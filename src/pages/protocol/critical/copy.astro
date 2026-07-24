@@ -1,0 +1,29 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+---
+<Tunnel title="Step 1 — Copy Files | Save My Gig!" status="Critical_Path · Recovery" red>
+  <div class="step-label">Step 1 of 5</div>
+  <h2 style="margin-bottom:1rem">Copy your files to this computer</h2>
+
+  <p>We are creating a temporary working copy.</p>
+
+  <div class="panel panel-warn">
+    <p style="margin:0">⚠️ <strong>Do not remove the USB whilst copying.</strong> Interrupting this step may cause data loss.</p>
+  </div>
+
+  <ul class="checklist">
+    <li>Plug your USB into the computer.</li>
+    <li>Create a new folder on the desktop.</li>
+    <li>Copy <strong>only the essential tracks</strong> you need to play.</li>
+    <li>Open the USB → use <strong>Search</strong>. Search by artist name or date added.</li>
+  </ul>
+
+  <p class="question">Have you copied enough tracks to play your set?</p>
+
+  <a href="/protocol/critical/erase" class="btn btn-go" data-event="step_completed" data-step="copy_files" data-answer="yes">
+    🟢 Yes — files are copied
+  </a>
+  <a href="/protocol/critical/usb-dead" class="btn btn-stop" data-event="step_completed" data-step="copy_files" data-answer="no">
+    🔴 No — the copy keeps failing
+  </a>
+</Tunnel>

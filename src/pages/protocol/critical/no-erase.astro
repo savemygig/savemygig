@@ -1,0 +1,27 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+// DRAFT — content written by Claude, pending Antonio's review (was a "(SOON)" dead end)
+---
+<Tunnel title="Keep the USB Untouched | Save My Gig!" status="Critical_Path · Safe Route" red>
+  <div class="review-flag">DRAFT — review pending. Remove this flag after approval.</div>
+
+  <div class="step-label">Safe route</div>
+  <h2 style="margin-bottom:1rem">OK. We don't touch your USB.</h2>
+
+  <p>Smart if that drive holds your whole library. Then we need <strong>any other USB drive</strong> to carry tonight's tracks.</p>
+
+  <ul class="checklist">
+    <li>Ask the other DJs, the promoter, the bar staff — someone has a pen drive.</li>
+    <li>Even a small one works. You only need tonight's set, not your library.</li>
+  </ul>
+
+  <p class="question">Did you find another USB drive?</p>
+
+  <a href="/protocol/critical/second-usb-format" class="btn btn-go" data-event="step_completed" data-step="no_erase" data-answer="found_usb">
+    🟢 Yes — got one
+  </a>
+  <a href="/protocol/critical/no-laptop-3" class="btn btn-stop" data-event="step_completed" data-step="no_erase" data-answer="no_usb">
+    🔴 No — there's no other USB here
+    <small>Survival mode: other ways to play tonight.</small>
+  </a>
+</Tunnel>

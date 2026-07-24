@@ -1,0 +1,26 @@
+---
+import Tunnel from '../layouts/Tunnel.astro';
+---
+<Tunnel title="Emergency Triage | Save My Gig!" status="Active_Triage" red>
+  <h1 style="margin-bottom:0.5rem">SYSTEM <span class="danger">DIAGNOSTIC</span></h1>
+  <p class="dim" style="margin-bottom:2.5rem">Select your emergency status to begin.</p>
+
+  <p class="question">How long until you play?</p>
+
+  <a href="/protocol/critical" class="btn btn-stop" data-event="triage_selected" data-path="critical">
+    ⏱ Less than 60 minutes
+    <small>Critical triage. Immediate workarounds to get music playing now.</small>
+  </a>
+
+  <a href="/protocol/quick-fix" class="btn btn-neutral" data-event="triage_selected" data-path="quick_fix">
+    🕐 1 to 3 hours
+    <small>Rapid diagnostic. Library repair and re-export before soundcheck.</small>
+  </a>
+
+  <a href="/protocol/full-recovery" class="btn btn-neutral" data-event="triage_selected" data-path="full_recovery">
+    🌙 Tomorrow / later
+    <small>Deep maintenance. Full diagnosis, formatting and Rekordbox stabilization.</small>
+  </a>
+
+  <p style="margin-top:2rem"><a href="/" class="dim" style="text-decoration:none">← Back</a></p>
+</Tunnel>

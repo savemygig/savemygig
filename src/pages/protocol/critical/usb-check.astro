@@ -1,0 +1,17 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+---
+<Tunnel title="USB Check | Save My Gig!" status="Critical_Path · Laptop" red>
+  <div class="step-label">Diagnostic</div>
+  <h2 style="margin-bottom:1rem">💻 You have a computer</h2>
+
+  <p>Good. Let's see if the computer can read your USB.</p>
+  <p><strong>Plug the USB into the computer.</strong> What happens?</p>
+
+  <a href="/protocol/critical/risk" class="btn btn-go" data-event="step_completed" data-step="usb_check" data-answer="files_visible">
+    🟢 I can see my files
+  </a>
+  <a href="/protocol/critical/usb-dead" class="btn btn-stop" data-event="step_completed" data-step="usb_check" data-answer="nothing">
+    🔴 Nothing happens
+  </a>
+</Tunnel>

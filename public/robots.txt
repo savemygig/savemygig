@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /protocol/
+Disallow: /saved
+Disallow: /files-lost
+
+Sitemap: https://www.savemygig.com/sitemap.xml

@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base
+  title="Never Again: The DJ USB Prevention System | Save My Gig!"
+  description="The exact system that makes USB failures a non-event: redundant drives, clean exports, proper ejects, and the gear that doesn't die."
+  path="/prepare"
+>
+  <main class="wrap">
+    <div class="status-line">Prevention_Hub</div>
+
+    <h1 style="margin-bottom:1rem">NEVER <span class="accent">AGAIN</span></h1>
+    <p class="dim" style="margin-bottom:2rem">USB failures aren't bad luck. They're a missing system. This is the system.</p>
+
+    <div class="panel">
+      <h3 style="margin-bottom:0.75rem">The rules</h3>
+      <ul class="checklist">
+        <li><strong>Two identical USBs, every gig.</strong> Same export on both. One in the bag, one in your pocket.</li>
+        <li><strong>FAT32 + MBR, always.</strong> Never exFAT, never GPT, never NTFS.</li>
+        <li><strong>Quality drives only.</strong> The $8 no-name stick is how this story starts. <a href="/gear">Approved drives →</a></li>
+        <li><strong>Eject properly, every time.</strong> From Rekordbox and from the player (<span class="mono">USB STOP</span>).</li>
+        <li><strong>Re-export after every library change.</strong> An old export is a corrupt export waiting to happen.</li>
+        <li><strong>Test on a player</strong> (or at least re-open in Rekordbox) before leaving home.</li>
+        <li><strong>Back up the Rekordbox library</strong> monthly to a different drive or cloud.</li>
+      </ul>
+    </div>
+
+    <div class="panel panel-go">
+      <h3 style="margin-bottom:0.75rem">📩 The Emergency Card</h3>
+      <p class="dim">One page. Everything to check before you leave, and the first moves when a player refuses your drive. Save it on your phone.</p>
+      <!-- TODO: wire form action to email provider before launch -->
+      <form action="#" method="post" data-todo="email-provider">
+        <input type="email" name="email" required placeholder="your@email.com"
+          style="width:100%;padding:0.9rem 1rem;border-radius:10px;border:1px solid var(--border);background:var(--bg-panel-2);color:var(--text);font-size:1rem;margin-bottom:0.75rem" />
+        <button type="submit" class="btn btn-go" data-event="email_capture" data-placement="prepare">
+          Send me the card
+        </button>
+      </form>
+    </div>
+
+    <div class="grid grid-2 section">
+      <div class="card">
+        <h3>🔌 The gear that doesn't die</h3>
+        <p>The exact drives worth carrying, and why.</p>
+        <a href="/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="prepare">See the kit</a>
+      </div>
+      <div class="card">
+        <h3>📖 The Booth Bible</h3>
+        <p>The full field manual — every booth disaster, handled. $17.</p>
+        <a href="/bible" class="btn btn-neutral" data-event="book_click" data-placement="prepare">Get the book</a>
+      </div>
+    </div>
+  </main>
+</Base>

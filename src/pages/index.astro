@@ -1,0 +1,117 @@
+---
+import Base from '../layouts/Base.astro';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What does CDJ Error E-8302 mean?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Error E-8302 on Pioneer CDJs means the player cannot read the data on your USB drive — usually a corrupt Rekordbox database or an unsupported file system. It can often be fixed on-site by re-exporting from Rekordbox or reformatting the drive as FAT32 with an MBR partition map.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Why is my USB not recognized on a CDJ or XDJ?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The most common causes are: the drive is formatted as NTFS or exFAT instead of FAT32, the partition map is GPT instead of MBR, the Rekordbox export is corrupt, or the USB hardware itself is failing. Save My Gig walks you through the fastest fix depending on how much time you have before you play.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How should I format a USB drive for Pioneer CDJs?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Format the drive as FAT32 with a Master Boot Record (MBR) partition scheme. Use a quality 32–64 GB drive and export your music with Rekordbox in Export mode.',
+      },
+    },
+  ],
+};
+---
+<Base
+  title="Save My Gig! | CDJ, XDJ & USB Emergency Help for DJs"
+  description="USB failed on a CDJ or XDJ? Error E-8302? Rekordbox export problem? Save My Gig walks you through the exact steps to get music playing again — fast, free, step by step."
+  path="/"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+
+  <main class="wrap center">
+    <div class="status-line" style="justify-content:center">System online</div>
+
+    <img src="/images/dj-usb-not-detected-emergency.webp"
+      alt="DJ facing a USB emergency at a CDJ booth"
+      width="1200" height="675" fetchpriority="high"
+      style="width:100%;max-width:34rem;height:auto;border-radius:12px;border:1px solid var(--border);margin-bottom:1.5rem" />
+
+    <h1 style="margin-bottom:1rem">SAVE MY <span class="accent">GIG!</span></h1>
+    <p class="dim" style="max-width:34rem;margin:0 auto 2rem">
+      Emergency guidance for DJs when USB drives fail, Rekordbox breaks,
+      or CDJ/XDJ players refuse to cooperate.
+    </p>
+
+    <a href="/emergency" class="btn btn-solid" style="max-width:26rem;margin:0 auto 3rem" data-event="begin_checkout" data-placement="home_hero">
+      🚨 Start Emergency Mode
+    </a>
+
+    <section class="section" style="text-align:left">
+      <h2 class="center" style="margin-bottom:1.5rem">Covers the errors that kill gigs</h2>
+      <div class="grid grid-2">
+        <a class="card" href="/fix/usb-not-recognized-cdj" style="text-decoration:none">
+          <h3 class="danger">USB NOT RECOGNIZED</h3>
+          <p>The player won't see your drive at all. The fastest checks first.</p>
+        </a>
+        <a class="card" href="/fix/cdj-error-e-8302" style="text-decoration:none">
+          <h3 class="danger">ERROR E-8302</h3>
+          <p>Cannot read the data. Usually a corrupt database — fixable on-site.</p>
+        </a>
+        <a class="card" href="/fix/rekordbox-export-failed" style="text-decoration:none">
+          <h3 class="danger">REKORDBOX EXPORT FAILED</h3>
+          <p>Export finished but the player shows nothing, or the export won't complete.</p>
+        </a>
+        <a class="card" href="/fix/emergency-loop-mode" style="text-decoration:none">
+          <h3 class="danger">EMERGENCY LOOP MODE</h3>
+          <p>The player is looping to protect the audio. What it means, what to do.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="section panel" style="text-align:left">
+      <h3 style="margin-bottom:0.75rem">Works with</h3>
+      <p class="dim" style="margin-bottom:0">
+        Pioneer CDJ-2000 / 2000NXS / 2000NXS2 · CDJ-3000 / 3000X ·
+        XDJ-1000 / 1000MK2 · XDJ-700 · XDJ-RX / RX2 / RX3 · XDJ-XZ ·
+        and most Rekordbox-compatible players.
+      </p>
+    </section>
+
+    <section class="section panel" style="text-align:left">
+      <h3 style="margin-bottom:0.75rem">The safe setup</h3>
+      <ul class="checklist">
+        <li>Format: <span class="mono">FAT32</span> · Partition map: <span class="mono">MBR</span></li>
+        <li>Capacity: 32–64 GB from a quality brand</li>
+        <li>Exported with Rekordbox in <span class="mono">EXPORT</span> mode</li>
+        <li>Always carry a second, identical USB — <a href="/prepare">see the prevention checklist</a></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2 style="margin-bottom:1rem">Never live this night again</h2>
+      <p class="dim" style="max-width:34rem;margin:0 auto 1.5rem">
+        The Booth Bible — the field manual for everything that can go wrong
+        in a DJ booth, and exactly what to do when it does.
+      </p>
+      <a href="/bible" class="btn btn-neutral" style="max-width:22rem;margin:0 auto" data-event="book_click" data-placement="home">
+        📖 Get The Booth Bible
+      </a>
+    </section>
+
+    <p class="dim" style="font-size:0.9rem">
+      A personal side project built by a DJ who's been there.
+      Free, no account, no tricks. <a href="/about">The story →</a>
+    </p>
+  </main>
+</Base>

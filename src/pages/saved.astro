@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+// Affiliate/product links: placeholders marked TODO until accounts exist.
+---
+<Base
+  title="You're Back On! | Save My Gig!"
+  description="You made it. Your set is saved. Here's how to make sure this never happens again."
+  path="/saved"
+  noindex
+>
+  <main class="wrap center">
+    <div class="status-line" style="justify-content:center">Ready_To_Play</div>
+
+    <h1 class="accent" style="margin-bottom:1rem">YOU'RE BACK ON.</h1>
+    <p style="max-width:32rem;margin:0 auto 0.5rem">Congratulations. You made it. <strong>Focus on your performance now.</strong> 😎</p>
+    <p class="dim" style="max-width:32rem;margin:0 auto 3rem">⚠️ After the gig, remember to delete the temporary files from the computer if you used one.</p>
+
+    <section class="panel panel-go" style="text-align:left;max-width:34rem;margin:0 auto 1.5rem">
+      <h2 style="margin-bottom:0.75rem">Never live this night again</h2>
+      <p class="dim">Tonight had a happy ending. The next one is not guaranteed — unless you make it guaranteed. <strong>The Booth Bible</strong> is the field manual for every disaster a DJ booth can throw at you, endorsed by people who run the world's biggest booths.</p>
+      <a href="/bible" class="btn btn-solid" data-event="book_click" data-placement="saved_hero">
+        📖 Get The Booth Bible — $17
+      </a>
+    </section>
+
+    <section class="panel" style="text-align:left;max-width:34rem;margin:0 auto 1.5rem">
+      <h3 style="margin-bottom:0.75rem">Retire the drive that betrayed you</h3>
+      <p class="dim">A USB that failed once will fail again. These are the drives that don't do this:</p>
+      <a href="/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="saved">
+        🔌 See the approved drives
+      </a>
+    </section>
+
+    <section class="panel" style="text-align:left;max-width:34rem;margin:0 auto 1.5rem">
+      <h3 style="margin-bottom:0.75rem">Get the Emergency Card</h3>
+      <p class="dim">The one-page quick reference from The Booth Bible — save it on your phone for the next dark booth. Free.</p>
+      <!-- TODO: wire form action to email provider (Formspree/Buttondown) before launch -->
+      <form action="#" method="post" data-todo="email-provider">
+        <input type="email" name="email" required placeholder="your@email.com"
+          style="width:100%;padding:0.9rem 1rem;border-radius:10px;border:1px solid var(--border);background:var(--bg-panel-2);color:var(--text);font-size:1rem;margin-bottom:0.75rem" />
+        <button type="submit" class="btn btn-go" data-event="email_capture" data-placement="saved">
+          📩 Send me the card
+        </button>
+      </form>
+    </section>
+
+    <p class="dim" style="margin-top:2rem">
+      Did this save your night? <a href="https://buymeacoffee.com/savemygig" data-event="affiliate_click" data-program="bmc" data-placement="saved">Buy me a coffee ☕</a>
+      · or just <a href="mailto:savemygig@gmail.com">tell me it worked</a> 🤝
+    </p>
+  </main>
+</Base>

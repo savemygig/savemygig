@@ -1,0 +1,18 @@
+---
+// The two buttons every /fix article ends with (blueprint §2).
+interface Props { article: string }
+const { article } = Astro.props;
+---
+<div class="panel panel-danger" style="margin-top:3rem">
+  <h3 style="margin-bottom:0.75rem">Playing soon and still stuck?</h3>
+  <p class="dim">The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.</p>
+  <a href="/emergency" class="btn btn-solid" data-event="begin_checkout" data-placement={`article_${article}`}>
+    🚨 Start Emergency Mode
+  </a>
+</div>
+<div class="panel" style="margin-top:1rem">
+  <p class="dim" style="margin-bottom:0.75rem"><strong>Never want to read this page again?</strong> The Booth Bible is the complete field manual for booth disasters — prevention, recovery, and everything between. $17.</p>
+  <a href="/bible" class="btn btn-neutral" data-event="book_click" data-placement={`article_${article}`}>
+    📖 Get The Booth Bible
+  </a>
+</div>

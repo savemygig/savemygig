@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCTA from '../../components/ArticleCTA.astro';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'CDJ Error E-8302 — What It Means and How to Fix It',
+  author: { '@type': 'Person', name: 'Antonio Afonso' },
+  publisher: { '@type': 'Organization', name: 'Save My Gig!' },
+};
+---
+<Base
+  title="CDJ Error E-8302 — What It Means and How to Fix It | Save My Gig!"
+  description="Error E-8302 on a Pioneer CDJ means the player can't read your USB's data — usually a corrupt Rekordbox database. Here's the immediate fix and the permanent one."
+  path="/fix/cdj-error-e-8302"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Error_E-8302</div>
+    <h1 style="margin-bottom:1.5rem">CDJ ERROR <span class="danger">E-8302</span>:<br />WHAT IT MEANS, HOW TO FIX IT</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Short version:</strong> E-8302 ("CANNOT READ DATA") means the CDJ sees your USB but can't read what's on it. Nine times out of ten it's a corrupt Rekordbox database or a wrong file system — both fixable, often before your set.</p>
+    </div>
+
+    <h2 style="margin:2rem 0 1rem">What causes it</h2>
+    <ul class="checklist">
+      <li><strong>Corrupt Rekordbox export</strong> — usually from pulling the USB without ejecting, or an interrupted sync.</li>
+      <li><strong>Wrong file system</strong> — NTFS or a GPT partition map. CDJs want <span class="mono">FAT32</span> + <span class="mono">MBR</span> (newer CDJ-3000 firmware also reads exFAT, but FAT32 is the safe answer across every booth).</li>
+      <li><strong>A failing drive</strong> — bad sectors right where the database lives.</li>
+      <li><strong>Old player firmware</strong> meeting a new Rekordbox export format.</li>
+    </ul>
+
+    <h2 style="margin:2rem 0 1rem">The immediate fix (at the venue)</h2>
+    <ul class="checklist">
+      <li>Eject properly (<span class="mono">USB STOP</span>), reseat the drive, try the other slot and the other player.</li>
+      <li>If another player reads it — play from that deck via Pro DJ Link.</li>
+      <li>With a laptop: open the USB in Rekordbox. If Rekordbox reads it, do a fresh export of tonight's playlist. If it doesn't, copy your music files off, reformat FAT32/MBR, re-export tonight's tracks.</li>
+      <li>No laptop and no player reads it: the database is gone for tonight — switch to the emergency flow below for the workaround route.</li>
+    </ul>
+
+    <h2 style="margin:2rem 0 1rem">The permanent fix (at home)</h2>
+    <ul class="checklist">
+      <li>Full-format the drive (not quick) as <span class="mono">FAT32</span> + <span class="mono">MBR</span>. If the full format fails or crawls, retire the drive.</li>
+      <li>Re-export your library fresh from Rekordbox in Export mode. Never copy an old database back onto a clean drive.</li>
+      <li>Update player firmware and Rekordbox.</li>
+      <li>Carry two identical drives with identical exports. E-8302 on one drive is an inconvenience; on your only drive it's a disaster.</li>
+    </ul>
+
+    <ArticleCTA article="e8302" />
+  </main>
+</Base>

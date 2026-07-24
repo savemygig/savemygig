@@ -1,0 +1,27 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+---
+<Tunnel title="Step 5 — Load on the Player | Save My Gig!" status="Critical_Path · Recovery" red>
+  <div class="step-label">Step 5 of 5</div>
+  <h2 style="margin-bottom:1rem">Load music on the player</h2>
+
+  <ul class="checklist">
+    <li>On the CDJ/XDJ, press <span class="mono">SOURCE</span></li>
+    <li>Select <span class="mono">USB</span></li>
+    <li>Go to <span class="mono">FOLDER</span></li>
+    <li>Load tracks from the folder you copied.</li>
+  </ul>
+
+  <div class="panel panel-warn">
+    <p style="margin:0">⚠️ These tracks were <strong>not exported via Rekordbox</strong>, so some features may be limited (Quantize, Sync, Hot Cues). This is normal. <strong>You can still play your set.</strong></p>
+  </div>
+
+  <p class="question">Can you load and play the tracks on the CDJ?</p>
+
+  <a href="/saved?path=critical&branch=laptop" class="btn btn-go" data-event="outcome_reached" data-outcome="saved" data-path="critical">
+    🟢 Yes — I'm playing
+  </a>
+  <a href="/protocol/critical/fallback" class="btn btn-stop" data-event="step_completed" data-step="load" data-answer="no">
+    🔴 No — the player still won't read it
+  </a>
+</Tunnel>

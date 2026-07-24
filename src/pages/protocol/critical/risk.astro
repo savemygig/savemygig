@@ -1,0 +1,22 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+---
+<Tunnel title="Files Are Visible | Save My Gig!" status="Critical_Path · Laptop" red>
+  <div class="step-label">Decision point</div>
+  <h2 class="accent" style="margin-bottom:1rem">✔️ FILES ARE VISIBLE</h2>
+
+  <p>Your music is still there.</p>
+
+  <div class="panel panel-warn">
+    <p style="margin:0">⚠️ <strong>Continuing involves risk.</strong></p>
+  </div>
+
+  <p class="question">Are you willing to temporarily copy your files to this computer and erase your USB so you can play?</p>
+
+  <a href="/protocol/critical/second-usb" class="btn btn-go" data-event="step_completed" data-step="risk_consent" data-answer="yes">
+    🟢 Yes — temporary copy is OK
+  </a>
+  <a href="/protocol/critical/no-erase" class="btn btn-stop" data-event="step_completed" data-step="risk_consent" data-answer="no">
+    🔴 No — I can't risk that
+  </a>
+</Tunnel>

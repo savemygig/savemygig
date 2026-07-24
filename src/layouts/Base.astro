@@ -1,0 +1,55 @@
+---
+import Analytics from '../components/Analytics.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** canonical path, e.g. "/gear" */
+  path: string;
+  /** noindex utility pages */
+  noindex?: boolean;
+}
+
+const { title, description, path, noindex = false } = Astro.props;
+const canonical = `https://www.savemygig.com${path === '/' ? '/' : path}`;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {noindex ? <meta name="robots" content="noindex,follow" /> : <meta name="robots" content="index,follow" />}
+  <meta name="theme-color" content="#000000" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content="Save My Gig!" />
+  <meta property="og:image" content="https://www.savemygig.com/images/dj-usb-not-detected-emergency.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600&display=swap" />
+  <Analytics />
+  <slot name="head" />
+</head>
+<body>
+  <slot />
+  <footer class="site-footer">
+    <div class="foot-links">
+      <a href="/emergency">Emergency Mode</a>
+      <a href="/prepare">Prevention</a>
+      <a href="/gear">Gear</a>
+      <a href="/recovery">Data Recovery</a>
+      <a href="/bible">The Booth Bible</a>
+      <a href="/about">About</a>
+    </div>
+    <p>Save My Gig! · Built by a DJ who's been there. · <a href="https://buymeacoffee.com/savemygig" data-event="affiliate_click" data-program="bmc" data-placement="footer">Buy me a coffee ☕</a></p>
+  </footer>
+</body>
+</html>

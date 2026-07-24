@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+// TODO: replace href="#" with real affiliate links once EaseUS / Disk Drill accounts approved.
+---
+<Base
+  title="Recover Files from a Dead or Corrupt USB Drive | Save My Gig!"
+  description="Your USB died with your music on it. Here's the honest recovery route: which software actually works, when it can't help, and when a lab is worth it."
+  path="/recovery"
+>
+  <main class="wrap">
+    <div class="status-line red">Data_Recovery</div>
+
+    <h1 style="margin-bottom:1rem">GET YOUR <span class="accent">FILES BACK</span></h1>
+    <p class="dim" style="margin-bottom:1rem">The honest version: software recovers files in most cases where the drive still powers on. It can't help a physically dead drive. Here's the route, in order.</p>
+    <div class="review-flag">DRAFT — affiliate links pending account approval. Antonio to confirm tool choices.</div>
+
+    <div class="panel panel-danger">
+      <p style="margin:0">⚠️ <strong>Before anything: stop writing to the drive.</strong> Don't format it, don't "try one more export". Every write overwrites recoverable music.</p>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin-bottom:0.5rem">Step 1 — Recovery software</h3>
+      <p class="dim">If your computer detects the drive (even showing 0 files or asking to format — <strong>say no</strong>), software has a real chance. Both of these scan free first, so you see what's recoverable before paying.</p>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3 style="font-size:1rem">Disk Drill</h3>
+          <p>Cleanest interface, great at FAT32 recovery, Mac and Windows. Free scan shows everything first.</p>
+          <a href="#" class="btn btn-go" data-event="affiliate_click" data-program="diskdrill" data-placement="recovery_1">Scan for free →</a>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem">EaseUS Data Recovery</h3>
+          <p>The veteran. Strong on corrupt partitions and drives that ask to be formatted.</p>
+          <a href="#" class="btn btn-go" data-event="affiliate_click" data-program="easeus" data-placement="recovery_2">Scan for free →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="lab">
+      <h3 style="margin-bottom:0.5rem">Step 2 — When software can't do it</h3>
+      <p class="dim" style="margin-bottom:0">Drive not detected anywhere, no light, physical damage, water: that's hardware. A recovery lab opens the drive and reads the memory chips directly. Costs run $100–500+, so it's for irreplaceable files — your own unreleased music, not tracks you can re-download. Search for a data recovery lab in your city and ask for a free diagnosis first; serious labs quote before they charge.</p>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin-bottom:0.5rem">Step 3 — Never pay for recovery twice</h3>
+      <p class="dim">Recovery is what you do once. A backup system is what you do instead. The Booth Bible sets it up in one evening.</p>
+      <a href="/bible" class="btn btn-neutral" data-event="book_click" data-placement="recovery">📖 Get The Booth Bible — $17</a>
+    </div>
+  </main>
+</Base>

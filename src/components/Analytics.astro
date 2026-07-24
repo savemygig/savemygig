@@ -1,0 +1,24 @@
+---
+// GA4 — G-65PEMEYW2M. Also binds any element with data-event / data-* params
+// so pages stay zero-custom-JS: <a data-event="triage_selected" data-path="critical">
+---
+<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-65PEMEYW2M"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-65PEMEYW2M');
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-event]');
+    if (!el) return;
+    var params = {};
+    for (var i = 0; i < el.attributes.length; i++) {
+      var a = el.attributes[i];
+      if (a.name.indexOf('data-') === 0 && a.name !== 'data-event') {
+        params[a.name.slice(5).replace(/-/g, '_')] = a.value;
+      }
+    }
+    gtag('event', el.getAttribute('data-event'), params);
+  });
+</script>

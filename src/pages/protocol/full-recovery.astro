@@ -1,0 +1,56 @@
+---
+import Tunnel from '../../layouts/Tunnel.astro';
+// DRAFT — full protocol pending Interview #2 with Antonio
+---
+<Tunnel title="Full Recovery Protocol | Save My Gig!" status="Full_Recovery · No rush">
+  <div class="review-flag">DRAFT — review pending. Full protocol to be refined with Antonio (Interview #2).</div>
+
+  <h1 style="margin-bottom:0.5rem">DEEP <span class="accent">MAINTENANCE</span></h1>
+  <p class="dim" style="margin-bottom:2rem">No gig tonight. We do this properly, once, so it never happens in a booth again.</p>
+
+  <div class="panel">
+    <div class="step-label">Phase 1 · Rescue everything first</div>
+    <ul class="checklist">
+      <li>Before touching anything else: copy <strong>everything readable</strong> off the USB to your computer.</li>
+      <li>If files won't copy or the drive isn't visible, stop here — recovery software has the best chance <em>before</em> any formatting. <a href="/recovery">See the recovery route →</a></li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="step-label">Phase 2 · Clean rebuild</div>
+    <ul class="checklist">
+      <li>Format the USB: <span class="mono">FAT32</span> · <span class="mono">MBR</span> · full format this time (not quick) — it maps out bad sectors.</li>
+      <li>If the full format fails or crawls, the drive is dying. Retire it. <a href="/gear">Replace it with a proven one →</a></li>
+      <li>Rebuild in Rekordbox <span class="mono">EXPORT</span> mode: re-export your playlists fresh. Never copy an old corrupt database back.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="step-label">Phase 3 · Stabilize Rekordbox</div>
+    <ul class="checklist">
+      <li>Rekordbox → File → <strong>Library maintenance</strong>: remove missing files, consolidate duplicates.</li>
+      <li>Back up the library (File → Library → Backup) to a different drive or cloud.</li>
+      <li>Update Rekordbox and your player firmware while you're at it — many read errors are firmware-level.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="step-label">Phase 4 · Never again</div>
+    <ul class="checklist">
+      <li>Two identical USBs, same export, every gig. One lives in your bag, one in your pocket.</li>
+      <li>Re-export after every library change; eject properly, every time.</li>
+      <li><a href="/prepare">The full prevention checklist →</a></li>
+    </ul>
+  </div>
+
+  <p class="question">Where did you land?</p>
+
+  <a href="/saved?path=full_recovery" class="btn btn-go" data-event="outcome_reached" data-outcome="saved" data-path="full_recovery">
+    🟢 Rebuilt and solid
+  </a>
+  <a href="/files-lost?path=full_recovery" class="btn btn-stop" data-event="outcome_reached" data-outcome="lost" data-path="full_recovery">
+    🔴 Some files couldn't be saved
+  </a>
+
+  <p style="margin-top:2rem"><a href="/emergency" class="dim" style="text-decoration:none">← Back to triage</a></p>
+</Tunnel>
