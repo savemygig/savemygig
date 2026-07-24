@@ -1,5 +1,6 @@
 ---
-// The two buttons every /fix article ends with (blueprint §2).
+// The CTA every /fix article ends with (blueprint §2).
+// NOTE: Booth Bible CTA removed 2026-07-24 — restore from git history at book launch.
 interface Props { article: string }
 const { article } = Astro.props;
 ---
@@ -11,8 +12,8 @@ const { article } = Astro.props;
   </a>
 </div>
 <div class="panel" style="margin-top:1rem">
-  <p class="dim" style="margin-bottom:0.75rem"><strong>Never want to read this page again?</strong> The Booth Bible is the complete field manual for booth disasters — prevention, recovery, and everything between. $17.</p>
-  <a href="/bible" class="btn btn-neutral" data-event="book_click" data-placement={`article_${article}`}>
-    📖 Get The Booth Bible
+  <p class="dim" style="margin-bottom:0.75rem"><strong>Never want to read this page again?</strong> Set up the prevention system once and this page becomes irrelevant.</p>
+  <a href="/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement={`article_${article}`}>
+    🛡 See the prevention checklist
   </a>
 </div>

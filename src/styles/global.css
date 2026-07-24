@@ -301,3 +301,117 @@ a { color: var(--green); }
   body { background: #fff; color: #000; }
   .btn, .status-line, .site-footer { display: none; }
 }
+
+/* ============================================================
+   ORIGINAL EMERGENCY-PAGE LANGUAGE (ported from v.B emergency.html
+   + choose.html) — hero, heartbeat button, alert card, pads
+   ============================================================ */
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(50px + env(safe-area-inset-top)) 20px 40px;
+  text-align: center;
+  overflow: hidden;
+  background: var(--bg);
+}
+.hero-img {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; z-index: 0;
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.95) 100%);
+  z-index: 1;
+}
+.hero-content { position: relative; z-index: 2; width: 100%; max-width: 600px; }
+
+.action-stack {
+  display: flex; flex-direction: column; gap: 16px;
+  width: 100%; max-width: 420px; margin: 0 auto;
+}
+
+.btn-heartbeat {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; padding: 18px 20px;
+  font-family: var(--font-body);
+  font-weight: 700; font-size: clamp(0.95rem, 4vw, 1.1rem);
+  white-space: nowrap; text-decoration: none;
+  border-radius: 8px; letter-spacing: 0.5px;
+  border: 2px solid var(--green);
+  color: var(--text);
+  background: rgba(0, 255, 102, 0.1);
+  animation: alert-pulse-green 2.2s infinite;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.btn-heartbeat:active { background: var(--green); color: #000; animation: none; transform: scale(0.96); }
+
+@keyframes alert-pulse-green {
+  0%   { box-shadow: 0 0 0 0 rgba(0,255,102,0.6);  background: rgba(0,255,102,0.1);  transform: scale(1); }
+  50%  { box-shadow: 0 0 0 25px rgba(0,255,102,0); background: rgba(0,255,102,0.25); transform: scale(1.03); }
+  100% { box-shadow: 0 0 0 0 rgba(0,255,102,0);    background: rgba(0,255,102,0.1);  transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .btn-heartbeat { animation: none; } }
+
+.btn-quiet {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; padding: 18px 20px;
+  font-weight: 700; font-size: clamp(0.95rem, 4vw, 1.05rem);
+  text-decoration: none; border-radius: 8px; letter-spacing: 0.5px;
+  border: 1px solid #444; color: #aaa; background: rgba(255,255,255,0.05);
+}
+.btn-quiet:active { transform: scale(0.96); }
+
+.led { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.led-g { background: var(--green); box-shadow: inset 0 1px 2px rgba(255,255,255,0.5), 0 0 8px rgba(0,255,102,0.8); }
+.led-r { background: var(--red); box-shadow: 0 0 10px var(--red); }
+.led-y { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; }
+
+.alert-card {
+  background: #1a0505;
+  border: 1px solid var(--red);
+  border-left: 5px solid var(--red);
+  border-radius: 6px;
+  padding: 16px 20px;
+  line-height: 1.5; color: #eee; font-size: 15px;
+  display: flex; gap: 12px; align-items: flex-start; text-align: left;
+}
+
+.problem-list { list-style: none; padding: 0; margin: 0 0 24px 0; }
+.problem-list li {
+  font-size: 15px; color: #ccc; padding: 12px 0;
+  border-bottom: 1px solid #1a1a1a;
+  display: flex; align-items: center;
+}
+.problem-list li::before {
+  content: ""; display: inline-block;
+  width: 6px; height: 6px; background: var(--red);
+  border-radius: 50%; margin-right: 12px; flex-shrink: 0;
+}
+
+/* Triage pads (from choose.html) */
+.pad-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
+.pad {
+  display: flex; flex-direction: column;
+  background: #0d0d0d;
+  border: 1px solid #1f1f1f;
+  border-radius: 12px;
+  padding: 20px;
+  text-decoration: none; color: var(--text);
+  transition: 0.1s ease;
+  position: relative; overflow: hidden;
+}
+.pad:active { transform: scale(0.97); background: #121212; }
+.pad::before { content: ""; position: absolute; top: 0; left: 0; width: 5px; height: 100%; }
+.pad-red::before { background: var(--red); }
+.pad-yellow::before { background: #ffcc00; }
+.pad-green::before { background: var(--green); }
+.pad-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.pad-header .led { width: 10px; height: 10px; }
+.pad-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; }
+.pad-desc { font-size: 14px; color: #888; line-height: 1.5; }
