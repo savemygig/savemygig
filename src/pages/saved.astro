@@ -34,14 +34,10 @@ import Base from '../layouts/Base.astro';
     <section class="panel" style="text-align:left;max-width:34rem;margin:0 auto 1.5rem">
       <h3 style="margin-bottom:0.75rem">Get the Emergency Card</h3>
       <p class="dim">The one-page quick reference for USB disasters — save it on your phone for the next dark booth. Free.</p>
-      <!-- TODO: wire form action to email provider (Formspree/Buttondown) before launch -->
-      <form action="#" method="post" data-todo="email-provider">
-        <input type="email" name="email" required placeholder="your@email.com"
-          style="width:100%;padding:0.9rem 1rem;border-radius:10px;border:1px solid var(--border);background:var(--bg-panel-2);color:var(--text);font-size:1rem;margin-bottom:0.75rem" />
-        <button type="submit" class="btn btn-go" data-event="email_capture" data-placement="saved">
-          📩 Send me the card
-        </button>
-      </form>
+      <!-- TODO: swap mailto for email provider form (Formspree/Buttondown) when chosen -->
+      <a href="mailto:savemygig@gmail.com?subject=Send%20me%20the%20Emergency%20Card" class="btn btn-go" data-event="email_capture" data-placement="saved">
+        📩 Email me the card
+      </a>
     </section>
 
     <p class="dim" style="margin-top:2rem">

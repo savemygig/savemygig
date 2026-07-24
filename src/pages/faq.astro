@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+
+const faqs = [
+  { q: 'Why is my USB not detected on a Pioneer CDJ or XDJ?', a: 'The most common causes, in order: the drive is formatted as NTFS or exFAT instead of FAT32; the partition map is GPT instead of MBR; the Rekordbox database on the drive is corrupt (often from an unsafe eject); or the drive hardware is failing. Reseat the drive, try the second slot and the other player first — many "dead" drives are just a bad mount.' },
+  { q: 'What does CDJ error E-8302 mean?', a: 'E-8302 ("CANNOT READ DATA") means the player sees the drive but cannot read its data — in most cases a corrupt Rekordbox export or a wrong file system. With a laptop you can usually fix it on-site: re-export fresh from Rekordbox, or reformat FAT32/MBR and re-export.' },
+  { q: 'How do I format a USB for CDJs?', a: 'FAT32 file system, MBR (Master Boot Record) partition scheme. On Mac: Disk Utility → Show All Devices → select the drive (not the volume) → Erase → MS-DOS (FAT) + Master Boot Record. On Windows: right-click the drive → Format → FAT32. Use a quality 32–64 GB drive.' },
+  { q: 'Can I play tracks that were not exported with Rekordbox?', a: 'Yes. CDJs can play plain audio files from a FAT32 USB via the FOLDER view. You lose cues, grids, playlists, Sync and Quantize — but you keep the gig. That is the core of our critical-path rescue.' },
+  { q: 'My export finished but the player shows nothing. Why?', a: 'The database landed corrupt — classic after pulling the drive without ejecting. Delete the playlists from the device in Rekordbox, re-sync them fresh, and eject with the Rekordbox eject button. If the device errors, copy your music off, format clean, export again.' },
+  { q: 'What is Emergency Loop mode?', a: 'When a CDJ runs out of readable audio mid-track (failing drive, corrupt file), it loops the last seconds instead of going silent. Mix out on the other player, then deal with the drive. One loop is a warning; two is a dying drive.' },
+  { q: 'Is Save My Gig really free?', a: 'Yes. No account, no paywall, and no ads inside the emergency flow — ever. If it saves your night you can buy us a coffee, but only after you are safe.' },
+  { q: 'Which USB drives should I buy for DJing?', a: 'A quality metal-bodied 32–64 GB stick from a major brand — and buy two identical ones, always. Our gear page lists the exact models we trust.' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(f => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<Base
+  title="DJ USB & CDJ FAQ — Every Question, Answered | Save My Gig!"
+  description="USB not detected, E-8302, Rekordbox exports, FAT32 formatting, emergency loops — the questions every DJ asks, answered by people who have lived them."
+  path="/faq"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line">FAQ</div>
+    <h1 style="margin-bottom:0.5rem">QUESTIONS FROM THE <span class="accent">BOOTH</span></h1>
+    <p class="dim" style="margin-bottom:2rem">Short answers first. Every answer links to the full fix.</p>
+
+    {faqs.map(f => (
+      <div class="panel">
+        <h3 style="margin-bottom:0.6rem">{f.q}</h3>
+        <p class="dim" style="margin-bottom:0">{f.a}</p>
+      </div>
+    ))}
+
+    <div class="panel panel-danger" style="margin-top:2rem">
+      <h3 style="margin-bottom:0.75rem">Question is urgent because you play soon?</h3>
+      <a href="/emergency" class="btn btn-solid" data-event="begin_checkout" data-placement="faq">🚨 Start Emergency Mode</a>
+    </div>
+  </main>
+</Base>

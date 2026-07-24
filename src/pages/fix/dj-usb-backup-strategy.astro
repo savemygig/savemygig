@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCTA from '../../components/ArticleCTA.astro';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'The DJ USB Backup Strategy: Two Drives, Zero Panic',
+  step: [
+    { '@type': 'HowToStep', name: 'Buy two identical drives', text: 'Two quality 32–64GB drives, same brand and model, formatted FAT32 + MBR.' },
+    { '@type': 'HowToStep', name: 'Export to both, every time', text: 'After every library change, run the same Rekordbox export to drive A and drive B.' },
+    { '@type': 'HowToStep', name: 'Separate them physically', text: 'One drive in the bag, one on your keys or in your pocket. Never together.' },
+  ],
+};
+---
+<Base
+  title="The DJ USB Backup Strategy: Two Drives, Zero Panic | Save My Gig!"
+  description="The exact backup system professional DJs use: two identical drives, mirrored exports, physical separation. One evening to set up, a career without USB panic."
+  path="/fix/dj-usb-backup-strategy"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line">Backup_Strategy</div>
+    <h1 style="margin-bottom:1.5rem">TWO DRIVES,<br><span class="accent">ZERO PANIC</span></h1>
+
+    <div class="panel panel-go">
+      <p style="margin:0"><strong>The whole system in one sentence:</strong> two identical USB drives, the same export on both, kept in two different pockets. Everything else on this site exists for people who don't do this yet.</p>
+    </div>
+
+    <h2 style="margin:2rem 0 1rem">Why redundancy beats recovery</h2>
+    <p>Every recovery technique — ours included — is a gamble played under pressure. A mirrored second drive is not a gamble: it's a fifteen-second swap while the room keeps dancing. The pros you never hear panic stories about aren't lucky. They carry the boring second drive.</p>
+
+    <h2 style="margin:2rem 0 1rem">The setup (one evening)</h2>
+    <ul class="checklist">
+      <li><strong>Buy two identical drives</strong> — same brand, same model, same size. Identical drives behave identically on players. <a href="/gear">The models we trust →</a></li>
+      <li><strong>Format both:</strong> <span class="mono">FAT32</span> + <span class="mono">MBR</span>. <a href="/fix/format-usb-for-cdj">Step-by-step →</a></li>
+      <li><strong>Export to both, back to back,</strong> in Rekordbox EXPORT mode. Same playlists, same order. Eject each with the Rekordbox button.</li>
+      <li><strong>Label them.</strong> A and B, tape or marker. In a dark booth you want zero thinking.</li>
+    </ul>
+
+    <h2 style="margin:2rem 0 1rem">The habit (per gig)</h2>
+    <ul class="checklist">
+      <li>Library changed this week? Re-export to <strong>both</strong> drives. An outdated backup is a trap.</li>
+      <li>Drive A in the gig bag. Drive B on your keychain or jacket. <strong>Never the same pocket, never the same bag.</strong></li>
+      <li>At the booth: play from A. If A misbehaves mid-set — eject, insert B, keep mixing. That's the whole emergency plan.</li>
+      <li>Once a month: back up the Rekordbox library itself (File → Library → Backup) to a third place — cloud or home drive.</li>
+    </ul>
+
+    <h2 style="margin:2rem 0 1rem">The failure math</h2>
+    <p>A quality drive fails rarely; call it once in hundreds of gig-nights. Two independent drives failing the same night is that number squared — effectively never. You cannot buy that reliability in one perfect drive at any price; you can have it for the cost of a second cheap one.</p>
+
+    <ArticleCTA article="backup_strategy" />
+  </main>
+</Base>

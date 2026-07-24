@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCTA from '../../components/ArticleCTA.astro';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'Waveforms Not Loading on CDJ — What It Means',
+  author: { '@type': 'Person', name: 'Antonio Afonso' },
+  publisher: { '@type': 'Organization', name: 'Save My Gig!' },
+};
+---
+<Base
+  title="Waveforms Not Loading on CDJ? Causes and Fixes | Save My Gig!"
+  description="Tracks play but waveforms stay blank or take forever on the CDJ. Missing analysis, slow drives, or a struggling database — here's the fix order."
+  path="/fix/waveforms-not-loading-cdj"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Waveforms_Blank</div>
+    <h1 style="margin-bottom:1.5rem">WAVEFORMS <span class="danger">NOT LOADING</span>?<br>READ THIS BEFORE PANICKING</h1>
+
+    <div class="panel panel-go">
+      <p style="margin:0"><strong>First, breathe:</strong> blank waveforms almost never stop a set. The audio plays fine — you're missing convenience, not music. Fix order below, panic not required.</p>
+    </div>
+
+    <h2 style="margin:2rem 0 1rem">The three causes</h2>
+    <ul class="checklist">
+      <li><strong>Tracks were never analyzed.</strong> Files dragged manually (or imported and exported too fast) carry no waveform data. The player shows a slowly-building wave or nothing.</li>
+      <li><strong>The drive is slow or dying.</strong> Waveform data loads from the USB; a struggling drive shows tracks instantly but waveforms crawl. Treat this as an early warning.</li>
+      <li><strong>Database mismatch.</strong> Old player firmware + new Rekordbox versions occasionally skip advanced waveform data. Audio still plays.</li>
+    </ul>
+
+    <h2 style="margin:2rem 0 1rem">At the venue</h2>
+    <ul class="checklist">
+      <li>Play on. The wave draws in real time as the player reads the track — beatmatch by ear like the veterans did.</li>
+      <li>If waveforms crawl AND browsing lags: the drive is struggling. Don't trust it for the next gig — <a href="/fix/usb-not-recognized-cdj">this is how those drives end</a>.</li>
+    </ul>
+
+    <h2 style="margin:2rem 0 1rem">At home</h2>
+    <ul class="checklist">
+      <li>In Rekordbox: select your library → right-click → <strong>Analyze</strong>. Let it finish completely.</li>
+      <li>Re-export tonight's playlists in <span class="mono">EXPORT</span> mode; the analysis travels with the export.</li>
+      <li>Update player firmware and Rekordbox to current versions.</li>
+      <li>Full-format (not quick) the suspect drive; if it crawls, retire it. <a href="/gear">Drives that don't do this →</a></li>
+    </ul>
+
+    <ArticleCTA article="waveforms" />
+  </main>
+</Base>

@@ -28,14 +28,10 @@ import Base from '../layouts/Base.astro';
     <div class="panel panel-go">
       <h3 style="margin-bottom:0.75rem">📩 The Emergency Card</h3>
       <p class="dim">One page. Everything to check before you leave, and the first moves when a player refuses your drive. Save it on your phone.</p>
-      <!-- TODO: wire form action to email provider before launch -->
-      <form action="#" method="post" data-todo="email-provider">
-        <input type="email" name="email" required placeholder="your@email.com"
-          style="width:100%;padding:0.9rem 1rem;border-radius:10px;border:1px solid var(--border);background:var(--bg-panel-2);color:var(--text);font-size:1rem;margin-bottom:0.75rem" />
-        <button type="submit" class="btn btn-go" data-event="email_capture" data-placement="prepare">
-          Send me the card
-        </button>
-      </form>
+      <!-- TODO: swap mailto for email provider form (Formspree/Buttondown) when chosen -->
+      <a href="mailto:savemygig@gmail.com?subject=Send%20me%20the%20Emergency%20Card" class="btn btn-go" data-event="email_capture" data-placement="prepare">
+        📩 Email me the card
+      </a>
     </div>
 
     <div class="grid section">

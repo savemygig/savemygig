@@ -1,0 +1,49 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCTA from '../../components/ArticleCTA.astro';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'exFAT vs FAT32 for CDJs — Which Format Actually Works',
+  author: { '@type': 'Person', name: 'Antonio Afonso' },
+  publisher: { '@type': 'Organization', name: 'Save My Gig!' },
+};
+---
+<Base
+  title="exFAT vs FAT32 for CDJ USB Drives — The Real Answer | Save My Gig!"
+  description="Which format works on CDJ-2000, CDJ-3000 and XDJ players? The honest compatibility table, the 4GB myth, and the one setup that works everywhere."
+  path="/fix/exfat-vs-fat32-cdj"
+  ogImage="/og/exfat-vs-fat32-cdj.png"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line">Format_Question</div>
+    <h1 style="margin-bottom:1.5rem">exFAT vs <span class="accent">FAT32</span>:<br>WHICH ONE FOR CDJs?</h1>
+
+    <div class="panel panel-go">
+      <p style="margin:0"><strong>The answer that never fails:</strong> FAT32 with an MBR partition map plays on every Rekordbox-compatible player ever made. exFAT works only on newer hardware. If you play in booths you don't control, FAT32 is the professional choice.</p>
+    </div>
+
+    <h2 style="margin:2rem 0 1rem">Compatibility, honestly</h2>
+    <ul class="checklist">
+      <li><span class="mono">FAT32 + MBR</span> — works on CDJ-850, 900, 2000, 2000NXS/NXS2, 3000, every XDJ. The universal key.</li>
+      <li><span class="mono">exFAT</span> — supported on CDJ-3000 and recent XDJ firmware; <strong>refused by CDJ-2000/2000NXS</strong>, still common in clubs worldwide.</li>
+      <li><span class="mono">NTFS / APFS / GPT anything</span> — no player reads them. This is the #1 cause of "USB not detected" on gig night.</li>
+    </ul>
+
+    <h2 style="margin:2rem 0 1rem">"But FAT32 has a 4GB limit!"</h2>
+    <p>Per file — not per drive. No DJ track approaches 4GB; even a 30-minute WAV is under 1GB. The only DJs who genuinely need exFAT are the ones carrying multi-hour uncompressed recordings on their gig drive, which is its own mistake. For music libraries, the limit is irrelevant.</p>
+
+    <h2 style="margin:2rem 0 1rem">The trap: how drives ship</h2>
+    <ul class="checklist">
+      <li>Most drives above 32GB ship <strong>exFAT from the factory</strong> — so a brand-new "professional" 64GB stick fails on a CDJ-2000 out of the box.</li>
+      <li>Windows won't offer FAT32 for large drives in the Format dialog; on Mac, choose <span class="mono">MS-DOS (FAT)</span> in Disk Utility with <span class="mono">Master Boot Record</span> — <a href="/fix/format-usb-for-cdj">full walkthrough here</a>.</li>
+    </ul>
+
+    <h2 style="margin:2rem 0 1rem">The rule to remember</h2>
+    <p><strong>Format for the oldest player you might ever face, not the newest one you own.</strong> The festival main stage has CDJ-3000s; the afterparty basement has a CDJ-2000 with a cigarette burn. FAT32 plays both.</p>
+
+    <ArticleCTA article="exfat_vs_fat32" />
+  </main>
+</Base>

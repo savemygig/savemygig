@@ -9,10 +9,13 @@ interface Props {
   path: string;
   /** noindex utility pages */
   noindex?: boolean;
+  /** per-page OG card, e.g. "/og/exfat-vs-fat32-cdj.png" */
+  ogImage?: string;
 }
 
-const { title, description, path, noindex = false } = Astro.props;
+const { title, description, path, noindex = false, ogImage } = Astro.props;
 const canonical = `https://www.savemygig.com${path === '/' ? '/' : path}`;
+const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-detected-emergency.webp'}`;
 ---
 <!doctype html>
 <html lang="en">
@@ -29,7 +32,7 @@ const canonical = `https://www.savemygig.com${path === '/' ? '/' : path}`;
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
   <meta property="og:site_name" content="Save My Gig!" />
-  <meta property="og:image" content="https://www.savemygig.com/images/dj-usb-not-detected-emergency.webp" />
+  <meta property="og:image" content={ogImageUrl} />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -46,9 +49,10 @@ const canonical = `https://www.savemygig.com${path === '/' ? '/' : path}`;
       <a href="/prepare">Prevention</a>
       <a href="/gear">Gear</a>
       <a href="/recovery">Data Recovery</a>
+      <a href="/faq">FAQ</a>
       <a href="/about">About</a>
     </div>
-    <p>Save My Gig! · Built by a DJ who's been there. · <a href="https://buymeacoffee.com/savemygig" data-event="affiliate_click" data-program="bmc" data-placement="footer">Buy me a coffee ☕</a></p>
+    <p>Save My Gig! · Built by a DJ who's been there. · <a href="https://buymeacoffee.com/savemygig" data-event="affiliate_click" data-program="bmc" data-placement="footer">Buy me a coffee ☕</a> · <a href="/privacy">Privacy</a></p>
   </footer>
 </body>
 </html>

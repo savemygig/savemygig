@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+// THE EMERGENCY CARD — the printable/screenshot-able one-pager promised on /saved and /prepare.
+---
+<Base
+  title="The DJ Emergency Card — Screenshot This | Save My Gig!"
+  description="The one-page USB emergency reference for DJs. Screenshot it, print it, keep it in your gig bag. Free."
+  path="/card"
+>
+  <main class="wrap">
+    <div class="status-line">Emergency_Card</div>
+    <h1 style="margin-bottom:0.5rem">THE EMERGENCY <span class="accent">CARD</span></h1>
+    <p class="dim" style="margin-bottom:1.5rem">📱 Screenshot this page now — it works with no signal, in any booth, at 3am.</p>
+
+    <div class="panel" style="border-color:rgba(0,255,102,0.3)">
+      <h3 style="margin-bottom:0.75rem">⚡ USB DEAD AT THE BOOTH — DO IN ORDER</h3>
+      <ul class="checklist">
+        <li>Reseat the drive. Wait 10 seconds. Re-insert firmly.</li>
+        <li>Second USB slot → other player → wait 30s (big libraries mount slowly).</li>
+        <li>Nobody playing? Power-cycle the player (USB STOP first).</li>
+        <li>Still dead + laptop nearby → copy tracks off, format FAT32+MBR, copy back, play via FOLDER.</li>
+        <li>No laptop → borrow a USB, play from phone via mixer, swap slots with next DJ. <strong>Music first, pride later.</strong></li>
+      </ul>
+    </div>
+
+    <div class="panel" style="border-color:rgba(255,176,32,0.3)">
+      <h3 style="margin-bottom:0.75rem">🔧 THE SACRED SETTINGS</h3>
+      <ul class="checklist">
+        <li>Format: <span class="mono">FAT32</span> · Scheme: <span class="mono">MBR</span> · Size: 32–64 GB</li>
+        <li>Mac: Disk Utility → Show All Devices → select the DRIVE → MS-DOS (FAT) + Master Boot Record</li>
+        <li>Music onto gig drives ONLY via Rekordbox EXPORT mode</li>
+        <li>Eject from Rekordbox AND the player (USB STOP). Every time.</li>
+      </ul>
+    </div>
+
+    <div class="panel panel-danger">
+      <h3 style="margin-bottom:0.75rem">🚫 NEVER (under pressure)</h3>
+      <ul class="checklist">
+        <li>Never format a drive that still holds unrescued files.</li>
+        <li>Never say YES when a computer offers to format your gig drive.</li>
+        <li>Never keep re-plugging a drive that's failing — each mount can make recovery harder.</li>
+        <li>Never leave home with one drive. <strong>Two identical drives, two pockets.</strong></li>
+      </ul>
+    </div>
+
+    <p class="dim center" style="font-size:0.85rem">savemygig.com/emergency — the full guided rescue, free · Print this page: it's ink-friendly.</p>
+  </main>
+</Base>

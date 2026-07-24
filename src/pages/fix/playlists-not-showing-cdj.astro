@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCTA from '../../components/ArticleCTA.astro';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'Playlists Not Showing on CDJ — Causes and Fixes',
+  author: { '@type': 'Person', name: 'Antonio Afonso' },
+  publisher: { '@type': 'Organization', name: 'Save My Gig!' },
+};
+---
+<Base
+  title="Playlists Not Showing on CDJ or XDJ? Here's Why | Save My Gig!"
+  description="Your USB mounts, tracks play, but playlists are missing on the CDJ. The database didn't make it. Here's the 5-minute fix and the permanent one."
+  path="/fix/playlists-not-showing-cdj"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Playlists_Missing</div>
+    <h1 style="margin-bottom:1.5rem">PLAYLISTS NOT SHOWING<br>ON THE <span class="danger">CDJ</span>?</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Short version:</strong> if tracks play but playlists are missing, your music arrived — the Rekordbox database didn't. Either the export skipped it, the eject corrupted it, or the drive was filled by drag-and-drop instead of Rekordbox.</p>
+    </div>
+
+    <h2 style="margin:2rem 0 1rem">Why it happens</h2>
+    <ul class="checklist">
+      <li><strong>Files were dragged onto the USB in Finder/Explorer</strong> — that copies music, not the database. Playlists only exist after a Rekordbox EXPORT-mode sync.</li>
+      <li><strong>The export was interrupted or ejected unsafely</strong> — the database is written near the end of a sync; pull early and tracks survive but playlists don't.</li>
+      <li><strong>Mixed exports from two computers</strong> — a second computer's Rekordbox can overwrite the device database with its own (empty) view.</li>
+      <li><strong>Very old player firmware</strong> meeting a new Rekordbox database version.</li>
+    </ul>
+
+    <h2 style="margin:2rem 0 1rem">At the venue (5 minutes)</h2>
+    <ul class="checklist">
+      <li>No laptop? Use <span class="mono">SOURCE → USB → FOLDER</span> — your music is still playable by folder, tonight is safe.</li>
+      <li>With a laptop: open Rekordbox in <span class="mono">EXPORT</span> mode, connect the USB, drag tonight's playlists onto the device, wait for the full sync, eject with the Rekordbox button.</li>
+      <li>Re-insert on the player and check the <span class="mono">PLAYLIST</span> browse tab — not FOLDER.</li>
+    </ul>
+
+    <h2 style="margin:2rem 0 1rem">The permanent fix</h2>
+    <ul class="checklist">
+      <li>One rule: <strong>music gets on gig drives only via Rekordbox export.</strong> Never Finder, never Explorer.</li>
+      <li>One computer owns the drive. If you must use two, let one be the only writer.</li>
+      <li>After every library change: re-export, eject properly, verify the playlists load before leaving home.</li>
+    </ul>
+
+    <ArticleCTA article="playlists_missing" />
+  </main>
+</Base>
