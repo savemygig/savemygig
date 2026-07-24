@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>No Computer - Player Checks | Save My Gig!</title>
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600&display=swap">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-65PEMEYW2M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-65PEMEYW2M');
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-event]');
+    if (!el) return;
+    var params = {};
+    for (var i = 0; i < el.attributes.length; i++) {
+      var a = el.attributes[i];
+      if (a.name.indexOf('data-') === 0 && a.name !== 'data-event') {
+        params[a.name.slice(5).replace(/-/g, '_')] = a.value;
+      }
+    }
+    gtag('event', el.getAttribute('data-event'), params);
+  });
+</script>
+<link rel="stylesheet" href="/_astro/global.CNmYpFaK.css">
+<style>
+/* VARIANT C - PULSE HUD: tactical, strong color, modern sharp */
+body{background:#060707;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:44px 44px;}
+.top-bar{background:rgba(6,7,7,.85);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,59,59,.25);}
+.screen{max-width:640px;padding-top:36px;}
+.review-flag{border-radius:6px;}
+.step-label{font-family:'JetBrains Mono',monospace;color:#ff3b3b;font-size:11px;letter-spacing:.24em;border:1px solid rgba(255,59,59,.35);display:inline-block;padding:5px 12px;border-radius:6px;background:rgba(255,59,59,.06);}
+h2{font-size:clamp(25px,5vw,32px);font-weight:650;letter-spacing:-.02em;margin:14px 0 16px;}
+.screen p{color:#a5aba5;font-size:16.5px;line-height:1.65;}
+.checklist{margin:1.4rem 0;border:1px solid rgba(255,255,255,.09);border-radius:12px;overflow:hidden;background:rgba(255,255,255,.02);}
+.checklist li{border-bottom:1px solid rgba(255,255,255,.07);padding:15px 16px 15px 46px;margin:0;}
+.checklist li::before{left:16px;top:19px;box-shadow:0 0 10px rgba(0,255,102,.8);}
+.question{font-family:'JetBrains Mono',monospace;font-size:17px;color:#fff;margin-top:2rem;}
+.pad{border-radius:12px;padding:20px 22px;border:1.5px solid;box-shadow:none;background:rgba(255,255,255,.02);}
+.pad::before{width:0;}
+.pad-green{border-color:rgba(0,255,102,.55);background:linear-gradient(90deg,rgba(0,255,102,.10),rgba(0,255,102,.02));}
+.pad-red{border-color:rgba(255,59,59,.45);background:linear-gradient(90deg,rgba(255,59,59,.08),rgba(255,59,59,.015));}
+.pad-green:hover{box-shadow:0 0 0 3px rgba(0,255,102,.15);}
+.pad-red:hover{box-shadow:0 0 0 3px rgba(255,59,59,.12);}
+.pad-title{font-size:17px;letter-spacing:.05em;}
+.led-g{animation:pulse 1.6s infinite;}
+</style>
+</head>
+<body>
+  <header class="top-bar">
+    <a href="/" class="brand">SAVE MY GIG</a>
+    <div class="status-indicator">Critical · No Laptop</div>
+  </header>
+  <main class="screen">
+    
+  <div class="review-flag">DRAFT, review pending.</div>
+  <div class="step-label">Step 1 of 3</div>
+  <h2 style="margin-bottom:1rem">🚫 No computer. We work with the booth.</h2>
+
+  <p>Most "dead" USBs at the booth are a connection or slot issue, not a dead drive. Fastest checks first:</p>
+
+  <ul class="checklist">
+    <li><strong>Pull the USB out and reseat it firmly.</strong> Wait 10 seconds before re-inserting.</li>
+    <li>Try the <strong>other USB slot</strong> on the same player (if it has two).</li>
+    <li>Try the <strong>other player</strong>. If it reads there, play from that deck and use Link.</li>
+    <li>Check the USB tip for <strong>dirt or sweat</strong>, wipe it, try again.</li>
+  </ul>
+
+  <p class="question">Does any player read the USB now?</p>
+
+  <nav class="pad-grid" aria-label="Choose one">
+  <a href="/saved?path=critical&amp;branch=no_laptop" class="pad pad-green" data-event="outcome_reached" data-step="no_laptop_1" data-answer="a" data-outcome="saved" data-path="critical">
+    <div class="pad-header">
+      <div class="led led-g"></div>
+      <div class="pad-title">YES - IT&#39;S READING</div>
+    </div>
+    
+  </a>
+  <a href="/protocol/critical/no-laptop-2" class="pad pad-red" data-event="step_completed" data-step="no_laptop_1" data-answer="b">
+    <div class="pad-header">
+      <div class="led led-r"></div>
+      <div class="pad-title">NO - STILL NOTHING</div>
+    </div>
+    
+  </a>
+</nav>
+
+  </main>
+</body>
+</html>
