@@ -1,0 +1,24 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+// DRAFT
+---
+<Tunnel title="Drive Health Test | Save My Gig!" status="Full_Recovery">
+  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="step-label">Step 2</div>
+  <h2 style="margin-bottom:1rem">Test the drive with a FULL format</h2>
+
+  <p>A full (not quick) format writes to every cell — it's a stress test and a clean slate in one.</p>
+
+  <ul class="checklist">
+    <li>Format the USB: <span class="mono">FAT32</span> · <span class="mono">MBR</span> · <strong>uncheck Quick Format</strong>.</li>
+    <li>Expect it to take a while — that's the point.</li>
+  </ul>
+
+  <p class="question">Did the full format complete normally (no errors, no absurd slowness)?</p>
+
+  <Choice step="fr_health"
+    a={{ href: '/protocol/full-recovery/rebuild', label: 'YES — CLEAN FORMAT' }}
+    b={{ href: '/protocol/full-recovery/retire', label: 'NO — ERRORS OR CRAWLING', desc: 'The hardware is failing. It never gets trusted with a gig again.' }}
+  />
+</Tunnel>

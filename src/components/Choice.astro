@@ -1,0 +1,45 @@
+---
+// The universal A/B decision — two pads, one choice. (Old choose.html language.)
+interface Opt {
+  href: string;
+  label: string;
+  desc?: string;
+  /** GA4 event name; defaults to step_completed */
+  event?: string;
+  /** extra data-* attrs, e.g. { outcome: 'saved', path: 'critical' } */
+  data?: Record<string, string>;
+}
+interface Props {
+  /** step id for GA4 */
+  step: string;
+  a: Opt; // the green/positive option
+  b: Opt; // the red/negative option
+}
+const { step, a, b } = Astro.props;
+
+const attrs = (o: Opt, answer: string) => {
+  const out: Record<string, string> = {
+    'data-event': o.event ?? 'step_completed',
+    'data-step': step,
+    'data-answer': answer,
+  };
+  for (const [k, v] of Object.entries(o.data ?? {})) out[`data-${k}`] = v;
+  return out;
+};
+---
+<nav class="pad-grid" aria-label="Choose one">
+  <a href={a.href} class="pad pad-green" {...attrs(a, 'a')}>
+    <div class="pad-header">
+      <div class="led led-g"></div>
+      <div class="pad-title">{a.label}</div>
+    </div>
+    {a.desc && <div class="pad-desc">{a.desc}</div>}
+  </a>
+  <a href={b.href} class="pad pad-red" {...attrs(b, 'b')}>
+    <div class="pad-header">
+      <div class="led led-r"></div>
+      <div class="pad-title">{b.label}</div>
+    </div>
+    {b.desc && <div class="pad-desc">{b.desc}</div>}
+  </a>
+</nav>

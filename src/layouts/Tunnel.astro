@@ -1,13 +1,13 @@
 ---
-// TUNNEL layout — the emergency flow. RULES (behavior spec §3.1):
-// no nav, no footer, no ads, no affiliate links, no book mention.
-// Nothing competes with the rescue.
+// TUNNEL layout — the emergency flow, in the original visual language:
+// top-bar (brand + blinking status), no nav, no footer links, no ads,
+// no affiliate links, no selling. Nothing competes with the rescue.
 import Analytics from '../components/Analytics.astro';
 import '../styles/global.css';
 
 interface Props {
   title: string;
-  /** e.g. "CRITICAL PATH" or "ACTIVE_TRIAGE" */
+  /** e.g. "CRITICAL_PATH" or "ACTIVE_TRIAGE" */
   status: string;
   red?: boolean;
 }
@@ -19,18 +19,23 @@ const { title, status, red = false } = Astro.props;
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>{title}</title>
   <meta name="robots" content="noindex,follow" />
   <meta name="theme-color" content="#000000" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600&display=swap" />
   <Analytics />
 </head>
 <body>
-  <main class="wrap">
-    <div class:list={['status-line', { red }]}>{status}</div>
+  <header class="top-bar">
+    <a href="/" class="brand">SAVE MY GIG</a>
+    <div class:list={['status-indicator', { green: !red }]}>{status}</div>
+  </header>
+  <main class="screen">
     <slot />
   </main>
 </body>

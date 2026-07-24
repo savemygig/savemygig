@@ -1,30 +1,30 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
 ---
-<Tunnel title="Step 3 — Format the USB | Save My Gig!" status="Critical_Path · Recovery" red>
+<Tunnel title="Step 3 — Format the USB | Save My Gig!" status="Critical · Recovery" red>
   <div class="step-label">Step 3 of 5</div>
   <h2 style="margin-bottom:1rem">USB format</h2>
 
   <p>Formatting prepares the drive so the CDJ can read it.</p>
 
   <ul class="checklist">
-    <li>Use your system's default tool, or right-click the USB drive → <strong>Format</strong>.</li>
+    <li>Right-click the USB drive → <strong>Format</strong> (or Disk Utility on Mac).</li>
     <li>Format: <span class="mono">FAT32</span> (if available) or <span class="mono">exFAT</span></li>
     <li>Name: <span class="mono">SAVEMYGIG</span> (or anything you like)</li>
     <li>Quick format: OK</li>
     <li>Scheme: <span class="mono">Master Boot Record (MBR)</span></li>
   </ul>
 
-  <div class="panel panel-warn">
-    <p style="margin:0">⚠️ <strong>Do not remove the USB during formatting.</strong></p>
+  <div class="alert-card" style="margin-bottom:1.5rem">
+    <div style="font-size:20px">⚠️</div>
+    <div><strong>Do not remove the USB during formatting.</strong></div>
   </div>
 
   <p class="question">Has the USB been successfully formatted?</p>
 
-  <a href="/protocol/critical/copy-back" class="btn btn-go" data-event="step_completed" data-step="format" data-answer="yes">
-    🟢 Yes — USB is formatted
-  </a>
-  <a href="/protocol/critical/usb-dead" class="btn btn-stop" data-event="step_completed" data-step="format" data-answer="no">
-    🔴 No — the format fails
-  </a>
+  <Choice step="format"
+    a={{ href: '/protocol/critical/copy-back', label: 'YES — USB IS FORMATTED' }}
+    b={{ href: '/protocol/critical/usb-dead', label: 'NO — THE FORMAT FAILS' }}
+  />
 </Tunnel>

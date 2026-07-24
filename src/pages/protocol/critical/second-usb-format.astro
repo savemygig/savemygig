@@ -1,32 +1,30 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
-// DRAFT — content written by Claude, pending Antonio's review (was a "(SOON)" dead end)
+import Choice from '../../../components/Choice.astro';
+// DRAFT — Antonio review pending
 ---
-<Tunnel title="Format the Second USB | Save My Gig!" status="Critical_Path · Second USB" red>
-  <div class="review-flag">DRAFT — review pending. Remove this flag after approval.</div>
-
+<Tunnel title="Format the Second USB | Save My Gig!" status="Critical · Second USB" red>
+  <div class="review-flag">DRAFT — review pending.</div>
   <div class="step-label">Step 1 of 2</div>
   <h2 style="margin-bottom:1rem">Format the second USB</h2>
 
-  <p>Good news: your original drive stays untouched. We prepare the second drive for the CDJ.</p>
+  <p>Your original drive stays untouched. We prepare the second drive for the CDJ.</p>
 
-  <div class="panel panel-warn">
-    <p style="margin:0">⚠️ <strong>This erases everything on the SECOND drive.</strong> Make sure nothing important is on it.</p>
+  <div class="alert-card" style="margin-bottom:1.5rem">
+    <div style="font-size:20px">⚠️</div>
+    <div><strong>This erases everything on the SECOND drive.</strong> Make sure nothing important is on it.</div>
   </div>
 
   <ul class="checklist">
     <li>Plug the <strong>second</strong> USB into the computer.</li>
-    <li>Right-click the drive → <strong>Format</strong> (or use Disk Utility / Disk Management).</li>
+    <li>Right-click → <strong>Format</strong> (or Disk Utility on Mac).</li>
     <li>Format: <span class="mono">FAT32</span> · Scheme: <span class="mono">MBR</span> · Quick format: OK</li>
   </ul>
 
   <p class="question">Is the second USB formatted?</p>
 
-  <a href="/protocol/critical/second-usb-copy" class="btn btn-go" data-event="step_completed" data-step="second_usb_format" data-answer="yes">
-    🟢 Yes — formatted
-  </a>
-  <a href="/protocol/critical/copy" class="btn btn-stop" data-event="step_completed" data-step="second_usb_format" data-answer="no">
-    🔴 No — it won't format
-    <small>Back to plan A: temporary copy using your original drive.</small>
-  </a>
+  <Choice step="second_usb_format"
+    a={{ href: '/protocol/critical/second-usb-copy', label: 'YES — FORMATTED' }}
+    b={{ href: '/protocol/critical/copy', label: "NO — IT WON'T FORMAT", desc: 'Back to plan A: temporary copy with your original drive.' }}
+  />
 </Tunnel>

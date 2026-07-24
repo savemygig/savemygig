@@ -1,24 +1,24 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
 ---
-<Tunnel title="Step 2 — Prepare the USB | Save My Gig!" status="Critical_Path · Recovery" red>
+<Tunnel title="Step 2 — Prepare the USB | Save My Gig!" status="Critical · Recovery" red>
   <div class="step-label">Step 2 of 5</div>
   <h2 style="margin-bottom:1rem">Prepare the USB</h2>
 
   <p>Your files are now temporarily safe on this computer.</p>
 
-  <div class="panel panel-danger">
-    <p style="margin:0">⚠️ <strong>The next step will ERASE your USB.</strong> This is irreversible. Only the tracks you copied to the computer will remain.</p>
+  <div class="alert-card" style="margin-bottom:1.5rem">
+    <div style="font-size:20px">⚠️</div>
+    <div><strong>The next step will ERASE your USB.</strong> This is irreversible. Only the tracks you copied to the computer will remain.</div>
   </div>
 
   <p>You are about to format the USB so it can be read again by CDJs.</p>
 
   <p class="question">Are you ready to erase the USB and continue?</p>
 
-  <a href="/protocol/critical/format" class="btn btn-go" data-event="step_completed" data-step="erase_consent" data-answer="yes">
-    🟢 Yes — erase the USB and continue
-  </a>
-  <a href="/protocol/critical/no-erase" class="btn btn-stop" data-event="step_completed" data-step="erase_consent" data-answer="no">
-    🔴 No — stop here
-  </a>
+  <Choice step="erase_consent"
+    a={{ href: '/protocol/critical/format', label: 'YES — ERASE AND CONTINUE' }}
+    b={{ href: '/protocol/critical/no-erase', label: 'NO — STOP HERE' }}
+  />
 </Tunnel>

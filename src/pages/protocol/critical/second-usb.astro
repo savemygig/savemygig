@@ -1,17 +1,16 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
 ---
-<Tunnel title="Second USB? | Save My Gig!" status="Critical_Path · Laptop" red>
+<Tunnel title="Second USB? | Save My Gig!" status="Critical · Laptop" red>
   <div class="step-label">Decision point</div>
   <h2 style="margin-bottom:1rem">One more question</h2>
 
   <p class="question">Do you have another USB pen-drive you can use right now?</p>
   <p class="dim">If yes, we use that one and your original stays untouched. Safer and faster.</p>
 
-  <a href="/protocol/critical/second-usb-format" class="btn btn-go" data-event="step_completed" data-step="second_usb" data-answer="yes">
-    🟢 Yes — I have another USB
-  </a>
-  <a href="/protocol/critical/copy" class="btn btn-neutral" data-event="step_completed" data-step="second_usb" data-answer="no">
-    ⚪ No — I only have this one
-  </a>
+  <Choice step="second_usb"
+    a={{ href: '/protocol/critical/second-usb-format', label: 'YES — I HAVE ANOTHER USB' }}
+    b={{ href: '/protocol/critical/copy', label: 'NO — I ONLY HAVE THIS ONE' }}
+  />
 </Tunnel>

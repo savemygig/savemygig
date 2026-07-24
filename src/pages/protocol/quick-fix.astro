@@ -1,61 +1,23 @@
 ---
 import Tunnel from '../../layouts/Tunnel.astro';
-// DRAFT — full protocol pending Interview #2 with Antonio
+import Choice from '../../components/Choice.astro';
+// DRAFT — Antonio review pending (built from logic + standard practice)
 ---
-<Tunnel title="Quick Fix Protocol (1–3 hours) | Save My Gig!" status="Quick_Fix · 1–3 hours">
-  <div class="review-flag">DRAFT — review pending. Full protocol to be refined with Antonio (Interview #2).</div>
+<Tunnel title="Quick Fix Protocol (1–3 hours) | Save My Gig!" status="Quick_Fix">
+  <div class="review-flag">DRAFT — review pending.</div>
+  <h1 style="margin-bottom:1rem">RAPID <span class="accent">DIAGNOSTIC</span></h1>
 
-  <h1 style="margin-bottom:0.5rem">RAPID <span class="accent">DIAGNOSTIC</span></h1>
-  <p class="dim" style="margin-bottom:2rem">You have 1–3 hours. Enough time to fix it properly instead of working around it. Work top to bottom — stop when it works.</p>
-
-  <div class="panel">
-    <div class="step-label">Phase 1 · Diagnose (10 min)</div>
-    <ul class="checklist">
-      <li>Plug the USB into a computer. <strong>Files visible?</strong> The drive is fine — the problem is the Rekordbox database. Go to Phase 2.</li>
-      <li><strong>Files not visible?</strong> The drive itself is failing. Skip to Phase 4.</li>
-    </ul>
+  <div class="alert-card" style="margin-bottom:1.5rem">
+    <div style="font-size:20px">🕐</div>
+    <div><strong>You have 1–3 hours.</strong> Enough time to fix it properly instead of working around it. We repair the USB and the Rekordbox database for real.</div>
   </div>
 
-  <div class="panel">
-    <div class="step-label">Phase 2 · Rebuild the database (30–45 min)</div>
-    <ul class="checklist">
-      <li>Open Rekordbox in <span class="mono">EXPORT</span> mode with the USB connected.</li>
-      <li>If Rekordbox sees the device: right-click the device → check/repair, then re-sync your playlists and eject safely.</li>
-      <li>If Rekordbox doesn't see it or errors: copy your music files off the USB to the computer first (safety), then format the USB (<span class="mono">FAT32</span> + <span class="mono">MBR</span>) and do a clean export of tonight's playlists.</li>
-      <li><strong>Export only what you need tonight</strong> — a small export finishes faster and fails less.</li>
-    </ul>
-  </div>
+  <p class="question">Do you have access to a computer with Rekordbox on it?</p>
 
-  <div class="panel">
-    <div class="step-label">Phase 3 · Verify before you leave (10 min)</div>
-    <ul class="checklist">
-      <li>Eject with Rekordbox's eject button, never by pulling the drive.</li>
-      <li>Re-insert the USB and confirm the device loads in Rekordbox with playlists intact.</li>
-      <li>If you can, test on a player at soundcheck before your slot.</li>
-    </ul>
-  </div>
+  <Choice step="qf_computer"
+    a={{ href: '/protocol/quick-fix/usb-check', label: 'YES — COMPUTER WITH REKORDBOX' }}
+    b={{ href: '/protocol/quick-fix/no-computer', label: 'NO — NOT RIGHT NOW' }}
+  />
 
-  <div class="panel">
-    <div class="step-label">Phase 4 · Drive failing? Build a fresh USB (45 min)</div>
-    <ul class="checklist">
-      <li>Do not keep re-plugging a dying drive — every mount risks more damage.</li>
-      <li>Get any other USB drive. Format it <span class="mono">FAT32</span> + <span class="mono">MBR</span>.</li>
-      <li>Export tonight's playlists from Rekordbox to the fresh drive.</li>
-      <li>No Rekordbox library on this computer? Copy raw files from backups, cloud, or purchases — you lose cues and grids, not the gig.</li>
-    </ul>
-  </div>
-
-  <p class="question">How did it end?</p>
-
-  <a href="/saved?path=quick_fix" class="btn btn-go" data-event="outcome_reached" data-outcome="saved" data-path="quick_fix">
-    🟢 Fixed — USB works
-  </a>
-  <a href="/protocol/critical" class="btn btn-neutral" data-event="step_completed" data-step="quickfix_downgrade" data-answer="time_ran_out">
-    ⏱ Time ran out — switch to critical mode
-  </a>
-  <a href="/files-lost?path=quick_fix" class="btn btn-stop" data-event="outcome_reached" data-outcome="lost" data-path="quick_fix">
-    🔴 The files are gone
-  </a>
-
-  <p style="margin-top:2rem"><a href="/emergency" class="dim" style="text-decoration:none">← Back to triage</a></p>
+  <p style="margin-top:1.5rem"><a href="/emergency" class="dim" style="text-decoration:none">← Back to triage</a></p>
 </Tunnel>

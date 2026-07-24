@@ -1,30 +1,29 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
-// DRAFT — content written by Claude, pending Antonio's review
+import Choice from '../../../components/Choice.astro';
+// DRAFT — Antonio review pending
 ---
-<Tunnel title="Copy Tracks to Second USB | Save My Gig!" status="Critical_Path · Second USB" red>
-  <div class="review-flag">DRAFT — review pending. Remove this flag after approval.</div>
-
+<Tunnel title="Copy Tracks to Second USB | Save My Gig!" status="Critical · Second USB" red>
+  <div class="review-flag">DRAFT — review pending.</div>
   <div class="step-label">Step 2 of 2</div>
   <h2 style="margin-bottom:1rem">Copy tonight's tracks across</h2>
 
-  <div class="panel panel-warn">
-    <p style="margin:0">⚠️ <strong>Do not remove either USB whilst copying.</strong></p>
+  <div class="alert-card" style="margin-bottom:1.5rem">
+    <div style="font-size:20px">⚠️</div>
+    <div><strong>Do not remove either USB whilst copying.</strong></div>
   </div>
 
   <ul class="checklist">
     <li>Plug in your <strong>original</strong> USB alongside the second one.</li>
-    <li>Copy <strong>only the tracks you need tonight</strong> from the original to the second drive.</li>
-    <li>Use Search — by artist name or date added — to find them fast.</li>
+    <li>Copy <strong>only the tracks you need tonight</strong> to the second drive.</li>
+    <li>Use Search — artist name or date added — to find them fast.</li>
     <li>Eject both drives safely when done.</li>
   </ul>
 
   <p class="question">Are tonight's tracks on the second USB?</p>
 
-  <a href="/protocol/critical/load" class="btn btn-go" data-event="step_completed" data-step="second_usb_copy" data-answer="yes">
-    🟢 Yes — let's load it on the player
-  </a>
-  <a href="/protocol/critical/fallback" class="btn btn-stop" data-event="step_completed" data-step="second_usb_copy" data-answer="no">
-    🔴 No — it's not working
-  </a>
+  <Choice step="second_usb_copy"
+    a={{ href: '/protocol/critical/load', label: 'YES — LOAD IT ON THE PLAYER' }}
+    b={{ href: '/protocol/critical/fallback', label: "NO — IT'S NOT WORKING" }}
+  />
 </Tunnel>

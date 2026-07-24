@@ -1,10 +1,10 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
-// DRAFT — content written by Claude, pending Antonio's review (was a "(SOON)" dead end)
+import Choice from '../../../components/Choice.astro';
+// DRAFT — Antonio review pending
 ---
-<Tunnel title="Keep the USB Untouched | Save My Gig!" status="Critical_Path · Safe Route" red>
-  <div class="review-flag">DRAFT — review pending. Remove this flag after approval.</div>
-
+<Tunnel title="Keep the USB Untouched | Save My Gig!" status="Critical · Safe Route" red>
+  <div class="review-flag">DRAFT — review pending.</div>
   <div class="step-label">Safe route</div>
   <h2 style="margin-bottom:1rem">OK. We don't touch your USB.</h2>
 
@@ -12,16 +12,13 @@ import Tunnel from '../../../layouts/Tunnel.astro';
 
   <ul class="checklist">
     <li>Ask the other DJs, the promoter, the bar staff — someone has a pen drive.</li>
-    <li>Even a small one works. You only need tonight's set, not your library.</li>
+    <li>Even a small one works. You only need tonight's set.</li>
   </ul>
 
   <p class="question">Did you find another USB drive?</p>
 
-  <a href="/protocol/critical/second-usb-format" class="btn btn-go" data-event="step_completed" data-step="no_erase" data-answer="found_usb">
-    🟢 Yes — got one
-  </a>
-  <a href="/protocol/critical/no-laptop-3" class="btn btn-stop" data-event="step_completed" data-step="no_erase" data-answer="no_usb">
-    🔴 No — there's no other USB here
-    <small>Survival mode: other ways to play tonight.</small>
-  </a>
+  <Choice step="no_erase"
+    a={{ href: '/protocol/critical/second-usb-format', label: 'YES — GOT ONE' }}
+    b={{ href: '/protocol/critical/no-laptop-3', label: 'NO — NO OTHER USB HERE', desc: 'Survival mode: other ways to play tonight.' }}
+  />
 </Tunnel>

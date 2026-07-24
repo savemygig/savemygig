@@ -1,5 +1,6 @@
 ---
 import Tunnel from '../../layouts/Tunnel.astro';
+import Choice from '../../components/Choice.astro';
 ---
 <Tunnel title="Critical Protocol | Save My Gig!" status="Critical_Path" red>
   <h1 class="danger" style="margin-bottom:1rem">READ BEFORE STARTING</h1>
@@ -8,24 +9,21 @@ import Tunnel from '../../layouts/Tunnel.astro';
     <ul class="checklist">
       <li><strong>You are in control.</strong> You decide every action before it happens.</li>
       <li>Results depend on the hardware state and are <strong>not guaranteed</strong>.</li>
-      <li>You can <strong>stop at any time</strong> if you feel uncomfortable with a step.</li>
+      <li>You can <strong>stop at any time</strong>.</li>
     </ul>
   </div>
 
-  <div class="panel panel-danger">
-    <p style="margin:0">🚨 <strong>Less than 60 minutes before your gig.</strong>
-    You don't have time to fix the USB. Right now the goal is simple:
-    <strong>play a set.</strong></p>
+  <div class="alert-card" style="margin-bottom:1.5rem">
+    <div style="font-size:20px">🚨</div>
+    <div><strong>Less than 60 minutes before your gig.</strong> You don't have time to fix the USB. Right now the goal is simple: <strong>play a set.</strong></div>
   </div>
 
   <p class="question">Do you have access to a computer right now?</p>
 
-  <a href="/protocol/critical/usb-check" class="btn btn-go" data-event="step_completed" data-step="critical_fork_computer" data-answer="yes">
-    💻 Yes — I have a computer
-  </a>
-  <a href="/protocol/critical/no-laptop" class="btn btn-stop" data-event="step_completed" data-step="critical_fork_computer" data-answer="no">
-    🚫 No — no computer available
-  </a>
+  <Choice step="critical_fork_computer"
+    a={{ href: '/protocol/critical/usb-check', label: '💻 YES — I HAVE A COMPUTER', desc: 'We rescue the USB with the computer.' }}
+    b={{ href: '/protocol/critical/no-laptop', label: '🚫 NO COMPUTER AVAILABLE', desc: 'We work with the players and the booth.' }}
+  />
 
-  <p style="margin-top:2rem"><a href="/emergency" class="dim" style="text-decoration:none">← Go back</a></p>
+  <p style="margin-top:1.5rem"><a href="/emergency" class="dim" style="text-decoration:none">← Go back</a></p>
 </Tunnel>

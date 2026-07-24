@@ -1,28 +1,25 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
-// DRAFT — content written by Claude, pending Antonio's review (was a "(SOON)" dead end)
+import Choice from '../../../components/Choice.astro';
+// DRAFT — Antonio review pending
 ---
-<Tunnel title="Computer Can't Read USB | Save My Gig!" status="Critical_Path · USB Check" red>
-  <div class="review-flag">DRAFT — review pending. Remove this flag after approval.</div>
-
+<Tunnel title="Computer Can't Read USB | Save My Gig!" status="Critical · USB Check" red>
+  <div class="review-flag">DRAFT — review pending.</div>
   <div class="step-label">Diagnostic</div>
   <h2 class="danger" style="margin-bottom:1rem">The computer can't read it either</h2>
 
   <p>Quick checks before we call it — 2 minutes, in order:</p>
 
   <ul class="checklist">
-    <li>Try a <strong>different USB port</strong> (avoid hubs — plug directly in).</li>
-    <li>Try <strong>another computer or phone adapter</strong> if one is nearby.</li>
-    <li>Listen and look: does the drive's light blink at all when inserted?</li>
+    <li>Try a <strong>different USB port</strong> (no hubs — plug directly in).</li>
+    <li>Try <strong>another computer or a phone adapter</strong> if one is nearby.</li>
+    <li>Watch for the drive's <strong>light</strong> when inserted.</li>
   </ul>
 
   <p class="question">Can any device see the USB now?</p>
 
-  <a href="/protocol/critical/risk" class="btn btn-go" data-event="step_completed" data-step="usb_dead_check" data-answer="recovered">
-    🟢 Yes — files are visible now
-  </a>
-  <a href="/protocol/critical/no-laptop-3" class="btn btn-stop" data-event="step_completed" data-step="usb_dead_check" data-answer="dead">
-    🔴 No — the USB is dead
-    <small>We get you playing another way first. File recovery comes after the gig.</small>
-  </a>
+  <Choice step="usb_dead_check"
+    a={{ href: '/protocol/critical/risk', label: 'YES — FILES ARE VISIBLE NOW' }}
+    b={{ href: '/protocol/critical/no-laptop-3', label: 'NO — THE USB IS DEAD', desc: 'We get you playing another way. File recovery comes after the gig.' }}
+  />
 </Tunnel>

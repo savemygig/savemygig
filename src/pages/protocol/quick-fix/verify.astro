@@ -1,0 +1,23 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+// DRAFT
+---
+<Tunnel title="Verify | Save My Gig!" status="Quick_Fix">
+  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="step-label">Final step</div>
+  <h2 style="margin-bottom:1rem">Verify before you trust it</h2>
+
+  <ul class="checklist">
+    <li>Unplug the USB, wait 5 seconds, plug it back in.</li>
+    <li>Open it in Rekordbox: device loads, playlists intact.</li>
+    <li>If you can reach a player before your set: test it there too (<span class="mono">SOURCE → USB</span>).</li>
+  </ul>
+
+  <p class="question">Does everything load correctly?</p>
+
+  <Choice step="qf_verify"
+    a={{ href: '/saved?path=quick_fix', label: "YES — I'M READY TO PLAY", event: 'outcome_reached', data: { outcome: 'saved', path: 'quick_fix' } }}
+    b={{ href: '/protocol/quick-fix/fresh-usb', label: 'NO — STILL BROKEN' }}
+  />
+</Tunnel>

@@ -1,0 +1,24 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+// DRAFT
+---
+<Tunnel title="Fresh Export | Save My Gig!" status="Quick_Fix">
+  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="step-label">Step 5</div>
+  <h2 style="margin-bottom:1rem">Export tonight's music with Rekordbox</h2>
+
+  <ul class="checklist">
+    <li>Rekordbox in <span class="mono">EXPORT</span> mode, USB connected.</li>
+    <li>Drag <strong>tonight's playlists only</strong> onto the device. Small export = fast and reliable.</li>
+    <li>No Rekordbox library on this computer? Import the music folder you backed up first, then export it.</li>
+    <li>Wait for the full sync, then eject with the Rekordbox eject button.</li>
+  </ul>
+
+  <p class="question">Export finished without errors?</p>
+
+  <Choice step="qf_export"
+    a={{ href: '/protocol/quick-fix/verify', label: 'YES — EXPORT COMPLETE' }}
+    b={{ href: '/protocol/quick-fix/fresh-usb', label: 'NO — EXPORT FAILS' }}
+  />
+</Tunnel>

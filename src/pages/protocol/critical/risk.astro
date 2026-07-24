@@ -1,22 +1,22 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
 ---
-<Tunnel title="Files Are Visible | Save My Gig!" status="Critical_Path · Laptop" red>
+<Tunnel title="Files Are Visible | Save My Gig!" status="Critical · Laptop" red>
   <div class="step-label">Decision point</div>
   <h2 class="accent" style="margin-bottom:1rem">✔️ FILES ARE VISIBLE</h2>
 
   <p>Your music is still there.</p>
 
-  <div class="panel panel-warn">
-    <p style="margin:0">⚠️ <strong>Continuing involves risk.</strong></p>
+  <div class="alert-card" style="margin-bottom:1.5rem">
+    <div style="font-size:20px">⚠️</div>
+    <div><strong>Continuing involves risk.</strong></div>
   </div>
 
   <p class="question">Are you willing to temporarily copy your files to this computer and erase your USB so you can play?</p>
 
-  <a href="/protocol/critical/second-usb" class="btn btn-go" data-event="step_completed" data-step="risk_consent" data-answer="yes">
-    🟢 Yes — temporary copy is OK
-  </a>
-  <a href="/protocol/critical/no-erase" class="btn btn-stop" data-event="step_completed" data-step="risk_consent" data-answer="no">
-    🔴 No — I can't risk that
-  </a>
+  <Choice step="risk_consent"
+    a={{ href: '/protocol/critical/second-usb', label: 'YES — TEMPORARY COPY IS OK' }}
+    b={{ href: '/protocol/critical/no-erase', label: "NO — I CAN'T RISK THAT" }}
+  />
 </Tunnel>

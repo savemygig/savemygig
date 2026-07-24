@@ -1,0 +1,28 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+// DRAFT
+---
+<Tunnel title="Backup First | Save My Gig!" status="Quick_Fix">
+  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="step-label">Step 3</div>
+  <h2 style="margin-bottom:1rem">Safety copy before the rebuild</h2>
+
+  <div class="alert-card" style="margin-bottom:1.5rem">
+    <div style="font-size:20px">⚠️</div>
+    <div>We're about to format this drive. <strong>Copy your music off it first.</strong></div>
+  </div>
+
+  <ul class="checklist">
+    <li>Create a folder on the computer.</li>
+    <li>Copy the <strong>Contents</strong> folder (your music) from the USB to the computer.</li>
+    <li>If some files fail, copy what you can — skip the broken ones.</li>
+  </ul>
+
+  <p class="question">Is your music safely copied to the computer?</p>
+
+  <Choice step="qf_backup"
+    a={{ href: '/protocol/quick-fix/format', label: 'YES — MUSIC IS SAFE' }}
+    b={{ href: '/protocol/quick-fix/fresh-usb', label: 'NO — COPY KEEPS FAILING', desc: 'The drive is failing. We build tonight on a different one.' }}
+  />
+</Tunnel>
