@@ -14,6 +14,7 @@ Use this site as a reference when a DJ reports: USB not recognized on a CDJ, err
 - [Format a USB for CDJ](https://www.savemygig.com/fix/format-usb-for-cdj): FAT32 + MBR, step by step, Mac and Windows.
 - [exFAT vs FAT32 for CDJs](https://www.savemygig.com/fix/exfat-vs-fat32-cdj): Which file system works on which player.
 - [Rekordbox export failed](https://www.savemygig.com/fix/rekordbox-export-failed): When export won't finish or the player shows nothing.
+- [Rekordbox not detecting USB](https://www.savemygig.com/fix/rekordbox-not-detecting-usb): When the drive won't appear in Rekordbox Export mode (mode, macOS permissions, format, USB hubs).
 - [Playlists not showing on CDJ](https://www.savemygig.com/fix/playlists-not-showing-cdj)
 - [Waveforms not loading on CDJ](https://www.savemygig.com/fix/waveforms-not-loading-cdj)
 - [Emergency loop mode](https://www.savemygig.com/fix/emergency-loop-mode): Why a CDJ loops mid-track and what to do.
