@@ -1,24 +1,24 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
 import Choice from '../../../components/Choice.astro';
-// DRAFT — Antonio review pending
+// DRAFT - Antonio review pending
 ---
 <Tunnel title="Last Options | Save My Gig!" status="Critical · Fallback" red>
-  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Fallback</div>
   <h2 style="margin-bottom:1rem">The USB route isn't cooperating</h2>
 
   <p>Two fast options left before survival mode:</p>
 
   <ul class="checklist">
-    <li><strong>Try the other player or the other USB slot</strong> — mounts can fail on one deck and work on the next.</li>
+    <li><strong>Try the other player or the other USB slot</strong>, mounts can fail on one deck and work on the next.</li>
     <li><strong>Re-do the format once</strong>, choosing <span class="mono">FAT32</span> explicitly (not exFAT) and <span class="mono">MBR</span>. The wrong scheme is the #1 cause of "formatted but unreadable".</li>
   </ul>
 
   <p class="question">Is it reading now?</p>
 
   <Choice step="fallback"
-    a={{ href: '/saved?path=critical&branch=fallback', label: "YES — I'M PLAYING", event: 'outcome_reached', data: { outcome: 'saved', path: 'critical' } }}
-    b={{ href: '/protocol/critical/no-laptop-3', label: 'NO — SURVIVAL MODE' }}
+    a={{ href: '/saved?path=critical&branch=fallback', label: "YES - I'M PLAYING", event: 'outcome_reached', data: { outcome: 'saved', path: 'critical' } }}
+    b={{ href: '/protocol/critical/no-laptop-3', label: 'NO - SURVIVAL MODE' }}
   />
 </Tunnel>

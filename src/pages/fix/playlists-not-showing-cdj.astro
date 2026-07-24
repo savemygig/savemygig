@@ -5,7 +5,7 @@ import ArticleCTA from '../../components/ArticleCTA.astro';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  headline: 'Playlists Not Showing on CDJ — Causes and Fixes',
+  headline: 'Playlists Not Showing on CDJ - Causes and Fixes',
   author: { '@type': 'Person', name: 'Antonio Afonso' },
   publisher: { '@type': 'Organization', name: 'Save My Gig!' },
 };
@@ -21,22 +21,22 @@ const schema = {
     <h1 style="margin-bottom:1.5rem">PLAYLISTS NOT SHOWING<br>ON THE <span class="danger">CDJ</span>?</h1>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><strong>Short version:</strong> if tracks play but playlists are missing, your music arrived — the Rekordbox database didn't. Either the export skipped it, the eject corrupted it, or the drive was filled by drag-and-drop instead of Rekordbox.</p>
+      <p style="margin:0"><strong>Short version:</strong> if tracks play but playlists are missing, your music arrived, the Rekordbox database didn't. Either the export skipped it, the eject corrupted it, or the drive was filled by drag-and-drop instead of Rekordbox.</p>
     </div>
 
     <h2 style="margin:2rem 0 1rem">Why it happens</h2>
     <ul class="checklist">
-      <li><strong>Files were dragged onto the USB in Finder/Explorer</strong> — that copies music, not the database. Playlists only exist after a Rekordbox EXPORT-mode sync.</li>
-      <li><strong>The export was interrupted or ejected unsafely</strong> — the database is written near the end of a sync; pull early and tracks survive but playlists don't.</li>
-      <li><strong>Mixed exports from two computers</strong> — a second computer's Rekordbox can overwrite the device database with its own (empty) view.</li>
+      <li><strong>Files were dragged onto the USB in Finder/Explorer</strong>, that copies music, not the database. Playlists only exist after a Rekordbox EXPORT-mode sync.</li>
+      <li><strong>The export was interrupted or ejected unsafely</strong>, the database is written near the end of a sync; pull early and tracks survive but playlists don't.</li>
+      <li><strong>Mixed exports from two computers</strong>, a second computer's Rekordbox can overwrite the device database with its own (empty) view.</li>
       <li><strong>Very old player firmware</strong> meeting a new Rekordbox database version.</li>
     </ul>
 
     <h2 style="margin:2rem 0 1rem">At the venue (5 minutes)</h2>
     <ul class="checklist">
-      <li>No laptop? Use <span class="mono">SOURCE → USB → FOLDER</span> — your music is still playable by folder, tonight is safe.</li>
+      <li>No laptop? Use <span class="mono">SOURCE → USB → FOLDER</span>, your music is still playable by folder, tonight is safe.</li>
       <li>With a laptop: open Rekordbox in <span class="mono">EXPORT</span> mode, connect the USB, drag tonight's playlists onto the device, wait for the full sync, eject with the Rekordbox button.</li>
-      <li>Re-insert on the player and check the <span class="mono">PLAYLIST</span> browse tab — not FOLDER.</li>
+      <li>Re-insert on the player and check the <span class="mono">PLAYLIST</span> browse tab, not FOLDER.</li>
     </ul>
 
     <h2 style="margin:2rem 0 1rem">The permanent fix</h2>

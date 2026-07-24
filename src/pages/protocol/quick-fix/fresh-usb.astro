@@ -4,23 +4,23 @@ import Choice from '../../../components/Choice.astro';
 // DRAFT
 ---
 <Tunnel title="Fresh Drive | Save My Gig!" status="Quick_Fix">
-  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Plan B</div>
   <h2 style="margin-bottom:1rem">Build tonight on a different drive</h2>
 
-  <p>Stop fighting the sick drive — you have time to build a healthy one.</p>
+  <p>Stop fighting the sick drive, you have time to build a healthy one.</p>
 
   <ul class="checklist">
-    <li>Get <strong>any other USB drive</strong> — borrow, buy at a petrol station, anything.</li>
+    <li>Get <strong>any other USB drive</strong>, borrow, buy at a petrol station, anything.</li>
     <li>Format it: <span class="mono">FAT32</span> + <span class="mono">MBR</span>.</li>
-    <li>Export tonight's playlists from Rekordbox — or copy the music files you backed up.</li>
+    <li>Export tonight's playlists from Rekordbox, or copy the music files you backed up.</li>
     <li>Verify: eject, replug, everything loads.</li>
   </ul>
 
   <p class="question">Is the fresh drive working?</p>
 
   <Choice step="qf_fresh_usb"
-    a={{ href: '/saved?path=quick_fix&branch=fresh_usb', label: "YES — I'M READY", event: 'outcome_reached', data: { outcome: 'saved', path: 'quick_fix' } }}
-    b={{ href: '/protocol/critical', label: 'NO — OUT OF OPTIONS OR TIME', desc: 'Switch to the critical path: workarounds and survival mode.' }}
+    a={{ href: '/saved?path=quick_fix&branch=fresh_usb', label: "YES - I'M READY", event: 'outcome_reached', data: { outcome: 'saved', path: 'quick_fix' } }}
+    b={{ href: '/protocol/critical', label: 'NO - OUT OF OPTIONS OR TIME', desc: 'Switch to the critical path: workarounds and survival mode.' }}
   />
 </Tunnel>

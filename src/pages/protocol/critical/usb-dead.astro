@@ -1,17 +1,17 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
 import Choice from '../../../components/Choice.astro';
-// DRAFT — Antonio review pending
+// DRAFT - Antonio review pending
 ---
 <Tunnel title="Computer Can't Read USB | Save My Gig!" status="Critical · USB Check" red>
-  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Diagnostic</div>
   <h2 class="danger" style="margin-bottom:1rem">The computer can't read it either</h2>
 
-  <p>Quick checks before we call it — 2 minutes, in order:</p>
+  <p>Quick checks before we call it - 2 minutes, in order:</p>
 
   <ul class="checklist">
-    <li>Try a <strong>different USB port</strong> (no hubs — plug directly in).</li>
+    <li>Try a <strong>different USB port</strong> (no hubs, plug directly in).</li>
     <li>Try <strong>another computer or a phone adapter</strong> if one is nearby.</li>
     <li>Watch for the drive's <strong>light</strong> when inserted.</li>
   </ul>
@@ -19,7 +19,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Can any device see the USB now?</p>
 
   <Choice step="usb_dead_check"
-    a={{ href: '/protocol/critical/risk', label: 'YES — FILES ARE VISIBLE NOW' }}
-    b={{ href: '/protocol/critical/no-laptop-3', label: 'NO — THE USB IS DEAD', desc: 'We get you playing another way. File recovery comes after the gig.' }}
+    a={{ href: '/protocol/critical/risk', label: 'YES - FILES ARE VISIBLE NOW' }}
+    b={{ href: '/protocol/critical/no-laptop-3', label: 'NO - THE USB IS DEAD', desc: 'We get you playing another way. File recovery comes after the gig.' }}
   />
 </Tunnel>

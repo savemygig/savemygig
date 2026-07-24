@@ -2,7 +2,7 @@
 import Tunnel from '../../../layouts/Tunnel.astro';
 import Choice from '../../../components/Choice.astro';
 ---
-<Tunnel title="Step 5 — Load on the Player | Save My Gig!" status="Critical · Recovery" red>
+<Tunnel title="Step 5 - Load on the Player | Save My Gig!" status="Critical · Recovery" red>
   <div class="step-label">Step 5 of 5</div>
   <h2 style="margin-bottom:1rem">Load music on the player</h2>
 
@@ -21,7 +21,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Can you load and play the tracks on the CDJ?</p>
 
   <Choice step="load"
-    a={{ href: '/saved?path=critical&branch=laptop', label: "YES — I'M PLAYING", event: 'outcome_reached', data: { outcome: 'saved', path: 'critical' } }}
-    b={{ href: '/protocol/critical/fallback', label: "NO — STILL WON'T READ" }}
+    a={{ href: '/saved?path=critical&branch=laptop', label: "YES - I'M PLAYING", event: 'outcome_reached', data: { outcome: 'saved', path: 'critical' } }}
+    b={{ href: '/protocol/critical/fallback', label: "NO - STILL WON'T READ" }}
   />
 </Tunnel>

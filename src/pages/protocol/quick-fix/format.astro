@@ -4,7 +4,7 @@ import Choice from '../../../components/Choice.astro';
 // DRAFT
 ---
 <Tunnel title="Clean Format | Save My Gig!" status="Quick_Fix">
-  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Step 4</div>
   <h2 style="margin-bottom:1rem">Format the USB clean</h2>
 
@@ -16,7 +16,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Formatted successfully?</p>
 
   <Choice step="qf_format"
-    a={{ href: '/protocol/quick-fix/export', label: 'YES — CLEAN AND EMPTY' }}
-    b={{ href: '/protocol/quick-fix/fresh-usb', label: 'NO — FORMAT FAILS', desc: 'A drive that won\'t format is done. Different drive.' }}
+    a={{ href: '/protocol/quick-fix/export', label: 'YES - CLEAN AND EMPTY' }}
+    b={{ href: '/protocol/quick-fix/fresh-usb', label: 'NO - FORMAT FAILS', desc: 'A drive that won\'t format is done. Different drive.' }}
   />
 </Tunnel>

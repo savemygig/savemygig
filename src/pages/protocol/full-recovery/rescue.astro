@@ -4,7 +4,7 @@ import Choice from '../../../components/Choice.astro';
 // DRAFT
 ---
 <Tunnel title="Rescue Everything | Save My Gig!" status="Full_Recovery">
-  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Step 1</div>
   <h2 style="margin-bottom:1rem">Rescue everything first</h2>
 
@@ -12,14 +12,14 @@ import Choice from '../../../components/Choice.astro';
 
   <ul class="checklist">
     <li>Create a folder on your computer: <span class="mono">USB-RESCUE</span>.</li>
-    <li>Copy <strong>everything readable</strong> from the USB into it — the whole drive, not just music.</li>
+    <li>Copy <strong>everything readable</strong> from the USB into it, the whole drive, not just music.</li>
     <li>Let it run; a slow copy is fine, an interrupted one is not.</li>
   </ul>
 
   <p class="question">Did everything copy successfully?</p>
 
   <Choice step="fr_rescue"
-    a={{ href: '/protocol/full-recovery/health', label: 'YES — FULL COPY DONE' }}
-    b={{ href: '/protocol/full-recovery/value', label: 'NO — SOME FILES FAIL', desc: 'Some data is trapped. Next question decides how hard we fight for it.' }}
+    a={{ href: '/protocol/full-recovery/health', label: 'YES - FULL COPY DONE' }}
+    b={{ href: '/protocol/full-recovery/value', label: 'NO - SOME FILES FAIL', desc: 'Some data is trapped. Next question decides how hard we fight for it.' }}
   />
 </Tunnel>

@@ -5,13 +5,13 @@ import ArticleCTA from '../../components/ArticleCTA.astro';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  headline: 'CDJ Emergency Loop Mode — What It Is and What to Do',
+  headline: 'CDJ Emergency Loop Mode - What It Is and What to Do',
   author: { '@type': 'Person', name: 'Antonio Afonso' },
   publisher: { '@type': 'Organization', name: 'Save My Gig!' },
 };
 ---
 <Base
-  title="CDJ Emergency Loop Mode — What It Is and What to Do | Save My Gig!"
+  title="CDJ Emergency Loop Mode - What It Is and What to Do | Save My Gig!"
   description="Your CDJ threw itself into an emergency loop mid-track. What Emergency Loop actually means, why the player did it, and how to get out clean."
   path="/fix/emergency-loop-mode"
   ogImage="/og/emergency-loop-mode.png"
@@ -22,12 +22,12 @@ const schema = {
     <h1 style="margin-bottom:1.5rem">CDJ <span class="danger">EMERGENCY LOOP</span>:<br />WHY IT HAPPENS, HOW TO EXIT</h1>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><strong>Short version:</strong> the player hit the end of the audio it could read and looped the last seconds instead of going silent. It's the CDJ saving your night, not ruining it — but it means the player can't read ahead, usually because the drive is struggling.</p>
+      <p style="margin:0"><strong>Short version:</strong> the player hit the end of the audio it could read and looped the last seconds instead of going silent. It's the CDJ saving your night, not ruining it, but it means the player can't read ahead, usually because the drive is struggling.</p>
     </div>
 
     <h2 style="margin:2rem 0 1rem">Why it happens</h2>
     <ul class="checklist">
-      <li>The USB is slow, failing, or was disconnected mid-read — the player ran out of buffered audio.</li>
+      <li>The USB is slow, failing, or was disconnected mid-read, the player ran out of buffered audio.</li>
       <li>A corrupt file: the track's data ends before the track does.</li>
       <li>Rarely: an overloaded drive full of huge WAVs on an older player's USB port.</li>
     </ul>
@@ -36,15 +36,15 @@ const schema = {
     <ul class="checklist">
       <li><strong>Don't yank the USB.</strong> The loop is keeping sound in the room.</li>
       <li>Load your next track on the <strong>other player</strong> (from its own source if possible) and mix out of the loop.</li>
-      <li>Once you're safe on the other deck: eject properly, reseat the drive, and watch it — one emergency loop is a warning, two is a dying drive.</li>
+      <li>Once you're safe on the other deck: eject properly, reseat the drive, and watch it, one emergency loop is a warning, two is a dying drive.</li>
       <li>If the same track always triggers it, the file is corrupt: re-download or re-export that track.</li>
     </ul>
 
     <h2 style="margin:2rem 0 1rem">After the gig</h2>
     <ul class="checklist">
       <li>Test the drive on a computer; copy everything off it while it still reads.</li>
-      <li>Full-format (FAT32 + MBR) and re-export — or retire the drive if the format struggles. <a href="/gear">Reliable replacements →</a></li>
-      <li>Emergency loops are a symptom. The disease is a single point of failure — <a href="/prepare">fix the system →</a></li>
+      <li>Full-format (FAT32 + MBR) and re-export, or retire the drive if the format struggles. <a href="/gear">Reliable replacements →</a></li>
+      <li>Emergency loops are a symptom. The disease is a single point of failure - <a href="/prepare">fix the system →</a></li>
     </ul>
 
     <ArticleCTA article="emergency_loop" />

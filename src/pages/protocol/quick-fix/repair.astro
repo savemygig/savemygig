@@ -4,23 +4,23 @@ import Choice from '../../../components/Choice.astro';
 // DRAFT
 ---
 <Tunnel title="Repair the Device | Save My Gig!" status="Quick_Fix">
-  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Step 3</div>
   <h2 style="margin-bottom:1rem">Refresh the export</h2>
 
-  <p>The device is readable — we replace tonight's data with a clean copy.</p>
+  <p>The device is readable, we replace tonight's data with a clean copy.</p>
 
   <ul class="checklist">
     <li>In Rekordbox, on the <strong>device</strong>: delete tonight's playlists.</li>
     <li>Drag tonight's playlists from your collection onto the device again (fresh sync).</li>
     <li>Wait for the sync to finish completely.</li>
-    <li>Eject with the <strong>eject button in Rekordbox</strong> — never pull the drive.</li>
+    <li>Eject with the <strong>eject button in Rekordbox</strong>, never pull the drive.</li>
   </ul>
 
   <p class="question">Did the sync finish without errors?</p>
 
   <Choice step="qf_repair"
-    a={{ href: '/protocol/quick-fix/verify', label: 'YES — SYNC COMPLETE' }}
-    b={{ href: '/protocol/quick-fix/backup', label: 'NO — ERRORS DURING SYNC', desc: 'Deeper corruption. We rebuild the drive clean.' }}
+    a={{ href: '/protocol/quick-fix/verify', label: 'YES - SYNC COMPLETE' }}
+    b={{ href: '/protocol/quick-fix/backup', label: 'NO - ERRORS DURING SYNC', desc: 'Deeper corruption. We rebuild the drive clean.' }}
   />
 </Tunnel>

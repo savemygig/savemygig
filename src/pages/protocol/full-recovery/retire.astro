@@ -4,7 +4,7 @@ import Choice from '../../../components/Choice.astro';
 // DRAFT
 ---
 <Tunnel title="Retire the Drive | Save My Gig!" status="Full_Recovery">
-  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Step 2b</div>
   <h2 style="margin-bottom:1rem">This drive is done. Retire it.</h2>
 
@@ -13,7 +13,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Do you have another USB drive to rebuild on right now?</p>
 
   <Choice step="fr_retire"
-    a={{ href: '/protocol/full-recovery/rebuild', label: 'YES — REBUILDING ON A NEW DRIVE' }}
-    b={{ href: '/prepare?from=retire', label: 'NO — I NEED PROPER DRIVES', desc: 'Go to the prevention hub: the drives worth buying and the system to run them.', event: 'outcome_reached', data: { outcome: 'prepare', path: 'full_recovery' } }}
+    a={{ href: '/protocol/full-recovery/rebuild', label: 'YES - REBUILDING ON A NEW DRIVE' }}
+    b={{ href: '/prepare?from=retire', label: 'NO - I NEED PROPER DRIVES', desc: 'Go to the prevention hub: the drives worth buying and the system to run them.', event: 'outcome_reached', data: { outcome: 'prepare', path: 'full_recovery' } }}
   />
 </Tunnel>

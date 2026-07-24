@@ -4,20 +4,20 @@ import Choice from '../../../components/Choice.astro';
 // DRAFT
 ---
 <Tunnel title="Final Verification | Save My Gig!" status="Full_Recovery">
-  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Final step</div>
   <h2 style="margin-bottom:1rem">Verify like it's gig night</h2>
 
   <ul class="checklist">
     <li>Eject properly. Unplug. Wait. Plug back in.</li>
     <li>Device loads in Rekordbox with all playlists.</li>
-    <li>Best: test on a real player (<span class="mono">SOURCE → USB</span>) — tracks load, waveforms show, cues fire.</li>
+    <li>Best: test on a real player (<span class="mono">SOURCE → USB</span>), tracks load, waveforms show, cues fire.</li>
   </ul>
 
   <p class="question">Everything solid?</p>
 
   <Choice step="fr_verify"
-    a={{ href: '/saved?path=full_recovery', label: 'YES — SOLID', event: 'outcome_reached', data: { outcome: 'saved', path: 'full_recovery' } }}
-    b={{ href: '/files-lost?path=full_recovery&branch=verify_fail', label: 'NO — PROBLEMS REMAIN', desc: 'Something deeper is wrong — the recovery route digs further.', event: 'outcome_reached', data: { outcome: 'lost', path: 'full_recovery' } }}
+    a={{ href: '/saved?path=full_recovery', label: 'YES - SOLID', event: 'outcome_reached', data: { outcome: 'saved', path: 'full_recovery' } }}
+    b={{ href: '/files-lost?path=full_recovery&branch=verify_fail', label: 'NO - PROBLEMS REMAIN', desc: 'Something deeper is wrong, the recovery route digs further.', event: 'outcome_reached', data: { outcome: 'lost', path: 'full_recovery' } }}
   />
 </Tunnel>

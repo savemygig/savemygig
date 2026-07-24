@@ -5,14 +5,14 @@ import ArticleCTA from '../../components/ArticleCTA.astro';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  headline: 'CDJ/XDJ Not Reading USB — Complete Emergency Guide',
+  headline: 'CDJ/XDJ Not Reading USB - Complete Emergency Guide',
   author: { '@type': 'Person', name: 'Antonio Afonso' },
   publisher: { '@type': 'Organization', name: 'Save My Gig!' },
 };
 ---
 <Base
   title="CDJ/XDJ Not Reading USB? Complete Emergency Guide | Save My Gig!"
-  description="Your Pioneer CDJ or XDJ won't recognize the USB drive. The fastest checks first, the real causes, and the fix — whether you play in 45 minutes or tomorrow."
+  description="Your Pioneer CDJ or XDJ won't recognize the USB drive. The fastest checks first, the real causes, and the fix, whether you play in 45 minutes or tomorrow."
   path="/fix/usb-not-recognized-cdj"
   ogImage="/og/usb-not-recognized-cdj.png"
 >
@@ -22,15 +22,15 @@ const schema = {
     <h1 style="margin-bottom:1.5rem">CDJ NOT READING YOUR <span class="danger">USB</span>?<br />DO THIS, IN THIS ORDER</h1>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><strong>Short version:</strong> most "dead" USBs at the booth are a connection, slot, or format problem — not dead files. Run the 60-second checks before you panic.</p>
+      <p style="margin:0"><strong>Short version:</strong> most "dead" USBs at the booth are a connection, slot, or format problem, not dead files. Run the 60-second checks before you panic.</p>
     </div>
 
     <h2 style="margin:2rem 0 1rem">The 60-second checks</h2>
     <ul class="checklist">
       <li>Pull the drive, wait 10 seconds, reseat it firmly.</li>
       <li>Try the second USB slot (if the player has one), then the other player.</li>
-      <li>Wipe the connector — sweat and booth grime are real causes.</li>
-      <li>Give it 30+ seconds — big libraries mount slowly, especially on older CDJ-2000s.</li>
+      <li>Wipe the connector, sweat and booth grime are real causes.</li>
+      <li>Give it 30+ seconds, big libraries mount slowly, especially on older CDJ-2000s.</li>
       <li>If nobody's playing on it: power-cycle the player and try again.</li>
     </ul>
 
@@ -38,12 +38,12 @@ const schema = {
     <ul class="checklist">
       <li><strong>Wrong format:</strong> NTFS never works; exFAT only on newer firmware; GPT partition maps confuse most players. The universal answer is <span class="mono">FAT32</span> + <span class="mono">MBR</span>.</li>
       <li><strong>Corrupt database:</strong> player sees the drive but shows an error or empty library → see <a href="/fix/cdj-error-e-8302">E-8302</a>.</li>
-      <li><strong>Dying hardware:</strong> the drive doesn't mount on a computer either. Stop plugging it in — you're making recovery harder.</li>
+      <li><strong>Dying hardware:</strong> the drive doesn't mount on a computer either. Stop plugging it in, you're making recovery harder.</li>
       <li><strong>Power-hungry drives:</strong> some SSDs and hub-style drives draw more power than a CDJ port gives. Plain quality pen drives are safer.</li>
     </ul>
 
     <h2 style="margin:2rem 0 1rem">If you play soon</h2>
-    <p>With a laptop at the venue, you can usually rescue the night: copy your essential tracks to the computer, reformat the drive FAT32/MBR, copy the tracks back, and play them from the folder view. You lose cues and sync — you keep the gig. The emergency flow below walks you through it step by step, including the no-laptop route.</p>
+    <p>With a laptop at the venue, you can usually rescue the night: copy your essential tracks to the computer, reformat the drive FAT32/MBR, copy the tracks back, and play them from the folder view. You lose cues and sync, you keep the gig. The emergency flow below walks you through it step by step, including the no-laptop route.</p>
 
     <ArticleCTA article="usb_not_recognized" />
   </main>

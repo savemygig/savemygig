@@ -1,17 +1,17 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
 import Choice from '../../../components/Choice.astro';
-// DRAFT — Antonio review pending
+// DRAFT - Antonio review pending
 ---
 <Tunnel title="Survival Mode | Save My Gig!" status="Critical · Survival" red>
-  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Step 3 of 3</div>
   <h2 style="margin-bottom:1rem">Survival mode: play without your USB</h2>
 
   <p>The USB is not coming back before your set. Stop troubleshooting. The goal now is only this: <strong>music comes out of the speakers when it's your turn.</strong></p>
 
   <ul class="checklist">
-    <li><strong>Ask the DJ before or after you.</strong> Borrow a USB — DJs help DJs, this happens to everyone.</li>
+    <li><strong>Ask the DJ before or after you.</strong> Borrow a USB - DJs help DJs, this happens to everyone.</li>
     <li><strong>Play from your phone.</strong> Ask the sound tech for a cable into a spare mixer channel.</li>
     <li><strong>Check for a booth laptop.</strong> Your USB may still read on a computer even if players refuse it.</li>
     <li><strong>Swap slots</strong> with the next DJ and use the extra time.</li>
@@ -20,7 +20,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Did you find a way to play?</p>
 
   <Choice step="survival"
-    a={{ href: '/saved?path=critical&branch=survival', label: "YES — I'M COVERED", event: 'outcome_reached', data: { outcome: 'saved', path: 'critical' } }}
-    b={{ href: '/files-lost?path=critical&branch=survival', label: 'NO — NOTHING WORKED', event: 'outcome_reached', data: { outcome: 'lost', path: 'critical' } }}
+    a={{ href: '/saved?path=critical&branch=survival', label: "YES - I'M COVERED", event: 'outcome_reached', data: { outcome: 'saved', path: 'critical' } }}
+    b={{ href: '/files-lost?path=critical&branch=survival', label: 'NO - NOTHING WORKED', event: 'outcome_reached', data: { outcome: 'lost', path: 'critical' } }}
   />
 </Tunnel>

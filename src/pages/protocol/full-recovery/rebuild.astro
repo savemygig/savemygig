@@ -4,22 +4,22 @@ import Choice from '../../../components/Choice.astro';
 // DRAFT
 ---
 <Tunnel title="Clean Rebuild | Save My Gig!" status="Full_Recovery">
-  <div class="review-flag">DRAFT — review pending.</div>
+  <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Step 3</div>
   <h2 style="margin-bottom:1rem">Rebuild it the right way</h2>
 
   <ul class="checklist">
     <li>Rekordbox in <span class="mono">EXPORT</span> mode, drive connected.</li>
     <li><strong>Re-export your playlists fresh.</strong> Never copy an old database back onto a clean drive.</li>
-    <li>Then: File → <strong>Library maintenance</strong> — remove missing files, consolidate duplicates.</li>
-    <li>Then: File → Library → <strong>Backup</strong> — to a different drive or cloud.</li>
+    <li>Then: File → <strong>Library maintenance</strong>, remove missing files, consolidate duplicates.</li>
+    <li>Then: File → Library → <strong>Backup</strong>, to a different drive or cloud.</li>
     <li>Update Rekordbox and player firmware while you're here.</li>
   </ul>
 
   <p class="question">Export + maintenance + backup all done?</p>
 
   <Choice step="fr_rebuild"
-    a={{ href: '/protocol/full-recovery/verify', label: 'YES — ALL DONE' }}
-    b={{ href: '/protocol/full-recovery/verify', label: 'EXPORT DONE — SKIPPED THE REST', desc: 'OK for today. The backup habit is what keeps you off this site.' }}
+    a={{ href: '/protocol/full-recovery/verify', label: 'YES - ALL DONE' }}
+    b={{ href: '/protocol/full-recovery/verify', label: 'EXPORT DONE - SKIPPED THE REST', desc: 'OK for today. The backup habit is what keeps you off this site.' }}
   />
 </Tunnel>

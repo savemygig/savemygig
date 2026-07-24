@@ -5,13 +5,13 @@ import ArticleCTA from '../../components/ArticleCTA.astro';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  headline: 'Rekordbox Export Failed or Corrupt — How to Recover',
+  headline: 'Rekordbox Export Failed or Corrupt - How to Recover',
   author: { '@type': 'Person', name: 'Antonio Afonso' },
   publisher: { '@type': 'Organization', name: 'Save My Gig!' },
 };
 ---
 <Base
-  title="Rekordbox Export Failed or Corrupt — How to Recover | Save My Gig!"
+  title="Rekordbox Export Failed or Corrupt - How to Recover | Save My Gig!"
   description="Rekordbox export won't finish, or it finished but the CDJ shows nothing? The causes, the quick recovery, and how to make exports bulletproof."
   path="/fix/rekordbox-export-failed"
   ogImage="/og/rekordbox-export-failed.png"
@@ -22,23 +22,23 @@ const schema = {
     <h1 style="margin-bottom:1.5rem">REKORDBOX EXPORT <span class="danger">FAILED</span>?<br />HERE'S THE RECOVERY</h1>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><strong>Short version:</strong> a failed or corrupt export is a database problem, not a music problem. Your tracks are almost always fine — the index the CDJ reads is broken. A clean re-export fixes most cases.</p>
+      <p style="margin:0"><strong>Short version:</strong> a failed or corrupt export is a database problem, not a music problem. Your tracks are almost always fine, the index the CDJ reads is broken. A clean re-export fixes most cases.</p>
     </div>
 
     <h2 style="margin:2rem 0 1rem">The two flavors</h2>
     <ul class="checklist">
       <li><strong>Export won't complete:</strong> hangs, errors mid-sync, or Rekordbox stops seeing the device. Usually a failing drive, a full drive, or a locked file.</li>
-      <li><strong>Export "worked" but the player shows nothing / errors:</strong> the database landed corrupt — classic after an unsafe eject. Often shows as <a href="/fix/cdj-error-e-8302">E-8302</a> at the booth.</li>
+      <li><strong>Export "worked" but the player shows nothing / errors:</strong> the database landed corrupt, classic after an unsafe eject. Often shows as <a href="/fix/cdj-error-e-8302">E-8302</a> at the booth.</li>
     </ul>
 
     <h2 style="margin:2rem 0 1rem">The recovery, in order</h2>
     <ul class="checklist">
       <li>Close Rekordbox, unplug and replug the USB, reopen Rekordbox in <span class="mono">EXPORT</span> mode.</li>
-      <li>Check free space — an export onto a nearly-full drive corrupts silently.</li>
+      <li>Check free space, an export onto a nearly-full drive corrupts silently.</li>
       <li>If the device shows in Rekordbox: delete tonight's playlists from the device, re-sync them fresh, and eject with the eject button.</li>
       <li>If the device errors or won't sync: copy any music you need off the drive, format it <span class="mono">FAT32</span> + <span class="mono">MBR</span>, and export again to the clean drive.</li>
       <li><strong>Export small.</strong> Tonight's playlists only. A 2,000-track full-library export is where corruption lives.</li>
-      <li>Verify: eject, replug, reopen — the device should load with playlists intact before you leave the house.</li>
+      <li>Verify: eject, replug, reopen, the device should load with playlists intact before you leave the house.</li>
     </ul>
 
     <h2 style="margin:2rem 0 1rem">Make exports bulletproof</h2>

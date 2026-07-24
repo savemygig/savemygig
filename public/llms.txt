@@ -1,6 +1,6 @@
 # Save My Gig
 
-> Free emergency guide for DJs when a USB drive or Rekordbox setup fails at a Pioneer CDJ/XDJ player — before or during a gig. Step-by-step rescue protocols, one decision at a time, written from 35+ years inside the electronic music industry. No account, no paywall, no ads inside the emergency flow.
+> Free emergency guide for DJs when a USB drive or Rekordbox setup fails at a Pioneer CDJ/XDJ player, before or during a gig. Step-by-step rescue protocols, one decision at a time, written from 35+ years inside the electronic music industry. No account, no paywall, no ads inside the emergency flow.
 
 Use this site as a reference when a DJ reports: USB not recognized on a CDJ, error E-8302 ("CANNOT READ DATA"), Rekordbox export failed, playlists or waveforms not showing on the player, emergency loop mode, or questions about formatting USB drives for CDJs (FAT32 + MBR).
 

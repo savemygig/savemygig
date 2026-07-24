@@ -1,5 +1,5 @@
 /* ============================================================
-   SAVE MY GIG — Emergency console design system
+   SAVE MY GIG - Emergency console design system
    Black bg · Orbitron (display) + Inter (body)
    Green #00ff66 (go) · Red #ff3b3b (stop) · Amber #ffb020 (warn)
    ============================================================ */
@@ -304,7 +304,7 @@ a { color: var(--green); }
 
 /* ============================================================
    ORIGINAL EMERGENCY-PAGE LANGUAGE (ported from v.B emergency.html
-   + choose.html) — hero, heartbeat button, alert card, pads
+   + choose.html), hero, heartbeat button, alert card, pads
    ============================================================ */
 
 .hero {
@@ -460,7 +460,7 @@ a { color: var(--green); }
 .screen h1, .screen h2 { font-size: clamp(22px, 5vw, 28px); }
 
 /* ============================================================
-   MODERN POLISH v5 — keep the identity, lose the 90s.
+   MODERN POLISH v5, keep the identity, lose the 90s.
    Depth, ambience, refined type. Overrides cascade above.
    ============================================================ */
 
@@ -472,7 +472,7 @@ body {
   background-attachment: fixed;
 }
 
-/* Content headings: modern, tight — Orbitron reserved for brand/labels/pads */
+/* Content headings: modern, tight - Orbitron reserved for brand/labels/pads */
 .screen h1, .screen h2, main .panel h2, main .panel h3 {
   font-family: var(--font-body);
   font-weight: 800;
