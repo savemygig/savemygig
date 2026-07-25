@@ -4,11 +4,12 @@ import Base from '../layouts/Base.astro';
 /**
  * Interactive pre-gig checklist. Prevention side, outside the tunnel.
  * Tick boxes with a live readiness meter; state persists per device.
- *   - localStorage key SMG_CHECKLIST_V1 = { itemKey: true }
- *   - localStorage key SMG_CHECKLIST_MODE = 'basic' | 'advanced'
+ *   - localStorage SMG_CHECKLIST_V1   = { itemKey: true }        (ticks)
+ *   - localStorage SMG_CHECKLIST_MODE = 'basic' | 'advanced'     (depth)
+ *   - localStorage SMG_CHECKLIST_OPEN = { groupId: false }       (collapsed)
  * Basic/Advanced toggle keeps the default list short on mobile; Advanced
- * reveals the full kit. Readiness counts only the items visible in the
- * current mode. Categories: the basics, technical, extras/add-ons.
+ * reveals the full kit. Each category collapses independently via the arrow.
+ * Readiness counts only the items visible in the current mode.
  */
 
 const groups = [
@@ -72,11 +73,10 @@ const groups = [
 ];
 
 const total = groups.reduce((n, g) => n + g.items.length, 0);
-const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level === 'basic').length, 0);
 ---
 <Base
   title="The Pre-Gig Checklist for DJs | Save My Gig!"
-  description="A tickable pre-gig checklist for DJs: the basics, the technical gear, and the life stuff you forget. Switch between a basic and a full list, track your readiness, saves on your device."
+  description="A tickable pre-gig checklist for DJs: the basics, the technical gear, and the life stuff you forget. Collapse each section, switch basic or full, track your readiness, saves on your device."
   path="/checklist"
 >
   <main class="wrap" id="top">
@@ -103,22 +103,29 @@ const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level ===
     <div id="list" data-mode="basic">
       {groups.map((g) => (
         <section class="panel task-group" data-group={g.id}>
-          <div class="group-head">
-            <h3>{g.title}</h3>
-            <span class="group-count" data-count={g.id}>0/0</span>
+          <h3 class="group-h">
+            <button type="button" class="group-toggle" data-toggle={g.id} aria-expanded="true" aria-controls={`body-${g.id}`}>
+              <span class="group-title">{g.title}</span>
+              <span class="group-meta">
+                <span class="group-count" data-count={g.id}>0/0</span>
+                <span class="chev" aria-hidden="true"></span>
+              </span>
+            </button>
+          </h3>
+          <div class="group-body" id={`body-${g.id}`}>
+            <p class="dim group-blurb">{g.blurb}</p>
+            <ul class="tasks">
+              {g.items.map((it) => (
+                <li class="task" data-level={it.level}>
+                  <label>
+                    <input type="checkbox" data-key={it.key} data-level={it.level} />
+                    <span class="box" aria-hidden="true"></span>
+                    <span class="task-label">{it.label}</span>
+                  </label>
+                </li>
+              ))}
+            </ul>
           </div>
-          <p class="dim group-blurb">{g.blurb}</p>
-          <ul class="tasks">
-            {g.items.map((it) => (
-              <li class="task" data-level={it.level}>
-                <label>
-                  <input type="checkbox" data-key={it.key} data-level={it.level} />
-                  <span class="box" aria-hidden="true"></span>
-                  <span class="task-label">{it.label}</span>
-                </label>
-              </li>
-            ))}
-          </ul>
         </section>
       ))}
     </div>
@@ -182,12 +189,7 @@ const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level ===
     top: 0.5rem;
     z-index: 5;
   }
-  .readiness-top {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-  }
+  .readiness-top { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
   .readiness-label {
     font-family: var(--font-body);
     font-weight: 600;
@@ -214,24 +216,37 @@ const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level ===
     overflow: hidden;
     margin: 0.9rem 0 0.7rem;
   }
-  .meter-fill {
-    height: 100%;
-    width: 0%;
-    background: var(--green);
-    border-radius: 999px;
-    transition: width 0.3s ease;
-  }
+  .meter-fill { height: 100%; width: 0%; background: var(--green); border-radius: 999px; transition: width 0.3s ease; }
   .readiness-sub { margin: 0; font-size: 0.85rem; color: var(--text-dim); }
   .readiness.is-ready .readiness-sub { color: var(--green); }
 
-  .task-group { padding-bottom: 0.6rem; }
-  .group-head {
+  .task-group { padding: 0; overflow: hidden; }
+
+  /* Collapsible header is a full-width button living inside the h3. */
+  .group-h { margin: 0; }
+  .group-toggle {
+    width: 100%;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    padding: 1.3rem 1.5rem;
+    font: inherit;
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
   }
-  .group-head h3 { margin: 0; }
+  .group-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.1rem, 3.6vw, 1.35rem);
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .group-meta { display: inline-flex; align-items: center; gap: 0.85rem; flex: 0 0 auto; }
   .group-count {
     font-family: var(--font-body);
     font-weight: 600;
@@ -241,7 +256,22 @@ const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level ===
     white-space: nowrap;
   }
   .group-count.done { color: var(--green); }
-  .group-blurb { margin: 0.35rem 0 0.4rem; font-size: 0.92rem; }
+  .chev {
+    width: 9px; height: 9px;
+    border-right: 2px solid var(--text-dim);
+    border-bottom: 2px solid var(--text-dim);
+    transform: rotate(45deg);           /* points down when expanded */
+    margin-top: -3px;
+    transition: transform 0.2s ease;
+    flex: 0 0 auto;
+  }
+  .group-toggle:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+
+  .group-body { padding: 0 1.5rem 1.1rem; }
+  .task-group.collapsed .group-body { display: none; }
+  .task-group.collapsed .chev { transform: rotate(-45deg); } /* points right when collapsed */
+
+  .group-blurb { margin: 0 0 0.4rem; font-size: 0.92rem; }
 
   .tasks { list-style: none; margin: 0.4rem 0 0; padding: 0; }
   .task { border-bottom: 1px solid var(--edge-soft); }
@@ -272,10 +302,8 @@ const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level ===
   .box::after {
     content: '';
     position: absolute;
-    left: 8px;
-    top: 4px;
-    width: 6px;
-    height: 11px;
+    left: 8px; top: 4px;
+    width: 6px; height: 11px;
     border: solid #0a0a0b;
     border-width: 0 2.5px 2.5px 0;
     transform: rotate(45deg) scale(0);
@@ -284,12 +312,7 @@ const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level ===
   .task input:checked + .box { background: var(--green); border-color: var(--green); }
   .task input:checked + .box::after { transform: rotate(45deg) scale(1); }
   .task input:focus-visible + .box { outline: 2px solid var(--green); outline-offset: 2px; }
-  .task-label {
-    font-size: 1rem;
-    line-height: 1.45;
-    color: var(--text);
-    transition: color 0.15s ease;
-  }
+  .task-label { font-size: 1rem; line-height: 1.45; color: var(--text); transition: color 0.15s ease; }
   .task input:checked ~ .task-label {
     color: var(--text-faint);
     text-decoration: line-through;
@@ -302,13 +325,14 @@ const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level ===
   .top-actions .btn { width: auto; display: inline-block; margin: 0; }
 
   @media (prefers-reduced-motion: reduce) {
-    .meter-fill, .box, .box::after, .readiness-pct, .mode-btn { transition: none; }
+    .meter-fill, .box, .box::after, .readiness-pct, .mode-btn, .chev { transition: none; }
   }
 </style>
 
 <script>
   const STORE_KEY = 'SMG_CHECKLIST_V1';
   const MODE_KEY = 'SMG_CHECKLIST_MODE';
+  const OPEN_KEY = 'SMG_CHECKLIST_OPEN';
 
   const listEl = document.getElementById('list');
   const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
@@ -318,20 +342,24 @@ const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level ===
   const readinessEl = document.getElementById('readiness');
   const hintEl = document.getElementById('modeHint');
   const modeBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('.mode-btn'));
+  const toggles = Array.from(document.querySelectorAll<HTMLButtonElement>('.group-toggle'));
 
   let mode: string = 'basic';
 
   function load(): Record<string, boolean> {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch (e) { return {}; }
+    try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : {}; }
+    catch (e) { return {}; }
   }
   function save(state: Record<string, boolean>) {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* storage blocked */ }
   }
-  function saveMode(m: string) {
-    try { localStorage.setItem(MODE_KEY, m); } catch (e) { /* storage blocked */ }
+  function saveMode(m: string) { try { localStorage.setItem(MODE_KEY, m); } catch (e) { /* blocked */ } }
+  function loadOpen(): Record<string, boolean> {
+    try { const raw = localStorage.getItem(OPEN_KEY); return raw ? JSON.parse(raw) : {}; }
+    catch (e) { return {}; }
+  }
+  function saveOpen(o: Record<string, boolean>) {
+    try { localStorage.setItem(OPEN_KEY, JSON.stringify(o)); } catch (e) { /* blocked */ }
   }
 
   function isVisible(box: HTMLInputElement): boolean {
@@ -378,6 +406,17 @@ const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level ===
     render();
   }
 
+  function setGroupOpen(section: HTMLElement, open: boolean, persist: boolean) {
+    section.classList.toggle('collapsed', !open);
+    const btn = section.querySelector<HTMLButtonElement>('.group-toggle');
+    if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (persist) {
+      const o = loadOpen();
+      o[section.getAttribute('data-group') || ''] = open;
+      saveOpen(o);
+    }
+  }
+
   // restore checks
   const state = load();
   boxes.forEach((b) => {
@@ -391,15 +430,28 @@ const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level ===
     });
   });
 
-  // wire mode buttons
+  // mode buttons
   modeBtns.forEach((b) => b.addEventListener('click', () => setMode(b.dataset.modeSet || 'basic')));
+
+  // collapse toggles (restore open state, default open)
+  const openState = loadOpen();
+  toggles.forEach((btn) => {
+    const section = btn.closest('.task-group') as HTMLElement;
+    const gid = section.getAttribute('data-group') || '';
+    const open = openState[gid] !== false; // default true
+    setGroupOpen(section, open, false);
+    btn.addEventListener('click', () => {
+      const nowOpen = section.classList.contains('collapsed'); // collapsed -> will open
+      setGroupOpen(section, nowOpen, true);
+    });
+  });
 
   // restore mode
   let savedMode = 'basic';
   try { savedMode = localStorage.getItem(MODE_KEY) || 'basic'; } catch (e) { /* ignore */ }
   setMode(savedMode === 'advanced' ? 'advanced' : 'basic');
 
-  // reset
+  // reset (ticks only, leaves sections and mode as they are)
   const resetBtn = document.getElementById('resetBtn');
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
