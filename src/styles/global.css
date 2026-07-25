@@ -418,3 +418,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, .pad:focus-visible, 
    is not shown to visitors. To bring them back for a review pass,
    change display:none to display:block here. */
 .review-flag { display: none; }
+
+/* ---------- Tunnel: small print that must never compete with the decision ---------- */
+.tunnel-note {
+  margin-top: 1.5rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-faint);
+}

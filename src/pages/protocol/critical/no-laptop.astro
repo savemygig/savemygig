@@ -6,21 +6,19 @@ import Choice from '../../../components/Choice.astro';
 <Tunnel title="No Computer - Player Checks | Save My Gig!" status="Critical · No Laptop" red>
   <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Step 1 of 3</div>
-  <h2 style="margin-bottom:1rem">🚫 No computer. We work with the booth.</h2>
-
-  <p>Most "dead" USBs at the booth are a connection or slot issue, not a dead drive. Fastest checks first:</p>
+  <h2 style="margin-bottom:1.25rem">Work the booth</h2>
 
   <ul class="checklist">
-    <li><strong>Pull the USB out and reseat it firmly.</strong> Wait 10 seconds before re-inserting.</li>
-    <li>Try the <strong>other USB slot</strong> on the same player (if it has two).</li>
-    <li>Try the <strong>other player</strong>. If it reads there, play from that deck and use Link.</li>
-    <li>Check the USB tip for <strong>dirt or sweat</strong>, wipe it, try again.</li>
+    <li>Pull the USB out. Wait 10 seconds. Push it back in firmly.</li>
+    <li>Try the <strong>other slot</strong> on the same player.</li>
+    <li>Try the <strong>other player</strong>. If it reads, play from there and use Link.</li>
+    <li>Wipe the USB tip. Sweat and dirt are real causes.</li>
   </ul>
 
-  <p class="question">Does any player read the USB now?</p>
+  <p class="question">Does any player read it now?</p>
 
   <Choice step="no_laptop_1"
-    a={{ href: '/saved?path=critical&branch=no_laptop', label: "YES - IT'S READING", event: 'outcome_reached', data: { outcome: 'saved', path: 'critical' } }}
-    b={{ href: '/protocol/critical/no-laptop-2', label: 'NO - STILL NOTHING' }}
+    a={{ href: '/saved?path=critical&branch=no_laptop', label: 'YES, IT IS READING', event: 'outcome_reached', data: { outcome: 'saved', path: 'critical' } }}
+    b={{ href: '/protocol/critical/no-laptop-2', label: 'NO, STILL NOTHING' }}
   />
 </Tunnel>
