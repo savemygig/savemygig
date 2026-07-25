@@ -73,36 +73,38 @@ const html = `<!doctype html>
 <style>
   @page { size: A4; margin: 0; }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  html, body { background: #0a0a0b; color: #f3f1ec; font-family: 'Inter', Arial, sans-serif; }
+  /* Print-friendly: white background, ink-light, readable in B&W or colour. */
+  html, body { background: #ffffff; color: #14110e; font-family: 'Inter', Arial, sans-serif; }
   .page { width: 210mm; height: 297mm; padding: 13mm 13mm 10mm; display: flex; flex-direction: column; }
-  .top { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid #2a2723; padding-bottom: 9px; margin-bottom: 12px; }
-  .brand { font-weight: 700; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #ff4d2e; margin-bottom: 6px; }
-  h1 { font-family: 'Archivo', 'Arial Black', sans-serif; font-weight: 900; font-size: 30px; line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase; }
-  h1 .a { color: #ff4d2e; }
+  .top { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #14110e; padding-bottom: 9px; margin-bottom: 12px; }
+  .brand { font-weight: 700; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #d9381a; margin-bottom: 6px; }
+  h1 { font-family: 'Archivo', 'Arial Black', sans-serif; font-weight: 900; font-size: 30px; line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase; color: #14110e; }
+  h1 .a { color: #d9381a; }
   .url { text-align: right; }
-  .url .u { font-family: 'Archivo', 'Arial Black', sans-serif; font-weight: 800; font-size: 15px; color: #f3f1ec; }
-  .url .s { font-size: 9.5px; color: #9a978f; margin-top: 3px; }
-  .lede { font-size: 12px; color: #9a978f; margin-bottom: 18px; }
-  .lede b { color: #f3f1ec; }
+  .url .u { font-family: 'Archivo', 'Arial Black', sans-serif; font-weight: 800; font-size: 15px; color: #14110e; }
+  .url .s { font-size: 9.5px; color: #6b6b6b; margin-top: 3px; }
+  .lede { font-size: 12px; color: #5a5750; margin-bottom: 18px; }
+  .lede b { color: #14110e; }
   .cols { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12mm; flex: 1; align-content: start; }
   .col { display: flex; flex-direction: column; }
   .cat { margin-bottom: 20px; }
   .cat-head { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
-  .cat-head .tick { width: 14px; height: 3px; background: #ff4d2e; display: inline-block; }
-  h2 { font-family: 'Archivo', 'Arial Black', sans-serif; font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 0.01em; }
+  .cat-head .tick { width: 14px; height: 3px; background: #d9381a; display: inline-block; }
+  h2 { font-family: 'Archivo', 'Arial Black', sans-serif; font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 0.01em; color: #14110e; }
   ul { list-style: none; }
-  li { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; font-size: 12.3px; line-height: 1.34; color: #cfccc4; }
-  li.ess { color: #f3f1ec; font-weight: 700; }
-  .box { flex: 0 0 auto; width: 14px; height: 14px; border: 1.5px solid #6a665f; border-radius: 2px; margin-top: 1.5px; }
-  li.ess .box { border-color: #f3f1ec; }
-  .tip { border: 1px solid #2a2723; background: #151413; border-radius: 2px; padding: 13px 15px; margin-top: 4px; }
-  .tip h3 { font-family: 'Archivo', 'Arial Black', sans-serif; font-weight: 800; font-size: 12px; text-transform: uppercase; color: #3ad884; margin-bottom: 6px; }
-  .tip p { font-size: 11px; line-height: 1.45; color: #9a978f; }
+  li { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; font-size: 12.3px; line-height: 1.34; color: #33302b; }
+  li.ess { color: #14110e; font-weight: 700; }
+  .box { flex: 0 0 auto; width: 14px; height: 14px; border: 1.5px solid #8a8681; border-radius: 2px; margin-top: 1.5px; }
+  li.ess .box { border-color: #14110e; border-width: 2px; }
+  .tip { border: 1px solid #d9d6d0; background: #f6f5f2; border-radius: 2px; padding: 13px 15px; margin-top: 4px; }
+  .tip h3 { font-family: 'Archivo', 'Arial Black', sans-serif; font-weight: 800; font-size: 12px; text-transform: uppercase; color: #14110e; margin-bottom: 6px; }
+  .tip h3 span { color: #d9381a; }
+  .tip p { font-size: 11px; line-height: 1.45; color: #5a5750; }
   .notes { margin-top: 8px; }
-  .notes .nlabel { font-family: 'Archivo', 'Arial Black', sans-serif; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #6a665f; margin-bottom: 12px; }
-  .notes .rule { border-bottom: 1px solid #221f1c; height: 26px; }
-  .foot { border-top: 1px solid #2a2723; padding-top: 9px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 9.5px; color: #6a665f; }
-  .foot .fu { color: #ff4d2e; font-weight: 700; letter-spacing: 0.04em; }
+  .notes .nlabel { font-family: 'Archivo', 'Arial Black', sans-serif; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8681; margin-bottom: 12px; }
+  .notes .rule { border-bottom: 1px solid #cfccc6; height: 26px; }
+  .foot { border-top: 1px solid #d9d6d0; padding-top: 9px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 9.5px; color: #8a8681; }
+  .foot .fu { color: #d9381a; font-weight: 700; letter-spacing: 0.04em; }
 </style></head>
 <body>
   <div class="page">
@@ -125,7 +127,7 @@ const html = `<!doctype html>
       <div class="col">
         ${cat(byId.technical)}
         <div class="tip">
-          <h3>The four that prevent most disasters</h3>
+          <h3>The <span>four</span> that prevent most disasters</h3>
           <p>Two identical drives. FAT32 with MBR. Re-exported and tested before you leave. Library backed up. Do these four and the rest is comfort.</p>
         </div>
       </div>
