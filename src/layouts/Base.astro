@@ -43,6 +43,22 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
   <slot name="head" />
 </head>
 <body>
+  <header class="site-nav-wrap">
+    <div class="site-nav">
+      <a href="/" class="nav-brand">Save My Gig<span class="accent">!</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <nav class="nav-links" id="navLinks" aria-label="Site">
+        <a href="/emergency">Emergency</a>
+        <a href="/prepare">Prevention</a>
+        <a href="/checklist">Checklist</a>
+        <a href="/gear">Gear</a>
+        <a href="/recovery">Recovery</a>
+        <a href="/about">About</a>
+      </nav>
+    </div>
+  </header>
   <slot />
   <footer class="site-footer">
     <div class="foot-links">
@@ -56,5 +72,53 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
     <p>Save My Gig! · Built by a DJ who's been there. · <a href="https://buymeacoffee.com/savemygig" data-event="affiliate_click" data-program="bmc" data-placement="footer">Buy me a coffee ☕</a> · <a href="/privacy">Privacy</a></p>
   </footer>
   <Consent />
+  <script>
+    const t = document.getElementById('navToggle');
+    const l = document.getElementById('navLinks');
+    if (t && l) {
+      t.addEventListener('click', () => {
+        const open = l.classList.toggle('open');
+        t.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
+  </script>
 </body>
 </html>
+
+<style is:global>
+  .site-nav-wrap { border-bottom: 1px solid var(--edge-soft); }
+  .site-nav {
+    max-width: 1100px; margin: 0 auto; padding: 0.85rem 1.25rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: relative;
+  }
+  .nav-brand {
+    font-family: var(--font-display); font-weight: 900; font-size: 1.05rem;
+    text-transform: uppercase; letter-spacing: -0.01em; color: var(--text); text-decoration: none;
+  }
+  .nav-brand .accent { color: var(--red); }
+  .nav-links { display: flex; gap: 1.5rem; }
+  .nav-links a {
+    font-family: var(--font-body); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.15s ease;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-toggle {
+    display: none; width: 42px; height: 38px; background: transparent;
+    border: 1px solid var(--edge); border-radius: var(--radius);
+    flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; padding: 0;
+  }
+  .nav-toggle .bar { width: 18px; height: 2px; background: var(--text); display: block; }
+  .nav-toggle:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+  @media (max-width: 640px) {
+    .nav-toggle { display: flex; }
+    .nav-links {
+      display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 30;
+      flex-direction: column; gap: 0; background: var(--surf);
+      border-bottom: 1px solid var(--edge); padding: 0.25rem 1.25rem 0.75rem;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 0.8rem 0; border-bottom: 1px solid var(--edge-soft); font-size: 0.95rem; }
+    .nav-links a:last-child { border-bottom: none; }
+  }
+</style>
