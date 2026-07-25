@@ -1,0 +1,182 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Dedicated feedback page. The form used to live in the global footer on every
+// page, which was heavy and read badly. Now the footer just links here, and the
+// form has room to breathe. Posts to /api/feedback (Brevo -> savemygig@gmail.com).
+// noindex: utility page, no SEO value.
+---
+<Base
+  title="Send feedback | Save My Gig"
+  description="Got an idea or found a bug on Save My Gig? Tell us. Suggestion, bug, anything. Leave your Instagram and we follow you back."
+  path="/feedback"
+  noindex={true}
+>
+  <main class="wrap fb-page">
+    <p class="status-line">FEEDBACK</p>
+    <h1 class="fb-h1">Got an idea?<br /><span class="accent">Found a bug?</span></h1>
+    <p class="fb-lead">
+      Suggestion, bug, anything at all. This is a project built by a DJ, and it gets better every time
+      someone tells us what is missing. Leave your Instagram and we follow you back.
+    </p>
+
+    <form class="fbp-form" id="fbForm" novalidate>
+      <label class="fbp-label" for="fb-type">What is this?</label>
+      <div class="fbp-seg" role="tablist" aria-label="Feedback type">
+        <input type="radio" name="type" id="t-sug" value="Suggestion" checked />
+        <label for="t-sug">Suggestion</label>
+        <input type="radio" name="type" id="t-bug" value="Bug" />
+        <label for="t-bug">Bug</label>
+        <input type="radio" name="type" id="t-oth" value="Other" />
+        <label for="t-oth">Other</label>
+      </div>
+
+      <label class="fbp-label" for="fb-msg">Your message</label>
+      <textarea id="fb-msg" name="message" class="fbp-input fbp-msg" rows="5"
+        placeholder="What is on your mind? The more specific, the better." required></textarea>
+
+      <label class="fbp-label" for="fb-ig">Your Instagram <span class="fbp-hint">(so we can follow you back)</span></label>
+      <input type="text" id="fb-ig" name="instagram" class="fbp-input" placeholder="@your.instagram" autocomplete="off" />
+
+      <div class="fbp-row">
+        <div class="fbp-col">
+          <label class="fbp-label" for="fb-name">Name <span class="fbp-hint">(optional)</span></label>
+          <input type="text" id="fb-name" name="name" class="fbp-input" placeholder="What do we call you?" autocomplete="name" />
+        </div>
+        <div class="fbp-col">
+          <label class="fbp-label" for="fb-email">Email <span class="fbp-hint">(optional, if you want a reply)</span></label>
+          <input type="email" id="fb-email" name="email" class="fbp-input" placeholder="you@email.com" autocomplete="email" />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-solid fbp-send">Send it</button>
+      <p class="fbp-status" id="fbStatus" role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="fbp-done" id="fbDone" hidden>
+      <div class="fbp-done-mark" aria-hidden="true">✓</div>
+      <h2 class="fbp-done-h">Got it. Thank you.</h2>
+      <p class="fbp-done-p">We read every single one. If you left your Instagram, expect a follow.</p>
+      <div class="fbp-done-btns">
+        <a href="/" class="btn btn-ghost">Back home</a>
+        <button type="button" class="btn btn-ghost" id="fbAnother">Send another</button>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style is:global>
+  .fb-page { max-width: var(--site-w); }
+  .fb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.9rem; }
+  .fb-lead { color: var(--text-dim); font-size: 1rem; line-height: 1.6; max-width: 40rem; margin-bottom: 2.2rem; }
+
+  .fbp-form { display: flex; flex-direction: column; }
+  .fbp-label {
+    font-family: var(--font-body); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--text); margin: 1.3rem 0 0.5rem;
+  }
+  .fbp-label:first-child { margin-top: 0; }
+  .fbp-hint { color: var(--text-faint); font-weight: 500; text-transform: none; letter-spacing: 0; font-size: 0.78rem; }
+
+  /* Segmented type control, big and tappable. */
+  .fbp-seg { display: flex; gap: 0; border: 1px solid var(--edge); border-radius: var(--radius); overflow: hidden; width: fit-content; max-width: 100%; }
+  .fbp-seg input { position: absolute; opacity: 0; pointer-events: none; }
+  .fbp-seg label {
+    font-family: var(--font-display); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.02em;
+    text-transform: uppercase; color: var(--text-dim); background: var(--surf);
+    padding: 0.7rem 1.3rem; cursor: pointer; border-right: 1px solid var(--edge);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .fbp-seg label:last-of-type { border-right: none; }
+  .fbp-seg input:checked + label { background: var(--red); color: #0a0a0b; }
+  .fbp-seg input:focus-visible + label { outline: 2px solid var(--red); outline-offset: 2px; }
+
+  .fbp-input {
+    width: 100%; padding: 0.85rem 1rem; font-family: inherit; font-size: 16px; color: var(--text);
+    background: var(--bg); border: 1px solid var(--edge); border-radius: var(--radius);
+  }
+  .fbp-input::placeholder { color: var(--text-faint); }
+  .fbp-input:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; border-color: var(--red); }
+  .fbp-msg { resize: vertical; min-height: 7rem; line-height: 1.55; }
+
+  .fbp-row { display: flex; gap: 1rem; }
+  .fbp-col { flex: 1; display: flex; flex-direction: column; }
+
+  .fbp-send { width: 100%; margin-top: 1.8rem; }
+  .fbp-status { margin: 0.9rem 0 0; font-size: 0.9rem; color: var(--text-dim); min-height: 1.2rem; }
+  .fbp-status:empty { display: none; }
+  .fbp-status.ok { color: var(--green); }
+  .fbp-status.err { color: var(--red); }
+
+  .fbp-done { text-align: center; padding: 2rem 0; }
+  .fbp-done-mark {
+    width: 56px; height: 56px; margin: 0 auto 1.1rem; border-radius: 50%;
+    background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green);
+    display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 700;
+  }
+  .fbp-done-h { font-size: clamp(1.6rem, 6vw, 2.2rem); margin-bottom: 0.6rem; }
+  .fbp-done-p { color: var(--text-dim); max-width: 28rem; margin: 0 auto 1.6rem; }
+  .fbp-done-btns { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 520px) {
+    .fbp-row { flex-direction: column; gap: 0; }
+    .fbp-seg { width: 100%; }
+    .fbp-seg label { flex: 1; text-align: center; padding: 0.7rem 0.4rem; }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('fbForm');
+  const statusEl = document.getElementById('fbStatus');
+  const done = document.getElementById('fbDone');
+  const another = document.getElementById('fbAnother');
+
+  if (form) {
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const fd = new FormData(form);
+      const message = (fd.get('message') || '').toString().trim();
+      if (!message) {
+        if (statusEl) { statusEl.textContent = 'Add a message first.'; statusEl.className = 'fbp-status err'; }
+        return;
+      }
+      const btn = form.querySelector('button[type="submit"]');
+      if (btn) { btn.setAttribute('disabled', 'true'); btn.textContent = 'Sending...'; }
+      if (statusEl) { statusEl.textContent = ''; statusEl.className = 'fbp-status'; }
+      try {
+        const res = await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            type: fd.get('type') || 'Other', message,
+            name: fd.get('name'), email: fd.get('email'),
+            instagram: fd.get('instagram'), page: 'feedback',
+          }),
+        });
+        const data = await res.json();
+        if (data && data.ok) {
+          form.hidden = true;
+          if (done) done.hidden = false;
+          done && done.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          if (statusEl) { statusEl.textContent = 'Could not send right now. Try again in a minute.'; statusEl.className = 'fbp-status err'; }
+          if (btn) { btn.removeAttribute('disabled'); btn.textContent = 'Send it'; }
+        }
+      } catch (e) {
+        if (statusEl) { statusEl.textContent = 'No connection. Try again later.'; statusEl.className = 'fbp-status err'; }
+        if (btn) { btn.removeAttribute('disabled'); btn.textContent = 'Send it'; }
+      }
+    });
+  }
+  if (another) {
+    another.addEventListener('click', () => {
+      form.reset();
+      if (done) done.hidden = true;
+      if (form) form.hidden = false;
+      const btn = form.querySelector('button[type="submit"]');
+      if (btn) { btn.removeAttribute('disabled'); btn.textContent = 'Send it'; }
+      if (statusEl) { statusEl.textContent = ''; statusEl.className = 'fbp-status'; }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+</script>

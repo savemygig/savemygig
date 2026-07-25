@@ -89,25 +89,9 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
     </div>
 
     <div class="foot-feedback">
-      <p class="foot-feedback-h">Got an idea or found a bug? Help us make it better.</p>
-      <p class="foot-feedback-sub">Suggestion, bug, anything. Leave your Instagram and we will follow you back.</p>
-      <form class="fb-form" id="fbForm" novalidate>
-        <div class="fb-row">
-          <select name="type" class="fb-input fb-type" aria-label="Feedback type">
-            <option value="Suggestion">Suggestion</option>
-            <option value="Bug">Bug</option>
-            <option value="Other">Other</option>
-          </select>
-          <input type="text" name="instagram" class="fb-input" placeholder="@your.instagram (optional)" aria-label="Your Instagram" />
-        </div>
-        <textarea name="message" class="fb-input fb-msg" rows="3" placeholder="What is on your mind?" aria-label="Your message" required></textarea>
-        <div class="fb-row">
-          <input type="text" name="name" class="fb-input" placeholder="Name (optional)" aria-label="Your name" />
-          <input type="email" name="email" class="fb-input" placeholder="Email (optional)" aria-label="Your email" />
-        </div>
-        <button type="submit" class="btn btn-solid fb-send">Send it</button>
-        <p class="fb-msg-status" id="fbStatus" role="status" aria-live="polite"></p>
-      </form>
+      <p class="foot-feedback-h">Got an idea or found a bug?</p>
+      <p class="foot-feedback-sub">Suggestion, bug, anything. Leave your Instagram and we follow you back.</p>
+      <a href="/feedback" class="btn btn-ghost foot-feedback-btn">Send feedback</a>
     </div>
     <div class="foot-links">
       <a href="/emergency">Emergency Mode</a>
@@ -141,40 +125,6 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
       });
     }
 
-    const fbForm = document.getElementById('fbForm');
-    const fbStatus = document.getElementById('fbStatus');
-    if (fbForm) {
-      fbForm.addEventListener('submit', async (ev) => {
-        ev.preventDefault();
-        const fd = new FormData(fbForm);
-        const message = (fd.get('message') || '').toString().trim();
-        if (!message) {
-          if (fbStatus) { fbStatus.textContent = 'Add a message first.'; fbStatus.className = 'fb-msg-status err'; }
-          return;
-        }
-        if (fbStatus) { fbStatus.textContent = 'Sending...'; fbStatus.className = 'fb-msg-status'; }
-        try {
-          const res = await fetch('/api/feedback', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({
-              type: fd.get('type'), message,
-              name: fd.get('name'), email: fd.get('email'),
-              instagram: fd.get('instagram'), page: location.pathname,
-            }),
-          });
-          const data = await res.json();
-          if (data && data.ok) {
-            fbForm.reset();
-            if (fbStatus) { fbStatus.textContent = 'Thank you. We read every one.'; fbStatus.className = 'fb-msg-status ok'; }
-          } else if (fbStatus) {
-            fbStatus.textContent = 'Could not send right now. Try again in a minute.'; fbStatus.className = 'fb-msg-status err';
-          }
-        } catch (e) {
-          if (fbStatus) { fbStatus.textContent = 'No connection. Try again later.'; fbStatus.className = 'fb-msg-status err'; }
-        }
-      });
-    }
   </script>
 </body>
 </html>
@@ -194,27 +144,12 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
   }
   .share-btn svg { flex: 0 0 auto; }
   .share-btn:hover { border-color: var(--text-dim); color: var(--text); background: var(--surf-2); }
-  .foot-feedback { max-width: 30rem; margin: 1.8rem auto 0; }
+  .foot-feedback { max-width: 30rem; margin: 1.8rem auto 0; display: flex; flex-direction: column; align-items: center; }
   .foot-feedback-h { font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--text); margin: 0 0 0.2rem; text-align: center; }
   .foot-feedback-sub { font-size: 0.82rem; color: var(--text-dim); margin: 0 0 0.9rem; text-align: center; }
-  .fb-form { display: flex; flex-direction: column; gap: 0.5rem; }
-  .fb-row { display: flex; gap: 0.5rem; }
-  .fb-input {
-    width: 100%; padding: 0.6rem 0.8rem; font-family: inherit; font-size: 16px; color: var(--text);
-    background: var(--bg); border: 1px solid var(--edge); border-radius: var(--radius);
-  }
-  .fb-input::placeholder { color: var(--text-faint); }
-  .fb-input:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; }
-  .fb-type { flex: 0 0 40%; }
-  .fb-msg { resize: vertical; min-height: 2.6rem; }
-  .fb-send { width: auto; align-self: flex-start; margin: 0.2rem 0 0; }
-  .fb-msg-status { margin: 0.5rem 0 0; font-size: 0.85rem; color: var(--text-dim); }
-  .fb-msg-status:empty { display: none; }
-  .fb-msg-status.ok { color: var(--green); }
-  .fb-msg-status.err { color: var(--red); }
-  @media (max-width: 480px) { .fb-row { flex-direction: column; } .fb-type { flex: 1; } }
+  .foot-feedback-btn { width: auto; margin: 0; padding: 0.6rem 1.6rem; }
   .site-nav {
-    max-width: 760px; margin: 0 auto; padding: 0.8rem 1.25rem;
+    max-width: var(--site-w); margin: 0 auto; padding: 0.8rem 1.25rem;
     display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: relative;
   }
   .nav-brand { display: flex; flex-direction: column; gap: 3px; text-decoration: none; line-height: 1; }
