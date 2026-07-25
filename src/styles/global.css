@@ -407,3 +407,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, .pad:focus-visible, 
 @media (min-width: 900px) {
   .screen { padding-top: 44px; }
 }
+
+/* ---------- Draft flags: hidden in public, kept in source ----------
+   The 29 screens that carry .review-flag still await Antonio's expert
+   review. The marker stays in the markup (so we know which ones), but
+   is not shown to visitors. To bring them back for a review pass,
+   change display:none to display:block here. */
+.review-flag { display: none; }
