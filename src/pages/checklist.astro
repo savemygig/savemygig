@@ -1,0 +1,328 @@
+---
+import Base from '../layouts/Base.astro';
+
+/**
+ * Interactive pre-gig checklist. Prevention side, outside the tunnel.
+ * Tick boxes with a live readiness meter; state persists per device in
+ * localStorage (key SMG_CHECKLIST_V1). No account, nothing sent anywhere.
+ * Categories requested by Antonio: the basics, technical, extras/add-ons.
+ */
+
+const groups = [
+  {
+    id: 'basics',
+    title: 'The basics',
+    blurb: 'Out the door with nothing missing.',
+    items: [
+      { key: 'usb-two', label: 'Two identical USB drives, same export on both' },
+      { key: 'headphones', label: 'Headphones' },
+      { key: 'phone', label: 'Phone charged, plus a power bank' },
+      { key: 'money', label: 'Cash and cards' },
+      { key: 'address', label: 'Venue address and set time confirmed' },
+      { key: 'contact', label: 'Promoter or club contact saved in your phone' },
+    ],
+  },
+  {
+    id: 'technical',
+    title: 'Technical',
+    blurb: 'The gear that actually plays your set.',
+    items: [
+      { key: 'format', label: 'Both drives are FAT32 with MBR, not exFAT or GPT' },
+      { key: 'reexport', label: 'Re-exported after the last library change' },
+      { key: 'tested', label: 'Both drives tested on a player, or reopened in Rekordbox' },
+      { key: 'backup', label: 'Rekordbox library backed up to cloud or a second drive' },
+      { key: 'card', label: 'Emergency Card saved on your phone' },
+      { key: 'adapters', label: 'USB-C and USB-A adapters for the booth' },
+      { key: 'cables', label: 'Spare cable and a short USB extension' },
+      { key: 'laptop', label: 'Laptop, charger and soundcard, if you play from a laptop' },
+    ],
+  },
+  {
+    id: 'extras',
+    title: 'Extras and add-ons',
+    blurb: 'The life stuff that is easy to forget on the way out.',
+    items: [
+      { key: 'meds', label: 'Any medicine you need' },
+      { key: 'clothes', label: 'The right clothes for the venue, and a spare shirt' },
+      { key: 'earplugs', label: 'Earplugs' },
+      { key: 'water', label: 'Water bottle' },
+      { key: 'car-keys', label: 'Car keys' },
+      { key: 'home-keys', label: 'Home keys' },
+      { key: 'docs', label: 'ID and documents, passport and boarding pass if flying' },
+    ],
+  },
+];
+
+const total = groups.reduce((n, g) => n + g.items.length, 0);
+---
+<Base
+  title="The Pre-Gig Checklist for DJs | Save My Gig!"
+  description="A tickable pre-gig checklist for DJs: the basics, the technical gear, and the life stuff you forget. Track your readiness before you leave home. Free, saves on your device."
+  path="/checklist"
+>
+  <main class="wrap">
+    <div class="status-line">Prevention_Hub</div>
+
+    <h1 style="margin-bottom:1rem">LEAVE HOME <span class="accent">READY</span></h1>
+    <p class="dim" style="margin-bottom:2rem">Tick it off before you walk out. Nothing forgotten, nothing sent anywhere. This list saves on this device, so it is waiting next time.</p>
+
+    <section class="readiness" id="readiness" aria-live="polite">
+      <div class="readiness-top">
+        <span class="readiness-label">Readiness</span>
+        <span class="readiness-pct" id="pct">0%</span>
+      </div>
+      <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
+      <p class="readiness-sub" id="sub">0 of {total} ready</p>
+    </section>
+
+    {groups.map((g) => (
+      <section class="panel task-group" data-group={g.id}>
+        <div class="group-head">
+          <h3>{g.title}</h3>
+          <span class="group-count" data-count={g.id}>0/{g.items.length}</span>
+        </div>
+        <p class="dim group-blurb">{g.blurb}</p>
+        <ul class="tasks">
+          {g.items.map((it) => (
+            <li class="task">
+              <label>
+                <input type="checkbox" data-key={it.key} />
+                <span class="box" aria-hidden="true"></span>
+                <span class="task-label">{it.label}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <div class="checklist-actions">
+      <button type="button" class="btn btn-neutral" id="resetBtn">Clear the list</button>
+    </div>
+
+    <div class="panel" style="margin-top:1.5rem">
+      <h3 style="margin-bottom:0.6rem">Why two drives, why FAT32</h3>
+      <p class="dim" style="margin-bottom:0">These are not superstitions, they are the failures we see most. The full reasoning, and the gear worth carrying, live in the <a href="/prepare">prevention system</a> and the <a href="/gear">gear guide</a>.</p>
+    </div>
+
+    <div class="panel panel-danger" style="margin-top:1.5rem">
+      <h3 style="margin-bottom:0.6rem">Already at the gig and something failed?</h3>
+      <a href="/emergency" class="btn btn-solid" data-event="begin_checkout" data-placement="checklist">Start Emergency Mode</a>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .readiness {
+    background: var(--surf-2);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius);
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 1.6rem;
+    position: sticky;
+    top: 0.5rem;
+    z-index: 5;
+  }
+  .readiness-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .readiness-label {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .readiness-pct {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    transition: color 0.25s ease;
+  }
+  .readiness.is-ready .readiness-pct { color: var(--green); }
+  .meter {
+    height: 10px;
+    background: var(--bg);
+    border: 1px solid var(--edge);
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 0.9rem 0 0.7rem;
+  }
+  .meter-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--green);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+  .readiness-sub {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+  .readiness.is-ready .readiness-sub { color: var(--green); }
+
+  .task-group { padding-bottom: 0.6rem; }
+  .group-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .group-head h3 { margin: 0; }
+  .group-count {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+  .group-count.done { color: var(--green); }
+  .group-blurb { margin: 0.35rem 0 0.4rem; font-size: 0.92rem; }
+
+  .tasks { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+  .task { border-bottom: 1px solid var(--edge-soft); }
+  .task:last-child { border-bottom: none; }
+  .task label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 0.85rem 0.2rem;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .task input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .box {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    margin-top: 1px;
+    border: 1.5px solid var(--text-faint);
+    border-radius: var(--radius);
+    background: var(--bg);
+    position: relative;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .box::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    width: 6px;
+    height: 11px;
+    border: solid #0a0a0b;
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg) scale(0);
+    transition: transform 0.15s ease;
+  }
+  .task input:checked + .box {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .task input:checked + .box::after { transform: rotate(45deg) scale(1); }
+  .task input:focus-visible + .box {
+    outline: 2px solid var(--green);
+    outline-offset: 2px;
+  }
+  .task-label {
+    font-size: 1rem;
+    line-height: 1.45;
+    color: var(--text);
+    transition: color 0.15s ease;
+  }
+  .task input:checked ~ .task-label {
+    color: var(--text-faint);
+    text-decoration: line-through;
+    text-decoration-color: var(--text-faint);
+  }
+
+  .checklist-actions { margin-top: 1.4rem; }
+  .checklist-actions .btn { width: auto; display: inline-block; margin: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .meter-fill, .box, .box::after, .readiness-pct { transition: none; }
+  }
+</style>
+
+<script>
+  const STORE_KEY = 'SMG_CHECKLIST_V1';
+  const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
+  const pctEl = document.getElementById('pct');
+  const fillEl = document.getElementById('meterFill');
+  const subEl = document.getElementById('sub');
+  const readinessEl = document.getElementById('readiness');
+  const total = boxes.length;
+
+  function load(): Record<string, boolean> {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function save(state: Record<string, boolean>) {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    } catch (e) {
+      /* storage blocked (private mode): the list still works this session */
+    }
+  }
+
+  function render() {
+    const done = boxes.filter((b) => b.checked).length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    if (pctEl) pctEl.textContent = pct + '%';
+    if (fillEl) fillEl.style.width = pct + '%';
+    if (subEl) subEl.textContent = pct === 100 ? 'Ready. Go play.' : `${done} of ${total} ready`;
+    if (readinessEl) readinessEl.classList.toggle('is-ready', pct === 100);
+
+    document.querySelectorAll<HTMLElement>('.task-group').forEach((group) => {
+      const inGroup = Array.from(group.querySelectorAll<HTMLInputElement>('input[type="checkbox"]'));
+      const gid = group.getAttribute('data-group');
+      const countEl = document.querySelector<HTMLElement>(`.group-count[data-count="${gid}"]`);
+      const gdone = inGroup.filter((b) => b.checked).length;
+      if (countEl) {
+        countEl.textContent = `${gdone}/${inGroup.length}`;
+        countEl.classList.toggle('done', gdone === inGroup.length && inGroup.length > 0);
+      }
+    });
+  }
+
+  const state = load();
+  boxes.forEach((b) => {
+    const k = b.dataset.key || '';
+    if (state[k]) b.checked = true;
+    b.addEventListener('change', () => {
+      const s = load();
+      s[b.dataset.key || ''] = b.checked;
+      save(s);
+      render();
+    });
+  });
+
+  const resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      boxes.forEach((b) => { b.checked = false; });
+      save({});
+      render();
+    });
+  }
+
+  render();
+</script>
