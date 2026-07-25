@@ -45,7 +45,10 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
 <body>
   <header class="site-nav-wrap">
     <div class="site-nav">
-      <a href="/" class="nav-brand">Save My Gig<span class="accent">!</span></a>
+      <a href="/" class="nav-brand">
+        <span class="nb-name">Save My Gig<span class="accent">!</span></span>
+        <span class="nb-tag">DJ rescue and prevention</span>
+      </a>
       <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
       </button>
@@ -88,14 +91,19 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
 <style is:global>
   .site-nav-wrap { border-bottom: 1px solid var(--edge-soft); }
   .site-nav {
-    max-width: 1100px; margin: 0 auto; padding: 0.85rem 1.25rem;
+    max-width: 780px; margin: 0 auto; padding: 0.8rem 1.25rem;
     display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: relative;
   }
-  .nav-brand {
+  .nav-brand { display: flex; flex-direction: column; gap: 2px; text-decoration: none; line-height: 1.02; }
+  .nb-name {
     font-family: var(--font-display); font-weight: 900; font-size: 1.05rem;
-    text-transform: uppercase; letter-spacing: -0.01em; color: var(--text); text-decoration: none;
+    text-transform: uppercase; letter-spacing: -0.01em; color: var(--text);
   }
-  .nav-brand .accent { color: var(--red); }
+  .nb-name .accent { color: var(--red); }
+  .nb-tag {
+    font-family: var(--font-body); font-weight: 600; font-size: 0.58rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--text-dim);
+  }
   .nav-links { display: flex; gap: 1.5rem; }
   .nav-links a {
     font-family: var(--font-body); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.05em;
