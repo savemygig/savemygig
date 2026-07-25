@@ -88,8 +88,20 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     <div class="mode-switch" role="group" aria-label="Checklist depth">
       <button type="button" class="mode-btn is-on" data-mode-set="basic" aria-pressed="true">Basic</button>
       <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Advanced</button>
+      <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Custom</button>
     </div>
     <p class="mode-hint dim" id="modeHint">Basic is the must-bring list. Switch to Advanced for the full kit.</p>
+
+    <div class="unlock" id="unlock" hidden>
+      <p class="unlock-title">Unlock Advanced and Custom</p>
+      <p class="dim unlock-copy">The full kit and your own custom lists are free. The only price is your email, call it a tiny tip that keeps this project alive. You also get Save My Gig news and the odd cool thing for your DJ career, never spam. Drop the email you actually open and you are in right away, one quick confirm and done.</p>
+      <form class="unlock-form" id="unlockForm" novalidate>
+        <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your best email" required />
+        <button type="submit" class="btn btn-solid">Join and unlock</button>
+      </form>
+      <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
+      <p class="unlock-note">One time on this device, as long as your browser storage stays on. <a href="/privacy">Privacy</a></p>
+    </div>
 
     <section class="readiness" id="readiness" aria-live="polite">
       <div class="readiness-top">
@@ -125,6 +137,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                 </li>
               ))}
             </ul>
+            <ul class="custom-tasks" data-custom={g.id}></ul>
+            <div class="add-own">
+              <input type="text" class="add-input" data-cat={g.id} placeholder="Add your own..." aria-label={`Add your own item to ${g.title}`} maxlength="80" />
+              <button type="button" class="add-btn" data-add={g.id}>Add</button>
+            </div>
           </div>
         </section>
       ))}
@@ -151,7 +168,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   </main>
 </Base>
 
-<style>
+<style is:global>
   .mode-switch {
     display: inline-flex;
     gap: 4px;
@@ -325,6 +342,61 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .top-actions { margin-top: 1.5rem; text-align: center; }
   .top-actions .btn { width: auto; display: inline-block; margin: 0; }
 
+  .unlock {
+    background: var(--surf-2); border: 1px solid var(--edge); border-radius: var(--radius);
+    padding: 1.2rem 1.3rem; margin: 0 0 1.6rem;
+  }
+  .unlock[hidden] { display: none; }
+  .unlock-title {
+    font-family: var(--font-display); font-weight: 800; font-size: 1.05rem;
+    text-transform: uppercase; letter-spacing: -0.01em; margin: 0 0 0.4rem;
+  }
+  .unlock-copy { font-size: 0.9rem; margin: 0 0 0.9rem; }
+  .unlock-form { display: flex; flex-direction: column; gap: 10px; }
+  .unlock-form input {
+    width: 100%; padding: 0.9rem 1rem; font-family: inherit; font-size: 16px;
+    color: var(--text); background: var(--bg); border: 1px solid var(--edge); border-radius: var(--radius);
+  }
+  .unlock-form input::placeholder { color: var(--text-faint); }
+  .unlock-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .unlock-form .btn { margin: 0; }
+  .unlock-msg:empty { display: none; }
+  .unlock-msg { margin: 0.8rem 0 0; font-size: 0.88rem; color: var(--text-dim); }
+  .unlock-msg.ok { color: var(--green); }
+  .unlock-msg.err { color: var(--red); }
+  @media (min-width: 520px) {
+    .unlock-form { flex-direction: row; }
+    .unlock-form input { flex: 1; }
+    .unlock-form .btn { width: auto; white-space: nowrap; }
+  }
+  .unlock-note { margin: 0.8rem 0 0; font-size: 0.76rem; color: var(--text-faint); }
+  .unlock-note a { color: var(--text-dim); }
+
+  /* Custom mode: your own items + add rows. Only shown in custom mode. */
+  .custom-tasks { list-style: none; margin: 0; padding: 0; }
+  #list:not([data-mode="custom"]) .custom-tasks,
+  #list:not([data-mode="custom"]) .add-own { display: none; }
+  .task-custom { display: flex; align-items: center; }
+  .task-custom > label { flex: 1; }
+  .task-remove {
+    flex: 0 0 auto; background: transparent; border: none; color: var(--text-faint);
+    font-size: 1.4rem; line-height: 1; cursor: pointer; padding: 0 0.2rem 0 0.6rem;
+  }
+  .task-remove:hover { color: var(--red); }
+  .add-own { display: flex; gap: 8px; margin: 0.6rem 0 0.2rem; }
+  .add-own .add-input {
+    flex: 1; padding: 0.75rem 0.9rem; font-family: inherit; font-size: 16px; color: var(--text);
+    background: var(--bg); border: 1px dashed var(--edge); border-radius: var(--radius);
+  }
+  .add-own .add-input::placeholder { color: var(--text-faint); }
+  .add-own .add-input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .add-own .add-btn {
+    flex: 0 0 auto; background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 0.8rem;
+    text-transform: uppercase; letter-spacing: 0.03em; padding: 0 1rem; cursor: pointer;
+  }
+  @media (hover: hover) { .add-own .add-btn:hover { border-color: var(--text-dim); } }
+
   @media (prefers-reduced-motion: reduce) {
     .meter-fill, .box, .box::after, .readiness-pct, .mode-btn, .chev { transition: none; }
   }
@@ -334,6 +406,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const STORE_KEY = 'SMG_CHECKLIST_V1';
   const MODE_KEY = 'SMG_CHECKLIST_MODE';
   const OPEN_KEY = 'SMG_CHECKLIST_OPEN';
+  const UNLOCK_KEY = 'SMG_UNLOCKED';
+  const CUSTOM_KEY = 'SMG_CHECKLIST_CUSTOM';
 
   const listEl = document.getElementById('list');
   const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
@@ -344,8 +418,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const hintEl = document.getElementById('modeHint');
   const modeBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('.mode-btn'));
   const toggles = Array.from(document.querySelectorAll<HTMLButtonElement>('.group-toggle'));
+  const unlockEl = document.getElementById('unlock') as HTMLElement | null;
+  const unlockForm = document.getElementById('unlockForm') as HTMLFormElement | null;
+  const unlockMsg = document.getElementById('unlockMsg');
 
   let mode: string = 'basic';
+  let pendingMode: string = 'advanced';
+
+  const allBoxes = () => Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
 
   function load(): Record<string, boolean> {
     try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : {}; }
@@ -362,13 +442,25 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function saveOpen(o: Record<string, boolean>) {
     try { localStorage.setItem(OPEN_KEY, JSON.stringify(o)); } catch (e) { /* blocked */ }
   }
+  function isUnlocked(): boolean { try { return localStorage.getItem(UNLOCK_KEY) === '1'; } catch (e) { return false; } }
+  function setUnlocked() { try { localStorage.setItem(UNLOCK_KEY, '1'); } catch (e) { /* blocked */ } }
+  function loadCustom(): Record<string, { k: string; t: string }[]> {
+    try { const raw = localStorage.getItem(CUSTOM_KEY); return raw ? JSON.parse(raw) : {}; }
+    catch (e) { return {}; }
+  }
+  function saveCustom(c: Record<string, { k: string; t: string }[]>) {
+    try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(c)); } catch (e) { /* blocked */ }
+  }
 
   function isVisible(box: HTMLInputElement): boolean {
-    return mode === 'advanced' || box.dataset.level !== 'advanced';
+    const lvl = box.dataset.level;
+    if (mode === 'basic') return lvl === 'basic';
+    if (mode === 'advanced') return lvl !== 'custom';
+    return true; // custom mode shows everything, including your own items
   }
 
   function render() {
-    const visible = boxes.filter(isVisible);
+    const visible = allBoxes().filter(isVisible);
     const done = visible.filter((b) => b.checked).length;
     const totalV = visible.length;
     const pct = totalV ? Math.round((done / totalV) * 100) : 0;
@@ -390,6 +482,51 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
   }
 
+  function attachBox(input: HTMLInputElement) {
+    const ticks = load();
+    if (ticks[input.dataset.key || '']) input.checked = true;
+    input.addEventListener('change', () => {
+      const s = load(); s[input.dataset.key || ''] = input.checked; save(s); render();
+    });
+  }
+
+  function renderCustom() {
+    const custom = loadCustom();
+    document.querySelectorAll<HTMLElement>('.custom-tasks').forEach((ul) => {
+      const cat = ul.getAttribute('data-custom') || '';
+      const items = custom[cat] || [];
+      ul.innerHTML = '';
+      items.forEach((it) => {
+        const li = document.createElement('li');
+        li.className = 'task task-custom';
+        li.setAttribute('data-level', 'custom');
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'checkbox'; input.dataset.key = it.k; input.dataset.level = 'custom';
+        const box = document.createElement('span'); box.className = 'box'; box.setAttribute('aria-hidden', 'true');
+        const span = document.createElement('span'); span.className = 'task-label'; span.textContent = it.t;
+        label.appendChild(input); label.appendChild(box); label.appendChild(span);
+        const rm = document.createElement('button');
+        rm.type = 'button'; rm.className = 'task-remove'; rm.setAttribute('aria-label', 'Remove'); rm.innerHTML = '&times;';
+        rm.addEventListener('click', () => {
+          const c = loadCustom(); c[cat] = (c[cat] || []).filter((x) => x.k !== it.k); saveCustom(c);
+          const t = load(); delete t[it.k]; save(t); renderCustom(); render();
+        });
+        li.appendChild(label); li.appendChild(rm);
+        attachBox(input);
+        ul.appendChild(li);
+      });
+    });
+  }
+
+  function addCustom(cat: string, text: string) {
+    const t = text.trim(); if (!t) return;
+    const c = loadCustom(); const arr = c[cat] || [];
+    const k = 'c-' + cat + '-' + Date.now().toString(36) + Math.floor(Math.random() * 1000);
+    arr.push({ k, t }); c[cat] = arr; saveCustom(c);
+    renderCustom(); render();
+  }
+
   function setMode(m: string) {
     mode = m;
     if (listEl) listEl.setAttribute('data-mode', m);
@@ -399,9 +536,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
     if (hintEl) {
-      hintEl.textContent = m === 'advanced'
-        ? 'The full kit. Switch back to Basic for just the essentials.'
-        : 'Basic is the must-bring list. Switch to Advanced for the full kit.';
+      if (m === 'advanced') hintEl.textContent = 'The full kit. Switch back to Basic for the essentials.';
+      else if (m === 'custom') hintEl.textContent = 'Your list. Add your own items to any section below.';
+      else hintEl.textContent = isUnlocked()
+        ? 'Basic is the must-brings. Advanced is the full kit, Custom is your own.'
+        : 'Basic is the must-brings. Advanced and Custom unlock with your email.';
     }
     saveMode(m);
     render();
@@ -418,7 +557,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     }
   }
 
-  // restore checks
+  // restore checks (static items)
   const state = load();
   boxes.forEach((b) => {
     const k = b.dataset.key || '';
@@ -431,8 +570,58 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
   });
 
-  // mode buttons
-  modeBtns.forEach((b) => b.addEventListener('click', () => setMode(b.dataset.modeSet || 'basic')));
+  // custom items (may already exist for unlocked users)
+  renderCustom();
+
+  // mode buttons: Advanced and Custom are gated behind an email
+  modeBtns.forEach((b) => b.addEventListener('click', () => {
+    const target = b.dataset.modeSet || 'basic';
+    if ((target === 'advanced' || target === 'custom') && !isUnlocked()) {
+      pendingMode = target;
+      if (unlockEl) unlockEl.hidden = false;
+      const inp = unlockForm && unlockForm.querySelector('input');
+      if (inp) (inp as HTMLInputElement).focus();
+      return;
+    }
+    if (unlockEl) unlockEl.hidden = true;
+    setMode(target);
+  }));
+
+  // unlock form: instant access, confirmation email fires in the background
+  if (unlockForm) {
+    unlockForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const inp = unlockForm.querySelector('input[name="email"]') as HTMLInputElement;
+      const email = (inp.value || '').trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        if (unlockMsg) { unlockMsg.textContent = 'That email does not look right. Check it and try again.'; unlockMsg.className = 'unlock-msg err'; }
+        inp.focus();
+        return;
+      }
+      setUnlocked();
+      if (unlockEl) unlockEl.hidden = true;
+      setMode(pendingMode);
+      if (typeof (window as any).gtag === 'function') {
+        (window as any).gtag('event', 'advanced_unlock', { placement: 'checklist', mode: pendingMode });
+      }
+      try {
+        await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ email, source: 'checklist-' + pendingMode }),
+        });
+      } catch (e) { /* unlocked anyway; feature is free */ }
+    });
+  }
+
+  // add-your-own inputs (custom mode)
+  document.querySelectorAll<HTMLButtonElement>('.add-btn').forEach((btn) => {
+    const cat = btn.getAttribute('data-add') || '';
+    const input = document.querySelector<HTMLInputElement>('.add-input[data-cat="' + cat + '"]');
+    const doAdd = () => { if (input) { addCustom(cat, input.value); input.value = ''; input.focus(); } };
+    btn.addEventListener('click', doAdd);
+    if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doAdd(); } });
+  });
 
   // collapse toggles (restore open state, default open)
   const openState = loadOpen();
@@ -447,16 +636,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
   });
 
-  // restore mode
+  // restore mode (advanced/custom only if already unlocked on this device)
   let savedMode = 'basic';
   try { savedMode = localStorage.getItem(MODE_KEY) || 'basic'; } catch (e) { /* ignore */ }
-  setMode(savedMode === 'advanced' ? 'advanced' : 'basic');
+  if ((savedMode === 'advanced' || savedMode === 'custom') && !isUnlocked()) savedMode = 'basic';
+  setMode(savedMode);
 
-  // reset (ticks only, leaves sections and mode as they are)
+  // reset (ticks only, keeps your custom items and mode)
   const resetBtn = document.getElementById('resetBtn');
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
-      boxes.forEach((b) => { b.checked = false; });
+      allBoxes().forEach((b) => { b.checked = false; });
       save({});
       render();
     });
