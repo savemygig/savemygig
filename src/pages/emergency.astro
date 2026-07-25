@@ -49,9 +49,17 @@ const faqSchema = {
   <link rel="preload" as="image" href="/images/dj-usb-not-detected-emergency.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" />
   <Analytics />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <style>
+    /* Flat, much darker, aligned emergency hero (the booth photo was too heavy). */
+    .hero { padding: calc(46px + env(safe-area-inset-top)) 20px 40px; }
+    .hero-img { filter: saturate(0.55) brightness(0.28); }
+    .hero-overlay { background: linear-gradient(180deg, rgba(10,10,11,0.9) 0%, rgba(10,10,11,0.92) 45%, rgba(10,10,11,0.99) 100%); }
+    .hero-content { max-width: 600px; }
+    .hero h1 { font-size: clamp(2rem, 8vw, 3.6rem); line-height: 0.98; }
+  </style>
 </head>
 <body>
 
