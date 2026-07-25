@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 
+// Homepage = simple "pick your pain" chooser. Rescue AND prevention, balanced:
+// three equal, neutral doors; colour lives only in the LED dots and comes up
+// on tap/hover. Emergency is never a permanently red box.
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -8,120 +11,135 @@ const faqSchema = {
     {
       '@type': 'Question',
       name: 'What does CDJ Error E-8302 mean?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Error E-8302 on Pioneer CDJs means the player cannot read the data on your USB drive, usually a corrupt Rekordbox database or an unsupported file system. It can often be fixed on-site by re-exporting from Rekordbox or reformatting the drive as FAT32 with an MBR partition map.',
-      },
+      acceptedAnswer: { '@type': 'Answer', text: 'Error E-8302 on Pioneer CDJs means the player cannot read the data on your USB drive, usually a corrupt Rekordbox database or an unsupported file system. It can often be fixed on-site by re-exporting from Rekordbox or reformatting the drive as FAT32 with an MBR partition map.' },
     },
     {
       '@type': 'Question',
       name: 'Why is my USB not recognized on a CDJ or XDJ?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'The most common causes are: the drive is formatted as NTFS or exFAT instead of FAT32, the partition map is GPT instead of MBR, the Rekordbox export is corrupt, or the USB hardware itself is failing. Save My Gig walks you through the fastest fix depending on how much time you have before you play.',
-      },
+      acceptedAnswer: { '@type': 'Answer', text: 'The most common causes are: the drive is formatted as NTFS or exFAT instead of FAT32, the partition map is GPT instead of MBR, the Rekordbox export is corrupt, or the USB hardware itself is failing. Save My Gig walks you through the fastest fix depending on how much time you have before you play.' },
     },
     {
       '@type': 'Question',
       name: 'How should I format a USB drive for Pioneer CDJs?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Format the drive as FAT32 with a Master Boot Record (MBR) partition scheme. Use a quality 32-64 GB drive and export your music with Rekordbox in Export mode.',
-      },
+      acceptedAnswer: { '@type': 'Answer', text: 'Format the drive as FAT32 with a Master Boot Record (MBR) partition scheme. Use a quality 32-64 GB drive and export your music with Rekordbox in Export mode.' },
     },
   ],
 };
 ---
 <Base
-  title="Save My Gig! | CDJ, XDJ & USB Emergency Help for DJs"
-  description="USB failed on a CDJ or XDJ? Error E-8302? Rekordbox export problem? Save My Gig walks you through the exact steps to get music playing again, fast, free, step by step."
+  title="Save My Gig! | DJ Rescue and Prevention for CDJ, XDJ & USB"
+  description="DJ rescue and prevention. In an emergency with a CDJ, XDJ or USB, getting gig-ready, or building a bulletproof setup? Pick your path. Free, no account, step by step."
   path="/"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
 
-  <header class="hero">
-    <img src="/images/pioneer-cdj-2000-cdj-3000-xdj-usb-not-detected-error.webp" alt="Pioneer CDJ setup showing USB not detected error" class="hero-img" fetchpriority="high" />
-    <div class="hero-overlay"></div>
+  <main class="landing">
+    <div class="brandline">SAVE MY GIG<span class="accent">!</span></div>
+    <p class="tag">DJ rescue and prevention</p>
 
-    <div class="hero-content">
-      <h1>SAVE MY <span class="accent">GIG!</span></h1>
-      <p style="font-size:clamp(15px,3.5vw,17px);color:#f5f5f5;line-height:1.5;margin-bottom:35px">
-        Emergency guidance for DJs when USB drives fail, Rekordbox breaks,
-        or CDJ/XDJ players refuse to cooperate.
-      </p>
+    <h1 class="ask">WHERE ARE <span class="accent">YOU?</span></h1>
+    <p class="sub">Pick what you need. Free, no account, built by a DJ who has been there.</p>
 
-      <nav class="action-stack" aria-label="Primary actions">
-        <a href="/emergency" class="btn-heartbeat" data-event="begin_checkout" data-placement="home_hero">
-          <span class="led led-g" aria-hidden="true"></span>
-          START EMERGENCY MODE
-        </a>
-
-        <div class="alert-card" role="note">
-          <div style="font-size:20px" aria-hidden="true">⚠️</div>
-          <div>USB not responding minutes before your set? Stay calm. This site exists exactly for this moment, free, no account, step by step.</div>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-  <main style="max-width:860px;margin:auto;padding:10px 20px 40px">
-
-    <section class="section" style="margin-top:2rem">
-      <h2 style="font-size:18px;text-transform:uppercase;letter-spacing:1px;margin:0 0 16px 0;border-bottom:1px solid #333;padding-bottom:8px">The errors that kill gigs</h2>
-      <div class="grid grid-2">
-        <a class="pad pad-red" href="/fix/usb-not-recognized-cdj">
-          <div class="pad-header"><div class="led led-r"></div><div class="pad-title" style="font-size:16px">USB NOT RECOGNIZED</div></div>
-          <div class="pad-desc">The player won't see your drive at all. The fastest checks, in order.</div>
-        </a>
-        <a class="pad pad-red" href="/fix/cdj-error-e-8302">
-          <div class="pad-header"><div class="led led-r"></div><div class="pad-title" style="font-size:16px">ERROR E-8302</div></div>
-          <div class="pad-desc">"Cannot read data." Usually a corrupt database, fixable on-site.</div>
-        </a>
-        <a class="pad pad-yellow" href="/fix/rekordbox-export-failed">
-          <div class="pad-header"><div class="led led-y"></div><div class="pad-title" style="font-size:16px">EXPORT FAILED</div></div>
-          <div class="pad-desc">Rekordbox export won't finish, or finished but the player shows nothing.</div>
-        </a>
-        <a class="pad pad-yellow" href="/fix/emergency-loop-mode">
-          <div class="pad-header"><div class="led led-y"></div><div class="pad-title" style="font-size:16px">EMERGENCY LOOP</div></div>
-          <div class="pad-desc">The player loops to protect the audio. What it means, what to do.</div>
-        </a>
-      </div>
-      <p style="margin-top:1rem"><a href="/fix/format-usb-for-cdj" class="dim">→ How to format a USB for CDJ (FAT32 + MBR), step by step</a></p>
-    </section>
-
-    <section class="section panel">
-      <h3 style="margin-bottom:0.75rem">Works with</h3>
-      <p class="dim" style="margin-bottom:0">
-        Pioneer CDJ-2000 / 2000NXS / 2000NXS2 · CDJ-3000 / 3000X ·
-        XDJ-1000 / 1000MK2 · XDJ-700 · XDJ-RX / RX2 / RX3 · XDJ-XZ ·
-        and most Rekordbox-compatible players.
-      </p>
-    </section>
-
-    <section class="section panel">
-      <h3 style="margin-bottom:0.75rem">The safe setup</h3>
-      <ul class="checklist">
-        <li>Format: <span class="mono">FAT32</span> · Partition map: <span class="mono">MBR</span></li>
-        <li>Capacity: 32-64 GB from a quality brand</li>
-        <li>Exported with Rekordbox in <span class="mono">EXPORT</span> mode</li>
-        <li>Always carry a second, identical USB - <a href="/prepare">see the prevention checklist</a></li>
-      </ul>
-    </section>
-
-    <section class="section center">
-      <h2 style="margin-bottom:1rem">Never live this night again</h2>
-      <p class="dim" style="max-width:34rem;margin:0 auto 1.5rem">
-        USB failures aren't bad luck, they're a missing system.
-        Set it up once and this site becomes a page you never need.
-      </p>
-      <a href="/prepare" class="btn-quiet" style="max-width:22rem;margin:0 auto" data-event="step_completed" data-step="prepare_click" data-placement="home">
-        🛡 GET THE PREVENTION SYSTEM
+    <nav class="doors" aria-label="Choose your path">
+      <a class="door d-emergency" href="/emergency" data-event="begin_checkout" data-placement="home_door_emergency">
+        <span class="door-led" aria-hidden="true"></span>
+        <span class="door-body">
+          <span class="door-title">I HAVE AN EMERGENCY</span>
+          <span class="door-desc">USB or player failing right now. A corrupt drive, lost tracks, an error code. Get playing again, fast.</span>
+        </span>
+        <span class="door-arrow" aria-hidden="true">&rarr;</span>
       </a>
-    </section>
 
-    <p class="dim center" style="font-size:0.9rem">
-      A personal side project built by a DJ who's been there.
-      Free, no account, no tricks. <a href="/about">The story →</a>
+      <a class="door d-ready" href="/checklist" data-event="step_completed" data-placement="home_door_checklist">
+        <span class="door-led" aria-hidden="true"></span>
+        <span class="door-body">
+          <span class="door-title">GET GIG-READY</span>
+          <span class="door-desc">Leaving for a gig? The checklist, and how to format and export your USB right.</span>
+        </span>
+        <span class="door-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+
+      <a class="door d-prevent" href="/prepare" data-event="step_completed" data-placement="home_door_prevention">
+        <span class="door-led" aria-hidden="true"></span>
+        <span class="door-body">
+          <span class="door-title">BULLETPROOF SETUP</span>
+          <span class="door-desc">Set up a system so this never happens again. Gear and compatibility included.</span>
+        </span>
+        <span class="door-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </nav>
+
+    <p class="known dim">
+      Know the exact error?
+      <a href="/fix/usb-not-recognized-cdj">USB not recognized</a> ·
+      <a href="/fix/cdj-error-e-8302">E-8302</a> ·
+      <a href="/fix/rekordbox-export-failed">Export failed</a> ·
+      <a href="/fix/emergency-loop-mode">Emergency loop</a>
     </p>
+
+    <p class="foot-note dim">Free forever in an emergency. No account, no ads in the rescue flow. <a href="/about">The story &rarr;</a></p>
   </main>
 </Base>
+
+<style>
+  .landing { max-width: 760px; margin: 0 auto; padding: 3rem 1.25rem 4rem; }
+  .brandline {
+    font-family: var(--font-display); font-weight: 900; font-size: clamp(1.6rem, 7vw, 2.4rem);
+    text-transform: uppercase; letter-spacing: -0.02em; line-height: 1;
+  }
+  .tag {
+    font-family: var(--font-body); font-weight: 600; font-size: 0.74rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-dim); margin: 0.5rem 0 2.6rem;
+  }
+  .ask { font-size: clamp(2rem, 9vw, 3.2rem); margin-bottom: 0.6rem; }
+  .sub { color: var(--text-dim); margin-bottom: 2rem; max-width: 34rem; }
+
+  .doors { display: flex; flex-direction: column; gap: 1rem; }
+
+  /* All three doors are equal and neutral. Colour lives in the LED, and the
+     accent only comes up on hover/tap. Rescue and prevention, balanced. */
+  .door {
+    display: flex; align-items: center; gap: 1.1rem;
+    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    padding: 1.4rem 1.5rem; text-decoration: none; color: var(--text);
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.08s ease;
+  }
+  .door:active { transform: scale(0.995); }
+
+  .door-led {
+    flex: 0 0 auto; width: 13px; height: 13px; border-radius: 50%;
+    background: var(--text-faint); transition: background 0.15s ease, box-shadow 0.15s ease;
+  }
+  .d-emergency .door-led { background: var(--red); }
+  .d-ready .door-led { background: var(--green); }
+  .d-prevent .door-led { background: var(--amber); }
+
+  .door-body { flex: 1; }
+  .door-title {
+    display: block; font-family: var(--font-display); font-weight: 800; font-size: 1.2rem;
+    text-transform: uppercase; letter-spacing: -0.01em; margin-bottom: 0.25rem; color: var(--text);
+  }
+  .door-desc { display: block; color: var(--text-dim); font-size: 0.92rem; line-height: 1.45; }
+  .door-arrow { flex: 0 0 auto; font-size: 1.4rem; color: var(--text-faint); transition: color 0.15s ease; }
+
+  /* Colour comes up on interaction, per door. */
+  .d-emergency:hover, .d-emergency:active, .d-emergency:focus-visible { border-color: var(--red); }
+  .d-emergency:hover .door-led, .d-emergency:active .door-led { box-shadow: 0 0 12px var(--red); }
+  .d-emergency:hover .door-arrow, .d-emergency:active .door-arrow { color: var(--red); }
+
+  .d-ready:hover, .d-ready:active, .d-ready:focus-visible { border-color: var(--amber); }
+  .d-ready:hover .door-led, .d-ready:active .door-led { box-shadow: 0 0 12px rgba(217,164,65,0.7); }
+  .d-ready:hover .door-arrow, .d-ready:active .door-arrow { color: var(--amber); }
+
+  .d-prevent:hover, .d-prevent:active, .d-prevent:focus-visible { border-color: var(--green); }
+  .d-prevent:hover .door-led, .d-prevent:active .door-led { box-shadow: 0 0 12px rgba(58,216,132,0.7); }
+  .d-prevent:hover .door-arrow, .d-prevent:active .door-arrow { color: var(--green); }
+
+  .known { margin-top: 1.6rem; font-size: 0.9rem; }
+  .known a { color: var(--text-dim); }
+  .known a:hover { color: var(--red); }
+
+  .foot-note { margin-top: 1.4rem; font-size: 0.9rem; }
+
+  @media (prefers-reduced-motion: reduce) { .door, .door-led, .door-arrow { transition: none; } }
+</style>
