@@ -19,6 +19,18 @@ function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
+// Normalize whatever the DJ typed (@name, name, a full instagram.com URL) into a
+// clickable profile link so Antonio can tap it and follow. Returns null if it is
+// not a valid handle.
+function igProfile(raw) {
+  let s = String(raw == null ? '' : raw).trim();
+  if (!s) return null;
+  s = s.replace(/^(https?:\/\/)?(www\.)?instagram\.com\//i, '').replace(/^@/, '');
+  s = s.split(/[/?#]/)[0].trim();
+  if (!/^[A-Za-z0-9._]{1,30}$/.test(s)) return null;
+  return { handle: s, url: 'https://www.instagram.com/' + s + '/' };
+}
+
 export async function onRequestPost({ request, env }) {
   let type = 'Other';
   let message = '';
@@ -41,20 +53,31 @@ export async function onRequestPost({ request, env }) {
   if (!message) return json({ ok: false, error: 'empty' }, 400);
   if (!env.BREVO_API_KEY) return json({ ok: false, error: 'not_configured' }, 500);
 
+  const ig = igProfile(instagram);
   const rows = [
     ['Type', type],
     ['Message', message],
     ['Name', name || '(none)'],
     ['Email', email || '(none)'],
-    ['Instagram', instagram || '(none)'],
+    ['Instagram', ig ? '@' + ig.handle : (instagram || '(none)')],
     ['Page', page || '(none)'],
   ];
   const html =
     `<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#111;">` +
     `<h2 style="margin:0 0 12px;">New Save My Gig feedback</h2>` +
-    rows.map(([k, v]) => `<p style="margin:0 0 8px;"><strong>${esc(k)}:</strong><br />${esc(v).replace(/\n/g, '<br />')}</p>`).join('') +
+    rows.map(([k, v]) => {
+      if (k === 'Instagram' && ig) {
+        return `<p style="margin:0 0 8px;"><strong>Instagram:</strong><br />` +
+          `<a href="${esc(ig.url)}" style="color:#ff4d2e;font-weight:700;text-decoration:none;">@${esc(ig.handle)}</a>` +
+          ` &nbsp;&middot;&nbsp; <a href="${esc(ig.url)}" style="color:#ff4d2e;">Open profile to follow &rarr;</a></p>`;
+      }
+      return `<p style="margin:0 0 8px;"><strong>${esc(k)}:</strong><br />${esc(v).replace(/\n/g, '<br />')}</p>`;
+    }).join('') +
     `</div>`;
-  const text = rows.map(([k, v]) => `${k}: ${v}`).join('\n\n');
+  const text = rows.map(([k, v]) => {
+    if (k === 'Instagram' && ig) return `Instagram: @${ig.handle}\n${ig.url}`;
+    return `${k}: ${v}`;
+  }).join('\n\n');
 
   const payload = {
     sender: SENDER,
