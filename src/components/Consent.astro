@@ -20,6 +20,8 @@
 </div>
 
 <style>
+  /* Must beat the .ck display rule below, otherwise the banner never hides. */
+  .ck[hidden] { display: none !important; }
   .ck {
     position: fixed; z-index: 80;
     left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom));
@@ -77,6 +79,7 @@
     function choose(v) {
       try { localStorage.setItem(KEY, v); } catch (e) {}
       box.hidden = true;
+      box.style.display = 'none'; // belt and braces, in case CSS wins
       if (v === 'yes') loadAnalytics();
     }
     document.getElementById('ck-yes').addEventListener('click', function () { choose('yes'); });
