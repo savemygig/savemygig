@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><title>A · Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#0b0c0e;--panel:#101216;--tx:#e9eaec;--dim:#8b9096;--faint:#5a5f66;
+  --line:#1b1d22;--ac:#3ad38a;--ac-dim:rgba(58,211,138,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100dvh;
+  background-image:radial-gradient(120% 60% at 50% -10%,rgba(58,211,138,.05),transparent 55%)}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;
+  padding:18px 22px;background:rgba(11,12,14,.72);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+.wordmark{font-weight:700;font-size:14px;letter-spacing:-.01em}
+.wordmark span{color:var(--faint);font-weight:500}
+.tag{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.bar{display:flex;gap:5px;padding:0 22px;margin-top:2px}
+.bar i{height:2px;flex:1;background:var(--line);border-radius:2px}
+.bar i.on{background:var(--ac)}
+main{max-width:540px;margin:0 auto;padding:40px 22px 120px}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:16px}
+h1{font-size:clamp(28px,7.5vw,36px);font-weight:600;letter-spacing:-.03em;line-height:1.08}
+.lead{color:var(--dim);font-size:16.5px;margin:16px 0 40px;max-width:30ch}
+.steps{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:26px 1fr;gap:18px;padding:22px 0;border-top:1px solid var(--line)}
+.row:last-child{border-bottom:1px solid var(--line)}
+.num{font-size:13px;font-weight:600;color:var(--ac);padding-top:2px;font-variant-numeric:tabular-nums}
+.row p{font-size:16px;color:#c3c7cc}
+.row p b{color:var(--tx);font-weight:600}
+.q{font-size:19px;font-weight:600;letter-spacing:-.01em;margin:40px 0 22px}
+.act{display:block;text-decoration:none;border-radius:13px;padding:17px 20px;margin-bottom:11px;position:relative}
+.act .t{font-size:16px;font-weight:600}
+.act .s{font-size:13.5px;margin-top:1px}
+.yes{background:var(--ac);color:#06231a}
+.yes .s{color:rgba(6,35,26,.7)}
+.no{background:var(--panel);border:1px solid var(--line);color:var(--tx)}
+.no .s{color:var(--dim)}
+.act .arr{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:17px;opacity:.5}
+.pill{display:inline-block;font-size:11.5px;color:var(--faint);border:1px solid var(--line);border-radius:999px;padding:5px 11px;margin-bottom:26px}
+</style></head><body>
+<header class="top"><div class="wordmark">Save My Gig <span>/ rescue</span></div><div class="tag">No laptop</div></header>
+<div class="bar"><i class="on"></i><i></i><i></i></div>
+<main>
+<span class="pill">Draft · review pending</span>
+<div class="eyebrow">Critical path · Step 1 of 3</div>
+<h1>No computer. We work with the booth.</h1>
+<p class="lead">Most dead USBs at the booth are a connection or slot issue, not a dead drive. Fastest checks first.</p>
+<div class="steps">
+<div class="row"><div class="num">01</div><p><b>Reseat the drive.</b> Pull the USB out, wait ten seconds, push it back in firmly.</p></div>
+<div class="row"><div class="num">02</div><p>Try the <b>other USB slot</b> on the same player, if it has two.</p></div>
+<div class="row"><div class="num">03</div><p>Try the <b>other player.</b> If it reads there, play from that deck and use Link.</p></div>
+<div class="row"><div class="num">04</div><p>Wipe the USB tip. <b>Dirt and sweat</b> are real causes. Try again.</p></div>
+</div>
+<p class="q">Does any player read the USB now?</p>
+<a class="act yes" href="#"><div class="t">Yes, it is reading</div><div class="s">Back to the music</div><span class="arr">&rarr;</span></a>
+<a class="act no" href="#"><div class="t">No, still nothing</div><div class="s">Next check, sixty seconds</div><span class="arr">&rarr;</span></a>
+</main></body></html>

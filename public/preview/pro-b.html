@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><title>B · Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#0a0a0b;--tx:#f3f1ec;--dim:#9a978f;--line:#242320;--ac:#ff4d2e}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;min-height:100dvh;padding-bottom:104px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 22px;border-bottom:1px solid var(--line)}
+.wm{font-family:'Archivo',sans-serif;font-weight:900;font-size:15px;letter-spacing:-.02em;text-transform:uppercase}
+.st{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ac)}
+main{max-width:600px;margin:0 auto;padding:34px 22px}
+.meta{display:flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:22px}
+.meta .l{flex:1;height:1px;background:var(--line)}
+h1{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(40px,12vw,64px);line-height:.94;letter-spacing:-.03em;text-transform:uppercase;margin-bottom:20px}
+.lead{font-size:18px;line-height:1.55;color:var(--dim);max-width:34ch;margin-bottom:44px}
+.item{display:grid;grid-template-columns:auto 1fr;gap:20px;padding:22px 0;border-top:1px solid var(--line)}
+.item:last-of-type{border-bottom:1px solid var(--line)}
+.k{font-family:'Archivo',sans-serif;font-weight:900;font-size:26px;line-height:1;color:var(--ac);font-variant-numeric:tabular-nums}
+.item p{font-size:17px;line-height:1.5;padding-top:2px}
+.item p b{font-weight:600}
+.q{font-family:'Archivo',sans-serif;font-weight:700;font-size:24px;letter-spacing:-.01em;margin:40px 0 4px}
+.actions{position:fixed;left:0;right:0;bottom:0;display:flex;gap:0;border-top:1px solid var(--line);background:var(--bg)}
+.actions a{flex:1;text-align:center;padding:22px 12px calc(22px + env(safe-area-inset-bottom));font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;letter-spacing:.02em;text-transform:uppercase;text-decoration:none}
+.yes{background:var(--tx);color:#0a0a0b}
+.no{color:var(--tx)}
+.no{border-left:1px solid var(--line)}
+.flag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);margin-bottom:24px}
+</style></head><body>
+<header class="top"><div class="wm">Save My Gig</div><div class="st">Critical · No laptop</div></header>
+<main>
+<div class="flag">Draft · review pending</div>
+<div class="meta"><span>Step 01 / 03</span><span class="l"></span><span>Critical</span></div>
+<h1>No computer.<br>Work the booth.</h1>
+<p class="lead">Most dead USBs at the booth are a connection or slot issue, not a dead drive. Fastest checks first.</p>
+<div class="item"><div class="k">01</div><p><b>Reseat the drive.</b> Pull the USB out, wait ten seconds, push it back in firmly.</p></div>
+<div class="item"><div class="k">02</div><p>Try the <b>other USB slot</b> on the same player, if it has two.</p></div>
+<div class="item"><div class="k">03</div><p>Try the <b>other player.</b> If it reads there, play from that deck and use Link.</p></div>
+<div class="item"><div class="k">04</div><p>Wipe the USB tip. <b>Dirt and sweat</b> are real causes. Try again.</p></div>
+<p class="q">Does any player read the USB now?</p>
+</main>
+<nav class="actions"><a class="yes" href="#">Yes, it reads</a><a class="no" href="#">No, still dead</a></nav>
+</body></html>
