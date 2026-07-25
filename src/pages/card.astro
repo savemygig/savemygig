@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import EmailCapture from '../components/EmailCapture.astro';
 // THE EMERGENCY CARD, the printable/screenshot-able one-pager promised on /saved and /prepare.
 ---
 <Base
@@ -43,6 +44,10 @@ import Base from '../layouts/Base.astro';
       </ul>
     </div>
 
+    <div style="text-align:left;margin:2rem 0 1rem">
+      <EmailCapture source="card" title="Want this as a printable PDF?"
+        blurb="This page is free forever, screenshot it right now. If you would rather have the printable version saved in your inbox, we will send it." />
+    </div>
     <p class="dim center" style="font-size:0.85rem">savemygig.com/emergency, the full guided rescue, free · Print this page: it's ink-friendly.</p>
   </main>
 </Base>

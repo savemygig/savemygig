@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import EmailCapture from '../components/EmailCapture.astro';
 ---
 <Base
   title="Never Again: The DJ USB Prevention System | Save My Gig!"
@@ -25,14 +26,11 @@ import Base from '../layouts/Base.astro';
       </ul>
     </div>
 
-    <div class="panel panel-go">
-      <h3 style="margin-bottom:0.75rem">📩 The Emergency Card</h3>
-      <p class="dim">One page. Everything to check before you leave, and the first moves when a player refuses your drive. Save it on your phone.</p>
-      <!-- TODO: swap mailto for email provider form (Formspree/Buttondown) when chosen -->
-      <a href="mailto:savemygig@gmail.com?subject=Send%20me%20the%20Emergency%20Card" class="btn btn-go" data-event="email_capture" data-placement="prepare">
-        📩 Email me the card
-      </a>
-    </div>
+    <EmailCapture
+      source="prepare"
+      title="The Emergency Card"
+      blurb="One page. Everything to check before you leave, and the first moves when a player refuses your drive. Read it free any time, or get the printable version emailed so it lives on your phone."
+    />
 
     <div class="grid section">
       <div class="card">

@@ -1,0 +1,120 @@
+---
+/**
+ * Emergency Card email capture.
+ * NOTE: the card itself is always free and public at /card. This is an
+ * upgrade offer ("keep it forever"), never a gate. Do not put this in
+ * front of the card or inside the rescue tunnel.
+ */
+interface Props {
+  /** where this form lives, for analytics: saved | prepare | card */
+  source: string;
+  title?: string;
+  blurb?: string;
+}
+const {
+  source,
+  title = 'Keep the Emergency Card',
+  blurb = 'We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.',
+} = Astro.props;
+const id = `cap-${source}`;
+---
+<section class="panel capture" data-capture={source}>
+  <h3 style="margin-bottom:0.6rem">{title}</h3>
+  <p class="dim" style="margin-bottom:1rem">{blurb}</p>
+
+  <form class="cap-form" id={id} novalidate>
+    <input
+      type="email"
+      name="email"
+      required
+      autocomplete="email"
+      inputmode="email"
+      placeholder="you@email.com"
+      aria-label="Your email address"
+    />
+    <button type="submit" class="btn btn-solid" style="margin:0">Send me the card</button>
+  </form>
+
+  <p class="cap-msg dim" role="status" aria-live="polite"></p>
+</section>
+
+<style>
+  .cap-form { display: flex; flex-direction: column; gap: 10px; }
+  .cap-form input {
+    width: 100%;
+    padding: 1rem 1.1rem;
+    font-family: inherit;
+    font-size: 16px; /* 16px stops iOS zooming on focus */
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius);
+  }
+  .cap-form input::placeholder { color: var(--text-faint); }
+  .cap-form input:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+  .cap-msg:empty { display: none; }
+  .cap-msg { margin: 0.9rem 0 0; font-size: 0.9rem; }
+  .cap-msg.ok { color: var(--green); }
+  .cap-msg.err { color: var(--red); }
+  @media (min-width: 560px) {
+    .cap-form { flex-direction: row; }
+    .cap-form input { flex: 1; }
+    .cap-form .btn { width: auto; white-space: nowrap; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.cap-form').forEach((form) => {
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const el = form as HTMLFormElement;
+      const wrap = el.closest('.capture') as HTMLElement;
+      const msg = wrap.querySelector('.cap-msg') as HTMLElement;
+      const btn = el.querySelector('button') as HTMLButtonElement;
+      const input = el.querySelector('input[name="email"]') as HTMLInputElement;
+      const source = wrap.dataset.capture || 'unknown';
+      const email = (input.value || '').trim();
+
+      msg.className = 'cap-msg dim';
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        msg.textContent = 'That email does not look right. Check it and try again.';
+        msg.className = 'cap-msg err';
+        input.focus();
+        return;
+      }
+
+      btn.disabled = true;
+      const original = btn.textContent;
+      btn.textContent = 'Sending...';
+      msg.textContent = '';
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ email, source }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          msg.textContent = data.already
+            ? 'You are already on the list. The card is on its way.'
+            : 'Done. Check your inbox for the Emergency Card.';
+          msg.className = 'cap-msg ok';
+          el.reset();
+          if (typeof (window as any).gtag === 'function') {
+            (window as any).gtag('event', 'email_capture', { placement: source });
+          }
+        } else {
+          msg.textContent = 'Something went wrong on our side. Try again in a minute.';
+          msg.className = 'cap-msg err';
+        }
+      } catch (err) {
+        msg.textContent = 'No connection. Try again when you have signal.';
+        msg.className = 'cap-msg err';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = original;
+      }
+    });
+  });
+</script>
