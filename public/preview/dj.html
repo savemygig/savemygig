@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><title>Console · Rekordbox-inspired</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#131519;--s1:#191c22;--s2:#20242c;--edge:#2b303a;--edge-soft:#22262e;
+  --tx:#e8eaef;--dim:#9aa0ac;--faint:#606672;
+  --blue:#2ea7ff;--blue-dim:rgba(46,167,255,.14);
+  --green:#31cc74;--red:#ff5d5d;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100dvh;padding-bottom:132px}
+.mono{font-family:'JetBrains Mono',monospace}
+/* top status bar, like software chrome */
+.bar{position:sticky;top:0;z-index:5;background:var(--s1);border-bottom:1px solid var(--edge)}
+.bar-row{display:flex;align-items:center;justify-content:space-between;padding:13px 16px}
+.wm{font-weight:700;font-size:14px;letter-spacing:-.01em}
+.wm i{color:var(--blue);font-style:normal}
+.readout{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:blink 1.8s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+/* waveform signature strip */
+.wave{display:flex;align-items:flex-end;gap:2px;height:22px;padding:0 16px 7px}
+.wave span{flex:1;background:var(--blue);opacity:.5;border-radius:1px}
+/* progress */
+.seg{display:flex;gap:4px;padding:0 16px 12px}
+.seg i{height:3px;flex:1;border-radius:3px;background:var(--edge)}
+.seg i.on{background:var(--blue)}
+main{max-width:540px;margin:0 auto;padding:22px 16px 0}
+.flag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--faint);margin-bottom:16px}
+.ctx{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+h1{font-size:clamp(25px,7vw,31px);font-weight:600;letter-spacing:-.025em;line-height:1.12}
+.lead{color:var(--dim);font-size:16px;margin:14px 0 26px;max-width:32ch}
+/* the module panel, like a Rekordbox/NI section */
+.mod{background:var(--s1);border:1px solid var(--edge);border-radius:12px;overflow:hidden}
+.mod-h{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--s2);border-bottom:1px solid var(--edge);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.op{display:grid;grid-template-columns:40px 1fr;align-items:start;gap:0;padding:0}
+.op+.op{border-top:1px solid var(--edge-soft)}
+.op .n{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--blue);padding:16px 0 16px 16px}
+.op p{padding:16px 16px 16px 4px;font-size:15px;color:#cbd0d8}
+.op p b{color:var(--tx);font-weight:600}
+.q{font-size:18px;font-weight:600;letter-spacing:-.01em;margin:26px 2px 0}
+/* thumb-zone action dock */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:6;background:linear-gradient(transparent,var(--bg) 22%);padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+.dock-in{max-width:540px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.act{display:flex;align-items:center;gap:14px;text-decoration:none;border-radius:13px;padding:15px 18px;border:1px solid;color:var(--tx)}
+.act .ic{width:9px;height:9px;border-radius:50%;flex:0 0 9px}
+.act .t{font-size:15.5px;font-weight:600}
+.act .s{font-size:12.5px;color:var(--dim)}
+.yes{background:rgba(49,204,116,.10);border-color:rgba(49,204,116,.45)}
+.yes .ic{background:var(--green);box-shadow:0 0 10px rgba(49,204,116,.6)}
+.yes .t{color:var(--green)}
+.no{background:var(--s1);border-color:var(--edge)}
+.no .ic{background:var(--red)}
+</style></head><body>
+<div class="bar">
+  <div class="bar-row"><div class="wm">SAVE MY <i>GIG</i></div><div class="readout"><span class="dot"></span>RESCUE / CRITICAL</div></div>
+  <div class="wave" id="wave"></div>
+  <div class="seg"><i class="on"></i><i></i><i></i></div>
+</div>
+<main>
+  <div class="flag">// DRAFT · review pending</div>
+  <div class="ctx">No laptop · Step 01 / 03</div>
+  <h1>No computer. We work with the booth.</h1>
+  <p class="lead">Most dead USBs are a connection or slot issue, not a dead drive. Fastest checks first.</p>
+  <div class="mod">
+    <div class="mod-h"><span>Checklist</span><span>4 steps</span></div>
+    <div class="op"><div class="n">01</div><p><b>Reseat the drive.</b> Pull the USB out, wait ten seconds, push it back in firmly.</p></div>
+    <div class="op"><div class="n">02</div><p>Try the <b>other USB slot</b> on the same player, if it has two.</p></div>
+    <div class="op"><div class="n">03</div><p>Try the <b>other player.</b> If it reads there, play from that deck and use Link.</p></div>
+    <div class="op"><div class="n">04</div><p>Wipe the USB tip. <b>Dirt and sweat</b> are real causes. Try again.</p></div>
+  </div>
+  <p class="q">Does any player read the USB now?</p>
+</main>
+<div class="dock"><div class="dock-in">
+  <a class="act yes" href="#"><span class="ic"></span><span><span class="t">Yes, it is reading</span><br><span class="s">Back to the music</span></span></a>
+  <a class="act no" href="#"><span class="ic"></span><span><span class="t">No, still nothing</span><br><span class="s">Next check, sixty seconds</span></span></a>
+</div></div>
+<script>
+// static waveform bars (varied heights) as a signature, no animation dependency
+var w=document.getElementById('wave'),h=[6,11,4,15,9,18,7,13,5,16,10,20,8,12,6,17,9,14,5,19,7,11,15,8,13,6,18,10,4,16,9,12,7,20,6,14,11,5,17,8];
+w.innerHTML=h.map(function(v){return '<span style="height:'+v+'px"></span>'}).join('');
+</script>
+</body></html>
