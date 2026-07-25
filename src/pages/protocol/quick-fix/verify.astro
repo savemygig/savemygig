@@ -17,7 +17,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Does everything load correctly?</p>
 
   <Choice step="qf_verify"
-    a={{ href: '/saved?path=quick_fix', label: "YES - I'M READY TO PLAY", event: 'outcome_reached', data: { outcome: 'saved', path: 'quick_fix' } }}
-    b={{ href: '/protocol/quick-fix/fresh-usb', label: 'NO - STILL BROKEN' }}
+    a={{ href: '/saved?path=quick_fix', label: "YES, READY TO PLAY", event: 'outcome_reached', data: { outcome: 'saved', path: 'quick_fix' } }}
+    b={{ href: '/protocol/quick-fix/fresh-usb', label: 'NO, STILL BROKEN' }}
   />
 </Tunnel>

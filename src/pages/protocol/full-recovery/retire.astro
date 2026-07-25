@@ -13,7 +13,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Do you have another USB drive to rebuild on right now?</p>
 
   <Choice step="fr_retire"
-    a={{ href: '/protocol/full-recovery/rebuild', label: 'YES - REBUILDING ON A NEW DRIVE' }}
-    b={{ href: '/prepare?from=retire', label: 'NO - I NEED PROPER DRIVES', desc: 'Go to the prevention hub: the drives worth buying and the system to run them.', event: 'outcome_reached', data: { outcome: 'prepare', path: 'full_recovery' } }}
+    a={{ href: '/protocol/full-recovery/rebuild', label: 'YES, REBUILDING CLEAN' }}
+    b={{ href: '/prepare?from=retire', label: 'NO, I NEED DRIVES', desc: 'Go to the prevention hub: the drives worth buying and the system to run them.', event: 'outcome_reached', data: { outcome: 'prepare', path: 'full_recovery' } }}
   />
 </Tunnel>

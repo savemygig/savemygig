@@ -6,9 +6,7 @@ import Choice from '../../../components/Choice.astro';
   <div class="step-label">Step 1 of 5</div>
   <h2 style="margin-bottom:1rem">Copy your files to this computer</h2>
 
-  <p>We are creating a temporary working copy.</p>
-
-  <div class="alert-card" style="margin-bottom:1.5rem">
+    <div class="alert-card" style="margin-bottom:1.5rem">
     <div style="font-size:20px">⚠️</div>
     <div><strong>Do not remove the USB whilst copying.</strong> Interrupting this step may cause data loss.</div>
   </div>
@@ -23,7 +21,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Have you copied enough tracks to play your set?</p>
 
   <Choice step="copy_files"
-    a={{ href: '/protocol/critical/erase', label: 'YES - FILES ARE COPIED' }}
-    b={{ href: '/protocol/critical/usb-dead', label: 'NO - THE COPY KEEPS FAILING' }}
+    a={{ href: '/protocol/critical/erase', label: 'YES, COPIED' }}
+    b={{ href: '/protocol/critical/usb-dead', label: 'NO, COPY KEEPS FAILING' }}
   />
 </Tunnel>

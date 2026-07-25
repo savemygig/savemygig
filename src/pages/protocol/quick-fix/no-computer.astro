@@ -8,7 +8,7 @@ import Choice from '../../../components/Choice.astro';
   <div class="step-label">Step 0</div>
   <h2 style="margin-bottom:1rem">You have time, use it to find a computer</h2>
 
-  <p>A proper fix needs Rekordbox. With 1-3 hours, you can usually get to one:</p>
+  <p class="dim">A proper fix needs Rekordbox. You have time to find one:</p>
 
   <ul class="checklist">
     <li>Your own laptop at home or in the car?</li>
@@ -19,7 +19,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Did you get access to a computer?</p>
 
   <Choice step="qf_find_computer"
-    a={{ href: '/protocol/quick-fix/usb-check', label: 'YES - GOT ONE' }}
-    b={{ href: '/protocol/critical', label: 'NO - SWITCH TO WORKAROUNDS', desc: 'No computer means no real repair. We use the critical path to get you playing.' }}
+    a={{ href: '/protocol/quick-fix/usb-check', label: 'YES, GOT ONE' }}
+    b={{ href: '/protocol/critical', label: 'NO, SWITCH TO WORKAROUNDS', desc: 'No computer means no real repair. We use the critical path to get you playing.' }}
   />
 </Tunnel>

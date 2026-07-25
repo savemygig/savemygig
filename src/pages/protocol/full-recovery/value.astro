@@ -16,7 +16,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Are there files on it you can't replace, your own edits, unreleased tracks, purchases you can't re-download?</p>
 
   <Choice step="fr_value"
-    a={{ href: '/files-lost?path=full_recovery', label: 'YES - IRREPLACEABLE FILES', desc: 'Recovery route: software first, lab if the drive is physically dead.', event: 'outcome_reached', data: { outcome: 'lost', path: 'full_recovery' } }}
-    b={{ href: '/protocol/full-recovery/health', label: 'NO - I CAN GET IT ALL BACK', desc: 'Then we sacrifice the data and rebuild the drive clean.' }}
+    a={{ href: '/files-lost?path=full_recovery', label: 'YES, IRREPLACEABLE', desc: 'Recovery route: software first, lab if the drive is physically dead.', event: 'outcome_reached', data: { outcome: 'lost', path: 'full_recovery' } }}
+    b={{ href: '/protocol/full-recovery/health', label: 'NO, I CAN REPLACE IT', desc: 'Then we sacrifice the data and rebuild the drive clean.' }}
   />
 </Tunnel>

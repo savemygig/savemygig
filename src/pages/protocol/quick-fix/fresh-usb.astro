@@ -20,7 +20,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Is the fresh drive working?</p>
 
   <Choice step="qf_fresh_usb"
-    a={{ href: '/saved?path=quick_fix&branch=fresh_usb', label: "YES - I'M READY", event: 'outcome_reached', data: { outcome: 'saved', path: 'quick_fix' } }}
-    b={{ href: '/protocol/critical', label: 'NO - OUT OF OPTIONS OR TIME', desc: 'Switch to the critical path: workarounds and survival mode.' }}
+    a={{ href: '/saved?path=quick_fix&branch=fresh_usb', label: "YES, I AM READY", event: 'outcome_reached', data: { outcome: 'saved', path: 'quick_fix' } }}
+    b={{ href: '/protocol/critical', label: 'NO, OUT OF TIME', desc: 'Switch to the critical path: workarounds and survival mode.' }}
   />
 </Tunnel>

@@ -4,10 +4,9 @@ import Choice from '../../../components/Choice.astro';
 ---
 <Tunnel title="USB Check | Save My Gig!" status="Critical · Laptop" red>
   <div class="step-label">Diagnostic</div>
-  <h2 style="margin-bottom:1rem">💻 You have a computer</h2>
+  <h2 style="margin-bottom:1rem">You have a computer</h2>
 
-  <p>Good. Let's see if the computer can read your USB.</p>
-  <p><strong>Plug the USB into the computer.</strong> What happens?</p>
+    <p><strong>Plug the USB into the computer.</strong> What happens?</p>
 
   <Choice step="usb_check"
     a={{ href: '/protocol/critical/risk', label: 'I CAN SEE MY FILES' }}

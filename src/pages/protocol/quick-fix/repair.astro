@@ -8,9 +8,7 @@ import Choice from '../../../components/Choice.astro';
   <div class="step-label">Step 3</div>
   <h2 style="margin-bottom:1rem">Refresh the export</h2>
 
-  <p>The device is readable, we replace tonight's data with a clean copy.</p>
-
-  <ul class="checklist">
+    <ul class="checklist">
     <li>In Rekordbox, on the <strong>device</strong>: delete tonight's playlists.</li>
     <li>Drag tonight's playlists from your collection onto the device again (fresh sync).</li>
     <li>Wait for the sync to finish completely.</li>
@@ -20,7 +18,7 @@ import Choice from '../../../components/Choice.astro';
   <p class="question">Did the sync finish without errors?</p>
 
   <Choice step="qf_repair"
-    a={{ href: '/protocol/quick-fix/verify', label: 'YES - SYNC COMPLETE' }}
-    b={{ href: '/protocol/quick-fix/backup', label: 'NO - ERRORS DURING SYNC', desc: 'Deeper corruption. We rebuild the drive clean.' }}
+    a={{ href: '/protocol/quick-fix/verify', label: 'YES, SYNC DONE' }}
+    b={{ href: '/protocol/quick-fix/backup', label: 'NO, SYNC ERRORS', desc: 'Deeper corruption. We rebuild the drive clean.' }}
   />
 </Tunnel>
