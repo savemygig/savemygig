@@ -36,6 +36,11 @@ const id = `cap-${source}`;
   </form>
 
   <p class="cap-msg dim" role="status" aria-live="polite"></p>
+
+  <p class="cap-legal">
+    We will send you a confirmation email first. Your address is stored with Brevo, our email
+    provider, and used only for this. Unsubscribe any time. <a href="/privacy">Privacy</a>
+  </p>
 </section>
 
 <style>
@@ -56,6 +61,13 @@ const id = `cap-${source}`;
   .cap-msg { margin: 0.9rem 0 0; font-size: 0.9rem; }
   .cap-msg.ok { color: var(--green); }
   .cap-msg.err { color: var(--red); }
+  .cap-legal {
+    margin: 0.9rem 0 0;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-faint);
+  }
+  .cap-legal a { color: var(--text-dim); }
   @media (min-width: 560px) {
     .cap-form { flex-direction: row; }
     .cap-form input { flex: 1; }

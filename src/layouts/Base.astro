@@ -1,5 +1,6 @@
 ---
 import Analytics from '../components/Analytics.astro';
+import Consent from '../components/Consent.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -54,5 +55,6 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
     </div>
     <p>Save My Gig! · Built by a DJ who's been there. · <a href="https://buymeacoffee.com/savemygig" data-event="affiliate_click" data-program="bmc" data-placement="footer">Buy me a coffee ☕</a> · <a href="/privacy">Privacy</a></p>
   </footer>
+  <Consent />
 </body>
 </html>

@@ -1,17 +1,15 @@
 ---
-// GA4 - G-65PEMEYW2M. Also binds any element with data-event / data-* params
-// so pages stay zero-custom-JS: <a data-event="triage_selected" data-path="critical">
+// GA4 - G-65PEMEYW2M.
+// IMPORTANT: the gtag library is NOT loaded here any more. It is loaded by
+// Consent.astro only after the visitor accepts analytics cookies (GDPR).
+// This file only wires the click tracking, which safely does nothing when
+// consent was declined, because gtag is undefined in that case.
 ---
-<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-65PEMEYW2M"></script>
 <script is:inline>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-65PEMEYW2M');
-
   document.addEventListener('click', function (e) {
     var el = e.target.closest('[data-event]');
     if (!el) return;
+    if (typeof window.gtag !== 'function') return; // no consent, no tracking
     var params = {};
     for (var i = 0; i < el.attributes.length; i++) {
       var a = el.attributes[i];
@@ -19,6 +17,6 @@
         params[a.name.slice(5).replace(/-/g, '_')] = a.value;
       }
     }
-    gtag('event', el.getAttribute('data-event'), params);
+    window.gtag('event', el.getAttribute('data-event'), params);
   });
 </script>

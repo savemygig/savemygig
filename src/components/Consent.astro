@@ -1,0 +1,85 @@
+---
+/**
+ * Cookie consent, GDPR/ePrivacy.
+ *
+ * Analytics cookies are only set AFTER the visitor accepts. Declining works
+ * and is remembered. Deliberately small and anchored to the bottom so it
+ * never covers the emergency CTA, and it is hidden inside the rescue tunnel
+ * (the Tunnel layout does not include this component).
+ */
+---
+<div id="ck" class="ck" role="dialog" aria-label="Cookie choice" hidden>
+  <p class="ck-t">
+    We use analytics cookies to see which pages actually help DJs. Nothing else, no ads, no selling.
+    <a href="/privacy">Privacy</a>
+  </p>
+  <div class="ck-b">
+    <button type="button" id="ck-no" class="ck-btn ck-ghost">Decline</button>
+    <button type="button" id="ck-yes" class="ck-btn ck-solid">Accept</button>
+  </div>
+</div>
+
+<style>
+  .ck {
+    position: fixed; z-index: 80;
+    left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom));
+    max-width: 640px; margin: 0 auto;
+    background: var(--surf); border: 1px solid var(--edge);
+    border-radius: var(--radius); padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .ck-t { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--text-dim); }
+  .ck-t a { color: var(--text); }
+  .ck-b { display: flex; gap: 8px; justify-content: flex-end; }
+  .ck-btn {
+    font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+    font-size: 12.5px; letter-spacing: 0.02em; padding: 10px 16px;
+    border-radius: var(--radius); cursor: pointer; border: 1px solid var(--edge);
+  }
+  .ck-ghost { background: transparent; color: var(--text-dim); }
+  .ck-solid { background: var(--red); color: #0a0a0b; border-color: var(--red); }
+  @media (min-width: 560px) {
+    .ck { flex-direction: row; align-items: center; }
+    .ck-t { flex: 1; }
+    .ck-b { flex-shrink: 0; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var KEY = 'smg-consent';
+    var GA = 'G-65PEMEYW2M';
+
+    function loadAnalytics() {
+      if (window.__smgGaLoaded) return;
+      window.__smgGaLoaded = true;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', GA);
+    }
+    window.__smgLoadAnalytics = loadAnalytics;
+
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) {}
+
+    if (saved === 'yes') { loadAnalytics(); return; }
+    if (saved === 'no') { return; }
+
+    var box = document.getElementById('ck');
+    if (!box) return;
+    box.hidden = false;
+
+    function choose(v) {
+      try { localStorage.setItem(KEY, v); } catch (e) {}
+      box.hidden = true;
+      if (v === 'yes') loadAnalytics();
+    }
+    document.getElementById('ck-yes').addEventListener('click', function () { choose('yes'); });
+    document.getElementById('ck-no').addEventListener('click', function () { choose('no'); });
+  })();
+</script>

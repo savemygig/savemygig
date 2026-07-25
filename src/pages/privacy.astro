@@ -2,8 +2,8 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base
-  title="Privacy | Save My Gig!"
-  description="What Save My Gig collects (very little), why, and your choices."
+  title="Privacy and cookies | Save My Gig!"
+  description="What Save My Gig collects (very little), why, who processes it, and your rights."
   path="/privacy"
   noindex
 >
@@ -11,21 +11,60 @@ import Base from '../layouts/Base.astro';
     <div class="status-line">Privacy</div>
     <h1 style="margin-bottom:1.5rem">PRIVACY, <span class="accent">PLAINLY</span></h1>
 
+    <p class="dim" style="margin-bottom:2rem">
+      Short version: the rescue flow needs nothing from you. No account, no login, no files uploaded.
+      The only personal data we ever hold is an email address, and only if you choose to give us one.
+    </p>
+
     <div class="panel">
-      <h3 style="margin-bottom:0.6rem">What we collect</h3>
-      <p class="dim" style="margin-bottom:0">Save My Gig has no accounts and no logins. We use Google Analytics 4 to understand anonymous usage, which pages help, where people get stuck. That involves cookies set by Google. We never see names, emails, or files.</p>
+      <h3 style="margin-bottom:0.6rem">Cookies and analytics</h3>
+      <p class="dim">
+        We use Google Analytics 4 to see which pages actually help and where people get stuck.
+        It sets cookies, so we <strong>only load it after you accept</strong> on the banner.
+        Decline and no analytics cookies are set, and the site works exactly the same.
+      </p>
+      <p class="dim" style="margin-bottom:0">
+        To change your mind later, clear this site's data in your browser and the banner will ask again.
+      </p>
     </div>
 
     <div class="panel">
-      <h3 style="margin-bottom:0.6rem">What we don't do</h3>
-      <p class="dim" style="margin-bottom:0">No ads inside the emergency flow. No selling of data. No tracking beyond standard analytics. If you email us, your address is used only to reply.</p>
+      <h3 style="margin-bottom:0.6rem">If you give us your email</h3>
+      <p class="dim">
+        Only to send you the Emergency Card and the occasional note that might save a gig.
+        We use double opt-in: you get a confirmation email first, and nothing is added to our list
+        until you click it.
+      </p>
+      <p class="dim" style="margin-bottom:0">
+        Emails are processed by <strong>Brevo</strong> (Sendinblue SAS, France), acting as our processor.
+        We do not sell, rent or share your address with anyone else. Every email has a one-click
+        unsubscribe, and unsubscribing removes you.
+      </p>
     </div>
 
     <div class="panel">
-      <h3 style="margin-bottom:0.6rem">Your choices</h3>
-      <p class="dim" style="margin-bottom:0">Block analytics with any content blocker and the site works exactly the same. Questions: <a href="mailto:savemygig@gmail.com">savemygig@gmail.com</a>.</p>
+      <h3 style="margin-bottom:0.6rem">Your rights</h3>
+      <p class="dim" style="margin-bottom:0">
+        If you are in the EU or UK, you can ask us for a copy of what we hold about you, ask us to
+        correct it, or ask us to delete it. Write to
+        <a href="mailto:savemygig@gmail.com">savemygig@gmail.com</a> and we will action it.
+        Our legal basis for the email list is your consent, which you can withdraw at any time.
+      </p>
     </div>
 
-    <p class="dim" style="font-size:0.85rem">Last updated: July 2026 · Operated from Brazil · Some outbound links on gear and recovery pages may become affiliate links; they never change what you pay.</p>
+    <div class="panel">
+      <h3 style="margin-bottom:0.6rem">What we never do</h3>
+      <p class="dim" style="margin-bottom:0">
+        No ads inside the emergency flow, ever. No selling of data. No tracking beyond the analytics
+        described above. We never see your music, your files, or your drives.
+      </p>
+    </div>
+
+    <p class="dim" style="font-size:0.85rem;margin-top:2rem">
+      Last updated: July 2026 · Operated from Brazil · Contact:
+      <a href="mailto:savemygig@gmail.com">savemygig@gmail.com</a> ·
+      Some outbound links on the gear and recovery pages may become affiliate links; they never
+      change what you pay and never appear inside the rescue flow.
+    </p>
   </main>
 </Base>
