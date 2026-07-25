@@ -114,7 +114,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
     <div class="custom-toolbar" id="customToolbar" hidden>
       <button type="button" class="btn btn-neutral" id="editToggle">Edit list</button>
+      <button type="button" class="btn btn-neutral" id="backupBtn">Email me a copy</button>
       <span class="edit-hint dim" id="editHint">Add or remove items. Tap Done when you finish, so nothing gets deleted by accident.</span>
+      <form class="backup-form" id="backupForm" hidden>
+        <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" />
+        <button type="submit" class="btn btn-neutral">Send it</button>
+      </form>
+      <p class="backup-msg" id="backupMsg" role="status" aria-live="polite"></p>
     </div>
 
     <div id="list" data-mode="basic" data-edit="off">
@@ -397,6 +403,19 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   .add-own { display: none; gap: 8px; margin: 0.6rem 0 0.2rem; }
   #list[data-mode="custom"][data-edit="on"] .add-own { display: flex; }
+
+  .backup-form { display: flex; gap: 8px; flex-basis: 100%; margin-top: 0.3rem; }
+  .backup-form[hidden] { display: none; }
+  .backup-form input {
+    flex: 1; padding: 0.7rem 0.9rem; font-family: inherit; font-size: 16px; color: var(--text);
+    background: var(--bg); border: 1px solid var(--edge); border-radius: var(--radius);
+  }
+  .backup-form input::placeholder { color: var(--text-faint); }
+  .backup-form .btn { margin: 0; width: auto; }
+  .backup-msg { flex-basis: 100%; margin: 0.4rem 0 0; font-size: 0.85rem; color: var(--text-dim); }
+  .backup-msg:empty { display: none; }
+  .backup-msg.ok { color: var(--green); }
+  .backup-msg.err { color: var(--red); }
   .add-own .add-input {
     flex: 1; padding: 0.75rem 0.9rem; font-family: inherit; font-size: 16px; color: var(--text);
     background: var(--bg); border: 1px dashed var(--edge); border-radius: var(--radius);
@@ -422,6 +441,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const UNLOCK_KEY = 'SMG_UNLOCKED';
   const CUSTOM_KEY = 'SMG_CHECKLIST_CUSTOM';
   const REMOVED_KEY = 'SMG_CHECKLIST_REMOVED';
+  const EMAIL_KEY = 'SMG_EMAIL';
 
   const listEl = document.getElementById('list');
   const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
@@ -437,6 +457,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const unlockMsg = document.getElementById('unlockMsg');
   const customToolbar = document.getElementById('customToolbar') as HTMLElement | null;
   const editToggle = document.getElementById('editToggle');
+  const backupBtn = document.getElementById('backupBtn');
+  const backupForm = document.getElementById('backupForm') as HTMLFormElement | null;
+  const backupMsg = document.getElementById('backupMsg');
 
   let mode: string = 'basic';
   let pendingMode: string = 'advanced';
@@ -473,6 +496,69 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     catch (e) { return []; }
   }
   function saveRemoved(a: string[]) { try { localStorage.setItem(REMOVED_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } }
+  function getEmail(): string { try { return localStorage.getItem(EMAIL_KEY) || ''; } catch (e) { return ''; } }
+  function setEmail(v: string) { try { localStorage.setItem(EMAIL_KEY, v); } catch (e) { /* blocked */ } }
+
+  function b64urlToStr(s: string): string {
+    let t = s.replace(/-/g, '+').replace(/_/g, '/');
+    while (t.length % 4) t += '=';
+    const bin = atob(t);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+  function tryRestore(): boolean {
+    const m = location.hash.match(/[#&]r=([^&]+)/);
+    if (!m) return false;
+    try {
+      const data = JSON.parse(b64urlToStr(decodeURIComponent(m[1])));
+      if (data && data.c) saveCustom(data.c);
+      if (data && Array.isArray(data.x)) saveRemoved(data.x);
+      setUnlocked();
+      history.replaceState(null, '', location.pathname + location.search);
+      return true;
+    } catch (e) { return false; }
+  }
+  function getListByCat(): Record<string, string[]> {
+    const out: Record<string, string[]> = {};
+    document.querySelectorAll<HTMLElement>('.task-group').forEach((group) => {
+      const cat = group.getAttribute('data-group') || '';
+      const labels: string[] = [];
+      group.querySelectorAll<HTMLElement>('.task').forEach((li) => {
+        if (li.classList.contains('removed')) return;
+        const el = li.querySelector<HTMLElement>('.task-label');
+        const t = el && el.textContent ? el.textContent.trim() : '';
+        if (t) labels.push(t);
+      });
+      out[cat] = labels;
+    });
+    return out;
+  }
+  async function sendBackup(email: string) {
+    email = (email || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      if (backupMsg) { backupMsg.textContent = 'That email does not look right.'; backupMsg.className = 'backup-msg err'; }
+      return;
+    }
+    if (backupMsg) { backupMsg.textContent = 'Sending...'; backupMsg.className = 'backup-msg'; }
+    try {
+      const res = await fetch('/api/backup', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email, listByCat: getListByCat(), custom: loadCustom(), removed: loadRemoved() }),
+      });
+      const data = await res.json();
+      if (data && data.ok) {
+        setEmail(email);
+        if (backupForm) backupForm.hidden = true;
+        if (backupMsg) { backupMsg.textContent = 'Sent to ' + email + '. Check your inbox for the copy and a link to load it anywhere.'; backupMsg.className = 'backup-msg ok'; }
+      } else if (backupMsg) {
+        backupMsg.textContent = 'Could not send right now. Try again in a minute.'; backupMsg.className = 'backup-msg err';
+      }
+    } catch (e) {
+      if (backupMsg) { backupMsg.textContent = 'No connection. Try again when you have signal.'; backupMsg.className = 'backup-msg err'; }
+    }
+  }
 
   function isVisible(box: HTMLInputElement): boolean {
     const lvl = box.dataset.level;
@@ -608,12 +694,31 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
   });
 
-  // custom items (may already exist for unlocked users)
+  // restore from an email link if one is present, then render custom items
+  const restored = tryRestore();
   renderCustom();
   applyRemoved();
 
   // edit toggle (custom mode): gates delete and add so nothing goes by accident
   if (editToggle) editToggle.addEventListener('click', () => setEdit(!editMode));
+
+  // email me a copy: sends the list + a load-anywhere link to their inbox
+  if (backupBtn) backupBtn.addEventListener('click', () => {
+    const stored = getEmail();
+    if (stored) { sendBackup(stored); }
+    else if (backupForm) {
+      backupForm.hidden = false;
+      const i = backupForm.querySelector('input');
+      if (i) (i as HTMLInputElement).focus();
+    }
+  });
+  if (backupForm) {
+    backupForm.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const i = backupForm.querySelector('input[name="email"]') as HTMLInputElement;
+      sendBackup(i.value);
+    });
+  }
 
   // remove a standard row (only reachable in edit mode)
   document.querySelectorAll<HTMLButtonElement>('.task-remove[data-remove]').forEach((btn) => {
@@ -652,6 +757,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         return;
       }
       setUnlocked();
+      setEmail(email);
       if (unlockEl) unlockEl.hidden = true;
       setMode(pendingMode);
       if (typeof (window as any).gtag === 'function') {
@@ -692,6 +798,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // restore mode (advanced/custom only if already unlocked on this device)
   let savedMode = 'basic';
   try { savedMode = localStorage.getItem(MODE_KEY) || 'basic'; } catch (e) { /* ignore */ }
+  if (restored) savedMode = 'custom';
   if ((savedMode === 'advanced' || savedMode === 'custom') && !isUnlocked()) savedMode = 'basic';
   setMode(savedMode);
 
