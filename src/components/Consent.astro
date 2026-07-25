@@ -10,6 +10,7 @@
 ---
 <div id="ck" class="ck" role="dialog" aria-label="Cookie choice" hidden>
   <p class="ck-t">
+    <strong class="ck-h">Before you dive in.</strong>
     We use analytics cookies to see which pages actually help DJs. Nothing else, no ads, no selling.
     <a href="/privacy">Privacy</a>
   </p>
@@ -24,25 +25,45 @@
   .ck[hidden] { display: none !important; }
   .ck {
     position: fixed; z-index: 80;
-    left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom));
-    max-width: 640px; margin: 0 auto;
-    background: var(--surf); border: 1px solid var(--edge);
-    border-radius: var(--radius); padding: 14px 16px;
-    display: flex; flex-direction: column; gap: 12px;
+    left: 12px; right: 12px; bottom: calc(14px + env(safe-area-inset-bottom));
+    max-width: 660px; margin: 0 auto;
+    /* Elevated + a bold amber notice edge so it reads as a distinct banner,
+       not another dark card. It has to hit your face. */
+    background: var(--surf-2);
+    border: 1.5px solid var(--amber);
+    border-radius: var(--radius); padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 13px;
+    box-shadow: 0 10px 44px rgba(0, 0, 0, 0.66), 0 0 0 1px rgba(217, 164, 65, 0.18), 0 0 26px rgba(217, 164, 65, 0.14);
+    animation: ckIn 0.32s ease-out both;
   }
-  .ck-t { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--text-dim); }
-  .ck-t a { color: var(--text); }
-  .ck-b { display: flex; gap: 8px; justify-content: flex-end; }
+  @keyframes ckIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) { .ck { animation: none; } }
+
+  .ck-t { margin: 0; font-size: 14px; line-height: 1.55; color: var(--text); }
+  .ck-h { display: block; font-family: var(--font-display); font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.02em; font-size: 12.5px;
+    color: var(--amber); margin-bottom: 3px; }
+  .ck-t a { color: var(--text); text-decoration: underline; }
+  .ck-b { display: flex; gap: 10px; justify-content: flex-end; }
   .ck-btn {
-    font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
-    font-size: 12.5px; letter-spacing: 0.02em; padding: 10px 16px;
+    font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
+    font-size: 13px; letter-spacing: 0.02em; padding: 11px 20px;
     border-radius: var(--radius); cursor: pointer; border: 1px solid var(--edge);
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
   }
-  .ck-ghost { background: transparent; color: var(--text-dim); }
+  /* Both are clearly buttons. Decline is a real outlined button, not a ghost
+     that melts into the panel. */
+  .ck-ghost { background: transparent; color: var(--text); border-color: var(--text-faint); }
+  .ck-ghost:hover { border-color: var(--text-dim); background: var(--surf); }
   .ck-solid { background: var(--red); color: #0a0a0b; border-color: var(--red); }
+  .ck-solid:hover { box-shadow: 0 0 14px rgba(255, 77, 46, 0.5); }
   @media (min-width: 560px) {
-    .ck { flex-direction: row; align-items: center; }
+    .ck { flex-direction: row; align-items: center; gap: 20px; }
     .ck-t { flex: 1; }
+    .ck-h { display: inline; margin-bottom: 0; margin-right: 6px; }
     .ck-b { flex-shrink: 0; }
   }
 </style>
