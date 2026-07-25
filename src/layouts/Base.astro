@@ -66,8 +66,8 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
   <slot />
   <footer class="site-footer">
     <div class="foot-share">
-      <p class="foot-share-h">Found this useful? Send it to a DJ who will need it.</p>
-      <p class="foot-share-sub">Free rescue and prevention. The more DJs know it exists, the more gigs it saves.</p>
+      <p class="foot-share-h">Send it to a DJ friend.</p>
+      <p class="foot-share-sub">The more DJs know about it, the more gigs it saves.</p>
       <div class="foot-share-btns">
         <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp" href="https://wa.me/?text=Save%20My%20Gig%2C%20free%20DJ%20rescue%20and%20prevention%2C%20for%20when%20your%20USB%20dies%20before%20a%20set.%20https%3A%2F%2Fwww.savemygig.com">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.1 14.9l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 0 1 12 4zm4.3 9.8c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1l-.7 1c-.2.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.5-1.1v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3c-.3.3-1 1-1 2.3s1 2.7 1.1 2.9 2 3.1 4.9 4.3c1.8.7 2.5.8 3.4.6.5 0 1.4-.5 1.6-1.1.2-.5.2-1 .1-1.1z"/></svg>
@@ -86,7 +86,28 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
           <span>Copy link</span>
         </button>
       </div>
-      <p class="foot-feedback"><a href="mailto:savemygig@gmail.com?subject=Idea%20or%20bug%20for%20Save%20My%20Gig">Got an idea or found a bug? Tell us &rarr;</a></p>
+    </div>
+
+    <div class="foot-feedback">
+      <p class="foot-feedback-h">Got an idea or found a bug? Help us make it better.</p>
+      <p class="foot-feedback-sub">Suggestion, bug, anything. Leave your Instagram and we will follow you back.</p>
+      <form class="fb-form" id="fbForm" novalidate>
+        <div class="fb-row">
+          <select name="type" class="fb-input fb-type" aria-label="Feedback type">
+            <option value="Suggestion">Suggestion</option>
+            <option value="Bug">Bug</option>
+            <option value="Other">Other</option>
+          </select>
+          <input type="text" name="instagram" class="fb-input" placeholder="@your.instagram (optional)" aria-label="Your Instagram" />
+        </div>
+        <textarea name="message" class="fb-input fb-msg" rows="3" placeholder="What is on your mind?" aria-label="Your message" required></textarea>
+        <div class="fb-row">
+          <input type="text" name="name" class="fb-input" placeholder="Name (optional)" aria-label="Your name" />
+          <input type="email" name="email" class="fb-input" placeholder="Email (optional)" aria-label="Your email" />
+        </div>
+        <button type="submit" class="btn btn-solid fb-send">Send it</button>
+        <p class="fb-msg-status" id="fbStatus" role="status" aria-live="polite"></p>
+      </form>
     </div>
     <div class="foot-links">
       <a href="/emergency">Emergency Mode</a>
@@ -119,6 +140,41 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
         } catch (e) { /* ignore */ }
       });
     }
+
+    const fbForm = document.getElementById('fbForm');
+    const fbStatus = document.getElementById('fbStatus');
+    if (fbForm) {
+      fbForm.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        const fd = new FormData(fbForm);
+        const message = (fd.get('message') || '').toString().trim();
+        if (!message) {
+          if (fbStatus) { fbStatus.textContent = 'Add a message first.'; fbStatus.className = 'fb-msg-status err'; }
+          return;
+        }
+        if (fbStatus) { fbStatus.textContent = 'Sending...'; fbStatus.className = 'fb-msg-status'; }
+        try {
+          const res = await fetch('/api/feedback', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              type: fd.get('type'), message,
+              name: fd.get('name'), email: fd.get('email'),
+              instagram: fd.get('instagram'), page: location.pathname,
+            }),
+          });
+          const data = await res.json();
+          if (data && data.ok) {
+            fbForm.reset();
+            if (fbStatus) { fbStatus.textContent = 'Thank you. We read every one.'; fbStatus.className = 'fb-msg-status ok'; }
+          } else if (fbStatus) {
+            fbStatus.textContent = 'Could not send right now. Try again in a minute.'; fbStatus.className = 'fb-msg-status err';
+          }
+        } catch (e) {
+          if (fbStatus) { fbStatus.textContent = 'No connection. Try again later.'; fbStatus.className = 'fb-msg-status err'; }
+        }
+      });
+    }
   </script>
 </body>
 </html>
@@ -138,16 +194,32 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
   }
   .share-btn svg { flex: 0 0 auto; }
   .share-btn:hover { border-color: var(--text-dim); color: var(--text); background: var(--surf-2); }
-  .foot-feedback { margin: 0.9rem 0 0; font-size: 0.85rem; }
-  .foot-feedback a { color: var(--text-dim); }
-  .foot-feedback a:hover { color: var(--text); }
+  .foot-feedback { max-width: 30rem; margin: 1.8rem auto 0; }
+  .foot-feedback-h { font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--text); margin: 0 0 0.2rem; text-align: center; }
+  .foot-feedback-sub { font-size: 0.82rem; color: var(--text-dim); margin: 0 0 0.9rem; text-align: center; }
+  .fb-form { display: flex; flex-direction: column; gap: 0.5rem; }
+  .fb-row { display: flex; gap: 0.5rem; }
+  .fb-input {
+    width: 100%; padding: 0.6rem 0.8rem; font-family: inherit; font-size: 16px; color: var(--text);
+    background: var(--bg); border: 1px solid var(--edge); border-radius: var(--radius);
+  }
+  .fb-input::placeholder { color: var(--text-faint); }
+  .fb-input:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; }
+  .fb-type { flex: 0 0 40%; }
+  .fb-msg { resize: vertical; min-height: 2.6rem; }
+  .fb-send { width: auto; align-self: flex-start; margin: 0.2rem 0 0; }
+  .fb-msg-status { margin: 0.5rem 0 0; font-size: 0.85rem; color: var(--text-dim); }
+  .fb-msg-status:empty { display: none; }
+  .fb-msg-status.ok { color: var(--green); }
+  .fb-msg-status.err { color: var(--red); }
+  @media (max-width: 480px) { .fb-row { flex-direction: column; } .fb-type { flex: 1; } }
   .site-nav {
-    max-width: 780px; margin: 0 auto; padding: 0.8rem 1.25rem;
+    max-width: 760px; margin: 0 auto; padding: 0.8rem 1.25rem;
     display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: relative;
   }
   .nav-brand { display: flex; flex-direction: column; gap: 3px; text-decoration: none; line-height: 1; }
   .nb-name {
-    font-family: var(--font-display); font-weight: 900; font-size: 1.22rem;
+    font-family: var(--font-display); font-weight: 900; font-size: 1.36rem;
     text-transform: uppercase; letter-spacing: -0.02em; color: var(--text);
   }
   .nb-name .accent { color: var(--red); }
@@ -156,7 +228,7 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
     text-transform: uppercase; color: var(--text-dim);
   }
   .nav-home { display: none; }
-  .nav-links { display: flex; gap: 1.25rem; }
+  .nav-links { display: flex; gap: 1.05rem; }
   .nav-links a {
     font-family: var(--font-body); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.05em;
     text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.15s ease;

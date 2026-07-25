@@ -79,7 +79,7 @@ const faqSchema = {
 </Base>
 
 <style>
-  .landing { max-width: 760px; margin: 0 auto; padding: 2.2rem 1.25rem 2.4rem; }
+  .landing { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem 1rem; }
   .ask { font-size: clamp(2rem, 9vw, 3.2rem); margin-bottom: 0.6rem; }
   .sub { color: var(--text-dim); margin-bottom: 2rem; max-width: 42rem; text-wrap: balance; }
 
@@ -104,10 +104,10 @@ const faqSchema = {
   .d-prevent .door-led { background: var(--amber); }
 
   /* One-time staggered outline glow: walks the eye down the three doors. */
-  .door { animation: doorGlow 1s ease-in-out both; }
-  .d-emergency { --glow: rgba(255,77,46,0.7); animation-delay: 0.35s; }
-  .d-ready { --glow: rgba(58,216,132,0.65); animation-delay: 0.95s; }
-  .d-prevent { --glow: rgba(217,164,65,0.65); animation-delay: 1.55s; }
+  .door { animation: doorGlow 1.2s ease-in-out both; }
+  .d-emergency { --glow: rgba(255,77,46,0.7); animation-delay: 0.42s; }
+  .d-ready { --glow: rgba(58,216,132,0.65); animation-delay: 1.14s; }
+  .d-prevent { --glow: rgba(217,164,65,0.65); animation-delay: 1.86s; }
   @keyframes doorGlow {
     0%, 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); border-color: var(--edge); }
     50% { box-shadow: 0 0 22px 1px var(--glow); border-color: var(--glow); }
