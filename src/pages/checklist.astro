@@ -100,7 +100,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <button type="submit" class="btn btn-solid">Join and unlock</button>
       </form>
       <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
-      <p class="unlock-note">One time on this device, as long as your browser storage stays on. <a href="/privacy">Privacy</a></p>
+      <p class="unlock-note">By joining you agree we can email you Save My Gig news and partner offers, DJ world only, never spam. One time on this device. <a href="/privacy">Privacy</a></p>
     </div>
 
     <section class="readiness" id="readiness" aria-live="polite">
@@ -112,7 +112,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <p class="readiness-sub" id="sub">0 ready</p>
     </section>
 
-    <div id="list" data-mode="basic">
+    <div class="custom-toolbar" id="customToolbar" hidden>
+      <button type="button" class="btn btn-neutral" id="editToggle">Edit list</button>
+      <span class="edit-hint dim" id="editHint">Add or remove items. Tap Done when you finish, so nothing gets deleted by accident.</span>
+    </div>
+
+    <div id="list" data-mode="basic" data-edit="off">
       {groups.map((g) => (
         <section class="panel task-group" data-group={g.id}>
           <h3 class="group-h">
@@ -128,12 +133,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             <p class="dim group-blurb">{g.blurb}</p>
             <ul class="tasks">
               {g.items.map((it) => (
-                <li class="task" data-level={it.level}>
+                <li class="task" data-level={it.level} data-key={it.key}>
                   <label>
                     <input type="checkbox" data-key={it.key} data-level={it.level} />
                     <span class="box" aria-hidden="true"></span>
                     <span class="task-label">{it.label}</span>
                   </label>
+                  <button type="button" class="task-remove" aria-label="Remove" data-remove={it.key}>&times;</button>
                 </li>
               ))}
             </ul>
@@ -292,8 +298,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .group-blurb { margin: 0 0 0.4rem; font-size: 0.92rem; }
 
   .tasks { list-style: none; margin: 0.4rem 0 0; padding: 0; }
-  .task { border-bottom: 1px solid var(--edge-soft); }
+  .task { border-bottom: 1px solid var(--edge-soft); display: flex; align-items: center; }
   .task:last-child { border-bottom: none; }
+  .task > label { flex: 1; }
   /* Basic mode hides the advanced items so the mobile list stays short. */
   #list[data-mode="basic"] .task[data-level="advanced"] { display: none; }
 
@@ -372,18 +379,24 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .unlock-note { margin: 0.8rem 0 0; font-size: 0.76rem; color: var(--text-faint); }
   .unlock-note a { color: var(--text-dim); }
 
-  /* Custom mode: your own items + add rows. Only shown in custom mode. */
+  /* Custom mode: your own items. Editing (delete/add) is gated behind Edit. */
   .custom-tasks { list-style: none; margin: 0; padding: 0; }
-  #list:not([data-mode="custom"]) .custom-tasks,
-  #list:not([data-mode="custom"]) .add-own { display: none; }
-  .task-custom { display: flex; align-items: center; }
-  .task-custom > label { flex: 1; }
+  #list:not([data-mode="custom"]) .custom-tasks { display: none; }
+  #list[data-mode="custom"] .task.removed { display: none; }
   .task-remove {
-    flex: 0 0 auto; background: transparent; border: none; color: var(--text-faint);
+    flex: 0 0 auto; display: none; background: transparent; border: none; color: var(--text-faint);
     font-size: 1.4rem; line-height: 1; cursor: pointer; padding: 0 0.2rem 0 0.6rem;
   }
+  #list[data-edit="on"] .task-remove { display: block; }
   .task-remove:hover { color: var(--red); }
-  .add-own { display: flex; gap: 8px; margin: 0.6rem 0 0.2rem; }
+
+  .custom-toolbar { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .custom-toolbar[hidden] { display: none; }
+  .custom-toolbar .btn { width: auto; display: inline-block; margin: 0; }
+  .edit-hint { font-size: 0.8rem; }
+
+  .add-own { display: none; gap: 8px; margin: 0.6rem 0 0.2rem; }
+  #list[data-mode="custom"][data-edit="on"] .add-own { display: flex; }
   .add-own .add-input {
     flex: 1; padding: 0.75rem 0.9rem; font-family: inherit; font-size: 16px; color: var(--text);
     background: var(--bg); border: 1px dashed var(--edge); border-radius: var(--radius);
@@ -408,6 +421,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const OPEN_KEY = 'SMG_CHECKLIST_OPEN';
   const UNLOCK_KEY = 'SMG_UNLOCKED';
   const CUSTOM_KEY = 'SMG_CHECKLIST_CUSTOM';
+  const REMOVED_KEY = 'SMG_CHECKLIST_REMOVED';
 
   const listEl = document.getElementById('list');
   const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
@@ -421,9 +435,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const unlockEl = document.getElementById('unlock') as HTMLElement | null;
   const unlockForm = document.getElementById('unlockForm') as HTMLFormElement | null;
   const unlockMsg = document.getElementById('unlockMsg');
+  const customToolbar = document.getElementById('customToolbar') as HTMLElement | null;
+  const editToggle = document.getElementById('editToggle');
 
   let mode: string = 'basic';
   let pendingMode: string = 'advanced';
+  let editMode = false;
 
   const allBoxes = () => Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
 
@@ -451,12 +468,18 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function saveCustom(c: Record<string, { k: string; t: string }[]>) {
     try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(c)); } catch (e) { /* blocked */ }
   }
+  function loadRemoved(): string[] {
+    try { const raw = localStorage.getItem(REMOVED_KEY); return raw ? JSON.parse(raw) : []; }
+    catch (e) { return []; }
+  }
+  function saveRemoved(a: string[]) { try { localStorage.setItem(REMOVED_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } }
 
   function isVisible(box: HTMLInputElement): boolean {
     const lvl = box.dataset.level;
+    if (mode === 'custom' && loadRemoved().indexOf(box.dataset.key || '') !== -1) return false;
     if (mode === 'basic') return lvl === 'basic';
     if (mode === 'advanced') return lvl !== 'custom';
-    return true; // custom mode shows everything, including your own items
+    return true; // custom mode shows everything, minus what you removed
   }
 
   function render() {
@@ -530,6 +553,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function setMode(m: string) {
     mode = m;
     if (listEl) listEl.setAttribute('data-mode', m);
+    if (m !== 'custom') setEdit(false);
+    if (customToolbar) customToolbar.hidden = m !== 'custom';
     modeBtns.forEach((b) => {
       const on = b.dataset.modeSet === m;
       b.classList.toggle('is-on', on);
@@ -544,6 +569,19 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     }
     saveMode(m);
     render();
+  }
+
+  function setEdit(on: boolean) {
+    editMode = on;
+    if (listEl) listEl.setAttribute('data-edit', on ? 'on' : 'off');
+    if (editToggle) editToggle.textContent = on ? 'Done' : 'Edit list';
+  }
+
+  function applyRemoved() {
+    const set = loadRemoved();
+    document.querySelectorAll<HTMLElement>('.task[data-key]').forEach((li) => {
+      li.classList.toggle('removed', set.indexOf(li.getAttribute('data-key') || '') !== -1);
+    });
   }
 
   function setGroupOpen(section: HTMLElement, open: boolean, persist: boolean) {
@@ -572,6 +610,21 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   // custom items (may already exist for unlocked users)
   renderCustom();
+  applyRemoved();
+
+  // edit toggle (custom mode): gates delete and add so nothing goes by accident
+  if (editToggle) editToggle.addEventListener('click', () => setEdit(!editMode));
+
+  // remove a standard row (only reachable in edit mode)
+  document.querySelectorAll<HTMLButtonElement>('.task-remove[data-remove]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const key = btn.getAttribute('data-remove') || '';
+      const set = loadRemoved();
+      if (set.indexOf(key) === -1) { set.push(key); saveRemoved(set); }
+      const li = btn.closest('.task'); if (li) li.classList.add('removed');
+      render();
+    });
+  });
 
   // mode buttons: Advanced and Custom are gated behind an email
   modeBtns.forEach((b) => b.addEventListener('click', () => {
