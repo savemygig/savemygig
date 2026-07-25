@@ -21,6 +21,11 @@
 const LIST_ID = 3; // "Emergency Card subscribers"
 const REDIRECT_URL = 'https://www.savemygig.com/card-ready';
 
+// Brevo double opt-in template. Not a secret, so it lives here.
+// "Emergency Card - double opt-in confirmation". Override with the
+// BREVO_DOI_TEMPLATE env var if the template is ever replaced.
+const DOI_TEMPLATE_ID = 1;
+
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), {
     status,
@@ -59,7 +64,7 @@ export async function onRequestPost({ request, env }) {
     accept: 'application/json',
   };
 
-  const templateId = parseInt(env.BREVO_DOI_TEMPLATE || '', 10);
+  const templateId = parseInt(env.BREVO_DOI_TEMPLATE || '', 10) || DOI_TEMPLATE_ID;
 
   // Preferred path: double opt-in.
   if (templateId) {
