@@ -103,6 +103,17 @@ const faqSchema = {
   .d-ready .door-led { background: var(--green); }
   .d-prevent .door-led { background: var(--amber); }
 
+  /* One-time staggered outline glow: walks the eye down the three doors. */
+  .door { animation: doorGlow 1s ease-in-out both; }
+  .d-emergency { --glow: rgba(255,77,46,0.7); animation-delay: 0.35s; }
+  .d-ready { --glow: rgba(58,216,132,0.65); animation-delay: 0.95s; }
+  .d-prevent { --glow: rgba(217,164,65,0.65); animation-delay: 1.55s; }
+  @keyframes doorGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); border-color: var(--edge); }
+    50% { box-shadow: 0 0 22px 1px var(--glow); border-color: var(--glow); }
+  }
+  @media (prefers-reduced-motion: reduce) { .door { animation: none; } }
+
   .door-body { flex: 1; }
   .door-title {
     display: block; font-family: var(--font-display); font-weight: 800; font-size: 1.2rem;
