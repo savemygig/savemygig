@@ -108,9 +108,7 @@ const id = `cap-${source}`;
         });
         const data = await res.json();
         if (data.ok) {
-          msg.textContent = data.already
-            ? 'You are already on the list. The card is on its way.'
-            : 'Done. Check your inbox for the Emergency Card.';
+          msg.textContent = 'Almost there. Check your inbox and tap the confirm link to get the card.';
           msg.className = 'cap-msg ok';
           el.reset();
           if (typeof (window as any).gtag === 'function') {
