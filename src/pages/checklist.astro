@@ -3,9 +3,12 @@ import Base from '../layouts/Base.astro';
 
 /**
  * Interactive pre-gig checklist. Prevention side, outside the tunnel.
- * Tick boxes with a live readiness meter; state persists per device in
- * localStorage (key SMG_CHECKLIST_V1). No account, nothing sent anywhere.
- * Categories requested by Antonio: the basics, technical, extras/add-ons.
+ * Tick boxes with a live readiness meter; state persists per device.
+ *   - localStorage key SMG_CHECKLIST_V1 = { itemKey: true }
+ *   - localStorage key SMG_CHECKLIST_MODE = 'basic' | 'advanced'
+ * Basic/Advanced toggle keeps the default list short on mobile; Advanced
+ * reveals the full kit. Readiness counts only the items visible in the
+ * current mode. Categories: the basics, technical, extras/add-ons.
  */
 
 const groups = [
@@ -14,12 +17,17 @@ const groups = [
     title: 'The basics',
     blurb: 'Out the door with nothing missing.',
     items: [
-      { key: 'usb-two', label: 'Two identical USB drives, same export on both' },
-      { key: 'headphones', label: 'Headphones' },
-      { key: 'phone', label: 'Phone charged, plus a power bank' },
-      { key: 'money', label: 'Cash and cards' },
-      { key: 'address', label: 'Venue address and set time confirmed' },
-      { key: 'contact', label: 'Promoter or club contact saved in your phone' },
+      { key: 'usb-two', level: 'basic', label: 'Two identical USB drives, same export on both' },
+      { key: 'headphones', level: 'basic', label: 'Headphones' },
+      { key: 'phone', level: 'basic', label: 'Phone charged, plus a power bank' },
+      { key: 'money', level: 'basic', label: 'Cash and cards' },
+      { key: 'address', level: 'basic', label: 'Venue address and set time confirmed' },
+      { key: 'contact', level: 'advanced', label: 'Promoter or club contact saved in your phone' },
+      { key: 'guestlist', level: 'advanced', label: 'Your name confirmed on the guest list' },
+      { key: 'transport', level: 'advanced', label: 'Transport home sorted: parking, ride, or last train' },
+      { key: 'running-order', level: 'advanced', label: 'Running order: when you go on and when you come off' },
+      { key: 'watch', level: 'advanced', label: 'A watch you can read in a dark booth' },
+      { key: 'pen', level: 'advanced', label: 'A pen, for guest lists and split sheets' },
     ],
   },
   {
@@ -27,14 +35,19 @@ const groups = [
     title: 'Technical',
     blurb: 'The gear that actually plays your set.',
     items: [
-      { key: 'format', label: 'Both drives are FAT32 with MBR, not exFAT or GPT' },
-      { key: 'reexport', label: 'Re-exported after the last library change' },
-      { key: 'tested', label: 'Both drives tested on a player, or reopened in Rekordbox' },
-      { key: 'backup', label: 'Rekordbox library backed up to cloud or a second drive' },
-      { key: 'card', label: 'Emergency Card saved on your phone' },
-      { key: 'adapters', label: 'USB-C and USB-A adapters for the booth' },
-      { key: 'cables', label: 'Spare cable and a short USB extension' },
-      { key: 'laptop', label: 'Laptop, charger and soundcard, if you play from a laptop' },
+      { key: 'format', level: 'basic', label: 'Both drives are FAT32 with MBR, not exFAT or GPT' },
+      { key: 'reexport', level: 'basic', label: 'Re-exported after the last library change' },
+      { key: 'tested', level: 'basic', label: 'Both drives tested on a player, or reopened in Rekordbox' },
+      { key: 'backup', level: 'basic', label: 'Rekordbox library backed up to cloud or a second drive' },
+      { key: 'card', level: 'basic', label: 'Emergency Card saved on your phone' },
+      { key: 'adapters', level: 'advanced', label: 'USB-C and USB-A adapters for the booth' },
+      { key: 'cables', level: 'advanced', label: 'Spare cable and a short USB extension' },
+      { key: 'laptop', level: 'advanced', label: 'Laptop, charger and soundcard, if you play from a laptop' },
+      { key: 'third-backup', level: 'advanced', label: 'A third backup drive, or an SD card copy' },
+      { key: 'labelled', level: 'advanced', label: 'Drives labelled A and B so you know which is which' },
+      { key: 'lib-format', level: 'advanced', label: 'Your export matches the club CDJ library format, no OneLibrary surprise' },
+      { key: 'cloud-set', level: 'advanced', label: 'A cloud link to your set you can download at the venue' },
+      { key: 'multitool', level: 'advanced', label: 'A small multitool or screwdriver for booth fixes' },
     ],
   },
   {
@@ -42,29 +55,41 @@ const groups = [
     title: 'Extras and add-ons',
     blurb: 'The life stuff that is easy to forget on the way out.',
     items: [
-      { key: 'meds', label: 'Any medicine you need' },
-      { key: 'clothes', label: 'The right clothes for the venue, and a spare shirt' },
-      { key: 'earplugs', label: 'Earplugs' },
-      { key: 'water', label: 'Water bottle' },
-      { key: 'car-keys', label: 'Car keys' },
-      { key: 'home-keys', label: 'Home keys' },
-      { key: 'docs', label: 'ID and documents, passport and boarding pass if flying' },
+      { key: 'meds', level: 'basic', label: 'Any medicine you need' },
+      { key: 'clothes', level: 'basic', label: 'The right clothes for the venue, and a spare shirt' },
+      { key: 'car-keys', level: 'basic', label: 'Car keys' },
+      { key: 'home-keys', level: 'basic', label: 'Home keys' },
+      { key: 'docs', level: 'basic', label: 'ID and documents, passport and boarding pass if flying' },
+      { key: 'earplugs', level: 'advanced', label: 'Earplugs' },
+      { key: 'water', level: 'advanced', label: 'Water bottle' },
+      { key: 'freshen', level: 'advanced', label: 'Deodorant and a small towel' },
+      { key: 'snacks', level: 'advanced', label: 'Snacks for a long night' },
+      { key: 'hotel', level: 'advanced', label: 'Hotel address saved offline, if you are staying over' },
+      { key: 'adapter', level: 'advanced', label: 'A travel adapter, if you are playing abroad' },
+      { key: 'backup-person', level: 'advanced', label: 'Someone to call who can bring a forgotten item' },
     ],
   },
 ];
 
 const total = groups.reduce((n, g) => n + g.items.length, 0);
+const basicTotal = groups.reduce((n, g) => n + g.items.filter((i) => i.level === 'basic').length, 0);
 ---
 <Base
   title="The Pre-Gig Checklist for DJs | Save My Gig!"
-  description="A tickable pre-gig checklist for DJs: the basics, the technical gear, and the life stuff you forget. Track your readiness before you leave home. Free, saves on your device."
+  description="A tickable pre-gig checklist for DJs: the basics, the technical gear, and the life stuff you forget. Switch between a basic and a full list, track your readiness, saves on your device."
   path="/checklist"
 >
-  <main class="wrap">
+  <main class="wrap" id="top">
     <div class="status-line">Prevention_Hub</div>
 
     <h1 style="margin-bottom:1rem">LEAVE HOME <span class="accent">READY</span></h1>
-    <p class="dim" style="margin-bottom:2rem">Tick it off before you walk out. Nothing forgotten, nothing sent anywhere. This list saves on this device, so it is waiting next time.</p>
+    <p class="dim" style="margin-bottom:1.6rem">Tick it off before you walk out. Nothing forgotten, nothing sent anywhere. This list saves on this device, so it is waiting next time.</p>
+
+    <div class="mode-switch" role="group" aria-label="Checklist depth">
+      <button type="button" class="mode-btn is-on" data-mode-set="basic" aria-pressed="true">Basic</button>
+      <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Advanced</button>
+    </div>
+    <p class="mode-hint dim" id="modeHint">Basic is the must-bring list. Switch to Advanced for the full kit.</p>
 
     <section class="readiness" id="readiness" aria-live="polite">
       <div class="readiness-top">
@@ -72,29 +97,31 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <span class="readiness-pct" id="pct">0%</span>
       </div>
       <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
-      <p class="readiness-sub" id="sub">0 of {total} ready</p>
+      <p class="readiness-sub" id="sub">0 ready</p>
     </section>
 
-    {groups.map((g) => (
-      <section class="panel task-group" data-group={g.id}>
-        <div class="group-head">
-          <h3>{g.title}</h3>
-          <span class="group-count" data-count={g.id}>0/{g.items.length}</span>
-        </div>
-        <p class="dim group-blurb">{g.blurb}</p>
-        <ul class="tasks">
-          {g.items.map((it) => (
-            <li class="task">
-              <label>
-                <input type="checkbox" data-key={it.key} />
-                <span class="box" aria-hidden="true"></span>
-                <span class="task-label">{it.label}</span>
-              </label>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))}
+    <div id="list" data-mode="basic">
+      {groups.map((g) => (
+        <section class="panel task-group" data-group={g.id}>
+          <div class="group-head">
+            <h3>{g.title}</h3>
+            <span class="group-count" data-count={g.id}>0/0</span>
+          </div>
+          <p class="dim group-blurb">{g.blurb}</p>
+          <ul class="tasks">
+            {g.items.map((it) => (
+              <li class="task" data-level={it.level}>
+                <label>
+                  <input type="checkbox" data-key={it.key} data-level={it.level} />
+                  <span class="box" aria-hidden="true"></span>
+                  <span class="task-label">{it.label}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
 
     <div class="checklist-actions">
       <button type="button" class="btn btn-neutral" id="resetBtn">Clear the list</button>
@@ -109,10 +136,42 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <h3 style="margin-bottom:0.6rem">Already at the gig and something failed?</h3>
       <a href="/emergency" class="btn btn-solid" data-event="begin_checkout" data-placement="checklist">Start Emergency Mode</a>
     </div>
+
+    <div class="top-actions">
+      <button type="button" class="btn btn-neutral" id="topBtn">Back to top</button>
+    </div>
   </main>
 </Base>
 
 <style>
+  .mode-switch {
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
+    background: var(--surf);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius);
+    margin-bottom: 0.6rem;
+  }
+  .mode-btn {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.55rem 1.2rem;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mode-btn.is-on { background: var(--text); color: #0a0a0b; }
+  .mode-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .mode-hint { font-size: 0.85rem; margin: 0 0 1.6rem; }
+
   .readiness {
     background: var(--surf-2);
     border: 1px solid var(--edge);
@@ -162,11 +221,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     border-radius: 999px;
     transition: width 0.3s ease;
   }
-  .readiness-sub {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-dim);
-  }
+  .readiness-sub { margin: 0; font-size: 0.85rem; color: var(--text-dim); }
   .readiness.is-ready .readiness-sub { color: var(--green); }
 
   .task-group { padding-bottom: 0.6rem; }
@@ -191,6 +246,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .tasks { list-style: none; margin: 0.4rem 0 0; padding: 0; }
   .task { border-bottom: 1px solid var(--edge-soft); }
   .task:last-child { border-bottom: none; }
+  /* Basic mode hides the advanced items so the mobile list stays short. */
+  #list[data-mode="basic"] .task[data-level="advanced"] { display: none; }
+
   .task label {
     display: flex;
     align-items: flex-start;
@@ -199,12 +257,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
-  .task input {
-    position: absolute;
-    opacity: 0;
-    width: 1px;
-    height: 1px;
-  }
+  .task input { position: absolute; opacity: 0; width: 1px; height: 1px; }
   .box {
     flex: 0 0 auto;
     width: 24px;
@@ -228,15 +281,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     transform: rotate(45deg) scale(0);
     transition: transform 0.15s ease;
   }
-  .task input:checked + .box {
-    background: var(--green);
-    border-color: var(--green);
-  }
+  .task input:checked + .box { background: var(--green); border-color: var(--green); }
   .task input:checked + .box::after { transform: rotate(45deg) scale(1); }
-  .task input:focus-visible + .box {
-    outline: 2px solid var(--green);
-    outline-offset: 2px;
-  }
+  .task input:focus-visible + .box { outline: 2px solid var(--green); outline-offset: 2px; }
   .task-label {
     font-size: 1rem;
     line-height: 1.45;
@@ -251,48 +298,59 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   .checklist-actions { margin-top: 1.4rem; }
   .checklist-actions .btn { width: auto; display: inline-block; margin: 0; }
+  .top-actions { margin-top: 1.5rem; text-align: center; }
+  .top-actions .btn { width: auto; display: inline-block; margin: 0; }
 
   @media (prefers-reduced-motion: reduce) {
-    .meter-fill, .box, .box::after, .readiness-pct { transition: none; }
+    .meter-fill, .box, .box::after, .readiness-pct, .mode-btn { transition: none; }
   }
 </style>
 
 <script>
   const STORE_KEY = 'SMG_CHECKLIST_V1';
+  const MODE_KEY = 'SMG_CHECKLIST_MODE';
+
+  const listEl = document.getElementById('list');
   const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
   const pctEl = document.getElementById('pct');
   const fillEl = document.getElementById('meterFill');
   const subEl = document.getElementById('sub');
   const readinessEl = document.getElementById('readiness');
-  const total = boxes.length;
+  const hintEl = document.getElementById('modeHint');
+  const modeBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('.mode-btn'));
+
+  let mode: string = 'basic';
 
   function load(): Record<string, boolean> {
     try {
       const raw = localStorage.getItem(STORE_KEY);
       return raw ? JSON.parse(raw) : {};
-    } catch (e) {
-      return {};
-    }
+    } catch (e) { return {}; }
+  }
+  function save(state: Record<string, boolean>) {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* storage blocked */ }
+  }
+  function saveMode(m: string) {
+    try { localStorage.setItem(MODE_KEY, m); } catch (e) { /* storage blocked */ }
   }
 
-  function save(state: Record<string, boolean>) {
-    try {
-      localStorage.setItem(STORE_KEY, JSON.stringify(state));
-    } catch (e) {
-      /* storage blocked (private mode): the list still works this session */
-    }
+  function isVisible(box: HTMLInputElement): boolean {
+    return mode === 'advanced' || box.dataset.level !== 'advanced';
   }
 
   function render() {
-    const done = boxes.filter((b) => b.checked).length;
-    const pct = total ? Math.round((done / total) * 100) : 0;
+    const visible = boxes.filter(isVisible);
+    const done = visible.filter((b) => b.checked).length;
+    const totalV = visible.length;
+    const pct = totalV ? Math.round((done / totalV) * 100) : 0;
+
     if (pctEl) pctEl.textContent = pct + '%';
     if (fillEl) fillEl.style.width = pct + '%';
-    if (subEl) subEl.textContent = pct === 100 ? 'Ready. Go play.' : `${done} of ${total} ready`;
-    if (readinessEl) readinessEl.classList.toggle('is-ready', pct === 100);
+    if (subEl) subEl.textContent = pct === 100 ? 'Ready. Go play.' : `${done} of ${totalV} ready`;
+    if (readinessEl) readinessEl.classList.toggle('is-ready', pct === 100 && totalV > 0);
 
     document.querySelectorAll<HTMLElement>('.task-group').forEach((group) => {
-      const inGroup = Array.from(group.querySelectorAll<HTMLInputElement>('input[type="checkbox"]'));
+      const inGroup = Array.from(group.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')).filter(isVisible);
       const gid = group.getAttribute('data-group');
       const countEl = document.querySelector<HTMLElement>(`.group-count[data-count="${gid}"]`);
       const gdone = inGroup.filter((b) => b.checked).length;
@@ -303,6 +361,24 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
   }
 
+  function setMode(m: string) {
+    mode = m;
+    if (listEl) listEl.setAttribute('data-mode', m);
+    modeBtns.forEach((b) => {
+      const on = b.dataset.modeSet === m;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    if (hintEl) {
+      hintEl.textContent = m === 'advanced'
+        ? 'The full kit. Switch back to Basic for just the essentials.'
+        : 'Basic is the must-bring list. Switch to Advanced for the full kit.';
+    }
+    saveMode(m);
+    render();
+  }
+
+  // restore checks
   const state = load();
   boxes.forEach((b) => {
     const k = b.dataset.key || '';
@@ -315,6 +391,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
   });
 
+  // wire mode buttons
+  modeBtns.forEach((b) => b.addEventListener('click', () => setMode(b.dataset.modeSet || 'basic')));
+
+  // restore mode
+  let savedMode = 'basic';
+  try { savedMode = localStorage.getItem(MODE_KEY) || 'basic'; } catch (e) { /* ignore */ }
+  setMode(savedMode === 'advanced' ? 'advanced' : 'basic');
+
+  // reset
   const resetBtn = document.getElementById('resetBtn');
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
@@ -324,5 +409,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
   }
 
-  render();
+  // back to top
+  const topBtn = document.getElementById('topBtn');
+  if (topBtn) {
+    topBtn.addEventListener('click', () => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  }
 </script>
