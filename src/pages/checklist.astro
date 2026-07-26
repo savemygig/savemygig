@@ -116,7 +116,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     <div class="custom-toolbar" id="customToolbar" hidden>
       <button type="button" class="btn btn-neutral" id="editToggle">Edit list</button>
       <button type="button" class="btn btn-neutral" id="backupBtn">Email me a copy</button>
-      <span class="edit-hint dim" id="editHint">Add or remove items. Tap Done when you finish, so nothing gets deleted by accident.</span>
+      <span class="edit-hint dim" id="editHint">Add, remove, rename (tap the text) or drag &#8597; to reorder. Tap Done when you finish, so nothing gets deleted by accident.</span>
       <form class="backup-form" id="backupForm" hidden>
         <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" />
         <button type="submit" class="btn btn-neutral">Send it</button>
@@ -251,6 +251,19 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .meter-fill { height: 100%; width: 0%; background: var(--green); border-radius: 999px; transition: width 0.3s ease; }
   .readiness-sub { margin: 0; font-size: 0.85rem; color: var(--text-dim); }
   .readiness.is-ready .readiness-sub { color: var(--green); }
+
+  /* Mobile: half-height readiness (Antonio: space is precious). The READINESS
+     label goes, "0 of 36 ready" and the percentage share one line, thin bar
+     below. Also stretch the list wider: tighter page and card padding. */
+  @media (max-width: 640px) {
+    .readiness { display: grid; grid-template-columns: 1fr auto; align-items: center;
+      gap: 0.1rem 0.8rem; padding: 0.6rem 0.95rem; }
+    .readiness-top { display: contents; }
+    .readiness-label { display: none; }
+    .readiness-pct { grid-area: 1 / 2; font-size: 1.35rem; }
+    .readiness-sub { grid-area: 1 / 1; }
+    .meter { grid-area: 2 / 1 / 2 / 3; height: 5px; margin: 0.3rem 0 0.1rem; }
+  }
 
   .task-group { padding: 0; overflow: hidden; }
 
@@ -391,6 +404,23 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .custom-tasks { list-style: none; margin: 0; padding: 0; }
   #list:not([data-mode="custom"]) .custom-tasks { display: none; }
   #list[data-mode="custom"] .task.removed { display: none; }
+  /* Custom items now live in the same list as the built-ins so the whole
+     group can be reordered as one. Hidden outside Custom mode. */
+  #list:not([data-mode="custom"]) .task-custom { display: none; }
+  /* Drag handle: only in Custom + Edit. touch-action none so dragging the
+     handle reorders instead of scrolling the page. */
+  .task-drag {
+    display: none; background: none; border: 0; color: var(--text-faint);
+    font-size: 1.05rem; line-height: 1; cursor: grab; padding: 0.4rem 0.5rem;
+    touch-action: none; flex: 0 0 auto;
+  }
+  #list[data-mode="custom"][data-edit="on"] .task-drag { display: block; }
+  .task.dragging { opacity: 0.55; }
+  .task-label-edit {
+    flex: 1; min-width: 0; font: inherit; color: var(--text);
+    background: var(--surf-2); border: 1px solid var(--green);
+    border-radius: 2px; padding: 0.2rem 0.45rem;
+  }
   .task-remove {
     flex: 0 0 auto; display: none; background: transparent; border: none; color: var(--text-faint);
     font-size: 1.4rem; line-height: 1; cursor: pointer; padding: 0 0.2rem 0 0.6rem;
@@ -434,6 +464,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   @media (prefers-reduced-motion: reduce) {
     .meter-fill, .box, .box::after, .readiness-pct, .mode-btn, .chev { transition: none; }
   }
+
+  /* Mobile width: the list takes the screen (kept last so it wins the cascade). */
+  @media (max-width: 640px) {
+    main.wrap { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .group-toggle { padding: 1.05rem 0.95rem; }
+    .group-body { padding: 0 0.95rem 0.95rem; }
+  }
 </style>
 
 <script>
@@ -443,6 +480,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const UNLOCK_KEY = 'SMG_UNLOCKED';
   const CUSTOM_KEY = 'SMG_CHECKLIST_CUSTOM';
   const REMOVED_KEY = 'SMG_CHECKLIST_REMOVED';
+  const ORDER_KEY = 'SMG_CHECKLIST_ORDER_V1';
+  const RENAME_KEY = 'SMG_CHECKLIST_RENAME_V1';
   const EMAIL_KEY = 'SMG_EMAIL';
 
   const listEl = document.getElementById('list');
@@ -498,6 +537,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     catch (e) { return []; }
   }
   function saveRemoved(a: string[]) { try { localStorage.setItem(REMOVED_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } }
+  function loadOrder(): Record<string, string[]> {
+    try { const raw = localStorage.getItem(ORDER_KEY); return raw ? JSON.parse(raw) : {}; }
+    catch (e) { return {}; }
+  }
+  function saveOrder(o: Record<string, string[]>) { try { localStorage.setItem(ORDER_KEY, JSON.stringify(o)); } catch (e) { /* blocked */ } }
+  function loadRenames(): Record<string, string> {
+    try { const raw = localStorage.getItem(RENAME_KEY); return raw ? JSON.parse(raw) : {}; }
+    catch (e) { return {}; }
+  }
+  function saveRenames(r: Record<string, string>) { try { localStorage.setItem(RENAME_KEY, JSON.stringify(r)); } catch (e) { /* blocked */ } }
   function getEmail(): string { try { return localStorage.getItem(EMAIL_KEY) || ''; } catch (e) { return ''; } }
   function setEmail(v: string) { try { localStorage.setItem(EMAIL_KEY, v); } catch (e) { /* blocked */ } }
 
@@ -601,32 +650,164 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
   }
 
+  // Custom items render into the SAME ul as the built-ins, so a group is one
+  // reorderable list. The old .custom-tasks ul stays empty (markup untouched).
   function renderCustom() {
     const custom = loadCustom();
-    document.querySelectorAll<HTMLElement>('.custom-tasks').forEach((ul) => {
-      const cat = ul.getAttribute('data-custom') || '';
+    document.querySelectorAll<HTMLElement>('.task-group').forEach((group) => {
+      const cat = group.getAttribute('data-group') || '';
+      const ul = group.querySelector<HTMLElement>('.tasks');
+      if (!ul) return;
+      ul.querySelectorAll('.task-custom').forEach((li) => li.remove());
       const items = custom[cat] || [];
-      ul.innerHTML = '';
       items.forEach((it) => {
         const li = document.createElement('li');
         li.className = 'task task-custom';
         li.setAttribute('data-level', 'custom');
+        li.setAttribute('data-key', it.k);
         const label = document.createElement('label');
         const input = document.createElement('input');
         input.type = 'checkbox'; input.dataset.key = it.k; input.dataset.level = 'custom';
         const box = document.createElement('span'); box.className = 'box'; box.setAttribute('aria-hidden', 'true');
         const span = document.createElement('span'); span.className = 'task-label'; span.textContent = it.t;
         label.appendChild(input); label.appendChild(box); label.appendChild(span);
+        const drag = makeDragHandle();
         const rm = document.createElement('button');
         rm.type = 'button'; rm.className = 'task-remove'; rm.setAttribute('aria-label', 'Remove'); rm.innerHTML = '&times;';
         rm.addEventListener('click', () => {
           const c = loadCustom(); c[cat] = (c[cat] || []).filter((x) => x.k !== it.k); saveCustom(c);
           const t = load(); delete t[it.k]; save(t); renderCustom(); render();
         });
-        li.appendChild(label); li.appendChild(rm);
+        li.appendChild(label); li.appendChild(drag); li.appendChild(rm);
         attachBox(input);
+        initRename(span);
         ul.appendChild(li);
       });
+    });
+    applyOrder();
+  }
+
+  /* ----- reorder (drag the handle up or down, Custom + Edit only) ----- */
+  function makeDragHandle(): HTMLButtonElement {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'task-drag';
+    b.setAttribute('aria-label', 'Drag to reorder'); b.textContent = '↕';
+    initDrag(b);
+    return b;
+  }
+  function initDrag(handle: HTMLElement) {
+    handle.addEventListener('pointerdown', (ev: PointerEvent) => {
+      if (!(mode === 'custom' && editMode)) return;
+      const li = handle.closest('li.task') as HTMLElement | null; if (!li) return;
+      const ul = li.parentElement as HTMLElement | null; if (!ul) return;
+      ev.preventDefault();
+      // NO setPointerCapture here: reordering moves the li (and the handle
+      // inside it) in the DOM, which silently destroys pointer capture and
+      // eats the pointerup. Document-level listeners survive the move.
+      li.classList.add('dragging');
+      const move = (e: PointerEvent) => {
+        e.preventDefault();
+        const liR = li.getBoundingClientRect();
+        const sibs = Array.from(ul.children).filter((n) => n !== li && !(n as HTMLElement).classList.contains('removed')) as HTMLElement[];
+        for (const sib of sibs) {
+          const r = sib.getBoundingClientRect();
+          const mid = r.top + r.height / 2;
+          if (e.clientY < mid && liR.top > r.top) { ul.insertBefore(li, sib); break; }
+          if (e.clientY > mid && liR.top < r.top) { ul.insertBefore(li, sib.nextSibling); break; }
+        }
+      };
+      const up = () => {
+        li.classList.remove('dragging');
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', up);
+        document.removeEventListener('pointercancel', up);
+        saveOrderFromDom();
+      };
+      document.addEventListener('pointermove', move, { passive: false });
+      document.addEventListener('pointerup', up);
+      document.addEventListener('pointercancel', up);
+    });
+  }
+  function saveOrderFromDom() {
+    const o: Record<string, string[]> = {};
+    document.querySelectorAll<HTMLElement>('.task-group').forEach((group) => {
+      const cat = group.getAttribute('data-group') || '';
+      const keys: string[] = [];
+      group.querySelectorAll<HTMLElement>('.tasks .task[data-key]').forEach((li) => {
+        keys.push(li.getAttribute('data-key') || '');
+      });
+      o[cat] = keys;
+    });
+    saveOrder(o);
+  }
+  function applyOrder() {
+    const o = loadOrder();
+    document.querySelectorAll<HTMLElement>('.task-group').forEach((group) => {
+      const cat = group.getAttribute('data-group') || '';
+      const order = o[cat]; if (!order || !order.length) return;
+      const ul = group.querySelector<HTMLElement>('.tasks'); if (!ul) return;
+      const byKey: Record<string, HTMLElement> = {};
+      const all = Array.from(ul.querySelectorAll<HTMLElement>('.task[data-key]'));
+      all.forEach((li) => { byKey[li.getAttribute('data-key') || ''] = li; });
+      const seq: HTMLElement[] = [];
+      order.forEach((k) => { if (byKey[k]) { seq.push(byKey[k]); delete byKey[k]; } });
+      all.forEach((li) => { if (seq.indexOf(li) === -1) seq.push(li); });
+      seq.forEach((li) => ul.appendChild(li));
+    });
+  }
+
+  /* ----- rename (tap the text, Custom + Edit only) ----- */
+  function applyRenames() {
+    const r = loadRenames();
+    document.querySelectorAll<HTMLElement>('.tasks .task[data-key]').forEach((li) => {
+      const k = li.getAttribute('data-key') || '';
+      if (r[k]) {
+        const span = li.querySelector<HTMLElement>('.task-label');
+        if (span) span.textContent = r[k];
+      }
+    });
+  }
+  function initRename(span: HTMLElement) {
+    span.addEventListener('click', (ev) => {
+      if (!(mode === 'custom' && editMode)) return;
+      ev.preventDefault();
+      const li = span.closest('li.task') as HTMLElement | null; if (!li) return;
+      if (li.querySelector('.task-label-edit')) return;
+      const key = li.getAttribute('data-key') || '';
+      const input = document.createElement('input');
+      input.type = 'text'; input.className = 'task-label-edit';
+      input.value = span.textContent || ''; input.maxLength = 80;
+      span.replaceWith(input);
+      input.focus(); input.select();
+      const commit = () => {
+        const t = (input.value || '').trim() || (span.textContent || '');
+        span.textContent = t;
+        input.replaceWith(span);
+        if (key.indexOf('c-') === 0) {
+          const c = loadCustom();
+          Object.keys(c).forEach((cat) => { c[cat] = c[cat].map((x) => (x.k === key ? { k: x.k, t } : x)); });
+          saveCustom(c);
+        } else {
+          const r = loadRenames(); r[key] = t; saveRenames(r);
+        }
+        render();
+      };
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+        if (e.key === 'Escape') { input.value = span.textContent || ''; input.blur(); }
+      });
+    });
+  }
+  // Built-in rows get their drag handle and rename wiring once at startup.
+  function ensureRowControls() {
+    document.querySelectorAll<HTMLElement>('.tasks .task[data-key]').forEach((li) => {
+      if (li.querySelector('.task-drag')) return;
+      const rm = li.querySelector('.task-remove');
+      const drag = makeDragHandle();
+      if (rm) li.insertBefore(drag, rm); else li.appendChild(drag);
+      const span = li.querySelector<HTMLElement>('.task-label');
+      if (span) initRename(span);
     });
   }
 
@@ -698,6 +879,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   // restore from an email link if one is present, then render custom items
   const restored = tryRestore();
+  ensureRowControls();
+  applyRenames();
   renderCustom();
   applyRemoved();
 
