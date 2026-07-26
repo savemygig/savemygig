@@ -100,7 +100,6 @@ a { color: var(--red); }
 
 .wrap { max-width: var(--site-w); margin: 0 auto; padding: 2.2rem var(--site-pad) 4rem; }
 .wrap-wide { max-width: var(--site-w); }
-.center { text-align: center; }
 .section { margin: 3rem 0; }
 
 /* ---------- Panels ---------- */
@@ -225,12 +224,6 @@ a { color: var(--red); }
 }
 .site-footer a { color: var(--text-dim); text-decoration: none; }
 .site-footer a:hover { color: var(--red); }
-.site-footer .foot-links {
-  display: flex; flex-wrap: wrap; justify-content: center;
-  gap: 1.2rem; margin-bottom: 1rem;
-  font-family: var(--font-body); font-weight: 600;
-  font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
-}
 
 /* ---------- Inline mono chip ---------- */
 

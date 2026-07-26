@@ -108,15 +108,15 @@ import Base from '../layouts/Base.astro';
   .fbp-status.ok { color: var(--green); }
   .fbp-status.err { color: var(--red); }
 
-  .fbp-done { text-align: center; padding: 2rem 0; }
+  .fbp-done { padding: 2rem 0; }
   .fbp-done-mark {
-    width: 56px; height: 56px; margin: 0 auto 1.1rem; border-radius: 50%;
+    width: 56px; height: 56px; margin: 0 0 1.1rem; border-radius: 50%;
     background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green);
     display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 700;
   }
   .fbp-done-h { font-size: clamp(1.6rem, 6vw, 2.2rem); margin-bottom: 0.6rem; }
-  .fbp-done-p { color: var(--text-dim); max-width: 28rem; margin: 0 auto 1.6rem; }
-  .fbp-done-btns { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
+  .fbp-done-p { color: var(--text-dim); max-width: 28rem; margin: 0 0 1.6rem; }
+  .fbp-done-btns { display: flex; gap: 0.7rem; flex-wrap: wrap; }
 
   @media (max-width: 520px) {
     .fbp-row { flex-direction: column; gap: 0; }

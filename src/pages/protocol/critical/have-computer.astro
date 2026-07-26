@@ -1,0 +1,23 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+
+// The old entry question, now asked AFTER the symptom triage rather than before
+// it, so nobody reaches the destructive route until the free fixes have failed.
+---
+<Tunnel title="Do you have a computer? | Save My Gig!" status="Critical_Path" red>
+  <div class="step-label">Decision point</div>
+  <h2 style="margin-bottom:0.75rem">Goal right now: play a set.</h2>
+  <p class="dim" style="margin-bottom:1.5rem">Not fix the USB. That comes after the gig.</p>
+
+  <p class="question">Do you have a computer right now?</p>
+
+  <Choice step="critical_fork_computer"
+    a={{ href: '/protocol/critical/usb-check', label: 'YES, I HAVE A COMPUTER' }}
+    b={{ href: '/protocol/critical/no-laptop', label: 'NO COMPUTER' }}
+  />
+
+  <p class="tunnel-note">
+    You decide every action. Nothing is guaranteed, and you can stop any time.
+  </p>
+</Tunnel>

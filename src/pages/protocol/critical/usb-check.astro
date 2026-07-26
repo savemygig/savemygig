@@ -6,7 +6,16 @@ import Choice from '../../../components/Choice.astro';
   <div class="step-label">Diagnostic</div>
   <h2 style="margin-bottom:1rem">You have a computer</h2>
 
-    <p><strong>Plug the USB into the computer.</strong> What happens?</p>
+  <div class="alert-card" style="margin-bottom:1.5rem">
+    <div style="font-size:20px" aria-hidden="true">⚠️</div>
+    <div>
+      <strong>If your computer offers to format or initialise the drive, say NO.</strong>
+      On a Mac the "Initialize…" button is pre-selected, so one tap destroys the
+      partition table. Your files are still there. Choose Ignore or Eject.
+    </div>
+  </div>
+
+  <p><strong>Plug the USB into the computer.</strong> What happens?</p>
 
   <Choice step="usb_check"
     a={{ href: '/protocol/critical/risk', label: 'I CAN SEE MY FILES' }}
