@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import PromoBanner from '../components/PromoBanner.astro';
 
 // Homepage = simple "pick your pain" chooser. Rescue AND prevention, balanced:
 // three equal, neutral doors; colour lives only in the LED dots and comes up
@@ -53,6 +54,8 @@ import Base from '../layouts/Base.astro';
     </p>
 
     <p class="foot-note dim">Free forever in an emergency. No account, no ads in the rescue flow. <a href="/about">The story &rarr;</a></p>
+
+    <PromoBanner exclude="/emergency" />
   </main>
 </Base>
 

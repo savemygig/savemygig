@@ -1,0 +1,159 @@
+---
+/**
+ * Internal promo banner, built to standard IAB ad dimensions.
+ *
+ * WHY THE ODD SIZES: this slot is deliberately a 728x90 leaderboard on desktop
+ * and a 320x100 large mobile banner on phones, the two most widely supported
+ * AdSense units. Today it carries internal links only. When ads are switched
+ * on, the ad unit drops into this exact slot and NOTHING on the page moves,
+ * no layout shift, no CLS penalty, no redesign.
+ *
+ * Rules for what goes in here:
+ *   - internal links only for now, no external or affiliate destinations
+ *   - phrased as the problem the DJ actually has, not as a feature
+ *   - NEVER rendered inside the rescue tunnel; nothing competes with the rescue
+ *
+ * A promo is picked at random on load so repeat visitors do not see the same
+ * one every time. The first is rendered visible server-side, so it still works
+ * with JavaScript disabled.
+ */
+interface Props {
+  /** path of the current page, so we never promote the page you are already on */
+  exclude?: string;
+}
+const { exclude = '' } = Astro.props;
+
+const ALL = [
+  {
+    href: '/emergency',
+    icon: 'alert',
+    q: 'USB not detected and you play soon?',
+    cta: 'Start Emergency Mode',
+  },
+  {
+    href: '/knowledge/rekordbox',
+    icon: 'disc',
+    q: 'Playlists missing on one deck but fine on another?',
+    cta: 'That is OneLibrary. Here is why',
+  },
+  {
+    href: '/checklist',
+    icon: 'check',
+    q: 'Leaving for a gig in an hour?',
+    cta: 'Run the pre-gig checklist',
+  },
+  {
+    href: '/fix/format-usb-for-cdj',
+    icon: 'usb',
+    q: 'New USB that the CDJ refuses to read?',
+    cta: 'Format it the way that always works',
+  },
+  {
+    href: '/recovery',
+    icon: 'rescue',
+    q: 'Drive died and your music is on it?',
+    cta: 'See what is still recoverable',
+  },
+];
+
+const promos = ALL.filter((p) => p.href !== exclude);
+---
+<aside class="promo-slot" aria-label="From Save My Gig">
+  {promos.map((p, i) => (
+    <a
+      class="promo"
+      href={p.href}
+      data-promo={i}
+      hidden={i !== 0}
+      data-event="promo_click"
+      data-placement="promo_banner"
+      data-target={p.href}
+    >
+      <span class="promo-icon" aria-hidden="true">
+        {p.icon === 'alert' && <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>}
+        {p.icon === 'disc' && <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>}
+        {p.icon === 'check' && <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>}
+        {p.icon === 'usb' && <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="7" rx="1"/><path d="M12 9v11"/><path d="M8 20h8"/></svg>}
+        {p.icon === 'rescue' && <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M3 12h18"/></svg>}
+      </span>
+      <span class="promo-body">
+        <span class="promo-q">{p.q}</span>
+        <span class="promo-cta">{p.cta} &rarr;</span>
+      </span>
+    </a>
+  ))}
+</aside>
+
+<style is:global>
+  /* 728x90 leaderboard on desktop, 320x100 large mobile banner on phones.
+     Fixed height in both cases so an ad unit can replace the contents later
+     without shifting a single pixel of the page. */
+  .promo-slot {
+    width: 100%;
+    max-width: 728px;
+    height: 90px;
+    margin: 2.4rem auto;
+  }
+  /* Once there is room, pin it to a true 728x90 leaderboard so a real ad unit
+     fits natively rather than being scaled or downgraded. The content column is
+     720px, so this sits 4px proud on each side, which is well inside the
+     viewport at this breakpoint and never creates horizontal scroll. */
+  @media (min-width: 820px) {
+    .promo-slot { width: 728px; max-width: none; }
+  }
+  .promo {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    width: 100%;
+    height: 100%;
+    padding: 0 1.2rem;
+    background: var(--surf);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius);
+    text-decoration: none;
+    overflow: hidden;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .promo[hidden] { display: none; }
+  .promo:hover { border-color: var(--red); background: var(--surf-2); }
+  .promo-icon {
+    flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; border-radius: 50%;
+    color: var(--red);
+    background: rgba(255, 77, 46, 0.1);
+    border: 1px solid rgba(255, 77, 46, 0.32);
+  }
+  .promo-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .promo-q {
+    font-family: var(--font-display); font-weight: 800; font-size: 1.02rem;
+    letter-spacing: -0.01em; color: var(--text); line-height: 1.2;
+  }
+  .promo-cta {
+    font-family: var(--font-body); font-weight: 600; font-size: 0.84rem;
+    color: var(--red); line-height: 1.2;
+  }
+
+  @media (max-width: 640px) {
+    .promo-slot { max-width: 320px; height: 100px; margin: 2rem auto; }
+    .promo { padding: 0 0.9rem; gap: 0.7rem; }
+    .promo-icon { width: 36px; height: 36px; }
+    .promo-icon svg { width: 19px; height: 19px; }
+    .promo-q { font-size: 0.92rem; }
+    .promo-cta { font-size: 0.78rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .promo { transition: none; } }
+</style>
+
+<script is:inline>
+  (function () {
+    var slots = document.querySelectorAll('.promo-slot');
+    for (var s = 0; s < slots.length; s++) {
+      var items = slots[s].querySelectorAll('.promo');
+      if (items.length < 2) continue;
+      var pick = Math.floor(Math.random() * items.length);
+      for (var i = 0; i < items.length; i++) items[i].hidden = (i !== pick);
+    }
+  })();
+</script>
