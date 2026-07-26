@@ -96,8 +96,13 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
 
       <div class="foot-cols">
         <div class="foot-brand">
-          <a href="/" class="foot-wordmark">Save My Gig<span class="accent">!</span></a>
-          <span class="foot-tag">DJ rescue and prevention</span>
+          <a href="/" class="foot-lockup" aria-label="Save My Gig, DJ rescue and prevention">
+            <img src="/images/save-my-gig-seal.png" alt="" width="72" height="72" loading="lazy" decoding="async" class="foot-seal" />
+            <span class="foot-lockup-text">
+              <span class="foot-wordmark">Save My Gig<span class="accent">!</span></span>
+              <span class="foot-tag">DJ rescue and prevention</span>
+            </span>
+          </a>
           <p class="foot-blurb">Free rescue and prevention for DJs, for when the USB dies before the set. Built by a DJ who has been there.</p>
           <div class="foot-social">
             <a class="soc-btn" href="https://www.instagram.com/savemygig/" target="_blank" rel="noopener" aria-label="Save My Gig on Instagram">
@@ -193,7 +198,13 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
 
   /* Columns: brand block + three link columns. */
   .foot-cols { display: flex; gap: 2.5rem; align-items: flex-start; }
-  .foot-brand { flex: 1.6; min-width: 15rem; display: flex; flex-direction: column; align-items: flex-start; }
+  .foot-brand { flex: 1.7; min-width: 17rem; display: flex; flex-direction: column; align-items: flex-start; }
+  /* Seal + wordmark lockup. The badge reads as a graphic mark; the text beside
+     it carries the name and tagline (the seal's curved micro-type is not
+     legible at this size, by design). */
+  .foot-lockup { display: flex; align-items: center; gap: 0.85rem; text-decoration: none; }
+  .foot-seal { flex: 0 0 auto; width: 72px; height: 72px; display: block; }
+  .foot-lockup-text { display: flex; flex-direction: column; }
   .foot-wordmark {
     font-family: var(--font-display); font-weight: 900; font-size: 1.3rem; line-height: 1;
     text-transform: uppercase; letter-spacing: -0.02em; color: var(--text); text-decoration: none;
@@ -201,7 +212,7 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
   .foot-wordmark .accent { color: var(--red); }
   .foot-tag {
     font-family: var(--font-body); font-weight: 600; font-size: 0.55rem; letter-spacing: 0.125em;
-    text-transform: uppercase; color: var(--text-dim); margin-top: 4px;
+    text-transform: uppercase; color: var(--text-dim); margin-top: 4px; white-space: nowrap;
   }
   .foot-blurb { font-size: 0.85rem; line-height: 1.6; color: var(--text-dim); margin: 0.9rem 0 1.1rem; max-width: 22rem; }
   .foot-social { display: flex; gap: 0.55rem; }
