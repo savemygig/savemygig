@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import Disclaimer from '../components/Disclaimer.astro';
+
+const UPDATED = '26 July 2026';
+---
+<Base
+  title="Disclaimer | Save My Gig!"
+  description="Save My Gig gives free general guidance on DJ storage and player problems. It is provided as is, without warranty, and you follow it at your own risk."
+  path="/disclaimer"
+>
+  <main class="wrap">
+    <div class="status-line">LEGAL</div>
+    <h1 style="margin-bottom:0.6rem">Disclaimer</h1>
+    <p class="dim" style="margin-bottom:2rem">Last updated: {UPDATED}</p>
+
+    <Disclaimer variant="full" />
+
+    <h2 class="dsc-sec">What this site is</h2>
+    <p>
+      Save My Gig is a free resource written by a working DJ. It offers general
+      guidance on common problems with DJ storage devices, media players and
+      library software. It is published in good faith and for general
+      information only.
+    </p>
+
+    <h2 class="dsc-sec">No warranty</h2>
+    <p>
+      All content is provided <strong>"as is"</strong>, without warranty of any
+      kind, express or implied. We do not warrant that the information is
+      accurate, complete, current, or suitable for your particular hardware,
+      firmware, software version or situation. Manufacturers change firmware and
+      software behaviour without notice, and a step that worked yesterday may
+      not work today.
+    </p>
+
+    <h2 class="dsc-sec">Risk of data loss</h2>
+    <p>
+      Some procedures described on this site, including formatting, erasing,
+      repartitioning, re-exporting and overwriting storage devices, will
+      <strong>permanently destroy data</strong>. Data destroyed this way is
+      normally unrecoverable without professional assistance, and sometimes not
+      at all. You are solely responsible for backing up your files before you
+      begin, and for confirming that you are operating on the correct device.
+    </p>
+
+    <h2 class="dsc-sec">Limitation of liability</h2>
+    <p>
+      To the fullest extent permitted by law, Save My Gig, its owner and its
+      contributors accept <strong>no liability whatsoever</strong> for any loss
+      or damage of any kind arising out of or in connection with the use of this
+      site or reliance on its content. This includes, without limitation: loss
+      or corruption of data, music libraries, playlists, cue points or metadata;
+      damage to storage devices, players, computers or other equipment; missed,
+      interrupted or cancelled performances; and any direct, indirect,
+      incidental, consequential or economic loss, including loss of income or
+      reputation.
+    </p>
+    <p>
+      Nothing in this disclaimer excludes or limits liability where it would be
+      unlawful to do so.
+    </p>
+
+    <h2 class="dsc-sec">Not professional data recovery</h2>
+    <p>
+      This site is not a substitute for professional data recovery. If the files
+      on your drive are irreplaceable, stop using the drive immediately and
+      consult a qualified data recovery service. Continuing to use, re-mount or
+      format a failing drive can reduce or eliminate the chance of recovery.
+    </p>
+
+    <h2 class="dsc-sec">Third parties, hardware and links</h2>
+    <p>
+      References to manufacturers, products, software and services are for
+      identification and guidance only. We are not affiliated with, endorsed by,
+      or acting on behalf of AlphaTheta, Pioneer DJ, or any other manufacturer
+      or software vendor named on this site. All trademarks belong to their
+      respective owners.
+    </p>
+    <p>
+      Some links to products or services may be affiliate links, meaning we may
+      earn a commission at no additional cost to you. This never changes what we
+      recommend, and there are no affiliate or sponsored links inside the
+      emergency rescue flow.
+    </p>
+
+    <h2 class="dsc-sec">Your responsibility</h2>
+    <p>
+      By using this site you confirm that you understand the risks described
+      above, that you are acting on your own judgement, and that you accept full
+      responsibility for the outcome. If you are not comfortable with that, do
+      not follow the steps, and seek professional help instead.
+    </p>
+
+    <h2 class="dsc-sec">Contact</h2>
+    <p>
+      Questions about this disclaimer:
+      <a href="mailto:savemygig@gmail.com">savemygig@gmail.com</a>, or use the
+      <a href="/feedback">feedback form</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .dsc-sec { font-size: 1.1rem; margin: 2rem 0 0.7rem; text-transform: none; letter-spacing: -0.01em; }
+  main p { color: var(--text-dim); }
+  main p strong { color: var(--text); }
+</style>

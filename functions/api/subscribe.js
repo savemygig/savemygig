@@ -26,11 +26,39 @@ const json = (data, status = 200) =>
     headers: { 'content-type': 'application/json; charset=utf-8' },
   });
 
-function confirmEmail(confirmUrl) {
-  const subject = 'Confirm your email to get the DJ Emergency Card';
+/**
+ * The confirmation email has to match what the person actually asked for.
+ * Someone who just unlocked the checklist was being sent an email titled
+ * "Confirm your email to get the DJ Emergency Card", which reads as a
+ * bait-and-switch. Copy is now chosen from the source.
+ */
+function copyFor(source) {
+  if (String(source).startsWith('checklist')) {
+    return {
+      subject: 'Confirm your email, Save My Gig',
+      h1a: 'You are in.',
+      h1b: 'One tap to confirm.',
+      lead: 'Advanced and Custom mode are already unlocked on your device. Confirm this address and we will also send you the printable Emergency Card, plus the occasional note that saves gigs.',
+      cta: 'Confirm my email',
+      plain: 'Advanced and Custom mode are already unlocked on your device.\nConfirm this address and we will also send you the printable Emergency Card.',
+    };
+  }
+  return {
+    subject: 'Confirm your email to get the DJ Emergency Card',
+    h1a: 'One tap and the',
+    h1b: 'card is yours.',
+    lead: 'Confirm this address and we will hand you the printable Emergency Card: the exact first moves for when a player refuses your USB mid-gig.',
+    cta: 'Confirm and get the card',
+    plain: 'One tap and the printable DJ Emergency Card is yours.',
+  };
+}
+
+function confirmEmail(confirmUrl, source) {
+  const c = copyFor(source);
+  const subject = c.subject;
 
   const text =
-    'One tap and the printable DJ Emergency Card is yours.\n\n' +
+    c.plain + '\n\n' +
     'Confirm your email:\n' + confirmUrl + '\n\n' +
     'If you did not ask for this, ignore this email and nothing happens.\n' +
     'This link works for 7 days.\n\n' +
@@ -47,14 +75,14 @@ function confirmEmail(confirmUrl) {
               <td style="padding:34px 30px 8px;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#ff4d2e;">Save My Gig</td>
             </tr>
             <tr>
-              <td style="padding:0 30px;font-family:'Arial Black',Arial,sans-serif;font-size:30px;line-height:1.05;font-weight:900;text-transform:uppercase;color:#f3f1ec;">One tap and the <span style="color:#ff4d2e;">card</span> is yours.</td>
+              <td style="padding:0 30px;font-family:'Arial Black',Arial,sans-serif;font-size:30px;line-height:1.05;font-weight:900;text-transform:uppercase;color:#f3f1ec;">${c.h1a} <span style="color:#ff4d2e;">${c.h1b}</span></td>
             </tr>
             <tr>
-              <td style="padding:18px 30px 4px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#9a978f;">Confirm this address and we will hand you the printable Emergency Card: the exact first moves for when a player refuses your USB mid-gig.</td>
+              <td style="padding:18px 30px 4px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#9a978f;">${c.lead}</td>
             </tr>
             <tr>
               <td style="padding:24px 30px 8px;">
-                <a href="${confirmUrl}" style="display:inline-block;background:#ff4d2e;color:#0a0a0b;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:800;letter-spacing:0.02em;text-transform:uppercase;text-decoration:none;padding:15px 26px;border-radius:2px;">Confirm and get the card</a>
+                <a href="${confirmUrl}" style="display:inline-block;background:#ff4d2e;color:#0a0a0b;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:800;letter-spacing:0.02em;text-transform:uppercase;text-decoration:none;padding:15px 26px;border-radius:2px;">${c.cta}</a>
               </td>
             </tr>
             <tr>
@@ -98,7 +126,33 @@ export async function onRequestPost({ request, env }) {
 
   const token = await makeToken(email.toLowerCase(), source, env.BREVO_API_KEY);
   const confirmUrl = `${SITE}/api/confirm?t=${encodeURIComponent(token)}`;
-  const { subject, html, text } = confirmEmail(confirmUrl);
+  const { subject, html, text } = confirmEmail(confirmUrl, source);
+
+  // Capture the lead NOW, but deliberately with no listIds.
+  //
+  // Previously nothing at all was stored until the confirm link was clicked,
+  // so every person who unlocked the checklist and ignored the email was lost
+  // entirely. Creating the contact with no list membership means it is visible
+  // and countable in Brevo, while remaining OUT of every marketing list, so no
+  // campaign can reach an unconfirmed address. confirm.js is what adds them to
+  // the list. Best effort: a failure here must never block the confirm email.
+  try {
+    await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: {
+        'api-key': env.BREVO_API_KEY,
+        'content-type': 'application/json',
+        accept: 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        updateEnabled: true,
+        attributes: { SOURCE: source },
+      }),
+    });
+  } catch (err) {
+    console.log('subscribe: pending contact write failed', String(err));
+  }
 
   const res = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',

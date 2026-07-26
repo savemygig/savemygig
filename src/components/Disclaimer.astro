@@ -1,0 +1,73 @@
+---
+/**
+ * Liability disclaimer.
+ *
+ * This site tells people to format, erase and overwrite storage devices under
+ * time pressure. That carries real risk of data loss, and we need to say so
+ * plainly, in the places where the risk actually lives, not only buried in a
+ * legal page nobody opens.
+ *
+ * Two variants:
+ *   compact  - a single line for the rescue tunnel, where nothing may compete
+ *              with the decision. Links to the full text.
+ *   full     - the block used on /disclaimer and the destructive-step pages.
+ */
+interface Props {
+  variant?: 'compact' | 'full';
+}
+const { variant = 'compact' } = Astro.props;
+---
+{variant === 'compact' ? (
+  <p class="dsc-compact">
+    You follow these steps at your own risk. Formatting or erasing a drive can
+    permanently destroy data. <a href="/disclaimer">Full disclaimer</a>.
+  </p>
+) : (
+  <div class="panel panel-warn dsc-full">
+    <h2 class="dsc-h">Before you erase anything, read this</h2>
+    <ul class="checklist">
+      <li>
+        <strong>Formatting and erasing permanently destroys data.</strong> Once a
+        drive is formatted, the music on it is gone unless you have another copy
+        or pay for professional recovery. There is no undo.
+      </li>
+      <li>
+        <strong>Copy the files off first whenever there is time.</strong> If you
+        can plug the drive into a computer and the files are visible, copy them
+        somewhere safe before you format anything.
+      </li>
+      <li>
+        <strong>Make sure you are erasing the right drive.</strong> Formatting the
+        wrong device, an external backup, a second USB, your system disk, is the
+        single most expensive mistake in this whole process.
+      </li>
+      <li>
+        <strong>This is general guidance, not a guarantee.</strong> Every drive,
+        player, firmware version and library is different. We cannot see your
+        setup and we cannot promise any step will work for you.
+      </li>
+      <li>
+        <strong>You act at your own risk.</strong> Save My Gig accepts no
+        liability for data loss, hardware damage, missed sets or any other loss
+        arising from following this site. If the music is irreplaceable, stop and
+        speak to a data recovery professional instead.
+      </li>
+    </ul>
+    <p class="dsc-foot">
+      Full terms: <a href="/disclaimer">Disclaimer</a> ·
+      <a href="/privacy">Privacy</a>
+    </p>
+  </div>
+)}
+
+<style is:global>
+  .dsc-compact {
+    margin-top: 1.5rem; font-size: 0.78rem; line-height: 1.5;
+    color: var(--text-dim); text-align: center;
+  }
+  .dsc-compact a { color: var(--text-dim); text-decoration: underline; }
+  .dsc-compact a:hover { color: var(--red); }
+  .dsc-full { margin: 2rem 0; }
+  .dsc-h { font-size: 1.05rem; margin-bottom: 0.9rem; text-transform: none; letter-spacing: -0.01em; }
+  .dsc-foot { font-size: 0.8rem; color: var(--text-dim); margin: 1rem 0 0; }
+</style>

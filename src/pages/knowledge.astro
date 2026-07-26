@@ -1,0 +1,107 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Knowledge hub. Save My Gig started Pioneer/rekordbox-shaped because that is
+// where the emergencies are, but the brand promise is "DJ rescue and
+// prevention", not "rekordbox rescue". This hub is the structure that lets
+// Serato, Traktor, Denon and Engine DJ land later without re-architecting
+// anything: each software gets its own page under /knowledge/<name>.
+const sections = [
+  {
+    name: 'rekordbox',
+    href: '/knowledge/rekordbox',
+    status: 'live',
+    blurb: 'Export, Device Library vs OneLibrary, library moves, and every error a CDJ throws at you.',
+  },
+  {
+    name: 'Serato DJ',
+    href: null,
+    status: 'planned',
+    blurb: 'Crates, offline library, and playing on club CDJs from a Serato setup.',
+  },
+  {
+    name: 'Traktor',
+    href: null,
+    status: 'planned',
+    blurb: 'Collection management and getting a Traktor library onto standalone players.',
+  },
+  {
+    name: 'Engine DJ / Denon',
+    href: null,
+    status: 'planned',
+    blurb: 'Engine library prep, SC Live and Prime players, and the crossover to Pioneer booths.',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'DJ software knowledge base',
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  about: { '@id': 'https://www.savemygig.com/#org' },
+};
+---
+<Base
+  title="DJ Software Knowledge Base - rekordbox, Serato, Traktor | Save My Gig!"
+  description="Deep reference for the software that runs your library. rekordbox first: export, Device Library vs OneLibrary, error codes and compatibility. Serato, Traktor and Engine DJ next."
+  path="/knowledge"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap">
+    <div class="status-line">KNOWLEDGE_BASE</div>
+    <h1 style="margin-bottom:0.8rem">Know your <span class="accent">software</span></h1>
+    <p class="dim kb-lead">
+      Most gig-night disasters are not hardware failures. They are library
+      problems wearing a hardware costume. This is the reference layer: what
+      each piece of software actually does to your files, and how to keep it
+      from ruining your night.
+    </p>
+
+    <div class="kb-grid">
+      {sections.map(s => (
+        s.href ? (
+          <a class="kb-card kb-live" href={s.href}>
+            <span class="kb-name">{s.name}</span>
+            <span class="kb-blurb">{s.blurb}</span>
+            <span class="kb-go">Open the guide &rarr;</span>
+          </a>
+        ) : (
+          <div class="kb-card kb-soon">
+            <span class="kb-name">{s.name}</span>
+            <span class="kb-blurb">{s.blurb}</span>
+            <span class="kb-tag">Coming next</span>
+          </div>
+        )
+      ))}
+    </div>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">Which one should we write next?</h2>
+      <p class="dim" style="margin-bottom:1rem">We build what DJs actually ask for. Tell us what you run and it moves up the list.</p>
+      <a href="/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Tell us what you use</a>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .kb-lead { max-width: 42rem; margin-bottom: 2rem; line-height: 1.6; }
+  .kb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.9rem; }
+  .kb-card {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    padding: 1.2rem 1.3rem; text-decoration: none;
+  }
+  .kb-live { transition: border-color 0.15s ease; }
+  .kb-live:hover { border-color: var(--red); }
+  .kb-soon { opacity: 0.62; }
+  .kb-name {
+    font-family: var(--font-display); font-weight: 800; font-size: 1.1rem;
+    text-transform: uppercase; letter-spacing: -0.01em; color: var(--text);
+  }
+  .kb-blurb { color: var(--text-dim); font-size: 0.88rem; line-height: 1.5; }
+  .kb-go { color: var(--red); font-size: 0.82rem; font-weight: 600; margin-top: 0.3rem; }
+  .kb-tag {
+    font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-faint); margin-top: 0.3rem;
+  }
+</style>

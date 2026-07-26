@@ -3,6 +3,7 @@
 // top-bar (brand + blinking status), no nav, no footer links, no ads,
 // no affiliate links, no selling. Nothing competes with the rescue.
 import Analytics from '../components/Analytics.astro';
+import Disclaimer from '../components/Disclaimer.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -10,9 +11,15 @@ interface Props {
   /** e.g. "CRITICAL_PATH" or "ACTIVE_TRIAGE" */
   status: string;
   red?: boolean;
+  /** optional visible heading; falls back to a screen-reader-only one */
+  heading?: string;
 }
 
-const { title, status, red = false } = Astro.props;
+const { title, status, red = false, heading } = Astro.props;
+// Every screen needs an h1 for heading order and screen readers. Most steps
+// render their own visible <h2>, so by default we emit a hidden h1 derived
+// from the page title rather than change the visual design.
+const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig!?\s*$/i, '');
 ---
 <!doctype html>
 <html lang="en">
@@ -35,8 +42,57 @@ const { title, status, red = false } = Astro.props;
     <a href="/" class="brand">SAVE MY GIG</a>
     <div class:list={['status-indicator', { green: !red }]}>{status}</div>
   </header>
-  <main class="screen">
+  <main class="screen" id="main">
+    <h1 class="sr-only">{srHeading}</h1>
     <slot />
+
+    <!-- Every step needs a way back. Without this a mis-tap under pressure was
+         only recoverable with the browser back gesture, which is unreliable on
+         a phone in a dark booth. -->
+    <nav class="tunnel-exit" aria-label="Leave or restart">
+      <button type="button" class="tx-btn" id="txBack">&larr; Back one step</button>
+      <a class="tx-btn" href="/emergency">Start over</a>
+    </nav>
+
+    <Disclaimer variant="compact" />
   </main>
+  <script is:inline>
+    (function () {
+      var b = document.getElementById('txBack');
+      if (!b) return;
+      // If there is no history to go back to (deep link, new tab), send them
+      // to triage instead of leaving a dead button.
+      if (window.history.length <= 1) {
+        b.textContent = '← Back to triage';
+        b.addEventListener('click', function () { window.location.href = '/emergency'; });
+      } else {
+        b.addEventListener('click', function () { window.history.back(); });
+      }
+    })();
+  </script>
 </body>
 </html>
+
+<style is:global>
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .tunnel-exit {
+    display: flex; gap: 10px; margin-top: 2.2rem;
+    padding-top: 1.2rem; border-top: 1px solid var(--edge-soft);
+  }
+  .tx-btn {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; padding: 11px 14px;
+    font-family: var(--font-body); font-weight: 600; font-size: 0.82rem;
+    letter-spacing: 0.02em; color: var(--text-dim); text-decoration: none;
+    background: transparent; border: 1px solid var(--edge);
+    border-radius: var(--radius); cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .tx-btn:hover { color: var(--text); border-color: var(--text-dim); }
+  .tx-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+  /* The brand in the top bar is the other way out; make it a real tap target. */
+  .top-bar .brand { padding: 11px 0; display: inline-block; }
+</style>

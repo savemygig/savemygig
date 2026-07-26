@@ -1,0 +1,295 @@
+---
+import Base from '../../layouts/Base.astro';
+import Disclaimer from '../../components/Disclaimer.astro';
+
+// The rekordbox reference page. This is the 2026 content gap: OneLibrary vs
+// Device Library is the failure mode that produces a mounted USB with no
+// playlists and NO error code, and almost nobody has written it clearly.
+//
+// FACT DISCIPLINE: everything stated here was verified against AlphaTheta /
+// Pioneer DJ official sources and rekordbox release notes on 2026-07-26.
+// Two things were deliberately left out because they could not be verified:
+// the exFAT status of the XDJ-1000MK2 and XDJ-RX2 (no official filesystem
+// article exists), and the meaning of error E-8306. Do not add them without
+// a primary source.
+const UPDATED = '26 July 2026';
+
+// exFAT support. FAT32 + MBR works on every player listed here, always.
+const players = [
+  { m: 'CDJ-3000X',     lib: 'OneLibrary',     exfat: 'Yes',              note: 'No SD card slot. USB-A x1, USB-C x2.' },
+  { m: 'CDJ-1500X',     lib: 'OneLibrary',     exfat: 'Yes',              note: 'Announced July 2026. Needs rekordbox 7.2.16+.' },
+  { m: 'CDJ-3000',      lib: 'Device Library', exfat: 'Yes, firmware 1.20+', note: 'Not a OneLibrary player on current firmware.' },
+  { m: 'CDJ-2000NXS2',  lib: 'Device Library', exfat: 'No',               note: 'The workhorse in most club booths. FAT32 only.' },
+  { m: 'CDJ-2000 / NXS', lib: 'Device Library', exfat: 'No',              note: 'Still everywhere. FAT32 only.' },
+  { m: 'CDJ-900 / 850', lib: 'Device Library', exfat: 'No',               note: 'FAT32 only.' },
+  { m: 'XDJ-AZ',        lib: 'OneLibrary',     exfat: 'Yes',              note: '' },
+  { m: 'XDJ-RX3',       lib: 'Device Library', exfat: 'Yes, firmware 1.11+', note: '' },
+  { m: 'XDJ-XZ',        lib: 'Device Library', exfat: 'Yes, firmware 1.23+', note: '' },
+  { m: 'XDJ-700',       lib: 'Device Library', exfat: 'No',               note: 'Officially FAT32, FAT or HFS+ only.' },
+  { m: 'OPUS-QUAD',     lib: 'OneLibrary',     exfat: 'Yes',              note: 'First OneLibrary player.' },
+  { m: 'OMNIS-DUO',     lib: 'OneLibrary',     exfat: 'Yes',              note: '' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/knowledge/rekordbox#article',
+  headline: 'rekordbox: export, Device Library vs OneLibrary, and USB compatibility',
+  description: 'Why a rekordbox USB mounts on a CDJ but shows no playlists, what OneLibrary and Device Library are, which players need which, and the export settings that work everywhere.',
+  author: { '@id': 'https://www.savemygig.com/#antonio' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-26',
+  dateModified: '2026-07-26',
+  inLanguage: 'en',
+  mainEntityOfPage: 'https://www.savemygig.com/knowledge/rekordbox',
+  about: [
+    { '@type': 'Thing', name: 'rekordbox' },
+    { '@type': 'Thing', name: 'Pioneer CDJ' },
+    { '@type': 'Thing', name: 'OneLibrary' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': 'https://www.savemygig.com/knowledge/rekordbox#faq',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Why does my USB show no playlists on a CDJ-3000X?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Because the drive was exported in Device Library format and the CDJ-3000X reads OneLibrary. The player mounts the drive and shows no error code, the playlists simply are not there. Re-export from rekordbox 7.2.13 or later, which writes both formats to the same drive.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the difference between OneLibrary and Device Library?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'They are two different database formats rekordbox writes onto a USB drive. Device Library is the long-standing format read by the CDJ-3000, CDJ-2000NXS2 and older players. OneLibrary is the newer format required by the CDJ-3000X, CDJ-1500X, XDJ-AZ, OPUS-QUAD and OMNIS-DUO. A drive carrying only one of them will look empty on a player that reads the other.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Which rekordbox version exports both OneLibrary and Device Library?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use rekordbox 7.2.13 or later. Do not use 7.2.12: it was withdrawn because tracks exported with it could fail to load on AlphaTheta and Pioneer DJ hardware. The current version at the time of writing is 7.2.16.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Should I format my DJ USB as FAT32 or exFAT?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'FAT32 with an MBR partition scheme. FAT32 is read by every Pioneer and AlphaTheta player ever made. exFAT is only read by newer units, so an exFAT drive that works on a CDJ-3000 is refused by the CDJ-2000NXS2 in the next booth.',
+      },
+    },
+  ],
+};
+---
+<Base
+  title="rekordbox USB Guide: OneLibrary, Device Library & CDJ Compatibility | Save My Gig!"
+  description="Your USB mounts on the CDJ but shows no playlists and no error? That is Device Library vs OneLibrary. The full explanation, the per-model compatibility table, and the export settings that work in every booth."
+  path="/knowledge/rekordbox"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span> <span>rekordbox</span>
+    </nav>
+
+    <div class="status-line">REKORDBOX</div>
+    <h1 class="rb-h1">rekordbox, <span class="accent">honestly</span></h1>
+    <p class="dim rb-updated">Last verified: {UPDATED}</p>
+
+    <div class="panel panel-go">
+      <p style="margin:0">
+        <strong>The short version.</strong> Format the drive <strong>FAT32 with an MBR
+        partition scheme</strong>, and export from <strong>rekordbox 7.2.13 or later</strong>.
+        That combination is readable by every Pioneer and AlphaTheta player in this
+        article, old and new. Everything below is why.
+      </p>
+    </div>
+
+    <h2 class="rb-h2" id="no-playlists">Why does my USB mount on the CDJ but show no playlists?</h2>
+    <p>
+      Nine times out of ten in 2026, this is not a broken drive. It is the
+      wrong <strong>database format</strong>, and it is the most confusing failure
+      in modern DJing because <strong>the player gives you no error code at all</strong>.
+      The stick mounts. The player is happy. Your playlists are simply not there.
+    </p>
+    <p>
+      rekordbox can write two different databases onto a USB drive:
+      <strong>Device Library</strong>, the long-standing format, and
+      <strong>OneLibrary</strong>, the newer one. A player reads one or the other.
+      If your drive carries only Device Library and you plug it into a CDJ-3000X,
+      the playlists will not appear.
+    </p>
+    <div class="panel panel-go">
+      <p style="margin:0">
+        <strong>Your music is not gone.</strong> The audio files on the drive are
+        never deleted by this. It is only the playlist database the player cannot
+        see. In the FOLDER or browse view the tracks are usually still there, which
+        is exactly what saves a set while you sort the rest out later.
+      </p>
+    </div>
+
+    <h2 class="rb-h2" id="onelibrary">What are OneLibrary and Device Library?</h2>
+    <p>
+      Both are the index rekordbox writes to your drive so a player can show your
+      playlists, cues, grids and artwork without a computer. OneLibrary was
+      introduced in <strong>rekordbox 6.6.11</strong> (March 2023), originally for
+      the OPUS-QUAD, and it is the format the newest hardware expects. Device
+      Library is what everything before it reads.
+    </p>
+    <p>
+      The trap is that the split does not follow the age of the gear the way you
+      would expect. <strong>The CDJ-3000 is a Device Library player. The CDJ-3000X
+      is a OneLibrary player.</strong> Two decks with nearly the same name, in the
+      same booth, reading different formats.
+    </p>
+
+    <h2 class="rb-h2" id="which-player">Which players use OneLibrary, and which read exFAT?</h2>
+    <p class="rb-tablenote">
+      FAT32 with MBR works on every model in this table. exFAT is the column
+      that bites.
+    </p>
+    <div class="rb-tablewrap">
+      <table class="rb-table">
+        <thead>
+          <tr><th scope="col">Player</th><th scope="col">Library format</th><th scope="col">Reads exFAT?</th><th scope="col">Notes</th></tr>
+        </thead>
+        <tbody>
+          {players.map(p => (
+            <tr>
+              <th scope="row">{p.m}</th>
+              <td><span class:list={['pill', p.lib === 'OneLibrary' ? 'pill-one' : 'pill-dev']}>{p.lib}</span></td>
+              <td class:list={[p.exfat === 'No' ? 'no' : 'yes']}>{p.exfat}</td>
+              <td class="dim">{p.note}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="rb-caveat">
+      We have deliberately left the <strong>XDJ-1000MK2</strong> and
+      <strong>XDJ-RX2</strong> off this table. There is no official AlphaTheta
+      filesystem article for either, and we will not guess about a drive you are
+      going to trust with a gig. Treat both as FAT32-only and you will be fine.
+      <strong>NTFS is never supported on any player</strong>, and the partition
+      scheme must be <strong>MBR</strong>, not GPT.
+    </p>
+
+    <h2 class="rb-h2" id="fix">How do I fix a drive that shows no playlists?</h2>
+    <ol class="rb-steps">
+      <li><strong>At the gig, switch to FOLDER view.</strong> Your audio files are still on the drive. You lose cues, grids and playlists, but you keep playing. That is the whole point of the rescue.</li>
+      <li><strong>Get to rekordbox 7.2.13 or later.</strong> From this version rekordbox can write both database formats onto the same drive, so one stick works in every booth.</li>
+      <li><strong>Re-export your playlists to the drive.</strong> Export, do not drag and drop. Dragging audio files gives you no database at all.</li>
+      <li><strong>Eject properly, from rekordbox.</strong> Pulling a drive mid-write is the single most common way to corrupt the database you just built.</li>
+      <li><strong>Test it before you leave the house</strong> if you own a player, or arrive early enough to test on the club's.</li>
+    </ol>
+
+    <div class="panel panel-warn">
+      <h3 style="margin-bottom:0.6rem;font-size:1rem">Two version numbers worth writing down</h3>
+      <p style="margin:0 0 0.6rem">
+        <strong>Never use rekordbox 7.2.12.</strong> AlphaTheta withdrew it because
+        tracks exported with that version could fail to load on their own hardware.
+        It was fixed in 7.2.13.
+      </p>
+      <p style="margin:0">
+        <strong>Converting a library is one-way.</strong> AlphaTheta's own wording:
+        if you convert when OneLibrary already exists on the drive, it is
+        overwritten, and any playlists or playback histories stored only in
+        OneLibrary are lost. Convert onto a fresh drive when you can.
+      </p>
+    </div>
+
+    <h2 class="rb-h2" id="fat32">Is FAT32 really limited to 32GB?</h2>
+    <p>
+      No, and this myth costs DJs money. FAT32 supports volumes up to
+      <strong>2TB</strong>. The 32GB ceiling you have run into is a limit in
+      <em>Windows' own formatting dialog</em>, not in the file system. On Windows
+      you can format a larger drive to FAT32 with a free tool such as
+      <strong>fat32format</strong> or its graphical version
+      <strong>guiformat</strong> (both from Ridgecrop Consultants). On a Mac, Disk
+      Utility does it natively: choose <span class="mono">MS-DOS (FAT)</span> with
+      a <span class="mono">Master Boot Record</span> scheme.
+    </p>
+    <p>
+      The real FAT32 limit is <strong>4GB per file</strong>. A 320kbps MP3 is around
+      9MB and even a long uncompressed WAV rarely passes 1GB, so for a music
+      library it never matters. <a href="/fix/format-usb-for-cdj">Full formatting walkthrough &rarr;</a>
+    </p>
+
+    <h2 class="rb-h2" id="errors">What do the CDJ error codes mean?</h2>
+    <dl class="rb-errors">
+      <dt>E-8302</dt>
+      <dd><strong>CANNOT PLAY TRACK.</strong> Officially: the track data on the storage device cannot be read correctly. Usually a corrupt export or a file system the player does not accept. <a href="/fix/cdj-error-e-8302">Full fix &rarr;</a></dd>
+      <dt>E-8304 / E-8305</dt>
+      <dd><strong>UNSUPPORTED FILE FORMAT.</strong> Officially: music files that cannot be played by the unit have been loaded. Re-encode the offending tracks, or re-export from rekordbox.</dd>
+    </dl>
+    <p class="rb-caveat">
+      We are not publishing a definition for E-8306. It does not appear on the
+      current official error pages and the older manuals contradict each other. If
+      you have hit it, <a href="/feedback">tell us what the screen said</a> and what
+      fixed it, and we will document it properly.
+    </p>
+
+    <h2 class="rb-h2" id="checklist">The setup that never surprises you</h2>
+    <ul class="checklist">
+      <li><strong>FAT32, MBR</strong>, on a 32 to 64GB drive from a brand you have heard of.</li>
+      <li><strong>rekordbox 7.2.13 or later</strong>, exported, not dragged.</li>
+      <li><strong>Two identical drives</strong>, same export on both, in different pockets.</li>
+      <li><strong>Eject from rekordbox</strong>, every single time.</li>
+      <li><strong>Test on a player</strong> before the drive ever matters.</li>
+    </ul>
+
+    <Disclaimer variant="full" />
+
+    <div class="panel panel-danger" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Playing soon and it is not working?</h2>
+      <a href="/emergency" class="btn btn-solid" data-event="begin_checkout" data-placement="knowledge_rekordbox">🚨 Start Emergency Mode</a>
+    </div>
+
+    <p class="rb-sources dim">
+      Sources: AlphaTheta / Pioneer DJ official product and support pages, rekordbox
+      release notes (7.2.12 withdrawal, 7.2.13, 7.2.16) and official CDJ-3000 and
+      CDJ-3000X error code documentation, all checked {UPDATED}. Firmware and
+      software behaviour changes without notice, so re-check before a big show.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  .rb-h2 { font-size: clamp(1.3rem, 4.5vw, 1.7rem); margin: 2.4rem 0 0.9rem; text-transform: none; letter-spacing: -0.015em; }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-tablenote { font-size: 0.88rem; margin-bottom: 0.8rem; }
+  .rb-tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 1rem; }
+  .rb-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 520px; }
+  .rb-table th, .rb-table td { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--edge); vertical-align: top; }
+  .rb-table thead th { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
+  .rb-table tbody th { color: var(--text); font-weight: 700; white-space: nowrap; }
+  .rb-table .yes { color: var(--green); }
+  .rb-table .no { color: var(--red); font-weight: 700; }
+  .pill { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .pill-one { background: rgba(217,164,65,0.14); color: var(--amber); border: 1px solid rgba(217,164,65,0.4); }
+  .pill-dev { background: rgba(154,151,143,0.1); color: var(--text-dim); border: 1px solid var(--edge); }
+  .rb-caveat { font-size: 0.88rem; border-left: 2px solid var(--edge); padding-left: 0.9rem; }
+  .rb-steps { margin: 0 0 1rem 1.1rem; color: var(--text-dim); line-height: 1.7; }
+  .rb-steps li { margin-bottom: 0.5rem; }
+  .rb-steps strong { color: var(--text); }
+  .rb-errors { margin-bottom: 1rem; }
+  .rb-errors dt { font-family: ui-monospace, Menlo, monospace; color: var(--red); font-weight: 700; margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--edge-soft); }
+</style>

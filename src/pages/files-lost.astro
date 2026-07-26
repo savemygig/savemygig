@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import EmailCapture from '../components/EmailCapture.astro';
 // Affiliate links: placeholders marked TODO until accounts approved.
 ---
 <Base
@@ -45,8 +46,14 @@ import Base from '../layouts/Base.astro';
       </a>
     </div>
 
+    <EmailCapture
+      source="files-lost"
+      title="Never have this night again"
+      blurb="We will email you the printable Emergency Card and the pre-gig checklist. Next time a drive dies it is a five-minute inconvenience, not a lost set. No spam, unsubscribe in one click."
+    />
+
     <p class="dim" style="text-align:center;margin-top:2rem">
-      <a href="/prepare">Prevention checklist →</a>
+      <a href="/feedback">Tell us what happened →</a>
     </p>
   </main>
 </Base>

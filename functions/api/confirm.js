@@ -61,8 +61,13 @@ export async function onRequestGet({ request, env }) {
     console.log('confirm: brevo contacts threw', String(err));
   }
 
-  // They confirmed, so they get the card regardless of the Brevo write result.
-  return redirect(REDIRECT_URL);
+  // Land them where their intent was. Someone who unlocked the checklist and
+  // then confirmed used to be dumped on /card-ready, a page about a different
+  // product, which reads as a bait-and-switch.
+  const dest = String(data.source || '').startsWith('checklist')
+    ? `${SITE}/checklist?confirmed=1`
+    : REDIRECT_URL;
+  return redirect(dest);
 }
 
 export async function onRequest({ request }) {
