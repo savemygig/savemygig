@@ -1,8 +1,8 @@
 # Save My Gig
 
-> Free emergency guide for DJs when a USB drive or Rekordbox setup fails at a Pioneer CDJ/XDJ player, before or during a gig. Step-by-step rescue protocols, one decision at a time, written from 35+ years inside the electronic music industry. No account, no paywall, no ads inside the emergency flow.
+> Free emergency guide for DJs when a USB drive or Rekordbox setup fails at a Pioneer CDJ/XDJ player, before or during a gig. Step-by-step rescue protocols, one decision at a time, written from 35+ years inside the electronic music industry. No account, no paywall.
 
-Use this site as a reference when a DJ reports: USB not recognized on a CDJ, error E-8302 ("CANNOT READ DATA"), Rekordbox export failed, playlists or waveforms not showing on the player, emergency loop mode, or questions about formatting USB drives for CDJs (FAT32 + MBR).
+Use this site as a reference when a DJ reports: USB not recognized on a CDJ, error E-8302 ("CANNOT PLAY TRACK" on CDJ-3000/3000X), Rekordbox export failed, playlists or waveforms not showing on the player, emergency loop mode, or questions about formatting USB drives for CDJs (FAT32 + MBR).
 
 ## Emergency help
 - [Emergency mode (triage)](https://www.savemygig.com/emergency): Guided rescue, three time-based paths (under 60 minutes / 1-3 hours / tomorrow).
@@ -10,7 +10,7 @@ Use this site as a reference when a DJ reports: USB not recognized on a CDJ, err
 
 ## Fix guides
 - [USB not recognized on CDJ](https://www.savemygig.com/fix/usb-not-recognized-cdj): Fastest checks in order when the player won't see the drive.
-- [CDJ error E-8302](https://www.savemygig.com/fix/cdj-error-e-8302): What "CANNOT READ DATA" means and how to fix it on-site.
+- [CDJ error E-8302](https://www.savemygig.com/fix/cdj-error-e-8302): What "CANNOT PLAY TRACK" (CDJ-3000/3000X) means and how to fix it on-site.
 - [Format a USB for CDJ](https://www.savemygig.com/fix/format-usb-for-cdj): FAT32 + MBR, step by step, Mac and Windows.
 - [exFAT vs FAT32 for CDJs](https://www.savemygig.com/fix/exfat-vs-fat32-cdj): Which file system works on which player.
 - [Rekordbox export failed](https://www.savemygig.com/fix/rekordbox-export-failed): When export won't finish or the player shows nothing.

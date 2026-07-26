@@ -3,7 +3,7 @@ import sitemap from '@astrojs/sitemap';
 
 // Pages that must never appear in the sitemap: the sealed rescue tunnel
 // (noindex by design), outcome pages, and utility pages. Everything else is
-// picked up automatically — the old hand-maintained public/sitemap.xml drifted
+// picked up automatically. The old hand-maintained public/sitemap.xml drifted
 // twice (it was missing /emergency and /checklist), so it is now generated.
 const BUILD_DATE = new Date().toISOString();
 
@@ -15,6 +15,7 @@ const EXCLUDE = [
   '/feedback',
   '/privacy',
   '/404',
+  '/offline',
 ];
 
 export default defineConfig({

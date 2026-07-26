@@ -11,7 +11,7 @@
 <div id="ck" class="ck" role="dialog" aria-label="Cookie choice" hidden>
   <p class="ck-t">
     <strong class="ck-h">Before you dive in.</strong>
-    Analytics cookies only, so we see which pages help DJs most. No ads.
+    Analytics cookies only, so we see which pages help DJs most.
     <a href="/privacy">Privacy</a>
   </p>
   <div class="ck-b">
@@ -118,7 +118,7 @@
     var box = document.getElementById('ck');
     if (!box) return;
     box.hidden = false;
-    // Suppress the sticky article CTA while the banner is up — it used to
+    // Suppress the sticky article CTA while the banner is up, it used to
     // cover both consent buttons on /fix pages at mobile width.
     document.documentElement.classList.add('ck-open');
 

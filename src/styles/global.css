@@ -173,13 +173,11 @@ a { color: var(--red); }
   margin-top: 0.35rem;
 }
 .btn-go     { border-color: var(--green); background: var(--green-dim); color: var(--green); }
-.btn-stop   { border-color: var(--red);   background: var(--red-dim);   color: var(--red); }
 .btn-neutral:hover { border-color: var(--text-dim); }
 .btn-solid  { background: var(--red); color: #0a0a0b; border-color: var(--red); font-weight: 800; }
 @media (hover: hover) {
   .btn-solid:hover { background: #ff623f; }
   .btn-go:hover   { background: rgba(58,216,132,0.2); }
-  .btn-stop:hover { background: rgba(255,77,46,0.2); }
 }
 
 /* ---------- Step meta ---------- */
@@ -455,6 +453,17 @@ html.ck-open .sticky-cta { display: none !important; }
    is not shown to visitors. To bring them back for a review pass,
    change display:none to display:block here. */
 .review-flag { display: none; }
+
+/* ---------- Skip link ----------
+   Hidden until focused, so keyboard and screen-reader users can jump past the
+   header straight to the page content (WCAG 2.4.1). */
+.skip-link {
+  position: absolute; left: 8px; top: -60px; z-index: 200;
+  padding: 10px 16px; background: var(--red); color: #0a0a0b;
+  font-family: var(--font-display); font-weight: 800; border-radius: var(--radius);
+  text-decoration: none; transition: top 0.15s ease;
+}
+.skip-link:focus { top: 8px; }
 
 /* ---------- Tunnel: small print that must never compete with the decision ---------- */
 .tunnel-note {

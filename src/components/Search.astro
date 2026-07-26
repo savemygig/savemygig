@@ -40,6 +40,10 @@
   }
   .srch-input::placeholder { color: var(--text-faint); }
   .srch-input::-webkit-search-cancel-button { display: none; }
+  /* The box already shows focus via .srch-box:focus-within (red border). The
+     global input:focus-visible outline would stack a second red ring offset
+     outside it (the "line over line"), so suppress it just for this input. */
+  .srch-input:focus-visible { outline: none; }
   .srch-clear { background: none; border: 0; color: var(--text-dim); font-size: 1.4rem;
     line-height: 1; cursor: pointer; padding: 0 0.2rem; min-height: 44px; }
   .srch-clear:hover { color: var(--text); }

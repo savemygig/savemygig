@@ -111,6 +111,7 @@ const entityGraph = {
   <slot name="head" />
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to content</a>
   <header class="site-nav-wrap">
     <div class="site-nav">
       <a href="/" class="nav-brand" aria-label="Save My Gig, DJ rescue and prevention, home">
@@ -148,7 +149,9 @@ const entityGraph = {
     </div>
   </div>
 
-  <slot />
+  <div id="main">
+    <slot />
+  </div>
   <footer class="site-footer">
     <div class="foot-inner">
 
@@ -419,7 +422,7 @@ const entityGraph = {
   .nav-links a:hover { color: var(--text); }
   .nav-search-btn {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 40px; height: 40px; flex: 0 0 auto;
+    width: 44px; height: 44px; flex: 0 0 auto;
     background: transparent; border: 1px solid var(--edge); border-radius: var(--radius);
     color: var(--text-dim); cursor: pointer; padding: 0; margin-left: 0.2rem;
     transition: color 0.15s ease, border-color 0.15s ease;
@@ -437,7 +440,7 @@ const entityGraph = {
   .so-close:hover { color: var(--text); }
 
   .nav-toggle {
-    display: none; width: 42px; height: 38px; background: transparent;
+    display: none; width: 44px; height: 44px; background: transparent;
     border: 1px solid var(--edge); border-radius: var(--radius);
     flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; padding: 0;
   }

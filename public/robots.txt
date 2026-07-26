@@ -1,4 +1,4 @@
-# Save My Gig — DJ rescue and prevention
+# Save My Gig: DJ rescue and prevention
 # savemygig.com
 #
 # Note on /protocol/: those pages are the step-by-step rescue tunnel. They are

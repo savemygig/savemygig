@@ -15,7 +15,7 @@
  *
  * Bump CACHE when the precache list changes; old caches are deleted on activate.
  */
-const CACHE = 'smg-v1';
+const CACHE = 'smg-v2';
 
 // The rescue path, offline. If a page is not here it still works online.
 const PRECACHE = [
@@ -44,7 +44,26 @@ const PRECACHE = [
   '/protocol/critical/fallback',
   '/protocol/critical/usb-dead',
   '/protocol/quick-fix',
+  '/protocol/quick-fix/usb-check',
+  '/protocol/quick-fix/rekordbox-check',
+  '/protocol/quick-fix/backup',
+  '/protocol/quick-fix/repair',
+  '/protocol/quick-fix/format',
+  '/protocol/quick-fix/export',
+  '/protocol/quick-fix/fresh-usb',
+  '/protocol/quick-fix/dead-checks',
+  '/protocol/quick-fix/no-computer',
+  '/protocol/quick-fix/verify',
   '/protocol/full-recovery',
+  '/protocol/full-recovery/value',
+  '/protocol/full-recovery/health',
+  '/protocol/full-recovery/rescue',
+  '/protocol/full-recovery/rebuild',
+  '/protocol/full-recovery/retire',
+  '/protocol/full-recovery/verify',
+  '/disclaimer',
+  '/knowledge',
+  '/knowledge/rekordbox',
   '/saved',
   '/files-lost',
   '/offline',

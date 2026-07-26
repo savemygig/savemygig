@@ -15,13 +15,13 @@ const faqs = [
   {
     id: 'usb-not-detected',
     q: 'Why is my USB not detected on a Pioneer CDJ or XDJ?',
-    a: 'The most common causes, in order: the drive is formatted as NTFS or exFAT instead of FAT32; the partition map is GPT instead of MBR; the Rekordbox database on the drive is corrupt (often from an unsafe eject); or the drive hardware is failing. Reseat the drive, try the second slot and the other player first, many "dead" drives are just a bad mount.',
+    a: 'The most common causes, in order: the drive is formatted as NTFS or exFAT instead of FAT32; the partition map is GPT (we recommend MBR); the Rekordbox database on the drive is corrupt (often from an unsafe eject); or the drive hardware is failing. Reseat the drive, try the second slot and the other player first, many "dead" drives are just a bad mount.',
     fix: { href: '/fix/usb-not-recognized-cdj', label: 'Full fix: CDJ not reading your USB' },
   },
   {
     id: 'e-8302',
     q: 'What does CDJ error E-8302 mean?',
-    a: 'E-8302 ("CANNOT READ DATA") means the player sees the drive but cannot read its data, in most cases a corrupt Rekordbox export or a wrong file system. With a laptop you can usually fix it on-site: re-export fresh from Rekordbox, or reformat FAT32/MBR and re-export.',
+    a: 'On the CDJ-3000 and CDJ-3000X, E-8302 reads "CANNOT PLAY TRACK": the player cannot read the track data on the drive, in most cases a corrupt Rekordbox export or a wrong file system. With a laptop you can usually fix it on-site: re-export fresh from Rekordbox, or reformat FAT32/MBR and re-export.',
     fix: { href: '/fix/cdj-error-e-8302', label: 'Full fix: CDJ error E-8302' },
   },
   {
@@ -93,7 +93,7 @@ const faqs = [
   {
     id: 'is-it-free',
     q: 'Is Save My Gig really free?',
-    a: 'Yes. No account, no paywall, and no ads inside the emergency flow, ever. If it saves your night you can buy us a coffee, but only after you are safe.',
+    a: 'Yes. No account and no paywall, ever. If it saves your night you can buy us a coffee, but only after you are safe.',
     fix: { href: '/about', label: 'The story behind Save My Gig' },
   },
   {
