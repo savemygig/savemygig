@@ -5,6 +5,20 @@ import PromoBanner from '../components/PromoBanner.astro';
 // Homepage = simple "pick your pain" chooser. Rescue AND prevention, balanced:
 // three equal, neutral doors; colour lives only in the LED dots and comes up
 // on tap/hover. Emergency is never a permanently red box.
+//
+// The H1 is deliberately FIXED. It is the brand anchor and the strongest SEO
+// and GEO signal on the site, and for the ~60% of visitors who arrive mid-crisis
+// a stable headline reads as reliability. The personality rotates in the SUBLINE
+// instead: same functional facts every time (free, no account), different warmth.
+// The first line renders server-side so it works with JavaScript disabled and is
+// what crawlers index.
+const SUBLINES = [
+  "Pick the one that sounds like you. Free, no account, built by someone who's been there.",
+  'Breathe. Pick a door. Free, no account, and no ads when you are in trouble.',
+  'Whatever just happened, there is a way through it. Free, no account.',
+  "Three doors, no wrong answer. Free, no account, built by someone who's been there.",
+  "You are in the right place. Free, no account, built by someone who's been there.",
+];
 ---
 <Base
   title="Save My Gig! | DJ Rescue and Prevention for CDJ, XDJ & USB"
@@ -13,8 +27,12 @@ import PromoBanner from '../components/PromoBanner.astro';
 >
 
   <main class="landing">
-    <h1 class="ask">WHAT DO YOU NEED, <span class="accent">DJ?</span></h1>
-    <p class="sub">Pick the one that sounds like you. Free, no account, built by someone who's been there.</p>
+    <h1 class="ask">WHAT'S YOUR SITUATION, <span class="accent">DJ?</span></h1>
+    <p class="sub" id="sub">
+      {SUBLINES.map((line, i) => (
+        <span class="sub-line" data-sub={i} hidden={i !== 0}>{line}</span>
+      ))}
+    </p>
 
     <nav class="doors" aria-label="Choose your path">
       <a class="door d-emergency" href="/emergency" data-event="begin_checkout" data-placement="home_door_emergency">
@@ -62,7 +80,9 @@ import PromoBanner from '../components/PromoBanner.astro';
 <style>
   .landing { max-width: var(--site-w); margin: 0 auto; padding: 2rem var(--site-pad) 1rem; }
   .ask { font-size: clamp(2rem, 9vw, 3.2rem); margin-bottom: 0.6rem; }
-  .sub { color: var(--text-dim); margin-bottom: 2rem; max-width: 42rem; text-wrap: balance; }
+  .sub { color: var(--text-dim); margin-bottom: 2rem; max-width: 42rem; text-wrap: balance; min-height: 3.2rem; }
+  .sub-line[hidden] { display: none; }
+  @media (max-width: 520px) { .sub { min-height: 4.8rem; } }
 
   .doors { display: flex; flex-direction: column; gap: 1rem; }
 
@@ -124,3 +144,12 @@ import PromoBanner from '../components/PromoBanner.astro';
 
   @media (prefers-reduced-motion: reduce) { .door, .door-led, .door-arrow { transition: none; } }
 </style>
+
+<script is:inline>
+  (function () {
+    var lines = document.querySelectorAll('#sub .sub-line');
+    if (lines.length < 2) return;
+    var pick = Math.floor(Math.random() * lines.length);
+    for (var i = 0; i < lines.length; i++) lines[i].hidden = (i !== pick);
+  })();
+</script>
