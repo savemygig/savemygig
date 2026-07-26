@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import InstallApp from '../components/InstallApp.astro';
 
 /**
  * Interactive pre-gig checklist. Prevention side, outside the tunnel.
@@ -177,6 +178,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     <div class="top-actions">
       <button type="button" class="btn btn-neutral" id="topBtn">Back to top</button>
     </div>
+    <InstallApp />
   </main>
 </Base>
 

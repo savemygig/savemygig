@@ -1,0 +1,114 @@
+---
+/**
+ * "Install this" prompt.
+ *
+ * Hidden by default and only revealed when installing is actually possible,
+ * so nobody sees a dead button:
+ *   - Chrome/Edge/Android: shown when the browser fires beforeinstallprompt.
+ *   - iOS Safari: no such event exists, so we detect iOS and show the manual
+ *     Share -> Add to Home Screen instructions instead.
+ *   - Already installed, or unsupported: stays hidden.
+ *
+ * The pitch is the offline capability, not "install our app". Nobody wants
+ * another app; everybody wants the rescue to work with no signal.
+ */
+---
+<div class="inst" id="installWrap" hidden>
+  <div class="inst-body">
+    <span class="inst-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 12 5 5 5-5"/><path d="M5 21h14"/></svg>
+    </span>
+    <span class="inst-txt">
+      <strong class="inst-h">Keep this on your phone</strong>
+      <span class="inst-sub" id="installSub">Install it and the rescue flow works with no signal, in any basement.</span>
+    </span>
+    <button type="button" class="inst-btn" id="installBtn">Install</button>
+  </div>
+  <div class="inst-ios" id="installIos" hidden>
+    <p>Tap <strong>Share</strong> at the bottom of Safari, then <strong>Add to Home Screen</strong>.</p>
+  </div>
+</div>
+
+<style is:global>
+  .inst { margin: 2rem 0 0; }
+  .inst[hidden] { display: none; }
+  .inst-body {
+    display: flex; align-items: center; gap: 0.85rem;
+    background: var(--surf-2); border: 1px solid var(--edge);
+    border-left: 3px solid var(--green); border-radius: var(--radius);
+    padding: 0.9rem 1.1rem;
+  }
+  .inst-icon {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 50%; color: var(--green);
+    background: rgba(58,216,132,0.1); border: 1px solid rgba(58,216,132,0.4);
+  }
+  .inst-txt { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+  .inst-h { font-family: var(--font-display); font-weight: 800; font-size: 0.98rem; color: var(--text); }
+  .inst-sub { font-size: 0.83rem; color: var(--text-dim); line-height: 1.45; }
+  .inst-btn {
+    flex: 0 0 auto; min-height: 44px; padding: 0.6rem 1.2rem; cursor: pointer;
+    font-family: var(--font-display); font-weight: 800; font-size: 0.85rem;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    background: var(--green); color: #0a0a0b; border: 1px solid var(--green);
+    border-radius: var(--radius);
+  }
+  .inst-btn:hover { filter: brightness(1.08); }
+  .inst-ios { padding: 0.75rem 1.1rem 0; }
+  .inst-ios[hidden] { display: none; }
+  .inst-ios p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+  .inst-ios strong { color: var(--text); }
+  @media (max-width: 520px) {
+    .inst-body { flex-wrap: wrap; }
+    .inst-btn { width: 100%; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var wrap = document.getElementById('installWrap');
+    if (!wrap) return;
+    var btn = document.getElementById('installBtn');
+    var ios = document.getElementById('installIos');
+    var sub = document.getElementById('installSub');
+    var deferred = null;
+
+    // Already running as an installed app: nothing to offer.
+    var standalone = window.matchMedia('(display-mode: standalone)').matches ||
+                     window.navigator.standalone === true;
+    if (standalone) return;
+
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferred = e;
+      wrap.hidden = false;
+    });
+
+    btn.addEventListener('click', function () {
+      if (!deferred) return;
+      deferred.prompt();
+      deferred.userChoice.then(function (c) {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'pwa_install_prompt', { outcome: c.outcome });
+        }
+        if (c.outcome === 'accepted') wrap.hidden = true;
+        deferred = null;
+      });
+    });
+
+    // iOS Safari never fires beforeinstallprompt, so show the manual route.
+    var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    var isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+    if (isIos && isSafari) {
+      btn.hidden = true;
+      ios.hidden = false;
+      sub.textContent = 'Add it to your home screen and the rescue flow works with no signal.';
+      wrap.hidden = false;
+    }
+
+    window.addEventListener('appinstalled', function () {
+      wrap.hidden = true;
+      if (typeof window.gtag === 'function') window.gtag('event', 'pwa_installed');
+    });
+  })();
+</script>
