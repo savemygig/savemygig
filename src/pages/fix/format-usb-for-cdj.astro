@@ -15,7 +15,8 @@ import Detail from '../../components/Detail.astro';
 // path stay visible; every branch after that is collapsed, so a DJ reads only
 // the one that applies to them. Collapsed content is still in the HTML, so
 // Google indexes it and AI answer engines quote it exactly as if it were open.
-const UPDATED = '26 July 2026';
+import { CHECKED } from '../../data/facts.js';
+const UPDATED = CHECKED;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -190,7 +191,7 @@ const faqSchema = {
 
     <h2 class="art-h2">The rule worth remembering</h2>
     <p class="art-close">
-      <strong>Format for the oldest player you might ever face, not the newest one you
+      <strong>Format for the oldest player you might ever face, not the most modern one you
       own.</strong> The festival main stage has CDJ-3000s. The afterparty basement has a
       CDJ-2000 with a cigarette burn on it. FAT32 plus MBR plays both.
     </p>

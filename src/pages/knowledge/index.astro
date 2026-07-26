@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { VENDOR_LINKS } from '../../data/facts.js';
 
 // Knowledge hub. Save My Gig started Pioneer/rekordbox-shaped because that is
 // where the emergencies are, but the brand promise is "DJ rescue and
@@ -80,6 +81,8 @@ const schema = {
       <p class="dim" style="margin-bottom:1rem">We build what DJs actually ask for. Tell us what you run and it moves up the list.</p>
       <a href="/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Tell us what you use</a>
     </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">Official downloads and release notes: {VENDOR_LINKS.map((v, i) => (<Fragment>{i > 0 ? ' · ' : ''}<a href={v.url} rel="noopener">{v.name}</a></Fragment>))}</p>
   </main>
 </Base>
 

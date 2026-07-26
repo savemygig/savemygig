@@ -1,6 +1,11 @@
 // Geometry gate for Save My Gig. Measures real layout in Chromium.
-// Usage: node /opt/node-tools/smg-geo.mjs /root/smg/dist
-import { chromium } from 'playwright';
+// Run: node scripts/geo-check.mjs   (or npm run gate:geo)
+// Playwright is not a repo dependency; it resolves from the global install at
+// /opt/node-tools when not found locally.
+import { createRequire } from 'node:module';
+let chromium;
+try { ({ chromium } = await import('playwright')); }
+catch { chromium = createRequire('/opt/node-tools/')('playwright').chromium; }
 import http from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { join, extname } from 'node:path';

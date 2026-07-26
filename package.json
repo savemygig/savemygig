@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "lint:content": "node scripts/lint-content.mjs dist",
+    "gate:geo": "node scripts/geo-check.mjs dist",
+    "gate": "astro build && node scripts/lint-content.mjs dist && node scripts/geo-check.mjs dist"
   },
   "keywords": [],
   "author": "",
