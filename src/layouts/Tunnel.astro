@@ -32,16 +32,15 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig!?\s*$/i, '');
   <meta name="robots" content="noindex,follow" />
   <meta name="theme-color" content="#000000" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" />
+  <link rel="preload" href="/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
   <Analytics />
 </head>
 <body>
   <header class="top-bar">
     <div class="top-bar-inner">
       <a href="/" class="brand" aria-label="Save My Gig, home">
-        <img src="/images/save-my-gig-seal.png" alt="" width="26" height="26" class="tb-seal" decoding="async" />
+        <picture><source srcset="/images/seal-72.webp" type="image/webp" /><img src="/images/seal-72.png" alt="" width="26" height="26" class="tb-seal" decoding="async" /></picture>
         <span>SAVE MY GIG</span>
       </a>
       <div class:list={['status-indicator', { green: !red }]}>{status}</div>
