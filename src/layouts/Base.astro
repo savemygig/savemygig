@@ -108,9 +108,12 @@ const entityGraph = {
 <body>
   <header class="site-nav-wrap">
     <div class="site-nav">
-      <a href="/" class="nav-brand">
-        <span class="nb-name">Save My Gig<span class="accent">!</span></span>
-        <span class="nb-tag">DJ rescue and prevention</span>
+      <a href="/" class="nav-brand" aria-label="Save My Gig, DJ rescue and prevention, home">
+        <img src="/images/save-my-gig-seal.png" alt="" width="42" height="42" class="nb-seal" decoding="async" />
+        <span class="nb-text">
+          <span class="nb-name">Save My Gig<span class="accent">!</span></span>
+          <span class="nb-tag">DJ rescue and prevention</span>
+        </span>
       </a>
       <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
@@ -121,9 +124,9 @@ const entityGraph = {
         <a href="/prepare">Prevention</a>
         <a href="/checklist">Checklist</a>
         <a href="/knowledge">Knowledge</a>
-        <a href="/recovery">Recovery</a>
         <a href="/gear">Gear</a>
-        <a href="/about">About</a>
+        <a href="/recovery" class="nav-more">Recovery</a>
+        <a href="/about" class="nav-more">About</a>
       </nav>
     </div>
   </header>
@@ -321,7 +324,9 @@ const entityGraph = {
     max-width: var(--site-w); margin: 0 auto; padding: 0.8rem 1.25rem;
     display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: relative;
   }
-  .nav-brand { display: flex; flex-direction: column; gap: 3px; text-decoration: none; line-height: 1; flex: 0 0 auto; }
+  .nav-brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; line-height: 1; flex: 0 0 auto; }
+  .nb-seal { flex: 0 0 auto; width: 42px; height: 42px; display: block; }
+  .nb-text { display: flex; flex-direction: column; gap: 3px; }
   .nb-name {
     font-family: var(--font-display); font-weight: 900; font-size: 1.36rem;
     text-transform: uppercase; letter-spacing: -0.02em; color: var(--text); white-space: nowrap;
@@ -346,7 +351,10 @@ const entityGraph = {
   .nav-toggle .bar { width: 18px; height: 2px; background: var(--text); display: block; }
   .nav-toggle:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
-  @media (max-width: 640px) {
+  /* Secondary destinations: in the drawer on mobile, footer on desktop. */
+  @media (min-width: 901px) { .nav-more { display: none; } }
+
+  @media (max-width: 900px) {
     .nav-toggle { display: flex; }
     .nb-name { font-size: 1.55rem; }
     .nb-tag { font-size: 0.62rem; letter-spacing: 0.135em; }
