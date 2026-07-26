@@ -216,8 +216,8 @@ a { color: var(--red); }
 .site-footer {
   border-top: 1px solid var(--edge);
   margin-top: 4rem;
-  padding: 2rem 1.25rem;
-  text-align: center;
+  padding: 2.6rem var(--site-pad) 2rem;
+  text-align: left;
   color: var(--text-faint);
   font-size: 0.85rem;
 }
