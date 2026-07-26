@@ -38,7 +38,6 @@ import InstallApp from '../components/InstallApp.astro';
 
     <section id="triage" class="emerg-triage">
       <h2 class="emerg-triage-h">How long until you play?</h2>
-      <p class="dim emerg-triage-sub">Select your emergency status to begin.</p>
 
       <nav class="pad-grid">
         <a href="/protocol/critical" class="pad pad-red" data-event="triage_selected" data-path="critical">
@@ -46,7 +45,7 @@ import InstallApp from '../components/InstallApp.astro';
             <div class="led led-r"></div>
             <div class="pad-title">&lt; 60 MINUTES</div>
           </div>
-          <div class="pad-desc">Critical triage. Immediate hardware workarounds and bypasses to get the music playing now.</div>
+          <div class="pad-desc">Get playing now.</div>
         </a>
 
         <a href="/protocol/quick-fix" class="pad pad-yellow" data-event="triage_selected" data-path="quick_fix">
@@ -54,7 +53,7 @@ import InstallApp from '../components/InstallApp.astro';
             <div class="led led-y"></div>
             <div class="pad-title">1 TO 3 HOURS</div>
           </div>
-          <div class="pad-desc">Rapid diagnostic. Library repair and database reconstruction before soundcheck.</div>
+          <div class="pad-desc">Fix it properly before soundcheck.</div>
         </a>
 
         <a href="/protocol/full-recovery" class="pad pad-green" data-event="triage_selected" data-path="full_recovery">
@@ -62,7 +61,7 @@ import InstallApp from '../components/InstallApp.astro';
             <div class="led led-g"></div>
             <div class="pad-title">TOMORROW / LATER</div>
           </div>
-          <div class="pad-desc">Deep maintenance. Comprehensive formatting and Rekordbox stabilization protocol.</div>
+          <div class="pad-desc">Rebuild it so this never repeats.</div>
         </a>
       </nav>
     </section>

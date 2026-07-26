@@ -1,6 +1,10 @@
 ---
 // The CTA every /fix article ends with (blueprint §2).
 // NOTE: Booth Bible CTA removed 2026-07-24, restore from git history at book launch.
+// EmailCapture added 2026-07-26 (Antonio's go): fix articles are where cold
+// search traffic lands and they captured nothing. Sits below both CTAs so it
+// never competes with the rescue.
+import EmailCapture from './EmailCapture.astro';
 interface Props { article: string }
 const { article } = Astro.props;
 ---
@@ -16,5 +20,8 @@ const { article } = Astro.props;
   <a href="/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement={`article_${article}`}>
     🛡 See the prevention checklist
   </a>
+</div>
+<div style="margin-top:1rem">
+  <EmailCapture source={`article_${article}`} />
 </div>
 <a href="/emergency" class="sticky-cta" data-event="begin_checkout" data-placement={`article_${article}_sticky`}>🚨 PLAYING SOON? START EMERGENCY MODE</a>
