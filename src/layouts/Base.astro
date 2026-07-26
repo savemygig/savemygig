@@ -334,14 +334,19 @@ const entityGraph = {
   .foot-brand { display: flex; flex-direction: column; align-items: flex-start; }
   .foot-lockup { display: block; text-decoration: none; }
   .foot-lockup-text { display: flex; flex-direction: column; }
+  /* The brand block is one tidy rectangle: the wordmark, the tagline and the
+     row of four social buttons are all tuned to the SAME width (the social row
+     is the reference, so the wordmark ends exactly at the edge of the YouTube
+     circle). Sizes below are measured values, not guesses. Change one and the
+     block stops squaring up, so re-measure if you touch them. */
   .foot-wordmark {
-    font-family: var(--font-display); font-weight: 900; font-size: 1.3rem; line-height: 1;
+    font-family: var(--font-display); font-weight: 900; font-size: 1.55rem; line-height: 1;
     text-transform: uppercase; letter-spacing: -0.02em; color: var(--text); text-decoration: none;
   }
   .foot-wordmark .accent { color: var(--red); }
   .foot-tag {
-    font-family: var(--font-body); font-weight: 600; font-size: 0.55rem; letter-spacing: 0.125em;
-    text-transform: uppercase; color: var(--text-dim); margin-top: 4px; white-space: nowrap;
+    font-family: var(--font-body); font-weight: 600; font-size: 0.55rem; letter-spacing: 0.235em;
+    text-transform: uppercase; color: var(--text-dim); margin-top: 6px; white-space: nowrap;
   }
   /* No blurb here on purpose. The tagline under the wordmark already says "DJ
      rescue and prevention" and the copyright line already says who built it,
@@ -356,13 +361,13 @@ const entityGraph = {
   .soc-btn:hover { color: var(--text); border-color: var(--text-dim); background: var(--surf-2); }
   .soc-btn:active { transform: scale(0.94); }
 
+  /* All three columns left-aligned and evenly spaced, so the eye reads one
+     rhythm across them instead of two edges. */
   .foot-col { display: flex; flex-direction: column; gap: 0.7rem; }
-  /* Last column right-aligned so the block ends flush at the container edge,
-     mirroring the magnifier at the top. Brand anchors the left, More the right. */
-  .foot-col:last-child { text-align: right; }
+  /* White, because these are the category labels, not secondary text. */
   .foot-col-h {
     font-family: var(--font-body); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.1rem;
+    text-transform: uppercase; color: var(--text); margin-bottom: 0.1rem;
   }
   .foot-col a {
     font-size: 0.88rem; color: var(--text-dim); text-decoration: none; transition: color 0.15s ease;
@@ -383,11 +388,9 @@ const entityGraph = {
        two columns, so there is no orphaned empty cell beside it. */
     .foot-cols { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; }
     .foot-brand { grid-column: 1 / -1; }
-    .foot-col:last-child { grid-column: 1 / -1; text-align: left; display: block; }
-    .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; }
-    .foot-col:last-child a { display: block; columns: 2; margin-bottom: 0.7rem; }
-    .foot-col:last-child { columns: 2; column-gap: 1.2rem; }
-    .foot-col:last-child .foot-col-h { column-span: all; }
+    .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
+    .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
+    .foot-col:last-child a { display: block; margin-bottom: 0.7rem; }
     .foot-base { justify-content: flex-start; }
   }
   .site-nav {
