@@ -180,8 +180,20 @@ const faqSchema = {
       <strong>XDJ-RX2</strong> off this table. There is no official AlphaTheta
       filesystem article for either, and we will not guess about a drive you are
       going to trust with a gig. Treat both as FAT32-only and you will be fine.
-      <strong>NTFS is never supported on any player</strong>, and the partition
-      scheme must be <strong>MBR</strong>, not GPT.
+      <strong>NTFS is never supported</strong>, and this one is not folklore:
+      AlphaTheta's rekordbox manual lists NTFS as unsupported for both SD cards
+      and USB drives, so rekordbox will not even write to it.
+    </p>
+    <p class="rb-caveat">
+      Two more things straight from that manual, because both catch people out.
+      First, <strong>exFAT is a USB-only option</strong>. rekordbox can export
+      to an exFAT USB drive, but it cannot export to an exFAT <strong>SD
+      card</strong>, no matter which player you are feeding. Second, the manual
+      documents file systems and says nothing at all about <strong>partition
+      schemes</strong>. We still recommend <strong>MBR</strong> over GPT,
+      because a GPT drive is a repeat offender in the "formatted fine, player
+      refuses it" category and MBR costs you nothing, but we would rather tell
+      you it is our recommendation than dress it up as a published requirement.
     </p>
 
     <h2 class="rb-h2" id="fix">How do I fix a drive that shows no playlists?</h2>

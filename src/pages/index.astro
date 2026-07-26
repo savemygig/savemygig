@@ -50,8 +50,8 @@ const SUBLINES = [
       <a class="door d-ready" href="/checklist" data-event="step_completed" data-placement="home_door_checklist">
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
-          <span class="door-title">GET GIG-READY</span>
-          <span class="door-desc">Leaving for a gig? The checklist, and how to export properly.</span>
+          <span class="door-title">GIG CHECKLIST</span>
+          <span class="door-desc">Leaving for a gig? Tick it off before you walk out.</span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
       </a>
@@ -83,7 +83,11 @@ const SUBLINES = [
 <style>
   .landing { max-width: var(--site-w); margin: 0 auto; padding: 2rem var(--site-pad) 1rem; }
   .ask { font-size: clamp(2rem, 9vw, 3.2rem); margin-bottom: 0.6rem; }
-  .sub { color: var(--text-dim); margin-bottom: 2rem; max-width: 42rem; text-wrap: balance; min-height: 3.2rem; }
+  /* min-height reserves space for the longest rotating subline so the doors
+     never jump. Now that every subline is capped at ~52 characters they all fit
+     on one line at desktop widths, so reserving two lines was pure dead space
+     between the headline and the first door. */
+  .sub { color: var(--text-dim); margin-bottom: 1.5rem; max-width: 42rem; text-wrap: balance; min-height: 1.7rem; }
   .sub-line[hidden] { display: none; }
 
   .doors { display: flex; flex-direction: column; gap: 1rem; }

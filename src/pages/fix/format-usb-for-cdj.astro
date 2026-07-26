@@ -56,7 +56,7 @@ const faqSchema = {
     {
       '@type': 'Question',
       name: 'My USB formatted fine but the CDJ still will not read it. Why?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Almost always the partition scheme. The drive is GPT rather than MBR, which formats and mounts perfectly on a computer but is refused by Pioneer players. Re-erase it selecting the device rather than the volume, and choose Master Boot Record.' },
+      acceptedAnswer: { '@type': 'Answer', text: 'Usually the partition scheme. The drive is GPT rather than MBR, which formats and mounts perfectly on a computer but is a common cause of a player refusing it. Re-erase it selecting the device rather than the volume, and choose Master Boot Record. Check the file system too: it must be FAT32, and never NTFS, which AlphaTheta lists as unsupported.' },
     },
   ],
 };
@@ -152,8 +152,8 @@ const faqSchema = {
       hint="Four causes, in the order worth checking."
     >
       <ul class="checklist">
-        <li><strong>The scheme is GPT, not MBR.</strong> By far the most likely, and invisible from the computer. Re-erase selecting the device rather than the volume (see above). On Windows check Disk Management &rarr; right-click the disk &rarr; Properties &rarr; Volumes.</li>
-        <li><strong>It is exFAT, not FAT32.</strong> Drives above 32&nbsp;GB ship exFAT from the factory, so a brand-new "professional" 64&nbsp;GB stick fails on an older CDJ out of the box.</li>
+        <li><strong>The scheme is GPT, not MBR.</strong> The usual suspect, and invisible from the computer. Re-erase selecting the device rather than the volume (see above). On Windows check Disk Management &rarr; right-click the disk &rarr; Properties &rarr; Volumes. To be straight with you: AlphaTheta documents which file systems rekordbox writes, and says nothing about partition schemes, so MBR is our recommendation rather than a published rule. It costs nothing and it removes a variable.</li>
+        <li><strong>It is exFAT, not FAT32.</strong> Drives above 32&nbsp;GB ship exFAT from the factory, so a brand-new "professional" 64&nbsp;GB stick fails on an older CDJ out of the box. If you are using an <strong>SD card</strong> rather than a USB stick, exFAT is not an option at all: rekordbox will not export to an exFAT SD card.</li>
         <li><strong>The music was dragged on, not exported.</strong> The player may show nothing at all in playlist view. Try the <strong>FOLDER</strong> browse button: if the tracks are there, that is what happened.</li>
         <li><strong>The drive itself is failing.</strong> If it formats but errors partway through copying, stop trusting it. <a href="/fix/dj-usb-backup-strategy">Two identical drives, always &rarr;</a></li>
       </ul>

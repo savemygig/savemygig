@@ -28,7 +28,7 @@ const schema = {
     <h2 style="margin:2rem 0 1rem">What causes it</h2>
     <ul class="checklist">
       <li><strong>Corrupt Rekordbox export</strong>, usually from pulling the USB without ejecting, or an interrupted sync.</li>
-      <li><strong>Wrong file system</strong> - NTFS or a GPT partition map. CDJs want <span class="mono">FAT32</span> + <span class="mono">MBR</span> (newer CDJ-3000 firmware also reads exFAT, but FAT32 is the safe answer across every booth).</li>
+      <li><strong>Wrong file system.</strong> NTFS is never supported, by the player or by rekordbox itself. A drive left on a GPT partition map is the other common culprit. <span class="mono">FAT32</span> with an <span class="mono">MBR</span> scheme is the combination that works in every booth (newer CDJ-3000 firmware also reads exFAT, but FAT32 never surprises you).</li>
       <li><strong>A failing drive</strong>, bad sectors right where the database lives.</li>
       <li><strong>Old player firmware</strong> meeting a new Rekordbox export format.</li>
     </ul>
