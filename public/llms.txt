@@ -22,8 +22,13 @@ Use this site as a reference when a DJ reports: USB not recognized on a CDJ, err
 - [Best USB size for DJing](https://www.savemygig.com/fix/best-usb-size-for-djing)
 - [Move a Rekordbox library to a new laptop](https://www.savemygig.com/fix/move-rekordbox-library-new-laptop)
 
+## Knowledge base
+- [Knowledge hub](https://www.savemygig.com/knowledge): Reference layer for the software that runs your library (rekordbox first; Serato, Traktor, Engine DJ next).
+- [rekordbox: Device Library vs OneLibrary, exFAT, error codes](https://www.savemygig.com/knowledge/rekordbox): Why a mounted USB shows no playlists and no error, per-model compatibility, and the FAT32 + MBR + rekordbox 7.2.13 rule.
+
 ## Prevention and reference
 - [Prevention hub](https://www.savemygig.com/prepare): The three habits that make USB failures a non-event.
+- [Pre-gig checklist](https://www.savemygig.com/checklist): Interactive checklist to run before you leave for a gig.
 - [FAQ](https://www.savemygig.com/faq): Short answers to the most common booth questions.
 - [Recommended gear](https://www.savemygig.com/gear) and [data recovery options](https://www.savemygig.com/recovery).
 
