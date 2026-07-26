@@ -440,7 +440,7 @@ const entityGraph = {
   .so-close:hover { color: var(--text); }
 
   .nav-toggle {
-    display: none; width: 44px; height: 44px; background: transparent;
+    display: none; width: 44px; height: 44px; flex: 0 0 auto; background: transparent;
     border: 1px solid var(--edge); border-radius: var(--radius);
     flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; padding: 0;
   }
@@ -480,5 +480,16 @@ const entityGraph = {
     .nav-links.open { display: flex; }
     .nav-links a { padding: 0.8rem 0; border-bottom: 1px solid var(--edge-soft); font-size: 0.95rem; }
     .nav-links a:last-child { border-bottom: none; }
+  }
+
+  /* Narrowest phones: with both header buttons pinned at 44px, the brand must
+     give a little or the row overflows. Shrink the wordmark and tighten the
+     gap, never the buttons. Measured to clear overflow at 360 and 375 while
+     #navToggle and #navSearchBtn stay 44x44. */
+  @media (max-width: 400px) {
+    .site-nav { gap: 0.5rem; }
+    .nb-name { font-size: 1.32rem; }
+    .nb-tag { font-size: 0.55rem; letter-spacing: 0.1em; }
+    .nav-search-btn { margin-right: 0.35rem; }
   }
 </style>
