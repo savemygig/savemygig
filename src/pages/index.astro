@@ -59,7 +59,7 @@ const SUBLINES = [
       <a class="door d-prevent" href="/prepare" data-event="step_completed" data-placement="home_door_prevention">
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
-          <span class="door-title">I HAVE TIME</span>
+          <span class="door-title">I WANT TO BE BULLETPROOF</span>
           <span class="door-desc">Build a setup that does not fail. Gear included.</span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
@@ -179,7 +179,11 @@ const SUBLINES = [
     .door { padding: 0.95rem 1.05rem; gap: 0.8rem; }
     .door { padding-block: clamp(0.7rem, 1.85svh, 1.1rem); }
 
-    .door-title { font-size: 1.04rem; margin-bottom: 0.12rem; }
+    /* 0.96rem, not 1.04rem, so the longest door title ("I want to be
+       bulletproof") still lands on ONE line at 360px. Door titles that wrap
+       push the third door below the fold, which is the thing we are protecting
+       here. This leaves headroom for future copy too. */
+    .door-title { font-size: 0.96rem; margin-bottom: 0.12rem; }
     .door-desc { font-size: 0.85rem; line-height: 1.38; }
     .door-arrow { font-size: 1.2rem; }
     .known { margin-top: 1rem; font-size: 0.85rem; }
@@ -202,7 +206,7 @@ const SUBLINES = [
     .sub { font-size: 0.84rem; margin-bottom: 0.6rem; min-height: 2.5rem; line-height: 1.42; }
     .doors { gap: 0.34rem; }
     .door { padding-block: 0.56rem; }
-    .door-title { font-size: 0.96rem; }
+    .door-title { font-size: 0.9rem; }
     .door-desc { font-size: 0.8rem; line-height: 1.33; }
   }
   .known a { color: var(--text-dim); }
