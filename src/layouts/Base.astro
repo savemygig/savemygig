@@ -1,6 +1,7 @@
 ---
 import Analytics from '../components/Analytics.astro';
 import Consent from '../components/Consent.astro';
+import Search from '../components/Search.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -119,6 +120,9 @@ const entityGraph = {
           <span class="nb-tag">DJ rescue and prevention</span>
         </span>
       </a>
+      <button class="nav-search-btn" id="navSearchBtn" aria-label="Search Save My Gig" aria-expanded="false" aria-controls="searchOverlay">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
       <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
       </button>
@@ -127,13 +131,20 @@ const entityGraph = {
         <a href="/emergency">Emergency</a>
         <a href="/prepare">Prevention</a>
         <a href="/checklist">Checklist</a>
-        <a href="/knowledge">Knowledge</a>
         <a href="/recovery">Recovery</a>
+        <a href="/knowledge">Knowledge</a>
         <a href="/gear" class="nav-more">Gear</a>
         <a href="/about" class="nav-more">About</a>
       </nav>
     </div>
   </header>
+  <div class="so" id="searchOverlay" hidden>
+    <div class="so-panel" role="dialog" aria-modal="true" aria-label="Search Save My Gig">
+      <Search />
+      <button type="button" class="so-close" id="searchClose" aria-label="Close search">&times;</button>
+    </div>
+  </div>
+
   <slot />
   <footer class="site-footer">
     <div class="foot-inner">
@@ -231,6 +242,33 @@ const entityGraph = {
         t.setAttribute('aria-expanded', open ? 'true' : 'false');
       });
     }
+    const sBtn = document.getElementById('navSearchBtn');
+    const sOv = document.getElementById('searchOverlay');
+    const sClose = document.getElementById('searchClose');
+    if (sBtn && sOv) {
+      const openSearch = () => {
+        sOv.hidden = false;
+        sBtn.setAttribute('aria-expanded', 'true');
+        const inp = sOv.querySelector('.srch-input');
+        if (inp) (inp as HTMLInputElement).focus();
+      };
+      const closeSearch = () => {
+        sOv.hidden = true;
+        sBtn.setAttribute('aria-expanded', 'false');
+        sBtn.focus();
+      };
+      sBtn.addEventListener('click', openSearch);
+      if (sClose) sClose.addEventListener('click', closeSearch);
+      sOv.addEventListener('click', (e) => { if (e.target === sOv) closeSearch(); });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !sOv.hidden) closeSearch();
+        // "/" opens search, the way every developer tool does it
+        const t = e.target as HTMLElement;
+        const typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+        if (e.key === '/' && sOv.hidden && !typing) { e.preventDefault(); openSearch(); }
+      });
+    }
+
     const copyBtn = document.getElementById('shareCopy');
     if (copyBtn) {
       copyBtn.addEventListener('click', async () => {
@@ -357,6 +395,25 @@ const entityGraph = {
     text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.15s ease;
   }
   .nav-links a:hover { color: var(--text); }
+  .nav-search-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; flex: 0 0 auto;
+    background: transparent; border: 1px solid var(--edge); border-radius: var(--radius);
+    color: var(--text-dim); cursor: pointer; padding: 0; margin-left: 0.2rem;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .nav-search-btn:hover { color: var(--text); border-color: var(--text-dim); }
+  .nav-search-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+  /* Search overlay */
+  .so { position: fixed; inset: 0; z-index: 90; background: rgba(10,10,11,0.82);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: 14vh 1.25rem 0; }
+  .so[hidden] { display: none; }
+  .so-panel { position: relative; max-width: 34rem; margin: 0 auto; }
+  .so-close { position: absolute; top: -2.6rem; right: 0; background: none; border: 0;
+    color: var(--text-dim); font-size: 2rem; line-height: 1; cursor: pointer; padding: 0 0.3rem; }
+  .so-close:hover { color: var(--text); }
+
   .nav-toggle {
     display: none; width: 42px; height: 38px; background: transparent;
     border: 1px solid var(--edge); border-radius: var(--radius);

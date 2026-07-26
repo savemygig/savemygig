@@ -11,7 +11,7 @@
 <div id="ck" class="ck" role="dialog" aria-label="Cookie choice" hidden>
   <p class="ck-t">
     <strong class="ck-h">Before you dive in.</strong>
-    We use analytics cookies to see which pages actually help DJs. Nothing else, no ads, no selling.
+    Analytics cookies only, so we see which pages help DJs most. No ads.
     <a href="/privacy">Privacy</a>
   </p>
   <div class="ck-b">
@@ -65,6 +65,28 @@
     .ck-t { flex: 1; }
     .ck-h { display: inline; margin-bottom: 0; margin-right: 6px; }
     .ck-b { flex-shrink: 0; }
+  }
+
+  /* On a phone this card sits on top of the homepage doors on the very first
+     visit, so every pixel it wastes is a pixel of the actual choice a DJ came
+     for. Kept loud (amber edge, glow) but as short as it can legally be:
+     roughly 140px instead of 360px. Buttons stay at a 44px tap target. */
+  @media (max-width: 559px) {
+    .ck { padding: 12px 14px; gap: 10px; left: 10px; right: 10px;
+      bottom: calc(10px + env(safe-area-inset-bottom)); }
+    .ck-t { font-size: 13.5px; line-height: 1.42; }
+    .ck-h { font-size: 12px; margin-bottom: 2px; }
+    .ck-btn { flex: 1; min-height: 44px; padding: 10px 12px; font-size: 12.5px; }
+    .ck-b { gap: 8px; }
+  }
+
+  /* Short phones (iPhone SE and friends): the banner has to get out of the way
+     of the third door, so the heading goes inline and the copy drops to one
+     line. Roughly 95px. Buttons keep the 44px target. */
+  @media (max-width: 559px) and (max-height: 640px) {
+    .ck { padding: 10px 12px; gap: 8px; }
+    .ck-t { font-size: 12.5px; line-height: 1.38; }
+    .ck-h { display: inline; font-size: 12px; margin: 0 5px 0 0; }
   }
 </style>
 
