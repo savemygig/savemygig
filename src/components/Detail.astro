@@ -1,0 +1,76 @@
+---
+/**
+ * Expandable section.
+ *
+ * The point of this component is that a DJ should never be handed a wall of
+ * text. They need THEIR branch: Windows or Mac, drive over 32GB or under, it
+ * worked or it didn't. Everything else is noise at the worst possible moment.
+ *
+ * Built on native <details>/<summary>, which means:
+ *   - it works with no JavaScript at all
+ *   - it is keyboard accessible and screen-reader correct for free
+ *   - the content is IN THE HTML, so Google indexes it and AI crawlers read
+ *     it exactly as if it were visible. Collapsing costs us nothing for SEO
+ *     or GEO; it only spares the human.
+ *
+ * Use `open` for the branch most people need, so the common path needs no click.
+ */
+interface Props {
+  /** the question, phrased the way the reader would ask it */
+  q: string;
+  /** one-line hint shown next to the question, before opening */
+  hint?: string;
+  /** start expanded */
+  open?: boolean;
+}
+const { q, hint, open = false } = Astro.props;
+---
+<details class="dt" open={open}>
+  <summary class="dt-q">
+    <span class="dt-txt">
+      <span class="dt-title">{q}</span>
+      {hint && <span class="dt-hint">{hint}</span>}
+    </span>
+    <span class="dt-icon" aria-hidden="true"></span>
+  </summary>
+  <div class="dt-body">
+    <slot />
+  </div>
+</details>
+
+<style is:global>
+  .dt {
+    border: 1px solid var(--edge);
+    border-radius: var(--radius);
+    background: var(--surf);
+    margin-bottom: 0.7rem;
+  }
+  .dt[open] { background: var(--surf-2); border-color: var(--text-faint); }
+  .dt-q {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1rem 1.15rem; cursor: pointer; list-style: none;
+    min-height: 44px;
+  }
+  .dt-q::-webkit-details-marker { display: none; }
+  .dt-q:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
+  .dt-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .dt-title {
+    font-family: var(--font-display); font-weight: 700; font-size: 1rem;
+    letter-spacing: -0.01em; color: var(--text); line-height: 1.3;
+  }
+  .dt-hint { font-size: 0.82rem; color: var(--text-dim); line-height: 1.4; }
+  /* Chevron, drawn in CSS so there is no extra request. */
+  .dt-icon {
+    flex: 0 0 auto; width: 10px; height: 10px; margin-right: 4px;
+    border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform 0.18s ease;
+  }
+  .dt[open] .dt-icon { transform: rotate(-135deg) translate(-2px, -2px); }
+  .dt-body { padding: 0 1.15rem 1.15rem; }
+  .dt-body > :last-child { margin-bottom: 0; }
+  .dt-body p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.65; }
+  .dt-body p strong { color: var(--text); }
+  .dt-body .checklist { margin-top: 0.4rem; }
+  @media (prefers-reduced-motion: reduce) { .dt-icon { transition: none; } }
+</style>

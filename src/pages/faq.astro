@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Search from '../components/Search.astro';
 
 // The single canonical FAQPage for the site. The homepage and /emergency used
 // to carry their own FAQPage blocks describing content that was not visible on
@@ -125,7 +126,9 @@ const schema = {
   <main class="wrap wrap-wide">
     <div class="status-line">FAQ</div>
     <h1 style="margin-bottom:0.5rem">QUESTIONS FROM THE <span class="accent">BOOTH</span></h1>
-    <p class="dim" style="margin-bottom:2rem">Short answers first. Every answer links to the full fix.</p>
+    <p class="dim" style="margin-bottom:1.2rem">Short answers first. Every answer links to the full fix.</p>
+
+    <div style="margin-bottom:2rem"><Search /></div>
 
     {faqs.map(f => (
       <div class="panel" id={f.id}>

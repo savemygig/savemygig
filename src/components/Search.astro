@@ -1,0 +1,173 @@
+---
+/**
+ * Site search.
+ *
+ * Static site, so this is entirely client side: it fetches /search-index.json
+ * once on first interaction (a few KB, then cached) and scores matches in the
+ * browser. No backend, no third-party widget, nothing to pay for, and it keeps
+ * working offline once loaded.
+ *
+ * Scoring is deliberately simple and weighted for this site: a hit in the title
+ * or in an expandable section's question beats a hit in body text, because on
+ * a troubleshooting site the question IS the thing people type.
+ */
+---
+<div class="srch" data-search>
+  <label class="sr-only" for="srchInput">Search Save My Gig</label>
+  <div class="srch-box">
+    <svg class="srch-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input
+      id="srchInput" type="search" class="srch-input" autocomplete="off"
+      placeholder="Search: USB not detected, FAT32, E-8302..."
+      aria-controls="srchResults" aria-expanded="false" role="combobox" aria-autocomplete="list"
+    />
+    <button type="button" class="srch-clear" id="srchClear" aria-label="Clear search" hidden>&times;</button>
+  </div>
+  <div class="srch-results" id="srchResults" role="listbox" aria-label="Search results" hidden></div>
+</div>
+
+<style is:global>
+  .srch { position: relative; width: 100%; max-width: 34rem; }
+  .srch-box { display: flex; align-items: center; gap: 0.6rem;
+    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    padding: 0 0.85rem; transition: border-color 0.15s ease; }
+  .srch-box:focus-within { border-color: var(--red); }
+  .srch-icon { flex: 0 0 auto; color: var(--text-faint); }
+  .srch-input {
+    flex: 1; min-width: 0; background: transparent; border: 0; outline: none;
+    color: var(--text); font-family: inherit; font-size: 16px;
+    padding: 0.8rem 0; min-height: 44px;
+  }
+  .srch-input::placeholder { color: var(--text-faint); }
+  .srch-input::-webkit-search-cancel-button { display: none; }
+  .srch-clear { background: none; border: 0; color: var(--text-dim); font-size: 1.4rem;
+    line-height: 1; cursor: pointer; padding: 0 0.2rem; min-height: 44px; }
+  .srch-clear:hover { color: var(--text); }
+
+  .srch-results {
+    position: absolute; z-index: 60; left: 0; right: 0; top: calc(100% + 6px);
+    background: var(--surf-2); border: 1px solid var(--edge); border-radius: var(--radius);
+    max-height: 62vh; overflow-y: auto; box-shadow: 0 14px 40px rgba(0,0,0,0.55);
+  }
+  .srch-results[hidden] { display: none; }
+  .srch-hit { display: block; padding: 0.75rem 0.95rem; text-decoration: none;
+    border-bottom: 1px solid var(--edge-soft); }
+  .srch-hit:last-child { border-bottom: none; }
+  .srch-hit:hover, .srch-hit.on { background: var(--surf); }
+  .srch-hit-t { display: block; font-family: var(--font-display); font-weight: 700;
+    font-size: 0.95rem; color: var(--text); line-height: 1.3; }
+  .srch-hit-d { display: block; font-size: 0.82rem; color: var(--text-dim);
+    line-height: 1.45; margin-top: 2px; }
+  .srch-hit mark { background: rgba(255,77,46,0.22); color: var(--text); border-radius: 2px; }
+  .srch-none { padding: 0.9rem 0.95rem; font-size: 0.88rem; color: var(--text-dim); }
+  .srch-none a { color: var(--red); }
+</style>
+
+<script is:inline>
+  (function () {
+    var wrap = document.querySelector('[data-search]');
+    if (!wrap) return;
+    var input = wrap.querySelector('.srch-input');
+    var out = wrap.querySelector('.srch-results');
+    var clear = wrap.querySelector('.srch-clear');
+    var docs = null, loading = false, cur = -1;
+
+    function load() {
+      if (docs || loading) return Promise.resolve();
+      loading = true;
+      return fetch('/search-index.json')
+        .then(function (r) { return r.json(); })
+        .then(function (d) { docs = d; loading = false; })
+        .catch(function () { loading = false; });
+    }
+
+    function esc(s) { return s.replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+    function mark(text, terms) {
+      var s = esc(text);
+      terms.forEach(function (t) {
+        if (t.length < 2) return;
+        s = s.replace(new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>');
+      });
+      return s;
+    }
+
+    function snippet(doc, terms) {
+      var b = doc.b || '';
+      var i = -1;
+      for (var k = 0; k < terms.length && i < 0; k++) i = b.toLowerCase().indexOf(terms[k]);
+      if (i < 0) return doc.d || b.slice(0, 120);
+      var start = Math.max(0, i - 50);
+      return (start ? '…' : '') + b.slice(start, start + 150) + '…';
+    }
+
+    function score(doc, terms) {
+      var t = (doc.t || '').toLowerCase();
+      var h = (doc.h || []).join(' ').toLowerCase();
+      var d = (doc.d || '').toLowerCase();
+      var b = (doc.b || '').toLowerCase();
+      var total = 0;
+      for (var i = 0; i < terms.length; i++) {
+        var q = terms[i], hit = 0;
+        if (t.indexOf(q) >= 0) hit += 12;      // title
+        if (h.indexOf(q) >= 0) hit += 8;       // a question on an expandable section
+        if (d.indexOf(q) >= 0) hit += 4;       // meta description
+        if (b.indexOf(q) >= 0) hit += 2;       // body, including collapsed content
+        if (!hit) return 0;                     // every term must appear somewhere
+        total += hit;
+      }
+      return total;
+    }
+
+    function render(q) {
+      var terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+      if (!terms.length || !docs) { out.hidden = true; input.setAttribute('aria-expanded', 'false'); return; }
+      var hits = docs.map(function (d) { return { d: d, s: score(d, terms) }; })
+                     .filter(function (x) { return x.s > 0; })
+                     .sort(function (a, b) { return b.s - a.s; })
+                     .slice(0, 8);
+      cur = -1;
+      if (!hits.length) {
+        out.innerHTML = '<p class="srch-none">Nothing matched “' + esc(q) +
+          '”. Try the <a href="/faq">FAQ</a>, or <a href="/emergency">start emergency mode</a>.</p>';
+      } else {
+        out.innerHTML = hits.map(function (x) {
+          return '<a class="srch-hit" role="option" href="' + x.d.u + '">' +
+            '<span class="srch-hit-t">' + mark(x.d.t, terms) + '</span>' +
+            '<span class="srch-hit-d">' + mark(snippet(x.d, terms), terms) + '</span></a>';
+        }).join('');
+      }
+      out.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+    }
+
+    input.addEventListener('focus', load);
+    input.addEventListener('input', function () {
+      var q = input.value.trim();
+      clear.hidden = !q;
+      if (!q) { out.hidden = true; input.setAttribute('aria-expanded', 'false'); return; }
+      load().then(function () { render(q); });
+    });
+    clear.addEventListener('click', function () {
+      input.value = ''; clear.hidden = true; out.hidden = true; input.focus();
+      input.setAttribute('aria-expanded', 'false');
+    });
+    input.addEventListener('keydown', function (e) {
+      var items = out.querySelectorAll('.srch-hit');
+      if (e.key === 'Escape') { out.hidden = true; input.setAttribute('aria-expanded', 'false'); return; }
+      if (!items.length) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        cur = e.key === 'ArrowDown' ? Math.min(cur + 1, items.length - 1) : Math.max(cur - 1, 0);
+        for (var i = 0; i < items.length; i++) items[i].classList.toggle('on', i === cur);
+        items[cur].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter' && cur >= 0) {
+        e.preventDefault(); window.location.href = items[cur].getAttribute('href');
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (!wrap.contains(e.target)) { out.hidden = true; input.setAttribute('aria-expanded', 'false'); }
+    });
+  })();
+</script>

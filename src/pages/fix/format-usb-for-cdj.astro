@@ -1,61 +1,215 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ArticleCTA from '../../components/ArticleCTA.astro';
+import Detail from '../../components/Detail.astro';
+
+// PATTERN REFERENCE for the /fix articles.
+//
+// The old version answered the easy 80% and stopped exactly where the reader
+// gets stuck: Windows not offering FAT32 above 32GB, and macOS hiding the
+// scheme selector unless you pick the device rather than the volume. Both send
+// people away, and both are the actual reason a "successfully formatted" drive
+// is refused at the booth.
+//
+// The fix is completeness WITHOUT a wall of text. The answer and the 60-second
+// path stay visible; every branch after that is collapsed, so a DJ reads only
+// the one that applies to them. Collapsed content is still in the HTML, so
+// Google indexes it and AI answer engines quote it exactly as if it were open.
+const UPDATED = '26 July 2026';
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
-  name: 'How to Format a USB for Pioneer CDJ (FAT32 + MBR)',
+  '@id': 'https://www.savemygig.com/fix/format-usb-for-cdj#howto',
+  name: 'How to format a USB for Pioneer CDJ (FAT32 + MBR)',
+  description: 'Format a USB drive so every Pioneer CDJ and XDJ reads it: FAT32 file system, MBR partition scheme, on both macOS and Windows, including drives over 32GB.',
+  totalTime: 'PT10M',
+  author: { '@id': 'https://www.savemygig.com/#antonio' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-20',
+  dateModified: '2026-07-26',
+  supply: [{ '@type': 'HowToSupply', name: 'A 32-64 GB USB drive' }],
+  tool: [{ '@type': 'HowToTool', name: 'macOS Disk Utility or Windows Format' }],
   step: [
-    { '@type': 'HowToStep', name: 'Back up the drive', text: 'Copy everything off the USB, formatting erases it.' },
-    { '@type': 'HowToStep', name: 'Choose FAT32 and MBR', text: 'Format as FAT32 with a Master Boot Record (MBR) partition scheme.' },
-    { '@type': 'HowToStep', name: 'Export with Rekordbox', text: 'Use Rekordbox Export mode to put music on the freshly formatted drive.' },
+    { '@type': 'HowToStep', name: 'Copy everything off the drive', text: 'Formatting erases the drive permanently. Copy the contents somewhere safe first.' },
+    { '@type': 'HowToStep', name: 'Format as FAT32 with an MBR scheme', text: 'On macOS use Disk Utility with Show All Devices enabled and select the device, not the volume, then Erase as MS-DOS (FAT) with a Master Boot Record scheme. On Windows right-click the drive and choose Format, then FAT32.' },
+    { '@type': 'HowToStep', name: 'Export from rekordbox', text: 'Use rekordbox 7.2.13 or later in EXPORT mode. Do not drag audio files onto the drive: that gives you no database, so no playlists, cues or grids.' },
+    { '@type': 'HowToStep', name: 'Verify on a player', text: 'Load a track from the drive on an actual player before the drive matters.' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': 'https://www.savemygig.com/fix/format-usb-for-cdj#faq',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Why is FAT32 not in the Windows format list?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Because the drive is larger than 32GB. That is a limit in the Windows formatting dialog, not in FAT32 itself, which supports volumes up to 2TB. Use the free guiformat tool from Ridgecrop Consultants, or format from the command line on Windows 11, or shrink the drive to a 32GB partition.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Why is there no Scheme option in Mac Disk Utility?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Because you selected the volume instead of the physical device. Choose View then Show All Devices, and select the top-level drive entry rather than the indented one beneath it. The Scheme dropdown only appears when the device itself is selected.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'My USB formatted fine but the CDJ still will not read it. Why?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Almost always the partition scheme. The drive is GPT rather than MBR, which formats and mounts perfectly on a computer but is refused by Pioneer players. Re-erase it selecting the device rather than the volume, and choose Master Boot Record.' },
+    },
   ],
 };
 ---
 <Base
-  title="How to Format a USB for Pioneer CDJ - FAT32 + MBR, Step by Step | Save My Gig!"
-  description="The exact settings to format a USB drive so every Pioneer CDJ and XDJ reads it: FAT32, MBR, and how to do it on Mac and Windows without the usual traps."
+  title="How to Format a USB for Pioneer CDJ (FAT32 + MBR) | Save My Gig!"
+  description="The exact settings so every Pioneer CDJ and XDJ reads your drive: FAT32 and MBR. Includes the two traps that get people, FAT32 missing on Windows and the hidden Scheme option on Mac."
   path="/fix/format-usb-for-cdj"
   ogImage="/og/format-usb-for-cdj.png"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+
   <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">/</span> <a href="/faq">Fixes</a> <span aria-hidden="true">/</span> <span>Format a USB</span>
+    </nav>
+
     <div class="status-line">Format_Guide</div>
-    <h1 style="margin-bottom:1.5rem">FORMAT A USB FOR <span class="accent">CDJ</span>:<br />THE SETTINGS THAT ALWAYS WORK</h1>
+    <h1 class="art-h1">Format a USB for <span class="accent">CDJ</span></h1>
+    <p class="dim art-updated">Last verified: {UPDATED} · about 10 minutes</p>
 
     <div class="panel panel-go">
-      <p style="margin:0"><strong>The answer:</strong> <span class="mono">FAT32</span> file system · <span class="mono">MBR</span> (Master Boot Record) partition scheme · 32-64 GB quality drive. That combination is read by every CDJ and XDJ ever shipped.</p>
+      <p style="margin:0">
+        <strong>The answer:</strong> <span class="mono">FAT32</span> file system,
+        <span class="mono">MBR</span> partition scheme, on a 32&ndash;64&nbsp;GB drive.
+        Every Pioneer CDJ and XDJ ever made reads that combination.
+      </p>
     </div>
 
-    <div class="panel panel-warn" style="margin-top:1rem">
-      <p style="margin:0">⚠️ Formatting <strong>erases the drive</strong>. Copy everything off it first.</p>
+    <div class="panel panel-warn" style="margin-top:0.8rem">
+      <p style="margin:0">Formatting <strong>erases the drive permanently</strong>. Copy everything off it first.</p>
     </div>
 
-    <h2 style="margin:2rem 0 1rem">On Mac (Disk Utility)</h2>
-    <ul class="checklist">
-      <li>Open <strong>Disk Utility</strong> → View → <strong>Show All Devices</strong> (this matters).</li>
-      <li>Select the <strong>drive itself</strong> (top level), not the volume under it.</li>
-      <li>Erase → Format: <span class="mono">MS-DOS (FAT)</span> → Scheme: <span class="mono">Master Boot Record</span>.</li>
-      <li>If "Scheme" doesn't appear, you selected the volume, go back to Show All Devices.</li>
-    </ul>
+    <h2 class="art-h2">The 60-second version</h2>
+    <ol class="art-steps">
+      <li><strong>Mac:</strong> Disk Utility &rarr; View &rarr; <strong>Show All Devices</strong> &rarr; select the <strong>drive</strong>, not the volume &rarr; Erase &rarr; <span class="mono">MS-DOS (FAT)</span> + <span class="mono">Master Boot Record</span>.</li>
+      <li><strong>Windows:</strong> right-click the drive in Explorer &rarr; Format &rarr; <span class="mono">FAT32</span> &rarr; Quick format is fine.</li>
+      <li>Put music on it with <strong>rekordbox 7.2.13 or later in EXPORT mode</strong>. Do not drag files.</li>
+      <li>Load a track from it on a player <strong>before the drive matters</strong>.</li>
+    </ol>
 
-    <h2 style="margin:2rem 0 1rem">On Windows</h2>
-    <ul class="checklist">
-      <li>Right-click the drive in Explorer → <strong>Format</strong> → File system: <span class="mono">FAT32</span> → Quick format is fine.</li>
-      <li>FAT32 option missing (drives over 32 GB)? Use Disk Management to shrink to a 32 GB partition, or a free FAT32 formatter tool.</li>
-      <li>Windows drives are MBR by default, you rarely need to touch the scheme. To check: Disk Management → right-click the disk → Properties → Volumes.</li>
-    </ul>
+    <h2 class="art-h2">If something goes wrong</h2>
+    <p class="dim art-lead">Open only the one that describes you.</p>
 
-    <h2 style="margin:2rem 0 1rem">The traps</h2>
-    <ul class="checklist">
-      <li><strong>exFAT:</strong> works on newer players (CDJ-3000, recent firmware), fails on the older CDJ-2000s still living in half the world's booths. FAT32 works everywhere.</li>
-      <li><strong>GPT scheme:</strong> the silent killer on Mac-formatted drives. Always choose MBR.</li>
-      <li><strong>128 GB+ drives:</strong> more trouble than they're worth for players. 32-64 GB is the sweet spot. <a href="/gear">Drives that behave →</a></li>
-    </ul>
+    <Detail
+      q="FAT32 isn't in the list on Windows"
+      hint="Almost always a drive bigger than 32GB. Three ways out."
+    >
+      <p>
+        This is a limit in the <strong>Windows formatting dialog</strong>, not in FAT32.
+        FAT32 itself supports volumes up to <strong>2&nbsp;TB</strong>. Microsoft simply
+        stopped offering it above 32&nbsp;GB in the graphical tool. Pick whichever of
+        these suits you:
+      </p>
+      <ul class="checklist">
+        <li><strong>Use a free formatter.</strong> <span class="mono">guiformat</span> (or its command-line twin <span class="mono">fat32format</span>), both from Ridgecrop Consultants, will format a large drive to FAT32 in a few seconds. This is what most DJs end up using.</li>
+        <li><strong>Windows 11 command line.</strong> Recent builds raised the built-in <span class="mono">format</span> command's FAT32 limit to 2&nbsp;TB, even though the graphical dialog still caps at 32&nbsp;GB. Open a terminal as administrator and run <span class="mono">format X: /FS:FAT32 /Q</span>, replacing X with your drive letter. Check the letter twice.</li>
+        <li><strong>Shrink it.</strong> Disk Management &rarr; shrink the volume to 32&nbsp;GB &rarr; format that partition FAT32. You lose the rest of the capacity, which for a gig drive rarely matters.</li>
+      </ul>
+      <p>
+        The tempting alternative is exFAT, because Windows offers it right there in the
+        dropdown. Do not take it unless you know every player you will touch reads exFAT.
+        <a href="/fix/exfat-vs-fat32-cdj">Here is which players do &rarr;</a>
+      </p>
+    </Detail>
 
-    <p style="margin-top:2rem">After formatting: put music on with <strong>Rekordbox Export mode</strong>, don't just drag files if you want cues, grids and playlists at the booth.</p>
+    <Detail
+      q="There's no Scheme option in Mac Disk Utility"
+      hint="You selected the volume instead of the drive."
+    >
+      <p>
+        Disk Utility hides the partition scheme unless you are looking at the
+        <strong>physical device</strong>. By default it only shows you the volume
+        sitting on top of it.
+      </p>
+      <ul class="checklist">
+        <li>In Disk Utility, choose <strong>View &rarr; Show All Devices</strong>.</li>
+        <li>The sidebar now shows the drive with the volume <strong>indented underneath it</strong>.</li>
+        <li>Select the <strong>top-level entry</strong>, the one with the manufacturer name, not the indented one.</li>
+        <li>Click Erase. The <strong>Scheme</strong> dropdown now appears. Choose <span class="mono">Master Boot Record</span>.</li>
+      </ul>
+      <p>
+        This matters more than it sounds. Erasing only the volume leaves the existing
+        partition map in place, which on any modern drive is <strong>GPT</strong>. The
+        format reports success, the drive mounts perfectly on your Mac, and the CDJ
+        refuses it. That is the single most common "but it formatted fine" story.
+      </p>
+    </Detail>
+
+    <Detail
+      q="It formatted fine but the CDJ still won't read it"
+      hint="Four causes, in the order worth checking."
+    >
+      <ul class="checklist">
+        <li><strong>The scheme is GPT, not MBR.</strong> By far the most likely, and invisible from the computer. Re-erase selecting the device rather than the volume (see above). On Windows check Disk Management &rarr; right-click the disk &rarr; Properties &rarr; Volumes.</li>
+        <li><strong>It is exFAT, not FAT32.</strong> Drives above 32&nbsp;GB ship exFAT from the factory, so a brand-new "professional" 64&nbsp;GB stick fails on an older CDJ out of the box.</li>
+        <li><strong>The music was dragged on, not exported.</strong> The player may show nothing at all in playlist view. Try the <strong>FOLDER</strong> browse button: if the tracks are there, that is what happened.</li>
+        <li><strong>The drive itself is failing.</strong> If it formats but errors partway through copying, stop trusting it. <a href="/fix/dj-usb-backup-strategy">Two identical drives, always &rarr;</a></li>
+      </ul>
+    </Detail>
+
+    <Detail
+      q="How do I know it actually worked?"
+      hint="Thirty seconds now beats finding out in the booth."
+    >
+      <ul class="checklist">
+        <li><strong>Check the format.</strong> Mac: select the drive in Disk Utility, it should read <span class="mono">MS-DOS (FAT32)</span> and <span class="mono">Master Boot Record</span>. Windows: right-click in Explorer &rarr; Properties &rarr; File system should say <span class="mono">FAT32</span>.</li>
+        <li><strong>Export, then eject properly.</strong> Use rekordbox's own eject button. Pulling the drive mid-write is the most common way to corrupt the database you just built.</li>
+        <li><strong>Load a track on a real player.</strong> Your own, or arrive early enough to test on the club's. A drive that has never been tested is not a backup, it is a hope.</li>
+      </ul>
+    </Detail>
+
+    <Detail
+      q="What size drive should I buy?"
+      hint="32-64 GB. Bigger is genuinely worse here."
+    >
+      <p>
+        32&ndash;64&nbsp;GB is the sweet spot: big enough for a full working library,
+        small enough that FAT32 formats without a fight. Larger drives take longer to
+        format, longer for a player to scan, and buy you nothing for one night of music.
+      </p>
+      <p>
+        The FAT32 limit worth knowing is <strong>4&nbsp;GB per file</strong>, not per
+        drive. A 320kbps MP3 is around 9&nbsp;MB, and even a long uncompressed WAV
+        rarely passes 1&nbsp;GB, so for a music library it never comes up.
+        <a href="/fix/best-usb-size-for-djing">More on sizing &rarr;</a> ·
+        <a href="/gear">Drives that behave &rarr;</a>
+      </p>
+    </Detail>
+
+    <h2 class="art-h2">The rule worth remembering</h2>
+    <p class="art-close">
+      <strong>Format for the oldest player you might ever face, not the newest one you
+      own.</strong> The festival main stage has CDJ-3000s. The afterparty basement has a
+      CDJ-2000 with a cigarette burn on it. FAT32 plus MBR plays both.
+    </p>
 
     <ArticleCTA article="format_guide" />
   </main>
 </Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .art-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
+  .art-updated { font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .art-h2 { font-size: clamp(1.3rem, 4.5vw, 1.7rem); margin: 2.4rem 0 0.9rem; text-transform: none; letter-spacing: -0.015em; }
+  .art-lead { font-size: 0.9rem; margin-bottom: 1rem; }
+  .art-steps { margin: 0 0 1rem 1.15rem; color: var(--text-dim); line-height: 1.75; }
+  .art-steps li { margin-bottom: 0.55rem; }
+  .art-steps strong { color: var(--text); }
+  .art-close { color: var(--text-dim); line-height: 1.7; }
+  .art-close strong { color: var(--text); }
+</style>
