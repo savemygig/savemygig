@@ -1,4 +1,39 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="4" fill="black"/>
-  <path d="M6 16H10L13 7L19 25L22 16H26" stroke="#00FF66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Save My Gig">
+  <title>Save My Gig!</title>
+  <circle cx="256" cy="256" r="256" fill="#0a0a0b"/>
+  <circle cx="256" cy="256" r="236" fill="none" stroke="#ff4d2e" stroke-width="16"/>
+  <g transform="translate(256,256) scale(1.38) translate(-256,-256)">
+    <path d="M212.00,144.00 Q212.00,130.00 226.00,130.00 L286.00,130.00 Q300.00,130.00 300.00,144.00 L300.00,198.00 Q300.00,212.00 314.00,212.00 L368.00,212.00 Q382.00,212.00 382.00,226.00 L382.00,286.00 Q382.00,300.00 368.00,300.00 L314.00,300.00 Q300.00,300.00 300.00,314.00 L300.00,368.00 Q300.00,382.00 286.00,382.00 L226.00,382.00 Q212.00,382.00 212.00,368.00 L212.00,314.00 Q212.00,300.00 198.00,300.00 L144.00,300.00 Q130.00,300.00 130.00,286.00 L130.00,226.00 Q130.00,212.00 144.00,212.00 L198.00,212.00 Q212.00,212.00 212.00,198.00 Z" fill="#ff4d2e"/>
+    <g>
+      <rect x="237.0" y="118.0" width="38" height="46" rx="3" fill="#f3f1ec"/>
+    <rect x="245.0" y="126.0" width="8" height="12" fill="#ff4d2e"/>
+    <rect x="259.0" y="126.0" width="8" height="12" fill="#ff4d2e"/>
+    <rect x="245.0" y="164.0" width="22" height="14" fill="#f3f1ec"/>
+    </g>
+    <g transform="rotate(180 256 256)">
+      <rect x="237.0" y="118.0" width="38" height="46" rx="3" fill="#f3f1ec"/>
+    <rect x="245.0" y="126.0" width="8" height="12" fill="#ff4d2e"/>
+    <rect x="259.0" y="126.0" width="8" height="12" fill="#ff4d2e"/>
+    <rect x="245.0" y="164.0" width="22" height="14" fill="#f3f1ec"/>
+    </g>
+    <rect x="195.5" y="245.0" width="5" height="22" rx="2.5" fill="#f3f1ec"/>
+    <rect x="184.5" y="235.0" width="5" height="42" rx="2.5" fill="#f3f1ec"/>
+    <rect x="173.5" y="225.0" width="5" height="62" rx="2.5" fill="#f3f1ec"/>
+    <rect x="162.5" y="234.0" width="5" height="44" rx="2.5" fill="#f3f1ec"/>
+    <rect x="151.5" y="244.0" width="5" height="24" rx="2.5" fill="#f3f1ec"/>
+    <rect x="311.5" y="245.0" width="5" height="22" rx="2.5" fill="#f3f1ec"/>
+    <rect x="322.5" y="235.0" width="5" height="42" rx="2.5" fill="#f3f1ec"/>
+    <rect x="333.5" y="225.0" width="5" height="62" rx="2.5" fill="#f3f1ec"/>
+    <rect x="344.5" y="234.0" width="5" height="44" rx="2.5" fill="#f3f1ec"/>
+    <rect x="355.5" y="244.0" width="5" height="24" rx="2.5" fill="#f3f1ec"/>
+    <circle cx="256" cy="256" r="55" fill="#0a0a0b"/>
+    <g fill="none" stroke="#f3f1ec" stroke-width="3.4" stroke-linecap="round">
+      <path d="M249 203 a52 52 0 0 1 44 26"/>
+      <path d="M247 220 a36 36 0 0 1 30 18"/>
+      <path d="M263 309 a52 52 0 0 1 -44 -26"/>
+      <path d="M265 292 a36 36 0 0 1 -30 -18"/>
+    </g>
+    <circle cx="256" cy="256" r="19" fill="#f3f1ec"/>
+    <circle cx="256" cy="256" r="6.5" fill="#0a0a0b"/>
+  </g>
 </svg>
