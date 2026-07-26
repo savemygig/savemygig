@@ -461,6 +461,12 @@ const entityGraph = {
     .nav-brand { margin-right: auto; }
     .nav-links { order: 2; }
     .nav-search-btn { order: 3; margin-left: 0.78rem; }
+    /* Desktop only: 20% smaller per Antonio (44px reads too big next to the
+       nav links). Mobile keeps 44px, that is a touch target; desktop is a
+       mouse target and 35px is fine. The geometry gate still enforces 44px
+       at phone widths. */
+    .nav-search-btn { width: 35px; height: 35px; }
+    .nav-search-btn svg { width: 15px; height: 15px; }
   }
 
   @media (max-width: 900px) {
