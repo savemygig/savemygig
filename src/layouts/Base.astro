@@ -423,10 +423,24 @@ const entityGraph = {
   .nav-toggle:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
   /* Secondary destinations: in the drawer on mobile, footer on desktop. */
-  @media (min-width: 901px) { .nav-more { display: none; } }
+  @media (min-width: 901px) {
+    .nav-more { display: none; }
+    /* On desktop the magnifier belongs at the far right, after the last link,
+       not wedged between the logo and the nav. In the DOM it stays next to the
+       hamburger because that is where it has to sit on a phone, so `order`
+       moves it visually without touching the markup. */
+    .site-nav { justify-content: flex-start; }
+    .nav-brand { margin-right: auto; }
+    .nav-links { order: 2; }
+    .nav-search-btn { order: 3; margin-left: 1.15rem; }
+  }
 
   @media (max-width: 900px) {
     .nav-toggle { display: flex; }
+    /* Keep the magnifier tight against the hamburger instead of letting
+       space-between float it into the middle of the bar on tablets. */
+    .nav-brand { margin-right: auto; }
+    .nav-search-btn { margin-left: 0; margin-right: 0.55rem; }
     .nb-name { font-size: 1.55rem; }
     .nb-tag { font-size: 0.62rem; letter-spacing: 0.135em; }
     .nav-home { display: block; }
