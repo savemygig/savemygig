@@ -1,9 +1,14 @@
 # Old URLs → new structure (301s, preserves any existing links/rank)
 /emergency.html      /emergency        301
 /choose.html         /emergency        301
-/protocol-entry.html /protocol/critical 301
-/quick-fix.html      /protocol/quick-fix 301
-/full-recovery.html  /protocol/full-recovery 301
+# These three used to point into /protocol/*, which is noindex. Sending legacy
+# link equity into a noindex page wastes it — point them at the crawlable,
+# indexable entry point that replaced them.
+/protocol-entry.html /emergency        301
+/quick-fix.html      /emergency        301
+/full-recovery.html  /emergency        301
+# The sitemap moved from a hand-written /sitemap.xml to the generated index.
+/sitemap.xml         /sitemap-index.xml 301
 /index.html          /                 301
 /teste.html          /                 301
 /bible               /prepare          301

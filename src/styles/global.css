@@ -216,7 +216,7 @@ a { color: var(--red); }
 .site-footer {
   border-top: 1px solid var(--edge);
   margin-top: 4rem;
-  padding: 2.6rem var(--site-pad) 2rem;
+  padding: 2.6rem 0 2rem;
   text-align: left;
   color: var(--text-faint);
   font-size: 0.85rem;
@@ -399,8 +399,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, .pad:focus-visible, 
   .status-line { display: none; }
 }
 
-/* ---------- Sticky mobile emergency CTA on articles ---------- */
+/* ---------- Sticky mobile emergency CTA on articles ----------
+   While the cookie banner is up it must NOT be covered: the sticky CTA used
+   to sit on top of both consent buttons on every /fix page at mobile width,
+   so consent could neither be given nor refused. Consent.astro sets
+   .ck-open on <html> while the banner is visible. */
 .sticky-cta { display: none; }
+html.ck-open .sticky-cta { display: none !important; }
 @media (max-width: 720px) {
   .sticky-cta {
     display: block; position: fixed; left: 12px; right: 12px;

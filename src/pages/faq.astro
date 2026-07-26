@@ -1,23 +1,117 @@
 ---
 import Base from '../layouts/Base.astro';
 
+// The single canonical FAQPage for the site. The homepage and /emergency used
+// to carry their own FAQPage blocks describing content that was not visible on
+// those pages — a structured-data policy violation, and three competing answers
+// to the same question. Those were removed; this is the one source of truth.
+//
+// Every entry carries a `fix` link. The page copy has always promised "every
+// answer links to the full fix" and used to link nothing; between them these
+// entries now link all 12 /fix articles, which also de-orphans the two that
+// had zero inbound links.
 const faqs = [
-  { q: 'Why is my USB not detected on a Pioneer CDJ or XDJ?', a: 'The most common causes, in order: the drive is formatted as NTFS or exFAT instead of FAT32; the partition map is GPT instead of MBR; the Rekordbox database on the drive is corrupt (often from an unsafe eject); or the drive hardware is failing. Reseat the drive, try the second slot and the other player first, many "dead" drives are just a bad mount.' },
-  { q: 'What does CDJ error E-8302 mean?', a: 'E-8302 ("CANNOT READ DATA") means the player sees the drive but cannot read its data, in most cases a corrupt Rekordbox export or a wrong file system. With a laptop you can usually fix it on-site: re-export fresh from Rekordbox, or reformat FAT32/MBR and re-export.' },
-  { q: 'How do I format a USB for CDJs?', a: 'FAT32 file system, MBR (Master Boot Record) partition scheme. On Mac: Disk Utility → Show All Devices → select the drive (not the volume) → Erase → MS-DOS (FAT) + Master Boot Record. On Windows: right-click the drive → Format → FAT32. Use a quality 32-64 GB drive.' },
-  { q: 'Can I play tracks that were not exported with Rekordbox?', a: 'Yes. CDJs can play plain audio files from a FAT32 USB via the FOLDER view. You lose cues, grids, playlists, Sync and Quantize, but you keep the gig. That is the core of our critical-path rescue.' },
-  { q: 'My export finished but the player shows nothing. Why?', a: 'The database landed corrupt, classic after pulling the drive without ejecting. Delete the playlists from the device in Rekordbox, re-sync them fresh, and eject with the Rekordbox eject button. If the device errors, copy your music off, format clean, export again.' },
-  { q: 'What is Emergency Loop mode?', a: 'When a CDJ runs out of readable audio mid-track (failing drive, corrupt file), it loops the last seconds instead of going silent. Mix out on the other player, then deal with the drive. One loop is a warning; two is a dying drive.' },
-  { q: 'Is Save My Gig really free?', a: 'Yes. No account, no paywall, and no ads inside the emergency flow, ever. If it saves your night you can buy us a coffee, but only after you are safe.' },
-  { q: 'Which USB drives should I buy for DJing?', a: 'A quality metal-bodied 32-64 GB stick from a major brand, and buy two identical ones, always. Our gear page lists the exact models we trust.' },
+  {
+    id: 'usb-not-detected',
+    q: 'Why is my USB not detected on a Pioneer CDJ or XDJ?',
+    a: 'The most common causes, in order: the drive is formatted as NTFS or exFAT instead of FAT32; the partition map is GPT instead of MBR; the Rekordbox database on the drive is corrupt (often from an unsafe eject); or the drive hardware is failing. Reseat the drive, try the second slot and the other player first, many "dead" drives are just a bad mount.',
+    fix: { href: '/fix/usb-not-recognized-cdj', label: 'Full fix: CDJ not reading your USB' },
+  },
+  {
+    id: 'e-8302',
+    q: 'What does CDJ error E-8302 mean?',
+    a: 'E-8302 ("CANNOT READ DATA") means the player sees the drive but cannot read its data, in most cases a corrupt Rekordbox export or a wrong file system. With a laptop you can usually fix it on-site: re-export fresh from Rekordbox, or reformat FAT32/MBR and re-export.',
+    fix: { href: '/fix/cdj-error-e-8302', label: 'Full fix: CDJ error E-8302' },
+  },
+  {
+    id: 'format-usb',
+    q: 'How do I format a USB for CDJs?',
+    a: 'FAT32 file system, MBR (Master Boot Record) partition scheme. On Mac: Disk Utility → Show All Devices → select the drive (not the volume) → Erase → MS-DOS (FAT) + Master Boot Record. On Windows: right-click the drive → Format → FAT32. Use a quality 32-64 GB drive.',
+    fix: { href: '/fix/format-usb-for-cdj', label: 'Full fix: format a USB for CDJs, step by step' },
+  },
+  {
+    id: 'exfat-or-fat32',
+    q: 'Should I use exFAT or FAT32 for DJing?',
+    a: 'FAT32, unless you know every player you will touch reads exFAT. FAT32 works on every Pioneer player ever made. exFAT is only read by newer units on recent firmware, so a drive that works on a CDJ-3000 can be refused by the CDJ-2000NXS2 in the next booth. FAT32 is the format that never surprises you.',
+    fix: { href: '/fix/exfat-vs-fat32-cdj', label: 'Full fix: exFAT vs FAT32 on CDJs' },
+  },
+  {
+    id: 'not-exported',
+    q: 'Can I play tracks that were not exported with Rekordbox?',
+    a: 'Yes. CDJs can play plain audio files from a FAT32 USB via the FOLDER view. You lose cues, grids, playlists, Sync and Quantize, but you keep the gig. That is the core of our critical-path rescue.',
+    fix: { href: '/emergency', label: 'Start Emergency Mode' },
+  },
+  {
+    id: 'export-shows-nothing',
+    q: 'My export finished but the player shows nothing. Why?',
+    a: 'The database landed corrupt, classic after pulling the drive without ejecting. Delete the playlists from the device in Rekordbox, re-sync them fresh, and eject with the Rekordbox eject button. If the device errors, copy your music off, format clean, export again.',
+    fix: { href: '/fix/playlists-not-showing-cdj', label: 'Full fix: playlists not showing on the CDJ' },
+  },
+  {
+    id: 'export-failed',
+    q: 'What do I do when Rekordbox says the export failed?',
+    a: 'Work in order: eject and re-seat the drive, check there is free space, then delete the device playlists and re-sync fresh. If the export keeps failing, the drive itself is usually the problem, copy the music off and reformat FAT32/MBR before exporting again.',
+    fix: { href: '/fix/rekordbox-export-failed', label: 'Full fix: Rekordbox export failed' },
+  },
+  {
+    id: 'rekordbox-no-usb',
+    q: 'Rekordbox is not detecting my USB. What now?',
+    a: 'If the operating system sees the drive but Rekordbox does not, it is almost always the file system or the partition map, not the software. Confirm the drive is FAT32 with an MBR scheme, then restart Rekordbox with the drive already connected.',
+    fix: { href: '/fix/rekordbox-not-detecting-usb', label: 'Full fix: Rekordbox not detecting the USB' },
+  },
+  {
+    id: 'waveforms',
+    q: 'Why are waveforms not loading on my CDJ?',
+    a: 'The audio is on the drive but the analysis data is missing or unreadable. Usually the tracks were copied manually instead of exported from Rekordbox, or the export was interrupted. Re-analyse in Rekordbox and export properly and the waveforms come back.',
+    fix: { href: '/fix/waveforms-not-loading-cdj', label: 'Full fix: waveforms not loading' },
+  },
+  {
+    id: 'emergency-loop',
+    q: 'What is Emergency Loop mode?',
+    a: 'When a CDJ runs out of readable audio mid-track (failing drive, corrupt file), it loops the last seconds instead of going silent. Mix out on the other player, then deal with the drive. One loop is a warning; two is a dying drive.',
+    fix: { href: '/fix/emergency-loop-mode', label: 'Full fix: Emergency Loop mode' },
+  },
+  {
+    id: 'how-many-drives',
+    q: 'How many USB drives should I bring to a gig?',
+    a: 'Two, identical, with the same export on both. A second drive is the only backup that works when you are already standing in the booth, and it turns a dead night into a ten-second swap.',
+    fix: { href: '/fix/dj-usb-backup-strategy', label: 'Full fix: the DJ USB backup strategy' },
+  },
+  {
+    id: 'usb-size',
+    q: 'What size USB drive is best for DJing?',
+    a: '32-64 GB is the sweet spot. Big enough for a full working library, small enough that FAT32 formats without a fight. Bigger drives are slower to format, slower to scan and no more useful for a night of music.',
+    fix: { href: '/fix/best-usb-size-for-djing', label: 'Full fix: how big should a DJ USB be' },
+  },
+  {
+    id: 'new-laptop',
+    q: 'How do I move my Rekordbox library to a new laptop without losing cues?',
+    a: 'Back up the library from Rekordbox itself, move the music folder with the same structure, then restore the backup on the new machine. Copying only the audio files loses every cue, grid and playlist, which is the mistake almost everyone makes once.',
+    fix: { href: '/fix/move-rekordbox-library-new-laptop', label: 'Full fix: move Rekordbox to a new laptop' },
+  },
+  {
+    id: 'is-it-free',
+    q: 'Is Save My Gig really free?',
+    a: 'Yes. No account, no paywall, and no ads inside the emergency flow, ever. If it saves your night you can buy us a coffee, but only after you are safe.',
+    fix: { href: '/about', label: 'The story behind Save My Gig' },
+  },
+  {
+    id: 'which-drives',
+    q: 'Which USB drives should I buy for DJing?',
+    a: 'A quality metal-bodied 32-64 GB stick from a major brand, and buy two identical ones, always. Our gear page lists the exact models we trust.',
+    fix: { href: '/gear', label: 'See the gear we trust' },
+  },
 ];
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
+  '@id': 'https://www.savemygig.com/faq#faq',
+  about: { '@id': 'https://www.savemygig.com/#org' },
   mainEntity: faqs.map(f => ({
     '@type': 'Question',
     name: f.q,
+    url: `https://www.savemygig.com/faq#${f.id}`,
     acceptedAnswer: { '@type': 'Answer', text: f.a },
   })),
 };
@@ -34,15 +128,32 @@ const schema = {
     <p class="dim" style="margin-bottom:2rem">Short answers first. Every answer links to the full fix.</p>
 
     {faqs.map(f => (
-      <div class="panel">
-        <h3 style="margin-bottom:0.6rem">{f.q}</h3>
-        <p class="dim" style="margin-bottom:0">{f.a}</p>
+      <div class="panel" id={f.id}>
+        <h2 class="faq-q">
+          <a href={`#${f.id}`} class="faq-anchor" aria-label={`Link to: ${f.q}`}>{f.q}</a>
+        </h2>
+        <p class="dim faq-a">{f.a}</p>
+        <a href={f.fix.href} class="faq-fix">{f.fix.label} &rarr;</a>
       </div>
     ))}
 
     <div class="panel panel-danger" style="margin-top:2rem">
-      <h3 style="margin-bottom:0.75rem">Question is urgent because you play soon?</h3>
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Question is urgent because you play soon?</h2>
       <a href="/emergency" class="btn btn-solid" data-event="begin_checkout" data-placement="faq">🚨 Start Emergency Mode</a>
     </div>
   </main>
 </Base>
+
+<style>
+  .faq-q { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
+  .faq-anchor { color: var(--text); text-decoration: none; }
+  .faq-anchor:hover { color: var(--red); }
+  .faq-a { margin-bottom: 0.8rem; }
+  .faq-fix {
+    font-family: var(--font-body); font-weight: 600; font-size: 0.85rem;
+    color: var(--red); text-decoration: none;
+  }
+  .faq-fix:hover { text-decoration: underline; }
+  /* Anchor landing shouldn't hide the question under the top of the viewport. */
+  .panel[id] { scroll-margin-top: 1.5rem; }
+</style>

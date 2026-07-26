@@ -24,7 +24,7 @@
   /* Must beat the .ck display rule below, otherwise the banner never hides. */
   .ck[hidden] { display: none !important; }
   .ck {
-    position: fixed; z-index: 80;
+    position: fixed; z-index: 100;
     left: 12px; right: 12px; bottom: calc(14px + env(safe-area-inset-bottom));
     max-width: 660px; margin: 0 auto;
     /* Elevated + a bold amber notice edge so it reads as a distinct banner,
@@ -96,11 +96,15 @@
     var box = document.getElementById('ck');
     if (!box) return;
     box.hidden = false;
+    // Suppress the sticky article CTA while the banner is up — it used to
+    // cover both consent buttons on /fix pages at mobile width.
+    document.documentElement.classList.add('ck-open');
 
     function choose(v) {
       try { localStorage.setItem(KEY, v); } catch (e) {}
       box.hidden = true;
       box.style.display = 'none'; // belt and braces, in case CSS wins
+      document.documentElement.classList.remove('ck-open');
       if (v === 'yes') loadAnalytics();
     }
     document.getElementById('ck-yes').addEventListener('click', function () { choose('yes'); });

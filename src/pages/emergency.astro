@@ -5,28 +5,6 @@ import Base from '../layouts/Base.astro';
 // lines up on the same content width as every other page. The step-by-step
 // panic flow (/protocol/*) stays deliberately menu-free.
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'Why is my USB not detected on CDJ 2000 or CDJ 3000?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Most USB detection issues on Pioneer CDJ players are caused by incorrect formatting, corrupted files or improper Rekordbox export.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I fix Rekordbox export problems?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Reformat the USB drive to FAT32 using MBR partition style and re-export your library using Rekordbox Export Mode.',
-      },
-    },
-  ],
-};
 ---
 <Base
   title="USB Not Detected? CDJ 2000, CDJ 3000 & XDJ Emergency Fix | Save My Gig"
@@ -35,7 +13,6 @@ const faqSchema = {
 >
   <meta slot="head" name="apple-mobile-web-app-capable" content="yes" />
   <meta slot="head" name="format-detection" content="telephone=no" />
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
 
   <main class="wrap emerg">
     <p class="status-line red">EMERGENCY_MODE</p>

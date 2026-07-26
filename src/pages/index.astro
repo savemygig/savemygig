@@ -4,34 +4,12 @@ import Base from '../layouts/Base.astro';
 // Homepage = simple "pick your pain" chooser. Rescue AND prevention, balanced:
 // three equal, neutral doors; colour lives only in the LED dots and comes up
 // on tap/hover. Emergency is never a permanently red box.
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'What does CDJ Error E-8302 mean?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Error E-8302 on Pioneer CDJs means the player cannot read the data on your USB drive, usually a corrupt Rekordbox database or an unsupported file system. It can often be fixed on-site by re-exporting from Rekordbox or reformatting the drive as FAT32 with an MBR partition map.' },
-    },
-    {
-      '@type': 'Question',
-      name: 'Why is my USB not recognized on a CDJ or XDJ?',
-      acceptedAnswer: { '@type': 'Answer', text: 'The most common causes are: the drive is formatted as NTFS or exFAT instead of FAT32, the partition map is GPT instead of MBR, the Rekordbox export is corrupt, or the USB hardware itself is failing. Save My Gig walks you through the fastest fix depending on how much time you have before you play.' },
-    },
-    {
-      '@type': 'Question',
-      name: 'How should I format a USB drive for Pioneer CDJs?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Format the drive as FAT32 with a Master Boot Record (MBR) partition scheme. Use a quality 32-64 GB drive and export your music with Rekordbox in Export mode.' },
-    },
-  ],
-};
 ---
 <Base
   title="Save My Gig! | DJ Rescue and Prevention for CDJ, XDJ & USB"
   description="DJ rescue and prevention. In an emergency with a CDJ, XDJ or USB, getting gig-ready, or building a bulletproof setup? Pick your path. Free, no account, step by step."
   path="/"
 >
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
 
   <main class="landing">
     <h1 class="ask">WHERE ARE <span class="accent">YOU?</span></h1>

@@ -15,8 +15,70 @@ interface Props {
 }
 
 const { title, description, path, noindex = false, ogImage } = Astro.props;
-const canonical = `https://www.savemygig.com${path === '/' ? '/' : path}`;
-const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-detected-emergency.webp'}`;
+const SITE = 'https://www.savemygig.com';
+const canonical = `${SITE}${path === '/' ? '/' : path}`;
+const ogImageUrl = `${SITE}${ogImage ?? '/images/dj-usb-not-detected-emergency.webp'}`;
+
+// Site-wide entity graph. Search engines and AI answer engines both weight
+// "who is this and why should I trust them" — and until now none of it was
+// machine-readable even though the logo, the four social profiles and the
+// author name were all already on the page. The @id values let the per-page
+// TechArticle/HowTo blocks reference one shared Organization and Person
+// instead of each declaring an anonymous stub.
+const entityGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${SITE}/#org`,
+      name: 'Save My Gig!',
+      alternateName: 'Save My Gig',
+      url: SITE,
+      email: 'savemygig@gmail.com',
+      description: 'Free DJ rescue and prevention. Step-by-step help for Pioneer CDJ and XDJ USB failures, Rekordbox export problems and error codes.',
+      logo: {
+        '@type': 'ImageObject',
+        '@id': `${SITE}/#logo`,
+        url: `${SITE}/images/save-my-gig-seal.png`,
+        width: 400,
+        height: 400,
+        caption: 'Save My Gig!',
+      },
+      image: { '@id': `${SITE}/#logo` },
+      founder: { '@id': `${SITE}/#antonio` },
+      sameAs: [
+        'https://www.instagram.com/savemygig/',
+        'https://www.tiktok.com/@savemygig',
+        'https://x.com/savemygig',
+        'https://www.youtube.com/@savemygig',
+      ],
+    },
+    {
+      '@type': 'Person',
+      '@id': `${SITE}/#antonio`,
+      name: 'Antonio Afonso',
+      jobTitle: 'DJ and founder of Save My Gig',
+      worksFor: { '@id': `${SITE}/#org` },
+      knowsAbout: [
+        'Pioneer CDJ',
+        'Pioneer XDJ',
+        'Rekordbox',
+        'DJ USB troubleshooting',
+        'FAT32 formatting',
+        'DJ data recovery',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE}/#website`,
+      url: SITE,
+      name: 'Save My Gig!',
+      description: 'DJ rescue and prevention.',
+      publisher: { '@id': `${SITE}/#org` },
+      inLanguage: 'en',
+    },
+  ],
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -39,6 +101,7 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" />
+  <script type="application/ld+json" set:html={JSON.stringify(entityGraph)} />
   <Analytics />
   <slot name="head" />
 </head>
@@ -177,7 +240,10 @@ const ogImageUrl = `https://www.savemygig.com${ogImage ?? '/images/dj-usb-not-de
 <style is:global>
   .site-nav-wrap { border-bottom: 1px solid var(--edge-soft); }
   /* ---- Footer: structured, left-aligned, same width as the nav/body ---- */
-  .foot-inner { max-width: var(--site-w); margin: 0 auto; }
+  /* Must match .site-nav and .wrap exactly: those are border-box 760px
+     INCLUDING their 20px gutters, so .foot-inner needs the same padding
+     inside the same max-width or the footer sits 20px out. */
+  .foot-inner { max-width: var(--site-w); margin: 0 auto; padding: 0 var(--site-pad); }
   .foot-rule { height: 1px; background: var(--edge-soft); margin: 2rem 0; }
 
   /* Share strip: copy left, buttons right on desktop; stacks on mobile. */
