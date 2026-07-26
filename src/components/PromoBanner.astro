@@ -26,30 +26,35 @@ const { exclude = '' } = Astro.props;
 const ALL = [
   {
     href: '/emergency',
+    tone: 'red',
     icon: 'alert',
     q: 'USB not detected and you play soon?',
     cta: 'Start Emergency Mode',
   },
   {
     href: '/knowledge/rekordbox',
+    tone: 'red',
     icon: 'disc',
     q: 'Playlists missing on one deck but fine on another?',
     cta: 'That is OneLibrary. Here is why',
   },
   {
     href: '/checklist',
+    tone: 'green',
     icon: 'check',
     q: 'Leaving for a gig in an hour?',
     cta: 'Run the pre-gig checklist',
   },
   {
     href: '/fix/format-usb-for-cdj',
+    tone: 'green',
     icon: 'usb',
     q: 'New USB that the CDJ refuses to read?',
     cta: 'Format it the way that always works',
   },
   {
     href: '/recovery',
+    tone: 'amber',
     icon: 'rescue',
     q: 'Drive died and your music is on it?',
     cta: 'See what is still recoverable',
@@ -61,7 +66,7 @@ const promos = ALL.filter((p) => p.href !== exclude);
 <aside class="promo-slot" aria-label="From Save My Gig">
   {promos.map((p, i) => (
     <a
-      class="promo"
+      class:list={['promo', `t-${p.tone}`]}
       href={p.href}
       data-promo={i}
       hidden={i !== 0}
@@ -92,7 +97,7 @@ const promos = ALL.filter((p) => p.href !== exclude);
     width: 100%;
     max-width: 728px;
     height: 90px;
-    margin: 2.4rem auto;
+    margin: 2rem auto 0;
   }
   /* Once there is room, pin it to a true 728x90 leaderboard so a real ad unit
      fits natively rather than being scaled or downgraded. The content column is
@@ -101,29 +106,38 @@ const promos = ALL.filter((p) => p.href !== exclude);
   @media (min-width: 820px) {
     .promo-slot { width: 728px; max-width: none; }
   }
+  /* Reads as a distinct slot without shouting. A filled colour block would
+     look like a cheap ad and cost trust on a rescue site, so the colour lives
+     in a left edge and the icon, using the same red/green/amber language as
+     the homepage doors. --tone is set per promo below. */
   .promo {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 0.9rem;
     width: 100%;
     height: 100%;
-    padding: 0 1.2rem;
-    background: var(--surf);
+    padding: 0 1.2rem 0 1.35rem;
+    background: linear-gradient(90deg, var(--tone-wash) 0%, var(--surf-2) 42%);
     border: 1px solid var(--edge);
+    border-left: 3px solid var(--tone);
     border-radius: var(--radius);
     text-decoration: none;
     overflow: hidden;
-    transition: border-color 0.15s ease, background 0.15s ease;
+    transition: border-color 0.15s ease, filter 0.15s ease;
   }
   .promo[hidden] { display: none; }
-  .promo:hover { border-color: var(--red); background: var(--surf-2); }
+  .promo:hover { border-color: var(--tone); filter: brightness(1.14); }
+  .t-red { --tone: var(--red); --tone-wash: rgba(255, 77, 46, 0.09); }
+  .t-green { --tone: var(--green); --tone-wash: rgba(58, 216, 132, 0.08); }
+  .t-amber { --tone: var(--amber); --tone-wash: rgba(217, 164, 65, 0.08); }
   .promo-icon {
     flex: 0 0 auto;
     display: inline-flex; align-items: center; justify-content: center;
     width: 42px; height: 42px; border-radius: 50%;
-    color: var(--red);
-    background: rgba(255, 77, 46, 0.1);
-    border: 1px solid rgba(255, 77, 46, 0.32);
+    color: var(--tone);
+    background: var(--tone-wash);
+    border: 1px solid var(--tone);
   }
   .promo-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
   .promo-q {
@@ -132,11 +146,11 @@ const promos = ALL.filter((p) => p.href !== exclude);
   }
   .promo-cta {
     font-family: var(--font-body); font-weight: 600; font-size: 0.84rem;
-    color: var(--red); line-height: 1.2;
+    color: var(--tone); line-height: 1.2;
   }
 
   @media (max-width: 640px) {
-    .promo-slot { max-width: 320px; height: 100px; margin: 2rem auto; }
+    .promo-slot { max-width: 320px; height: 100px; margin: 1.6rem auto 0; }
     .promo { padding: 0 0.9rem; gap: 0.7rem; }
     .promo-icon { width: 36px; height: 36px; }
     .promo-icon svg { width: 19px; height: 19px; }
