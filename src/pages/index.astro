@@ -6,21 +6,27 @@ import PromoBanner from '../components/PromoBanner.astro';
 // three equal, neutral doors; colour lives only in the LED dots and comes up
 // on tap/hover. Emergency is never a permanently red box.
 //
-// The H1 is deliberately FIXED. It is the brand anchor and the strongest SEO
-// and GEO signal on the site, and for the ~60% of visitors who arrive mid-crisis
-// a stable headline reads as reliability. The personality rotates in the SUBLINE
-// instead: same functional facts every time (free, no account), different warmth.
-// The first line renders server-side so it works with JavaScript disabled and is
-// what crawlers index.
+// The H1 asks what you want to DO, not what your situation is, and the doors
+// are actions rather than states. That is deliberate and it is about who
+// actually lands here: DJs mid-crisis arrive on /fix/* and /emergency straight
+// from search, so homepage traffic skews COLD (social, word of mouth, someone
+// typing the name). A cold visitor does not need sorting by situation, they
+// need to see what this place can do for them. Actions tell them; states do not.
+//
+// The H1 is otherwise FIXED. It is the brand anchor, and a stable headline reads
+// as reliability. Personality rotates in the SUBLINE instead: same functional
+// facts every time (free, no account), different warmth. The first line renders
+// server-side so it works with JavaScript disabled and is what crawlers index.
+//
 // Sublines are capped at ~52 characters on purpose. The block reserves height
 // for the LONGEST one so the doors don't jump when it rotates, so a single
 // three-line subline was silently pushing the third door off every small phone.
 const SUBLINES = [
-  'Pick the one that sounds like you. Free, no account.',
+  'Pick what you came for. Free, no account.',
   'Breathe. Pick a door. Free, no account, no ads.',
-  "Whatever happened, there's a way through it. Free.",
-  'Three doors, no wrong answer. Free, no account.',
-  "You're in the right place. Free, no account.",
+  'Three ways in, no wrong answer. Free, no account.',
+  'Start anywhere. Free, no account, no ads.',
+  'Whatever you need, it is free. No account.',
 ];
 ---
 <Base
@@ -30,7 +36,7 @@ const SUBLINES = [
 >
 
   <main class="landing">
-    <h1 class="ask">WHAT'S YOUR SITUATION, <span class="accent">DJ?</span></h1>
+    <h1 class="ask">WHAT DO YOU WANT TO DO, <span class="accent">DJ?</span></h1>
     <p class="sub" id="sub">
       {SUBLINES.map((line, i) => (
         <span class="sub-line" data-sub={i} hidden={i !== 0}>{line}</span>
@@ -41,7 +47,7 @@ const SUBLINES = [
       <a class="door d-emergency" href="/emergency" data-event="begin_checkout" data-placement="home_door_emergency">
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
-          <span class="door-title">I HAVE A PROBLEM NOW</span>
+          <span class="door-title">FIX A PROBLEM NOW</span>
           <span class="door-desc">USB or player failing. Get playing again, fast.</span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
@@ -50,8 +56,8 @@ const SUBLINES = [
       <a class="door d-ready" href="/checklist" data-event="step_completed" data-placement="home_door_checklist">
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
-          <span class="door-title">I HAVE A GIG SOON</span>
-          <span class="door-desc">Run the checklist before you walk out the door.</span>
+          <span class="door-title">RUN THE GIG CHECKLIST</span>
+          <span class="door-desc">Playing soon? Tick it off before you walk out.</span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
       </a>
@@ -59,8 +65,8 @@ const SUBLINES = [
       <a class="door d-prevent" href="/prepare" data-event="step_completed" data-placement="home_door_prevention">
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
-          <span class="door-title">I WANT TO BE BULLETPROOF</span>
-          <span class="door-desc">Build a setup that does not fail. Gear included.</span>
+          <span class="door-title">GET BULLETPROOF</span>
+          <span class="door-desc">Our system for a setup that never fails. Gear included.</span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
       </a>
