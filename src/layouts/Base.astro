@@ -209,8 +209,12 @@ const entityGraph = {
               <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 4.9 12 4.9 12 4.9s-7 0-8.9.5A3 3 0 0 0 1 7.5 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.5zM9.8 15.3V8.7l5.7 3.3-5.7 3.3z"/></svg>
             </a>
           </div>
-          <a class="foot-bmc" href="https://www.buymeacoffee.com/savemygig" target="_blank" rel="noopener" data-event="affiliate_click" data-program="bmc" data-placement="footer" aria-label="Buy me a coffee">
-            <img src="https://cdn.buymeacoffee.com/buttons/v2/default-red.png" alt="Buy me a coffee" width="217" height="60" loading="lazy" />
+          <!-- Minimal on purpose (Antonio): a small cup and a text link, not
+               the official BMC image button, which shouted next to the quiet
+               icon row. -->
+          <a class="foot-bmc" href="https://www.buymeacoffee.com/savemygig" target="_blank" rel="noopener" data-event="affiliate_click" data-program="bmc" data-placement="footer">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a3 3 0 0 1 0 6h-1"/><path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M7 2v2"/><path d="M11 2v2"/></svg>
+            <span>Buy me a coffee</span>
           </a>
         </div>
 
@@ -239,7 +243,9 @@ const entityGraph = {
       <div class="foot-rule"></div>
 
       <div class="foot-base">
-        <span class="foot-copy">© 2026 Save My Gig! · Built by someone who's been there.</span>
+        <!-- Plural, per Antonio: it is not one person anymore, there is a
+             crew of DJs and techs behind this. -->
+        <span class="foot-copy">© 2026 Save My Gig! · Built by DJs who've been there.</span>
         <!-- Alive-signal, per Antonio's homepage review: says the project is
              maintained without printing a date that would itself go stale. -->
         <span class="foot-live">Updated continuously with new equipment and fixes.</span>
@@ -443,12 +449,13 @@ const entityGraph = {
   .foot-copy { font-size: 0.8rem; color: var(--text-faint); }
   .foot-live { font-size: 0.74rem; color: var(--text-faint); opacity: 0.85; }
   /* Centered under the social row, same 176px measure (4 x 38px buttons + 3 x
-     0.5rem gaps) so it reads as one tidy stack, not a stray link. The image
-     is the official Buy Me a Coffee button, scaled down to sit quietly under
-     the icon row instead of at its native 217x60 promotional size. */
-  .foot-bmc { display: flex; justify-content: center; width: 176px; margin: 0.8rem 0 0; }
-  .foot-bmc img { height: 40px; width: auto; border-radius: 6px; }
-  .foot-bmc:hover img { opacity: 0.88; }
+     0.5rem gaps) so it reads as one tidy stack, not a stray link. */
+  .foot-bmc {
+    display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+    width: 176px; margin: 0.8rem 0 0;
+    font-size: 0.8rem; color: var(--text-dim); text-decoration: none;
+  }
+  .foot-bmc:hover { color: var(--red); }
 
   @media (max-width: 640px) {
     .foot-share { flex-direction: column; align-items: flex-start; gap: 0.9rem; }
