@@ -145,8 +145,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            list with you. NOT "Email PDF": that button emails the list as text
            with a restore link, no PDF attached, and a label must never promise
            an attachment that does not arrive. EMAIL LIST is what it does. -->
-      <button type="button" class="btn btn-neutral" id="editToggle">Edit</button>
-      <button type="button" class="btn btn-neutral" id="resetBtn">Clear</button>
+      <button type="button" class="btn btn-neutral" id="editToggle"><span class="bl-full">Edit list</span><span class="bl-short">Edit</span></button>
+      <button type="button" class="btn btn-neutral" id="resetBtn"><span class="bl-full">Clear list</span><span class="bl-short">Clear</span></button>
       <!-- Full words on desktop, one word on a phone: four buttons at full
            length wrap the toolbar onto a second line on mobile (Antonio). -->
       <button type="button" class="btn btn-neutral" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
@@ -1078,7 +1078,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     // true (it will sync the list). Changes persist locally the moment they
     // are made either way, so the label is a promise the site already keeps.
     if (editToggle) {
-      editToggle.textContent = on ? 'Save' : 'Edit list';
+      // Same full/short span pair as the other buttons, so the label is
+      // consistent whichever path set it (it used to show "Edit" or
+      // "Edit list" depending on whether setEdit had run yet).
+      editToggle.innerHTML = on
+        ? 'Save'
+        : '<span class="bl-full">Edit list</span><span class="bl-short">Edit</span>';
       editToggle.classList.toggle('editing', on);
     }
   }
