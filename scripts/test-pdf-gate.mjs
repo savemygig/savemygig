@@ -45,15 +45,19 @@ const ok = (name, cond, detail = '') => {
   if (!cond) fails.push(name);
 };
 
+// Download no longer serves a static file: it opens a print view built from
+// the LIVE list (Antonio's rule: what you download is what is on screen). So
+// the test watches for the popup and reads its contents, not a download event.
+
 // ---- 1 + 2: first-time visitor
 {
-  const ctx = await browser.newContext({ acceptDownloads: true });
+  const ctx = await browser.newContext();
   const page = await ctx.newPage();
   await page.goto(base + '/checklist', { waitUntil: 'networkidle' });
   await page.evaluate(() => document.querySelector('#ck')?.remove()); // consent card eats clicks
 
-  let downloaded = false;
-  page.on('download', () => { downloaded = true; });
+  let popped = false;
+  ctx.on('page', () => { popped = true; });
 
   await page.click('#pdfBtn');
   await page.waitForTimeout(500);
@@ -62,36 +66,51 @@ const ok = (name, cond, detail = '') => {
   const title = await page.textContent('#unlockTitle');
   ok('gate opens for a locked visitor', gateOpen);
   ok('gate shows PDF copy, not mode copy', /printable/i.test(title || ''), title || '');
-  ok('no download before the email', !downloaded);
+  ok('no print view before registering', !popped);
 
   await page.fill('#unlockForm input[name=email]', 'test@example.com');
-  const dl = page.waitForEvent('download', { timeout: 5000 }).catch(() => null);
+  const pop = ctx.waitForEvent('page', { timeout: 5000 }).catch(() => null);
   await page.click('#unlockForm button[type=submit]');
-  const got = await dl;
-  ok('download starts after the email', !!got, got ? got.suggestedFilename() : 'no download event');
+  const view = await pop;
+  ok('print view opens after registering', !!view);
+  if (view) {
+    await view.waitForLoadState('domcontentloaded').catch(() => {});
+    const body = await view.evaluate(() => document.body.innerText).catch(() => '');
+    ok('print view carries the live list', /Headphones/i.test(body), body ? '' : 'empty body');
+  }
 
   const gateClosed = await page.evaluate(() => !!document.getElementById('unlock')?.hidden);
-  ok('gate closes after unlock', gateClosed);
+  ok('gate closes after registering', gateClosed);
   const unlocked = await page.evaluate(() => localStorage.getItem('SMG_UNLOCKED'));
-  ok('unlock persisted', unlocked === '1');
+  ok('registration persisted', unlocked === '1');
   await ctx.close();
 }
 
-// ---- 3: already unlocked
+// ---- 3: already registered, and the view must reflect CURRENT state
 {
-  const ctx = await browser.newContext({ acceptDownloads: true });
+  const ctx = await browser.newContext();
   const page = await ctx.newPage();
   await page.goto(base + '/checklist', { waitUntil: 'networkidle' });
   await page.evaluate(() => { localStorage.setItem('SMG_UNLOCKED', '1'); });
   await page.reload({ waitUntil: 'networkidle' });
   await page.evaluate(() => document.querySelector('#ck')?.remove());
 
-  const dl = page.waitForEvent('download', { timeout: 5000 }).catch(() => null);
+  // Tick the first item, then download: the tick must appear in the view.
+  // The real checkbox input is visually replaced by the .box span, which
+  // intercepts pointer events, so click the label the way a person does.
+  await page.click('li.task label');
+  await page.waitForTimeout(200);
+  const pop = ctx.waitForEvent('page', { timeout: 5000 }).catch(() => null);
   await page.click('#pdfBtn');
-  const got = await dl;
-  ok('unlocked visitor downloads with no gate', !!got, got ? got.suggestedFilename() : 'no download event');
+  const view = await pop;
+  ok('registered visitor gets the view with no gate', !!view);
   const gateOpen = await page.evaluate(() => !document.getElementById('unlock')?.hidden);
-  ok('gate stays shut for an unlocked visitor', !gateOpen);
+  ok('gate stays shut for a registered visitor', !gateOpen);
+  if (view) {
+    await view.waitForLoadState('domcontentloaded').catch(() => {});
+    const ticked = await view.evaluate(() => document.querySelectorAll('li.done').length).catch(() => 0);
+    ok('the tick made on screen shows in the download', ticked >= 1, `${ticked} ticked rows`);
+  }
   await ctx.close();
 }
 

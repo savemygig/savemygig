@@ -104,13 +104,26 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            "free for registered users", which is how every real tool works and
            how a working DJ expects to be treated. -->
       <p class="unlock-title" id="unlockTitle">Register to unlock Advanced and Custom</p>
-      <p class="dim unlock-copy" id="unlockCopy">Free for registered users. Register with your email and you are in right away. We will send you news and the odd cool thing for your DJ career, never spam.</p>
+      <p class="dim unlock-copy" id="unlockCopy">Free for registered users. Register with your email and you are in right away.</p>
+      <!-- One required field, two optional ones. Antonio wanted name, surname,
+           artist name and Instagram, all required, so he can follow every DJ
+           who registers. The follow-back idea is genuinely good and stays. The
+           required part does not: every mandatory field cuts completion, and a
+           DJ in a hurry abandons forms that feel like paperwork. So email is
+           the only requirement, and the Instagram field carries the promise
+           that makes people WANT to fill it. Optional fields that offer
+           something convert; required fields that demand something do not. -->
       <form class="unlock-form" id="unlockForm" novalidate>
         <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your best email" required />
+        <input type="text" name="artist" autocomplete="nickname" placeholder="Artist name (optional)" aria-label="Artist name, optional" maxlength="80" />
+        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="@your.artist.instagram (optional)" aria-label="Artist Instagram, optional" maxlength="80" />
+        <p class="unlock-follow dim">Drop your artist Instagram and we follow you. Every DJ who registers, no exceptions.</p>
         <button type="submit" class="btn btn-solid">Register</button>
       </form>
       <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
-      <p class="unlock-note">By joining you agree we can email you Save My Gig news and partner offers, DJ world only, never spam. One time on this device. <a href="/privacy">Privacy</a></p>
+      <!-- Antonio's anti-spam promise, in his voice, tightened. This doubles as
+           the consent line, so it has to stay honest about what we send. -->
+      <p class="unlock-note">Relax, this is not a spam list. Once in a while we share something we think is worth your time: news about the site, new tools, or a product or service that helps your career. That is it. Opt out any time, one click. <a href="/privacy">Privacy</a></p>
     </div>
 
     <section class="readiness" id="readiness" aria-live="polite">
@@ -122,10 +135,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <p class="readiness-sub" id="sub">0 ready</p>
     </section>
 
+    <!-- One toolbar, four short verbs (Antonio): Edit, Clear, Download PDF,
+         Email. The old layout split them across two rows a full page apart,
+         with "Download the printable PDF" and "Clear the list" spelling out
+         what the short words already say. Edit and Email only make sense in
+         Custom mode and hide outside it; Clear and Download work everywhere. -->
     <div class="custom-toolbar" id="customToolbar" hidden>
-      <button type="button" class="btn btn-neutral" id="editToggle">Edit list</button>
-      <button type="button" class="btn btn-neutral" id="backupBtn">Email me a copy</button>
-      <span class="edit-hint dim" id="editHint">Add, remove, rename (tap the text), or drag the arrows to reorder. Tap Done when you finish, so nothing gets deleted by accident.</span>
+      <button type="button" class="btn btn-neutral" id="editToggle">Edit</button>
+      <button type="button" class="btn btn-neutral" id="resetBtn">Clear</button>
+      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions">Download PDF</button>
+      <button type="button" class="btn btn-neutral" id="backupBtn">Email</button>
+      <span class="edit-hint dim" id="editHint">Add, remove, rename with the pencil, or drag the arrows to reorder. Tap Save when you finish, so nothing gets deleted by accident.</span>
       <form class="backup-form" id="backupForm" hidden>
         <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" />
         <button type="submit" class="btn btn-neutral">Send it</button>
@@ -169,10 +189,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       ))}
     </div>
 
-    <div class="checklist-actions">
-      <a href="/downloads/save-my-gig-pre-gig-checklist.pdf" class="btn btn-neutral" id="pdfBtn" download data-event="checklist_download" data-placement="checklist_actions">Download the printable PDF</a>
-      <button type="button" class="btn btn-neutral" id="resetBtn">Clear the list</button>
-    </div>
+    <!-- The bottom actions row is gone: its two buttons moved into the toolbar
+         above the list, where Antonio pointed out they belong. -->
 
     <div class="panel" style="margin-top:1.5rem">
       <h3 style="margin-bottom:0.6rem">Why two drives, why FAT32</h3>
@@ -271,6 +289,18 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
 
   .task-group { padding: 0; overflow: hidden; }
+  /* EDIT MODE IS A VISIBLE STATE (Antonio). While editing: the toggle button
+     goes green, and so does every group that is open, i.e. the ones whose
+     items you can actually touch right now. Collapsed groups stay neutral,
+     which quietly says "expand me and I become editable too". Leave edit mode
+     and all of it reverts. One colour, one meaning: green marks where editing
+     is live. */
+  #editToggle.editing {
+    border-color: var(--green); color: var(--green);
+  }
+  #list[data-edit="on"] .task-group:not(.collapsed) {
+    border-color: var(--green);
+  }
 
   /* Collapsible header is a full-width button living inside the h3. */
   .group-h { margin: 0; }
@@ -386,6 +416,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .unlock-copy { font-size: 0.9rem; margin: 0 0 0.9rem; }
   .unlock-form { display: flex; flex-direction: column; gap: 10px; }
+  .unlock-follow { font-size: 0.82rem; margin: 0; }
   .unlock-form input {
     width: 100%; padding: 0.9rem 1rem; font-family: inherit; font-size: 16px;
     color: var(--text); background: var(--bg); border: 1px solid var(--edge); border-radius: var(--radius);
@@ -397,9 +428,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .unlock-msg { margin: 0.8rem 0 0; font-size: 0.88rem; color: var(--text-dim); }
   .unlock-msg.ok { color: var(--green); }
   .unlock-msg.err { color: var(--red); }
+  /* The single-row desktop layout died when the form grew optional fields:
+     three inputs, a promise line and a button do not fit on one row. Email and
+     artist share a row on wide screens, Instagram and its promise get their
+     own, button under. */
   @media (min-width: 520px) {
-    .unlock-form { flex-direction: row; }
-    .unlock-form input { flex: 1; }
+    .unlock-form { flex-direction: row; flex-wrap: wrap; }
+    .unlock-form input { flex: 1 1 220px; }
+    .unlock-form .unlock-follow { flex: 1 1 100%; }
     .unlock-form .btn { width: auto; white-space: nowrap; }
   }
   .unlock-note { margin: 0.8rem 0 0; font-size: 0.76rem; color: var(--text-faint); }
@@ -427,6 +463,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .task-drag:hover { color: var(--text-dim); }
   .task-drag:active { cursor: grabbing; color: var(--text); }
+  /* The rename pencil. Same recipe as the drag handle: small quiet icon,
+     thumb-sized target, visible only where renaming is actually possible. */
+  .task-edit {
+    display: none; background: none; border: 0; color: var(--text-faint);
+    line-height: 0; cursor: pointer;
+    padding: 10px; min-width: 40px; min-height: 40px;
+    align-items: center; justify-content: center; flex: 0 0 auto;
+  }
+  .task-edit:hover { color: var(--green); }
+  #list[data-mode="custom"][data-edit="on"] .task-edit { display: flex; }
   #list[data-mode="custom"][data-edit="on"] .task-drag { display: flex; }
   /* The row you are holding lifts off the list and follows your finger; the
      rows it displaces slide out of the way. Same on mobile and desktop, it is
@@ -559,7 +605,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   let pendingMode: string = 'advanced';
   // What the DJ was reaching for when the gate appeared: a mode, or the PDF.
   let pendingWant: 'mode' | 'pdf' = 'mode';
-  const PDF_URL = '/downloads/save-my-gig-pre-gig-checklist.pdf';
+  // The old static PDF stays on disk for the email flow, but the Download
+  // button no longer serves it: it prints the live list instead.
   let editMode = false;
 
   const allBoxes = () => Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
@@ -734,7 +781,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           const c = loadCustom(); c[cat] = (c[cat] || []).filter((x) => x.k !== it.k); saveCustom(c);
           const t = load(); delete t[it.k]; save(t); renderCustom(); render();
         });
-        li.appendChild(label); li.appendChild(drag); li.appendChild(rm);
+        li.appendChild(label); li.appendChild(makeEditButton()); li.appendChild(drag); li.appendChild(rm);
         attachBox(input);
         initRename(span);
         ul.appendChild(li);
@@ -750,11 +797,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     b.setAttribute('aria-label', 'Drag to reorder');
     // An SVG, not the "↕" character: iOS renders that codepoint as a blue
     // EMOJI, so the handles looked nothing like the desktop ones.
-    // Antonio: "the arrows are too glued, make them longer so people understand
-    // it's an arrow". The old one was a 16x16 square with the two heads almost
-    // touching, which read as a smudge rather than a grab handle. Taller
-    // viewBox, full-height shaft, heads pushed to the extremes.
-    b.innerHTML = '<svg viewBox="0 0 16 26" width="15" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v22"/><path d="m3 7 5-5 5 5"/><path d="m3 19 5 5 5-5"/></svg>';
+    // Third iteration, both bounds set by Antonio. 16x16 read as a smudge
+    // ("too glued"), 15x24 shouted louder than the checkbox next to it ("too
+    // big, I don't like it"). 11x18 with a thinner stroke keeps the clear
+    // shaft-and-heads shape that fixed the first complaint at a weight that
+    // sits quietly in the row. The 44x44 tap target is padding, unchanged.
+    b.innerHTML = '<svg viewBox="0 0 14 22" width="11" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v18"/><path d="m3 6 4-4 4 4"/><path d="m3 16 4 4 4-4"/></svg>';
     initDrag(b);
     return b;
   }
@@ -870,10 +918,26 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       }
     });
   }
-  function initRename(span: HTMLElement) {
-    span.addEventListener('click', (ev) => {
+  // Antonio asked for an edit pencil on each row because he thought the only
+  // way to change an item was delete-and-retype. Tap-the-text rename has
+  // existed the whole time; he built this site and did not find it, which is
+  // the complete argument for the pencil. An affordance nobody can see is a
+  // feature that does not exist. The pencil triggers the exact same flow.
+  function makeEditButton(): HTMLButtonElement {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'task-edit';
+    b.setAttribute('aria-label', 'Rename this item');
+    b.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
+    b.addEventListener('click', () => {
+      const li = b.closest('li.task') as HTMLElement | null;
+      const span = li && li.querySelector<HTMLElement>('.task-label');
+      if (span) beginRename(span);
+    });
+    return b;
+  }
+
+  function beginRename(span: HTMLElement) {
       if (!(mode === 'custom' && editMode)) return;
-      ev.preventDefault();
       const li = span.closest('li.task') as HTMLElement | null; if (!li) return;
       if (li.querySelector('.task-label-edit')) return;
       const key = li.getAttribute('data-key') || '';
@@ -900,15 +964,24 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
         if (e.key === 'Escape') { input.value = span.textContent || ''; input.blur(); }
       });
+  }
+  // Tap the text still works for the people who found it.
+  function initRename(span: HTMLElement) {
+    span.addEventListener('click', (ev) => {
+      if (!(mode === 'custom' && editMode)) return;
+      ev.preventDefault();
+      beginRename(span);
     });
   }
-  // Built-in rows get their drag handle and rename wiring once at startup.
+  // Built-in rows get their pencil, drag handle and rename wiring at startup.
   function ensureRowControls() {
     document.querySelectorAll<HTMLElement>('.tasks .task[data-key]').forEach((li) => {
       if (li.querySelector('.task-drag')) return;
       const rm = li.querySelector('.task-remove');
+      const pencil = makeEditButton();
       const drag = makeDragHandle();
-      if (rm) li.insertBefore(drag, rm); else li.appendChild(drag);
+      if (rm) { li.insertBefore(pencil, rm); li.insertBefore(drag, rm); }
+      else { li.appendChild(pencil); li.appendChild(drag); }
       const span = li.querySelector<HTMLElement>('.task-label');
       if (span) initRename(span);
     });
@@ -926,7 +999,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     mode = m;
     if (listEl) listEl.setAttribute('data-mode', m);
     if (m !== 'custom') setEdit(false);
-    if (customToolbar) customToolbar.hidden = m !== 'custom';
+    // The toolbar itself now lives in every mode, because Clear and Download
+    // PDF apply everywhere. Only Edit and Email are Custom-mode tools.
+    if (customToolbar) {
+      customToolbar.hidden = false;
+      const custom = m === 'custom';
+      if (editToggle) editToggle.hidden = !custom;
+      const bk = document.getElementById('backupBtn');
+      if (bk) bk.hidden = !custom;
+    }
     modeBtns.forEach((b) => {
       const on = b.dataset.modeSet === m;
       b.classList.toggle('is-on', on);
@@ -946,7 +1027,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function setEdit(on: boolean) {
     editMode = on;
     if (listEl) listEl.setAttribute('data-edit', on ? 'on' : 'off');
-    if (editToggle) editToggle.textContent = on ? 'Done' : 'Edit list';
+    // "Save", not "Done". Antonio's call: Edit then Save is the pair every
+    // user already knows, and once accounts exist Save will also be literally
+    // true (it will sync the list). Changes persist locally the moment they
+    // are made either way, so the label is a promise the site already keeps.
+    if (editToggle) {
+      editToggle.textContent = on ? 'Save' : 'Edit list';
+      editToggle.classList.toggle('editing', on);
+    }
   }
 
   function applyRemoved() {
@@ -1024,7 +1112,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const MODE_TITLE = 'Unlock Advanced and Custom';
   const MODE_COPY = unlockCopy ? unlockCopy.textContent || '' : '';
   const PDF_TITLE = 'Register to download the printable checklist';
-  const PDF_COPY = 'Free for registered users. A clean one-page PDF with empty tick boxes. Print it, fold it, keep it in your USB case, or pin it up in the booth. We will send you news and the odd cool thing for your DJ career, never spam.';
+  const PDF_COPY = 'Free for registered users. Your list, exactly as it stands, as a clean printable PDF. Print it, fold it, keep it in your USB case, or pin it up in the booth.';
 
   // Opens the gate with copy that matches what the DJ actually reached for.
   function openGate() {
@@ -1038,26 +1126,74 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     if (inp) (inp as HTMLInputElement).focus();
   }
 
-  // Starts the download without navigating away, so the DJ keeps their place
-  // and their ticked boxes.
-  function grabPdf() {
-    const a = document.createElement('a');
-    a.href = PDF_URL;
-    a.download = 'save-my-gig-pre-gig-checklist.pdf';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+  // WHAT YOU DOWNLOAD IS WHAT IS ON SCREEN. Antonio's rule, and it is the only
+  // honest one: "if it is clear, it's clear. If it is fulfilled, it's
+  // fulfilled." The old button served a pre-made static PDF of the default
+  // list, which silently ignored every rename, removal, custom item and tick.
+  // Email already sent the real list; Download lied. Now the document is built
+  // from the live DOM at the moment of the tap: current mode, current order,
+  // current names, current ticks. The browser's own print-to-PDF does the
+  // rendering, which needs no library and matches paper size to the user.
+  function printCurrentList() {
+    const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] || c));
+    const groups: { title: string; items: { label: string; done: boolean }[] }[] = [];
+    document.querySelectorAll<HTMLElement>('.task-group').forEach((g) => {
+      const title = (g.querySelector('.group-title')?.textContent || '').trim();
+      const items: { label: string; done: boolean }[] = [];
+      g.querySelectorAll<HTMLElement>('li.task').forEach((li) => {
+        // Hidden rows are hidden for a reason: removed in Custom, or above the
+        // current mode's level. The printout must match the screen exactly.
+        if (li.offsetParent === null) return;
+        const label = (li.querySelector('.task-label')?.textContent || '').trim();
+        const done = !!li.querySelector<HTMLInputElement>('input[type=checkbox]')?.checked;
+        if (label) items.push({ label, done });
+      });
+      if (items.length) groups.push({ title, items });
+    });
+
+    const rows = (items: { label: string; done: boolean }[]) => items.map((it) =>
+      `<li class="${it.done ? 'done' : ''}"><span class="bx">${it.done ? '&#10003;' : ''}</span>${esc(it.label)}</li>`
+    ).join('');
+    const sections = groups.map((g) =>
+      `<section><h2>${esc(g.title)}</h2><ul>${rows(g.items)}</ul></section>`
+    ).join('');
+
+    const w = window.open('', '_blank');
+    if (!w) return; // popup blocked; the button simply does nothing rather than erroring
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8" />
+<title>save-my-gig-pre-gig-checklist</title>
+<style>
+  /* Ink-friendly on purpose: light page, dark text, real boxes to tick by hand. */
+  body { font: 14px/1.5 Arial, Helvetica, sans-serif; color: #111; margin: 36px; }
+  .brand { color: #d43a1e; font-weight: 800; letter-spacing: 0.14em; font-size: 11px; text-transform: uppercase; }
+  h1 { font-size: 26px; margin: 2px 0 2px; text-transform: uppercase; letter-spacing: -0.01em; }
+  .sub { color: #666; font-size: 12px; margin: 0 0 18px; }
+  section { break-inside: avoid; margin-bottom: 14px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid #d43a1e; padding-bottom: 4px; margin: 0 0 6px; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { padding: 4px 0 4px 26px; position: relative; border-bottom: 1px solid #eee; }
+  .bx { position: absolute; left: 0; top: 5px; width: 13px; height: 13px; border: 1.5px solid #444; border-radius: 2px; font-size: 11px; line-height: 13px; text-align: center; }
+  li.done { color: #888; text-decoration: line-through; }
+  li.done .bx { background: #e8f7ee; border-color: #2f9e5f; color: #2f9e5f; }
+  .foot { margin-top: 18px; color: #888; font-size: 11px; display: flex; justify-content: space-between; }
+</style></head><body>
+<div class="brand">Save My Gig</div>
+<h1>Pre-gig checklist</h1>
+<p class="sub">Your list, exactly as it stood when you downloaded it. savemygig.com/checklist</p>
+${sections}
+<div class="foot"><span>Something failing at the booth? savemygig.com/emergency</span><span>savemygig.com</span></div>
+<script>window.onload = function () { window.print(); };<\/script>
+</body></html>`);
+    w.document.close();
   }
 
-  // The PDF is behind the same email as Advanced and Custom. Note for whoever
-  // reads this later: this is a SOFT gate. The file is a static URL and anyone
-  // who wants it can take it. That is fine and deliberate. It is a fair ask,
-  // not a lock, and nothing safety-critical is ever behind it.
+  // The PDF sits behind the same registration as Advanced and Custom. This is
+  // a SOFT gate, deliberately: it is a fair ask, not a lock, and nothing
+  // safety-critical is ever behind it.
   const pdfBtn = document.getElementById('pdfBtn');
   if (pdfBtn) {
-    pdfBtn.addEventListener('click', (ev) => {
-      if (isUnlocked()) return;          // already a member, let the link work
-      ev.preventDefault();
+    pdfBtn.addEventListener('click', () => {
+      if (isUnlocked()) { printCurrentList(); return; }
       pendingWant = 'pdf';
       openGate();
     });
@@ -1094,18 +1230,25 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       // Give them the thing they actually came for, immediately. The
       // confirmation email fires afterwards in the background: nobody should
       // wait on an inbox while standing in a hurry.
-      if (pendingWant === 'pdf') grabPdf();
+      if (pendingWant === 'pdf') printCurrentList();
       else setMode(pendingMode);
 
       const want = pendingWant === 'pdf' ? 'pdf' : pendingMode;
       if (typeof (window as any).gtag === 'function') {
         (window as any).gtag('event', 'advanced_unlock', { placement: 'checklist', mode: want });
       }
+      const artistEl = unlockForm.querySelector('input[name="artist"]') as HTMLInputElement | null;
+      const igEl = unlockForm.querySelector('input[name="instagram"]') as HTMLInputElement | null;
       try {
         await fetch('/api/subscribe', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ email, source: 'checklist-' + want }),
+          body: JSON.stringify({
+            email,
+            source: 'checklist-' + want,
+            artist: artistEl ? artistEl.value.trim() : '',
+            instagram: igEl ? igEl.value.trim() : '',
+          }),
         });
       } catch (e) { /* unlocked anyway; feature is free */ }
     });

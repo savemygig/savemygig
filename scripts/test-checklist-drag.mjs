@@ -68,8 +68,12 @@ if (handle) {
     const r = s.getBoundingClientRect();
     return { w: Math.round(r.width), h: Math.round(r.height) };
   });
+  // Bounds set by Antonio across three iterations: 16x16 square read as a
+  // smudge, 24px tall shouted. The shape test (clearly taller than wide) is
+  // what protects the "reads as an arrow" complaint; the size floor only
+  // guards against regressing to the original square.
   ok('arrow is clearly taller than wide', svg.h > svg.w * 1.3, `${svg.w}x${svg.h}`);
-  ok('arrow is tall enough to read as an arrow', svg.h >= 20, `${svg.h}px tall`);
+  ok('arrow is tall enough to read as an arrow', svg.h >= 16 && svg.h <= 20, `${svg.h}px tall`);
 }
 
 // Selection: drag across two rows and confirm nothing gets selected.

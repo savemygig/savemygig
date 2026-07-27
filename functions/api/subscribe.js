@@ -101,6 +101,8 @@ function confirmEmail(confirmUrl, source) {
 export async function onRequestPost({ request, env }) {
   let email = '';
   let source = 'unknown';
+  let artist = '';
+  let instagram = '';
 
   try {
     const ct = request.headers.get('content-type') || '';
@@ -108,10 +110,14 @@ export async function onRequestPost({ request, env }) {
       const body = await request.json();
       email = (body.email || '').trim();
       source = (body.source || 'unknown').trim();
+      artist = String(body.artist || '').trim().slice(0, 80);
+      instagram = String(body.instagram || '').trim().slice(0, 80);
     } else {
       const form = await request.formData();
       email = String(form.get('email') || '').trim();
       source = String(form.get('source') || 'unknown').trim();
+      artist = String(form.get('artist') || '').trim().slice(0, 80);
+      instagram = String(form.get('instagram') || '').trim().slice(0, 80);
     }
   } catch (err) {
     return json({ ok: false, error: 'bad_request' }, 400);
@@ -147,11 +153,39 @@ export async function onRequestPost({ request, env }) {
       body: JSON.stringify({
         email,
         updateEnabled: true,
-        attributes: { SOURCE: source },
+        attributes: { SOURCE: source, ARTIST: artist, INSTAGRAM: instagram },
       }),
     });
   } catch (err) {
     console.log('subscribe: pending contact write failed', String(err));
+  }
+
+  // Tell Antonio someone registered, so he can follow their artist Instagram
+  // back. The follow-back is a promise printed on the form, which makes this
+  // email part of keeping a promise, not a nice-to-have. Still best effort:
+  // it must never block the visitor's confirmation email, and it sends even
+  // without an Instagram handle so he sees every registration in one place.
+  try {
+    // Plain-text email, so no HTML escaping needed; the handle is clamped to
+    // 80 chars at the top and URL-encoded in the link.
+    const igLine = instagram
+      ? `Instagram: ${instagram} - https://instagram.com/${encodeURIComponent(instagram.replace(/^@/, ''))}`
+      : 'Instagram: (not given)';
+    await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify({
+        sender: SENDER,
+        to: [{ email: 'savemygig@gmail.com', name: 'Save My Gig' }],
+        subject: `New registration${artist ? ': ' + artist : ''}${instagram ? ' (' + instagram + ')' : ''}`,
+        textContent:
+          `New Save My Gig registration\n\n` +
+          `Email: ${email}\nArtist: ${artist || '(not given)'}\n${igLine}\nSource: ${source}\n\n` +
+          `Promise on the form: every DJ who registers gets a follow.`,
+      }),
+    });
+  } catch (err) {
+    console.log('subscribe: owner notification failed', String(err));
   }
 
   const res = await fetch('https://api.brevo.com/v3/smtp/email', {
