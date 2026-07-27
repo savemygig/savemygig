@@ -1,63 +1,45 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
+import { RUNLIST, RUNLIST_NEVER } from '../../../data/runlist.js';
 
-// THE RUN LIST. NOT A DECISION TREE.
+// THE SIX MOVES. NOT A DECISION TREE, AND NOT A TUTORIAL EITHER.
 //
-// Antonio's insight, and he is right: a DJ two minutes from a set cannot read
-// a screen and choose between A and B six times. Under adrenaline the CHOOSING
-// is the expensive part, not the doing.
+// Antonio pushed this one step further than the first version and he is right:
+// a DJ with ten minutes is not reading, they are REMEMBERING. So the screen is
+// built to be recognised, not consumed. Six words at a size you can read from
+// arm's length in a dark booth, one line of jog text each, and every word of
+// explanation folded away behind a tap for the one person who needs it.
 //
-// Aviation and emergency medicine solved this long ago: memory items. A short,
-// fixed, linear sequence run in order, no branching. The operator stops when
-// the problem goes away, and they know it went away because they can hear it.
+// The list is deliberately six and not ten. Ten is a document. Six is a thing
+// you can still recite with a room watching you.
 //
-// So the under-60-minutes path is a single screen of actions ordered by
-// (how often it works) x (how fast it is). No questions. The DJ works down and
-// stops when sound comes out. The decision TREE still exists and is still
-// good, it just belongs to the DJ who has an hour or a day, where diagnosis is
-// worth more than speed. Link to it at the bottom, not at the top.
+// The list itself lives in src/data/runlist.js because it also has to appear,
+// word for word, on the printable card and in prevention. If the wording drifts
+// between surfaces the DJ never memorises it, and memorising it is the whole
+// point.
 ---
-<Tunnel title="Do This Now | Save My Gig!" status="Critical · Do this now" red srHeading="Do these in order until sound comes out">
-  <h2 style="margin-bottom:0.5rem">Do these in order.</h2>
-  <p class="dim" style="margin-bottom:1.5rem">Stop as soon as it plays. Most DJs are back on by step three.</p>
+<Tunnel title="The Six Moves | Save My Gig!" status="Critical · Do this now" red srHeading="Six moves, in order, until it plays">
+  <h2 style="margin-bottom:0.4rem">Six moves. In order.</h2>
+  <p class="dim" style="margin-bottom:1.4rem">
+    Stop the moment it plays. Most gigs are saved in the first two.
+  </p>
 
-  <ol class="runlist">
-    <li>
-      <strong>Pull the USB out. Count to ten. Push it back in firmly.</strong>
-      <span>Wait, some drives take 30 seconds to mount.</span>
-    </li>
-    <li>
-      <strong>Try the other slot, then the other player.</strong>
-      <span>A drive can fail on one deck and work on the next. If it reads there, play from there.</span>
-    </li>
-    <li>
-      <strong>Playlists missing but the drive shows up? Press FOLDER view.</strong>
-      <span>SOURCE, select USB, then the browse / FOLDER button. Your music is still on the stick. You lose cues and sync, you keep the gig.</span>
-    </li>
-    <li>
-      <strong>Load your second USB.</strong>
-      <span>If you carry two, this is over in ten seconds.</span>
-    </li>
-    <li>
-      <strong>Wipe the USB tip and try again.</strong>
-      <span>Sweat and booth dirt are real causes.</span>
-    </li>
-    <li>
-      <strong>Restart the player, but only if nobody is playing on it.</strong>
-      <span>USB STOP first, power off, twenty seconds, back on.</span>
-    </li>
-    <li>
-      <strong>Borrow a drive, or play off your phone into a spare channel.</strong>
-      <span>Ask the DJ before or after you. This happens to everyone.</span>
-    </li>
+  <ol class="moves">
+    {RUNLIST.map((s) => (
+      <li>
+        <span class="move-verb">{s.verb}</span>
+        <span class="move-action">{s.action}</span>
+        <details class="move-more">
+          <summary>Why, and how</summary>
+          <p>{s.detail}</p>
+        </details>
+      </li>
+    ))}
   </ol>
 
-  <div class="alert-card" style="margin:1.75rem 0 1.5rem">
+  <div class="alert-card" style="margin:1.6rem 0 1.4rem">
     <div style="font-size:20px" aria-hidden="true">⚠️</div>
-    <div>
-      Do not let anything format or initialise your drive tonight. Your music is
-      still on it.
-    </div>
+    <div>{RUNLIST_NEVER}</div>
   </div>
 
   <nav class="pad-grid" aria-label="What next">
@@ -75,50 +57,73 @@ import Tunnel from '../../../layouts/Tunnel.astro';
       <div class="pad-desc">Step by step diagnosis, one question at a time.</div>
     </a>
   </nav>
+
+  <p class="tunnel-note" style="margin-top:1.6rem">
+    Learn these six before the gig, not during one. The DJ who carries a cloned
+    second drive never gets past move one. <a href="/prepare">The prevention rules</a>.
+  </p>
 </Tunnel>
 
 <style>
-  .runlist { list-style: none; counter-reset: rl; margin: 0; padding: 0; }
-  .runlist li {
-    counter-increment: rl;
+  /* Sized to be READ AT ARM'S LENGTH IN A DARK BOOTH. The verb is the memory
+     hook and carries the weight; the action line is a jog; the detail is folded
+     away so it can never compete with either. */
+  .moves { list-style: none; counter-reset: mv; margin: 0; padding: 0; }
+  .moves li {
+    counter-increment: mv;
     position: relative;
-    padding: 0.85rem 0 0.85rem 2.6rem;
+    padding: 1rem 0 1rem 3rem;
     border-bottom: 1px solid var(--edge-soft);
   }
-  .runlist li:last-child { border-bottom: none; }
-  .runlist li::before {
-    content: counter(rl);
+  .moves li:last-child { border-bottom: none; }
+  .moves li::before {
+    content: counter(mv);
     position: absolute;
     left: 0;
-    top: 0.8rem;
-    width: 1.85rem;
-    height: 1.85rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--surf-2);
-    border: 1px solid var(--edge);
-    border-radius: 50%;
+    top: 0.95rem;
+    width: 2.15rem;
+    text-align: center;
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 0.9rem;
-    color: var(--text);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--text-faint);
   }
-  .runlist strong {
+  .move-verb {
     display: block;
-    font-size: 1.02rem;
-    line-height: 1.35;
-    margin-bottom: 0.15rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
   }
-  .runlist span {
+  .move-action {
     display: block;
-    font-size: 0.87rem;
-    line-height: 1.45;
+    font-size: 0.97rem;
+    line-height: 1.4;
     color: var(--text-dim);
   }
-  @media (max-width: 420px) {
-    .runlist li { padding-left: 2.3rem; }
-    .runlist strong { font-size: 0.97rem; }
-    .runlist span { font-size: 0.83rem; }
+  .move-more { margin-top: 0.45rem; }
+  .move-more > summary {
+    display: inline-block;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    cursor: pointer;
+    padding: 4px 0;
+    list-style: none;
+  }
+  .move-more > summary::-webkit-details-marker { display: none; }
+  .move-more > summary::before { content: '+ '; }
+  .move-more[open] > summary::before { content: '\2212 '; }
+  .move-more > summary:hover { color: var(--text-dim); }
+  .move-more p {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--text-dim);
+    margin: 0.3rem 0 0.2rem;
   }
 </style>

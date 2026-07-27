@@ -1,7 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import EmailCapture from '../components/EmailCapture.astro';
+import { RUNLIST } from '../data/runlist.js';
 // THE EMERGENCY CARD, the printable/screenshot-able one-pager promised on /saved and /prepare.
+//
+// The booth block is rendered from src/data/runlist.js, the same source the
+// emergency screen uses. It used to be a separate hand written list with
+// different wording and a different order, which is the worst possible outcome:
+// a DJ who screenshots this card and then opens the site mid-gig would see two
+// versions of the same advice and trust neither. One list, one order, one set
+// of words, everywhere.
 ---
 <Base
   title="The DJ Emergency Card - Screenshot This | Save My Gig!"
@@ -14,14 +22,15 @@ import EmailCapture from '../components/EmailCapture.astro';
     <p class="dim" style="margin-bottom:1.5rem">📱 Screenshot this page now, it works with no signal, in any booth, at 3am.</p>
 
     <div class="panel" style="border-color:rgba(0,255,102,0.3)">
-      <h3 style="margin-bottom:0.75rem">⚡ USB DEAD AT THE BOOTH - DO IN ORDER</h3>
-      <ul class="checklist">
-        <li>Reseat the drive. Wait 10 seconds. Re-insert firmly.</li>
-        <li>Second USB slot → other player → wait 30s (big libraries mount slowly).</li>
-        <li>Nobody playing? Power-cycle the player (USB STOP first).</li>
-        <li>Still dead + laptop nearby → copy tracks off, format FAT32+MBR, copy back, play via FOLDER.</li>
-        <li>No laptop → borrow a USB, play from phone via mixer, swap slots with next DJ. <strong>Music first, pride later.</strong></li>
-      </ul>
+      <h3 style="margin-bottom:0.4rem">⚡ USB DEAD AT THE BOOTH, THE SIX MOVES</h3>
+      <p class="dim" style="font-size:0.85rem;margin-bottom:0.9rem">
+        Learn these six words. In the booth you will only have time to remember them.
+      </p>
+      <ol class="card-moves">
+        {RUNLIST.map((s) => (
+          <li><strong>{s.verb}</strong> <span>{s.action}</span></li>
+        ))}
+      </ol>
     </div>
 
     <div class="panel" style="border-color:rgba(255,176,32,0.3)">
@@ -51,3 +60,28 @@ import EmailCapture from '../components/EmailCapture.astro';
     <p class="dim" style="font-size:0.85rem">savemygig.com/emergency, the full guided rescue, free · Print this page: it's ink-friendly.</p>
   </main>
 </Base>
+
+<style>
+  /* Compact on screen, still legible in a screenshot on a phone at arm's
+     length, and it prints. The verb leads so the eye finds the step it is on
+     without reading the sentence. */
+  .card-moves { list-style: none; counter-reset: cm; margin: 0; padding: 0; }
+  .card-moves li {
+    counter-increment: cm;
+    position: relative;
+    padding: 0.42rem 0 0.42rem 1.75rem;
+    line-height: 1.4;
+  }
+  .card-moves li::before {
+    content: counter(cm);
+    position: absolute; left: 0; top: 0.42rem;
+    width: 1.25rem; text-align: center;
+    font-family: var(--font-display); font-weight: 800;
+    color: var(--text-faint);
+  }
+  .card-moves strong {
+    font-family: var(--font-display); font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.01em;
+  }
+  .card-moves span { color: var(--text-dim); }
+</style>
