@@ -502,6 +502,27 @@ html.ck-open .sticky-cta { display: none !important; }
   }
 }
 
+/* ---------- Back to top (Base pages only, never the tunnel) ---------- */
+.to-top {
+  position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 80;
+  width: 46px; height: 46px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surf-2); color: var(--text-dim);
+  border: 1px solid var(--edge);
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+.to-top:hover { color: var(--text); border-color: var(--text-dim); }
+.to-top[hidden] { display: none; }
+/* On mobile /fix articles the red sticky CTA owns the bottom edge; the top
+   button steps above it so they never overlap. z-index stays below the CTA:
+   between "back to top" and "start emergency mode", emergency wins. */
+@media (max-width: 720px) {
+  body:has(.sticky-cta) .to-top { bottom: calc(74px + env(safe-area-inset-bottom)); }
+}
+@media print { .to-top { display: none !important; } }
+
 /* ---------- Desktop comfort ---------- */
 @media (min-width: 900px) {
   .screen { padding-top: 44px; }

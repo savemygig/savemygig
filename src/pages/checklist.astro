@@ -92,10 +92,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
     <div class="mode-switch" role="group" aria-label="Checklist depth">
       <button type="button" class="mode-btn is-on" data-mode-set="basic" aria-pressed="true">Basic</button>
-      <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Advanced</button>
+      <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Pro</button>
       <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Custom</button>
     </div>
-    <p class="mode-hint dim" id="modeHint">Basic is the must-bring list. Switch to Advanced for the full kit.</p>
+    <p class="mode-hint dim" id="modeHint">Basic is the must-brings. Pro is the full kit, Custom is your own.</p>
 
     <!-- One gate, two doors. This panel now also serves the PDF download, so
          the title and first line are set from JS depending on what the DJ
@@ -107,8 +107,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            a professional feel charged for something we call free. It is
            "free for registered users", which is how every real tool works and
            how a working DJ expects to be treated. -->
-      <p class="unlock-title" id="unlockTitle">Register to unlock Advanced and Custom</p>
-      <p class="dim unlock-copy" id="unlockCopy">Free for registered users. Register with your email and you are in right away.</p>
+      <p class="unlock-title" id="unlockTitle">Register to unlock Pro and Custom</p>
+      <!-- Per-device honesty (audit finding): registration unlocks THIS device
+           today, and the emailed copy is what carries the list across devices.
+           When account sync ships this copy gets stronger, not corrected. -->
+      <p class="dim unlock-copy" id="unlockCopy">Free for registered users. Register with your email and you are in right away on this device. Your list saves here; Email list sends you a copy with a link that loads it on any other device.</p>
       <!-- One required field, two optional ones. Antonio wanted name, surname,
            artist name and Instagram, all required, so he can follow every DJ
            who registers. The follow-back idea is genuinely good and stays. The
@@ -157,11 +160,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <button type="button" class="btn btn-neutral" id="resetBtn"><span class="bl-full">Reset list</span><span class="bl-short">Reset</span></button>
       <!-- Full words on desktop, one word on a phone: four buttons at full
            length wrap the toolbar onto a second line on mobile (Antonio). -->
-      <button type="button" class="btn btn-neutral" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
       <!-- "Download list", not "Download PDF" (Antonio): the file is a PDF but
            the thing you are downloading is your list, same object as the other
            three buttons. -->
       <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Download list</span><span class="bl-short">Download</span></button>
+      <!-- Email is LAST and darker in every mode (Antonio): it is the one
+           action that requires registration, because an email needs an
+           address, and the shade quietly says this one is different. -->
+      <button type="button" class="btn btn-neutral btn-gated" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
       <!-- Antonio: instructions occupy space; read once, dismiss forever. The X
            writes localStorage so it never comes back on this device. Copy cut
            to the four verbs the mode actually has. -->
@@ -568,6 +574,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .hint-ic { vertical-align: -1px; margin: 0 1px; }
   /* Armed reset: the button itself becomes the confirmation. */
   #resetBtn.armed { border-color: var(--red); color: var(--red); }
+  /* The gated action: darker than its neighbours, which quietly says this one
+     asks something of you. Registered users see it behave like any button. */
+  /* .btn.btn-gated, two classes on purpose: global.css loads AFTER page CSS,
+     so a single-class rule here loses the cascade to .btn's own background. */
+  .btn.btn-gated { background: var(--bg); color: var(--text-dim); }
+  .btn.btn-gated:hover { color: var(--text); }
 
   .add-own { display: none; gap: 8px; margin: 0.6rem 0 0.2rem; }
   #list[data-mode="custom"][data-edit="on"] .add-own { display: flex; }
@@ -660,7 +672,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   let mode: string = 'basic';
   let pendingMode: string = 'advanced';
   // What the DJ was reaching for when the gate appeared: a mode, or the PDF.
-  let pendingWant: 'mode' | 'pdf' = 'mode';
+  let pendingWant: 'mode' | 'pdf' | 'email' = 'mode';
   // The old static PDF stays on disk for the email flow, but the Download
   // button no longer serves it: it prints the live list instead.
   let editMode = false;
@@ -735,7 +747,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       const cat = group.getAttribute('data-group') || '';
       const labels: string[] = [];
       group.querySelectorAll<HTMLElement>('.task').forEach((li) => {
-        if (li.classList.contains('removed')) return;
+        // Rows hidden by the current MODE (or removal) stay out: emailing from
+        // Basic must email the Basic list, not all 37 items. Computed display
+        // is checked on the row itself, so items inside a COLLAPSED section
+        // still count; collapsing a group is tidiness, not deletion.
+        if (getComputedStyle(li).display === 'none') return;
         const el = li.querySelector<HTMLElement>('.task-label');
         const t = el && el.textContent ? el.textContent.trim() : '';
         if (t) labels.push(t);
@@ -1065,9 +1081,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     if (customToolbar) {
       customToolbar.hidden = false;
       const custom = m === 'custom';
+      // Edit is the only Custom-exclusive button now: Email works in every
+      // mode (it emails whatever list the mode shows) and sits last.
       if (editToggle) editToggle.style.display = custom ? '' : 'none';
-      const bk = document.getElementById('backupBtn');
-      if (bk) bk.style.display = custom ? '' : 'none';
       // The tip explains pencil/arrows/x, which only exist in Custom. It was
       // leaking into Basic and Advanced, describing controls that are not
       // there. Dismissal state still wins over mode.
@@ -1080,11 +1096,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
     if (hintEl) {
-      if (m === 'advanced') hintEl.textContent = 'The full kit. Switch back to Basic for the essentials.';
+      if (m === 'advanced') hintEl.textContent = 'Pro is the full kit. Switch back to Basic for the essentials.';
       else if (m === 'custom') hintEl.textContent = 'Your list. Add, edit, delete or reorder any item below.';
       else hintEl.textContent = isUnlocked()
-        ? 'Basic is the must-brings. Advanced is the full kit, Custom is your own.'
-        : 'Basic is the must-brings. Advanced and Custom unlock with your email.';
+        ? 'Basic is the must-brings. Pro is the full kit, Custom is your own.'
+        : 'Basic is the must-brings. Pro and Custom unlock when you register.';
     }
     saveMode(m);
     render();
@@ -1155,7 +1171,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   if (editToggle) editToggle.addEventListener('click', () => setEdit(!editMode));
 
   // email me a copy: sends the list + a load-anywhere link to their inbox
+  // Email requires registration (Antonio: "how can you get an email if you
+  // are not registered?"). Registered with a stored address: sends straight
+  // away. Registered without one (edge): the inline form. Not registered:
+  // the same gate as everything else, and registering sends the list to the
+  // address they just gave.
   if (backupBtn) backupBtn.addEventListener('click', () => {
+    if (!isUnlocked()) {
+      pendingWant = 'email';
+      openGate();
+      return;
+    }
     const stored = getEmail();
     if (stored) { sendBackup(stored); }
     else if (backupForm) {
@@ -1195,15 +1221,23 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   const unlockTitle = document.getElementById('unlockTitle');
   const unlockCopy = document.getElementById('unlockCopy');
-  const MODE_TITLE = 'Unlock Advanced and Custom';
+  const MODE_TITLE = 'Register to unlock Pro and Custom';
   const MODE_COPY = unlockCopy ? unlockCopy.textContent || '' : '';
   const PDF_TITLE = 'Register to download the printable checklist';
   const PDF_COPY = 'Free for registered users. Your list, exactly as it stands, as a clean printable PDF. Print it, fold it, keep it in your USB case, or pin it up in the booth.';
 
   // Opens the gate with copy that matches what the DJ actually reached for.
   function openGate() {
-    if (unlockTitle) unlockTitle.textContent = pendingWant === 'pdf' ? PDF_TITLE : MODE_TITLE;
-    if (unlockCopy) unlockCopy.textContent = pendingWant === 'pdf' ? PDF_COPY : MODE_COPY;
+    const gateCopy = {
+      pdf: { t: PDF_TITLE, c: PDF_COPY },
+      email: {
+        t: 'Register to email your list',
+        c: 'Free for registered users. We send your list, exactly as it stands, to your inbox, with a link that loads it back on any device.',
+      },
+      mode: { t: MODE_TITLE, c: MODE_COPY },
+    }[pendingWant] || { t: MODE_TITLE, c: MODE_COPY };
+    if (unlockTitle) unlockTitle.textContent = gateCopy.t;
+    if (unlockCopy) unlockCopy.textContent = gateCopy.c;
     if (unlockEl) {
       unlockEl.hidden = false;
       unlockEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1228,8 +1262,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       const items: { label: string; done: boolean }[] = [];
       g.querySelectorAll<HTMLElement>('li.task').forEach((li) => {
         // Hidden rows are hidden for a reason: removed in Custom, or above the
-        // current mode's level. The printout must match the screen exactly.
-        if (li.offsetParent === null) return;
+        // current mode's level. But a COLLAPSED section is tidiness, not
+        // deletion, so the check is the row's own computed display, which
+        // offsetParent got wrong: it silently dropped every collapsed section
+        // from the printout.
+        if (getComputedStyle(li).display === 'none') return;
         const label = (li.querySelector('.task-label')?.textContent || '').trim();
         const done = !!li.querySelector<HTMLInputElement>('input[type=checkbox]')?.checked;
         if (label) items.push({ label, done });
@@ -1317,9 +1354,10 @@ ${sections}
       // confirmation email fires afterwards in the background: nobody should
       // wait on an inbox while standing in a hurry.
       if (pendingWant === 'pdf') printCurrentList();
+      else if (pendingWant === 'email') sendBackup(email); // to the address they just registered
       else setMode(pendingMode);
 
-      const want = pendingWant === 'pdf' ? 'pdf' : pendingMode;
+      const want = pendingWant === 'pdf' ? 'pdf' : pendingWant === 'email' ? 'email' : pendingMode;
       if (typeof (window as any).gtag === 'function') {
         (window as any).gtag('event', 'advanced_unlock', { placement: 'checklist', mode: want });
       }

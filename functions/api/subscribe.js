@@ -38,9 +38,9 @@ function copyFor(source) {
       subject: 'Confirm your email, Save My Gig',
       h1a: 'You are in.',
       h1b: 'One tap to confirm.',
-      lead: 'Advanced and Custom mode are already unlocked on your device. Confirm this address and we will also send you the printable Emergency Card, plus the occasional note that saves gigs.',
+      lead: 'Pro and Custom mode are already unlocked on your device. Confirm this address and we will also send you the printable Emergency Card, plus the occasional note that saves gigs.',
       cta: 'Confirm my email',
-      plain: 'Advanced and Custom mode are already unlocked on your device.\nConfirm this address and we will also send you the printable Emergency Card.',
+      plain: 'Pro and Custom mode are already unlocked on your device.\nConfirm this address and we will also send you the printable Emergency Card.',
     };
   }
   return {
