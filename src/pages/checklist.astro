@@ -150,7 +150,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            with a restore link, no PDF attached, and a label must never promise
            an attachment that does not arrive. EMAIL LIST is what it does. -->
       <button type="button" class="btn btn-neutral" id="editToggle"><span class="bl-full">Edit list</span><span class="bl-short">Edit</span></button>
-      <button type="button" class="btn btn-neutral" id="resetBtn"><span class="bl-full">Clear list</span><span class="bl-short">Clear</span></button>
+      <!-- "Reset list", not "Clear list" (Antonio): the promise is that the
+           list goes back to how it was before you touched anything, which in
+           Custom means your edits too, not just the ticks. That makes it
+           destructive, so it asks once before it acts. -->
+      <button type="button" class="btn btn-neutral" id="resetBtn"><span class="bl-full">Reset list</span><span class="bl-short">Reset</span></button>
       <!-- Full words on desktop, one word on a phone: four buttons at full
            length wrap the toolbar onto a second line on mobile (Antonio). -->
       <button type="button" class="btn btn-neutral" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
@@ -556,6 +560,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     font-size: 1.1rem; line-height: 1; padding: 8px 10px;
   }
   #hintClose:hover { color: var(--text); }
+  /* Armed reset: the button itself becomes the confirmation. */
+  #resetBtn.armed { border-color: var(--red); color: var(--red); }
 
   .add-own { display: none; gap: 8px; margin: 0.6rem 0 0.2rem; }
   #list[data-mode="custom"][data-edit="on"] .add-own { display: flex; }
@@ -1064,7 +1070,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
     if (hintEl) {
       if (m === 'advanced') hintEl.textContent = 'The full kit. Switch back to Basic for the essentials.';
-      else if (m === 'custom') hintEl.textContent = 'Your list. Add your own items to any section below.';
+      else if (m === 'custom') hintEl.textContent = 'Your list. Add, edit, delete or reorder any item below.';
       else hintEl.textContent = isUnlocked()
         ? 'Basic is the must-brings. Advanced is the full kit, Custom is your own.'
         : 'Basic is the must-brings. Advanced and Custom unlock with your email.';
@@ -1355,9 +1361,42 @@ ${sections}
   // reset (ticks only, keeps your custom items and mode)
   const resetBtn = document.getElementById('resetBtn');
   if (resetBtn) {
+    // Reset = back to factory, per Antonio: "everything goes back to how it
+    // was before you edit anything." In Basic/Advanced that is just the ticks;
+    // in Custom it also restores deleted items, undoes renames and reorders,
+    // and removes added items. Because that now destroys real work, the first
+    // tap arms the button and the second one fires; anything else disarms it.
+    let resetArmed = false;
+    let resetTimer: ReturnType<typeof setTimeout> | undefined;
+    const disarmReset = () => {
+      resetArmed = false;
+      if (resetTimer) clearTimeout(resetTimer);
+      resetBtn.innerHTML = '<span class="bl-full">Reset list</span><span class="bl-short">Reset</span>';
+      resetBtn.classList.remove('armed');
+    };
     resetBtn.addEventListener('click', () => {
+      if (!resetArmed) {
+        resetArmed = true;
+        resetBtn.textContent = mode === 'custom' ? 'Reset everything?' : 'Reset ticks?';
+        resetBtn.classList.add('armed');
+        resetTimer = setTimeout(disarmReset, 4000);
+        return;
+      }
+      disarmReset();
       allBoxes().forEach((b) => { b.checked = false; });
       save({});
+      if (mode === 'custom') {
+        try {
+          localStorage.removeItem('SMG_CHECKLIST_ORDER_V1');
+          localStorage.removeItem('SMG_CHECKLIST_RENAME_V1');
+          localStorage.removeItem(CUSTOM_KEY);
+          localStorage.removeItem(REMOVED_KEY);
+        } catch (e) {}
+        // A full rebuild from defaults beats surgically undoing four kinds of
+        // edit in place.
+        location.reload();
+        return;
+      }
       render();
     });
   }
