@@ -147,8 +147,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            an attachment that does not arrive. EMAIL LIST is what it does. -->
       <button type="button" class="btn btn-neutral" id="editToggle">Edit</button>
       <button type="button" class="btn btn-neutral" id="resetBtn">Clear</button>
-      <button type="button" class="btn btn-neutral" id="backupBtn">Email list</button>
-      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions">Download PDF</button>
+      <!-- Full words on desktop, one word on a phone: four buttons at full
+           length wrap the toolbar onto a second line on mobile (Antonio). -->
+      <button type="button" class="btn btn-neutral" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
+      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Download PDF</span><span class="bl-short">Download</span></button>
       <span class="edit-hint dim" id="editHint">Add, remove, rename with the pencil, or drag the arrows to reorder. Tap Save when you finish, so nothing gets deleted by accident.</span>
       <form class="backup-form" id="backupForm" hidden>
         <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" />
@@ -421,6 +423,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .unlock-copy { font-size: 0.9rem; margin: 0 0 0.9rem; }
   .unlock-form { display: flex; flex-direction: column; gap: 10px; }
   .unlock-follow { font-size: 0.82rem; margin: 0; }
+  .bl-short { display: none; }
   .unlock-form input {
     width: 100%; padding: 0.9rem 1rem; font-family: inherit; font-size: 16px;
     color: var(--text); background: var(--bg); border: 1px solid var(--edge); border-radius: var(--radius);
@@ -520,7 +523,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     flex: 0 0 auto; display: none; background: transparent; border: none; color: var(--text-faint);
     font-size: 1.4rem; line-height: 1; cursor: pointer; padding: 0 0.2rem 0 0.6rem;
   }
-  #list[data-edit="on"] .task-remove { display: block; }
+  /* Custom-scoped like the pencil and the arrows: a remove button in Basic
+     mode (the iPhone bug) deletes from a list the mode cannot re-add to. */
+  #list[data-mode="custom"][data-edit="on"] .task-remove { display: block; }
   .task-remove:hover { color: var(--red); }
 
   .custom-toolbar { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem; }
@@ -573,6 +578,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     .group-body { padding: 0 1.2rem 0.95rem; }
     .task > label { padding-left: 0; padding-right: 0; }
     .custom-toolbar .btn { padding-left: 1.2rem; padding-right: 1.2rem; }
+    .bl-full { display: none; }
+    .bl-short { display: inline; }
   }
 </style>
 
@@ -1005,12 +1012,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     if (m !== 'custom') setEdit(false);
     // The toolbar itself now lives in every mode, because Clear and Download
     // PDF apply everywhere. Only Edit and Email are Custom-mode tools.
+    // style.display, NOT the hidden attribute: .btn sets its own display, and
+    // author CSS beats the UA's [hidden] rule. On Antonio's iPhone (Basic mode,
+    // not unlocked on that device) Edit stayed tappable, which produced edit
+    // state in Basic: remove buttons and green outlines with no pencil and no
+    // arrows, because those are rightly Custom-only.
     if (customToolbar) {
       customToolbar.hidden = false;
       const custom = m === 'custom';
-      if (editToggle) editToggle.hidden = !custom;
+      if (editToggle) editToggle.style.display = custom ? '' : 'none';
       const bk = document.getElementById('backupBtn');
-      if (bk) bk.hidden = !custom;
+      if (bk) bk.style.display = custom ? '' : 'none';
     }
     modeBtns.forEach((b) => {
       const on = b.dataset.modeSet === m;
@@ -1029,6 +1041,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
 
   function setEdit(on: boolean) {
+    // Edit exists only in Custom. Belt to the display-none braces above: even
+    // if some path makes the button clickable, edit state cannot turn on
+    // outside the one mode whose tools exist.
+    if (on && mode !== 'custom') on = false;
     editMode = on;
     if (listEl) listEl.setAttribute('data-edit', on ? 'on' : 'off');
     // "Save", not "Done". Antonio's call: Edit then Save is the pair every
