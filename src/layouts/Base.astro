@@ -531,10 +531,13 @@ const entityGraph = {
        wordmark, tagline and socials, shrinks as ONE proportioned unit so
        the seal always has clear air. Coffee stays full size. */
     @media (max-width: 414px) {
-      /* Third pass: 1.28rem read crowded, 1.12rem read shrunken ("too
-         aggressive"). This is the midpoint. */
-      .foot-wordmark { font-size: 1.2rem; }
-      .foot-tag { font-size: 0.45rem; letter-spacing: 0.195em; }
+      /* THE RECTANGLE RULE (Antonio, and the desktop comment above says the
+         same): wordmark, tagline and social row are ONE width. The social
+         row (4x32px + 3x0.4rem = 147px) is the reference; wordmark and
+         tagline sizes below are MEASURED to match it at 147px. Change one,
+         re-measure all three. */
+      .foot-wordmark { font-size: 1.28rem; }
+      .foot-tag { font-size: 0.45rem; letter-spacing: 0.25em; }
       .foot-social { gap: 0.4rem; margin-top: 0.9rem; }
       .soc-btn { width: 32px; height: 32px; }
       .soc-btn svg { width: 15px; height: 15px; }
