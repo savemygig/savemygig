@@ -1,0 +1,336 @@
+---
+import Base from '../../../layouts/Base.astro';
+import EmailCapture from '../../../components/EmailCapture.astro';
+import { CHECKED, DJM_900NXS2 } from '../../../data/facts.js';
+
+// Second pilot page for the Pioneer DJ / AlphaTheta hardware reference. Same
+// template as cdj-2000nxs2.astro: eight groups, same five-part accordion
+// voice, same shared .acc-* classes. Facts sourced from DJM_900NXS2 in
+// src/data/facts.js, which links the primary AlphaTheta specification page.
+// No firmware "known issue" is claimed here because none could be verified
+// against a primary source, see the Known Issues section for how that is
+// handled honestly instead of invented.
+const UPDATED = CHECKED;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/djm-900nxs2#article',
+  headline: 'DJM-900NXS2: the operational reference',
+  description: 'What every DJ should know before working a DJM-900NXS2: emergency fixes for no signal or unresponsive faders, the effects and dual-USB workflow that matter, and compatibility with rekordbox, Serato and Traktor.',
+  author: { '@id': 'https://www.savemygig.com/#antonio' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-27',
+  dateModified: '2026-07-27',
+  inLanguage: 'en',
+  mainEntityOfPage: 'https://www.savemygig.com/knowledge/pioneer-dj/djm-900nxs2',
+};
+---
+<Base
+  title="DJM-900NXS2 Guide: Fixes, Effects & Compatibility | Save My Gig!"
+  description="The DJM-900NXS2 field manual: what to do when a channel has no signal, effects will not engage, or the dual USB workflow trips you up, plus the compatibility that actually matters."
+  path="/knowledge/pioneer-dj/djm-900nxs2"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span>
+      <a href="/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>DJM-900NXS2</span>
+    </nav>
+
+    <div class="status-line">DJM-900NXS2</div>
+    <h1 class="rb-h1">DJM-900NXS2, <span class="accent">the field manual</span></h1>
+    <p class="dim rb-updated">Last verified: {UPDATED}</p>
+
+    <div class="panel panel-go">
+      <p style="margin:0">
+        <strong>The short version.</strong> A {DJM_900NXS2.channels}-channel professional
+        mixer with <strong>{DJM_900NXS2.usbPorts} USB ports</strong> (built for back-to-back
+        DJs to hot-swap without cutting the music), {DJM_900NXS2.beatFxCount} Beat FX
+        types and {DJM_900NXS2.soundColorFx.length} Sound Color FX on every channel.
+        It is the standard pairing for the CDJ-2000NXS2 and still one of the most
+        common mixers in professional booths. Before you touch it: know where the
+        channel gain trim is before the set starts, not during it, clipping on this
+        desk is a gain-staging problem, not an effects problem.
+      </p>
+    </div>
+
+    <h2 class="acc-group">🚨 Emergency fixes</h2>
+
+    <details class="acc-sec" name="djm900-acc" id="no-signal"><summary><h2 class="acc-h2">A channel has no signal</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Before assuming the channel has failed,
+        check the channel fader, the crossfader assignment, and the input selector,
+        in that order.</p>
+        <p><strong>Why this happens.</strong> The channel fader can simply be down,
+        the crossfader assign switch can have that channel routed to the opposite
+        side you are pushing, or the input selector can be set to a source that is
+        not actually playing (LINE instead of USB, for example).</p>
+        <p><strong>Fix it now.</strong> Bring the channel fader fully up. Check the
+        crossfader assign switch (LEFT / THRU / RIGHT) matches where your crossfader
+        actually is. Confirm the input selector for that channel matches your source.
+        If all three check out, move the source to a different channel to isolate
+        whether the problem is the channel strip or upstream.</p>
+        <p><strong>Avoid it next time.</strong> Do a full gain and routing check on
+        every channel before doors open, not after the first complaint from the
+        booth.</p>
+        <p class="acc-related">Related: <a href="#faders">Faders behaving unexpectedly</a> <a href="/emergency">Start Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900-acc" id="faders"><summary><h2 class="acc-h2">Faders behaving unexpectedly</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> This mixer uses Magvel magnetic, contact-free
+        faders, so wear-related scratchiness is rare, but a mismatched fader curve
+        setting is a common cause of a channel that feels "wrong."</p>
+        <p><strong>Why this happens.</strong> The channel fader and crossfader curve
+        are both independently adjustable, a curve set for scratching feels
+        completely different from one set for smooth blending, and a previous DJ may
+        have left it set for their own style.</p>
+        <p><strong>Fix it now.</strong> Check the fader curve selector switches on
+        the channel strips and crossfader before your set, and reset them to your
+        own preference rather than assuming the default.</p>
+        <p><strong>Avoid it next time.</strong> If you are playing back-to-back,
+        agree curve settings with the other DJ before the handover, not mid-set.</p>
+        <p class="acc-related">Related: <a href="#no-signal">Channel has no signal</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900-acc" id="effects-not-working"><summary><h2 class="acc-h2">Effects not engaging</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> If Beat FX or Sound Color FX will not
+        engage, the channel select for the effect almost always does not match the
+        channel you are trying to affect.</p>
+        <p><strong>Why this happens.</strong> Beat FX and Sound Color FX are both
+        assigned to a specific channel (or the master) independently of which channel
+        fader is up, it is easy to dial in an effect on the wrong assignment under
+        pressure.</p>
+        <p><strong>Fix it now.</strong> Confirm the FX channel select matches the
+        channel you want affected, confirm the FX level/depth knob is not at zero,
+        and for Beat FX confirm the BPM (tap or auto) is reading correctly, a wrong
+        BPM reading makes a beat-synced effect sound broken even when it is working.</p>
+        <p><strong>Avoid it next time.</strong> Set your FX channel assignment as part
+        of your pre-set routine, the same moment you check gain and routing.</p>
+        <p class="acc-related">Related: <a href="#beat-fx">Beat FX, explained</a> <a href="#sound-color-fx">Sound Color FX, explained</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900-acc" id="headphones-not-working"><summary><h2 class="acc-h2">Headphones or cue not working</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Check the cue/PFL button on the channel
+        before assuming a hardware fault, cueing has to be switched on per channel.</p>
+        <p><strong>Why this happens.</strong> Each channel has its own cue button;
+        it is easy to be listening to the wrong channel entirely, especially when
+        swapping decks quickly.</p>
+        <p><strong>Fix it now.</strong> Press cue/PFL on the channel you actually
+        want to hear, check the headphone level and mix (cue/master blend) knobs are
+        not at zero, and try the other headphone jack if the mixer has more than one.</p>
+        <p><strong>Avoid it next time.</strong> Set your headphone mix and level as
+        part of your pre-set check, not after you have already started cueing the
+        next track.</p>
+        <p class="acc-related">Related: <a href="#no-signal">Channel has no signal</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900-acc" id="usb-not-recognized"><summary><h2 class="acc-h2">USB sound card not recognized by the computer</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> With {DJM_900NXS2.usbPorts} USB ports built
+        for DJ hand-offs, confirm which port your software is actually pointed at
+        before assuming a fault.</p>
+        <p><strong>Why this happens.</strong> DJ software has to be told which USB
+        audio device to use, and with two ports available it is easy for the audio
+        settings to still be pointed at the previous DJ's connection.</p>
+        <p><strong>Fix it now.</strong> In your software's audio preferences, confirm
+        the DJM-900NXS2 is selected as the input and output device, and that you are
+        plugged into the port matching your channel assignment. Unplug and replug
+        the USB cable directly, skip hubs.</p>
+        <p><strong>Avoid it next time.</strong> Check your channel and USB port
+        assignment as soon as you plug in, before you are relying on it live.</p>
+        <p class="acc-related">Related: <a href="#dual-usb">Dual USB, explained</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">⚠ Known issues</h2>
+
+    <details class="acc-sec" name="djm900-acc" id="known-issues"><summary><h2 class="acc-h2">Firmware and known issues</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> We do not have a verified, documented
+        hardware defect to report for this mixer. This section was last checked
+        against official sources on {UPDATED}.</p>
+        <p><strong>Why we are saying that plainly.</strong> This site's rule is to
+        state a fact only once it is verified against a primary source. AlphaTheta
+        does publish firmware updates for this mixer; check the official firmware
+        page for your unit's current state before a major show.</p>
+        <p><strong>Do this.</strong> If you hit a genuine, repeatable fault on a
+        specific firmware version, <a href="/feedback">tell us what happened</a> and
+        we will verify and document it properly, the same way this page documents
+        the CDJ-2000NXS2's real firmware history.</p>
+        <p class="acc-related">Related: <a href="https://www.pioneerdj.com/en-us/product/mixer/archive/djm-900nxs2/black/support/" rel="noopener">Official AlphaTheta support page</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">⚙ Features explained</h2>
+
+    <details class="acc-sec" name="djm900-acc" id="beat-fx"><summary><h2 class="acc-h2">Beat FX</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> {DJM_900NXS2.beatFxCount} beat-synced effect
+        types, selected and dialed in via the X-Pad with its own OLED display.</p>
+        <p><strong>Why it matters.</strong> Beat FX locks the effect's timing to the
+        track's BPM automatically, so a delay or echo lands musically without manual
+        tapping.</p>
+        <p><strong>When professionals use it.</strong> A short echo out on the last
+        bar before a mix, or a filter sweep to build tension into a drop.</p>
+        <p><strong>Common mistakes.</strong> Leaving an effect engaged after the
+        transition and forgetting it is still active, and trusting an incorrect BPM
+        read instead of confirming it against the track.</p>
+        <p class="acc-related">Related: <a href="#sound-color-fx">Sound Color FX</a> <a href="#effects-not-working">Effects not engaging</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900-acc" id="sound-color-fx"><summary><h2 class="acc-h2">Sound Color FX</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Six always-available effects on every
+        channel: {DJM_900NXS2.soundColorFx.join(', ')}, controlled by a single knob
+        per channel, no menu diving.</p>
+        <p><strong>Why it matters.</strong> Because it lives on the channel strip
+        itself, it is fast enough to use mid-mix without looking away from the
+        crowd or the next track.</p>
+        <p><strong>When professionals use it.</strong> Filter into a breakdown, or a
+        touch of Space to open up a track before a big drop.</p>
+        <p><strong>Common mistakes.</strong> Overusing Crush or Noise on a main room
+        system, they read as dramatic on headphones and can sound harsh through a
+        full PA.</p>
+        <p class="acc-related">Related: <a href="#beat-fx">Beat FX</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900-acc" id="dual-usb"><summary><h2 class="acc-h2">Dual USB</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> {DJM_900NXS2.usbPorts} USB ports built into
+        the mixer, so two DJs (or one DJ and a backup laptop) can be plugged in and
+        ready at the same time.</p>
+        <p><strong>Why it matters.</strong> The outgoing DJ does not have to unplug
+        before the incoming DJ can prepare, the handover is a channel and fader move,
+        not a cable scramble.</p>
+        <p><strong>When professionals use it.</strong> Any back-to-back set, and any
+        night where you want a laptop plugged in as backup while running from CDJs.</p>
+        <p><strong>Common mistakes.</strong> Assuming the mixer auto-selects the
+        right USB input, confirm your software's audio device and the channel input
+        selector agree, see <a href="#usb-not-recognized">USB not recognized</a>.</p>
+        <p class="acc-related">Related: <a href="#usb-not-recognized">USB sound card not recognized</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">💡 Professional tips</h2>
+
+    <details class="acc-sec" name="djm900-acc" id="gain-staging"><summary><h2 class="acc-h2">Gain staging before the room, not during it</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Set channel trim so the signal sits around
+        unity on the meter before you touch an effect or an EQ.</p>
+        <p><strong>Why it matters.</strong> Clipping on this mixer is a gain problem
+        far more often than an effects problem. Chasing distortion with EQ or FX
+        adjustments while the actual cause is trim set too hot wastes time and rarely
+        fixes it.</p>
+        <p><strong>Do this.</strong> Set trim per channel while cueing, before the
+        track is live in the room, so you are not adjusting gain in front of a
+        crowd.</p>
+        <p><strong>Common mistakes.</strong> Copying another DJ's trim setting
+        without checking it, different tracks and different software output levels
+        need different trim.</p>
+        <p class="acc-related">Related: <a href="#no-signal">A channel has no signal</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">🛡 Preventive maintenance</h2>
+
+    <details class="acc-sec" name="djm900-acc" id="maintenance"><summary><h2 class="acc-h2">Keeping the desk reliable over years of bookings</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Cable and connector care matters more than
+        fader care on this mixer, the Magvel faders are contact-free by design.</p>
+        <p><strong>Why it matters.</strong> RCA, USB and Ethernet connectors take the
+        real wear over a touring life, loose or bent pins cause the intermittent
+        faults that are hardest to diagnose live.</p>
+        <p><strong>Do this.</strong> Inspect cables before they go in the bag, not
+        just when a fault appears. Unplug by the connector, never by pulling the
+        cable. Keep the desk covered during transport.</p>
+        <p><strong>Avoid it next time.</strong> Do not coil cables tightly around
+        connectors, that is where strain damage starts.</p>
+        <p class="acc-related">Related: <a href="#no-signal">A channel has no signal</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">🔄 Compatibility</h2>
+
+    <details class="acc-sec" name="djm900-acc" id="compatibility"><summary><h2 class="acc-h2">Software and player compatibility</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Supports rekordbox DVS, Serato DJ Pro and
+        Traktor Pro, and pairs with any Pro DJ Link player, library format
+        (Device Library or OneLibrary) does not affect the mixer itself.</p>
+        <p><strong>Why it matters.</strong> The mixer's built-in network switch is
+        what lets multiple CDJs share tempo and playback info over Pro DJ Link, that
+        works the same whichever generation of player you connect.</p>
+        <p><strong>Do this.</strong> Confirm your DVS or DJ software license
+        supports this mixer's timecode/soundcard input before the gig, not at
+        soundcheck.</p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a> <a href="/knowledge/rekordbox#which-player">Player compatibility table</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">📚 Frequently asked questions</h2>
+
+    <details class="acc-sec" name="djm900-acc" id="faq"><summary><h2 class="acc-h2">Quick answers</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>Does the library format (Device Library or OneLibrary) affect the mixer?</dt><dd>No, that only matters on the player side. The mixer just receives audio and Link data.</dd>
+          <dt>Can I link with a mix of older and newer CDJs?</dt><dd>Yes, Pro DJ Link works across generations, the mixer's switch does not care which players are attached.</dd>
+          <dt>Can I connect a CDJ-2000NXS2?</dt><dd>Yes, this is the era-correct pairing.</dd>
+          <dt>Does it support rekordbox DVS?</dt><dd>Yes, along with Serato DJ Pro and Traktor Pro.</dd>
+          <dt>How many USB devices can I plug in at once?</dt><dd>Two, one per USB port, built for a back-to-back handover.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Related guides</h2>
+      <p class="dim" style="margin:0">
+        <a href="/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a> ·
+        <a href="/knowledge/rekordbox">rekordbox reference</a> ·
+        <a href="/checklist">Club setup checklist</a> ·
+        <a href="/feedback">Tell us what you use</a>
+      </p>
+    </div>
+
+    <div class="panel panel-danger" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Playing soon and it is not working?</h2>
+      <a href="/emergency" class="btn btn-solid" data-event="begin_checkout" data-placement="knowledge_djm900nxs2">🚨 Start Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_djm900nxs2" />
+    </div>
+
+    <p class="rb-sources dim">
+      Sources: AlphaTheta / Pioneer DJ official specification and support pages,
+      checked {UPDATED}. General troubleshooting steps (gain, routing, cabling)
+      reflect standard mixing practice, not a specific documented defect.
+      Firmware and behaviour changes without notice, re-check before a big show.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

@@ -34,6 +34,30 @@ export const VENDOR_LINKS = [
   { name: 'Engine DJ', url: 'https://enginedj.com/downloads' },
 ];
 
+// Hardware reference facts (Pioneer DJ / AlphaTheta equipment pages, added
+// 2026-07-27). Same rule as REKORDBOX above: thresholds and named fixes only,
+// verified against AlphaTheta's own published firmware change-history PDFs.
+// Do not add a model here until its page has been researched from a primary
+// source. "newestKnown" fields are for internal reference and must never be
+// rendered as "current" or "latest" in copy, exactly like REKORDBOX.newestKnown.
+export const CDJ_2000NXS2 = {
+  newestKnown: '1.86',                 // 27 Feb 2024, "minor bugs fixed". Reference only.
+  beatJumpIntro: '1.70',               // 2/4/8/16-beat Beat Jump added, 21 Sep 2017.
+  slipHotCueFix: '1.60',               // startup and SLIP HOT CUE issue fixed, 11 Jan 2017.
+  waveformColorFix: '1.55',            // waveform color selection, briefly broken, restored, 13 Dec 2016.
+  controlModeDropoutFix: '1.51',       // audio dropouts in Control Mode eliminated, 20 Oct 2016.
+  source: 'https://downloads.support.alphatheta.com/firmwares/dj-players/CDJ-2000NXS2/CDJ-2000NXS2-Firmware-Change-History-Ver186-en.pdf',
+};
+
+export const DJM_900NXS2 = {
+  channels: 4,
+  usbPorts: 2,
+  sendReturn: true,          // independent send/return, internal + external FX at once
+  beatFxCount: 14,
+  soundColorFx: ['Sweep', 'Filter', 'Crush', 'Dub Echo', 'Noise', 'Space'],
+  source: 'https://www.pioneerdj.com/en-us/product/mixer/archive/djm-900nxs2/black/specifications/',
+};
+
 // FAT32 + MBR works on every player here, always. exFAT is the variable.
 // Each row: model, library format, exFAT support (with the firmware threshold
 // where one applies), and a short note. Edit here when a source-check reports

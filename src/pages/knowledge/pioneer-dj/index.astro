@@ -1,0 +1,136 @@
+---
+import Base from '../../../layouts/Base.astro';
+
+// Pioneer DJ / AlphaTheta hardware hub. This is the reusable pattern for
+// every future manufacturer hub (Denon DJ, Allen & Heath, RANE...): a flat
+// list of models by category, each either a live page or "Coming next".
+// Antonio's brief (2026-07-27): a professional field manual for the gear DJs
+// actually meet in booths, not a rewritten product manual. Two pages are
+// live and fully researched so far (the two most common club units); the
+// rest are queued and should not be filled with unverified content, see the
+// project doc on hardware-reference rollout for the priority order.
+const players = [
+  { name: 'CDJ-3000X', href: null },
+  { name: 'CDJ-3000', href: null },
+  { name: 'CDJ-2000NXS2', href: '/knowledge/pioneer-dj/cdj-2000nxs2' },
+  { name: 'CDJ-2000NXS', href: null },
+  { name: 'CDJ-1500X', href: null },
+  { name: 'XDJ-1000MK2', href: null },
+];
+const mixers = [
+  { name: 'DJM-A9', href: null },
+  { name: 'DJM-900NXS2', href: '/knowledge/pioneer-dj/djm-900nxs2' },
+  { name: 'DJM-900NXS', href: null },
+  { name: 'DJM-V10', href: null },
+  { name: 'DJM-V10-LF', href: null },
+];
+const allInOne = [
+  { name: 'XDJ-AZ', href: null },
+  { name: 'OPUS-QUAD', href: null },
+  { name: 'XDJ-XZ', href: null },
+  { name: 'XDJ-RX3', href: null },
+  { name: 'OMNIS-DUO', href: null },
+];
+const controllers = [
+  { name: 'DDJ-FLX10', href: null },
+  { name: 'DDJ-1000', href: null },
+  { name: 'DDJ-REV7', href: null },
+  { name: 'DDJ-FLX4', href: null },
+];
+
+const categories = [
+  { label: 'Players', items: players },
+  { label: 'Mixers', items: mixers },
+  { label: 'All-in-one systems', items: allInOne },
+  { label: 'Controllers', items: controllers, note: 'Rare in clubs, but the standard for home preparation and mobile gigs.' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Pioneer DJ / AlphaTheta hardware reference',
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  about: { '@id': 'https://www.savemygig.com/#org' },
+};
+---
+<Base
+  title="Pioneer DJ / AlphaTheta Hardware Reference | Save My Gig!"
+  description="CDJs, XDJs, DJM mixers and DDJ controllers: the field manual for the gear you actually meet in professional DJ booths, not a rewritten product manual."
+  path="/knowledge/pioneer-dj"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span> <span>Pioneer DJ / AlphaTheta</span>
+    </nav>
+
+    <div class="status-line">PIONEER_DJ</div>
+    <h1 style="margin-bottom:0.8rem">Pioneer DJ / <span class="accent">AlphaTheta</span></h1>
+    <p class="dim kb-lead">
+      Not a rewritten product manual. This is the operational reference: what
+      goes wrong, how to fix it fast, how experienced DJs actually run this
+      gear, and how to stop the same failure happening at your next gig.
+    </p>
+
+    {categories.map(cat => (
+      <>
+        <h2 class="kb-h" style="margin-top:1.8rem">{cat.label}</h2>
+        {cat.note && <p class="dim" style="margin-bottom:0.9rem;font-size:0.85rem">{cat.note}</p>}
+        <div class="kb-grid">
+          {cat.items.map(m => (
+            m.href ? (
+              <a class="kb-card kb-live" href={m.href}>
+                <span class="kb-name">{m.name}</span>
+                <span class="kb-go">Open the guide &rarr;</span>
+              </a>
+            ) : (
+              <div class="kb-card kb-soon">
+                <span class="kb-name">{m.name}</span>
+                <span class="kb-tag">Coming next</span>
+              </div>
+            )
+          ))}
+        </div>
+      </>
+    ))}
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">Which unit should we write next?</h2>
+      <p class="dim" style="margin-bottom:1rem">We are building this in the order DJs actually meet the gear. Tell us what you are running into and it moves up the list.</p>
+      <a href="/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Tell us what you use</a>
+    </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">
+      Looking for library and export questions instead? <a href="/knowledge/rekordbox">The rekordbox reference</a> covers that.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .kb-lead { max-width: 42rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  .kb-h {
+    font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+  }
+  .kb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.9rem; }
+  .kb-card {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    padding: 1.1rem 1.2rem; text-decoration: none;
+  }
+  .kb-live { transition: border-color 0.15s ease; }
+  .kb-live:hover { border-color: var(--red); }
+  .kb-soon { opacity: 0.62; }
+  .kb-name {
+    font-family: var(--font-display); font-weight: 800; font-size: 1.02rem;
+    text-transform: uppercase; letter-spacing: -0.01em; color: var(--text);
+  }
+  .kb-go { color: var(--red); font-size: 0.82rem; font-weight: 600; margin-top: 0.2rem; }
+  .kb-tag {
+    font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-faint); margin-top: 0.2rem;
+  }
+</style>
