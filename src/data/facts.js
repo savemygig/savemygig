@@ -49,6 +49,34 @@ export const CDJ_2000NXS2 = {
   source: 'https://downloads.support.alphatheta.com/firmwares/dj-players/CDJ-2000NXS2/CDJ-2000NXS2-Firmware-Change-History-Ver186-en.pdf',
 };
 
+export const CDJ_3000 = {
+  newestKnown: '3.22',            // 15 Jan 2026, RMX-IGNITE link support. Reference only.
+  onelibraryWithdrawn: '3.30',    // 2025: added OneLibrary, withdrawn after playlists failed to
+                                  // display for users exporting from older rekordbox. Official
+                                  // line: no music or data was deleted. Player reverted to
+                                  // Device Library.
+  linkDjm2000nxsFix: '3.20',      // 24 Apr 2025: PRO DJ LINK with DJM-2000NXS fixed.
+  screenDeadFix: '3.19',          // 11 Dec 2024: rare screen-dead-on-power-on fixed.
+  stabilityFix: '3.18',           // 3 Dec 2024: no-audio, display blackouts, freezes on some units fixed.
+  ecoStandbyIntro: '3.16',        // 10 Oct 2024: EU Ecodesign auto power management, 20 minutes.
+  browseWaitingFix: '3.14',       // 25 Jul 2024: "Waiting" popup could block the BROWSE screen.
+  sixPlayersIntro: '2.03',        // 13 Oct 2022: up to 6 units over PRO DJ LINK.
+  emergencyLoopHotCueFix: '1.09', // 16 Mar 2021: Emergency Loop wrongly triggering during Hot Cue pause.
+  exfatIntro: '1.20',             // exFAT read support threshold (also in PLAYERS below).
+  source: 'https://downloads.support.alphatheta.com/firmwares/dj-players/CDJ-3000/CDJ-3000-Firmware-Change-History-Ver322-en.pdf',
+  sourceWithdrawal: 'https://www.pioneerdj.com/en/news/2026/cdj-3000-firmware-ver330-important-notice/',
+};
+
+export const CDJ_3000X = {
+  newestKnown: '1.40',        // 14 Jul 2026. Reference only.
+  darkModeIntro: '1.40',      // Dark and Light display modes.
+  internetUpdateIntro: '1.40',// firmware updates over the internet.
+  wifiDupIntro: '1.40',       // Wi-Fi Setting Duplication across units.
+  djayHidIntro: '1.20',       // 21 Oct 2025: USB-HID for djay Pro.
+  seratoHidIntro: '1.10',     // 9 Sep 2025: USB-HID for Serato DJ Pro.
+  source: 'https://support.alphatheta.com/en-US/articles/50228449553049',
+};
+
 export const DJM_900NXS2 = {
   channels: 4,
   usbPorts: 2,

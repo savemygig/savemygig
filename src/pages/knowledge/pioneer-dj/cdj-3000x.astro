@@ -1,0 +1,288 @@
+---
+import Base from '../../../layouts/Base.astro';
+import EmailCapture from '../../../components/EmailCapture.astro';
+import { CHECKED, CDJ_3000X, REKORDBOX } from '../../../data/facts.js';
+
+// Fourth equipment page, same template. Facts from CDJ_3000X in facts.js
+// (primary source: AlphaTheta's official firmware page). This is a young
+// unit: no documented defect exists yet, and the Known Issues section says
+// so plainly instead of inventing one, same honesty rule as the DJM-900NXS2
+// page.
+const UPDATED = CHECKED;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/cdj-3000x#article',
+  headline: 'CDJ-3000X: the operational reference',
+  description: 'What every DJ should know before touching a CDJ-3000X: OneLibrary only, no SD card slot, emergency fixes, firmware milestones, and compatibility with rekordbox and older players.',
+  author: { '@id': 'https://www.savemygig.com/#antonio' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-27',
+  dateModified: '2026-07-27',
+  inLanguage: 'en',
+  mainEntityOfPage: 'https://www.savemygig.com/knowledge/pioneer-dj/cdj-3000x',
+};
+---
+<Base
+  title="CDJ-3000X Guide: OneLibrary, No SD Slot & Compatibility | Save My Gig!"
+  description="The CDJ-3000X field manual: OneLibrary only, no SD card slot, what to do when playlists are missing, firmware milestones, and how it coexists with older CDJs in the same booth."
+  path="/knowledge/pioneer-dj/cdj-3000x"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span>
+      <a href="/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>CDJ-3000X</span>
+    </nav>
+
+    <div class="status-line">CDJ-3000X</div>
+    <h1 class="rb-h1">CDJ-3000X, <span class="accent">the field manual</span></h1>
+    <p class="dim rb-updated">Last verified: {UPDATED}</p>
+
+    <div class="panel panel-go">
+      <p style="margin:0">
+        <strong>The short version.</strong> The top of the current player range,
+        and the deck where the library rules change. It reads
+        <strong>OneLibrary only</strong>, never Device Library, it reads exFAT as
+        well as FAT32, and it has <strong>no SD card slot</strong>: one USB-A port
+        and two USB-C. A drive that works perfectly on the CDJ-3000 next to it can
+        show no playlists here. Export from rekordbox {REKORDBOX.dualFormatFloor}
+        or later, which writes both formats, and one stick covers the whole booth.
+      </p>
+    </div>
+
+    <h2 class="acc-group">🚨 Emergency fixes</h2>
+
+    <details class="acc-sec" name="cdj3000x-acc" id="no-playlists">
+      <summary><h2 class="acc-h2">USB mounts but playlists are missing</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> The drive was almost certainly exported
+        in Device Library format only, and this deck reads OneLibrary only. No
+        error code, the stick mounts, the playlists simply are not there.</p>
+        <p><strong>Why this happens.</strong> Most drives in circulation were
+        exported for the Device Library generation (CDJ-3000, CDJ-2000NXS2), which
+        is still most of the world's booths. This is the single most likely
+        surprise a working DJ meets on this player.</p>
+        <p><strong>Fix it now.</strong> FOLDER view, immediately: the audio files
+        are on the drive and playable, you lose cues and playlists, you keep the
+        gig. With a laptop, re-export from rekordbox {REKORDBOX.dualFormatFloor}
+        or later, which writes OneLibrary and Device Library to the same drive.</p>
+        <p><strong>Avoid it next time.</strong> Make {REKORDBOX.dualFormatFloor}+
+        exports your permanent standard, not a per-gig decision.</p>
+        <p class="acc-related">Related: <a href="/knowledge/rekordbox#onelibrary">OneLibrary vs Device Library</a> <a href="/knowledge/rekordbox#no-playlists">The same failure, in depth</a> <a href="/emergency">Start Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj3000x-acc" id="sd-card">
+      <summary><h2 class="acc-h2">You arrived with an SD card</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> There is no SD slot on this player. If
+        your music lives on SD cards, this booth cannot read them directly.</p>
+        <p><strong>Why this happens.</strong> Ports on this unit are one USB-A and
+        two USB-C, the SD slot from earlier CDJ generations is gone. DJs who built
+        an SD-based workflow on older decks meet this the hard way.</p>
+        <p><strong>Fix it now.</strong> Borrow a USB stick, from another DJ, the
+        booth drawer, or the promoter, and copy your music onto it with any
+        available laptop; FAT32 the stick if the player refuses it. No laptop and
+        no second drive is exactly the situation the emergency flow walks through.</p>
+        <p><strong>Avoid it next time.</strong> Carry USB, not SD, as your primary.
+        SD-only is now a single-generation workflow, and this player is proof the
+        industry has left it.</p>
+        <p class="acc-related">Related: <a href="/emergency">Start Emergency Mode</a> <a href="/fix/dj-usb-backup-strategy">The two-drive habit</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj3000x-acc" id="frozen-screen">
+      <summary><h2 class="acc-h2">Touchscreen frozen or unresponsive</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Audio and the physical controls run
+        independently of the screen: the track keeps playing, so keep mixing.</p>
+        <p><strong>Why this happens.</strong> Any embedded touchscreen can lock up
+        occasionally; there is no documented chronic freeze on this unit.</p>
+        <p><strong>Fix it now.</strong> Finish the current track on the physical
+        controls, shift new selections to another player, and restart the unit at
+        a safe moment, never mid-track.</p>
+        <p><strong>Avoid it next time.</strong> Never update firmware on gig day,
+        and report a repeat-freezing unit to the venue or rental company with the
+        firmware version from the utility menu.</p>
+        <p class="acc-related">Related: <a href="/emergency">Start Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">⚠ Known issues</h2>
+
+    <details class="acc-sec" name="cdj3000x-acc" id="known-issues">
+      <summary><h2 class="acc-h2">Firmware and known issues</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> This is a young unit and we have no
+        verified, documented defect to report. This section was last checked
+        against official sources on {UPDATED}.</p>
+        <p><strong>What the firmware history shows instead</strong> is steady
+        feature additions: introduced in {CDJ_3000X.seratoHidIntro}, USB-HID
+        control for Serato DJ Pro; introduced in {CDJ_3000X.djayHidIntro}, USB-HID
+        for djay Pro; introduced in {CDJ_3000X.darkModeIntro}, Dark and Light
+        display modes, firmware updates over the internet, and Wi-Fi Setting
+        Duplication between units.</p>
+        <p><strong>Do this.</strong> If you hit a genuine, repeatable fault on a
+        specific firmware version, <a href="/feedback">tell us what happened</a>
+        and we will verify it against official sources and document it here.</p>
+        <p class="acc-related">Related: <a href="https://support.alphatheta.com/en-US/articles/50228449553049" rel="noopener">Official CDJ-3000X firmware page</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">⚙ Features explained</h2>
+
+    <details class="acc-sec" name="cdj3000x-acc" id="onelibrary-feature">
+      <summary><h2 class="acc-h2">OneLibrary, on this deck specifically</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> OneLibrary is the database format this
+        player reads from your USB, the successor to Device Library.</p>
+        <p><strong>Why it matters.</strong> It is not backward compatible in
+        either direction: this deck cannot read a Device-Library-only stick, and a
+        CDJ-2000NXS2 cannot read a OneLibrary-only stick.</p>
+        <p><strong>When professionals deal with it.</strong> Every time a booth
+        mixes generations, which today is most booths. The dual-format export from
+        rekordbox {REKORDBOX.dualFormatFloor}+ is the working answer.</p>
+        <p><strong>Common mistakes.</strong> Converting a drive's library format
+        one-way without a fresh backup: AlphaTheta's own guidance warns that
+        converting overwrites what is on the drive. Convert onto a spare, not your
+        only stick.</p>
+        <p class="acc-related">Related: <a href="/knowledge/rekordbox#onelibrary">The full OneLibrary explainer</a> <a href="/knowledge/rekordbox#version-notes">Version numbers worth knowing</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj3000x-acc" id="internet-updates">
+      <summary><h2 class="acc-h2">Firmware updates over the internet</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Introduced in firmware
+        {CDJ_3000X.internetUpdateIntro}, the player can update itself over Wi-Fi
+        instead of the USB-stick ritual.</p>
+        <p><strong>Why it matters.</strong> Easier updates are good for gear you
+        own, and they also make it easier for a venue to change a deck's behaviour
+        between your soundcheck and your set.</p>
+        <p><strong>When professionals use it.</strong> At home, between bookings,
+        with time to test afterwards.</p>
+        <p><strong>Common mistakes.</strong> Updating because the player offered
+        to, on the day of a show. Convenience does not change the rule: gig day is
+        a freeze.</p>
+        <p class="acc-related">Related: <a href="/prepare">Why gig day is a freeze</a> <a href="/knowledge/pioneer-dj/cdj-3000#firmware-330">What a bad firmware week looks like</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">💡 Professional tips</h2>
+
+    <details class="acc-sec" name="cdj3000x-acc" id="mixed-booth">
+      <summary><h2 class="acc-h2">Working a booth that mixes this with older decks</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Treat the CDJ-3000X and everything older
+        as two different library worlds sharing one Link chain, because that is
+        exactly what they are.</p>
+        <p><strong>Why it matters.</strong> Link happily syncs tempo across
+        generations while each deck reads a different database from the same USB.
+        The booth looks uniform; the format rules are not.</p>
+        <p><strong>Do this.</strong> One export standard, rekordbox
+        {REKORDBOX.dualFormatFloor} or later, both formats on every stick, and the
+        mixed booth becomes boring in the best way.</p>
+        <p><strong>Common mistakes.</strong> Testing your drive only on the
+        CDJ-3000X at soundcheck, then opening on the older deck at night.</p>
+        <p class="acc-related">Related: <a href="/knowledge/rekordbox#which-player">Who reads what, the full table</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">🛡 Preventive maintenance</h2>
+
+    <details class="acc-sec" name="cdj3000x-acc" id="maintenance">
+      <summary><h2 class="acc-h2">Keeping a unit reliable</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Standard professional deck care, plus
+        one new habit: treat USB-C ports with the same respect as the USB-A.</p>
+        <p><strong>Why it matters.</strong> Two of the three ports are USB-C, and
+        C connectors take lateral strain worse than A. A bent C port on a venue
+        deck is a slow, expensive fault.</p>
+        <p><strong>Do this.</strong> Insert and remove C connectors straight, eject
+        properly every time, keep firmware updated between bookings via the
+        internet update, and keep transport covers on.</p>
+        <p class="acc-related">Related: <a href="/prepare">The full prevention system</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">🔄 Compatibility</h2>
+
+    <details class="acc-sec" name="cdj3000x-acc" id="compatibility">
+      <summary><h2 class="acc-h2">rekordbox, library format and Pro DJ Link</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> OneLibrary only. FAT32 and exFAT both
+        read. No SD slot; one USB-A and two USB-C ports. Pro DJ Link across
+        generations, and USB-HID control for Serato DJ Pro (firmware
+        {CDJ_3000X.seratoHidIntro}+) and djay Pro ({CDJ_3000X.djayHidIntro}+).</p>
+        <p><strong>Why it matters.</strong> The library format is the sharp edge;
+        everything else about this deck coexists smoothly with the rest of the
+        booth.</p>
+        <p><strong>Do this.</strong> rekordbox {REKORDBOX.dualFormatFloor} or
+        later for every export; FAT32 + MBR remains the drive format that works on
+        everything either way.</p>
+        <p class="acc-related">Related: <a href="/knowledge/rekordbox#which-player">Per-model compatibility table</a> <a href="/knowledge/pioneer-dj/cdj-3000">CDJ-3000</a></p>
+      </div>
+    </details>
+
+    <h2 class="acc-group">📚 Frequently asked questions</h2>
+
+    <details class="acc-sec" name="cdj3000x-acc" id="faq">
+      <summary><h2 class="acc-h2">Quick answers</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>Can this player read exFAT?</dt><dd>Yes, exFAT and FAT32 both.</dd>
+          <dt>Can I use Device Library?</dt><dd>No. OneLibrary only. A Device-Library-only stick shows no playlists here.</dd>
+          <dt>Does it have an SD card slot?</dt><dd>No. One USB-A port and two USB-C.</dd>
+          <dt>Can I link with a CDJ-3000 or CDJ-2000NXS2?</dt><dd>Yes, Pro DJ Link works across generations. Whether playlists appear on each deck depends on which formats your USB carries, export with rekordbox {REKORDBOX.dualFormatFloor}+ and it carries both.</dd>
+          <dt>Can I use it with Serato or djay?</dt><dd>Yes, USB-HID control for Serato DJ Pro since firmware {CDJ_3000X.seratoHidIntro} and djay Pro since {CDJ_3000X.djayHidIntro}.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Related guides</h2>
+      <p class="dim" style="margin:0">
+        <a href="/knowledge/rekordbox">rekordbox reference</a> ·
+        <a href="/knowledge/pioneer-dj/cdj-3000">CDJ-3000</a> ·
+        <a href="/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a> ·
+        <a href="/fix/format-usb-for-cdj">USB preparation</a> ·
+        <a href="/checklist">Club setup checklist</a>
+      </p>
+    </div>
+
+    <div class="panel panel-danger" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Playing soon and it is not working?</h2>
+      <a href="/emergency" class="btn btn-solid" data-event="begin_checkout" data-placement="knowledge_cdj3000x">🚨 Start Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_cdj3000x" />
+    </div>
+
+    <p class="rb-sources dim">
+      Sources: AlphaTheta's official CDJ-3000X firmware page and product
+      documentation, checked {UPDATED}. General troubleshooting steps reflect
+      standard practice. Firmware and behaviour changes without notice, re-check
+      before a big show.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>
