@@ -21,12 +21,17 @@ import PromoBanner from '../components/PromoBanner.astro';
 // Sublines are capped at ~52 characters on purpose. The block reserves height
 // for the LONGEST one so the doors don't jump when it rotates, so a single
 // three-line subline was silently pushing the third door off every small phone.
+//
+// 2026-07-27, Antonio's homepage review: "Pick a door" told the visitor what
+// to do but not why to trust the place. Every subline now leads with the
+// credibility claim (real booths, not rewritten manuals) and keeps the two
+// functional facts (free, no account) as the closer. Same cap, same rotation.
 const SUBLINES = [
-  'Pick what you came for. Free, no account.',
-  'Pick a door. Free, no account.',
-  'Three ways in, no wrong answer. Free, no account.',
-  'Start anywhere. Free, no account.',
-  'Whatever you need, it is free. No account.',
+  'Real fixes from real booths. Free, no account.',
+  "Built by DJs who've been there. Free, no account.",
+  'From the booth, not the manual. Free, no account.',
+  'Fast answers for real booth problems. Free.',
+  'Solved in real booths first. Free, no account.',
 ];
 ---
 <Base
@@ -70,6 +75,13 @@ const SUBLINES = [
       <a class="door d-prevent" href="/prepare" data-event="step_completed" data-placement="home_door_prevention">
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
+          <!-- Reviewed 2026-07-27 per Antonio's homepage audit: "GET
+               BULLETPROOF" stays. The title carries the personality and the
+               description directly beneath does the explaining ("the seven
+               rules that make USB failure a non-event"), so a first-time
+               visitor never sees the title without its meaning attached. A
+               plainer title ("PREVENT FAILURES") would be clearer alone but
+               weaker as a brand, and it is never alone. -->
           <span class="door-title">GET BULLETPROOF</span>
           <span class="door-desc"><span class="dd-full">The seven rules that make USB failure a non-event.</span><span class="dd-short">Seven rules. No more USB disasters.</span></span>
         </span>
@@ -80,10 +92,13 @@ const SUBLINES = [
     <!-- Label history: "Straight to the fix:" promised adjacency to the
          emergency door that the layout does not have. "Common searches:" was
          honest but 16 characters, and on a phone it pushed five links onto a
-         third line. "Top fixes:" is 10 characters, still honest (all five are
-         /fix/ articles), and buys the line back. -->
+         third line. "Top fixes:" bought the line back. Antonio's homepage
+         review preferred "Popular fixes" (says these are problems DJs hit
+         every day, not our editorial picks); measured at 360/375/393px and it
+         holds two lines, so the better label wins. If a sixth link is ever
+         added, re-measure at 360 first. -->
     <p class="known dim">
-      Top fixes:
+      Popular fixes:
       <a href="/fix/usb-not-recognized-cdj">USB not recognized</a> ·
       <a href="/fix/playlists-not-showing-cdj">Playlists not showing</a> ·
       <a href="/fix/cdj-error-e-8302">E-8302</a> ·
@@ -91,7 +106,23 @@ const SUBLINES = [
       <a href="/fix/exfat-vs-fat32-cdj">exFAT vs FAT32</a>
     </p>
 
+    <!-- Most visitors arrive with one specific symptom in their head. The nav
+         magnifier is easy to miss, so the body offers the same overlay in
+         words. Falls back to /faq (which carries the same Search box) when
+         the overlay script has not loaded. -->
+    <p class="seek dim">
+      Different symptom? <a href="/faq" id="homeSeek" data-event="search_open" data-placement="home_seek">Search it</a>.
+    </p>
+
     <PromoBanner exclude="/emergency" />
+
+    <!-- The credibility stamp, last on purpose: after the visitor has seen
+         what the place does, one quiet line says why it can be trusted.
+         Kept faint and small so it reads as a signature, not marketing. -->
+    <p class="creed">
+      Independent, and built from real booth experience. Professional
+      equipment, not rewritten manuals.
+    </p>
   </main>
 </Base>
 
@@ -255,6 +286,14 @@ const SUBLINES = [
   }
   .known a { color: var(--text-dim); }
   .known a:hover { color: var(--red); }
+  .seek { margin-top: 0.5rem; font-size: 0.9rem; }
+  .seek a { color: var(--text-dim); }
+  .seek a:hover { color: var(--red); }
+  @media (max-width: 640px) { .seek { font-size: 0.85rem; margin-top: 0.45rem; } }
+  .creed {
+    margin: 1.7rem 0 0.4rem; font-size: 0.8rem; line-height: 1.55;
+    color: var(--text-faint); max-width: 34rem;
+  }
 
   @media (prefers-reduced-motion: reduce) { .door, .door-led, .door-arrow { transition: none; } }
 </style>
@@ -262,8 +301,20 @@ const SUBLINES = [
 <script is:inline>
   (function () {
     var lines = document.querySelectorAll('#sub .sub-line');
-    if (lines.length < 2) return;
-    var pick = Math.floor(Math.random() * lines.length);
-    for (var i = 0; i < lines.length; i++) lines[i].hidden = (i !== pick);
+    if (lines.length >= 2) {
+      var pick = Math.floor(Math.random() * lines.length);
+      for (var i = 0; i < lines.length; i++) lines[i].hidden = (i !== pick);
+    }
+    // "Search it" opens the same overlay as the nav magnifier. The href is a
+    // real fallback (/faq carries the same search box), so this never dead-ends
+    // if the nav script has not run.
+    var seek = document.getElementById('homeSeek');
+    var sBtn = document.getElementById('navSearchBtn');
+    if (seek && sBtn) {
+      seek.addEventListener('click', function (e) {
+        e.preventDefault();
+        sBtn.click();
+      });
+    }
   })();
 </script>

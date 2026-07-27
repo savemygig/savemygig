@@ -240,6 +240,9 @@ const entityGraph = {
 
       <div class="foot-base">
         <span class="foot-copy">© 2026 Save My Gig! · Built by someone who's been there.</span>
+        <!-- Alive-signal, per Antonio's homepage review: says the project is
+             maintained without printing a date that would itself go stale. -->
+        <span class="foot-live">Updated continuously with new equipment and fixes.</span>
       </div>
     </div>
   </footer>
@@ -434,9 +437,11 @@ const entityGraph = {
 
   /* Base row: just the copyright now, coffee moved under the social icons.
      Centered to the page per Antonio, not left-aligned like it was when the
-     coffee link shared this row. */
-  .foot-base { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; text-align: center; }
+     coffee link shared this row. Column, so the alive-signal line sits under
+     the copyright rather than beside it. */
+  .foot-base { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-align: center; }
   .foot-copy { font-size: 0.8rem; color: var(--text-faint); }
+  .foot-live { font-size: 0.74rem; color: var(--text-faint); opacity: 0.85; }
   /* Centered under the social row, same 176px measure (4 x 38px buttons + 3 x
      0.5rem gaps) so it reads as one tidy stack, not a stray link. The image
      is the official Buy Me a Coffee button, scaled down to sit quietly under
