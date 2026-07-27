@@ -122,9 +122,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            something convert; required fields that demand something do not. -->
       <form class="unlock-form" id="unlockForm" novalidate>
         <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your best email" required />
-        <!-- "or first name" doubles as the hint that the site will greet you
-             by it (the homepage swaps DJ? for this name where it fits). -->
-        <input type="text" name="artist" autocomplete="nickname" placeholder="Artist name or first name (optional)" aria-label="Artist name or first name, optional" maxlength="80" />
+        <!-- REQUIRED since 2026-07-27 (Antonio: the personal touch is worth
+             the field, and everyone has a first name, techs included). The
+             homepage greets by this name where it fits. Trade-off noted at
+             the time: a second required field costs some conversions. -->
+        <input type="text" name="artist" required autocomplete="nickname" placeholder="Artist name or first name" aria-label="Artist name or first name" maxlength="80" />
         <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="@your.artist.instagram (optional)" aria-label="Artist Instagram, optional" maxlength="80" />
         <p class="unlock-follow dim">Share your Instagram. We will be happy to follow your work.</p>
         <button type="submit" class="btn btn-solid">Register</button>

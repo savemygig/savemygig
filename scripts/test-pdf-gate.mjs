@@ -74,6 +74,8 @@ const ok = (name, cond, detail = '') => {
   ok('no print view before registering', !popped);
 
   await page.fill('#unlockForm input[name=email]', 'test@example.com');
+  // artist name is REQUIRED since 2026-07-27; an empty field blocks submit
+  await page.fill('#unlockForm input[name=artist]', 'Test DJ');
   const pop = ctx.waitForEvent('page', { timeout: 5000 }).catch(() => null);
   await page.click('#unlockForm button[type=submit]');
   const view = await pop;
