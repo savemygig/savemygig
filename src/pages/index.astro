@@ -44,20 +44,20 @@ const SUBLINES = [
     </p>
 
     <nav class="doors" aria-label="Choose your path">
-      <a class="door d-emergency" href="/emergency" data-event="begin_checkout" data-placement="home_door_emergency">
-        <span class="door-led" aria-hidden="true"></span>
-        <span class="door-body">
-          <span class="door-title">FIX A PROBLEM NOW</span>
-          <span class="door-desc"><span class="dd-full">USB or player failing. Get playing again, fast.</span><span class="dd-short">USB or player failing? Fix it fast.</span></span>
-        </span>
-        <span class="door-arrow" aria-hidden="true">&rarr;</span>
-      </a>
-
       <a class="door d-ready" href="/checklist" data-event="step_completed" data-placement="home_door_checklist">
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
           <span class="door-title">RUN PRE-GIG CHECKLIST</span>
           <span class="door-desc"><span class="dd-full">Playing soon? Tick it off before you walk out.</span><span class="dd-short">Playing soon? Tick it off first.</span></span>
+        </span>
+        <span class="door-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+
+      <a class="door d-emergency" href="/emergency" data-event="begin_checkout" data-placement="home_door_emergency">
+        <span class="door-led" aria-hidden="true"></span>
+        <span class="door-body">
+          <span class="door-title">FIX A PROBLEM NOW</span>
+          <span class="door-desc"><span class="dd-full">USB or player failing. Get playing again, fast.</span><span class="dd-short">USB or player failing? Fix it fast.</span></span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
       </a>
@@ -128,8 +128,9 @@ const SUBLINES = [
   .d-emergency { --glow: rgba(255,77,46,0.7); }
   .d-ready { --glow: rgba(58,216,132,0.65); }
   .d-prevent { --glow: rgba(217,164,65,0.65); }
-  .d-emergency::after { animation-delay: 0.42s; }
-  .d-ready::after { animation-delay: 1.14s; }
+  /* Delays follow the doors top to bottom: checklist, emergency, prevention. */
+  .d-ready::after { animation-delay: 0.42s; }
+  .d-emergency::after { animation-delay: 1.14s; }
   .d-prevent::after { animation-delay: 1.86s; }
   @keyframes doorGlow { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { .door::after { animation: none; } }

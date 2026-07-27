@@ -412,7 +412,31 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .task-drag:hover { color: var(--text-dim); }
   #list[data-mode="custom"][data-edit="on"] .task-drag { display: block; }
-  .task.dragging { opacity: 0.55; }
+  /* The row you are holding lifts off the list and follows your finger; the
+     rows it displaces slide out of the way. Same on mobile and desktop, it is
+     all pointer events. */
+  .task.dragging {
+    background: var(--surf-2);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+    border-radius: 2px;
+    border-bottom-color: transparent;
+    position: relative;
+    z-index: 6;
+    cursor: grabbing;
+  }
+  .task.dragging .task-drag { color: var(--green); cursor: grabbing; }
+  /* No text selection, no long-press callout, no blue highlight while you are
+     editing. Putting a finger on a row used to select the words. */
+  body.dragging-row { user-select: none; -webkit-user-select: none; }
+  #list[data-edit="on"] .task-label,
+  #list[data-edit="on"] .group-toggle,
+  .task-drag {
+    user-select: none; -webkit-user-select: none;
+    -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .task { transition: none !important; }
+  }
   .task-label-edit {
     flex: 1; min-width: 0; font: inherit; color: var(--text);
     background: var(--surf-2); border: 1px solid var(--green);
@@ -712,23 +736,63 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       // NO setPointerCapture here: reordering moves the li (and the handle
       // inside it) in the DOM, which silently destroys pointer capture and
       // eats the pointerup. Document-level listeners survive the move.
+      const grabOffset = ev.clientY - li.getBoundingClientRect().top;
       li.classList.add('dragging');
-      const move = (e: PointerEvent) => {
-        e.preventDefault();
-        const liR = li.getBoundingClientRect();
-        const sibs = Array.from(ul.children).filter((n) => n !== li && !(n as HTMLElement).classList.contains('removed')) as HTMLElement[];
+      document.body.classList.add('dragging-row');
+
+      // Put the row where the finger is, reorder if it has crossed a
+      // neighbour, then re-anchor to the finger so it never jumps.
+      const place = (clientY: number) => {
+        li.style.transform = '';
+        const nat = li.getBoundingClientRect();
+        const wantTop = clientY - grabOffset;
+        const visCenter = wantTop + nat.height / 2;
+        const sibs = Array.from(ul.children)
+          .filter((n) => n !== li && !(n as HTMLElement).classList.contains('removed')) as HTMLElement[];
         for (const sib of sibs) {
           const r = sib.getBoundingClientRect();
-          const mid = r.top + r.height / 2;
-          if (e.clientY < mid && liR.top > r.top) { ul.insertBefore(li, sib); break; }
-          if (e.clientY > mid && liR.top < r.top) { ul.insertBefore(li, sib.nextSibling); break; }
+          if (visCenter > r.top && visCenter < r.bottom) {
+            const before = new Map<HTMLElement, number>();
+            sibs.forEach((s) => before.set(s, s.getBoundingClientRect().top));
+            if (visCenter < r.top + r.height / 2) ul.insertBefore(li, sib);
+            else ul.insertBefore(li, sib.nextSibling);
+            // Slide the displaced rows from where they were to where they now
+            // are, so the list visibly opens a gap instead of snapping.
+            sibs.forEach((s) => {
+              const d = (before.get(s) || 0) - s.getBoundingClientRect().top;
+              if (!d) return;
+              s.style.transition = 'none';
+              s.style.transform = `translateY(${d}px)`;
+              requestAnimationFrame(() => {
+                s.style.transition = 'transform 0.16s ease';
+                s.style.transform = '';
+              });
+            });
+            break;
+          }
         }
+        li.style.transform = '';
+        const now = li.getBoundingClientRect();
+        // The slight scale is the "it comes to you" lift: the row you hold
+        // sits above the list until you let go.
+        li.style.transform = `translateY(${(wantTop - now.top).toFixed(1)}px) scale(1.03)`;
       };
+
+      // Animate the lift in, then go instant so the row tracks the finger 1:1.
+      li.style.transition = 'transform 0.12s ease, box-shadow 0.12s ease';
+      place(ev.clientY);
+      window.setTimeout(() => { if (li.classList.contains('dragging')) li.style.transition = ''; }, 130);
+      const move = (e: PointerEvent) => { e.preventDefault(); place(e.clientY); };
       const up = () => {
-        li.classList.remove('dragging');
         document.removeEventListener('pointermove', move);
         document.removeEventListener('pointerup', up);
         document.removeEventListener('pointercancel', up);
+        // Settle back into the row it landed on.
+        li.style.transition = 'transform 0.16s ease';
+        li.style.transform = '';
+        window.setTimeout(() => { li.style.transition = ''; }, 190);
+        li.classList.remove('dragging');
+        document.body.classList.remove('dragging-row');
         saveOrderFromDom();
       };
       document.addEventListener('pointermove', move, { passive: false });
