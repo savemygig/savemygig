@@ -127,6 +127,15 @@ const id = `cap-${source}`;
       btn.textContent = 'Sending...';
       msg.textContent = '';
 
+      // Registration counts everywhere, and it counts even if the API coughs:
+      // same policy as the checklist gate, the features are free and the keys
+      // go in before the network is trusted. Both surfaces now behave the
+      // same on the failure path.
+      try {
+        localStorage.setItem('SMG_UNLOCKED', '1');
+        localStorage.setItem('SMG_EMAIL', email);
+      } catch (e) {}
+
       try {
         const res = await fetch('/api/subscribe', {
           method: 'POST',
@@ -137,12 +146,6 @@ const id = `cap-${source}`;
         if (data.ok) {
           msg.textContent = 'Almost there. Check your inbox and tap the confirm link to get the card.';
           msg.className = 'cap-msg ok';
-          // Registration counts everywhere: same keys the checklist gate reads,
-          // so Pro, Custom and the downloads are open the next time they visit.
-          try {
-            localStorage.setItem('SMG_UNLOCKED', '1');
-            localStorage.setItem('SMG_EMAIL', email);
-          } catch (e) {}
           el.reset();
           if (typeof (window as any).gtag === 'function') {
             (window as any).gtag('event', 'email_capture', { placement: source });

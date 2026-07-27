@@ -33,7 +33,7 @@ const RULES = [
   { name: 'snapshot: as of <date>', re: /\bas of \d/gi },
 
   // Condescension. Every one of these has actually shipped on this site.
-  { name: 'condescending: telling a pro to calm down', re: /\bstay calm\b|\bdon'?t panic\b|\bdo not panic\b|\bbefore you panic\b|\bpanic not required\b|\bfirst,? breathe\b|\btake a (deep )?breath\b/gi },
+  { name: 'condescending: telling a pro to calm down', re: /\bstay calm\b|\bdon'?t panic\b|\bdo not panic\b|\bbefore you panic\b|\bbefore panicking\b|\bstop panicking\b|\bpanic not required\b|\bfirst,? breathe\b|\btake a (deep )?breath\b|\brelax,\b/gi },
   // Reflex-tier instructions. A working DJ has done these before they open a
   // website. If one is genuinely needed, name it under a `.assumed` line as
   // something we ASSUME is done, do not print it as a step.

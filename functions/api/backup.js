@@ -34,12 +34,16 @@ export async function onRequestPost({ request, env }) {
   let listByCat = {};
   let custom = {};
   let removed = [];
+  let renames = {};
+  let order = {};
   try {
     const b = await request.json();
     email = (b.email || '').trim();
     listByCat = b.listByCat || {};
     custom = b.custom || {};
     removed = Array.isArray(b.removed) ? b.removed : [];
+    renames = b.renames && typeof b.renames === 'object' ? b.renames : {};
+    order = b.order && typeof b.order === 'object' ? b.order : {};
   } catch (e) {
     return json({ ok: false, error: 'bad_request' }, 400);
   }
@@ -51,7 +55,10 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: false, error: 'not_configured' }, 500);
   }
 
-  const restoreUrl = `${SITE}/checklist#r=${b64url(JSON.stringify({ c: custom, x: removed }))}`;
+  // The restore link must carry the WHOLE list state. It used to encode only
+  // custom items and removals, so renames and order silently vanished on the
+  // second device while the email's own text showed the renamed labels.
+  const restoreUrl = `${SITE}/checklist#r=${b64url(JSON.stringify({ c: custom, x: removed, r: renames, o: order }))}`;
 
   // Readable list, grouped by category, escaped.
   const order = ['basics', 'technical', 'extras'];

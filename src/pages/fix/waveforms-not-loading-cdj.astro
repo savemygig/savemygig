@@ -19,7 +19,7 @@ const schema = {
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
   <main class="wrap wrap-wide">
     <div class="status-line red">Waveforms_Blank</div>
-    <h1 style="margin-bottom:1.5rem">WAVEFORMS <span class="danger">NOT LOADING</span>?<br>READ THIS BEFORE PANICKING</h1>
+    <h1 style="margin-bottom:1.5rem">WAVEFORMS <span class="danger">NOT LOADING</span>?<br>Read this first</h1>
 
     <div class="panel panel-go">
       <p style="margin:0"><strong>Short version:</strong> blank waveforms almost never stop a set. The audio plays fine, you are missing convenience, not music. Fix order below.</p>
@@ -29,7 +29,7 @@ const schema = {
     <ul class="checklist">
       <li><strong>Tracks were never analyzed.</strong> Files dragged manually (or imported and exported too fast) carry no waveform data. The player shows a slowly-building wave or nothing.</li>
       <li><strong>The drive is slow or dying.</strong> Waveform data loads from the USB; a struggling drive shows tracks instantly but waveforms crawl. Treat this as an early warning.</li>
-      <li><strong>Database mismatch.</strong> Old player firmware + new Rekordbox versions occasionally skip advanced waveform data. Audio still plays.</li>
+      <li><strong>Database mismatch.</strong> Old player firmware + new Rekordbox versions occasionally skip detailed waveform data. Audio still plays.</li>
     </ul>
 
     <h2 style="margin:2rem 0 1rem">At the venue</h2>

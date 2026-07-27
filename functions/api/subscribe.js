@@ -148,7 +148,7 @@ export async function onRequestPost({ request, env }) {
   // campaign can reach an unconfirmed address. confirm.js is what adds them to
   // the list. Best effort: a failure here must never block the confirm email.
   try {
-    await fetch('https://api.brevo.com/v3/contacts', {
+    const res2 = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
         'api-key': env.BREVO_API_KEY,
@@ -158,9 +158,23 @@ export async function onRequestPost({ request, env }) {
       body: JSON.stringify({
         email,
         updateEnabled: true,
-        attributes: { SOURCE: source, ARTIST: artist, INSTAGRAM: instagram },
+        // Conditional on purpose: updateEnabled means a later registration
+        // from a surface without these fields (EmailCapture sends only the
+        // email) would OVERWRITE a stored artist name and Instagram with
+        // empty strings, destroying the follow-back data. Absent key = field
+        // untouched.
+        attributes: Object.assign(
+          { SOURCE: source },
+          artist ? { ARTIST: artist } : {},
+          instagram ? { INSTAGRAM: instagram } : {}
+        ),
       }),
     });
+    if (!res2 || !res2.ok) {
+      let d = '';
+      try { d = JSON.stringify(await res2.json()); } catch (e) { /* ignore */ }
+      console.log('subscribe: pending contact write status', res2 && res2.status, d);
+    }
   } catch (err) {
     console.log('subscribe: pending contact write failed', String(err));
   }

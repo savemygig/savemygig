@@ -130,7 +130,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
       <!-- Antonio's anti-spam promise, in his voice, tightened. This doubles as
            the consent line, so it has to stay honest about what we send. -->
-      <p class="unlock-note">Relax, this is not a spam list. Once in a while we share something we think is worth your time: news about the site, new tools, or a product or service that helps your career. That is it. Opt out any time, one click. <a href="/privacy">Privacy</a></p>
+      <p class="unlock-note">This is not a spam list. Once in a while we share something we think is worth your time: news about the site, new tools, or a product or service that helps your career. That is it. Opt out any time, one click. <a href="/privacy">Privacy</a></p>
     </div>
 
     <section class="readiness" id="readiness" aria-live="polite">
@@ -677,6 +677,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   let pendingMode: string = 'advanced';
   // What the DJ was reaching for when the gate appeared: a mode, or the PDF.
   let pendingWant: 'mode' | 'pdf' | 'email' = 'mode';
+  // Assigned by the reset block below; setMode calls it so an armed reset
+  // NEVER survives a mode switch. Audit finding: arm "Reset ticks?" in Basic,
+  // hop to Custom within 4s, tap again, and the confirmation you gave for
+  // ticks wipes the entire custom list. The question and the action must
+  // always belong to the same mode.
+  let disarmResetHook: () => void = () => {};
   // The old static PDF stays on disk for the email flow, but the Download
   // button no longer serves it: it prints the live list instead.
   let editMode = false;
@@ -740,6 +746,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       const data = JSON.parse(b64urlToStr(decodeURIComponent(m[1])));
       if (data && data.c) saveCustom(data.c);
       if (data && Array.isArray(data.x)) saveRemoved(data.x);
+      // Renames and order joined the payload later; older links simply lack
+      // the keys and restore what they carry.
+      if (data && data.r && typeof data.r === 'object') saveRenames(data.r);
+      if (data && data.o && typeof data.o === 'object') saveOrder(data.o);
       setUnlocked();
       history.replaceState(null, '', location.pathname + location.search);
       return true;
@@ -764,19 +774,30 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
     return out;
   }
+  let backupBusy = false;
   async function sendBackup(email: string) {
+    if (backupBusy) return; // double-tap sends double emails
     email = (email || '').trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
       if (backupMsg) { backupMsg.textContent = 'That email does not look right.'; backupMsg.className = 'backup-msg err'; }
       return;
     }
     if (backupMsg) { backupMsg.textContent = 'Sending...'; backupMsg.className = 'backup-msg'; }
+    backupBusy = true;
     try {
       const res = await fetch('/api/backup', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email, listByCat: getListByCat(), custom: loadCustom(), removed: loadRemoved() }),
+        body: JSON.stringify({ email, listByCat: getListByCat(), custom: loadCustom(), removed: loadRemoved(), renames: loadRenames(), order: loadOrder() }),
       });
+      // A non-2xx is a SERVER problem. It used to fall through res.json()
+      // into the catch and tell a DJ on solid venue Wi-Fi "no connection,
+      // find signal", which misdiagnoses the failure at them.
+      if (!res.ok) {
+        if (backupMsg) { backupMsg.textContent = 'Could not send right now, the problem is on our side. Try again in a minute.'; backupMsg.className = 'backup-msg err'; }
+        backupBusy = false;
+        return;
+      }
       const data = await res.json();
       if (data && data.ok) {
         setEmail(email);
@@ -788,6 +809,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     } catch (e) {
       if (backupMsg) { backupMsg.textContent = 'No connection. Try again when you have signal.'; backupMsg.className = 'backup-msg err'; }
     }
+    backupBusy = false;
   }
 
   function isVisible(box: HTMLInputElement): boolean {
@@ -885,6 +907,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function initDrag(handle: HTMLElement) {
     handle.addEventListener('pointerdown', (ev: PointerEvent) => {
       if (!(mode === 'custom' && editMode)) return;
+      // An open rename must commit before rows start moving: preventDefault
+      // below suppresses the focus change, and moving a focused element in
+      // the DOM drops focus WITHOUT firing blur, which orphaned the input.
+      const openEdit = document.querySelector('.task-label-edit') as HTMLInputElement | null;
+      if (openEdit) openEdit.blur();
       const li = handle.closest('li.task') as HTMLElement | null; if (!li) return;
       const ul = li.parentElement as HTMLElement | null; if (!ul) return;
       ev.preventDefault();
@@ -1078,6 +1105,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   function setMode(m: string) {
     mode = m;
+    disarmResetHook();
     if (listEl) listEl.setAttribute('data-mode', m);
     if (m !== 'custom') setEdit(false);
     // The toolbar itself now lives in every mode, because Clear and Download
@@ -1170,6 +1198,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   });
 
   // restore from an email link if one is present, then render custom items
+  // The confirm email's redirect lands here with ?confirmed=1. It used to be
+  // written and never read: no acknowledgment, and the param stuck around in
+  // shared URLs. One green line, then gone.
+  if (new URLSearchParams(location.search).get('confirmed') === '1') {
+    if (backupMsg) { backupMsg.textContent = 'Email confirmed. You are registered on this device.'; backupMsg.className = 'backup-msg ok'; }
+    const sp = new URLSearchParams(location.search); sp.delete('confirmed');
+    history.replaceState(null, '', location.pathname + (sp.toString() ? '?' + sp.toString() : '') + location.hash);
+  }
+
   const restored = tryRestore();
   ensureRowControls();
   applyRenames();
@@ -1291,7 +1328,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     ).join('');
 
     const w = window.open('', '_blank');
-    if (!w) return; // popup blocked; the button simply does nothing rather than erroring
+    if (!w) return false; // popup blocked; callers tell the user, not silence
     w.document.write(`<!doctype html><html><head><meta charset="utf-8" />
 <title>save-my-gig-pre-gig-checklist</title>
 <style>
@@ -1317,6 +1354,7 @@ ${sections}
 <script>window.onload = function () { window.print(); };<\/script>
 </body></html>`);
     w.document.close();
+    return true;
   }
 
   // The PDF sits behind the same registration as Advanced and Custom. This is
@@ -1325,7 +1363,13 @@ ${sections}
   const pdfBtn = document.getElementById('pdfBtn');
   if (pdfBtn) {
     pdfBtn.addEventListener('click', () => {
-      if (isUnlocked()) { printCurrentList(); return; }
+      if (isUnlocked()) {
+        if (!printCurrentList() && backupMsg) {
+          backupMsg.textContent = 'Your browser blocked the download window. Allow pop-ups for this site and tap again.';
+          backupMsg.className = 'backup-msg err';
+        }
+        return;
+      }
       pendingWant = 'pdf';
       openGate();
     });
@@ -1346,8 +1390,10 @@ ${sections}
 
   // unlock form: instant access, confirmation email fires in the background
   if (unlockForm) {
+    let unlockBusy = false;
     unlockForm.addEventListener('submit', async (ev) => {
       ev.preventDefault();
+      if (unlockBusy) return; // double-tap sends double emails
       const inp = unlockForm.querySelector('input[name="email"]') as HTMLInputElement;
       const email = (inp.value || '').trim();
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
@@ -1355,6 +1401,7 @@ ${sections}
         inp.focus();
         return;
       }
+      unlockBusy = true;
       setUnlocked();
       setEmail(email);
       if (unlockEl) unlockEl.hidden = true;
@@ -1362,7 +1409,15 @@ ${sections}
       // Give them the thing they actually came for, immediately. The
       // confirmation email fires afterwards in the background: nobody should
       // wait on an inbox while standing in a hurry.
-      if (pendingWant === 'pdf') printCurrentList();
+      if (pendingWant === 'pdf') {
+        // Popup blockers eat the print view on exactly this path (the user
+        // just submitted a form). Dead air after handing over an email address
+        // is the worst possible outcome, so say what happened and what to do.
+        if (!printCurrentList() && backupMsg) {
+          backupMsg.textContent = 'You are registered. Your browser blocked the download window: tap Download list again and allow pop-ups.';
+          backupMsg.className = 'backup-msg ok';
+        }
+      }
       else if (pendingWant === 'email') sendBackup(email); // to the address they just registered
       else setMode(pendingMode);
 
@@ -1384,6 +1439,7 @@ ${sections}
           }),
         });
       } catch (e) { /* unlocked anyway; feature is free */ }
+      unlockBusy = false;
     });
   }
 
@@ -1432,6 +1488,7 @@ ${sections}
       resetBtn.innerHTML = '<span class="bl-full">Reset list</span><span class="bl-short">Reset</span>';
       resetBtn.classList.remove('armed');
     };
+    disarmResetHook = disarmReset;
     resetBtn.addEventListener('click', () => {
       if (!resetArmed) {
         resetArmed = true;

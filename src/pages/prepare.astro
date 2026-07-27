@@ -14,8 +14,8 @@ import EmailCapture from '../components/EmailCapture.astro';
     <p class="dim" style="margin-bottom:2rem">USB failures aren't bad luck. They're a missing system. This is the system.</p>
 
     <div class="panel">
-      <h3 style="margin-bottom:0.75rem">The rules</h3>
-      <ul class="checklist">
+      <h3 style="margin-bottom:0.75rem">The seven rules</h3>
+      <ol class="rules-ol">
         <li><strong>Two identical USBs, every gig.</strong> Same export on both. One in the bag, one in your pocket.</li>
         <li><strong>FAT32, always.</strong> NTFS never works. exFAT is a gamble in a booth you do not control, since only newer players read it. Pick <span class="mono">MBR</span> when the format tool offers you a scheme.</li>
         <li><strong>Quality drives only.</strong> The $8 no-name stick is how this story starts. <a href="/gear">Approved drives →</a></li>
@@ -23,7 +23,7 @@ import EmailCapture from '../components/EmailCapture.astro';
         <li><strong>Re-export after every library change.</strong> An old export is a corrupt export waiting to happen.</li>
         <li><strong>Test on a player</strong> (or at least re-open in Rekordbox) before leaving home.</li>
         <li><strong>Back up the Rekordbox library</strong> monthly to a different drive or cloud.</li>
-      </ul>
+      </ol>
     </div>
 
     <!-- Antonio's rule, kept OUTSIDE the numbered seven so the homepage door's
@@ -62,3 +62,22 @@ import EmailCapture from '../components/EmailCapture.astro';
     </div>
   </main>
 </Base>
+
+<style>
+  /* The homepage door promises "the seven rules"; the numbers make the count
+     visible instead of asking the reader to tally dashes. */
+  .rules-ol { list-style: none; counter-reset: rl; margin: 1.2rem 0 0; padding: 0; }
+  .rules-ol li {
+    counter-increment: rl;
+    position: relative;
+    padding: 0.75rem 0 0.75rem 2.2rem;
+    border-bottom: 1px solid var(--edge-soft);
+  }
+  .rules-ol li:last-child { border-bottom: none; }
+  .rules-ol li::before {
+    content: counter(rl);
+    position: absolute; left: 0; top: 0.75rem;
+    width: 1.5rem; text-align: center;
+    font-family: var(--font-display); font-weight: 800; color: var(--red);
+  }
+</style>

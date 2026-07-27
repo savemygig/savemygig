@@ -15,7 +15,7 @@ const groups = [
     title: 'Drives and formats',
     terms: [
       { t: 'FAT32', d: 'The file system that every Pioneer and AlphaTheta player reads, old and new, which is why this site recommends it. Its one real limit is 4GB per FILE, not per drive, and no DJ track approaches that.' },
-      { t: 'exFAT', d: 'A newer file system. Officially supported on CDJ-3000, CDJ-3000X, XDJ-RX3, XDJ-XZ and XDJ-AZ, refused by every CDJ-2000 including the NXS2. Most drives over 32GB ship with it from the factory, which is why a brand-new stick can fail on an older player out of the box. rekordbox writes exFAT to USB drives only, never SD cards.' },
+      { t: 'exFAT', d: 'A newer file system. Officially supported on CDJ-3000, CDJ-3000X, CDJ-1500X, XDJ-RX3, XDJ-XZ and XDJ-AZ, refused by every CDJ-2000 including the NXS2. Most drives over 32GB ship with it from the factory, which is why a brand-new stick can fail on an older player out of the box. rekordbox writes exFAT to USB drives only, never SD cards.' },
       { t: 'NTFS', d: 'A Windows file system. No player reads it, and rekordbox will not export to it. If a drive is NTFS, it gets reformatted before it ever sees a booth.' },
       { t: 'MBR (Master Boot Record)', d: 'One of two ways a drive describes its own layout, and the one players expect. AlphaTheta documents that the CDJ-3000 does not support the GUID scheme, so when a format tool asks, pick MBR. On a Mac this means erasing the DEVICE, not the volume, in Disk Utility.' },
       { t: 'GPT (GUID Partition Table)', d: 'The other layout scheme, and a recurring cause of "it formatted fine but the player refuses it". You get GPT by accident on a Mac when you erase the volume instead of the device.' },
