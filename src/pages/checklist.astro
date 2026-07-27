@@ -214,7 +214,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            pushing Email list onto a second row). -->
       <button type="button" class="btn btn-neutral" id="resetBtn">
         <span class="rs-idle"><span class="bl-full">Reset list</span><span class="bl-short">Reset</span></span>
-        <span class="rs-arm" aria-hidden="true"><span class="bl-full">Are you sure?</span><span class="bl-short">Sure?</span></span>
+        <!-- "Click again" (Antonio): near the same width as "Reset list",
+             so the stacked-cell trick has almost nothing to reserve. -->
+        <span class="rs-arm" aria-hidden="true"><span class="bl-full">Click again</span><span class="bl-short">Again?</span></span>
       </button>
       <!-- Full words on desktop, one word on a phone: four buttons at full
            length wrap the toolbar onto a second line on mobile (Antonio). -->
