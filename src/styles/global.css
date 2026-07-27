@@ -424,6 +424,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, .pad:focus-visible, 
   outline: 2px solid var(--red); outline-offset: 3px;
 }
 
+/* "You have already reseated it and tried the other deck." The house style for
+   naming what we ASSUME the reader has done. It is doing real work: it tells a
+   working DJ in one line that this site knows they are not a rookie, and it
+   buys the right to skip the obvious steps instead of printing them. Set quiet
+   and offset, because it is context, not instruction. */
+.assumed {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text-faint);
+  border-left: 2px solid var(--edge);
+  padding: 0.1rem 0 0.1rem 0.8rem;
+  margin: 0 0 1.5rem;
+}
+
 /* Screen reader only. This lived inside Tunnel.astro's scoped-global block,
    which meant it only existed on tunnel pages: every .sr-only element on a
    Base.astro page rendered as visible text. It belongs here, once, where both

@@ -1,6 +1,8 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
-import { RUNLIST, RUNLIST_NEVER, RUNLIST_LAST_RESORT } from '../../../data/runlist.js';
+import {
+  RUNLIST, RUNLIST_HEAD, RUNLIST_ASSUMED, RUNLIST_NEVER, RUNLIST_LAST_RESORT,
+} from '../../../data/runlist.js';
 
 // THE SIX MOVES. NOT A DECISION TREE, AND NOT A TUTORIAL EITHER.
 //
@@ -19,10 +21,12 @@ import { RUNLIST, RUNLIST_NEVER, RUNLIST_LAST_RESORT } from '../../../data/runli
 // point.
 ---
 <Tunnel title="The Six Moves | Save My Gig!" status="Critical · Do this now" red srHeading="Six moves, in order, until it plays">
-  <h2 style="margin-bottom:0.4rem">Six moves. In order.</h2>
-  <p class="dim" style="margin-bottom:1.4rem">
-    Stop the moment it plays. Most gigs are saved in the first two.
-  </p>
+  <!-- NOT "do not panic" and NOT "stay calm". Telling a working DJ to calm down
+       is the same insult as telling them to try the other deck: it assumes they
+       are losing it. They are not, they are working. State what is left. -->
+  <h2 style="margin-bottom:0.5rem">Four moves you have not tried.</h2>
+  <p class="dim" style="margin-bottom:0.9rem">{RUNLIST_HEAD}</p>
+  <p class="assumed">{RUNLIST_ASSUMED}</p>
 
   <ol class="moves">
     {RUNLIST.map((s) => (
@@ -66,8 +70,9 @@ import { RUNLIST, RUNLIST_NEVER, RUNLIST_LAST_RESORT } from '../../../data/runli
   </nav>
 
   <p class="tunnel-note" style="margin-top:1.6rem">
-    Learn these six before the gig, not during one. The DJ who carries a cloned
-    second drive never gets past move one. <a href="/prepare">The prevention rules</a>.
+    None of this is needed by the DJ who walked in with a cloned second drive in
+    the other pocket. That version of tonight is ten seconds long.
+    <a href="/prepare">The prevention rules</a>.
   </p>
 </Tunnel>
 
@@ -75,6 +80,7 @@ import { RUNLIST, RUNLIST_NEVER, RUNLIST_LAST_RESORT } from '../../../data/runli
   /* Sized to be READ AT ARM'S LENGTH IN A DARK BOOTH. The verb is the memory
      hook and carries the weight; the action line is a jog; the detail is folded
      away so it can never compete with either. */
+  /* .assumed is in global.css: it is house style now, not one page's trick. */
   .moves { list-style: none; counter-reset: mv; margin: 0; padding: 0; }
   .moves li {
     counter-increment: mv;
