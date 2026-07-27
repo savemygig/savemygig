@@ -62,6 +62,14 @@ function visibleText(html) {
 }
 const files = (await walk(ROOT)).filter((p) => !SKIP(p));
 const hits = [];
+// The manifest is JSON, not HTML, so the walk below never sees it, and an
+// em dash hid in the PWA install dialog's app name until Antonio's browser
+// showed it to him ("it's the same as: MADE WITH AI!"). Lint every string
+// the manifest ships.
+try {
+  const mf = await readFile(join(ROOT, 'manifest.webmanifest'), 'utf-8');
+  if (/[—–]/.test(mf)) hits.push('manifest.webmanifest: em/en dash in manifest text');
+} catch { /* no manifest in this build */ }
 for (const f of files) {
   const text = visibleText(await readFile(f, 'utf-8'));
   for (const r of RULES) {

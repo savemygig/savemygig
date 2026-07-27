@@ -294,11 +294,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <!-- "Download list", not "Download PDF" (Antonio): the file is a PDF but
            the thing you are downloading is your list, same object as the other
            three buttons. -->
-      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Download list [PDF]</span><span class="bl-short">Download</span></button>
+      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Download list</span><span class="bl-short">Download</span></button>
       <!-- Email is LAST and darker in every mode (Antonio): it is the one
            action that requires registration, because an email needs an
            address, and the shade quietly says this one is different. -->
-      <button type="button" class="btn btn-neutral btn-gated" id="backupBtn"><span class="bl-full">Email list [PDF]</span><span class="bl-short">Email</span></button>
+      <button type="button" class="btn btn-neutral btn-gated" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
       <!-- Antonio: instructions occupy space; read once, dismiss forever. The X
            writes localStorage so it never comes back on this device. Copy cut
            to the four verbs the mode actually has. -->
@@ -336,6 +336,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                 <span class="chev" aria-hidden="true"></span>
               </span>
             </button>
+            <!-- Custom + Edit: any category can go (Antonio). For built-in
+                 groups this HIDES (Reset list brings them back); user
+                 sections delete outright. -->
+            <button type="button" class="group-remove" data-group-hide={g.id} aria-label={`Remove section ${g.title}`}>&times;</button>
           </h3>
           <div class="group-body" id={`body-${g.id}`}>
             <p class="dim group-blurb">{g.blurb}</p>
@@ -818,13 +822,20 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 0.8rem;
     text-transform: uppercase; letter-spacing: 0.03em; padding: 0 1rem; cursor: pointer;
   }
-  /* A user section's delete control, Edit only. */
+  /* Section delete control, Custom + Edit only, sits RIGHT of the header
+     (the h3 is a flex row so the x never wraps under the full-width
+     toggle). Built-ins hide, user sections delete. */
+  .group-h { display: flex; align-items: center; }
+  .group-h .group-toggle { flex: 1; min-width: 0; }
   .group-remove {
     display: none; background: none; border: 0; color: var(--text-faint);
-    font-size: 18px; line-height: 1; cursor: pointer; padding: 0 0.5rem;
+    font-size: 18px; line-height: 1; cursor: pointer;
+    padding: 0 0.9rem; align-self: stretch; align-items: center;
   }
   .group-remove:hover { color: var(--red); }
   #list[data-mode="custom"][data-edit="on"] .group-remove { display: inline-flex; }
+  /* A built-in category the DJ removed in Custom: gone in Custom only. */
+  #list[data-mode="custom"] .task-group.user-hidden { display: none; }
 
   /* The closing philosophy line. */
   .creed {
@@ -898,6 +909,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const ORDER_KEY = 'SMG_CHECKLIST_ORDER_V1';
   const RENAME_KEY = 'SMG_CHECKLIST_RENAME_V1';
   const SECTIONS_KEY = 'SMG_CHECKLIST_SECTIONS_V1';
+  const HIDDENG_KEY = 'SMG_CHECKLIST_HIDDENGROUPS_V1';
   const EMAIL_KEY = 'SMG_EMAIL';
 
   const listEl = document.getElementById('list');
@@ -984,6 +996,19 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function saveSections(s: { id: string; t: string }[]) {
     try { localStorage.setItem(SECTIONS_KEY, JSON.stringify(s)); } catch (e) { /* blocked */ }
   }
+  // Built-in categories the DJ removed in Custom (hidden, not deleted:
+  // Reset list restores them). User sections delete outright instead.
+  function loadHiddenGroups(): string[] {
+    try { const raw = localStorage.getItem(HIDDENG_KEY); return raw ? JSON.parse(raw) : []; }
+    catch (e) { return []; }
+  }
+  function saveHiddenGroups(a: string[]) { try { localStorage.setItem(HIDDENG_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } }
+  function applyHiddenGroups() {
+    const hidden = loadHiddenGroups();
+    document.querySelectorAll<HTMLElement>('.task-group').forEach((g) => {
+      g.classList.toggle('user-hidden', hidden.indexOf(g.getAttribute('data-group') || '') !== -1);
+    });
+  }
   function loadOrder(): Record<string, string[]> {
     try { const raw = localStorage.getItem(ORDER_KEY); return raw ? JSON.parse(raw) : {}; }
     catch (e) { return {}; }
@@ -1017,6 +1042,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       if (data && data.r && typeof data.r === 'object') saveRenames(data.r);
       if (data && data.o && typeof data.o === 'object') saveOrder(data.o);
       if (data && Array.isArray(data.s)) saveSections(data.s);
+      if (data && Array.isArray(data.h)) saveHiddenGroups(data.h);
       setUnlocked();
       history.replaceState(null, '', location.pathname + location.search);
       return true;
@@ -1025,6 +1051,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function getListByCat(): Record<string, string[]> {
     const out: Record<string, string[]> = {};
     document.querySelectorAll<HTMLElement>('.task-group').forEach((group) => {
+      // A category the DJ removed (or one empty in this mode) stays out of
+      // the email and the printout entirely.
+      if (getComputedStyle(group).display === 'none') return;
       const cat = group.getAttribute('data-group') || '';
       const labels: string[] = [];
       group.querySelectorAll<HTMLElement>('.task').forEach((li) => {
@@ -1059,8 +1088,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           email, listByCat: getListByCat(), custom: loadCustom(), removed: loadRemoved(),
           renames: loadRenames(), order: loadOrder(),
           // User sections travel too: the email needs their titles and the
-          // restore link needs their definitions.
+          // restore link needs their definitions. Hidden categories travel
+          // so the second device matches the first.
           sections: loadSections(),
+          hiddenGroups: loadHiddenGroups(),
           catNames: (() => { const m: Record<string, string> = {}; document.querySelectorAll<HTMLElement>('.task-group').forEach((g) => { const t = g.querySelector('.group-title'); if (t) m[g.getAttribute('data-group') || ''] = t.textContent || ''; }); return m; })(),
         }),
       });
@@ -1088,7 +1119,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   function isVisible(box: HTMLInputElement): boolean {
     const lvl = box.dataset.level;
-    if (mode === 'custom' && loadRemoved().indexOf(box.dataset.key || '') !== -1) return false;
+    if (mode === 'custom') {
+      if (loadRemoved().indexOf(box.dataset.key || '') !== -1) return false;
+      // Items inside a category the DJ removed do not exist for the meter.
+      const g = box.closest('.task-group');
+      if (g && loadHiddenGroups().indexOf(g.getAttribute('data-group') || '') !== -1) return false;
+    }
     if (mode === 'basic') return lvl === 'basic';
     if (mode === 'advanced') return lvl !== 'custom';
     return true; // custom mode shows everything, minus what you removed
@@ -1131,6 +1167,37 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
 
   /* ----- the DJ's own sections (Custom mode, Antonio's spec) ----- */
+  // A named section picks its own icon (Antonio: "it has to be intelligent
+  // and understand that medicine is medicine"). Keyword match on the title,
+  // in English, Portuguese and Spanish; the bulb is the fallback. All
+  // monochrome stroke, per the standing no-emoji rule.
+  const SECTION_ICONS: Record<string, string> = {
+    health: '<path d="M12 3a2 2 0 0 1 2 2v3h3a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-3v3a2 2 0 0 1-2 2h-0a2 2 0 0 1-2-2v-3H7a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h3V5a2 2 0 0 1 2-2z"/>',
+    disc: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/>',
+    usb: '<rect x="9" y="2" width="6" height="7" rx="1"/><path d="M12 9v11"/><path d="M8 20h8"/>',
+    plane: '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>',
+    cup: '<path d="M17 8h1a3 3 0 0 1 0 6h-1"/><path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M7 2v2"/><path d="M11 2v2"/>',
+    shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1 1 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+    star: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
+    bulb: '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8a6 6 0 0 0-12 0c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/>',
+  };
+  const SECTION_ICON_WORDS: [string, string[]][] = [
+    ['health', ['medic', 'remed', 'pill', 'pharma', 'farmac', 'health', 'saude', 'salud', 'first aid', 'aid kit']],
+    ['disc', ['music', 'musica', 'track', 'vinyl', 'record', 'playlist', 'set ']],
+    ['usb', ['cable', 'cabo', 'adapter', 'adaptador', 'usb', 'tech', 'charger', 'carregador', 'cargador']],
+    ['plane', ['travel', 'viagem', 'viaje', 'flight', 'voo', 'vuelo', 'hotel', 'tour', 'passport', 'passaporte']],
+    ['cup', ['food', 'comida', 'snack', 'drink', 'bebida', 'agua', 'water', 'coffee', 'cafe']],
+    ['shield', ['key', 'chave', 'llave', 'secur', 'segur', 'lock', 'backup']],
+    ['star', ['cloth', 'roupa', 'ropa', 'wear', 'shirt', 'camis', 'merch', 'style', 'estilo']],
+  ];
+  function pickSectionIcon(title: string): string {
+    const t = ' ' + title.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '') + ' ';
+    let body = SECTION_ICONS.bulb;
+    for (const [icon, words] of SECTION_ICON_WORDS) {
+      if (words.some((w) => t.indexOf(w) !== -1)) { body = SECTION_ICONS[icon]; break; }
+    }
+    return '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + body + '</svg>';
+  }
   // User sections are real .task-group elements built here with the same
   // anatomy as the fixed ones, so every existing mechanism (counts, custom
   // items, order, print, email) sees them for free. They render only in
@@ -1150,7 +1217,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       btn.type = 'button'; btn.className = 'group-toggle';
       btn.setAttribute('data-toggle', sec.id); btn.setAttribute('aria-expanded', 'true');
       const ic = document.createElement('span'); ic.className = 'group-ic'; ic.setAttribute('aria-hidden', 'true');
-      ic.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8a6 6 0 0 0-12 0c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>';
+      ic.innerHTML = pickSectionIcon(sec.t);
       const title = document.createElement('span'); title.className = 'group-title'; title.textContent = sec.t;
       const meta = document.createElement('span'); meta.className = 'group-meta';
       const count = document.createElement('span'); count.className = 'group-count'; count.setAttribute('data-count', sec.id); count.textContent = '0/0';
@@ -1557,6 +1624,20 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   renderSections();
   renderCustom();
   applyRemoved();
+  applyHiddenGroups();
+
+  // Remove a built-in category (Custom + Edit): hides it and everything in
+  // it; Reset list is the way back. User sections have their own delete.
+  document.querySelectorAll<HTMLButtonElement>('[data-group-hide]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const gid = btn.getAttribute('data-group-hide') || '';
+      const h = loadHiddenGroups();
+      if (h.indexOf(gid) === -1) h.push(gid);
+      saveHiddenGroups(h);
+      applyHiddenGroups();
+      render();
+    });
+  });
 
   // add a whole new section (Custom + Edit)
   const addSectionBtn = document.getElementById('addSectionBtn');
@@ -1670,6 +1751,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] || c));
     const groups: { title: string; items: { label: string; done: boolean }[] }[] = [];
     document.querySelectorAll<HTMLElement>('.task-group').forEach((g) => {
+      if (getComputedStyle(g).display === 'none') return; // removed category
       const title = (g.querySelector('.group-title')?.textContent || '').trim();
       const items: { label: string; done: boolean }[] = [];
       g.querySelectorAll<HTMLElement>('li.task').forEach((li) => {
@@ -1902,6 +1984,7 @@ ${sections}
           localStorage.removeItem(CUSTOM_KEY);
           localStorage.removeItem(REMOVED_KEY);
           localStorage.removeItem(SECTIONS_KEY);
+          localStorage.removeItem(HIDDENG_KEY);
         } catch (e) {}
         // A full rebuild from defaults beats surgically undoing four kinds of
         // edit in place.

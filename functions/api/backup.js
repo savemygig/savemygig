@@ -43,6 +43,7 @@ export async function onRequestPost({ request, env }) {
   let renames = {};
   let order = {};
   let sections = [];
+  let hiddenGroups = [];
   let catNamesIn = {};
   try {
     const b = await request.json();
@@ -53,6 +54,7 @@ export async function onRequestPost({ request, env }) {
     renames = b.renames && typeof b.renames === 'object' ? b.renames : {};
     order = b.order && typeof b.order === 'object' ? b.order : {};
     sections = Array.isArray(b.sections) ? b.sections : [];
+    hiddenGroups = Array.isArray(b.hiddenGroups) ? b.hiddenGroups : [];
     catNamesIn = b.catNames && typeof b.catNames === 'object' ? b.catNames : {};
   } catch (e) {
     return json({ ok: false, error: 'bad_request' }, 400);
@@ -68,7 +70,7 @@ export async function onRequestPost({ request, env }) {
   // The restore link must carry the WHOLE list state. It used to encode only
   // custom items and removals, so renames and order silently vanished on the
   // second device while the email's own text showed the renamed labels.
-  const restoreUrl = `${SITE}/checklist#r=${b64url(JSON.stringify({ c: custom, x: removed, r: renames, o: order, s: sections }))}`;
+  const restoreUrl = `${SITE}/checklist#r=${b64url(JSON.stringify({ c: custom, x: removed, r: renames, o: order, s: sections, h: hiddenGroups }))}`;
 
   // Readable list, grouped by category, escaped.
   // NOTE: named CAT_ORDER, not "order": `order` above already holds the DJ's
