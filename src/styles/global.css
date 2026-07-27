@@ -115,6 +115,9 @@ a { color: var(--red); }
   animation: pulse 2s ease-in-out infinite;
   flex-shrink: 0;
 }
+/* Desktop-only status tag (Antonio, first used on /checklist): the eyebrow
+   earns its line on a wide screen but not above a phone H1. */
+@media (max-width: 640px) { .sl-desktop { display: none; } }
 .status-line.red { color: var(--red); }
 .status-line.red::before { background: var(--red); }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }

@@ -22,7 +22,10 @@ import AccGroup from '../components/AccGroup.astro';
     <div class="status-line">Install_Guide</div>
 
     <h1 style="margin-bottom:1rem">KEEP IT <span class="accent">WITH YOU</span></h1>
-    <p class="dim" style="margin-bottom:1.2rem">Save My Gig installs as an app on your phone and your computer. No app store, nothing to download from a store, nothing to pay. One minute now, and the rescue flow lives on your device, ready for the exact moment the venue has no signal.</p>
+    <!-- Say PWA out loud and early (Antonio): calling it "an app" without
+         the word would be selling something it is not. The term lands here,
+         the plain explanation lives in "What is a PWA?" below. -->
+    <p class="dim" style="margin-bottom:1.2rem">Save My Gig installs as an app on your phone and your computer. Technically it is a <strong>PWA</strong>, a progressive web app: the site itself becomes the app, explained in plain words <a href="#what-is-a-pwa">below</a>. No app store, nothing to pay. One minute now, and the rescue flow lives on your device, ready for the exact moment the venue has no signal.</p>
 
     <p class="dim" style="margin-bottom:2rem">A club basement, a festival with a saturated network, a rave in the mountains: the places where gigs break are the places where websites die. This one is built not to.</p>
 
@@ -79,10 +82,10 @@ import AccGroup from '../components/AccGroup.astro';
 
     <AccGroup icon="book" title="How it works" />
 
-    <details class="acc-sec" name="inst-acc" id="what-is-this">
-      <summary><h2 class="acc-h2">What exactly did I just install?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+    <details class="acc-sec" name="inst-acc" id="what-is-a-pwa">
+      <summary><h2 class="acc-h2">What is a PWA?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Short answer.</strong> A progressive web app, PWA for short: the website itself, promoted to app status by your own browser. No app store approved it, no update nags you, it takes almost no space, and it cannot see anything on your device that the website could not already see.</p>
+        <p><strong>Short answer.</strong> A progressive web app: the website itself, promoted to app status by your own browser. Not a native app from a store. No app store approved it, no update nags you, it takes almost no space, and it cannot see anything on your device that the website could not already see.</p>
         <p><strong>Why it matters here.</strong> The first time you open Save My Gig, your browser quietly downloads the complete rescue kit, every screen of the emergency flows, into the device's own storage. From then on, those pages load from your phone or laptop, not from the internet. When you are online you always get the live, freshest version; when you are not, the saved kit answers instead. That switch is automatic. You never choose, it just works.</p>
         <p>Installing to your home screen or Dock does not change what is saved, the browser does that on any visit. What installing changes is durability and speed: a real icon you can find with shaking hands, and storage the system treats as an app's, not as leftover website data to tidy away.</p>
       </div>

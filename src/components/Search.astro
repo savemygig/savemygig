@@ -84,15 +84,20 @@ const { placeholder = 'Search: USB not detected, FAT32, E-8302...' } = Astro.pro
     var input = wrap.querySelector('.srch-input');
     var out = wrap.querySelector('.srch-results');
     var clear = wrap.querySelector('.srch-clear');
-    var docs = null, loading = false, cur = -1;
+    var docs = null, loadP = null, cur = -1;
 
+    // Callers always get a promise that resolves AFTER the index exists.
+    // (The old version resolved immediately while a fetch was in flight, so
+    // the first keystroke could render nothing and never retry.)
     function load() {
-      if (docs || loading) return Promise.resolve();
-      loading = true;
-      return fetch('/search-index.json')
-        .then(function (r) { return r.json(); })
-        .then(function (d) { docs = d; loading = false; })
-        .catch(function () { loading = false; });
+      if (docs) return Promise.resolve();
+      if (!loadP) {
+        loadP = fetch('/search-index.json')
+          .then(function (r) { return r.json(); })
+          .then(function (d) { docs = d; })
+          .catch(function () { loadP = null; });
+      }
+      return loadP;
     }
 
     function esc(s) { return s.replace(/[&<>"]/g, function (c) {
