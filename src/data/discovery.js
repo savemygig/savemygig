@@ -25,7 +25,6 @@ export const DISCOVERY = {
     'DJM-V10',
     'CDJ-2000NXS2',
     'DJM-900NXS2',
-    'OPUS-QUAD',
   ],
   software: [
     'rekordbox',
@@ -34,8 +33,16 @@ export const DISCOVERY = {
     'OneLibrary',
     'Device Library',
     'Pro DJ Link',
-    'HID mode',
     'MBR',
+  ],
+  // First-timer symptoms, Antonio's steer: the rotation must show searches a
+  // DJ would actually type on a bad night, not only nouns.
+  symptoms: [
+    'USB not playing',
+    'no sound',
+    'player frozen',
+    'screen frozen',
+    'waveforms missing',
   ],
   features: [
     'hot cues',
@@ -51,6 +58,6 @@ export const DISCOVERY = {
   knowledge: [
     'Beat FX',
     'emergency loop',
-    'Wi-Fi',
+    'emergency card',
   ],
 };

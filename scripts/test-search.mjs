@@ -42,11 +42,38 @@ const ok = (name, cond, detail = '') => {
   if (!cond) fails.push(name);
 };
 
-// Pages that embed an inline search box outside the overlay. The overlay's
-// own instance is hidden, so the visible input is the inline one.
-for (const path of ['/', '/faq']) {
+// HOMEPAGE: tapping the box hands off to the top overlay (Antonio), which
+// must be the SAME width as the page column, and results appear there.
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.goto(base + '/', { waitUntil: 'load' });
+  const homeWidth = await page.evaluate(() =>
+    document.querySelector('.home-srch .srch-box').getBoundingClientRect().width);
+  await page.locator('#main .srch-input').click();
+  const overlay = page.locator('#searchOverlay');
+  let handoff = false;
+  try { await overlay.waitFor({ state: 'visible', timeout: 5000 }); handoff = true; } catch {}
+  ok('/: tapping the box opens the top overlay', handoff);
+  const soWidth = await page.evaluate(() =>
+    document.querySelector('.so-panel .srch-box')?.getBoundingClientRect().width || 0);
+  ok('/: overlay box is the same width as the page box', Math.abs(soWidth - homeWidth) < 4, `${soWidth} vs ${homeWidth}`);
+  const soInput = page.locator('.so-panel .srch-input');
+  await soInput.fill('error');
+  const soResults = page.locator('.so-panel .srch-results');
+  let visible = false, hits = 0;
+  try {
+    await soResults.waitFor({ state: 'visible', timeout: 8000 });
+    visible = true;
+    hits = await soResults.locator('.srch-hit').count();
+  } catch {}
+  ok('/: overlay search shows results', visible && hits > 0, `${hits} hits`);
+  await page.close();
+}
+
+// FAQ: the inline box searches in place (the behaviour Antonio liked).
+{
   const page = await browser.newPage();
-  await page.goto(base + path, { waitUntil: 'load' });
+  await page.goto(base + '/faq', { waitUntil: 'load' });
   const input = page.locator('#main .srch-input');
   await input.click();
   await input.fill('error');
@@ -57,15 +84,14 @@ for (const path of ['/', '/faq']) {
     visible = true;
     hits = await results.locator('.srch-hit').count();
   } catch {}
-  ok(`${path}: inline search shows results`, visible && hits > 0, `${hits} hits`);
-  // Focus styling: the box border goes red (the design Antonio liked on /faq).
+  ok('/faq: inline search shows results', visible && hits > 0, `${hits} hits`);
   await input.focus();
   await page.waitForTimeout(400); // let the 0.15s border transition finish
   const border = await page.evaluate(() => {
     const box = document.querySelector('#main .srch-box');
     return box ? getComputedStyle(box).borderColor : '';
   });
-  ok(`${path}: focus turns the box red`, /255, 77, 46|rgb\(255/.test(border), border);
+  ok('/faq: focus turns the box red', /255, 77, 46|rgb\(255/.test(border), border);
   await page.close();
 }
 

@@ -266,8 +266,11 @@ const SUBLINES = [
     /* Antonio, second pass: still too small on a phone. Roughly +12% across
        the range: 17.0 -> 19.2px on a 360 Android, 19.2 -> 21.6px on an iPhone
        15/16, 21.5 -> 24.1px on a Pro Max. Desktop is untouched, he likes it. */
+    /* Antonio, third pass: on a Pro Max that cap read SUPER big; normal
+       iPhone is right. Cap lowered ~10% (1.56 -> 1.4rem = 22.4px): a 390px
+       iPhone (21.6px) never reaches it, only the widest phones feel it. */
     .door-title {
-      font-size: clamp(1.14rem, calc(7.2vw - 6.5px), 1.56rem);
+      font-size: clamp(1.14rem, calc(7.2vw - 6.5px), 1.4rem);
       margin-bottom: 0.2rem; letter-spacing: -0.015em;
     }
     .door-desc { font-size: clamp(0.79rem, calc(3.4vw + 0.3px), 1rem); line-height: 1.35; }
@@ -372,6 +375,14 @@ const SUBLINES = [
         }
       }
     } catch (e) { /* storage blocked, brand line stays */ }
+    // Tapping the search box HANDS OFF to the top overlay (Antonio): same
+    // full content width, results appear at the top of the screen where the
+    // list view breathes, instead of a dropdown pinned low on the page. The
+    // overlay opener focuses its own input, so typing lands there. Without
+    // JS the box is still a working inline search via the component itself.
+    var homeIn = document.querySelector('.home-srch .srch-input');
+    var navBtn = document.getElementById('navSearchBtn');
+    if (homeIn && navBtn) homeIn.addEventListener('focus', function () { navBtn.click(); });
   })();
 </script>
 

@@ -163,7 +163,9 @@ const entityGraph = {
                2026-07-27. Antonio: sounded like a charity poster. The share
                ask now reads as crew knowledge passed along, and the buttons
                below are the punchline. -->
-          <p class="foot-share-h">Every DJ knows a DJ who needs this.</p>
+          <!-- Colon, not a period (Antonio): the line INTRODUCES the share
+               buttons below it, so it ends the way an introduction does. -->
+          <p class="foot-share-h">Every DJ knows a DJ who needs this:</p>
         </div>
         <div class="foot-share-btns">
           <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp" href="https://wa.me/?text=Save%20My%20Gig%2C%20free%20DJ%20rescue%20and%20prevention%2C%20for%20when%20your%20USB%20dies%20before%20a%20set.%20https%3A%2F%2Fwww.savemygig.com">
@@ -492,25 +494,22 @@ const entityGraph = {
        pair up; More spans the full width underneath and flows its own links in
        two columns, so there is no orphaned empty cell beside it. */
     .foot-cols { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; }
-    /* Two real columns: the brand stack on the left, the seal centered in
-       whatever space remains on the right. Grid, not absolute positioning,
-       so "centered" stays true on every phone width. */
+    /* Seal LEFT, brand stack RIGHT (Antonio): mirrors the header's own
+       dynamic, seal then Save My Gig. Grid, not absolute positioning, so
+       the geometry holds on every phone width. Sized 20% under the earlier
+       full-stack stretch, vertically centered against the stack. */
     .foot-brand {
       grid-column: 1 / -1;
       display: grid; grid-template-columns: auto 1fr; align-items: center;
-      column-gap: 0.5rem;
+      column-gap: 1.1rem;
     }
-    .foot-brand .foot-lockup, .foot-brand .foot-social, .foot-brand .foot-bmc { grid-column: 1; }
+    .foot-brand .foot-lockup, .foot-brand .foot-social, .foot-brand .foot-bmc { grid-column: 2; }
     /* On a phone the coffee link left-aligns with the icons. */
     .foot-bmc { justify-content: flex-start; width: auto; }
-    /* The seal spans EXACTLY the brand stack (Antonio's spec): top edge level
-       with the top of the wordmark, bottom edge level with the coffee line,
-       centered in the remaining width with equal air both sides. Stretching
-       the row span does that geometrically, whatever the phone width. */
     .foot-seal {
-      display: block; grid-column: 2; grid-row: 1 / span 3;
-      align-self: stretch; justify-self: center;
-      height: 100%; width: auto; max-width: 100%; object-fit: contain;
+      display: block; grid-column: 1; grid-row: 1 / span 3;
+      align-self: center; justify-self: center;
+      width: 120px; height: 120px;
     }
     .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
     .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
@@ -554,7 +553,11 @@ const entityGraph = {
   .so { position: fixed; inset: 0; z-index: 90; background: rgba(10,10,11,0.82);
     backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: 14vh 1.25rem 0; }
   .so[hidden] { display: none; }
-  .so-panel { position: relative; max-width: 34rem; margin: 0 auto; }
+  /* Full content width (Antonio): the overlay box must be the SAME length
+     as the homepage search box, which spans the site column, "large, not
+     smaller". 34rem was the old narrow panel. */
+  .so-panel { position: relative; max-width: calc(var(--site-w) - 2 * var(--site-pad)); margin: 0 auto; }
+  .so-panel .srch { max-width: none; }
   .so-close { position: absolute; top: -2.6rem; right: 0; background: none; border: 0;
     color: var(--text-dim); font-size: 2rem; line-height: 1; cursor: pointer; padding: 0 0.3rem; }
   .so-close:hover { color: var(--text); }
