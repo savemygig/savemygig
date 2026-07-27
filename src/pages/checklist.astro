@@ -580,8 +580,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   /* Transparent, not gray slabs (Antonio): the toolbar reads as quiet
      outlined actions on the page background, same language as the homepage
      search box. Two-selector specificity beats global .btn regardless of
-     load order. */
-  .custom-toolbar .btn { width: auto; display: inline-block; margin: 0; background: transparent; }
+     load order. All four buttons share Email list's behaviour, dim at rest,
+     white on hover/touch (Antonio); click states like the armed red Reset
+     keep their own colors via higher specificity. */
+  .custom-toolbar .btn {
+    width: auto; display: inline-block; margin: 0;
+    background: transparent; color: var(--text-dim);
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .custom-toolbar .btn:hover, .custom-toolbar .btn:active {
+    color: var(--text); border-color: var(--text-dim);
+  }
   .edit-hint {
     font-size: 0.8rem;
     flex: 1 1 100%;
