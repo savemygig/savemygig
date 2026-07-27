@@ -28,6 +28,7 @@ const groups = [
   { id: 'technical', title: 'Technical', items: [
     { b: 1, t: 'Both drives FAT32 with MBR, not exFAT or GPT' },
     { b: 1, t: 'Re-exported after the last library change' },
+    { b: 1, t: 'No updates today: rekordbox, firmware and OS stay as they are' },
     { b: 1, t: 'Both drives tested on a player, or in Rekordbox' },
     { b: 1, t: 'Rekordbox library backed up to cloud or a 2nd drive' },
     { b: 1, t: 'Emergency Card saved on your phone' },

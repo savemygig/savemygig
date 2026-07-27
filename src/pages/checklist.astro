@@ -39,6 +39,10 @@ const groups = [
     items: [
       { key: 'format', level: 'basic', label: 'Both drives are FAT32, not exFAT; MBR recommended over GPT' },
       { key: 'reexport', level: 'basic', label: 'Re-exported after the last library change' },
+      // Antonio's rule, and the research backs it with names: AlphaTheta pulled
+      // CDJ-3000 firmware 3.30 after it emptied browse screens live. A working
+      // setup on gig day is a frozen setup.
+      { key: 'noupdates', level: 'basic', label: 'No updates today: rekordbox, firmware and OS stay as they are' },
       { key: 'tested', level: 'basic', label: 'Both drives tested on a player, or reopened in Rekordbox' },
       { key: 'backup', level: 'basic', label: 'Rekordbox library backed up to cloud or a second drive' },
       { key: 'card', level: 'basic', label: 'Emergency Card saved on your phone' },
