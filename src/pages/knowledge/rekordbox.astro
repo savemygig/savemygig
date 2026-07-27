@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Disclaimer from '../../components/Disclaimer.astro';
 import EmailCapture from '../../components/EmailCapture.astro';
+import AccGroup from '../../components/AccGroup.astro';
 import { CHECKED, PLAYERS, VENDOR_LINKS, REKORDBOX } from '../../data/facts.js';
 
 // The rekordbox reference page. Restructured 2026-07-27 per Antonio's spec:
@@ -112,7 +113,7 @@ const faqSchema = {
       </p>
     </div>
 
-    <h2 class="acc-group">🚨 Emergency fixes</h2>
+    <AccGroup icon="zap" title="Emergency fixes" />
 
     <details class="acc-sec" name="rb-acc" id="no-playlists">
       <summary><h2 class="acc-h2">USB mounts on the CDJ but shows no playlists</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -227,7 +228,7 @@ const faqSchema = {
       </div>
     </details>
 
-    <h2 class="acc-group">📚 Understanding rekordbox</h2>
+    <AccGroup icon="book" title="Understanding rekordbox" />
 
     <details class="acc-sec" name="rb-acc" id="onelibrary">
       <summary><h2 class="acc-h2">What are OneLibrary and Device Library?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -272,7 +273,7 @@ const faqSchema = {
       </div>
     </details>
 
-    <h2 class="acc-group">💾 USB &amp; library preparation</h2>
+    <AccGroup icon="usb" title="USB & library preparation" />
 
     <details class="acc-sec" name="rb-acc" id="fat32">
       <summary><h2 class="acc-h2">Is FAT32 really limited to 32GB?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -334,7 +335,7 @@ const faqSchema = {
       </div>
     </details>
 
-    <h2 class="acc-group">⚙ Compatibility &amp; version notes</h2>
+    <AccGroup icon="sync" title="Compatibility & version notes" />
 
     <details class="acc-sec" name="rb-acc" id="which-player">
       <summary><h2 class="acc-h2">Which players use OneLibrary, and which read exFAT?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -406,7 +407,7 @@ const faqSchema = {
       </div>
     </details>
 
-    <h2 class="acc-group">⭐ Best practices</h2>
+    <AccGroup icon="star" title="Best practices" />
 
     <details class="acc-sec" name="rb-acc" id="checklist">
       <summary><h2 class="acc-h2">The setup that never surprises you</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -441,7 +442,7 @@ const faqSchema = {
       </div>
     </details>
 
-    <h2 class="acc-group">💡 Tips &amp; tricks</h2>
+    <AccGroup icon="bulb" title="Tips & tricks" />
 
     <details class="acc-sec" name="rb-acc" id="re-export-habit">
       <summary><h2 class="acc-h2">Re-export after every library change</h2><span class="acc-chev" aria-hidden="true"></span></summary>

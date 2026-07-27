@@ -1,6 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
+import AccGroup from '../../../components/AccGroup.astro';
 import { CHECKED, CDJ_3000X, REKORDBOX } from '../../../data/facts.js';
 
 // Fourth equipment page, same template. Facts from CDJ_3000X in facts.js
@@ -54,7 +55,7 @@ const schema = {
       </p>
     </div>
 
-    <h2 class="acc-group">🚨 Emergency fixes</h2>
+    <AccGroup icon="zap" title="Emergency fixes" />
 
     <details class="acc-sec" name="cdj3000x-acc" id="no-playlists">
       <summary><h2 class="acc-h2">USB mounts but playlists are missing</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -112,7 +113,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">⚠ Known issues</h2>
+    <AccGroup icon="warn" title="Known issues" />
 
     <details class="acc-sec" name="cdj3000x-acc" id="known-issues">
       <summary><h2 class="acc-h2">Firmware and known issues</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -133,7 +134,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">⚙ Features explained</h2>
+    <AccGroup icon="sliders" title="Features explained" />
 
     <details class="acc-sec" name="cdj3000x-acc" id="onelibrary-feature">
       <summary><h2 class="acc-h2">OneLibrary, on this deck specifically</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -172,7 +173,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">💡 Professional tips</h2>
+    <AccGroup icon="bulb" title="Professional tips" />
 
     <details class="acc-sec" name="cdj3000x-acc" id="mixed-booth">
       <summary><h2 class="acc-h2">Working a booth that mixes this with older decks</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -192,7 +193,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">🛡 Preventive maintenance</h2>
+    <AccGroup icon="shield" title="Preventive maintenance" />
 
     <details class="acc-sec" name="cdj3000x-acc" id="maintenance">
       <summary><h2 class="acc-h2">Keeping a unit reliable</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -209,7 +210,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">🔄 Compatibility</h2>
+    <AccGroup icon="sync" title="Compatibility" />
 
     <details class="acc-sec" name="cdj3000x-acc" id="compatibility">
       <summary><h2 class="acc-h2">rekordbox, library format and Pro DJ Link</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -228,7 +229,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">📚 Frequently asked questions</h2>
+    <AccGroup icon="book" title="Frequently asked questions" />
 
     <details class="acc-sec" name="cdj3000x-acc" id="faq">
       <summary><h2 class="acc-h2">Quick answers</h2><span class="acc-chev" aria-hidden="true"></span></summary>

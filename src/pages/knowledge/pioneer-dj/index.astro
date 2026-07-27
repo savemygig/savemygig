@@ -3,7 +3,7 @@ import Base from '../../../layouts/Base.astro';
 
 // Pioneer DJ / AlphaTheta hardware hub. This is the reusable pattern for
 // every future manufacturer hub (Denon DJ, Allen & Heath, RANE...): a flat
-// list of models by category, each either a live page or "Coming next".
+// list of models by category, each either a live page or "Coming soon".
 // Antonio's brief (2026-07-27): a professional field manual for the gear DJs
 // actually meet in booths, not a rewritten product manual. Two pages are
 // live and fully researched so far (the two most common club units); the
@@ -86,7 +86,7 @@ const schema = {
             ) : (
               <div class="kb-card kb-soon">
                 <span class="kb-name">{m.name}</span>
-                <span class="kb-tag">Coming next</span>
+                <span class="kb-tag">Coming soon</span>
               </div>
             )
           ))}

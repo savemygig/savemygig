@@ -1,6 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
+import AccGroup from '../../../components/AccGroup.astro';
 import { CHECKED, DJM_900NXS2 } from '../../../data/facts.js';
 
 // Second pilot page for the Pioneer DJ / AlphaTheta hardware reference. Same
@@ -57,7 +58,7 @@ const schema = {
       </p>
     </div>
 
-    <h2 class="acc-group">🚨 Emergency fixes</h2>
+    <AccGroup icon="zap" title="Emergency fixes" />
 
     <details class="acc-sec" name="djm900-acc" id="no-signal"><summary><h2 class="acc-h2">A channel has no signal</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
@@ -152,7 +153,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">⚠ Known issues</h2>
+    <AccGroup icon="warn" title="Known issues" />
 
     <details class="acc-sec" name="djm900-acc" id="known-issues"><summary><h2 class="acc-h2">Firmware and known issues</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
@@ -171,7 +172,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">⚙ Features explained</h2>
+    <AccGroup icon="sliders" title="Features explained" />
 
     <details class="acc-sec" name="djm900-acc" id="beat-fx"><summary><h2 class="acc-h2">Beat FX</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
@@ -223,7 +224,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">💡 Professional tips</h2>
+    <AccGroup icon="bulb" title="Professional tips" />
 
     <details class="acc-sec" name="djm900-acc" id="gain-staging"><summary><h2 class="acc-h2">Gain staging before the room, not during it</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
@@ -243,7 +244,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">🛡 Preventive maintenance</h2>
+    <AccGroup icon="shield" title="Preventive maintenance" />
 
     <details class="acc-sec" name="djm900-acc" id="maintenance"><summary><h2 class="acc-h2">Keeping the desk reliable over years of bookings</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
@@ -261,7 +262,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">🔄 Compatibility</h2>
+    <AccGroup icon="sync" title="Compatibility" />
 
     <details class="acc-sec" name="djm900-acc" id="compatibility"><summary><h2 class="acc-h2">Software and player compatibility</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
@@ -278,7 +279,7 @@ const schema = {
       </div>
     </details>
 
-    <h2 class="acc-group">📚 Frequently asked questions</h2>
+    <AccGroup icon="book" title="Frequently asked questions" />
 
     <details class="acc-sec" name="djm900-acc" id="faq"><summary><h2 class="acc-h2">Quick answers</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
