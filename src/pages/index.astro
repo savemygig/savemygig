@@ -66,8 +66,12 @@ const SUBLINES = [
       <a class="door d-emergency" href="/emergency" data-event="begin_checkout" data-placement="home_door_emergency">
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
+          <!-- Antonio, launch refinements 2026-07-27: "mixer" added because the
+               no-sound branch behind this door is mixer territory, and "fast"
+               dropped because it promised a speed nobody can guarantee. Same
+               rule as everywhere else: never write a promise into copy. -->
           <span class="door-title">FIX A PROBLEM NOW</span>
-          <span class="door-desc"><span class="dd-full">USB or player failing. Get playing again, fast.</span><span class="dd-short">USB or player failing? Fix it fast.</span></span>
+          <span class="door-desc"><span class="dd-full">USB, player or mixer failing. Get playing again.</span><span class="dd-short">USB, player or mixer failing? Fix it.</span></span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
       </a>
