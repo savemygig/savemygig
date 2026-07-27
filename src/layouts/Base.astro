@@ -527,7 +527,13 @@ const entityGraph = {
     .foot-seal {
       display: block; position: absolute;
       left: calc(50% + 0.6rem); top: 50%; transform: translateY(-50%);
-      height: 80%; width: auto;
+      /* 92% = his "+15% but never breaking anything": still inside the
+         stack's height (100% would touch the wordmark and coffee lines),
+         and the max-width guard stops it at the right half's edge on any
+         phone, letterboxing left instead of overflowing. */
+      height: 92%; width: auto;
+      max-width: calc(50% - 0.6rem);
+      object-fit: contain; object-position: left center;
     }
     .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
     .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
