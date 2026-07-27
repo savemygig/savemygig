@@ -194,9 +194,11 @@ const entityGraph = {
       <div class="foot-cols">
         <div class="foot-brand">
           <!-- Mobile only (Antonio): the brand block spans the full width on
-               a phone and the right half sat empty, so the seal fills it.
-               Desktop keeps the clean four-column grid, no seal. -->
-          <img class="foot-seal" src="/images/seal-90.webp" alt="" width="90" height="90" loading="lazy" aria-hidden="true" />
+               a phone and the right half sat empty, so the seal fills it,
+               CENTERED in that space both ways (a corner-pinned version
+               shipped for an hour and looked like a sticker). Desktop keeps
+               the clean four-column grid, no seal. -->
+          <img class="foot-seal" src="/images/seal-footer.webp" alt="" width="104" height="104" loading="lazy" aria-hidden="true" />
           <a href="/" class="foot-lockup" aria-label="Save My Gig, DJ rescue and prevention">
             <span class="foot-lockup-text">
               <span class="foot-wordmark">Save My Gig<span class="accent">!</span></span>
@@ -230,6 +232,9 @@ const entityGraph = {
           <span class="foot-col-h">Rescue</span>
           <a href="/emergency">Emergency mode</a>
           <a href="/recovery">Data recovery</a>
+          <!-- Antonio's call: the installed app IS rescue, it guides you
+               with no internet, so it earns the fourth slot here. -->
+          <a href="/install">Install the app</a>
           <a href="/faq">FAQ</a>
         </nav>
         <nav class="foot-col" aria-label="Prevent">
@@ -253,9 +258,15 @@ const entityGraph = {
       <div class="foot-base">
         <!-- Plural, per Antonio: it is not one person anymore, there is a
              crew of DJs and techs behind this. -->
-        <span class="foot-copy">© 2026 Save My Gig! · Built by DJs who've been there.</span>
+        <!-- Symbols, settled 2026-07-27: © is COPYRIGHT (automatic, no
+             registration exists or is needed, standard on every site).
+             ™ claims the unregistered trademark, allowed before filing.
+             ® is the only forbidden one until the mark is registered.
+             Never "upgrade" ™ to ® here without Antonio's registration. -->
+        <span class="foot-copy">© 2026 Save My Gig!&trade; · Built by DJs who've been there.</span>
         <!-- Alive-signal, per Antonio's homepage review: says the project is
-             maintained without printing a date that would itself go stale. -->
+             maintained without printing a date that would itself go stale.
+             Same font size as the line above (Antonio). -->
         <span class="foot-live">Updated continuously with new equipment and fixes.</span>
       </div>
     </div>
@@ -458,7 +469,7 @@ const entityGraph = {
      the copyright rather than beside it. */
   .foot-base { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-align: center; }
   .foot-copy { font-size: 0.8rem; color: var(--text-faint); }
-  .foot-live { font-size: 0.74rem; color: var(--text-faint); opacity: 0.85; }
+  .foot-live { font-size: 0.8rem; color: var(--text-faint); opacity: 0.85; }
   /* Left-justified (Antonio, 2026-07-27): every element in this column and in
      the link columns beside it sits on the left edge, so a centered coffee
      link read as accidental. The cup now starts flush with the Instagram
@@ -480,10 +491,19 @@ const entityGraph = {
        pair up; More spans the full width underneath and flows its own links in
        two columns, so there is no orphaned empty cell beside it. */
     .foot-cols { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; }
-    .foot-brand { grid-column: 1 / -1; position: relative; }
-    /* Centered against the wordmark + socials stack, clear of the coffee
-       link's row. */
-    .foot-seal { display: block; position: absolute; top: 0.4rem; right: 0.2rem; }
+    /* Two real columns: the brand stack on the left, the seal centered in
+       whatever space remains on the right. Grid, not absolute positioning,
+       so "centered" stays true on every phone width. */
+    .foot-brand {
+      grid-column: 1 / -1;
+      display: grid; grid-template-columns: auto 1fr; align-items: center;
+      column-gap: 0.5rem;
+    }
+    .foot-brand .foot-lockup, .foot-brand .foot-social, .foot-brand .foot-bmc { grid-column: 1; }
+    .foot-seal {
+      display: block; grid-column: 2; grid-row: 1 / span 3;
+      justify-self: center; align-self: center;
+    }
     .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
     .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
     .foot-col:last-child a { display: block; margin-bottom: 0.7rem; }
