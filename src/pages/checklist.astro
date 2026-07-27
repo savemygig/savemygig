@@ -111,7 +111,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <!-- Per-device honesty (audit finding): registration unlocks THIS device
            today, and the emailed copy is what carries the list across devices.
            When account sync ships this copy gets stronger, not corrected. -->
-      <p class="dim unlock-copy" id="unlockCopy">Free for registered users. Register with your email and you are in right away on this device. Your list saves here; Email list sends you a copy with a link that loads it on any other device.</p>
+      <p class="dim unlock-copy" id="unlockCopy">Free for registered users. Register with your email and your name and you are in right away on this device. Your list saves here; Email list sends you a copy with a link that loads it on any other device.</p>
       <!-- One required field, two optional ones. Antonio wanted name, surname,
            artist name and Instagram, all required, so he can follow every DJ
            who registers. The follow-back idea is genuinely good and stays. The
@@ -127,14 +127,21 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              homepage greets by this name where it fits. Trade-off noted at
              the time: a second required field costs some conversions. -->
         <input type="text" name="artist" required autocomplete="nickname" placeholder="Artist name or first name" aria-label="Artist name or first name" maxlength="80" />
-        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="@your.artist.instagram (optional)" aria-label="Artist Instagram, optional" maxlength="80" />
-        <p class="unlock-follow dim">Share your Instagram. We will be happy to follow your work.</p>
-        <button type="submit" class="btn btn-solid">Register</button>
+        <!-- The follow promise lives INSIDE the field now (Antonio): one line
+             less under the form, and the pitch sits exactly where the answer
+             goes. Long placeholder ellipsizes on narrow phones; the handle
+             hint is front-loaded so the cut only ever costs the tail. -->
+        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="@your.artist.instagram (optional). We will be happy to follow your work" aria-label="Artist Instagram, optional. We will be happy to follow your work" maxlength="80" />
+        <!-- Register + the anti-spam promise share a row on desktop (Antonio:
+             everything moves up a little); they stack again on phones. -->
+        <div class="unlock-actions">
+          <button type="submit" class="btn btn-solid">Register</button>
+          <!-- Antonio's anti-spam promise, in his voice, tightened. This
+               doubles as the consent line, so it stays honest about sends. -->
+          <p class="unlock-note">This is not a spam list. Once in a while we share something we think is worth your time: news about the site, new tools, or a product or service that helps your career. That is it. Opt out any time, one click. <a href="/privacy">Privacy</a></p>
+        </div>
       </form>
       <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
-      <!-- Antonio's anti-spam promise, in his voice, tightened. This doubles as
-           the consent line, so it has to stay honest about what we send. -->
-      <p class="unlock-note">This is not a spam list. Once in a while we share something we think is worth your time: news about the site, new tools, or a product or service that helps your career. That is it. Opt out any time, one click. <a href="/privacy">Privacy</a></p>
     </div>
 
     <section class="readiness" id="readiness" aria-live="polite">
@@ -469,7 +476,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .unlock-copy { font-size: 0.9rem; margin: 0 0 0.9rem; }
   .unlock-form { display: flex; flex-direction: column; gap: 10px; }
-  .unlock-follow { font-size: 0.82rem; margin: 0; }
   .bl-short { display: none; }
   .unlock-form input {
     width: 100%; padding: 0.9rem 1rem; font-family: inherit; font-size: 16px;
@@ -482,17 +488,19 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .unlock-msg { margin: 0.8rem 0 0; font-size: 0.88rem; color: var(--text-dim); }
   .unlock-msg.ok { color: var(--green); }
   .unlock-msg.err { color: var(--red); }
-  /* The single-row desktop layout died when the form grew optional fields:
-     three inputs, a promise line and a button do not fit on one row. Email and
-     artist share a row on wide screens, Instagram and its promise get their
-     own, button under. */
+  /* Register and the anti-spam note share a row on desktop (Antonio: the
+     panel compacts, everything moves up); phones stack them again. */
+  .unlock-actions { display: flex; flex-direction: column; gap: 0.8rem; }
   @media (min-width: 520px) {
     .unlock-form { flex-direction: row; flex-wrap: wrap; }
     .unlock-form input { flex: 1 1 220px; }
-    .unlock-form .unlock-follow { flex: 1 1 100%; }
     .unlock-form .btn { width: auto; white-space: nowrap; }
+    .unlock-actions {
+      flex: 1 1 100%; flex-direction: row; align-items: center; gap: 1.2rem;
+    }
+    .unlock-actions .unlock-note { margin: 0; }
   }
-  .unlock-note { margin: 0.8rem 0 0; font-size: 0.76rem; color: var(--text-faint); }
+  .unlock-note { margin: 0; font-size: 0.76rem; color: var(--text-faint); }
   .unlock-note a { color: var(--text-dim); }
 
   /* Custom mode: your own items. Editing (delete/add) is gated behind Edit. */
