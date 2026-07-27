@@ -494,22 +494,24 @@ const entityGraph = {
        pair up; More spans the full width underneath and flows its own links in
        two columns, so there is no orphaned empty cell beside it. */
     .foot-cols { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; }
-    /* Seal LEFT, brand stack RIGHT (Antonio): mirrors the header's own
-       dynamic, seal then Save My Gig. Grid, not absolute positioning, so
-       the geometry holds on every phone width. Sized 20% under the earlier
-       full-stack stretch, vertically centered against the stack. */
+    /* Antonio's mockup (2026-07-27, final): brand stack LEFT, seal RIGHT.
+       The seal's TOP touches the top of the wordmark, its BOTTOM touches
+       the coffee line (align-self stretch over all three rows), and its
+       LEFT edge lines up with the PREPARE column below, which is why the
+       brand grid uses the SAME 1fr 1fr + 1.2rem gap as .foot-cols. The
+       seal-left version was tried and reverted. */
     .foot-brand {
       grid-column: 1 / -1;
-      display: grid; grid-template-columns: auto 1fr; align-items: center;
-      column-gap: 1.1rem;
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center;
+      column-gap: 1.2rem;
     }
-    .foot-brand .foot-lockup, .foot-brand .foot-social, .foot-brand .foot-bmc { grid-column: 2; }
-    /* On a phone the coffee link left-aligns with the icons. */
+    .foot-brand .foot-lockup, .foot-brand .foot-social, .foot-brand .foot-bmc { grid-column: 1; }
+    /* On a phone the coffee link left-aligns with the icons (his mockup). */
     .foot-bmc { justify-content: flex-start; width: auto; }
     .foot-seal {
-      display: block; grid-column: 1; grid-row: 1 / span 3;
-      align-self: center; justify-self: center;
-      width: 120px; height: 120px;
+      display: block; grid-column: 2; grid-row: 1 / span 3;
+      align-self: stretch; justify-self: start;
+      height: 100%; width: auto; max-width: 100%; object-fit: contain;
     }
     .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
     .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
