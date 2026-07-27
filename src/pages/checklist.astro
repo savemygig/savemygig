@@ -207,7 +207,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            list goes back to how it was before you touched anything, which in
            Custom means your edits too, not just the ticks. That makes it
            destructive, so it asks once before it acts. -->
-      <button type="button" class="btn btn-neutral" id="resetBtn"><span class="bl-full">Reset list</span><span class="bl-short">Reset</span></button>
+      <!-- BOTH states live in the button, stacked on one grid cell, and a
+           class flips visibility: the button's width is the width of its
+           widest state from the first paint, so arming can never grow it
+           and reflow the toolbar (Antonio caught "Reset everything?"
+           pushing Email list onto a second row). -->
+      <button type="button" class="btn btn-neutral" id="resetBtn">
+        <span class="rs-idle"><span class="bl-full">Reset list</span><span class="bl-short">Reset</span></span>
+        <span class="rs-arm" aria-hidden="true"><span class="bl-full">Are you sure?</span><span class="bl-short">Sure?</span></span>
+      </button>
       <!-- Full words on desktop, one word on a phone: four buttons at full
            length wrap the toolbar onto a second line on mobile (Antonio). -->
       <!-- "Download list", not "Download PDF" (Antonio): the file is a PDF but
@@ -375,17 +383,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     overflow: hidden;
     margin: 0.25rem 0 0;
   }
-  /* The fill REVEALS a fixed red -> amber -> green gradient spanning the
-     whole track (Antonio's idea, his pick of the two builds): the tip's
-     colour reads as your state, danger at the start, green at ready. The
-     gradient is painted at track width via background-size, which the JS
-     keeps in sync with the fill width (10000/pct trick below). */
-  .meter-fill {
-    height: 100%; width: 0%; border-radius: 999px; transition: width 0.3s ease;
-    background-image: linear-gradient(90deg, var(--red) 0%, var(--amber) 50%, var(--green) 100%);
-    background-repeat: no-repeat; background-position: left center;
-    background-size: 100% 100%;
-  }
+  /* GREEN ONLY, settled (Antonio): a red->green gradient was built, seen,
+     and reverted the same hour. His words: a red bar stresses an artist
+     who packed everything for this one gig, "this is not a game". The
+     meter encourages, it never judges. Do not reintroduce the gradient. */
+  .meter-fill { height: 100%; width: 0%; background: var(--green); border-radius: 999px; transition: width 0.3s ease; }
   .readiness-sub { grid-area: 1 / 1; margin: 0; font-size: 0.9rem; color: var(--text-dim); }
   .readiness.is-ready .readiness-sub { color: var(--green); }
 
@@ -683,8 +685,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   #hintClose:hover { color: var(--text); }
   .hint-ic { vertical-align: -1px; margin: 0 1px; }
-  /* Armed reset: the button itself becomes the confirmation. */
+  /* Armed reset: the button itself becomes the confirmation. Both labels
+     occupy the same grid cell; visibility flips, width never moves. */
+  #resetBtn { display: inline-grid; }
+  #resetBtn > span { grid-area: 1 / 1; }
+  #resetBtn .rs-arm { visibility: hidden; }
   #resetBtn.armed { border-color: var(--red); color: var(--red); }
+  #resetBtn.armed .rs-idle { visibility: hidden; }
+  #resetBtn.armed .rs-arm { visibility: visible; }
   /* The gated action: darker than its neighbours, which quietly says this one
      asks something of you. Registered users see it behave like any button. */
   /* .btn.btn-gated, two classes on purpose: global.css loads AFTER page CSS,
@@ -934,13 +942,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     const pct = totalV ? Math.round((done / totalV) * 100) : 0;
 
     if (pctEl) pctEl.textContent = pct + '%';
-    if (fillEl) {
-      fillEl.style.width = pct + '%';
-      // Keep the gradient spanning the TRACK, not the fill: the fill is
-      // pct% wide, so its background must be (100/pct)x its own width for
-      // the gradient's far green end to sit at the track's 100% mark.
-      fillEl.style.backgroundSize = (pct > 0 ? (10000 / pct) : 100) + '% 100%';
-    }
+    if (fillEl) fillEl.style.width = pct + '%';
     if (subEl) subEl.textContent = pct === 100 ? 'Ready. Go play.' : `${done} of ${totalV} ready`;
     if (readinessEl) readinessEl.classList.toggle('is-ready', pct === 100 && totalV > 0);
 
@@ -1624,18 +1626,17 @@ ${sections}
     const disarmReset = () => {
       resetArmed = false;
       if (resetTimer) clearTimeout(resetTimer);
-      resetBtn.innerHTML = '<span class="bl-full">Reset list</span><span class="bl-short">Reset</span>';
+      // Labels live in the markup, stacked; only the class flips. Never
+      // write innerHTML here again: label swaps changed the button width
+      // and reflowed the whole toolbar.
       resetBtn.classList.remove('armed');
     };
     disarmResetHook = disarmReset;
     resetBtn.addEventListener('click', () => {
       if (!resetArmed) {
         resetArmed = true;
-        // Full question on desktop; on a phone the shared-width button cannot
-        // fit "Reset everything?", so it asks the one word that matters.
-        resetBtn.innerHTML = mode === 'custom'
-          ? '<span class="bl-full">Reset everything?</span><span class="bl-short">Confirm?</span>'
-          : '<span class="bl-full">Reset ticks?</span><span class="bl-short">Confirm?</span>';
+        // "Are you sure?" for every mode (Antonio): short enough to share
+        // the idle width, and the red border already says this is serious.
         resetBtn.classList.add('armed');
         resetTimer = setTimeout(disarmReset, 4000);
         return;
