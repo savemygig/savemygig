@@ -151,7 +151,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            length wrap the toolbar onto a second line on mobile (Antonio). -->
       <button type="button" class="btn btn-neutral" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
       <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Download PDF</span><span class="bl-short">Download</span></button>
-      <span class="edit-hint dim" id="editHint">Add, remove, rename with the pencil, or drag the arrows to reorder. Tap Save when you finish, so nothing gets deleted by accident.</span>
+      <!-- Antonio: instructions occupy space; read once, dismiss forever. The X
+           writes localStorage so it never comes back on this device. Copy cut
+           to the four verbs the mode actually has. -->
+      <span class="edit-hint dim" id="editHint">Add, rename (pencil), reorder (arrows), delete (&times;). Save when done.<button type="button" id="hintClose" aria-label="Dismiss this tip">&times;</button></span>
       <form class="backup-form" id="backupForm" hidden>
         <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" />
         <button type="submit" class="btn btn-neutral">Send it</button>
@@ -531,7 +534,21 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .custom-toolbar { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem; }
   .custom-toolbar[hidden] { display: none; }
   .custom-toolbar .btn { width: auto; display: inline-block; margin: 0; }
-  .edit-hint { font-size: 0.8rem; }
+  .edit-hint {
+    font-size: 0.8rem;
+    flex: 1 1 100%;
+    position: relative;
+    padding: 0.5rem 2.1rem 0.5rem 0.7rem;
+    border: 1px solid var(--edge);
+    border-radius: 2px;
+  }
+  .edit-hint[data-gone] { display: none; }
+  #hintClose {
+    position: absolute; right: 2px; top: 50%; transform: translateY(-50%);
+    background: none; border: 0; color: var(--text-faint); cursor: pointer;
+    font-size: 1.1rem; line-height: 1; padding: 8px 10px;
+  }
+  #hintClose:hover { color: var(--text); }
 
   .add-own { display: none; gap: 8px; margin: 0.6rem 0 0.2rem; }
   #list[data-mode="custom"][data-edit="on"] .add-own { display: flex; }
@@ -577,7 +594,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     .group-toggle { padding: 1.05rem 1.2rem; }
     .group-body { padding: 0 1.2rem 0.95rem; }
     .task > label { padding-left: 0; padding-right: 0; }
-    .custom-toolbar .btn { padding-left: 1.2rem; padding-right: 1.2rem; }
+    /* Four buttons, ONE row, on a 360px Samsung (Antonio: "breaking the line,
+       doesn't look very cool"). They share the width equally; DOWNLOAD is the
+       longest word and sets the floor, measured to fit at 0.72rem. */
+    .custom-toolbar { gap: 6px; }
+    .custom-toolbar .btn {
+      flex: 1 1 0; min-width: 0;
+      padding: 0.7rem 0.3rem;
+      font-size: 0.72rem; letter-spacing: 0.01em;
+      text-align: center;
+    }
     .bl-full { display: none; }
     .bl-short { display: inline; }
   }
@@ -1125,6 +1151,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       const li = btn.closest('.task'); if (li) li.classList.add('removed');
       render();
     });
+  });
+
+  // The edit-instructions tip: read once, dismiss forever on this device.
+  const HINT_KEY = 'SMG_HINT_EDIT_DISMISSED';
+  const hintEl2 = document.getElementById('editHint');
+  const hintClose = document.getElementById('hintClose');
+  try { if (localStorage.getItem(HINT_KEY) === '1' && hintEl2) hintEl2.setAttribute('data-gone', '1'); } catch (e) {}
+  if (hintClose) hintClose.addEventListener('click', () => {
+    if (hintEl2) hintEl2.setAttribute('data-gone', '1');
+    try { localStorage.setItem(HINT_KEY, '1'); } catch (e) {}
   });
 
   const unlockTitle = document.getElementById('unlockTitle');
