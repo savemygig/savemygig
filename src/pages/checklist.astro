@@ -361,6 +361,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
               <input type="text" class="add-input" data-cat={g.id} placeholder="Add your own..." aria-label={`Add your own item to ${g.title}`} maxlength="80" />
               <button type="button" class="add-btn" data-add={g.id}>Add</button>
             </div>
+            <!-- Category notes (Antonio's spec): one personal briefing area
+                 per category, Custom mode only. Not a comments system: booth
+                 config, contacts, set times, the gig-specific facts that are
+                 not checklist items. Autosaves, prints, emails, restores. -->
+            <div class="cat-notes">
+              <button type="button" class="notes-toggle" data-notes-btn={g.id}>+ Add notes</button>
+              <textarea class="notes-area" data-notes={g.id} rows="4" maxlength="2000" placeholder={`Notes for ${g.title}: setup, contacts, times, anything this gig needs.`} aria-label={`Your notes for ${g.title}`} hidden></textarea>
+            </div>
           </div>
         </section>
       ))}
@@ -817,6 +825,25 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .add-own { display: none; gap: 8px; margin: 0.6rem 0 0.2rem; }
   #list[data-mode="custom"][data-edit="on"] .add-own { display: flex; }
 
+  /* Category notes: Custom mode only, quiet by design. */
+  .cat-notes { display: none; margin: 0.7rem 0 0.2rem; }
+  #list[data-mode="custom"] .cat-notes { display: block; }
+  .notes-toggle {
+    background: none; border: 0; padding: 0.4rem 0; cursor: pointer;
+    font-family: inherit; font-size: 0.84rem; color: var(--text-faint);
+  }
+  .notes-toggle:hover { color: var(--text-dim); }
+  .notes-toggle[hidden] { display: none; }
+  .notes-area {
+    width: 100%; resize: vertical; min-height: 84px;
+    padding: 0.75rem 0.9rem; font-family: inherit; font-size: 16px;
+    line-height: 1.5; color: var(--text);
+    background: var(--bg); border: 1px dashed var(--edge); border-radius: var(--radius);
+  }
+  .notes-area::placeholder { color: var(--text-faint); }
+  .notes-area:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .notes-area[hidden] { display: none; }
+
   /* Group header icon: same monochrome stroke language as everywhere. */
   .group-ic { display: inline-flex; flex: 0 0 auto; color: var(--text-dim); margin-right: 0.55rem; }
 
@@ -922,6 +949,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const RENAME_KEY = 'SMG_CHECKLIST_RENAME_V1';
   const SECTIONS_KEY = 'SMG_CHECKLIST_SECTIONS_V1';
   const HIDDENG_KEY = 'SMG_CHECKLIST_HIDDENGROUPS_V1';
+  const NOTES_KEY = 'SMG_CHECKLIST_NOTES_V1';
   const EMAIL_KEY = 'SMG_EMAIL';
 
   const listEl = document.getElementById('list');
@@ -1015,6 +1043,25 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     catch (e) { return []; }
   }
   function saveHiddenGroups(a: string[]) { try { localStorage.setItem(HIDDENG_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } }
+  function loadNotes(): Record<string, string> {
+    try { const raw = localStorage.getItem(NOTES_KEY); return raw ? JSON.parse(raw) : {}; }
+    catch (e) { return {}; }
+  }
+  function saveNotes(n: Record<string, string>) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch (e) { /* blocked */ } }
+  // Wire one category's notes pair (button + textarea). Used for the fixed
+  // groups at load and for user sections as they render.
+  function wireNotes(btn: HTMLButtonElement, area: HTMLTextAreaElement, gid: string) {
+    const existing = loadNotes()[gid] || '';
+    if (existing) { area.value = existing; area.hidden = false; btn.hidden = true; }
+    btn.addEventListener('click', () => {
+      btn.hidden = true; area.hidden = false; area.focus();
+    });
+    area.addEventListener('input', () => {
+      const n = loadNotes();
+      if (area.value.trim()) n[gid] = area.value; else delete n[gid];
+      saveNotes(n);
+    });
+  }
   function applyHiddenGroups() {
     const hidden = loadHiddenGroups();
     document.querySelectorAll<HTMLElement>('.task-group').forEach((g) => {
@@ -1055,6 +1102,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       if (data && data.o && typeof data.o === 'object') saveOrder(data.o);
       if (data && Array.isArray(data.s)) saveSections(data.s);
       if (data && Array.isArray(data.h)) saveHiddenGroups(data.h);
+      if (data && data.n && typeof data.n === 'object') saveNotes(data.n);
       setUnlocked();
       history.replaceState(null, '', location.pathname + location.search);
       return true;
@@ -1104,6 +1152,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           // so the second device matches the first.
           sections: loadSections(),
           hiddenGroups: loadHiddenGroups(),
+          notes: loadNotes(),
           catNames: (() => { const m: Record<string, string> = {}; document.querySelectorAll<HTMLElement>('.task-group').forEach((g) => { const t = g.querySelector('.group-title'); if (t) m[g.getAttribute('data-group') || ''] = t.textContent || ''; }); return m; })(),
         }),
       });
@@ -1262,7 +1311,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       addBtn.addEventListener('click', doAdd);
       addInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doAdd(); } });
       addRow.appendChild(addInput); addRow.appendChild(addBtn);
-      body.appendChild(ul); body.appendChild(addRow);
+      // Category notes, same anatomy as the fixed groups.
+      const notesWrap = document.createElement('div'); notesWrap.className = 'cat-notes';
+      const notesBtn = document.createElement('button');
+      notesBtn.type = 'button'; notesBtn.className = 'notes-toggle'; notesBtn.textContent = '+ Add notes';
+      const notesArea = document.createElement('textarea');
+      notesArea.className = 'notes-area'; notesArea.rows = 4; notesArea.maxLength = 2000; notesArea.hidden = true;
+      notesArea.placeholder = 'Notes for ' + sec.t + ': setup, contacts, times, anything this gig needs.';
+      notesArea.setAttribute('aria-label', 'Your notes for ' + sec.t);
+      wireNotes(notesBtn, notesArea, sec.id);
+      notesWrap.appendChild(notesBtn); notesWrap.appendChild(notesArea);
+      body.appendChild(ul); body.appendChild(addRow); body.appendChild(notesWrap);
       section.appendChild(h3); section.appendChild(body);
       // Collapse behaviour, same rules as the fixed groups.
       const open = loadOpen()[sec.id] === true;
@@ -1638,6 +1697,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   applyRemoved();
   applyHiddenGroups();
 
+  // Category notes on the fixed groups (user sections wire their own).
+  document.querySelectorAll<HTMLButtonElement>('[data-notes-btn]').forEach((btn) => {
+    const gid = btn.getAttribute('data-notes-btn') || '';
+    const area = document.querySelector<HTMLTextAreaElement>(`textarea[data-notes="${gid}"]`);
+    if (area) wireNotes(btn, area, gid);
+  });
+
   // Remove a built-in category (Custom + Edit): hides it and everything in
   // it; Reset list is the way back. User sections have their own delete.
   document.querySelectorAll<HTMLButtonElement>('[data-group-hide]').forEach((btn) => {
@@ -1761,9 +1827,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // rendering, which needs no library and matches paper size to the user.
   function printCurrentList() {
     const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] || c));
-    const groups: { title: string; items: { label: string; done: boolean }[] }[] = [];
+    const allNotes = mode === 'custom' ? loadNotes() : {};
+    const groups: { title: string; notes: string; items: { label: string; done: boolean }[] }[] = [];
     document.querySelectorAll<HTMLElement>('.task-group').forEach((g) => {
       if (getComputedStyle(g).display === 'none') return; // removed category
+      const gid = g.getAttribute('data-group') || '';
       const title = (g.querySelector('.group-title')?.textContent || '').trim();
       const items: { label: string; done: boolean }[] = [];
       g.querySelectorAll<HTMLElement>('li.task').forEach((li) => {
@@ -1777,14 +1845,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         const done = !!li.querySelector<HTMLInputElement>('input[type=checkbox]')?.checked;
         if (label) items.push({ label, done });
       });
-      if (items.length) groups.push({ title, items });
+      const notes = (allNotes[gid] || '').trim();
+      if (items.length || notes) groups.push({ title, notes, items });
     });
 
     const rows = (items: { label: string; done: boolean }[]) => items.map((it) =>
       `<li class="${it.done ? 'done' : ''}"><span class="bx">${it.done ? '&#10003;' : ''}</span>${esc(it.label)}</li>`
     ).join('');
     const sections = groups.map((g) =>
-      `<section><h2>${esc(g.title)}</h2><ul>${rows(g.items)}</ul></section>`
+      `<section><h2>${esc(g.title)}</h2><ul>${rows(g.items)}</ul>${g.notes ? `<p class="gnotes">${esc(g.notes).replace(/\n/g, '<br />')}</p>` : ''}</section>`
     ).join('');
 
     const w = window.open('', '_blank');
@@ -1798,6 +1867,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   h1 { font-size: 26px; margin: 2px 0 2px; text-transform: uppercase; letter-spacing: -0.01em; }
   .sub { color: #666; font-size: 12px; margin: 0 0 18px; }
   section { break-inside: avoid; margin-bottom: 14px; }
+  .gnotes { margin: 6px 0 0 26px; padding: 8px 10px; font-size: 12px; color: #444; border-left: 2px solid #d43a1e; background: #f6f5f3; }
   h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid #d43a1e; padding-bottom: 4px; margin: 0 0 6px; }
   ul { list-style: none; margin: 0; padding: 0; }
   li { padding: 4px 0 4px 26px; position: relative; border-bottom: 1px solid #eee; }
@@ -1997,6 +2067,7 @@ ${sections}
           localStorage.removeItem(REMOVED_KEY);
           localStorage.removeItem(SECTIONS_KEY);
           localStorage.removeItem(HIDDENG_KEY);
+          localStorage.removeItem(NOTES_KEY);
         } catch (e) {}
         // A full rebuild from defaults beats surgically undoing four kinds of
         // edit in place.

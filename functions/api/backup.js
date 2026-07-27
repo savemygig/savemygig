@@ -44,6 +44,7 @@ export async function onRequestPost({ request, env }) {
   let order = {};
   let sections = [];
   let hiddenGroups = [];
+  let notes = {};
   let catNamesIn = {};
   try {
     const b = await request.json();
@@ -55,6 +56,7 @@ export async function onRequestPost({ request, env }) {
     order = b.order && typeof b.order === 'object' ? b.order : {};
     sections = Array.isArray(b.sections) ? b.sections : [];
     hiddenGroups = Array.isArray(b.hiddenGroups) ? b.hiddenGroups : [];
+    notes = b.notes && typeof b.notes === 'object' ? b.notes : {};
     catNamesIn = b.catNames && typeof b.catNames === 'object' ? b.catNames : {};
   } catch (e) {
     return json({ ok: false, error: 'bad_request' }, 400);
@@ -70,7 +72,7 @@ export async function onRequestPost({ request, env }) {
   // The restore link must carry the WHOLE list state. It used to encode only
   // custom items and removals, so renames and order silently vanished on the
   // second device while the email's own text showed the renamed labels.
-  const restoreUrl = `${SITE}/checklist#r=${b64url(JSON.stringify({ c: custom, x: removed, r: renames, o: order, s: sections, h: hiddenGroups }))}`;
+  const restoreUrl = `${SITE}/checklist#r=${b64url(JSON.stringify({ c: custom, x: removed, r: renames, o: order, s: sections, h: hiddenGroups, n: notes }))}`;
 
   // Readable list, grouped by category, escaped.
   // NOTE: named CAT_ORDER, not "order": `order` above already holds the DJ's
@@ -95,6 +97,12 @@ export async function onRequestPost({ request, env }) {
       sectionsHtml += `<tr><td style="padding:3px 30px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#f3f1ec;">&#9633;&nbsp;&nbsp;${esc(label)}</td></tr>`;
       textLines.push('[ ] ' + label);
     });
+    // The DJ's own notes for this category, under its items.
+    const note = typeof notes[cat] === 'string' ? notes[cat].trim() : '';
+    if (note) {
+      sectionsHtml += `<tr><td style="padding:8px 30px 3px 44px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.55;color:#9a978f;border-left:0;">${esc(note).replace(/\n/g, '<br />')}</td></tr>`;
+      textLines.push('Notes: ' + note.replace(/\n/g, ' / '));
+    }
   });
   if (!sectionsHtml) {
     sectionsHtml = `<tr><td style="padding:16px 30px;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#9a978f;">Your custom list is empty right now.</td></tr>`;
