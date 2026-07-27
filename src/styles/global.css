@@ -632,6 +632,10 @@ html.ck-open .sticky-cta { display: none !important; }
 .acc-sec[open] > summary .acc-chev { transform: rotate(225deg); }
 .acc-body { padding: 0 1.25rem 1.1rem; }
 .acc-body p, .acc-body li { color: var(--text-dim); line-height: 1.65; }
+/* Numbered steps inside an accordion (/install): without this the global
+   reset leaves <ol> with no padding and the numbers print ON the box edge. */
+.acc-body ol { margin: 0 0 0.8rem; padding-left: 1.6rem; }
+.acc-body ol li { margin-bottom: 0.55rem; padding-left: 0.2rem; }
 .acc-body strong { color: var(--text); }
 .acc-related {
   font-size: 0.85rem; margin-top: 0.9rem; padding-top: 0.7rem;

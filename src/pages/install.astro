@@ -122,18 +122,22 @@ import AccGroup from '../components/AccGroup.astro';
 </Base>
 
 <script is:inline>
-  // Open the accordion that matches the visitor's own device, so an iPhone
-  // visitor sees iPhone steps without hunting. Native single-open (name=)
-  // closes it again the moment they open another.
+  // Everything starts COLLAPSED and the visitor picks their device
+  // (Antonio: auto-opening by user agent felt like the page deciding for
+  // you). Deep links still open their section, same as the other
+  // reference pages: #what-is-a-pwa from the intro, #iphone from anywhere.
   (function () {
-    var ua = navigator.userAgent;
-    var id = /iphone|ipad|ipod/i.test(ua) ? 'iphone'
-      : /android/i.test(ua) ? 'android'
-      : /macintosh|mac os x/i.test(ua) ? 'mac'
-      : 'windows';
-    // Deep links win over device detection.
-    if (location.hash && document.getElementById(location.hash.slice(1))) return;
-    var el = document.getElementById(id);
-    if (el && el.tagName === 'DETAILS') el.open = true;
+    function openTarget() {
+      var id = location.hash.slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (!el) return;
+      var box = el.closest ? el.closest('details') : null;
+      if (el.tagName === 'DETAILS') box = el;
+      if (box && !box.open) box.open = true;
+      el.scrollIntoView();
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
   })();
 </script>

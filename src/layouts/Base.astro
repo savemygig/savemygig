@@ -471,13 +471,13 @@ const entityGraph = {
   .foot-base { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-align: center; }
   .foot-copy { font-size: 0.8rem; color: var(--text-faint); }
   .foot-live { font-size: 0.8rem; color: var(--text-faint); opacity: 0.85; }
-  /* Left-justified (Antonio, 2026-07-27): every element in this column and in
-     the link columns beside it sits on the left edge, so a centered coffee
-     link read as accidental. The cup now starts flush with the Instagram
-     circle, one rhythm down the whole brand block. */
+  /* Desktop: centered under the social row, same 176px measure (4 x 38px
+     buttons + 3 x 0.5rem gaps), one tidy stack. Antonio tried left-justified
+     for an afternoon and called it back: centered with the icons wins on
+     desktop, LEFT wins on phones (see the media block below). */
   .foot-bmc {
-    display: flex; align-items: center; justify-content: flex-start; gap: 0.45rem;
-    margin: 0.8rem 0 0;
+    display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+    width: 176px; margin: 0.8rem 0 0;
     font-size: 0.8rem; color: var(--text-dim); text-decoration: none;
   }
   .foot-bmc:hover { color: var(--red); }
@@ -501,9 +501,16 @@ const entityGraph = {
       column-gap: 0.5rem;
     }
     .foot-brand .foot-lockup, .foot-brand .foot-social, .foot-brand .foot-bmc { grid-column: 1; }
+    /* On a phone the coffee link left-aligns with the icons. */
+    .foot-bmc { justify-content: flex-start; width: auto; }
+    /* The seal spans EXACTLY the brand stack (Antonio's spec): top edge level
+       with the top of the wordmark, bottom edge level with the coffee line,
+       centered in the remaining width with equal air both sides. Stretching
+       the row span does that geometrically, whatever the phone width. */
     .foot-seal {
       display: block; grid-column: 2; grid-row: 1 / span 3;
-      justify-self: center; align-self: center;
+      align-self: stretch; justify-self: center;
+      height: 100%; width: auto; max-width: 100%; object-fit: contain;
     }
     .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
     .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
