@@ -1514,6 +1514,16 @@ ${sections}
         inp.focus();
         return;
       }
+      // The form is novalidate (custom messages), so the artist field's
+      // required attribute is decorative: THIS is the real check. Antonio
+      // caught the hole registering email-only in a private window. The
+      // name is required because the homepage greets the DJ by it.
+      const artistInp = unlockForm.querySelector('input[name="artist"]') as HTMLInputElement | null;
+      if (artistInp && !artistInp.value.trim()) {
+        if (unlockMsg) { unlockMsg.textContent = 'Add your artist name or first name, so we know what to call you.'; unlockMsg.className = 'unlock-msg err'; }
+        artistInp.focus();
+        return;
+      }
       unlockBusy = true;
       setUnlocked();
       setEmail(email);
