@@ -10,20 +10,28 @@
  * Scoring is deliberately simple and weighted for this site: a hit in the title
  * or in an expandable section's question beats a hit in body text, because on
  * a troubleshooting site the question IS the thing people type.
+ *
+ * MULTI-INSTANCE: every page carries the overlay search in the header, and
+ * /faq and the homepage embed a second box inline. The script used to wire
+ * only the FIRST [data-search] on the page, which left the inline boxes
+ * looking perfect and doing nothing (Antonio caught it on /faq). Ids are
+ * per-instance now and the script wires every instance it finds.
  */
+const uid = 'srch-' + Math.random().toString(36).slice(2, 8);
+const { placeholder = 'Search: USB not detected, FAT32, E-8302...' } = Astro.props;
 ---
 <div class="srch" data-search>
-  <label class="sr-only" for="srchInput">Search Save My Gig</label>
+  <label class="sr-only" for={uid}>Search Save My Gig</label>
   <div class="srch-box">
     <svg class="srch-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <input
-      id="srchInput" type="search" class="srch-input" autocomplete="off"
-      placeholder="Search: USB not detected, FAT32, E-8302..."
-      aria-controls="srchResults" aria-expanded="false" role="combobox" aria-autocomplete="list"
+      id={uid} type="search" class="srch-input" autocomplete="off"
+      placeholder={placeholder}
+      aria-controls={uid + '-results'} aria-expanded="false" role="combobox" aria-autocomplete="list"
     />
-    <button type="button" class="srch-clear" id="srchClear" aria-label="Clear search" hidden>&times;</button>
+    <button type="button" class="srch-clear" aria-label="Clear search" hidden>&times;</button>
   </div>
-  <div class="srch-results" id="srchResults" role="listbox" aria-label="Search results" hidden></div>
+  <div class="srch-results" id={uid + '-results'} role="listbox" aria-label="Search results" hidden></div>
 </div>
 
 <style is:global>
@@ -68,9 +76,11 @@
 </style>
 
 <script is:inline>
-  (function () {
-    var wrap = document.querySelector('[data-search]');
-    if (!wrap) return;
+  // Runs once per rendered instance; each run wires every instance that is
+  // not wired yet, so however many boxes a page has, they all work.
+  document.querySelectorAll('[data-search]').forEach(function (wrap) {
+    if (wrap.dataset.wired) return;
+    wrap.dataset.wired = '1';
     var input = wrap.querySelector('.srch-input');
     var out = wrap.querySelector('.srch-results');
     var clear = wrap.querySelector('.srch-clear');
@@ -173,5 +183,5 @@
     document.addEventListener('click', function (e) {
       if (!wrap.contains(e.target)) { out.hidden = true; input.setAttribute('aria-expanded', 'false'); }
     });
-  })();
+  });
 </script>

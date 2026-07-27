@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import PromoBanner from '../components/PromoBanner.astro';
 import InstallApp from '../components/InstallApp.astro';
+import Search from '../components/Search.astro';
 
 // Homepage = simple "pick your pain" chooser. Rescue AND prevention, balanced:
 // three equal, neutral doors; colour lives only in the LED dots and comes up
@@ -122,21 +123,18 @@ const SUBLINES = [
       <a href="/fix/exfat-vs-fat32-cdj">exFAT vs FAT32</a>
     </p>
 
-    <!-- Antonio's launch refinement: a real search-shaped box under the
-         popular fixes, transparent on the page background, so symptom-based
-         search reads as a core feature. It is an <a> styled as an input, not
-         a real input: tapping it opens the same overlay as the nav magnifier
-         (cursor lands in the real field there), and without JS it falls back
-         to /faq, which carries the same search box. The nav magnifier stays. -->
-    <a class="seekbox" href="/faq" id="homeSeek" data-event="search_open" data-placement="home_seek" aria-label="Search Save My Gig">
-      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <!-- Front-loaded on purpose: phones ellipsize the tail, so "Search
-           anything" must survive the cut. Antonio's second pass: category
-           words ("a problem, an error code") read abstract; concrete examples
-           teach the range in one glance, and the third one is deliberately a
-           QUESTION, so the box also invites doubts, not just faults. -->
-      <span class="seekbox-hint">Search anything: USB not recognized, E-8302, what is OneLibrary&hellip;</span>
-    </a>
+    <!-- A REAL search box (Antonio, third pass): it used to be an <a> styled
+         as an input that bounced you into the nav overlay, which felt like a
+         trick next to the /faq box that searches in place. This is the same
+         live component as /faq: focus turns the border red, results appear
+         right under the box as you type, no overlay jump. The nav magnifier
+         overlay stays for every other page.
+         Placeholder is front-loaded ("Search anything" survives the phone
+         ellipsis) and uses concrete examples, the third one deliberately a
+         QUESTION so the box invites doubts, not just faults. -->
+    <div class="home-srch">
+      <Search placeholder="Search anything: USB not recognized, E-8302, what is OneLibrary…" />
+    </div>
 
     <PromoBanner exclude="/emergency" />
 
@@ -307,22 +305,16 @@ const SUBLINES = [
   }
   .known a { color: var(--text-dim); }
   .known a:hover { color: var(--red); }
-  /* Search-shaped, not gray: transparent on the page background with the
-     standard edge, per Antonio, so it reads as part of the page rather than
-     a widget. Text ellipsizes instead of wrapping on narrow phones. */
-  .seekbox {
-    display: flex; align-items: center; gap: 0.7rem;
-    margin-top: 0.9rem; padding: 0.8rem 1rem;
-    background: transparent; border: 1px solid var(--edge); border-radius: var(--radius);
-    color: var(--text-faint); text-decoration: none;
-    transition: border-color 0.15s ease, color 0.15s ease;
-  }
-  .seekbox:hover, .seekbox:focus-visible { border-color: var(--text-dim); color: var(--text-dim); }
+  /* Homepage flavour of the shared search component: transparent on the page
+     background (per Antonio, it reads as part of the page, not a widget) and
+     full landing width, unlike the 34rem default. */
+  .home-srch { margin-top: 0.9rem; }
+  .home-srch :global(.srch) { max-width: none; }
+  .home-srch :global(.srch-box) { background: transparent; position: relative; }
   /* Fourth stop of the one-time load glow (Antonio): the eye walks the three
      doors, then lands here. Neutral white and a notch softer than the doors,
      because this is the catch-all, not a fourth door. Same one-pass rule. */
-  .seekbox { position: relative; }
-  .seekbox::after {
+  .home-srch :global(.srch-box)::after {
     content: ''; position: absolute; inset: -1px; border-radius: var(--radius);
     pointer-events: none; opacity: 0; will-change: opacity;
     box-shadow: 0 0 18px 1px rgba(243, 241, 236, 0.35);
@@ -330,14 +322,10 @@ const SUBLINES = [
     animation: doorGlow 1.2s ease-in-out both;
     animation-delay: 2.58s;
   }
-  @media (prefers-reduced-motion: reduce) { .seekbox::after { animation: none; } }
-  .seekbox svg { flex: 0 0 auto; }
-  .seekbox-hint {
-    font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
+  @media (prefers-reduced-motion: reduce) { .home-srch :global(.srch-box)::after { animation: none; } }
   @media (max-width: 640px) {
-    .seekbox { margin-top: 0.8rem; padding: 0.7rem 0.9rem; }
-    .seekbox-hint { font-size: 0.85rem; }
+    .home-srch { margin-top: 0.8rem; }
+    .home-srch :global(.srch-input) { font-size: 16px; }
   }
 
   @media (prefers-reduced-motion: reduce) { .door, .door-led, .door-arrow { transition: none; } }
@@ -368,16 +356,5 @@ const SUBLINES = [
         }
       }
     } catch (e) { /* storage blocked, brand line stays */ }
-    // "Search it" opens the same overlay as the nav magnifier. The href is a
-    // real fallback (/faq carries the same search box), so this never dead-ends
-    // if the nav script has not run.
-    var seek = document.getElementById('homeSeek');
-    var sBtn = document.getElementById('navSearchBtn');
-    if (seek && sBtn) {
-      seek.addEventListener('click', function (e) {
-        e.preventDefault();
-        sBtn.click();
-      });
-    }
   })();
 </script>
