@@ -116,7 +116,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     <div class="custom-toolbar" id="customToolbar" hidden>
       <button type="button" class="btn btn-neutral" id="editToggle">Edit list</button>
       <button type="button" class="btn btn-neutral" id="backupBtn">Email me a copy</button>
-      <span class="edit-hint dim" id="editHint">Add, remove, rename (tap the text) or drag &#8597; to reorder. Tap Done when you finish, so nothing gets deleted by accident.</span>
+      <span class="edit-hint dim" id="editHint">Add, remove, rename (tap the text), or drag the arrows to reorder. Tap Done when you finish, so nothing gets deleted by accident.</span>
       <form class="backup-form" id="backupForm" hidden>
         <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" />
         <button type="submit" class="btn btn-neutral">Send it</button>
@@ -211,29 +211,31 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .mode-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .mode-hint { font-size: 0.85rem; margin: 0 0 1.6rem; }
 
+  /* It is sticky, so it is on screen the whole time you work the list. That
+     makes height expensive: one line ("0 of 36 ready" + the percentage) with a
+     thin bar under it, on every screen size. The READINESS label was saying
+     what the numbers already say. */
   .readiness {
     background: var(--surf-2);
     border: 1px solid var(--edge);
     border-radius: var(--radius);
-    padding: 1.4rem 1.5rem;
+    padding: 0.7rem 1.1rem;
     margin-bottom: 1.6rem;
     position: sticky;
     top: 0.5rem;
     z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.15rem 1rem;
   }
-  .readiness-top { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
-  .readiness-label {
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
+  .readiness-top { display: contents; }
+  .readiness-label { display: none; }
   .readiness-pct {
+    grid-area: 1 / 2;
     font-family: var(--font-display);
     font-weight: 900;
-    font-size: clamp(1.6rem, 6vw, 2.2rem);
+    font-size: 1.5rem;
     line-height: 1;
     letter-spacing: -0.02em;
     color: var(--text);
@@ -241,28 +243,22 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .readiness.is-ready .readiness-pct { color: var(--green); }
   .meter {
-    height: 10px;
+    grid-area: 2 / 1 / 2 / 3;
+    height: 6px;
     background: var(--bg);
     border: 1px solid var(--edge);
     border-radius: 999px;
     overflow: hidden;
-    margin: 0.9rem 0 0.7rem;
+    margin: 0.25rem 0 0;
   }
   .meter-fill { height: 100%; width: 0%; background: var(--green); border-radius: 999px; transition: width 0.3s ease; }
-  .readiness-sub { margin: 0; font-size: 0.85rem; color: var(--text-dim); }
+  .readiness-sub { grid-area: 1 / 1; margin: 0; font-size: 0.9rem; color: var(--text-dim); }
   .readiness.is-ready .readiness-sub { color: var(--green); }
 
-  /* Mobile: half-height readiness (Antonio: space is precious). The READINESS
-     label goes, "0 of 36 ready" and the percentage share one line, thin bar
-     below. Also stretch the list wider: tighter page and card padding. */
   @media (max-width: 640px) {
-    .readiness { display: grid; grid-template-columns: 1fr auto; align-items: center;
-      gap: 0.1rem 0.8rem; padding: 0.6rem 0.95rem; }
-    .readiness-top { display: contents; }
-    .readiness-label { display: none; }
-    .readiness-pct { grid-area: 1 / 2; font-size: 1.35rem; }
-    .readiness-sub { grid-area: 1 / 1; }
-    .meter { grid-area: 2 / 1 / 2 / 3; height: 5px; margin: 0.3rem 0 0.1rem; }
+    .readiness { padding: 0.6rem 0.8rem; gap: 0.1rem 0.8rem; }
+    .readiness-pct { font-size: 1.35rem; }
+    .meter { height: 5px; }
   }
 
   .task-group { padding: 0; overflow: hidden; }
@@ -411,9 +407,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      handle reorders instead of scrolling the page. */
   .task-drag {
     display: none; background: none; border: 0; color: var(--text-faint);
-    font-size: 1.05rem; line-height: 1; cursor: grab; padding: 0.4rem 0.5rem;
+    line-height: 0; cursor: grab; padding: 0.45rem 0.5rem;
     touch-action: none; flex: 0 0 auto;
   }
+  .task-drag:hover { color: var(--text-dim); }
   #list[data-mode="custom"][data-edit="on"] .task-drag { display: block; }
   .task.dragging { opacity: 0.55; }
   .task-label-edit {
@@ -465,11 +462,19 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     .meter-fill, .box, .box::after, .readiness-pct, .mode-btn, .chev { transition: none; }
   }
 
-  /* Mobile width: the list takes the screen (kept last so it wins the cascade). */
+  /* Mobile width and alignment (kept last so it wins the cascade).
+     The generic .panel padding was stacking on top of the card's own inset,
+     so the checkboxes sat 21px right of the Done button and 40px of the card
+     was dead space on the right. Zero the panel padding and let the header and
+     the body share ONE 1.2rem inset, matched by the toolbar buttons, so the
+     group title, the checkboxes and Done all start on the same vertical line. */
   @media (max-width: 640px) {
     main.wrap { padding-left: 0.75rem; padding-right: 0.75rem; }
-    .group-toggle { padding: 1.05rem 0.95rem; }
-    .group-body { padding: 0 0.95rem 0.95rem; }
+    .task-group.panel { padding-left: 0; padding-right: 0; }
+    .group-toggle { padding: 1.05rem 1.2rem; }
+    .group-body { padding: 0 1.2rem 0.95rem; }
+    .task > label { padding-left: 0; padding-right: 0; }
+    .custom-toolbar .btn { padding-left: 1.2rem; padding-right: 1.2rem; }
   }
 </style>
 
@@ -691,7 +696,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function makeDragHandle(): HTMLButtonElement {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'task-drag';
-    b.setAttribute('aria-label', 'Drag to reorder'); b.textContent = '↕';
+    b.setAttribute('aria-label', 'Drag to reorder');
+    // An SVG, not the "↕" character: iOS renders that codepoint as a blue
+    // EMOJI, so the handles looked nothing like the desktop ones.
+    b.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m8 9 4-4 4 4"/><path d="m8 15 4 4 4-4"/></svg>';
     initDrag(b);
     return b;
   }
