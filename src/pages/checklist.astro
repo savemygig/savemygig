@@ -96,7 +96,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          cleaner); phones wrap naturally. Returning visitors on a phone have
          read this already, so it auto-hides for them and gives the space
          back, no dismiss chrome needed. -->
-    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Tick it off before you walk out, so the night never starts with something missing. <span class="intro-b">Your list saves on this device, and registration loads it on any other.</span></p>
+    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Tick it off before you walk out, so the gig never starts with something missing. <span class="intro-b">Your list saves on this device, and registration loads it on any other.</span></p>
     <script is:inline>
       (function () {
         try {
@@ -143,11 +143,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            a professional feel charged for something we call free. It is
            "free for registered users", which is how every real tool works and
            how a working DJ expects to be treated. -->
-      <p class="unlock-title" id="unlockTitle">Register free to unlock Pro and Custom</p>
+      <p class="unlock-title" id="unlockTitle">Register free to unlock Pro and Custom modes</p>
       <!-- Per-device honesty (audit finding): registration unlocks THIS device
            today, and the emailed copy is what carries the list across devices.
            When account sync ships this copy gets stronger, not corrected. -->
-      <p class="dim unlock-copy" id="unlockCopy">You are in right away on this device; Email list can carry your list to any other.</p>
+      <p class="dim unlock-copy" id="unlockCopy">Access is instant, no password. The Email list button carries your list to any other device.</p>
       <!-- One required field, two optional ones. Antonio wanted name, surname,
            artist name and Instagram, all required, so he can follow every DJ
            who registers. The follow-back idea is genuinely good and stays. The
@@ -169,7 +169,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              hint is front-loaded so the cut only ever costs the tail. -->
         <!-- Reads in cause-and-effect order (Antonio): the handle, then why
              we want it, then that it is optional. -->
-        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Optional: @your.artist.instagram, we will be happy to follow your work" aria-label="Optional: your artist Instagram, we will be happy to follow your work" maxlength="80" />
+        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Optional: @your.artist.instagram, we will happily follow your work" aria-label="Optional: your artist Instagram, we will happily follow your work" maxlength="80" />
         <!-- Register + the anti-spam promise share a row on desktop (Antonio:
              everything moves up a little); they stack again on phones. -->
         <div class="unlock-actions">
@@ -177,7 +177,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           <!-- Antonio's anti-spam promise, tightened twice (second pass cut
                nine words so it holds two lines beside Register). Still the
                consent line, so it stays honest about what we send. -->
-          <p class="unlock-note">Once in a while we share something worth your time: site news, new tools, or a product or service that helps your career. Opt out any time, one click. <a href="/privacy">Privacy</a></p>
+          <p class="unlock-note">Once in a while we share something worth your time by email: site news, new tools, or a product that helps your career. Opt out any time, one click. <a href="/privacy">Privacy</a></p>
         </div>
       </form>
       <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
@@ -213,11 +213,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <!-- "Download list", not "Download PDF" (Antonio): the file is a PDF but
            the thing you are downloading is your list, same object as the other
            three buttons. -->
-      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Download list</span><span class="bl-short">Download</span></button>
+      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Download list [PDF]</span><span class="bl-short">Download</span></button>
       <!-- Email is LAST and darker in every mode (Antonio): it is the one
            action that requires registration, because an email needs an
            address, and the shade quietly says this one is different. -->
-      <button type="button" class="btn btn-neutral btn-gated" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
+      <button type="button" class="btn btn-neutral btn-gated" id="backupBtn"><span class="bl-full">Email list [PDF]</span><span class="bl-short">Email</span></button>
       <!-- Antonio: instructions occupy space; read once, dismiss forever. The X
            writes localStorage so it never comes back on this device. Copy cut
            to the four verbs the mode actually has. -->
@@ -375,7 +375,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     overflow: hidden;
     margin: 0.25rem 0 0;
   }
-  .meter-fill { height: 100%; width: 0%; background: var(--green); border-radius: 999px; transition: width 0.3s ease; }
+  /* The fill REVEALS a fixed red -> amber -> green gradient spanning the
+     whole track (Antonio's idea, his pick of the two builds): the tip's
+     colour reads as your state, danger at the start, green at ready. The
+     gradient is painted at track width via background-size, which the JS
+     keeps in sync with the fill width (10000/pct trick below). */
+  .meter-fill {
+    height: 100%; width: 0%; border-radius: 999px; transition: width 0.3s ease;
+    background-image: linear-gradient(90deg, var(--red) 0%, var(--amber) 50%, var(--green) 100%);
+    background-repeat: no-repeat; background-position: left center;
+    background-size: 100% 100%;
+  }
   .readiness-sub { grid-area: 1 / 1; margin: 0; font-size: 0.9rem; color: var(--text-dim); }
   .readiness.is-ready .readiness-sub { color: var(--green); }
 
@@ -924,7 +934,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     const pct = totalV ? Math.round((done / totalV) * 100) : 0;
 
     if (pctEl) pctEl.textContent = pct + '%';
-    if (fillEl) fillEl.style.width = pct + '%';
+    if (fillEl) {
+      fillEl.style.width = pct + '%';
+      // Keep the gradient spanning the TRACK, not the fill: the fill is
+      // pct% wide, so its background must be (100/pct)x its own width for
+      // the gradient's far green end to sit at the track's 100% mark.
+      fillEl.style.backgroundSize = (pct > 0 ? (10000 / pct) : 100) + '% 100%';
+    }
     if (subEl) subEl.textContent = pct === 100 ? 'Ready. Go play.' : `${done} of ${totalV} ready`;
     if (readinessEl) readinessEl.classList.toggle('is-ready', pct === 100 && totalV > 0);
 
@@ -1364,7 +1380,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   const unlockTitle = document.getElementById('unlockTitle');
   const unlockCopy = document.getElementById('unlockCopy');
-  const MODE_TITLE = 'Register free to unlock Pro and Custom';
+  const MODE_TITLE = 'Register free to unlock Pro and Custom modes';
   const MODE_COPY = unlockCopy ? unlockCopy.textContent || '' : '';
   const PDF_TITLE = 'Register free to download the printable checklist';
   const PDF_COPY = 'Your list, exactly as it stands, as a clean printable PDF. Print it, fold it, keep it in your USB case, or pin it up in the booth.';
