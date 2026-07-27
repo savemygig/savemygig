@@ -559,7 +559,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   .custom-toolbar { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem; }
   .custom-toolbar[hidden] { display: none; }
-  .custom-toolbar .btn { width: auto; display: inline-block; margin: 0; }
+  /* Transparent, not gray slabs (Antonio): the toolbar reads as quiet
+     outlined actions on the page background, same language as the homepage
+     search box. Two-selector specificity beats global .btn regardless of
+     load order. */
+  .custom-toolbar .btn { width: auto; display: inline-block; margin: 0; background: transparent; }
   .edit-hint {
     font-size: 0.8rem;
     flex: 1 1 100%;
@@ -1452,12 +1456,15 @@ ${sections}
     if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doAdd(); } });
   });
 
-  // collapse toggles (restore open state, default open)
+  // collapse toggles (restore open state). DEFAULT COLLAPSED (Antonio,
+  // collapse doctrine): the three group headers are the index, the page
+  // opens compact on any screen, and a group you opened stays open on your
+  // next visit because the choice persists.
   const openState = loadOpen();
   toggles.forEach((btn) => {
     const section = btn.closest('.task-group') as HTMLElement;
     const gid = section.getAttribute('data-group') || '';
-    const open = openState[gid] !== false; // default true
+    const open = openState[gid] === true; // default collapsed
     setGroupOpen(section, open, false);
     btn.addEventListener('click', () => {
       const nowOpen = section.classList.contains('collapsed'); // collapsed -> will open

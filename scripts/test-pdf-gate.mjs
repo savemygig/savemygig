@@ -52,6 +52,11 @@ const ok = (name, cond, detail = '') => {
 // ---- 1 + 2: first-time visitor
 {
   const ctx = await browser.newContext();
+    await ctx.addInitScript(() => {
+    // Groups default COLLAPSED since Antonio's collapse doctrine; these tests
+    // exercise rows, so open all three groups the way a returning user would.
+    localStorage.setItem('SMG_CHECKLIST_OPEN', JSON.stringify({ basics: true, technical: true, extras: true }));
+  });
   const page = await ctx.newPage();
   await page.goto(base + '/checklist', { waitUntil: 'networkidle' });
   await page.evaluate(() => document.querySelector('#ck')?.remove()); // consent card eats clicks
@@ -89,6 +94,11 @@ const ok = (name, cond, detail = '') => {
 // ---- 3: already registered, and the view must reflect CURRENT state
 {
   const ctx = await browser.newContext();
+    await ctx.addInitScript(() => {
+    // Groups default COLLAPSED since Antonio's collapse doctrine; these tests
+    // exercise rows, so open all three groups the way a returning user would.
+    localStorage.setItem('SMG_CHECKLIST_OPEN', JSON.stringify({ basics: true, technical: true, extras: true }));
+  });
   const page = await ctx.newPage();
   await page.goto(base + '/checklist', { waitUntil: 'networkidle' });
   await page.evaluate(() => { localStorage.setItem('SMG_UNLOCKED', '1'); });

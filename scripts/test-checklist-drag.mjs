@@ -41,6 +41,9 @@ const ok = (name, cond, detail = '') => {
   if (!cond) fails.push(name);
 };
 
+await page.addInitScript(() => {
+  localStorage.setItem('SMG_CHECKLIST_OPEN', JSON.stringify({ basics: true, technical: true, extras: true }));
+});
 await page.goto(base + '/checklist', { waitUntil: 'networkidle' });
 await page.evaluate(() => {
   document.querySelector('#ck')?.remove();
@@ -128,6 +131,23 @@ const inputSelectable = await page.evaluate(() => {
   return v;
 });
 ok('rename input is still selectable', inputSelectable === 'text', `user-select: ${inputSelectable}`);
+
+// ---- collapsed by default: a FRESH visitor (no stored state) sees the three
+// group headers as the index, nothing expanded (Antonio's collapse doctrine).
+{
+  const freshPage = await browser.newPage({ viewport: { width: 900, height: 1000 } });
+  await freshPage.goto(base + '/checklist', { waitUntil: 'networkidle' });
+  const counts = await freshPage.evaluate(() => ({
+    total: document.querySelectorAll('.task-group').length,
+    collapsed: document.querySelectorAll('.task-group.collapsed').length,
+  }));
+  if (counts.total < 3 || counts.collapsed !== counts.total) {
+    console.error(`FAIL  fresh visit starts collapsed  (${counts.collapsed}/${counts.total} collapsed)`);
+    process.exit(1);
+  }
+  console.log(`PASS  fresh visit starts collapsed  (${counts.collapsed}/${counts.total} groups)`);
+  await freshPage.close();
+}
 
 await browser.close();
 server.close();

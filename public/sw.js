@@ -15,7 +15,7 @@
  *
  * Bump CACHE when the precache list changes; old caches are deleted on activate.
  */
-const CACHE = 'smg-v6';
+const CACHE = 'smg-v7';
 
 // The rescue path, offline. If a page is not here it still works online.
 const PRECACHE = [
@@ -81,6 +81,7 @@ const PRECACHE = [
   '/saved',
   '/files-lost',
   '/offline',
+  '/search-index.json',
   '/fonts/archivo-latin-wght-normal.woff2',
   '/fonts/inter-latin-wght-normal.woff2',
   '/images/seal-72.webp',
@@ -116,7 +117,13 @@ self.addEventListener('fetch', (e) => {
   const isHTML = req.mode === 'navigate' ||
     (req.headers.get('accept') || '').includes('text/html');
 
-  if (isHTML) {
+  // The search index regenerates every deploy: cache-first froze it at
+  // whatever the visitor's first fetch saw, so pages added later never
+  // appeared in THEIR search (Antonio caught it live with "DJM 900").
+  // Network-first keeps search current online and still works offline.
+  const isSearchIndex = url.pathname === '/search-index.json';
+
+  if (isHTML || isSearchIndex) {
     e.respondWith(
       fetch(req)
         .then((res) => {
