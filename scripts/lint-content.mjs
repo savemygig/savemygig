@@ -31,6 +31,10 @@ const RULES = [
   { name: 'snapshot: current version/firmware/release', re: /current (version|firmware|release)/gi },
   { name: 'snapshot: at the time of writing', re: /at the time of writing/gi },
   { name: 'snapshot: as of <date>', re: /\bas of \d/gi },
+  // A counted promise ("the seven rules") breaks the day a rule is added.
+  // Antonio's call, 2026-07-27: say "the mandatory rules" and let the page
+  // show its own count. Numbers in a list are fine; numbers in a PROMISE rot.
+  { name: 'snapshot: counted rules promise', re: /\b(two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|\d+) rules\b/gi },
 
   // Condescension. Every one of these has actually shipped on this site.
   { name: 'condescending: telling a pro to calm down', re: /\bstay calm\b|\bdon'?t panic\b|\bdo not panic\b|\bbefore you panic\b|\bbefore panicking\b|\bstop panicking\b|\bpanic not required\b|\bfirst,? breathe\b|\btake a (deep )?breath\b|\brelax,\b/gi },

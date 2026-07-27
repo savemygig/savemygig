@@ -15,7 +15,7 @@
  *
  * Bump CACHE when the precache list changes; old caches are deleted on activate.
  */
-const CACHE = 'smg-v7';
+const CACHE = 'smg-v8';
 
 // The rescue path, offline. If a page is not here it still works online.
 const PRECACHE = [
@@ -75,6 +75,7 @@ const PRECACHE = [
   '/protocol/full-recovery/retire',
   '/protocol/full-recovery/verify',
   '/disclaimer',
+  '/install',
   '/knowledge',
   '/knowledge/rekordbox',
   '/knowledge/dictionary',

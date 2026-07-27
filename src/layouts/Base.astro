@@ -159,7 +159,11 @@ const entityGraph = {
 
       <div class="foot-share">
         <div class="foot-share-copy">
-          <p class="foot-share-h">Good deed of the day: send this to a DJ friend.</p>
+          <!-- "Good deed of the day: send this to a DJ friend." until
+               2026-07-27. Antonio: sounded like a charity poster. The share
+               ask now reads as crew knowledge passed along, and the buttons
+               below are the punchline. -->
+          <p class="foot-share-h">Every DJ knows a DJ who needs this.</p>
         </div>
         <div class="foot-share-btns">
           <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp" href="https://wa.me/?text=Save%20My%20Gig%2C%20free%20DJ%20rescue%20and%20prevention%2C%20for%20when%20your%20USB%20dies%20before%20a%20set.%20https%3A%2F%2Fwww.savemygig.com">
@@ -189,6 +193,10 @@ const entityGraph = {
 
       <div class="foot-cols">
         <div class="foot-brand">
+          <!-- Mobile only (Antonio): the brand block spans the full width on
+               a phone and the right half sat empty, so the seal fills it.
+               Desktop keeps the clean four-column grid, no seal. -->
+          <img class="foot-seal" src="/images/seal-90.webp" alt="" width="90" height="90" loading="lazy" aria-hidden="true" />
           <a href="/" class="foot-lockup" aria-label="Save My Gig, DJ rescue and prevention">
             <span class="foot-lockup-text">
               <span class="foot-wordmark">Save My Gig<span class="accent">!</span></span>
@@ -399,6 +407,9 @@ const entityGraph = {
     gap: 2rem; align-items: start;
   }
   .foot-brand { display: flex; flex-direction: column; align-items: flex-start; }
+  /* Hidden on desktop (Antonio: the four-column distribution there is right
+     as it is); the phone media block below reveals it. */
+  .foot-seal { display: none; }
   .foot-lockup { display: block; text-decoration: none; }
   .foot-lockup-text { display: flex; flex-direction: column; }
   /* The brand block is one tidy rectangle: the wordmark, the tagline and the
@@ -448,11 +459,13 @@ const entityGraph = {
   .foot-base { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-align: center; }
   .foot-copy { font-size: 0.8rem; color: var(--text-faint); }
   .foot-live { font-size: 0.74rem; color: var(--text-faint); opacity: 0.85; }
-  /* Centered under the social row, same 176px measure (4 x 38px buttons + 3 x
-     0.5rem gaps) so it reads as one tidy stack, not a stray link. */
+  /* Left-justified (Antonio, 2026-07-27): every element in this column and in
+     the link columns beside it sits on the left edge, so a centered coffee
+     link read as accidental. The cup now starts flush with the Instagram
+     circle, one rhythm down the whole brand block. */
   .foot-bmc {
-    display: flex; align-items: center; justify-content: center; gap: 0.45rem;
-    width: 176px; margin: 0.8rem 0 0;
+    display: flex; align-items: center; justify-content: flex-start; gap: 0.45rem;
+    margin: 0.8rem 0 0;
     font-size: 0.8rem; color: var(--text-dim); text-decoration: none;
   }
   .foot-bmc:hover { color: var(--red); }
@@ -467,7 +480,10 @@ const entityGraph = {
        pair up; More spans the full width underneath and flows its own links in
        two columns, so there is no orphaned empty cell beside it. */
     .foot-cols { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; }
-    .foot-brand { grid-column: 1 / -1; }
+    .foot-brand { grid-column: 1 / -1; position: relative; }
+    /* Centered against the wordmark + socials stack, clear of the coffee
+       link's row. */
+    .foot-seal { display: block; position: absolute; top: 0.4rem; right: 0.2rem; }
     .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
     .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
     .foot-col:last-child a { display: block; margin-bottom: 0.7rem; }

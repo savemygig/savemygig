@@ -1,0 +1,136 @@
+---
+import Base from '../layouts/Base.astro';
+import AccGroup from '../components/AccGroup.astro';
+
+// The install guide. Born 2026-07-27 from Antonio's homepage review: the
+// install banner used to teach ("Tap Share at the bottom of Safari...") and
+// the instruction floated orphaned under the box. His call: the banner
+// points, THIS page teaches, professionally: every platform, what a PWA is,
+// what actually works with no signal, and the honest conditions. The offline
+// scope listed here mirrors public/sw.js PRECACHE. If that list changes,
+// change the "with no signal" accordion here too.
+//
+// This page is itself in the service worker precache, so the guide about
+// offline is available offline.
+---
+<Base
+  title="Install Save My Gig as an App | Works With No Signal"
+  description="Add Save My Gig to your phone or computer in under a minute. The whole rescue flow stays on your device, so the fix is there even when the booth has no signal."
+  path="/install"
+>
+  <main class="wrap">
+    <div class="status-line">Install_Guide</div>
+
+    <h1 style="margin-bottom:1rem">KEEP IT <span class="accent">WITH YOU</span></h1>
+    <p class="dim" style="margin-bottom:1.2rem">Save My Gig installs as an app on your phone and your computer. No app store, nothing to download from a store, nothing to pay. One minute now, and the rescue flow lives on your device, ready for the exact moment the venue has no signal.</p>
+
+    <p class="dim" style="margin-bottom:2rem">A club basement, a festival with a saturated network, a rave in the mountains: the places where gigs break are the places where websites die. This one is built not to.</p>
+
+    <AccGroup icon="zap" title="Install it on your device" />
+
+    <details class="acc-sec" name="inst-acc" id="iphone">
+      <summary><h2 class="acc-h2">iPhone and iPad (Safari)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ol>
+          <li>Open <span class="mono">savemygig.com</span> in Safari.</li>
+          <li>Tap <strong>Share</strong> (the square with the arrow pointing up, bottom of the screen).</li>
+          <li>Scroll the list and tap <strong>Add to Home Screen</strong>.</li>
+          <li>Tap <strong>Add</strong>. The Save My Gig icon appears with your apps.</li>
+        </ol>
+        <p>From now on, open it from the icon like any app. It runs full screen, and on iPhone this step matters more than convenience: iOS treats a home screen app's storage with far more respect than a tab you visited once, which is what keeps the rescue kit on your phone long term.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="android">
+      <summary><h2 class="acc-h2">Android (Chrome)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ol>
+          <li>Open <span class="mono">savemygig.com</span> in Chrome.</li>
+          <li>Tap the <strong>three-dot menu</strong> (top right).</li>
+          <li>Tap <strong>Add to Home screen</strong> (on some phones it says <strong>Install app</strong>).</li>
+          <li>Confirm. The icon lands on your home screen.</li>
+        </ol>
+        <p>Chrome may also offer the install directly with a banner or an install icon in the address bar; either route ends in the same place. Samsung Internet and Firefox have the same option under their own menus.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="windows">
+      <summary><h2 class="acc-h2">Windows (Chrome or Edge)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ol>
+          <li>Open <span class="mono">savemygig.com</span> in Chrome or Edge.</li>
+          <li>Look at the right end of the address bar for the <strong>install icon</strong> (a small screen with a down arrow), or open the browser menu and choose <strong>Install Save My Gig</strong> (in Edge: <strong>Apps, then Install this site as an app</strong>).</li>
+          <li>Confirm. It opens in its own window, and you can pin it to the taskbar or Start like any program.</li>
+        </ol>
+        <p>Useful beyond emergencies: the checklist and the knowledge base in their own window while rekordbox has your full attention.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="mac">
+      <summary><h2 class="acc-h2">Mac (Safari or Chrome)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ol>
+          <li><strong>Safari:</strong> open <span class="mono">savemygig.com</span>, then <strong>File, Add to Dock</strong>. If that menu item is missing, your macOS predates the feature; use the Chrome route instead.</li>
+          <li><strong>Chrome:</strong> click the <strong>install icon</strong> at the right end of the address bar, or the three-dot menu, then <strong>Cast, Save and Share, Install page as app</strong> (wording varies slightly by version).</li>
+        </ol>
+        <p>Either way you get a Save My Gig app in your Dock that opens in its own window.</p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="How it works" />
+
+    <details class="acc-sec" name="inst-acc" id="what-is-this">
+      <summary><h2 class="acc-h2">What exactly did I just install?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> A progressive web app, PWA for short: the website itself, promoted to app status by your own browser. No app store approved it, no update nags you, it takes almost no space, and it cannot see anything on your device that the website could not already see.</p>
+        <p><strong>Why it matters here.</strong> The first time you open Save My Gig, your browser quietly downloads the complete rescue kit, every screen of the emergency flows, into the device's own storage. From then on, those pages load from your phone or laptop, not from the internet. When you are online you always get the live, freshest version; when you are not, the saved kit answers instead. That switch is automatic. You never choose, it just works.</p>
+        <p>Installing to your home screen or Dock does not change what is saved, the browser does that on any visit. What installing changes is durability and speed: a real icon you can find with shaking hands, and storage the system treats as an app's, not as leftover website data to tidy away.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="offline-scope">
+      <summary><h2 class="acc-h2">What works with no signal</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Saved on your device, always available:</strong> the emergency start page and every step of all four rescue flows (the critical path for when you play within the hour, the no-sound protocol, the quick fix, the full recovery), the pre-gig checklist, the pocket emergency card, the rekordbox reference, the dictionary, and search itself. That is the entire "something is wrong right now" surface of the site, deliberately.</p>
+        <p><strong>Available offline only if you visited them before:</strong> the fix articles, the FAQ, the hardware pages. Anything you have opened while online stays readable without signal afterwards.</p>
+        <p><strong>Never available offline, by nature:</strong> anything that talks to our server, like registering or emailing yourself the checklist. Those queue up for when you are back in coverage. Your ticked checklist is different: it saves on the device itself, so it works with no signal at all times.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="conditions">
+      <summary><h2 class="acc-h2">The honest conditions</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p>We would rather you know exactly where the edges are than discover them in a booth.</p>
+        <ol>
+          <li><strong>Open it once with signal first.</strong> The rescue kit downloads on your first visit. A first-ever visit with airplane mode on has nothing saved yet.</li>
+          <li><strong>Clearing your browser data clears the kit.</strong> "Clear history and website data" deletes everything a website stored, ours included. After a clear-out, open the site once online and the kit is back.</li>
+          <li><strong>On iPhone, the home screen icon is the protection.</strong> iOS can quietly purge stored data from websites you have not visited in a while. An app on your home screen is exempt from that housekeeping, which is the practical reason the install matters most on iPhone.</li>
+          <li><strong>Offline shows the last saved copy.</strong> New fixes and pages arrive whenever you are online; with no signal you get the kit exactly as it was last saved, which for an emergency is exactly what you need.</li>
+        </ol>
+        <p>Want to prove it to yourself? Open the site, switch on airplane mode, and open <a href="/emergency">Emergency mode</a>. It loads. That test takes thirty seconds and it is the whole promise, demonstrated.</p>
+      </div>
+    </details>
+
+    <div class="panel cta-exit" style="margin-top:2rem">
+      <h3 style="margin-bottom:0.75rem">In trouble right now?</h3>
+      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="install">🚨 Start Emergency Mode</a>
+    </div>
+  </main>
+</Base>
+
+<script is:inline>
+  // Open the accordion that matches the visitor's own device, so an iPhone
+  // visitor sees iPhone steps without hunting. Native single-open (name=)
+  // closes it again the moment they open another.
+  (function () {
+    var ua = navigator.userAgent;
+    var id = /iphone|ipad|ipod/i.test(ua) ? 'iphone'
+      : /android/i.test(ua) ? 'android'
+      : /macintosh|mac os x/i.test(ua) ? 'mac'
+      : 'windows';
+    // Deep links win over device detection.
+    if (location.hash && document.getElementById(location.hash.slice(1))) return;
+    var el = document.getElementById(id);
+    if (el && el.tagName === 'DETAILS') el.open = true;
+  })();
+</script>

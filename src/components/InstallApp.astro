@@ -1,16 +1,21 @@
 ---
 /**
- * "Install this" prompt.
+ * "Install this" prompt. Homepage only, dismissible for good via the X.
  *
- * Hidden by default and only revealed when installing is actually possible,
- * so nobody sees a dead button:
- *   - Chrome/Edge/Android: shown when the browser fires beforeinstallprompt.
- *   - iOS Safari: no such event exists, so we detect iOS and show the manual
- *     Share -> Add to Home Screen instructions instead.
- *   - Already installed, or unsupported: stays hidden.
+ * Slimmed 2026-07-27 (Antonio): the banner does not TEACH anymore, it points.
+ * One title, one honest line, one "How it works" link to /install, which
+ * carries the per-platform steps (the "Tap Share in Safari" walkthrough used
+ * to float here below the box, orphaned; it lives on /install now).
  *
- * The pitch is the offline capability, not "install our app". Nobody wants
- * another app; everybody wants the rescue to work with no signal.
+ * Shown to EVERYONE not already installed: phones and desktops both (Antonio
+ * asked for the desktop appearance explicitly). Where the browser supports
+ * one-tap install (beforeinstallprompt), the Install button appears too;
+ * everywhere else the link is the route.
+ *
+ * The claim is engineered, not marketing: the service worker precaches the
+ * whole rescue tunnel on first visit. Wording must stay honest about the
+ * condition ("once you've opened it") because a first-ever visit with no
+ * signal has nothing cached. Full scope and conditions live on /install.
  */
 ---
 <div class="inst" id="installWrap" hidden>
@@ -19,14 +24,11 @@
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 12 5 5 5-5"/><path d="M5 21h14"/></svg>
     </span>
     <span class="inst-txt">
-      <strong class="inst-h">Keep this on your phone</strong>
-      <span class="inst-sub" id="installSub">Install it and the rescue flow works with no signal, in any basement.</span>
+      <strong class="inst-h" id="installH">Keep this on your phone</strong>
+      <span class="inst-sub">Once you've opened it, the rescue flow stays on this device, even with no signal. <a class="inst-more" href="/install" data-event="step_completed" data-placement="home_install_more">More &rarr;</a></span>
     </span>
-    <button type="button" class="inst-btn" id="installBtn">Install</button>
+    <button type="button" class="inst-btn" id="installBtn" hidden>Install</button>
     <button type="button" class="inst-close" id="installClose" aria-label="Dismiss">&times;</button>
-  </div>
-  <div class="inst-ios" id="installIos" hidden>
-    <p>Tap <strong>Share</strong> at the bottom of Safari, then <strong>Add to Home Screen</strong>.</p>
   </div>
 </div>
 
@@ -47,6 +49,8 @@
   .inst-txt { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
   .inst-h { font-family: var(--font-display); font-weight: 800; font-size: 0.98rem; color: var(--text); }
   .inst-sub { font-size: 0.83rem; color: var(--text-dim); line-height: 1.45; }
+  .inst-more { color: var(--green); text-decoration: none; white-space: nowrap; }
+  .inst-more:hover { text-decoration: underline; }
   .inst-btn {
     flex: 0 0 auto; min-height: 44px; padding: 0.6rem 1.2rem; cursor: pointer;
     font-family: var(--font-display); font-weight: 800; font-size: 0.85rem;
@@ -55,17 +59,20 @@
     border-radius: var(--radius);
   }
   .inst-btn:hover { filter: brightness(1.08); }
+  .inst-btn[hidden] { display: none; }
+  /* The X lives in the TOP-RIGHT CORNER, absolutely positioned (Antonio,
+     from an Android screenshot: in the flex row it wrapped below the
+     full-width Install button and doubled the banner's height). Corner
+     placement never moves, whatever wraps. */
+  .inst-body { position: relative; padding-right: 2.6rem; }
   .inst-close {
-    flex: 0 0 auto; width: 34px; height: 34px; margin-left: -0.3rem;
+    position: absolute; top: 0.3rem; right: 0.3rem;
+    width: 34px; height: 34px;
     display: inline-flex; align-items: center; justify-content: center;
     background: transparent; border: none; color: var(--text-faint);
     font-size: 20px; line-height: 1; cursor: pointer;
   }
   .inst-close:hover { color: var(--text); }
-  .inst-ios { padding: 0.75rem 1.1rem 0; }
-  .inst-ios[hidden] { display: none; }
-  .inst-ios p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
-  .inst-ios strong { color: var(--text); }
   @media (max-width: 520px) {
     .inst-body { flex-wrap: wrap; }
     .inst-btn { width: 100%; }
@@ -77,8 +84,6 @@
     var wrap = document.getElementById('installWrap');
     if (!wrap) return;
     var btn = document.getElementById('installBtn');
-    var ios = document.getElementById('installIos');
-    var sub = document.getElementById('installSub');
     var deferred = null;
 
     // Already running as an installed app: nothing to offer.
@@ -93,10 +98,21 @@
       try { localStorage.setItem('SMG_INSTALL_DISMISSED', '1'); } catch (e) { /* session-only then */ }
     });
 
+    // Desktop gets its own title; the copy is otherwise device-neutral.
+    var isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+    if (!isMobile) {
+      var h = document.getElementById('installH');
+      if (h) h.textContent = 'Keep this on your computer';
+    }
+
+    // Visible for everyone not installed/dismissed; the button only where the
+    // browser offers one-tap install. /install covers every manual route.
+    wrap.hidden = false;
+
     window.addEventListener('beforeinstallprompt', function (e) {
       e.preventDefault();
       deferred = e;
-      wrap.hidden = false;
+      btn.hidden = false;
     });
 
     btn.addEventListener('click', function () {
@@ -110,16 +126,6 @@
         deferred = null;
       });
     });
-
-    // iOS Safari never fires beforeinstallprompt, so show the manual route.
-    var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    var isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
-    if (isIos && isSafari) {
-      btn.hidden = true;
-      ios.hidden = false;
-      sub.textContent = 'Add it to your home screen and the rescue flow works with no signal.';
-      wrap.hidden = false;
-    }
 
     window.addEventListener('appinstalled', function () {
       wrap.hidden = true;

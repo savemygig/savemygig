@@ -89,13 +89,17 @@ const SUBLINES = [
         <span class="door-body">
           <!-- Reviewed 2026-07-27 per Antonio's homepage audit: "GET
                BULLETPROOF" stays. The title carries the personality and the
-               description directly beneath does the explaining ("the seven
-               rules that make USB failure a non-event"), so a first-time
-               visitor never sees the title without its meaning attached. A
-               plainer title ("PREVENT FAILURES") would be clearer alone but
-               weaker as a brand, and it is never alone. -->
+               description directly beneath does the explaining, so a
+               first-time visitor never sees the title without its meaning
+               attached. A plainer title ("PREVENT FAILURES") would be clearer
+               alone but weaker as a brand, and it is never alone.
+               Second pass, same audit: no COUNT in the promise ("seven rules"
+               becomes "mandatory rules") because a count is a snapshot that
+               breaks the day a rule is added, and no "USB" because prevention
+               now covers players and mixers too. Same anti-snapshot doctrine
+               as the content lint. Do not reintroduce a number here. -->
           <span class="door-title">GET BULLETPROOF</span>
-          <span class="door-desc"><span class="dd-full">The seven rules that make USB failure a non-event.</span><span class="dd-short">Seven rules. No more USB disasters.</span></span>
+          <span class="door-desc"><span class="dd-full">The mandatory rules that make gig failure a non-event.</span><span class="dd-short">Mandatory rules. No more disasters.</span></span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
       </a>
@@ -127,9 +131,11 @@ const SUBLINES = [
     <a class="seekbox" href="/faq" id="homeSeek" data-event="search_open" data-placement="home_seek" aria-label="Search Save My Gig">
       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <!-- Front-loaded on purpose: phones ellipsize the tail, so "Search
-           anything" must survive the cut. The examples widen the perceived
-           scope (Antonio): not just errors, also gear and vocabulary. -->
-      <span class="seekbox-hint">Search anything: a problem, an error code, a player, a term</span>
+           anything" must survive the cut. Antonio's second pass: category
+           words ("a problem, an error code") read abstract; concrete examples
+           teach the range in one glance, and the third one is deliberately a
+           QUESTION, so the box also invites doubts, not just faults. -->
+      <span class="seekbox-hint">Search anything: USB not recognized, E-8302, what is OneLibrary&hellip;</span>
     </a>
 
     <PromoBanner exclude="/emergency" />
