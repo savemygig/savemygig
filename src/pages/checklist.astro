@@ -399,7 +399,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
-  .task input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  /* [type=checkbox], not all inputs: the bare selector also caught the RENAME
+     text input, crushing it to an invisible 1px sliver. That was Antonio's
+     "edit deletes everything" bug: the input existed, had the text, took the
+     keystrokes, and could not be seen. */
+  .task input[type="checkbox"] { position: absolute; opacity: 0; width: 1px; height: 1px; }
   .box {
     flex: 0 0 auto;
     width: 24px;
@@ -1017,7 +1021,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       input.type = 'text'; input.className = 'task-label-edit';
       input.value = span.textContent || ''; input.maxLength = 80;
       span.replaceWith(input);
-      input.focus(); input.select();
+      // Cursor at the END, not select-all: with everything selected, the
+      // first keystroke replaces the whole text, which reads as the site
+      // eating your item. Editing should start where the text stops.
+      input.focus();
+      const n = input.value.length;
+      input.setSelectionRange(n, n);
       const commit = () => {
         const t = (input.value || '').trim() || (span.textContent || '');
         span.textContent = t;
@@ -1426,7 +1435,11 @@ ${sections}
     resetBtn.addEventListener('click', () => {
       if (!resetArmed) {
         resetArmed = true;
-        resetBtn.textContent = mode === 'custom' ? 'Reset everything?' : 'Reset ticks?';
+        // Full question on desktop; on a phone the shared-width button cannot
+        // fit "Reset everything?", so it asks the one word that matters.
+        resetBtn.innerHTML = mode === 'custom'
+          ? '<span class="bl-full">Reset everything?</span><span class="bl-short">Confirm?</span>'
+          : '<span class="bl-full">Reset ticks?</span><span class="bl-short">Confirm?</span>';
         resetBtn.classList.add('armed');
         resetTimer = setTimeout(disarmReset, 4000);
         return;

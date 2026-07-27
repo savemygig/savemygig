@@ -90,6 +90,34 @@ if (rows.length >= 2) {
   ok('dragging across rows selects no text', sel.trim() === '', sel ? `selected: "${sel.slice(0, 40)}"` : 'nothing selected');
 }
 
+// The rename input must be VISIBLY LARGE, not merely present. The checkbox
+// hider (.task input) once crushed it to 16x8px: it held the text, took the
+// keystrokes, and could not be seen. Playwright counts a 1px box as visible,
+// which is how that shipped, so the assertion is now about real size.
+{
+  const editBtn2 = await page.$('#editToggle');
+  if (editBtn2) {
+    const pencil = await page.$('.task-edit');
+    if (pencil) {
+      await pencil.click();
+      await page.waitForTimeout(200);
+      const box2 = await page.evaluate(() => {
+        const i = document.querySelector('.task-label-edit');
+        if (!i) return null;
+        const r = i.getBoundingClientRect();
+        return { w: Math.round(r.width), h: Math.round(r.height), value: i.value,
+                 selStart: i.selectionStart, len: i.value.length };
+      });
+      ok('rename input is really visible', !!box2 && box2.w >= 150 && box2.h >= 20,
+         box2 ? `${box2.w}x${box2.h}` : 'no input');
+      ok('rename keeps the text, cursor at the end',
+         !!box2 && box2.value.length > 0 && box2.selStart === box2.len,
+         box2 ? `"${box2.value.slice(0, 24)}...", cursor ${box2.selStart}/${box2.len}` : '');
+      await page.keyboard.press('Escape');
+    }
+  }
+}
+
 // The rename input must stay selectable, or renaming breaks.
 const inputSelectable = await page.evaluate(() => {
   const el = document.createElement('input');

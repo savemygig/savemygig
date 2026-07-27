@@ -130,14 +130,19 @@ const schema = {
 
     <div style="margin-bottom:2rem"><Search /></div>
 
+    <!-- Collapsed by default (Antonio's sitewide rule for long text): the
+         questions are the index, the person expands the answer they came for.
+         FAQPage schema and search engines still get every answer, it is all in
+         the HTML. -->
     {faqs.map(f => (
-      <div class="panel" id={f.id}>
-        <h2 class="faq-q">
-          <a href={`#${f.id}`} class="faq-anchor" aria-label={`Link to: ${f.q}`}>{f.q}</a>
-        </h2>
+      <details class="panel faq-sec" id={f.id}>
+        <summary>
+          <h2 class="faq-q">{f.q}</h2>
+          <span class="faq-chev" aria-hidden="true"></span>
+        </summary>
         <p class="dim faq-a">{f.a}</p>
         <a href={f.fix.href} class="faq-fix">{f.fix.label} &rarr;</a>
-      </div>
+      </details>
     ))}
 
     <div class="panel panel-danger" style="margin-top:2rem">
@@ -148,9 +153,39 @@ const schema = {
 </Base>
 
 <style>
-  .faq-q { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
-  .faq-anchor { color: var(--text); text-decoration: none; }
-  .faq-anchor:hover { color: var(--red); }
+  .faq-q { font-size: 1.15rem; font-weight: 800; margin: 0; letter-spacing: -0.01em; }
+  .faq-sec > summary {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
+  }
+  .faq-sec > summary::-webkit-details-marker { display: none; }
+  .faq-sec > summary:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+  .faq-sec[open] > summary { margin-bottom: 0.6rem; }
+  .faq-chev {
+    flex: 0 0 auto; width: 9px; height: 9px; margin-top: -3px;
+    border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
+    transform: rotate(45deg); transition: transform 0.2s ease;
+  }
+  .faq-sec[open] > summary .faq-chev { transform: rotate(225deg); }
+  @media (prefers-reduced-motion: reduce) { .faq-chev { transition: none; } }
+</style>
+
+<script is:inline>
+  // Deep links (search results and #anchors) open the closed answer first.
+  (function () {
+    function openTarget() {
+      var id = location.hash.slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (el && el.tagName === 'DETAILS' && !el.open) el.open = true;
+      if (el) el.scrollIntoView();
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
+  })();
+</script>
+
+<style>
   .faq-a { margin-bottom: 0.8rem; }
   .faq-fix {
     font-family: var(--font-body); font-weight: 600; font-size: 0.85rem;

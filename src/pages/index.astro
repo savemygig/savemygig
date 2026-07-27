@@ -133,7 +133,11 @@ const SUBLINES = [
     content: ''; position: absolute; inset: -1px; border-radius: var(--radius);
     pointer-events: none; opacity: 0; will-change: opacity;
     box-shadow: 0 0 22px 1px var(--glow); border: 1px solid var(--glow);
-    animation: doorGlow 1.2s ease-in-out both;
+    /* Repeats forever (Antonio: "run again every three seconds will be
+       cool"): each cycle is a 1.2s sweep followed by rest, and the stagger
+       below keeps the three doors shimmering in sequence, top to bottom,
+       instead of blinking together. Reduced-motion users see none of it. */
+    animation: doorGlow 4.4s ease-in-out 0s infinite both;
   }
   .d-emergency { --glow: rgba(255,77,46,0.7); }
   .d-ready { --glow: rgba(58,216,132,0.65); }
@@ -142,7 +146,9 @@ const SUBLINES = [
   .d-ready::after { animation-delay: 0.42s; }
   .d-emergency::after { animation-delay: 1.14s; }
   .d-prevent::after { animation-delay: 1.86s; }
-  @keyframes doorGlow { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+  /* The sweep occupies the first ~27% of the cycle (1.2s of 4.4s); the rest
+     is quiet, so the page breathes between passes. */
+  @keyframes doorGlow { 0%, 27%, 100% { opacity: 0; } 13.5% { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { .door::after { animation: none; } }
 
   .door-body { flex: 1; }

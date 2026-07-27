@@ -106,7 +106,9 @@ const faqSchema = {
       </p>
     </div>
 
-    <h2 class="rb-h2" id="no-playlists">Why does my USB mount on the CDJ but show no playlists?</h2>
+    <details class="rb-sec" id="no-playlists">
+      <summary><h2 class="rb-h2">Why does my USB mount on the CDJ but show no playlists?</h2><span class="rb-chev" aria-hidden="true"></span></summary>
+      <div class="rb-body">
     <p>
       Nine times out of ten in 2026, this is not a broken drive. It is the
       wrong <strong>database format</strong>, and it is the most confusing failure
@@ -129,7 +131,11 @@ const faqSchema = {
       </p>
     </div>
 
-    <h2 class="rb-h2" id="onelibrary">What are OneLibrary and Device Library?</h2>
+      </div>
+    </details>
+    <details class="rb-sec" id="onelibrary">
+      <summary><h2 class="rb-h2">What are OneLibrary and Device Library?</h2><span class="rb-chev" aria-hidden="true"></span></summary>
+      <div class="rb-body">
     <p>
       Both are the index rekordbox writes to your drive so a player can show your
       playlists, cues, grids and artwork without a computer. OneLibrary was
@@ -145,7 +151,11 @@ const faqSchema = {
       same booth, reading different formats.
     </p>
 
-    <h2 class="rb-h2" id="which-player">Which players use OneLibrary, and which read exFAT?</h2>
+      </div>
+    </details>
+    <details class="rb-sec" id="which-player">
+      <summary><h2 class="rb-h2">Which players use OneLibrary, and which read exFAT?</h2><span class="rb-chev" aria-hidden="true"></span></summary>
+      <div class="rb-body">
     <p class="rb-tablenote">
       FAT32 with MBR works on every model in this table. exFAT is the column
       that bites.
@@ -188,7 +198,11 @@ const faqSchema = {
       you it is our recommendation than dress it up as a published requirement.
     </p>
 
-    <h2 class="rb-h2" id="fix">How do I fix a drive that shows no playlists?</h2>
+      </div>
+    </details>
+    <details class="rb-sec" id="fix">
+      <summary><h2 class="rb-h2">How do I fix a drive that shows no playlists?</h2><span class="rb-chev" aria-hidden="true"></span></summary>
+      <div class="rb-body">
     <ol class="rb-steps">
       <li><strong>At the gig, switch to FOLDER view.</strong> Your audio files are still on the drive. You lose cues, grids and playlists, but you keep playing. That is the whole point of the rescue.</li>
       <li><strong>Get to rekordbox 7.2.13 or later.</strong> From this version rekordbox can write both database formats onto the same drive, so one stick works in every booth.</li>
@@ -212,7 +226,11 @@ const faqSchema = {
       </p>
     </div>
 
-    <h2 class="rb-h2" id="fat32">Is FAT32 really limited to 32GB?</h2>
+      </div>
+    </details>
+    <details class="rb-sec" id="fat32">
+      <summary><h2 class="rb-h2">Is FAT32 really limited to 32GB?</h2><span class="rb-chev" aria-hidden="true"></span></summary>
+      <div class="rb-body">
     <p>
       No, and this myth costs DJs money. FAT32 supports volumes up to
       <strong>2TB</strong>. The 32GB ceiling you have run into is a limit in
@@ -229,7 +247,11 @@ const faqSchema = {
       library it never matters. <a href="/fix/format-usb-for-cdj">Full formatting walkthrough &rarr;</a>
     </p>
 
-    <h2 class="rb-h2" id="errors">What do the CDJ error codes mean?</h2>
+      </div>
+    </details>
+    <details class="rb-sec" id="errors">
+      <summary><h2 class="rb-h2">What do the CDJ error codes mean?</h2><span class="rb-chev" aria-hidden="true"></span></summary>
+      <div class="rb-body">
     <p class="rb-caveat">These are the official definitions for the CDJ-3000 and CDJ-3000X. Older CDJs (CDJ-350 and CDJ-850 era) can map some codes differently.</p>
     <dl class="rb-errors">
       <dt>E-8302</dt>
@@ -244,7 +266,11 @@ const faqSchema = {
       fixed it, and we will document it properly.
     </p>
 
-    <h2 class="rb-h2" id="checklist">The setup that never surprises you</h2>
+      </div>
+    </details>
+    <details class="rb-sec" id="checklist">
+      <summary><h2 class="rb-h2">The setup that never surprises you</h2><span class="rb-chev" aria-hidden="true"></span></summary>
+      <div class="rb-body">
     <ul class="checklist">
       <li><strong>FAT32, MBR</strong>, on a 32 to 64GB drive from a brand you have heard of.</li>
       <li><strong>rekordbox 7.2.13 or later</strong>, exported, not dragged.</li>
@@ -253,6 +279,8 @@ const faqSchema = {
       <li><strong>Test on a player</strong> before the drive ever matters.</li>
     </ul>
 
+      </div>
+    </details>
     <Disclaimer variant="full" />
 
     <div class="panel panel-danger" style="margin-top:2rem">
@@ -282,6 +310,29 @@ const faqSchema = {
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
   .rb-h2 { font-size: clamp(1.3rem, 4.5vw, 1.7rem); margin: 2.4rem 0 0.9rem; text-transform: none; letter-spacing: -0.015em; }
+  /* Collapsible sections (Antonio): the questions are the index, the answers
+     expand. Closed by default, so the page reads as seven questions instead of
+     a wall. Content stays in the HTML, so search engines and AI read it all. */
+  .rb-sec {
+    background: var(--surf); border: 1px solid var(--edge);
+    border-radius: var(--radius); margin: 0 0 0.8rem;
+  }
+  .rb-sec > summary {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1.05rem 1.25rem; cursor: pointer; list-style: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rb-sec > summary::-webkit-details-marker { display: none; }
+  .rb-sec > summary .rb-h2 { margin: 0; font-size: clamp(1.05rem, 3.6vw, 1.3rem); }
+  .rb-sec > summary:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+  .rb-chev {
+    flex: 0 0 auto; width: 9px; height: 9px; margin-top: -3px;
+    border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
+    transform: rotate(45deg); transition: transform 0.2s ease;
+  }
+  .rb-sec[open] > .rb-chev, .rb-sec[open] > summary .rb-chev { transform: rotate(225deg); }
+  .rb-body { padding: 0 1.25rem 1.1rem; }
+  @media (prefers-reduced-motion: reduce) { .rb-chev { transition: none; } }
   main p { color: var(--text-dim); line-height: 1.65; }
   main p strong { color: var(--text); }
   .rb-tablenote { font-size: 0.88rem; margin-bottom: 0.8rem; }
@@ -304,3 +355,23 @@ const faqSchema = {
   .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
   .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--edge-soft); }
 </style>
+
+<script is:inline>
+  // Deep links must still work with the sections closed: a link to
+  // #which-player (the exfat article sends people here) opens that section
+  // before scrolling to it. Same on hash changes within the page.
+  (function () {
+    function openTarget() {
+      var id = location.hash.slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (!el) return;
+      var box = el.closest ? el.closest('details') : null;
+      if (el.tagName === 'DETAILS') box = el;
+      if (box && !box.open) box.open = true;
+      el.scrollIntoView();
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
+  })();
+</script>

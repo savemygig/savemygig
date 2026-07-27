@@ -18,9 +18,15 @@ const {
 } = Astro.props;
 const id = `cap-${source}`;
 ---
+<!-- One registration, sitewide (Antonio). This form used to be its own little
+     email system, disconnected from the checklist gate: registering there did
+     nothing here and capturing here unlocked nothing there. Now it speaks
+     registration, a successful capture REGISTERS the device (same keys the
+     checklist reads), and a visitor who is already registered sees a one-tap
+     send button with their address instead of a form asking again. -->
 <section class="panel capture" data-capture={source}>
   <h3 style="margin-bottom:0.6rem">{title}</h3>
-  <p class="dim" style="margin-bottom:1rem">{blurb}</p>
+  <p class="dim cap-blurb" style="margin-bottom:1rem">{blurb}</p>
 
   <form class="cap-form" id={id} novalidate>
     <input
@@ -32,14 +38,15 @@ const id = `cap-${source}`;
       placeholder="you@email.com"
       aria-label="Your email address"
     />
-    <button type="submit" class="btn btn-solid" style="margin:0">Send me the card</button>
+    <button type="submit" class="btn btn-solid" style="margin:0">Register and send it</button>
   </form>
 
   <p class="cap-msg dim" role="status" aria-live="polite"></p>
 
   <p class="cap-legal">
-    We will send you a confirmation email first. Your address is stored with Brevo, our email
-    provider, and used only for this. Unsubscribe any time. <a href="/privacy">Privacy</a>
+    Registering is free and counts everywhere on Save My Gig. We send a
+    confirmation email first. Your address is stored with Brevo, our email
+    provider. Unsubscribe any time. <a href="/privacy">Privacy</a>
   </p>
 </section>
 
@@ -76,6 +83,26 @@ const id = `cap-${source}`;
 </style>
 
 <script>
+  // Already registered on this device: no form, one tap, their address shown.
+  document.querySelectorAll('.capture').forEach((wrap) => {
+    let unlocked = false; let stored = '';
+    try {
+      unlocked = localStorage.getItem('SMG_UNLOCKED') === '1';
+      stored = localStorage.getItem('SMG_EMAIL') || '';
+    } catch (e) {}
+    if (unlocked && stored) {
+      const form = wrap.querySelector('.cap-form') as HTMLFormElement | null;
+      const blurb = wrap.querySelector('.cap-blurb') as HTMLElement | null;
+      if (form) {
+        const input = form.querySelector('input[name="email"]') as HTMLInputElement | null;
+        const btn = form.querySelector('button') as HTMLButtonElement | null;
+        if (input) { input.value = stored; input.hidden = true; }
+        if (btn) btn.textContent = 'Send it to ' + stored;
+        if (blurb) blurb.textContent = 'You are registered. One tap and it is in your inbox.';
+      }
+    }
+  });
+
   document.querySelectorAll('.cap-form').forEach((form) => {
     form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
@@ -110,6 +137,12 @@ const id = `cap-${source}`;
         if (data.ok) {
           msg.textContent = 'Almost there. Check your inbox and tap the confirm link to get the card.';
           msg.className = 'cap-msg ok';
+          // Registration counts everywhere: same keys the checklist gate reads,
+          // so Pro, Custom and the downloads are open the next time they visit.
+          try {
+            localStorage.setItem('SMG_UNLOCKED', '1');
+            localStorage.setItem('SMG_EMAIL', email);
+          } catch (e) {}
           el.reset();
           if (typeof (window as any).gtag === 'function') {
             (window as any).gtag('event', 'email_capture', { placement: source });
