@@ -512,6 +512,11 @@ const entityGraph = {
       display: block; grid-column: 2; grid-row: 1 / span 3;
       align-self: stretch; justify-self: start;
       height: 100%; width: auto; max-width: 100%; object-fit: contain;
+      /* 20% smaller (Antonio, after seeing it on iPhone and Android), drawn
+         from the same anchor: left edge stays on the Prepare column,
+         vertically centered in the stack. Scale, not height, so the grid
+         geometry above stays measured and true. */
+      transform: scale(0.8); transform-origin: left center;
     }
     .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
     .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
