@@ -24,18 +24,21 @@ const players = [
   { name: 'XDJ-1000MK2', href: null },
   { name: 'XDJ-700', href: null },
 ];
+// Order inside each category is top of the line down to entry, Antonio's
+// rule, matching how the players were already sorted. V10 and V10-LF are
+// one card: same desk, the LF swaps in long channel faders and drops the
+// crossfader, so a separate page would be a duplicate.
 const mixers = [
+  { name: 'DJM-V10 / V10-LF', href: '/knowledge/pioneer-dj/djm-v10' },
+  { name: 'DJM-V5', href: null },
   { name: 'DJM-A9', href: '/knowledge/pioneer-dj/djm-a9' },
   { name: 'DJM-900NXS2', href: '/knowledge/pioneer-dj/djm-900nxs2' },
   { name: 'DJM-900NXS', href: null },
-  { name: 'DJM-V10', href: '/knowledge/pioneer-dj/djm-v10' },
-  { name: 'DJM-V10-LF', href: null },
-  { name: 'DJM-V5', href: null },
   { name: 'euphonia', href: null },
 ];
 const allInOne = [
-  { name: 'XDJ-AZ', href: null },
   { name: 'OPUS-QUAD', href: null },
+  { name: 'XDJ-AZ', href: null },
   { name: 'XDJ-XZ', href: null },
   { name: 'XDJ-RX3', href: null },
 ];
@@ -89,9 +92,16 @@ const schema = {
       gear, and how to stop the same failure happening at your next gig.
     </p>
 
+    <!-- Collapsible categories (Antonio): on a phone the six category
+         headers ARE the index, tap one to expand it. On desktop there is
+         room, so the inline script below opens everything before paint and
+         the page reads as before. Native details/summary, no framework. -->
     {categories.map(cat => (
-      <>
-        <h2 class="kb-h" style="margin-top:1.8rem">{cat.label}</h2>
+      <details class="kb-cat">
+        <summary>
+          <h2 class="kb-h">{cat.label}</h2>
+          <span class="kb-chev" aria-hidden="true"></span>
+        </summary>
         {cat.note && <p class="dim" style="margin-bottom:0.9rem;font-size:0.85rem">{cat.note}</p>}
         <div class="kb-grid">
           {cat.items.map(m => (
@@ -108,8 +118,18 @@ const schema = {
             )
           ))}
         </div>
-      </>
+      </details>
     ))}
+    <script is:inline>
+      // Desktop has room: open every category before first interaction.
+      // Phones keep them collapsed so the category list is the index.
+      (function () {
+        if (window.matchMedia('(min-width: 641px)').matches) {
+          var cats = document.querySelectorAll('.kb-cat');
+          for (var i = 0; i < cats.length; i++) cats[i].open = true;
+        }
+      })();
+    </script>
 
     <div class="panel" style="margin-top:2rem">
       <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">Which unit should we write next?</h2>
@@ -130,8 +150,23 @@ const schema = {
   .kb-lead { max-width: 42rem; margin-bottom: 1.5rem; line-height: 1.6; }
   .kb-h {
     font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
-    border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+    margin: 0; flex: 1;
   }
+  .kb-cat { margin-top: 1.6rem; }
+  .kb-cat > summary {
+    display: flex; align-items: center; gap: 0.8rem;
+    border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+    cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
+  }
+  .kb-cat > summary::-webkit-details-marker { display: none; }
+  .kb-cat > summary:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+  .kb-chev {
+    flex: 0 0 auto; width: 8px; height: 8px; margin-top: -3px;
+    border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
+    transform: rotate(45deg); transition: transform 0.2s ease;
+  }
+  .kb-cat[open] > summary .kb-chev { transform: rotate(225deg); }
+  @media (prefers-reduced-motion: reduce) { .kb-chev { transition: none; } }
   .kb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.9rem; }
   .kb-card {
     display: flex; flex-direction: column; gap: 0.4rem;
