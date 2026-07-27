@@ -2,64 +2,72 @@
 import Base from '../../layouts/Base.astro';
 import { VENDOR_LINKS } from '../../data/facts.js';
 
-// Knowledge hub. Save My Gig started Pioneer/rekordbox-shaped because that is
-// where the emergencies are, but the brand promise is "DJ rescue and
-// prevention", not "rekordbox rescue". This hub is the structure that lets
-// Serato, Traktor, Denon and Engine DJ land later without re-architecting
-// anything: each software gets its own page under /knowledge/<name>.
-const sections = [
+// Knowledge hub, restructured on Antonio's call: "Master your tools", split
+// into SOFTWARE and HARDWARE, because a DJ's tools are both. Focus stays on
+// rekordbox + Pioneer DJ / AlphaTheta, which is most of the world's booths;
+// everything else lands later without re-architecting anything: each tool
+// gets its own page under /knowledge/<name>.
+const software = [
   {
     name: 'rekordbox',
     href: '/knowledge/rekordbox',
-    status: 'live',
     blurb: 'Export, Device Library vs OneLibrary, library moves, and every error a CDJ throws at you.',
   },
   {
     name: 'Serato DJ',
     href: null,
-    status: 'planned',
     blurb: 'Crates, offline library, and playing on club CDJs from a Serato setup.',
   },
   {
     name: 'Traktor',
     href: null,
-    status: 'planned',
     blurb: 'Collection management and getting a Traktor library onto standalone players.',
   },
   {
-    name: 'Engine DJ / Denon',
+    name: 'Engine DJ',
     href: null,
-    status: 'planned',
     blurb: 'Engine library prep, SC Live and Prime players, and the crossover to Pioneer booths.',
+  },
+];
+const hardware = [
+  {
+    name: 'Pioneer DJ / AlphaTheta',
+    href: null,
+    blurb: 'CDJs, XDJs, DJM mixers and all-in-ones: known issues by firmware version, and the habits that prevent them.',
+  },
+  {
+    name: 'Denon DJ',
+    href: null,
+    blurb: 'SC players and Prime hardware, once the AlphaTheta reference is complete.',
   },
 ];
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  name: 'DJ software knowledge base',
+  name: 'DJ software and hardware knowledge base',
   isPartOf: { '@id': 'https://www.savemygig.com/#website' },
   about: { '@id': 'https://www.savemygig.com/#org' },
 };
 ---
 <Base
-  title="DJ Software Knowledge Base - rekordbox, Serato, Traktor | Save My Gig!"
-  description="Deep reference for the software that runs your library. rekordbox first: export, Device Library vs OneLibrary, error codes and compatibility. Serato, Traktor and Engine DJ next."
+  title="Master Your Tools - DJ Software & Hardware Reference | Save My Gig!"
+  description="Deep reference for the tools that run your set. Software: rekordbox export, Device Library vs OneLibrary, error codes. Hardware: Pioneer DJ and AlphaTheta players and mixers. Serato, Traktor and Engine DJ next."
   path="/knowledge"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
   <main class="wrap">
     <div class="status-line">KNOWLEDGE_BASE</div>
-    <h1 style="margin-bottom:0.8rem">Know your <span class="accent">software</span></h1>
+    <h1 style="margin-bottom:0.8rem">Master your <span class="accent">tools</span></h1>
     <p class="dim kb-lead">
-      Most gig-night disasters are not hardware failures. They are library
-      problems wearing a hardware costume. This is the reference layer: what
-      each piece of software actually does to your files, and how to keep it
-      from ruining your night.
+      Your tools are the software that runs your library and the hardware that
+      plays it. This is the reference layer for both: what each one actually
+      does, where it breaks, and how to keep it from ruining your night.
     </p>
 
+    <h2 class="kb-h">Software</h2>
     <div class="kb-grid">
-      {sections.map(s => (
+      {software.map(s => (
         s.href ? (
           <a class="kb-card kb-live" href={s.href}>
             <span class="kb-name">{s.name}</span>
@@ -76,6 +84,33 @@ const schema = {
       ))}
     </div>
 
+    <h2 class="kb-h" style="margin-top:2rem">Hardware</h2>
+    <div class="kb-grid">
+      {hardware.map(s => (
+        s.href ? (
+          <a class="kb-card kb-live" href={s.href}>
+            <span class="kb-name">{s.name}</span>
+            <span class="kb-blurb">{s.blurb}</span>
+            <span class="kb-go">Open the guide &rarr;</span>
+          </a>
+        ) : (
+          <div class="kb-card kb-soon">
+            <span class="kb-name">{s.name}</span>
+            <span class="kb-blurb">{s.blurb}</span>
+            <span class="kb-tag">Coming next</span>
+          </div>
+        )
+      ))}
+    </div>
+
+    <!-- Audit fix: a visitor in look-it-up mode used to dead-end here. The
+         site's actual reference depth lives in the fix articles and the FAQ,
+         so the hub now points at them. -->
+    <p class="dim" style="margin-top:1.6rem">
+      Looking for a specific failure? The <a href="/faq">FAQ answers every
+      common question</a> and links the full fix library.
+    </p>
+
     <div class="panel" style="margin-top:2rem">
       <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">Which one should we write next?</h2>
       <p class="dim" style="margin-bottom:1rem">We build what DJs actually ask for. Tell us what you run and it moves up the list.</p>
@@ -88,6 +123,10 @@ const schema = {
 
 <style>
   .kb-lead { max-width: 42rem; margin-bottom: 2rem; line-height: 1.6; }
+  .kb-h {
+    font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+  }
   .kb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.9rem; }
   .kb-card {
     display: flex; flex-direction: column; gap: 0.4rem;
