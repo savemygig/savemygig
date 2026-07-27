@@ -61,10 +61,15 @@ export async function onRequestPost({ request, env }) {
   const restoreUrl = `${SITE}/checklist#r=${b64url(JSON.stringify({ c: custom, x: removed, r: renames, o: order }))}`;
 
   // Readable list, grouped by category, escaped.
-  const order = ['basics', 'technical', 'extras'];
+  // NOTE: named CAT_ORDER, not "order": `order` above already holds the DJ's
+  // saved row order from the client, and the duplicate declaration was a
+  // SyntaxError that killed EVERY Cloudflare deployment (the static build
+  // passes locally, but Pages compiles functions/ at deploy time). The gate
+  // now node --checks this directory so the class of bug cannot ship again.
+  const CAT_ORDER = ['basics', 'technical', 'extras'];
   let sectionsHtml = '';
   let textLines = [];
-  order.forEach((cat) => {
+  CAT_ORDER.forEach((cat) => {
     const items = Array.isArray(listByCat[cat]) ? listByCat[cat] : [];
     if (!items.length) return;
     sectionsHtml += `<tr><td style="padding:16px 30px 4px;font-family:'Arial Black',Arial,sans-serif;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;color:#ff4d2e;">${esc(CAT_NAMES[cat] || cat)}</td></tr>`;

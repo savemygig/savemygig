@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "lint:content": "node scripts/lint-content.mjs dist",
     "gate:geo": "node scripts/geo-check.mjs dist",
-    "gate": "astro build && node scripts/lint-content.mjs dist && node scripts/geo-check.mjs dist && node scripts/fold-check.mjs dist && node scripts/test-pdf-gate.mjs dist && node scripts/test-checklist-drag.mjs dist"
+    "gate": "astro build && node scripts/check-functions.mjs && node scripts/lint-content.mjs dist && node scripts/geo-check.mjs dist && node scripts/fold-check.mjs dist && node scripts/test-pdf-gate.mjs dist && node scripts/test-checklist-drag.mjs dist"
   },
   "keywords": [],
   "author": "",
