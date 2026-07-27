@@ -62,6 +62,11 @@ function confirmEmail(confirmUrl, source) {
     'Confirm your email:\n' + confirmUrl + '\n\n' +
     'Keep this email. New phone or laptop? Open it there and tap the same ' +
     'link: that device gets registered too.\n\n' +
+    // The follow-back ask lives HERE, not on the registration form: the form
+    // gives (we follow every DJ who registers), the email may ask, because by
+    // now value has been delivered first (Antonio + strategy call).
+    'We follow every DJ who registers. If you like what we are building, a ' +
+    'follow back at instagram.com/savemygig always helps.\n\n' +
     'If you did not ask for this, ignore this email and nothing happens.\n' +
     'This link works for 7 days.\n\n' +
     'Save My Gig';
@@ -89,6 +94,9 @@ function confirmEmail(confirmUrl, source) {
             </tr>
             <tr>
               <td style="padding:14px 30px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#9a978f;"><strong style="color:#f3f1ec;">Keep this email.</strong> New phone or laptop? Open it there and tap the same button: that device gets registered too.</td>
+            </tr>
+            <tr>
+              <td style="padding:14px 30px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#9a978f;">We follow every DJ who registers. If you like what we are building, a follow back at <a href="https://instagram.com/savemygig" style="color:#f3f1ec;">@savemygig</a> always helps.</td>
             </tr>
             <tr>
               <td style="padding:14px 30px 30px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#6a665f;">Did not ask for this? Ignore this email and nothing happens. The link works for 7 days. Button not working? Paste this into your browser:<br /><a href="${confirmUrl}" style="color:#9a978f;word-break:break-all;">${confirmUrl}</a></td>
