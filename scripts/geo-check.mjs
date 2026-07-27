@@ -57,6 +57,9 @@ for (const path of PAGES) {
         doorTitles: [...document.querySelectorAll('.door-title')].map(e => {
           const cs = getComputedStyle(e); const lh = parseFloat(cs.lineHeight) || e.getBoundingClientRect().height;
           return +(e.getBoundingClientRect().height / lh).toFixed(2); }),
+        doorDescs: [...document.querySelectorAll('.door-desc')].map(e => {
+          const cs = getComputedStyle(e); const lh = parseFloat(cs.lineHeight) || e.getBoundingClientRect().height;
+          return +(e.getBoundingClientRect().height / lh).toFixed(2); }),
       };
     });
     await page.close();
@@ -69,6 +72,9 @@ for (const path of PAGES) {
     }
     if (over > 0) fails.push(`${path}@${w}: horizontal overflow ${over}px`);
     if (path === '/') for (const dl of m.doorTitles) if (dl > 1.2) fails.push(`/@${w}: a door title wraps (${dl} lines)`);
+    // On phones the SHORT description must stay one line, or the third door
+    // drops below the fold.
+    if (path === '/') for (const dl of m.doorDescs) if (dl > 1.2) fails.push(`/@${w}: a door description wraps (${dl} lines)`);
   }
 }
 await browser.close();

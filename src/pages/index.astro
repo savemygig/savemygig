@@ -48,7 +48,7 @@ const SUBLINES = [
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
           <span class="door-title">FIX A PROBLEM NOW</span>
-          <span class="door-desc">USB or player failing. Get playing again, fast.</span>
+          <span class="door-desc"><span class="dd-full">USB or player failing. Get playing again, fast.</span><span class="dd-short">USB or player failing? Fix it fast.</span></span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
       </a>
@@ -57,7 +57,7 @@ const SUBLINES = [
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
           <span class="door-title">RUN PRE-GIG CHECKLIST</span>
-          <span class="door-desc">Playing soon? Tick it off before you walk out.</span>
+          <span class="door-desc"><span class="dd-full">Playing soon? Tick it off before you walk out.</span><span class="dd-short">Playing soon? Tick it off first.</span></span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
       </a>
@@ -66,7 +66,7 @@ const SUBLINES = [
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
           <span class="door-title">GET BULLETPROOF</span>
-          <span class="door-desc">Our system for a setup that never fails. Gear included.</span>
+          <span class="door-desc"><span class="dd-full">The seven rules that make USB failure a non-event.</span><span class="dd-short">Seven rules. No more USB disasters.</span></span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
       </a>
@@ -140,6 +140,11 @@ const SUBLINES = [
     text-transform: uppercase; letter-spacing: -0.01em; margin-bottom: 0.25rem; color: var(--text);
   }
   .door-desc { display: block; color: var(--text-dim); font-size: 0.92rem; line-height: 1.45; }
+  /* Two lengths, one message. Desktop has room for the full line; phones get a
+     short version that lands on ONE line, which keeps the three doors above
+     the fold and stops them reading as a wall of grey. Both stay in the HTML,
+     so search engines and AI crawlers still read the full text. */
+  .dd-short { display: none; }
   .door-arrow { flex: 0 0 auto; font-size: 1.4rem; color: var(--text-faint); transition: color 0.15s ease; }
 
   /* Colour comes up on interaction, per door. */
@@ -194,6 +199,8 @@ const SUBLINES = [
       margin-bottom: 0.2rem; letter-spacing: -0.015em;
     }
     .door-desc { font-size: clamp(0.79rem, calc(3.4vw + 0.3px), 1rem); line-height: 1.35; }
+    .dd-full { display: none; }
+    .dd-short { display: inline; }
     .door-arrow { font-size: 1.2rem; }
     .known { margin-top: 1.15rem; font-size: 0.85rem; }
   }
