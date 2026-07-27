@@ -339,13 +339,21 @@ const SUBLINES = [
       for (var i = 0; i < lines.length; i++) lines[i].hidden = (i !== pick);
     }
     // Registered visitors with an artist name get greeted by it. textContent
-    // only (never HTML), first word, 10-char cap or we keep the brand line.
+    // only (never HTML), first word. The fit check is the LAYOUT ITSELF
+    // (Antonio's "characters or pixels" call): try the name, measure whether
+    // the H1 grew a line, revert to the brand line if it did. So a name shows
+    // wherever it genuinely fits and can never push the doors under the fold.
     try {
       var who = localStorage.getItem('SMG_ARTIST');
       var el = document.getElementById('askWho');
-      if (who && el) {
+      var h1 = document.querySelector('.ask');
+      if (who && el && h1) {
         who = who.split(/\s+/)[0];
-        if (who.length >= 2 && who.length <= 10) el.textContent = who.toUpperCase() + '?';
+        if (who.length >= 2 && who.length <= 14) {
+          var before = h1.getBoundingClientRect().height;
+          el.textContent = who.toUpperCase() + '?';
+          if (h1.getBoundingClientRect().height > before + 1) el.textContent = 'DJ?';
+        }
       }
     } catch (e) { /* storage blocked, brand line stays */ }
     // "Search it" opens the same overlay as the nav magnifier. The href is a
