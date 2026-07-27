@@ -35,7 +35,11 @@ await new Promise(r => server.listen(0, r));
 const port = server.address().port;
 const base = `http://127.0.0.1:${port}`;
 
-const WIDTHS = [360, 375, 390, 412, 430];
+// Real phone widths, weighted to what DJs actually carry (Antonio: mostly
+// iPhone, 16/17 and Pro models). 360 = budget Android, 375 = iPhone SE,
+// 390 = iPhone 12-15, 393 = iPhone 16 / Galaxy S23, 402 = iPhone 16 Pro,
+// 412 = Pixel, 430 = iPhone 15 Pro Max, 440 = iPhone 16 Pro Max.
+const WIDTHS = [360, 375, 390, 393, 402, 412, 430, 440];
 const PAGES = ['/', '/emergency', '/fix/cdj-error-e-8302'];
 const browser = await chromium.launch();
 const fails = [];
