@@ -47,7 +47,12 @@ const SUBLINES = [
       <a class="door d-ready" href="/checklist" data-event="step_completed" data-placement="home_door_checklist">
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
-          <span class="door-title">RUN PRE-GIG CHECKLIST</span>
+          <!-- "RUN" was answering a question the h1 already asked. The headline
+               is "What do you want to do, DJ?", so the doors are the answers
+               and do not need to repeat the verb. "NOW" on the emergency door
+               stays: that one is not redundancy, it is the only word telling a
+               DJ which of the three doors is the 2am one. -->
+          <span class="door-title">PRE-GIG CHECKLIST</span>
           <span class="door-desc"><span class="dd-full">Playing soon? Tick it off before you walk out.</span><span class="dd-short">Playing soon? Tick it off first.</span></span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
@@ -72,8 +77,13 @@ const SUBLINES = [
       </a>
     </nav>
 
+    <!-- Was "Straight to the fix:", which promised adjacency to the emergency
+         door. These links sit below all three doors, so that promise was
+         written for a layout that does not exist. "Common searches" describes
+         what the list actually is, works from any position, and quietly tells a
+         DJ that other DJs hit these too. -->
     <p class="known dim">
-      Straight to the fix:
+      Common searches:
       <a href="/fix/usb-not-recognized-cdj">USB not recognized</a> ·
       <a href="/fix/playlists-not-showing-cdj">Playlists not showing</a> ·
       <a href="/fix/cdj-error-e-8302">E-8302</a> ·

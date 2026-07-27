@@ -98,11 +98,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          asked for. A second unlock panel with its own copy would have drifted
          from this one within a week. -->
     <div class="unlock" id="unlock" hidden>
-      <p class="unlock-title" id="unlockTitle">Unlock Advanced and Custom</p>
-      <p class="dim unlock-copy" id="unlockCopy">The full kit and your own custom lists are free. The only price is your email, call it a tiny tip that keeps this project alive. You also get Save My Gig news and the odd cool thing for your DJ career, never spam. Drop the email you actually open and you are in right away, one quick confirm and done.</p>
+      <!-- Antonio's framing, and it is better than what was here. This is NOT
+           "your email is the price". That reads like a transaction and it makes
+           a professional feel charged for something we call free. It is
+           "free for registered users", which is how every real tool works and
+           how a working DJ expects to be treated. -->
+      <p class="unlock-title" id="unlockTitle">Register to unlock Advanced and Custom</p>
+      <p class="dim unlock-copy" id="unlockCopy">Free for registered users. Register with your email and you are in right away. We will send you news and the odd cool thing for your DJ career, never spam.</p>
       <form class="unlock-form" id="unlockForm" novalidate>
         <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your best email" required />
-        <button type="submit" class="btn btn-solid">Join and unlock</button>
+        <button type="submit" class="btn btn-solid">Register</button>
       </form>
       <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
       <p class="unlock-note">By joining you agree we can email you Save My Gig news and partner offers, DJ world only, never spam. One time on this device. <a href="/privacy">Privacy</a></p>
@@ -411,11 +416,18 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      handle reorders instead of scrolling the page. */
   .task-drag {
     display: none; background: none; border: 0; color: var(--text-faint);
-    line-height: 0; cursor: grab; padding: 0.45rem 0.5rem;
+    line-height: 0; cursor: grab;
+    /* 44x44 minimum, because you have to hit this exactly to start a drag and
+       Antonio had to aim for it. The arrow inside is now 15x24, so the padding
+       is what gets the target to a thumb-sized 44. */
+    padding: 10px 14px;
+    min-width: 44px; min-height: 44px;
+    display: none; align-items: center; justify-content: center;
     touch-action: none; flex: 0 0 auto;
   }
   .task-drag:hover { color: var(--text-dim); }
-  #list[data-mode="custom"][data-edit="on"] .task-drag { display: block; }
+  .task-drag:active { cursor: grabbing; color: var(--text); }
+  #list[data-mode="custom"][data-edit="on"] .task-drag { display: flex; }
   /* The row you are holding lifts off the list and follows your finger; the
      rows it displaces slide out of the way. Same on mobile and desktop, it is
      all pointer events. */
@@ -432,9 +444,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   /* No text selection, no long-press callout, no blue highlight while you are
      editing. Putting a finger on a row used to select the words. */
   body.dragging-row { user-select: none; -webkit-user-select: none; }
-  #list[data-edit="on"] .task-label,
-  #list[data-edit="on"] .group-toggle,
-  .task-drag {
+
+  /* NOTHING in the list is selectable. The old rules only covered edit mode and
+     only certain children, so a drag that started a few pixels off the handle
+     ran a range selection straight down the list and painted several rows blue,
+     including the remove buttons. A checklist is something you tick and drag,
+     never something you highlight, so the whole list opts out. The rename input
+     is the one exception and re-enables it below. */
+  #list, #list .task, #list .task-label, #list .group-toggle, .task-drag {
     user-select: none; -webkit-user-select: none;
     -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
   }
@@ -445,6 +462,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     flex: 1; min-width: 0; font: inherit; color: var(--text);
     background: var(--surf-2); border: 1px solid var(--green);
     border-radius: 2px; padding: 0.2rem 0.45rem;
+    /* The one place selection MUST work: you cannot rename what you cannot
+       select. Overrides the blanket rule above. */
+    user-select: text; -webkit-user-select: text;
   }
   .task-remove {
     flex: 0 0 auto; display: none; background: transparent; border: none; color: var(--text-faint);
@@ -730,7 +750,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     b.setAttribute('aria-label', 'Drag to reorder');
     // An SVG, not the "↕" character: iOS renders that codepoint as a blue
     // EMOJI, so the handles looked nothing like the desktop ones.
-    b.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m8 9 4-4 4 4"/><path d="m8 15 4 4 4-4"/></svg>';
+    // Antonio: "the arrows are too glued, make them longer so people understand
+    // it's an arrow". The old one was a 16x16 square with the two heads almost
+    // touching, which read as a smudge rather than a grab handle. Taller
+    // viewBox, full-height shaft, heads pushed to the extremes.
+    b.innerHTML = '<svg viewBox="0 0 16 26" width="15" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v22"/><path d="m3 7 5-5 5 5"/><path d="m3 19 5 5 5-5"/></svg>';
     initDrag(b);
     return b;
   }
@@ -999,8 +1023,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const unlockCopy = document.getElementById('unlockCopy');
   const MODE_TITLE = 'Unlock Advanced and Custom';
   const MODE_COPY = unlockCopy ? unlockCopy.textContent || '' : '';
-  const PDF_TITLE = 'Get the printable checklist';
-  const PDF_COPY = 'A clean one-page PDF with empty tick boxes. Print it, fold it, keep it in your USB case, or pin it up in the booth. It costs an email. You also get Save My Gig news and the odd cool thing for your DJ career, never spam.';
+  const PDF_TITLE = 'Register to download the printable checklist';
+  const PDF_COPY = 'Free for registered users. A clean one-page PDF with empty tick boxes. Print it, fold it, keep it in your USB case, or pin it up in the booth. We will send you news and the odd cool thing for your DJ career, never spam.';
 
   // Opens the gate with copy that matches what the DJ actually reached for.
   function openGate() {
