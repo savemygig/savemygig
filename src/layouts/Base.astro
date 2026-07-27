@@ -494,29 +494,20 @@ const entityGraph = {
        pair up; More spans the full width underneath and flows its own links in
        two columns, so there is no orphaned empty cell beside it. */
     .foot-cols { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; }
-    /* Antonio's mockup (2026-07-27, final): brand stack LEFT, seal RIGHT.
-       The seal's TOP touches the top of the wordmark, its BOTTOM touches
-       the coffee line (align-self stretch over all three rows), and its
-       LEFT edge lines up with the PREPARE column below, which is why the
-       brand grid uses the SAME 1fr 1fr + 1.2rem gap as .foot-cols. The
-       seal-left version was tried and reverted. */
-    .foot-brand {
-      grid-column: 1 / -1;
-      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center;
-      column-gap: 1.2rem;
-    }
-    .foot-brand .foot-lockup, .foot-brand .foot-social, .foot-brand .foot-bmc { grid-column: 1; }
+    /* Antonio's mockup (2026-07-27, final): brand stack LEFT with its
+       original tight spacing, seal RIGHT. The seal is ABSOLUTE on purpose:
+       when it lived in the grid flow its image height inflated the rows and
+       spread the wordmark/socials/coffee apart (Antonio: "they look
+       terrible now"). Out of flow, it cannot touch the stack's geometry.
+       Left edge on the Prepare column (50% + half the 1.2rem column gap),
+       vertically centered, 80% of the stack height (his -20% call). */
+    .foot-brand { grid-column: 1 / -1; position: relative; }
     /* On a phone the coffee link left-aligns with the icons (his mockup). */
     .foot-bmc { justify-content: flex-start; width: auto; }
     .foot-seal {
-      display: block; grid-column: 2; grid-row: 1 / span 3;
-      align-self: stretch; justify-self: start;
-      height: 100%; width: auto; max-width: 100%; object-fit: contain;
-      /* 20% smaller (Antonio, after seeing it on iPhone and Android), drawn
-         from the same anchor: left edge stays on the Prepare column,
-         vertically centered in the stack. Scale, not height, so the grid
-         geometry above stays measured and true. */
-      transform: scale(0.8); transform-origin: left center;
+      display: block; position: absolute;
+      left: calc(50% + 0.6rem); top: 50%; transform: translateY(-50%);
+      height: 80%; width: auto;
     }
     .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
     .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
