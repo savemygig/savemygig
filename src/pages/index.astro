@@ -299,6 +299,19 @@ const SUBLINES = [
     transition: border-color 0.15s ease, color 0.15s ease;
   }
   .seekbox:hover, .seekbox:focus-visible { border-color: var(--text-dim); color: var(--text-dim); }
+  /* Fourth stop of the one-time load glow (Antonio): the eye walks the three
+     doors, then lands here. Neutral white and a notch softer than the doors,
+     because this is the catch-all, not a fourth door. Same one-pass rule. */
+  .seekbox { position: relative; }
+  .seekbox::after {
+    content: ''; position: absolute; inset: -1px; border-radius: var(--radius);
+    pointer-events: none; opacity: 0; will-change: opacity;
+    box-shadow: 0 0 18px 1px rgba(243, 241, 236, 0.35);
+    border: 1px solid rgba(243, 241, 236, 0.55);
+    animation: doorGlow 1.2s ease-in-out both;
+    animation-delay: 2.58s;
+  }
+  @media (prefers-reduced-motion: reduce) { .seekbox::after { animation: none; } }
   .seekbox svg { flex: 0 0 auto; }
   .seekbox-hint {
     font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
