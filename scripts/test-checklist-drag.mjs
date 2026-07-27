@@ -42,7 +42,7 @@ const ok = (name, cond, detail = '') => {
 };
 
 await page.addInitScript(() => {
-  localStorage.setItem('SMG_CHECKLIST_OPEN', JSON.stringify({ basics: true, technical: true, extras: true }));
+  localStorage.setItem('SMG_CHECKLIST_OPEN', JSON.stringify({ music: true, gear: true, personal: true, logistics: true, backups: true, technical: true, recovery: true, travel: true }));
 });
 await page.goto(base + '/checklist', { waitUntil: 'networkidle' });
 await page.evaluate(() => {

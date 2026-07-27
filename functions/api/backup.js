@@ -13,7 +13,13 @@
 
 const SITE = 'https://www.savemygig.com';
 const SENDER = { name: 'Save My Gig', email: 'savemygig@gmail.com' };
-const CAT_NAMES = { basics: 'The basics', technical: 'Technical', extras: 'Extras and add-ons' };
+// New taxonomy 2026-07-27 (Antonio's checklist redesign). Old ids kept as
+// aliases so a stale client that posts the old categories still renders.
+const CAT_NAMES = {
+  music: 'Music', gear: 'DJ Gear', personal: 'Personal Essentials', logistics: 'Logistics',
+  backups: 'Music Backups', technical: 'Technical Kit', recovery: 'Backup & Recovery', travel: 'Travel',
+  basics: 'The basics', extras: 'Extras and add-ons',
+};
 
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json; charset=utf-8' } });
@@ -36,6 +42,8 @@ export async function onRequestPost({ request, env }) {
   let removed = [];
   let renames = {};
   let order = {};
+  let sections = [];
+  let catNamesIn = {};
   try {
     const b = await request.json();
     email = (b.email || '').trim();
@@ -44,6 +52,8 @@ export async function onRequestPost({ request, env }) {
     removed = Array.isArray(b.removed) ? b.removed : [];
     renames = b.renames && typeof b.renames === 'object' ? b.renames : {};
     order = b.order && typeof b.order === 'object' ? b.order : {};
+    sections = Array.isArray(b.sections) ? b.sections : [];
+    catNamesIn = b.catNames && typeof b.catNames === 'object' ? b.catNames : {};
   } catch (e) {
     return json({ ok: false, error: 'bad_request' }, 400);
   }
@@ -58,7 +68,7 @@ export async function onRequestPost({ request, env }) {
   // The restore link must carry the WHOLE list state. It used to encode only
   // custom items and removals, so renames and order silently vanished on the
   // second device while the email's own text showed the renamed labels.
-  const restoreUrl = `${SITE}/checklist#r=${b64url(JSON.stringify({ c: custom, x: removed, r: renames, o: order }))}`;
+  const restoreUrl = `${SITE}/checklist#r=${b64url(JSON.stringify({ c: custom, x: removed, r: renames, o: order, s: sections }))}`;
 
   // Readable list, grouped by category, escaped.
   // NOTE: named CAT_ORDER, not "order": `order` above already holds the DJ's
@@ -66,14 +76,19 @@ export async function onRequestPost({ request, env }) {
   // SyntaxError that killed EVERY Cloudflare deployment (the static build
   // passes locally, but Pages compiles functions/ at deploy time). The gate
   // now node --checks this directory so the class of bug cannot ship again.
-  const CAT_ORDER = ['basics', 'technical', 'extras'];
+  const CAT_ORDER = ['music', 'gear', 'personal', 'logistics', 'backups', 'technical', 'recovery', 'travel', 'basics', 'extras'];
+  // User-created sections arrive as extra listByCat keys with their display
+  // titles in catNames; they render after the standard categories.
+  const catNames = catNamesIn;
+  const allCats = CAT_ORDER.concat(Object.keys(listByCat).filter((c) => CAT_ORDER.indexOf(c) === -1));
   let sectionsHtml = '';
   let textLines = [];
-  CAT_ORDER.forEach((cat) => {
+  allCats.forEach((cat) => {
     const items = Array.isArray(listByCat[cat]) ? listByCat[cat] : [];
     if (!items.length) return;
-    sectionsHtml += `<tr><td style="padding:16px 30px 4px;font-family:'Arial Black',Arial,sans-serif;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;color:#ff4d2e;">${esc(CAT_NAMES[cat] || cat)}</td></tr>`;
-    textLines.push('', (CAT_NAMES[cat] || cat).toUpperCase());
+    const name = catNames[cat] || CAT_NAMES[cat] || cat;
+    sectionsHtml += `<tr><td style="padding:16px 30px 4px;font-family:'Arial Black',Arial,sans-serif;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;color:#ff4d2e;">${esc(name)}</td></tr>`;
+    textLines.push('', name.toUpperCase());
     items.forEach((label) => {
       sectionsHtml += `<tr><td style="padding:3px 30px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#f3f1ec;">&#9633;&nbsp;&nbsp;${esc(label)}</td></tr>`;
       textLines.push('[ ] ' + label);

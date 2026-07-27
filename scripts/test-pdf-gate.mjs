@@ -55,7 +55,7 @@ const ok = (name, cond, detail = '') => {
     await ctx.addInitScript(() => {
     // Groups default COLLAPSED since Antonio's collapse doctrine; these tests
     // exercise rows, so open all three groups the way a returning user would.
-    localStorage.setItem('SMG_CHECKLIST_OPEN', JSON.stringify({ basics: true, technical: true, extras: true }));
+    localStorage.setItem('SMG_CHECKLIST_OPEN', JSON.stringify({ music: true, gear: true, personal: true, logistics: true, backups: true, technical: true, recovery: true, travel: true }));
   });
   const page = await ctx.newPage();
   await page.goto(base + '/checklist', { waitUntil: 'networkidle' });
@@ -99,7 +99,7 @@ const ok = (name, cond, detail = '') => {
     await ctx.addInitScript(() => {
     // Groups default COLLAPSED since Antonio's collapse doctrine; these tests
     // exercise rows, so open all three groups the way a returning user would.
-    localStorage.setItem('SMG_CHECKLIST_OPEN', JSON.stringify({ basics: true, technical: true, extras: true }));
+    localStorage.setItem('SMG_CHECKLIST_OPEN', JSON.stringify({ music: true, gear: true, personal: true, logistics: true, backups: true, technical: true, recovery: true, travel: true }));
   });
   const page = await ctx.newPage();
   await page.goto(base + '/checklist', { waitUntil: 'networkidle' });
