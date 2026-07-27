@@ -268,7 +268,9 @@ const entityGraph = {
              site's content, KEEP. ™ = unregistered trademark claim, legal
              before filing, KEEP. ® = registered mark, FORBIDDEN until an
              actual registration exists; never "upgrade" the ™. -->
-        <span class="foot-copy">© 2026 Save My Gig!&trade; · Built by DJs who've been there.</span>
+        <!-- On narrow phones the dot-joined line wrapped raggedly (Antonio,
+             S10e). The separator becomes a deliberate line break there. -->
+        <span class="foot-copy">© 2026 Save My Gig!&trade;<span class="fc-sep"> · </span><span class="fc-rest">Built by DJs who've been there.</span></span>
         <!-- Alive-signal, per Antonio's homepage review: says the project is
              maintained without printing a date that would itself go stale.
              Same font size as the line above (Antonio). -->
@@ -541,6 +543,13 @@ const entityGraph = {
       .foot-social { gap: 0.4rem; margin-top: 0.9rem; }
       .soc-btn { width: 32px; height: 32px; }
       .soc-btn svg { width: 15px; height: 15px; }
+    }
+    /* Bottom lines: deliberate breaks instead of ragged wrap on narrow
+       phones; the alive-signal drops a step so it holds one line at 360. */
+    @media (max-width: 414px) {
+      .fc-sep { display: none; }
+      .fc-rest { display: block; }
+      .foot-live { font-size: 0.74rem; }
     }
     .foot-seal {
       display: block; position: absolute;
