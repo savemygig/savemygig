@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PromoBanner from '../components/PromoBanner.astro';
+import InstallApp from '../components/InstallApp.astro';
 
 // Homepage = simple "pick your pain" chooser. Rescue AND prevention, balanced:
 // three equal, neutral doors; colour lives only in the LED dots and comes up
@@ -132,6 +133,11 @@ const SUBLINES = [
     </a>
 
     <PromoBanner exclude="/emergency" />
+
+    <!-- The install offer lives HERE only (Antonio): one page, one look,
+         dismissible for good via the X. It reveals below the fold, so the
+         doors and their gate stay untouched. -->
+    <InstallApp />
   </main>
 </Base>
 

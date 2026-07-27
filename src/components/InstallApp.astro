@@ -23,6 +23,7 @@
       <span class="inst-sub" id="installSub">Install it and the rescue flow works with no signal, in any basement.</span>
     </span>
     <button type="button" class="inst-btn" id="installBtn">Install</button>
+    <button type="button" class="inst-close" id="installClose" aria-label="Dismiss">&times;</button>
   </div>
   <div class="inst-ios" id="installIos" hidden>
     <p>Tap <strong>Share</strong> at the bottom of Safari, then <strong>Add to Home Screen</strong>.</p>
@@ -54,6 +55,13 @@
     border-radius: var(--radius);
   }
   .inst-btn:hover { filter: brightness(1.08); }
+  .inst-close {
+    flex: 0 0 auto; width: 34px; height: 34px; margin-left: -0.3rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; border: none; color: var(--text-faint);
+    font-size: 20px; line-height: 1; cursor: pointer;
+  }
+  .inst-close:hover { color: var(--text); }
   .inst-ios { padding: 0.75rem 1.1rem 0; }
   .inst-ios[hidden] { display: none; }
   .inst-ios p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
@@ -77,6 +85,13 @@
     var standalone = window.matchMedia('(display-mode: standalone)').matches ||
                      window.navigator.standalone === true;
     if (standalone) return;
+    // Dismissed once = gone for good (Antonio). The X below writes the flag.
+    try { if (localStorage.getItem('SMG_INSTALL_DISMISSED') === '1') return; } catch (e) { /* show */ }
+    var closeBtn = document.getElementById('installClose');
+    if (closeBtn) closeBtn.addEventListener('click', function () {
+      wrap.hidden = true;
+      try { localStorage.setItem('SMG_INSTALL_DISMISSED', '1'); } catch (e) { /* session-only then */ }
+    });
 
     window.addEventListener('beforeinstallprompt', function (e) {
       e.preventDefault();

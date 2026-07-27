@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import InstallApp from '../components/InstallApp.astro';
 
 /**
  * Interactive pre-gig checklist. Prevention side, outside the tunnel.
@@ -85,10 +84,23 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   path="/checklist"
 >
   <main class="wrap" id="top">
-    <div class="status-line">Prevention_Hub</div>
 
     <h1 style="margin-bottom:1rem">LEAVE HOME <span class="accent">READY</span></h1>
-    <p class="dim" style="margin-bottom:1.6rem">Tick it off before you walk out. Nothing forgotten, nothing sent anywhere. This list saves on this device, so it is waiting next time.</p>
+    <!-- Desktop breaks before the storage sentence (Antonio: statically
+         cleaner); phones wrap naturally. Returning visitors on a phone have
+         read this already, so it auto-hides for them and gives the space
+         back, no dismiss chrome needed. -->
+    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Tick it off before you walk out. Nothing forgotten, nothing sent anywhere. <span class="intro-b">This list saves on this device, so it is waiting next time.</span></p>
+    <script is:inline>
+      (function () {
+        try {
+          if (window.matchMedia('(max-width: 640px)').matches &&
+              (localStorage.getItem('SMG_CHECKLIST_MODE') || localStorage.getItem('SMG_CHECKLIST_V1'))) {
+            document.getElementById('pageIntro').style.display = 'none';
+          }
+        } catch (e) { /* storage blocked: keep the intro */ }
+      })();
+    </script>
 
     <div class="mode-switch" role="group" aria-label="Checklist depth">
       <button type="button" class="mode-btn is-on" data-mode-set="basic" aria-pressed="true">Basic</button>
@@ -137,7 +149,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <!-- Register + the anti-spam promise share a row on desktop (Antonio:
              everything moves up a little); they stack again on phones. -->
         <div class="unlock-actions">
-          <button type="submit" class="btn btn-solid">Register</button>
+          <button type="submit" class="btn btn-quiet-danger">Register</button>
           <!-- Antonio's anti-spam promise, tightened twice (second pass cut
                nine words so it holds two lines beside Register). Still the
                consent line, so it stays honest about what we send. -->
@@ -237,14 +249,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     <!-- The bottom actions row is gone: its two buttons moved into the toolbar
          above the list, where Antonio pointed out they belong. -->
 
-    <div class="panel" style="margin-top:1.5rem">
-      <h3 style="margin-bottom:0.6rem">Why two drives, why FAT32</h3>
-      <p class="dim" style="margin-bottom:0">These are not superstitions, they are the failures we see most. The full reasoning, and the gear worth carrying, live in the <a href="/prepare">prevention system</a> and the <a href="/gear">gear guide</a>.</p>
-    </div>
-
     <div class="panel panel-danger" style="margin-top:1.5rem">
       <h3 style="margin-bottom:0.6rem">Already at the gig and something failed?</h3>
-      <a href="/emergency" class="btn btn-solid" data-event="begin_checkout" data-placement="checklist">Start Emergency Mode</a>
+      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="checklist">Start Emergency Mode</a>
     </div>
 
     <!-- Icon-only circle, Antonio's EPK pattern: the site's boxes are square
@@ -256,7 +263,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
       </button>
     </div>
-    <InstallApp />
   </main>
 </Base>
 
@@ -457,6 +463,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   .checklist-actions { margin-top: 1.4rem; display: flex; flex-wrap: wrap; gap: 0.7rem; }
   .checklist-actions .btn { width: auto; display: inline-block; margin: 0; }
+
+  /* Desktop: the storage promise starts its own line under the intro. */
+  @media (min-width: 641px) { .intro-b { display: block; } }
   .top-actions { margin-top: 1.5rem; text-align: center; }
   /* Antonio's EPK circle: transparent, thin edge, arrow brightens to white. */
   .top-circle {
@@ -1175,8 +1184,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
     if (hintEl) {
-      if (m === 'advanced') hintEl.textContent = 'Pro is the full kit. Switch back to Basic for the essentials.';
-      else if (m === 'custom') hintEl.textContent = 'Your list. Add, edit, delete or reorder any item below.';
+      if (m === 'advanced') hintEl.textContent = 'Everything, including the extras. Custom makes it yours.';
+      else if (m === 'custom') hintEl.textContent = 'Your list, your rules: add, edit, delete, reorder.';
       else hintEl.textContent = isUnlocked()
         ? 'Basic is the must-brings. Pro is the full kit, Custom is your own.'
         : 'Basic is the must-brings. Pro and Custom unlock when you register.';

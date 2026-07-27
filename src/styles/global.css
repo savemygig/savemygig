@@ -244,6 +244,11 @@ a { color: var(--red); }
   color: var(--text-faint);
   font-size: 0.85rem;
 }
+/* Phones: the gap between the last content and the share strip was dead
+   air (Antonio). Footer tightens; content is unchanged. */
+@media (max-width: 640px) {
+  .site-footer { margin-top: 1.3rem; padding-top: 1.5rem; }
+}
 .site-footer a { color: var(--text-dim); text-decoration: none; }
 .site-footer a:hover { color: var(--red); }
 
@@ -548,6 +553,24 @@ html.ck-open .sticky-cta { display: none !important; }
   text-decoration: none; transition: top 0.15s ease;
 }
 .skip-link:focus { top: 8px; }
+
+/* ---------- Quiet emergency CTA ----------
+   Antonio's rule, extending the homepage-door principle ("emergency is never
+   a permanently red box"): on calm pages the bottom emergency CTA is an exit
+   sign, not the page's job, so it is outlined red and only FILLS on
+   interaction. Solid red stays reserved for crisis surfaces: /emergency
+   itself, the rescue tunnel, and the mobile sticky CTA on fix articles. */
+.btn-quiet-danger {
+  background: transparent; color: var(--red);
+  border: 1px solid var(--red);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.btn-quiet-danger:hover, .btn-quiet-danger:active { background: var(--red); color: #0a0a0b; }
+
+/* ---------- Active nav ----------
+   The page you are on shows red in the desktop nav and the mobile drawer
+   (Antonio), which is what made per-page status labels redundant. */
+.nav-links a.nav-on { color: var(--red); }
 
 /* ---------- Tunnel: small print that must never compete with the decision ---------- */
 .tunnel-note {
