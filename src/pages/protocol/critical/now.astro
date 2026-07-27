@@ -1,6 +1,6 @@
 ---
 import Tunnel from '../../../layouts/Tunnel.astro';
-import { RUNLIST, RUNLIST_NEVER } from '../../../data/runlist.js';
+import { RUNLIST, RUNLIST_NEVER, RUNLIST_LAST_RESORT } from '../../../data/runlist.js';
 
 // THE SIX MOVES. NOT A DECISION TREE, AND NOT A TUTORIAL EITHER.
 //
@@ -37,10 +37,17 @@ import { RUNLIST, RUNLIST_NEVER } from '../../../data/runlist.js';
     ))}
   </ol>
 
-  <div class="alert-card" style="margin:1.6rem 0 1.4rem">
+  <div class="alert-card" style="margin:1.6rem 0 1.2rem">
     <div style="font-size:20px" aria-hidden="true">⚠️</div>
     <div>{RUNLIST_NEVER}</div>
   </div>
+
+  <!-- Deliberately NOT numbered. It is not a move, it is what is left when the
+       moves are gone, and it depends on a cable that lives in prevention. -->
+  <details class="move-more last-resort">
+    <summary>{RUNLIST_LAST_RESORT.title}</summary>
+    <p>{RUNLIST_LAST_RESORT.body}</p>
+  </details>
 
   <nav class="pad-grid" aria-label="What next">
     <a href="/saved?path=critical&branch=runlist" class="pad pad-green" data-event="outcome_reached" data-outcome="saved" data-path="critical">
@@ -126,4 +133,6 @@ import { RUNLIST, RUNLIST_NEVER } from '../../../data/runlist.js';
     color: var(--text-dim);
     margin: 0.3rem 0 0.2rem;
   }
+  .last-resort { margin: 0 0 1.6rem; }
+  .last-resort > summary { text-transform: none; letter-spacing: 0; font-size: 0.88rem; }
 </style>

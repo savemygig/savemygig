@@ -62,13 +62,35 @@ export const RUNLIST = [
   },
   {
     verb: 'BORROW',
-    action: 'Take a drive off another DJ, or play off your phone.',
+    action: 'Take a drive off the DJ before or after you.',
     detail:
-      'Ask the DJ before or after you, or the resident. This has happened to ' +
-      'every one of them. A phone into a spare channel is not a failure, it is ' +
-      'a set that continued. Music first, pride later.',
+      'Ask the DJ on either side of you, or the resident. This has happened to ' +
+      'every one of them, and their drive is a rekordbox export like yours, so ' +
+      'it will read. You will be playing someone else’s music, but you will ' +
+      'be playing. Music first, pride later.',
   },
 ];
+
+/*
+ * NOT a move. Antonio killed "play off your phone" as move six and he is right
+ * twice over: it needs a USB-C to 3.5mm female adapter AND a 3.5mm to twin RCA
+ * cable, which almost nobody has in the bag at the moment they need it, so as
+ * an in-booth instruction it is useless. And even when it works it is not a DJ
+ * playing, it is a room that is not silent. Those are different outcomes and we
+ * should not dress one up as the other.
+ *
+ * So it lives here, below the list, as the honest last resort, and the cable
+ * itself belongs in PREVENTION where a DJ can act on it.
+ */
+export const RUNLIST_LAST_RESORT = {
+  title: 'If there is no drive anywhere',
+  body:
+    'A phone into a spare channel keeps the room from going silent. Be clear ' +
+    'with yourself about what it is: it is not your set continuing, it is the ' +
+    'night not stopping. It also only works if you already carry a USB-C to ' +
+    '3.5mm adapter and a 3.5mm to twin RCA cable. Six pounds, no weight, and it ' +
+    'is worth nothing at all if it is at home.',
+};
 
 /* The one rule that overrides every step above. */
 export const RUNLIST_NEVER =

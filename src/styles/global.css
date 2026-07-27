@@ -381,10 +381,14 @@ a { color: var(--red); }
 @media (min-width: 720px) { .pad { padding: 22px 46px 22px 24px; } .pad-title { font-size: 18px; } }
 
 /* Tunnel top bar */
+/* SOLID, not glass. Antonio caught this on Android: a translucent sticky bar
+   with backdrop-filter smears during the URL-bar collapse, and step text ends
+   up painted through the brand. Both become unreadable, on the one screen where
+   unreadable is unacceptable. A frosted bar is a nice effect; on the emergency
+   path legibility outranks it, and an opaque bar cannot smear. */
 .top-bar {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(10,10,11,0.85);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  background: var(--bg);
   border-bottom: 1px solid var(--edge);
   padding: calc(10px + env(safe-area-inset-top)) 20px 10px;
 }
