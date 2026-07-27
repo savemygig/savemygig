@@ -524,6 +524,17 @@ const entityGraph = {
     .foot-brand { grid-column: 1 / -1; position: relative; }
     /* On a phone the coffee link left-aligns with the icons (his mockup). */
     .foot-bmc { justify-content: flex-start; width: auto; }
+    /* Narrow phones (Samsung S10/S23 class, 360px logical; iPhone at 390
+       is untouched): the whole brand package shrinks as ONE unit, wordmark,
+       tagline and socials in proportion, so the seal never crowds it.
+       Coffee stays full size (Antonio). */
+    @media (max-width: 379px) {
+      .foot-wordmark { font-size: 1.28rem; }
+      .foot-tag { font-size: 0.47rem; letter-spacing: 0.2em; }
+      .foot-social { gap: 0.4rem; margin-top: 0.9rem; }
+      .soc-btn { width: 33px; height: 33px; }
+      .soc-btn svg { width: 15px; height: 15px; }
+    }
     .foot-seal {
       display: block; position: absolute;
       left: calc(50% + 0.6rem); top: 50%; transform: translateY(-50%);
