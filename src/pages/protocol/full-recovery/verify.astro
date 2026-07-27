@@ -18,6 +18,6 @@ import Choice from '../../../components/Choice.astro';
 
   <Choice step="fr_verify"
     a={{ href: '/saved?path=full_recovery', label: 'YES, SOLID', event: 'outcome_reached', data: { outcome: 'saved', path: 'full_recovery' } }}
-    b={{ href: '/files-lost?path=full_recovery&branch=verify_fail', label: 'NO, PROBLEMS REMAIN', desc: 'Something deeper is wrong, the recovery route digs further.', event: 'outcome_reached', data: { outcome: 'lost', path: 'full_recovery' } }}
+    b={{ href: '/protocol/full-recovery/retire', label: 'NO, PROBLEMS REMAIN', desc: 'Your music is already safe on the computer. It is the drive that is not trustworthy.' }}
   />
 </Tunnel>
