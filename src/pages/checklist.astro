@@ -165,7 +165,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <!-- Antonio: instructions occupy space; read once, dismiss forever. The X
            writes localStorage so it never comes back on this device. Copy cut
            to the four verbs the mode actually has. -->
-      <span class="edit-hint dim" id="editHint">Add, rename (pencil), reorder (arrows), delete (&times;). Save when done.<button type="button" id="hintClose" aria-label="Dismiss this tip">&times;</button></span>
+      <!-- The tip SHOWS the icons instead of naming them: the same pencil and
+           arrow that sit on every row, so reading the tip is already learning
+           the interface (Antonio). -->
+      <span class="edit-hint dim" id="editHint">Add, rename
+        <svg class="hint-ic" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>, reorder
+        <svg class="hint-ic" viewBox="0 0 14 22" width="9" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v18"/><path d="m3 6 4-4 4 4"/><path d="m3 16 4 4 4-4"/></svg>, delete &times;. Save list when done!<button type="button" id="hintClose" aria-label="Dismiss this tip">&times;</button></span>
       <form class="backup-form" id="backupForm" hidden>
         <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" />
         <button type="submit" class="btn btn-neutral">Send it</button>
@@ -560,6 +565,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     font-size: 1.1rem; line-height: 1; padding: 8px 10px;
   }
   #hintClose:hover { color: var(--text); }
+  .hint-ic { vertical-align: -1px; margin: 0 1px; }
   /* Armed reset: the button itself becomes the confirmation. */
   #resetBtn.armed { border-color: var(--red); color: var(--red); }
 
@@ -1062,6 +1068,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       if (editToggle) editToggle.style.display = custom ? '' : 'none';
       const bk = document.getElementById('backupBtn');
       if (bk) bk.style.display = custom ? '' : 'none';
+      // The tip explains pencil/arrows/x, which only exist in Custom. It was
+      // leaking into Basic and Advanced, describing controls that are not
+      // there. Dismissal state still wins over mode.
+      const hint = document.getElementById('editHint');
+      if (hint) hint.style.display = custom && !hint.hasAttribute('data-gone') ? '' : 'none';
     }
     modeBtns.forEach((b) => {
       const on = b.dataset.modeSet === m;
