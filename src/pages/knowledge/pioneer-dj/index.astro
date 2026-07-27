@@ -9,6 +9,12 @@ import Base from '../../../layouts/Base.astro';
 // live and fully researched so far (the two most common club units); the
 // rest are queued and should not be filled with unverified content, see the
 // project doc on hardware-reference rollout for the priority order.
+// Catalog per Antonio, 2026-07-27 evening pass: XDJ-700 joins the older
+// players still working every week; DJM-V5 and euphonia join the mixers;
+// all-in-ones trimmed to the four still very used (his list); Turntables
+// added with the PLX-1000 only (the one with real booth presence, the
+// PLX-500 is a home unit and the PLX-CRSS12 is niche); Effectors added
+// with the RMX-1000 (the classic) and RMX-IGNITE (its successor).
 const players = [
   { name: 'CDJ-3000X', href: '/knowledge/pioneer-dj/cdj-3000x' },
   { name: 'CDJ-3000', href: '/knowledge/pioneer-dj/cdj-3000' },
@@ -16,6 +22,7 @@ const players = [
   { name: 'CDJ-2000NXS', href: null },
   { name: 'CDJ-1500X', href: null },
   { name: 'XDJ-1000MK2', href: null },
+  { name: 'XDJ-700', href: null },
 ];
 const mixers = [
   { name: 'DJM-A9', href: '/knowledge/pioneer-dj/djm-a9' },
@@ -23,13 +30,21 @@ const mixers = [
   { name: 'DJM-900NXS', href: null },
   { name: 'DJM-V10', href: '/knowledge/pioneer-dj/djm-v10' },
   { name: 'DJM-V10-LF', href: null },
+  { name: 'DJM-V5', href: null },
+  { name: 'euphonia', href: null },
 ];
 const allInOne = [
   { name: 'XDJ-AZ', href: null },
   { name: 'OPUS-QUAD', href: null },
   { name: 'XDJ-XZ', href: null },
   { name: 'XDJ-RX3', href: null },
-  { name: 'OMNIS-DUO', href: null },
+];
+const turntables = [
+  { name: 'PLX-1000', href: null },
+];
+const effectors = [
+  { name: 'RMX-1000', href: null },
+  { name: 'RMX-IGNITE', href: null },
 ];
 const controllers = [
   { name: 'DDJ-FLX10', href: null },
@@ -42,6 +57,8 @@ const categories = [
   { label: 'Players', items: players },
   { label: 'Mixers', items: mixers },
   { label: 'All-in-one systems', items: allInOne },
+  { label: 'Turntables', items: turntables, note: 'The professional deck venues actually install. Vinyl coverage grows here as it earns it.' },
+  { label: 'Effectors', items: effectors },
   { label: 'Controllers', items: controllers, note: 'Rare in clubs, but the standard for home preparation and mobile gigs.' },
 ];
 
