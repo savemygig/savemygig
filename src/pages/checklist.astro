@@ -185,7 +185,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Custom</button>
     </div>
     <div class="mode-hint dim" id="modeHintBox">
-      <span id="modeHint">Must-brings. The essential checklist every DJ should have before leaving for a gig.</span>
+      <span id="modeHint"><span class="mh-s">The must-brings.</span><span class="mh-f">Must-brings. The essential checklist every DJ should have before leaving for a gig.</span></span>
       <button type="button" class="mode-hint-close" id="modeHintClose" aria-label="Dismiss">&times;</button>
     </div>
     <script is:inline>
@@ -425,6 +425,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .mode-btn.is-on { background: var(--text); color: #0a0a0b; }
   .mode-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .mode-hint { font-size: 0.85rem; margin: 0 0 1.6rem; }
+  /* Mode description: full sentence on desktop, ONE line on a phone
+     (Antonio: never two lines here). The shorts are his own tags. */
+  .mh-s { display: none; }
+  @media (max-width: 640px) {
+    .mh-s { display: inline; }
+    .mh-f { display: none; }
+  }
   .mode-hint-close { display: none; }
   @media (max-width: 640px) {
     /* On phones the hint is a dismissible tip, boxed like the edit tip. */
@@ -1546,9 +1553,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
     if (hintEl) {
-      if (m === 'advanced') hintEl.textContent = 'The full kit. Everything in Base, plus backup gear and professional extras for any situation.';
-      else if (m === 'custom') hintEl.textContent = 'Your own. Start with Advanced and tailor the checklist to your setup, workflow, and preferences.';
-      else hintEl.textContent = 'Must-brings. The essential checklist every DJ should have before leaving for a gig.';
+      if (m === 'advanced') hintEl.innerHTML = '<span class="mh-s">The full kit.</span><span class="mh-f">The full kit. Everything in Base, plus backup gear and professional extras for any situation.</span>';
+      else if (m === 'custom') hintEl.innerHTML = '<span class="mh-s">Your own, built from Advanced.</span><span class="mh-f">Your own. Start with Advanced and tailor the checklist to your setup, workflow, and preferences.</span>';
+      else hintEl.innerHTML = '<span class="mh-s">The must-brings.</span><span class="mh-f">Must-brings. The essential checklist every DJ should have before leaving for a gig.</span>';
     }
     saveMode(m);
     render();
