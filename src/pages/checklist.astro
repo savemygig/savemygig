@@ -150,7 +150,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <!-- Full words on desktop, one word on a phone: four buttons at full
            length wrap the toolbar onto a second line on mobile (Antonio). -->
       <button type="button" class="btn btn-neutral" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
-      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Download PDF</span><span class="bl-short">Download</span></button>
+      <!-- "Download list", not "Download PDF" (Antonio): the file is a PDF but
+           the thing you are downloading is your list, same object as the other
+           three buttons. -->
+      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Download list</span><span class="bl-short">Download</span></button>
       <!-- Antonio: instructions occupy space; read once, dismiss forever. The X
            writes localStorage so it never comes back on this device. Copy cut
            to the four verbs the mode actually has. -->
@@ -1081,8 +1084,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       // Same full/short span pair as the other buttons, so the label is
       // consistent whichever path set it (it used to show "Edit" or
       // "Edit list" depending on whether setEdit had run yet).
+      // "Save list", matching the row: every action names the same object.
       editToggle.innerHTML = on
-        ? 'Save'
+        ? '<span class="bl-full">Save list</span><span class="bl-short">Save</span>'
         : '<span class="bl-full">Edit list</span><span class="bl-short">Edit</span>';
       editToggle.classList.toggle('editing', on);
     }
