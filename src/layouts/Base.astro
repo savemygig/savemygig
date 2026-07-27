@@ -471,7 +471,9 @@ const entityGraph = {
   .foot-col { display: flex; flex-direction: column; gap: 0.7rem; }
   /* White, because these are the category labels, not secondary text. */
   .foot-col-h {
-    font-family: var(--font-body); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.12em;
+    /* 0.7rem -> 0.8rem (~14%), Antonio: the chief of the category should
+       outrank its links. */
+    font-family: var(--font-body); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--text); margin-bottom: 0.1rem;
   }
   .foot-col a {
@@ -493,9 +495,11 @@ const entityGraph = {
   .foot-bmc {
     display: flex; align-items: center; justify-content: center; gap: 0.45rem;
     width: 176px; margin: 0.8rem 0 0;
-    font-size: 0.8rem; color: var(--text-dim); text-decoration: none;
+    /* Brand red, same as the wordmark's "!" (Antonio): dim grey let the one
+       support ask on the whole site pass unnoticed. This one may scream. */
+    font-size: 0.8rem; color: var(--red); text-decoration: none;
   }
-  .foot-bmc:hover { color: var(--red); }
+  .foot-bmc:hover { filter: brightness(1.15); }
 
   @media (max-width: 640px) {
     .foot-share { flex-direction: column; align-items: flex-start; gap: 0.9rem; }
