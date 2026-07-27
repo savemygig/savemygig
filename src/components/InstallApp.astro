@@ -24,7 +24,11 @@
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 12 5 5 5-5"/><path d="M5 21h14"/></svg>
     </span>
     <span class="inst-txt">
-      <strong class="inst-h" id="installH">Keep this on your phone</strong>
+      <!-- Inclusive on purpose (Antonio): the reader must understand it
+           installs on ANY device they own, not just the one in front of
+           them. This banner renders on desktop only (mobile uses the
+           rotating banner slide), so one title serves. -->
+      <strong class="inst-h" id="installH">Keep this on your computer and your phone</strong>
       <span class="inst-sub">Once you've opened it, the rescue flow stays on this device, even with no signal. <a class="inst-more" href="/install" data-event="step_completed" data-placement="home_install_more">More &rarr;</a></span>
     </span>
     <button type="button" class="inst-btn" id="installBtn" hidden>Install</button>
@@ -101,13 +105,6 @@
       wrap.hidden = true;
       try { localStorage.setItem('SMG_INSTALL_DISMISSED', '1'); } catch (e) { /* session-only then */ }
     });
-
-    // Desktop gets its own title; the copy is otherwise device-neutral.
-    var isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
-    if (!isMobile) {
-      var h = document.getElementById('installH');
-      if (h) h.textContent = 'Keep this on your computer';
-    }
 
     // Visible for everyone not installed/dismissed; the button only where the
     // browser offers one-tap install. /install covers every manual route.
