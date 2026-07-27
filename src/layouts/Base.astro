@@ -524,16 +524,18 @@ const entityGraph = {
     .foot-brand { grid-column: 1 / -1; position: relative; }
     /* On a phone the coffee link left-aligns with the icons (his mockup). */
     .foot-bmc { justify-content: flex-start; width: auto; }
-    /* Narrow phones (Samsung S10/S23 class, 360px logical; iPhone at 390
-       is untouched): the whole brand package shrinks as ONE unit, wordmark,
-       tagline and socials in proportion, so the seal never crowds it.
-       Coffee stays full size (Antonio). */
-    @media (max-width: 379px) {
-      .foot-wordmark { font-size: 1.28rem; }
-      .foot-tag { font-size: 0.47rem; letter-spacing: 0.2em; }
-      .foot-social { gap: 0.4rem; margin-top: 0.9rem; }
-      .soc-btn { width: 33px; height: 33px; }
-      .soc-btn svg { width: 15px; height: 15px; }
+    /* Phones up to the iPhone 15 / S23 class (Antonio, second pass: both
+       still crowded, "reduce fifteen percent more"). The Pro Max width
+       (428+) is EXCLUDED on his call: "on 15 Pro Max looks awesome", so it
+       keeps the full-size block. Below that, the whole brand package,
+       wordmark, tagline and socials, shrinks as ONE proportioned unit so
+       the seal always has clear air. Coffee stays full size. */
+    @media (max-width: 414px) {
+      .foot-wordmark { font-size: 1.12rem; }
+      .foot-tag { font-size: 0.44rem; letter-spacing: 0.19em; }
+      .foot-social { gap: 0.35rem; margin-top: 0.85rem; }
+      .soc-btn { width: 30px; height: 30px; }
+      .soc-btn svg { width: 14px; height: 14px; }
     }
     .foot-seal {
       display: block; position: absolute;
