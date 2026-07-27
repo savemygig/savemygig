@@ -118,7 +118,10 @@ const SUBLINES = [
          to /faq, which carries the same search box. The nav magnifier stays. -->
     <a class="seekbox" href="/faq" id="homeSeek" data-event="search_open" data-placement="home_seek" aria-label="Search Save My Gig">
       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <span class="seekbox-hint">Search any problem, error code or term</span>
+      <!-- Front-loaded on purpose: phones ellipsize the tail, so "Search
+           anything" must survive the cut. The examples widen the perceived
+           scope (Antonio): not just errors, also gear and vocabulary. -->
+      <span class="seekbox-hint">Search anything: a problem, an error code, a player, a term</span>
     </a>
 
     <PromoBanner exclude="/emergency" />
