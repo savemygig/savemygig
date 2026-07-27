@@ -263,12 +263,12 @@ const entityGraph = {
       <div class="foot-base">
         <!-- Plural, per Antonio: it is not one person anymore, there is a
              crew of DJs and techs behind this. -->
-        <!-- Symbols, Antonio's final call 2026-07-27: NO © (he wants only
-             the ™; copyright exists with or without the notice, explained
-             twice, his decision stands). ™ = unregistered trademark,
-             allowed before filing. ® stays FORBIDDEN until the mark is
-             registered; never "upgrade" the ™. -->
-        <span class="foot-copy">2026 Save My Gig!&trade; · Built by DJs who've been there.</span>
+        <!-- Symbols, SETTLED with Antonio 2026-07-27 (after full walkthrough):
+             © = copyright, automatic, no registration needed, protects the
+             site's content, KEEP. ™ = unregistered trademark claim, legal
+             before filing, KEEP. ® = registered mark, FORBIDDEN until an
+             actual registration exists; never "upgrade" the ™. -->
+        <span class="foot-copy">© 2026 Save My Gig!&trade; · Built by DJs who've been there.</span>
         <!-- Alive-signal, per Antonio's homepage review: says the project is
              maintained without printing a date that would itself go stale.
              Same font size as the line above (Antonio). -->
@@ -312,6 +312,16 @@ const entityGraph = {
         if (e.key === '/' && sOv.hidden && !typing) { e.preventDefault(); openSearch(); }
       });
     }
+
+    // Footer brand = back to top (Antonio): tapping the wordmark or the
+    // seal pushes you to the beginning of the page, same move as the
+    // floating circle. The href="/" stays as the no-JS fallback.
+    const footTop = (e: Event) => {
+      e.preventDefault();
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    };
+    document.querySelectorAll('.foot-lockup, .foot-seal').forEach((el) => el.addEventListener('click', footTop));
 
     const copyBtn = document.getElementById('shareCopy');
     if (copyBtn) {
@@ -426,7 +436,8 @@ const entityGraph = {
   /* Hidden on desktop (Antonio: the four-column distribution there is right
      as it is); the phone media block below reveals it. */
   .foot-seal { display: none; }
-  .foot-lockup { display: block; text-decoration: none; }
+  .foot-lockup { display: block; text-decoration: none; cursor: pointer; }
+  .foot-seal { cursor: pointer; }
   .foot-lockup-text { display: flex; flex-direction: column; }
   /* The brand block is one tidy rectangle: the wordmark, the tagline and the
      row of four social buttons are all tuned to the SAME width (the social row
