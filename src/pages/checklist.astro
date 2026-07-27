@@ -117,7 +117,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your best email" required />
         <input type="text" name="artist" autocomplete="nickname" placeholder="Artist name (optional)" aria-label="Artist name, optional" maxlength="80" />
         <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="@your.artist.instagram (optional)" aria-label="Artist Instagram, optional" maxlength="80" />
-        <p class="unlock-follow dim">Drop your artist Instagram and we follow you. Every DJ who registers, no exceptions.</p>
+        <p class="unlock-follow dim">Share your Instagram. We will be happy to follow your work.</p>
         <button type="submit" class="btn btn-solid">Register</button>
       </form>
       <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
@@ -141,10 +141,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          what the short words already say. Edit and Email only make sense in
          Custom mode and hide outside it; Clear and Download work everywhere. -->
     <div class="custom-toolbar" id="customToolbar" hidden>
+      <!-- Antonio's order: the two list actions, then the two ways to take the
+           list with you. NOT "Email PDF": that button emails the list as text
+           with a restore link, no PDF attached, and a label must never promise
+           an attachment that does not arrive. EMAIL LIST is what it does. -->
       <button type="button" class="btn btn-neutral" id="editToggle">Edit</button>
       <button type="button" class="btn btn-neutral" id="resetBtn">Clear</button>
+      <button type="button" class="btn btn-neutral" id="backupBtn">Email list</button>
       <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions">Download PDF</button>
-      <button type="button" class="btn btn-neutral" id="backupBtn">Email</button>
       <span class="edit-hint dim" id="editHint">Add, remove, rename with the pencil, or drag the arrows to reorder. Tap Save when you finish, so nothing gets deleted by accident.</span>
       <form class="backup-form" id="backupForm" hidden>
         <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" />

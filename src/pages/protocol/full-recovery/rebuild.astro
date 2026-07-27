@@ -11,8 +11,11 @@ import Choice from '../../../components/Choice.astro';
   <ul class="checklist">
     <li>Rekordbox in <span class="mono">EXPORT</span> mode, drive connected.</li>
     <li><strong>Re-export your playlists fresh.</strong> Never copy an old database back onto a clean drive.</li>
-    <li>Then: File → <strong>Library maintenance</strong>, remove missing files, consolidate duplicates.</li>
-    <li>Then: File → Library → <strong>Backup</strong>, to a different drive or cloud.</li>
+    <!-- "File > Library maintenance" does not exist in the rekordbox 7 manual;
+         the verified path (rekordbox 7.2.3 manual) is File > Library > Backup
+         Library. A wrong menu path on a rebuild screen is a DJ hunting a menu
+         that is not there, so the unverified step is gone. -->
+    <li>Then: File → Library → <strong>Backup Library</strong>, to a different drive or cloud.</li>
     <li>Update Rekordbox and player firmware while you're here.</li>
   </ul>
 

@@ -10,12 +10,24 @@ import Choice from '../../../components/Choice.astro';
 
   <p class="dim">A full format writes to every cell. Stress test and clean slate in one.</p>
 
+  <!-- The rescue-route DJ copied their files two screens ago; the "I can
+       replace it" DJ copied nothing. This screen wipes the drive for BOTH, so
+       it says so itself instead of relying on a pad description upstream. -->
+  <div class="alert-card" style="margin-bottom:1.25rem">
+    <div style="font-size:20px" aria-hidden="true">⚠️</div>
+    <div>
+      <strong>This wipes everything still on the drive.</strong> Only what you
+      already copied off survives. If anything on it is irreplaceable and not
+      yet copied, stop and go back.
+    </div>
+  </div>
+
   <ul class="checklist">
     <li>Format the USB: <span class="mono">FAT32</span> · <span class="mono">MBR</span> · <strong>uncheck Quick Format</strong>.</li>
-    <li>Expect it to take a while, that's the point.</li>
+    <li>A full pass on a big stick takes time. That is the test working.</li>
   </ul>
 
-  <p class="question">Did the full format complete normally (no errors, no absurd slowness)?</p>
+  <p class="question">Did the full format complete with no errors?</p>
 
   <Choice step="fr_health"
     a={{ href: '/protocol/full-recovery/rebuild', label: 'YES - CLEAN FORMAT' }}

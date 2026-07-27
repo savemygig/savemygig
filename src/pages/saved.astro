@@ -24,13 +24,23 @@ import EmailCapture from '../components/EmailCapture.astro';
       </a>
     </section>
 
-    <section class="panel" style="margin-bottom:1.5rem">
+    <!-- Hidden for the no-sound arrivals: their whole branch premise was
+         "nothing is broken on your drive" (a crossfader assign, a cable, a cue
+         mix). Telling that DJ to retire a drive that never failed reads as a
+         site that was not listening, on the page where trust pays out. -->
+    <section class="panel" id="retirePanel" style="margin-bottom:1.5rem">
       <h3 style="margin-bottom:0.75rem">Retire the drive that betrayed you</h3>
       <p class="dim">A USB that failed once will fail again. These are the drives that don't do this:</p>
       <a href="/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="saved">
         🔌 See the approved drives
       </a>
     </section>
+    <script>
+      if (new URLSearchParams(location.search).get('path') === 'no_sound') {
+        const p = document.getElementById('retirePanel');
+        if (p) p.remove();
+      }
+    </script>
 
     <div style="margin-bottom:1.5rem">
       <EmailCapture

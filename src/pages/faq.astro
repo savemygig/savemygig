@@ -21,13 +21,13 @@ const faqs = [
   {
     id: 'e-8302',
     q: 'What does CDJ error E-8302 mean?',
-    a: 'On the CDJ-3000 and CDJ-3000X, E-8302 reads "CANNOT PLAY TRACK": the player cannot read the track data on the drive, in most cases a corrupt Rekordbox export or a wrong file system. With a laptop you can usually fix it on-site: re-export fresh from Rekordbox, or reformat FAT32/MBR and re-export.',
+    a: 'On the CDJ-3000 and CDJ-3000X, E-8302 reads "CANNOT PLAY TRACK": the player cannot read the track data on the drive, in most cases a corrupt Rekordbox export or a wrong file system. With a laptop you can usually fix it on-site: re-export fresh from Rekordbox, or, once everything on the drive that exists nowhere else is copied off, reformat FAT32/MBR and re-export. Never format a drive that still holds your only copy of anything.',
     fix: { href: '/fix/cdj-error-e-8302', label: 'Full fix: CDJ error E-8302' },
   },
   {
     id: 'format-usb',
     q: 'How do I format a USB for CDJs?',
-    a: 'FAT32 file system, MBR (Master Boot Record) partition scheme. On Mac: Disk Utility → Show All Devices → select the drive (not the volume) → Erase → MS-DOS (FAT) + Master Boot Record. On Windows: right-click the drive → Format → FAT32. Use a quality 32-64 GB drive.',
+    a: 'FAT32 file system, MBR (Master Boot Record) partition scheme. On Mac: Disk Utility → Show All Devices → select the drive (not the volume) → Erase → MS-DOS (FAT) + Master Boot Record. On Windows the built-in Format dialog only offers FAT32 up to 32 GB; for a 64 GB drive use the free guiformat tool, the full walkthrough is linked below. Use a quality 32-64 GB drive.',
     fix: { href: '/fix/format-usb-for-cdj', label: 'Full fix: format a USB for CDJs, step by step' },
   },
   {

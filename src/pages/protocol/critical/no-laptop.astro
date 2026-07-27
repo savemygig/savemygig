@@ -19,7 +19,11 @@ import Choice from '../../../components/Choice.astro';
     <li><strong>FOLDER view.</strong> If the drive appears but your playlists do not, the database died and the audio did not. Browse by folder and play.</li>
   </ul>
 
-  <p class="question">Does any player read it now?</p>
+  <!-- Not "does any player read it": the no-computer route arrives here from
+       screens where the drive IS being read and the problem is loading tracks.
+       Asking about reading pre-answers YES and routes a still-stuck DJ to
+       /saved. Loading and playing is the outcome that actually matters. -->
+  <p class="question">Can you load and play a track on any player now?</p>
 
   <Choice step="no_laptop_1"
     a={{ href: '/saved?path=critical&branch=no_laptop', label: 'YES, IT IS READING', event: 'outcome_reached', data: { outcome: 'saved', path: 'critical' } }}
