@@ -556,3 +556,49 @@ html.ck-open .sticky-cta { display: none !important; }
   line-height: 1.5;
   color: var(--text-faint);
 }
+
+/* ---------- Shared reference accordion ----------
+   One collapsible system for every deep-reference page: /knowledge/rekordbox
+   and the Pioneer DJ / AlphaTheta hardware pages both use it, and it is the
+   template for every manufacturer added after them. Groups are plain text
+   labels above a cluster of <details name="..."> elements; the shared `name`
+   makes the browser close the others when one opens, so only one section is
+   open at a time without any JS. Antonio's rule for long-text pages: the
+   questions are the index, the person expands the answer they came for. */
+.acc-group {
+  font-family: var(--font-display); font-size: 0.78rem; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint);
+  margin: 2.2rem 0 0.7rem;
+}
+.acc-group:first-of-type { margin-top: 1.6rem; }
+.acc-sec {
+  background: var(--surf); border: 1px solid var(--edge);
+  border-radius: var(--radius); margin: 0 0 0.8rem;
+}
+.acc-sec > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 1.05rem 1.25rem; cursor: pointer; list-style: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.acc-sec > summary::-webkit-details-marker { display: none; }
+.acc-sec > summary:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+.acc-h2 {
+  margin: 0; font-size: clamp(1.05rem, 3.6vw, 1.3rem);
+  text-transform: none; letter-spacing: -0.015em;
+}
+.acc-chev {
+  flex: 0 0 auto; width: 9px; height: 9px; margin-top: -3px;
+  border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
+  transform: rotate(45deg); transition: transform 0.2s ease;
+}
+.acc-sec[open] > summary .acc-chev { transform: rotate(225deg); }
+.acc-body { padding: 0 1.25rem 1.1rem; }
+.acc-body p, .acc-body li { color: var(--text-dim); line-height: 1.65; }
+.acc-body strong { color: var(--text); }
+.acc-related {
+  font-size: 0.85rem; margin-top: 0.9rem; padding-top: 0.7rem;
+  border-top: 1px solid var(--edge-soft);
+}
+.acc-related a { color: var(--red); text-decoration: none; font-weight: 600; margin-right: 0.9rem; }
+.acc-related a:hover { text-decoration: underline; }
+@media (prefers-reduced-motion: reduce) { .acc-chev { transition: none; } }
