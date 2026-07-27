@@ -115,13 +115,13 @@ const SUBLINES = [
          every day, not our editorial picks); measured at 360/375/393px and it
          holds two lines, so the better label wins. If a sixth link is ever
          added, re-measure at 360 first. -->
-    <p class="known dim">
+    <!-- ONE LINE, always (Antonio): the script below measures the row and
+         hides links from the end until it fits a single line, the same
+         self-measuring pattern as the H1 greeting. Order matters: the links
+         most worth keeping come first. -->
+    <p class="known dim" id="popularRow">
       Popular fixes:
-      <a href="/fix/usb-not-recognized-cdj">USB not recognized</a> ·
-      <a href="/fix/playlists-not-showing-cdj">Playlists not showing</a> ·
-      <a href="/fix/cdj-error-e-8302">E-8302</a> ·
-      <a href="/fix/rekordbox-export-failed">Export failed</a> ·
-      <a href="/fix/exfat-vs-fat32-cdj">exFAT vs FAT32</a>
+      <span class="pf-item"><a href="/fix/usb-not-recognized-cdj">USB not recognized</a></span><span class="pf-item"> · <a href="/fix/cdj-error-e-8302">E-8302</a></span><span class="pf-item"> · <a href="/fix/playlists-not-showing-cdj">Playlists not showing</a></span><span class="pf-item"> · <a href="/fix/rekordbox-export-failed">Export failed</a></span><span class="pf-item"> · <a href="/fix/exfat-vs-fat32-cdj">exFAT vs FAT32</a></span>
     </p>
 
     <!-- A REAL search box (Antonio, third pass): it used to be an <a> styled
@@ -383,6 +383,25 @@ const SUBLINES = [
     var homeIn = document.querySelector('.home-srch .srch-input');
     var navBtn = document.getElementById('navSearchBtn');
     if (homeIn && navBtn) homeIn.addEventListener('focus', function () { navBtn.click(); });
+
+    // Popular fixes: ONE line, never two (Antonio). The layout measures
+    // itself: hide links from the end until the row height is a single
+    // line. Re-run on resize/rotation. No-JS shows all five, which only
+    // wraps on phones, an acceptable fallback.
+    var row = document.getElementById('popularRow');
+    if (row) {
+      var fitRow = function () {
+        var items = row.querySelectorAll('.pf-item');
+        for (var i = 0; i < items.length; i++) items[i].hidden = false;
+        var oneLine = parseFloat(getComputedStyle(row).lineHeight) * 1.5;
+        for (var j = items.length - 1; j > 0 && row.getBoundingClientRect().height > oneLine; j--) {
+          items[j].hidden = true;
+        }
+      };
+      fitRow();
+      var rT;
+      window.addEventListener('resize', function () { clearTimeout(rT); rT = setTimeout(fitRow, 150); });
+    }
   })();
 </script>
 
