@@ -495,11 +495,14 @@ const entityGraph = {
   .foot-bmc {
     display: flex; align-items: center; justify-content: center; gap: 0.45rem;
     width: 176px; margin: 0.8rem 0 0;
-    /* Brand red, same as the wordmark's "!" (Antonio): dim grey let the one
-       support ask on the whole site pass unnoticed. This one may scream. */
-    font-size: 0.8rem; color: var(--red); text-decoration: none;
+    font-size: 0.8rem; text-decoration: none;
   }
-  .foot-bmc:hover { filter: brightness(1.15); }
+  /* Brand red, same as the wordmark's "!" (Antonio): dim grey let the one
+     support ask on the whole site pass unnoticed. This one may scream.
+     Selector NOTE: two classes on purpose, ".site-footer a" (class+element)
+     outranks a single class and silently kept this grey the first time. */
+  .site-footer a.foot-bmc { color: var(--red); }
+  .site-footer a.foot-bmc:hover { color: var(--red); filter: brightness(1.15); }
 
   @media (max-width: 640px) {
     .foot-share { flex-direction: column; align-items: flex-start; gap: 0.9rem; }
