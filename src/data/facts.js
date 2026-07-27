@@ -86,6 +86,41 @@ export const DJM_900NXS2 = {
   source: 'https://www.pioneerdj.com/en-us/product/mixer/archive/djm-900nxs2/black/specifications/',
 };
 
+export const DJM_A9 = {
+  channels: 4,
+  usbPorts: 'one USB-A, two USB-B/USB-C',  // official spec page wording
+  bluetooth: true,            // wireless audio input from other devices
+  wifi: true,                 // Stagehand remote monitoring
+  dualHeadphones: true,       // two independent headphone outputs
+  beatFxCount: 14,            // includes Mobius, Triplet Filter, Triplet Roll
+  micPhantom: true,           // MIC1 accepts phantom-powered condensers
+  newestKnown: '1.19',        // 15 Jan 2026, RMX-IGNITE support. Reference only.
+  linkFreezeFix: '1.11',      // 26 Aug 2025: rare freeze under heavy PRO DJ LINK network load fixed.
+  uaspFix: '1.07',            // 14 May 2025: UASP-compatible USB storage not recognized, fixed.
+  ecoStandbyIntro: '1.05',    // 18 Jul 2024: EU Ecodesign power management, 20 minutes.
+  multiIoInsertFix: '1.02',   // 14 Nov 2023: insert method intermittently disabled on Multi I/O
+                              // switching; DVS phono input malfunction on USB-B when switching
+                              // PC/Mac across the A/B ports. Both fixed.
+  source: 'https://downloads.support.alphatheta.com/firmwares/dj-mixers/DJM-A9/DJM-A9-Firmware-Change-History-Ver119-en.pdf',
+};
+
+export const DJM_V10 = {
+  channels: 6,
+  eqBands: 4,                 // 4-band EQ per channel
+  compressor: true,           // per-channel compressor
+  dualHeadphones: true,       // dual headphone outputs, plus booth EQ
+  boothEq: true,
+  sendReturn: true,           // expanded send/return, external FX combinable with built-in
+  newestKnown: '1.20',        // 15 Jan 2026, RMX-IGNITE support. Reference only.
+  uaspFix: '1.16',            // 14 May 2025: UASP-compatible USB storage not recognized, fixed.
+  ecoStandbyIntro: '1.13',    // 18 Jul 2024: EU Ecodesign power management, 20 minutes.
+  cdj3000LinkAudioFix: '1.12',// 15 Dec 2022: potential audio cut-out when connected to CDJ-3000
+                              // over the PRO DJ LINK network, fixed.
+  midiFix: '1.07',            // 29 Sep 2020: incorrect MIDI output in certain operation, fixed.
+  channelInputFix: '1.04',    // 4 Feb 2020: audio would sometimes fail to input to a channel, fixed.
+  source: 'https://downloads.support.alphatheta.com/firmwares/dj-mixers/DJM-V10/DJM-V10-Firmware-Change-History-Ver120-en.pdf',
+};
+
 // FAT32 + MBR works on every player here, always. exFAT is the variable.
 // Each row: model, library format, exFAT support (with the firmware threshold
 // where one applies), and a short note. Edit here when a source-check reports
