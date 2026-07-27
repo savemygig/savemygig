@@ -25,7 +25,9 @@ const schema = {
       <p style="margin:0"><strong>The answer that never fails:</strong> FAT32 with an MBR partition map plays on every Rekordbox-compatible player ever made. exFAT works only on newer hardware. If you play in booths you don't control, FAT32 is the professional choice.</p>
     </div>
 
-    <h2 style="margin:2rem 0 1rem">Compatibility, honestly</h2>
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Compatibility, honestly</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li><span class="mono">FAT32 + MBR</span>, works on CDJ-850, 900, 2000, 2000NXS/NXS2, 3000, every XDJ. The universal key.</li>
       <!-- Scope corrected against AlphaTheta's official exFAT FAQ: it names
@@ -38,17 +40,39 @@ const schema = {
       <li><span class="mono">Partition scheme</span>, choose <span class="mono">MBR</span>. AlphaTheta documents file systems but not partition schemes, so treat this one as our recommendation rather than a published requirement. A drive left on GPT, which is what you get if you erase the volume instead of the device on a Mac, is a recurring cause of "it formatted fine but the player refuses it". MBR costs you nothing.</li>
     </ul>
 
-    <h2 style="margin:2rem 0 1rem">"But FAT32 has a 4GB limit!"</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">"But FAT32 has a 4GB limit!"</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <p>Per file, not per drive. No DJ track approaches 4GB; even a 30-minute WAV is under 1GB. The only DJs who genuinely need exFAT are the ones carrying multi-hour uncompressed recordings on their gig drive, which is its own mistake. For music libraries, the limit is irrelevant.</p>
 
-    <h2 style="margin:2rem 0 1rem">The trap: how drives ship</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">The trap: how drives ship</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li>Most drives above 32GB ship <strong>exFAT from the factory</strong>, so a brand-new "professional" 64GB stick fails on a CDJ-2000 out of the box.</li>
       <li>Windows won't offer FAT32 for large drives in the Format dialog; on Mac, choose <span class="mono">MS-DOS (FAT)</span> in Disk Utility with <span class="mono">Master Boot Record</span> - <a href="/fix/format-usb-for-cdj">full walkthrough here</a>.</li>
     </ul>
 
-    <h2 style="margin:2rem 0 1rem">The rule to remember</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">The rule to remember</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <p><strong>Format for the oldest player you might ever face, not the most modern one you own.</strong> The festival main stage has CDJ-3000s; the afterparty basement has a CDJ-2000 with a cigarette burn. FAT32 plays both.</p>
+      </div>
+    </details>
+
+
 
     <ArticleCTA article="exfat_vs_fat32" />
   </main>

@@ -25,7 +25,9 @@ const schema = {
       <p style="margin:0"><strong>Short version:</strong> if the drive is missing from the Devices list, the cause is almost always one of three things: you are not in Export mode, the operating system itself cannot see the drive, or the drive is formatted in a way Rekordbox cannot write to. Check them in that order.</p>
     </div>
 
-    <h2 style="margin:2rem 0 1rem">The 60-second checks</h2>
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">The 60-second checks</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li><strong>Confirm you are in Export mode.</strong> The device tree with your USB only appears in Export. Top-left of Rekordbox, switch from Performance or Lighting to <span class="mono">EXPORT</span>.</li>
       <li><strong>Check the computer sees the drive first.</strong> Open Finder (Mac) or File Explorer (Windows). If the USB is not there either, this is not a Rekordbox problem, it is a drive or connection problem. Reseat it, try another port, skip the hub.</li>
@@ -33,7 +35,13 @@ const schema = {
       <li><strong>Restart Rekordbox with the drive already inserted.</strong> Some versions only scan removable drives at launch. Insert first, then open the app.</li>
     </ul>
 
-    <h2 style="margin:2rem 0 1rem">Still missing? The real causes</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Still missing? The real causes</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li><strong>macOS permissions.</strong> Newer macOS blocks apps from removable drives until you allow it. System Settings, Privacy and Security, Files and Folders (or Removable Volumes), turn Rekordbox on, then relaunch. This one traps a lot of people after an OS update.</li>
       <li><strong>Wrong format.</strong> Rekordbox exports to <span class="mono">FAT32</span> or <span class="mono">exFAT</span> only. A drive formatted NTFS (common on Windows) or APFS (Mac) may mount on the computer but will not accept an export. The safe answer for every CDJ is <span class="mono">FAT32</span> plus <span class="mono">MBR</span>. <a href="/fix/format-usb-for-cdj">Format walkthrough here</a>.</li>
@@ -41,8 +49,18 @@ const schema = {
       <li><strong>A failing drive.</strong> If it mounts, disappears, and reappears, or throws read errors in Finder or Explorer, the hardware is going. Copy your music off now and retire it. <a href="/fix/dj-usb-backup-strategy">Why two identical drives</a>.</li>
     </ul>
 
-    <h2 style="margin:2rem 0 1rem">If the gig is soon</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">If the gig is soon</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <p>If you have the tracks on your computer, the fastest safe route is to reformat a working drive <span class="mono">FAT32</span> plus <span class="mono">MBR</span>, export fresh from Rekordbox, and eject properly with the Rekordbox eject button. If the drive that failed holds the only copy of anything, do not format it, treat it as recovery. The emergency flow below walks the whole thing step by step, including what to do when there is no time left.</p>
+      </div>
+    </details>
+
+
 
     <ArticleCTA article="rekordbox_not_detecting_usb" />
   </main>

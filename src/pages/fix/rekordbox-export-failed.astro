@@ -25,13 +25,21 @@ const schema = {
       <p style="margin:0"><strong>Short version:</strong> a failed or corrupt export is a database problem, not a music problem. Your tracks are almost always fine, the index the CDJ reads is broken. A clean re-export fixes most cases.</p>
     </div>
 
-    <h2 style="margin:2rem 0 1rem">The two flavors</h2>
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">The two flavors</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li><strong>Export won't complete:</strong> hangs, errors mid-sync, or Rekordbox stops seeing the device. Usually a failing drive, a full drive, or a locked file. If the drive never appears in Rekordbox at all, that is a different problem, see <a href="/fix/rekordbox-not-detecting-usb">Rekordbox not detecting the USB</a>.</li>
       <li><strong>Export "worked" but the player shows nothing / errors:</strong> the database landed corrupt, classic after an unsafe eject. Often shows as <a href="/fix/cdj-error-e-8302">E-8302</a> at the booth.</li>
     </ul>
 
-    <h2 style="margin:2rem 0 1rem">The recovery, in order</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">The recovery, in order</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li>Close Rekordbox, unplug and replug the USB, reopen Rekordbox in <span class="mono">EXPORT</span> mode.</li>
       <li>Check free space, an export onto a nearly-full drive corrupts silently.</li>
@@ -41,13 +49,23 @@ const schema = {
       <li>Verify: eject, replug, reopen, the device should load with playlists intact before you leave the house.</li>
     </ul>
 
-    <h2 style="margin:2rem 0 1rem">Make exports bulletproof</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Make exports bulletproof</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li>Always eject from Rekordbox, then wait for the OS to release the drive.</li>
       <li>Keep the library healthy: File → Library → Backup Library, monthly.</li>
       <li>Back up the Rekordbox library to another drive or cloud.</li>
       <li>Two identical USBs, exported together. The second one is why this article never matters again.</li>
     </ul>
+      </div>
+    </details>
+
+
 
     <ArticleCTA article="rekordbox_export" />
   </main>

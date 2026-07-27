@@ -25,7 +25,9 @@ const schema = {
       <p style="margin:0"><strong>Short version:</strong> most "dead" USBs at the booth are a connection, slot, or format problem, not dead files.</p>
     </div>
 
-    <h2 style="margin:2rem 0 1rem">The 60-second checks</h2>
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">The 60-second checks</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <p class="assumed">
       Reseating the drive and trying the other slot and the other player are
       assumed done. Listed for completeness, not as advice.
@@ -36,7 +38,13 @@ const schema = {
       <li>If nobody's playing on it: power-cycle the player and try again.</li>
     </ul>
 
-    <h2 style="margin:2rem 0 1rem">Still nothing? The real causes</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Still nothing? The real causes</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li><strong>Wrong format:</strong> NTFS never works; exFAT only on newer firmware; GPT partition maps confuse most players. The universal answer is <span class="mono">FAT32</span> + <span class="mono">MBR</span>.</li>
       <li><strong>Corrupt database:</strong> player sees the drive but shows an error or empty library → see <a href="/fix/cdj-error-e-8302">E-8302</a>.</li>
@@ -44,8 +52,18 @@ const schema = {
       <li><strong>Power-hungry drives:</strong> some SSDs and hub-style drives draw more power than a CDJ port gives. Plain quality flash drives are safer.</li>
     </ul>
 
-    <h2 style="margin:2rem 0 1rem">If you play soon</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">If you play soon</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <p>With a laptop at the venue, you can usually rescue the night: copy your essential tracks to the computer, reformat the drive FAT32/MBR, copy the tracks back, and play them from the folder view. You lose cues and sync, you keep the gig. The emergency flow below walks you through it step by step, including the no-laptop route.</p>
+      </div>
+    </details>
+
+
 
     <ArticleCTA article="usb_not_recognized" />
   </main>

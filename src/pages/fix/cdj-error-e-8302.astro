@@ -25,7 +25,9 @@ const schema = {
       <p style="margin:0"><strong>Short version:</strong> E-8302 reads <strong>CANNOT PLAY TRACK</strong> on the CDJ-3000 and CDJ-3000X: the player cannot read the track data on your USB. Nine times out of ten it's a corrupt Rekordbox database or a wrong file system, both fixable, often before your set.</p>
     </div>
 
-    <h2 style="margin:2rem 0 1rem">What causes it</h2>
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">What causes it</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li><strong>Corrupt Rekordbox export</strong>, usually from pulling the USB without ejecting, or an interrupted sync.</li>
       <li><strong>Wrong file system.</strong> NTFS is never supported, by the player or by rekordbox itself. A drive left on a GPT partition map is the other common culprit. <span class="mono">FAT32</span> with an <span class="mono">MBR</span> scheme is the combination that works in every booth (newer CDJ-3000 firmware also reads exFAT, but FAT32 never surprises you).</li>
@@ -33,7 +35,13 @@ const schema = {
       <li><strong>Old player firmware</strong> meeting a new Rekordbox export format.</li>
     </ul>
 
-    <h2 style="margin:2rem 0 1rem">The immediate fix (at the venue)</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">The immediate fix (at the venue)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li>Eject properly (<span class="mono">USB STOP</span>), reseat the drive, try the other slot and the other player.</li>
       <li>If another player reads it, play from that deck via Pro DJ Link.</li>
@@ -41,13 +49,23 @@ const schema = {
       <li>No laptop and no player reads it: the database is gone for tonight, switch to the emergency flow below for the workaround route.</li>
     </ul>
 
-    <h2 style="margin:2rem 0 1rem">The permanent fix (at home)</h2>
+    
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">The permanent fix (at home)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
     <ul class="checklist">
       <li>Full-format the drive (not quick) as <span class="mono">FAT32</span> + <span class="mono">MBR</span>. If the full format fails or crawls, retire the drive.</li>
       <li>Re-export your library fresh from Rekordbox in Export mode. Never copy an old database back onto a clean drive.</li>
       <li>Update player firmware and Rekordbox.</li>
       <li>Carry two identical drives with identical exports. E-8302 on one drive is an inconvenience; on your only drive it's a disaster.</li>
     </ul>
+      </div>
+    </details>
+
+
 
     <ArticleCTA article="e8302" />
   </main>
