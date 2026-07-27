@@ -567,6 +567,18 @@ html.ck-open .sticky-cta { display: none !important; }
 }
 .btn-quiet-danger:hover, .btn-quiet-danger:active { background: var(--red); color: #0a0a0b; }
 
+/* ---------- Exit box ----------
+   The container for the quiet emergency CTA at the bottom of calm pages.
+   Antonio: the old faded-red fill clashed with the outlined red button
+   inside it (red on faded red). Transparent fill, red edge, centered, and
+   ALL the color now lives in the button's hover fill. */
+.cta-exit {
+  background: transparent;
+  border: 1px solid rgba(255, 77, 46, 0.45);
+  text-align: center;
+}
+.cta-exit .btn { margin: 0 auto; }
+
 /* ---------- Active nav ----------
    The page you are on shows red in the desktop nav and the mobile drawer
    (Antonio), which is what made per-page status labels redundant. */

@@ -90,7 +90,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          cleaner); phones wrap naturally. Returning visitors on a phone have
          read this already, so it auto-hides for them and gives the space
          back, no dismiss chrome needed. -->
-    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Tick it off before you walk out. Nothing forgotten, nothing sent anywhere. <span class="intro-b">This list saves on this device, so it is waiting next time.</span></p>
+    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Tick it off before you walk out, so the night never starts with something missing. <span class="intro-b">Your list saves on this device, and registration loads it on any other.</span></p>
     <script is:inline>
       (function () {
         try {
@@ -107,7 +107,25 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Pro</button>
       <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Custom</button>
     </div>
-    <p class="mode-hint dim" id="modeHint">Basic is the must-brings. Pro is the full kit, Custom is your own.</p>
+    <div class="mode-hint dim" id="modeHintBox">
+      <span id="modeHint">Basic is the must-brings. Pro is the full kit, Custom is your own.</span>
+      <button type="button" class="mode-hint-close" id="modeHintClose" aria-label="Dismiss">&times;</button>
+    </div>
+    <script is:inline>
+      (function () {
+        var box = document.getElementById('modeHintBox');
+        var x = document.getElementById('modeHintClose');
+        if (!box || !x) return;
+        var mobile = window.matchMedia('(max-width: 640px)');
+        try {
+          if (mobile.matches && localStorage.getItem('SMG_HINT_MODES_DISMISSED') === '1') box.style.display = 'none';
+        } catch (e) { /* show */ }
+        x.addEventListener('click', function () {
+          box.style.display = 'none';
+          try { localStorage.setItem('SMG_HINT_MODES_DISMISSED', '1'); } catch (e) { /* session only */ }
+        });
+      })();
+    </script>
 
     <!-- One gate, two doors. This panel now also serves the PDF download, so
          the title and first line are set from JS depending on what the DJ
@@ -123,7 +141,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <!-- Per-device honesty (audit finding): registration unlocks THIS device
            today, and the emailed copy is what carries the list across devices.
            When account sync ships this copy gets stronger, not corrected. -->
-      <p class="dim unlock-copy" id="unlockCopy">Register with your email and your name and you are in right away on this device. Your list saves here; Email list sends you a copy with a link that loads it on any other device.</p>
+      <p class="dim unlock-copy" id="unlockCopy">You are in right away on this device; Email list can carry your list to any other.</p>
       <!-- One required field, two optional ones. Antonio wanted name, surname,
            artist name and Instagram, all required, so he can follow every DJ
            who registers. The follow-back idea is genuinely good and stays. The
@@ -145,7 +163,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              hint is front-loaded so the cut only ever costs the tail. -->
         <!-- Reads in cause-and-effect order (Antonio): the handle, then why
              we want it, then that it is optional. -->
-        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="@your.artist.instagram, we will be happy to follow your work (optional)" aria-label="Artist Instagram, we will be happy to follow your work, optional" maxlength="80" />
+        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Optional: @your.artist.instagram, we will be happy to follow your work" aria-label="Optional: your artist Instagram, we will be happy to follow your work" maxlength="80" />
         <!-- Register + the anti-spam promise share a row on desktop (Antonio:
              everything moves up a little); they stack again on phones. -->
         <div class="unlock-actions">
@@ -249,8 +267,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     <!-- The bottom actions row is gone: its two buttons moved into the toolbar
          above the list, where Antonio pointed out they belong. -->
 
-    <div class="panel panel-danger" style="margin-top:1.5rem">
-      <h3 style="margin-bottom:0.6rem">Already at the gig and something failed?</h3>
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h3 style="margin-bottom:0.9rem">Already at the gig and something failed?</h3>
       <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="checklist">Start Emergency Mode</a>
     </div>
 
@@ -294,6 +312,22 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .mode-btn.is-on { background: var(--text); color: #0a0a0b; }
   .mode-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .mode-hint { font-size: 0.85rem; margin: 0 0 1.6rem; }
+  .mode-hint-close { display: none; }
+  @media (max-width: 640px) {
+    /* On phones the hint is a dismissible tip, boxed like the edit tip. */
+    .mode-hint {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      border: 1px solid var(--edge); border-radius: var(--radius);
+      padding: 0.55rem 0.4rem 0.55rem 0.8rem;
+    }
+    .mode-hint-close {
+      display: inline-flex; align-items: center; justify-content: center;
+      flex: 0 0 auto; width: 30px; height: 30px; margin: -4px 0 0;
+      background: transparent; border: none; color: var(--text-faint);
+      font-size: 19px; line-height: 1; cursor: pointer;
+    }
+    .mode-hint-close:hover { color: var(--text); }
+  }
 
   /* It is sticky, so it is on screen the whole time you work the list. That
      makes height expensive: one line ("0 of 36 ready" + the percentage) with a
@@ -371,7 +405,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     border: none;
     cursor: pointer;
     text-align: left;
-    padding: 1.3rem 1.5rem;
+    padding: 1.1rem 1.5rem;
     font: inherit;
     color: inherit;
     -webkit-tap-highlight-color: transparent;
@@ -466,7 +500,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   /* Desktop: the storage promise starts its own line under the intro. */
   @media (min-width: 641px) { .intro-b { display: block; } }
-  .top-actions { margin-top: 1.5rem; text-align: center; }
+  .top-actions { margin: 1.1rem 0 0; text-align: center; }
   /* Antonio's EPK circle: transparent, thin edge, arrow brightens to white. */
   .top-circle {
     width: 46px; height: 46px; border-radius: 50%;
@@ -677,7 +711,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   @media (max-width: 640px) {
     main.wrap { padding-left: 0.75rem; padding-right: 0.75rem; }
     .task-group.panel { padding-left: 0; padding-right: 0; }
-    .group-toggle { padding: 1.05rem 1.2rem; }
+    .group-toggle { padding: 0.9rem 1.2rem; }
     .group-body { padding: 0 1.2rem 0.95rem; }
     .task > label { padding-left: 0; padding-right: 0; }
     /* Four buttons, ONE row, on a 360px Samsung (Antonio: "breaking the line,
@@ -1184,11 +1218,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
     if (hintEl) {
-      if (m === 'advanced') hintEl.textContent = 'Everything, including the extras. Custom makes it yours.';
+      if (m === 'advanced') hintEl.textContent = 'The full kit. Basic for the essentials, Custom to make it yours.';
       else if (m === 'custom') hintEl.textContent = 'Your list, your rules: add, edit, delete, reorder.';
       else hintEl.textContent = isUnlocked()
         ? 'Basic is the must-brings. Pro is the full kit, Custom is your own.'
-        : 'Basic is the must-brings. Pro and Custom unlock when you register.';
+        : 'Basic is the must-brings. Pro is the full kit, Custom is your own.';
     }
     saveMode(m);
     render();
