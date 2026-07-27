@@ -54,6 +54,11 @@ const ALL = [
     q: 'Tired of this happening at all?', cta: 'Build a setup that does not fail' },
   { href: '/knowledge/pioneer-dj', tone: 'amber', icon: 'disc',
     q: 'Playing on gear you have never touched?', cta: 'Open the hardware field manual' },
+  // MOBILE ONLY (Antonio: two banners polluted the phone, so on mobile the
+  // install pitch lives here in the rotation and the standalone banner hides;
+  // desktop keeps the standalone banner and never shows this slide).
+  { href: '/install', tone: 'green', icon: 'save', mobileOnly: true,
+    q: 'Basement booth, zero bars?', cta: 'Keep the rescue on your phone' },
 ];
 
 const promos = ALL.filter((p) => p.href !== exclude);
@@ -64,6 +69,7 @@ const promos = ALL.filter((p) => p.href !== exclude);
       class:list={['promo', `t-${p.tone}`]}
       href={p.href}
       data-promo={i}
+      data-mobile-only={p.mobileOnly ? '1' : undefined}
       hidden={i !== 0}
       data-event="promo_click"
       data-placement="promo_banner"
@@ -75,6 +81,7 @@ const promos = ALL.filter((p) => p.href !== exclude);
         {p.icon === 'check' && <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>}
         {p.icon === 'usb' && <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="7" rx="1"/><path d="M12 9v11"/><path d="M8 20h8"/></svg>}
         {p.icon === 'rescue' && <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M3 12h18"/></svg>}
+        {p.icon === 'save' && <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 12 5 5 5-5"/><path d="M5 21h14"/></svg>}
       </span>
       <span class="promo-body">
         <span class="promo-q">{p.q}</span>
@@ -160,9 +167,17 @@ const promos = ALL.filter((p) => p.href !== exclude);
 
 <script is:inline>
   (function () {
+    var desktop = window.matchMedia('(min-width: 641px)').matches;
     var slots = document.querySelectorAll('.promo-slot');
     for (var s = 0; s < slots.length; s++) {
-      var items = slots[s].querySelectorAll('.promo');
+      var all = slots[s].querySelectorAll('.promo');
+      // Mobile-only slides (the install pitch) never enter the desktop pick:
+      // desktop already carries the standalone install banner.
+      var items = [];
+      for (var j = 0; j < all.length; j++) {
+        if (desktop && all[j].hasAttribute('data-mobile-only')) { all[j].hidden = true; continue; }
+        items.push(all[j]);
+      }
       if (items.length < 2) continue;
       var pick = Math.floor(Math.random() * items.length);
       for (var i = 0; i < items.length; i++) items[i].hidden = (i !== pick);

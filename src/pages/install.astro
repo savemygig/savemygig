@@ -22,12 +22,46 @@ import AccGroup from '../components/AccGroup.astro';
     <div class="status-line">Install_Guide</div>
 
     <h1 style="margin-bottom:1rem">KEEP IT <span class="accent">WITH YOU</span></h1>
-    <!-- Say PWA out loud and early (Antonio): calling it "an app" without
-         the word would be selling something it is not. The term lands here,
-         the plain explanation lives in "What is a PWA?" below. -->
-    <p class="dim" style="margin-bottom:1.2rem">Save My Gig installs as an app on your phone and your computer. Technically it is a <strong>PWA</strong>, a progressive web app: the site itself becomes the app, explained in plain words <a href="#what-is-a-pwa">below</a>. No app store, nothing to pay. One minute now, and the rescue flow lives on your device, ready for the exact moment the venue has no signal.</p>
+    <!-- ONE line of loose text, everything else collapsed (Antonio, the
+         collapse doctrine applied here too: "DJs don't like huge portions
+         of text, they will not read it"). The explanation lives in "Start
+         here", the first accordion of the first group. "How it works" comes
+         BEFORE the install steps: understand it, then install it. -->
+    <p class="dim" style="margin-bottom:2rem">Save My Gig installs as an app, a <strong>PWA</strong>: one minute, and the rescue flow lives on your device, even with no signal.</p>
 
-    <p class="dim" style="margin-bottom:2rem">A club basement, a festival with a saturated network, a rave in the mountains: the places where gigs break are the places where websites die. This one is built not to.</p>
+    <AccGroup icon="book" title="How it works" />
+
+    <details class="acc-sec" name="inst-acc" id="what-is-a-pwa">
+      <summary><h2 class="acc-h2">Start here: what is this?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> A progressive web app, PWA: the website itself, promoted to app status by your own browser. Not a native app from a store. No app store approved it, no update nags you, it takes almost no space, nothing to pay, and it cannot see anything on your device that the website could not already see.</p>
+        <p><strong>Why it matters here.</strong> The first time you open Save My Gig, your browser quietly downloads the complete rescue kit, every screen of the emergency flows, into the device's own storage. From then on, those pages load from your phone or laptop, not from the internet. When you are online you always get the live version; when you are not, the saved kit answers instead. That switch is automatic, you never choose.</p>
+        <p>A club basement, a festival with a saturated network, a rave in the mountains: the places where gigs break are the places where websites die. This one is built not to. Installing to your home screen or Dock adds durability and speed: a real icon you can find with shaking hands, and storage the system treats as an app's, not as leftover website data to tidy away.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="offline-scope">
+      <summary><h2 class="acc-h2">What works with no signal</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Saved on your device, always available:</strong> the emergency start page and every step of all four rescue flows (the critical path for when you play within the hour, the no-sound protocol, the quick fix, the full recovery), the pre-gig checklist, the pocket emergency card, the rekordbox reference, the dictionary, and search itself. That is the entire "something is wrong right now" surface of the site, deliberately.</p>
+        <p><strong>Available offline only if you visited them before:</strong> the fix articles, the FAQ, the hardware pages. Anything you have opened while online stays readable without signal afterwards.</p>
+        <p><strong>Never available offline, by nature:</strong> anything that talks to our server, like registering or emailing yourself the checklist. Those queue up for when you are back in coverage. Your ticked checklist is different: it saves on the device itself, so it works with no signal at all times.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="conditions">
+      <summary><h2 class="acc-h2">The honest conditions</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p>We would rather you know exactly where the edges are than discover them in a booth.</p>
+        <ol>
+          <li><strong>Open it once with signal first.</strong> The rescue kit downloads on your first visit. A first-ever visit with airplane mode on has nothing saved yet.</li>
+          <li><strong>Clearing your browser data clears the kit.</strong> "Clear history and website data" deletes everything a website stored, ours included. After a clear-out, open the site once online and the kit is back.</li>
+          <li><strong>On iPhone, the home screen icon is the protection.</strong> iOS can quietly purge stored data from websites you have not visited in a while. An app on your home screen is exempt from that housekeeping, which is the practical reason the install matters most on iPhone.</li>
+          <li><strong>Offline shows the last saved copy.</strong> New fixes and pages arrive whenever you are online; with no signal you get the kit exactly as it was last saved, which for an emergency is exactly what you need.</li>
+        </ol>
+        <p>Want to prove it to yourself? Open the site, switch on airplane mode, and open <a href="/emergency">Emergency mode</a>. It loads. That test takes thirty seconds and it is the whole promise, demonstrated.</p>
+      </div>
+    </details>
 
     <AccGroup icon="zap" title="Install it on your device" />
 
@@ -77,40 +111,6 @@ import AccGroup from '../components/AccGroup.astro';
           <li><strong>Chrome:</strong> click the <strong>install icon</strong> at the right end of the address bar, or the three-dot menu, then <strong>Cast, Save and Share, Install page as app</strong> (wording varies slightly by version).</li>
         </ol>
         <p>Either way you get a Save My Gig app in your Dock that opens in its own window.</p>
-      </div>
-    </details>
-
-    <AccGroup icon="book" title="How it works" />
-
-    <details class="acc-sec" name="inst-acc" id="what-is-a-pwa">
-      <summary><h2 class="acc-h2">What is a PWA?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
-      <div class="acc-body">
-        <p><strong>Short answer.</strong> A progressive web app: the website itself, promoted to app status by your own browser. Not a native app from a store. No app store approved it, no update nags you, it takes almost no space, and it cannot see anything on your device that the website could not already see.</p>
-        <p><strong>Why it matters here.</strong> The first time you open Save My Gig, your browser quietly downloads the complete rescue kit, every screen of the emergency flows, into the device's own storage. From then on, those pages load from your phone or laptop, not from the internet. When you are online you always get the live, freshest version; when you are not, the saved kit answers instead. That switch is automatic. You never choose, it just works.</p>
-        <p>Installing to your home screen or Dock does not change what is saved, the browser does that on any visit. What installing changes is durability and speed: a real icon you can find with shaking hands, and storage the system treats as an app's, not as leftover website data to tidy away.</p>
-      </div>
-    </details>
-
-    <details class="acc-sec" name="inst-acc" id="offline-scope">
-      <summary><h2 class="acc-h2">What works with no signal</h2><span class="acc-chev" aria-hidden="true"></span></summary>
-      <div class="acc-body">
-        <p><strong>Saved on your device, always available:</strong> the emergency start page and every step of all four rescue flows (the critical path for when you play within the hour, the no-sound protocol, the quick fix, the full recovery), the pre-gig checklist, the pocket emergency card, the rekordbox reference, the dictionary, and search itself. That is the entire "something is wrong right now" surface of the site, deliberately.</p>
-        <p><strong>Available offline only if you visited them before:</strong> the fix articles, the FAQ, the hardware pages. Anything you have opened while online stays readable without signal afterwards.</p>
-        <p><strong>Never available offline, by nature:</strong> anything that talks to our server, like registering or emailing yourself the checklist. Those queue up for when you are back in coverage. Your ticked checklist is different: it saves on the device itself, so it works with no signal at all times.</p>
-      </div>
-    </details>
-
-    <details class="acc-sec" name="inst-acc" id="conditions">
-      <summary><h2 class="acc-h2">The honest conditions</h2><span class="acc-chev" aria-hidden="true"></span></summary>
-      <div class="acc-body">
-        <p>We would rather you know exactly where the edges are than discover them in a booth.</p>
-        <ol>
-          <li><strong>Open it once with signal first.</strong> The rescue kit downloads on your first visit. A first-ever visit with airplane mode on has nothing saved yet.</li>
-          <li><strong>Clearing your browser data clears the kit.</strong> "Clear history and website data" deletes everything a website stored, ours included. After a clear-out, open the site once online and the kit is back.</li>
-          <li><strong>On iPhone, the home screen icon is the protection.</strong> iOS can quietly purge stored data from websites you have not visited in a while. An app on your home screen is exempt from that housekeeping, which is the practical reason the install matters most on iPhone.</li>
-          <li><strong>Offline shows the last saved copy.</strong> New fixes and pages arrive whenever you are online; with no signal you get the kit exactly as it was last saved, which for an emergency is exactly what you need.</li>
-        </ol>
-        <p>Want to prove it to yourself? Open the site, switch on airplane mode, and open <a href="/emergency">Emergency mode</a>. It loads. That test takes thirty seconds and it is the whole promise, demonstrated.</p>
       </div>
     </details>
 

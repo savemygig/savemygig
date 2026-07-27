@@ -507,6 +507,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   /* Desktop: the storage promise starts its own line under the intro. */
   @media (min-width: 641px) { .intro-b { display: block; } }
   .top-actions { margin: 1.1rem 0 0; text-align: center; }
+  /* Below the circle, the page ends. The gap down to the footer's top rule
+     must MATCH the 1.1rem gap up to the emergency panel (Antonio measured
+     it by eye on an iPhone: the default 4rem page bottom read as a hole).
+     .wrap's own padding-bottom is the culprit, trimmed here page-locally;
+     the footer's 1.3rem margin-top supplies the rest of the breathing. */
+  main.wrap { padding-bottom: 0.4rem; }
   /* Antonio's EPK circle: transparent, thin edge, arrow brightens to white. */
   .top-circle {
     width: 46px; height: 46px; border-radius: 50%;
@@ -1510,7 +1516,14 @@ ${sections}
         }
       }
       else if (pendingWant === 'email') sendBackup(email); // to the address they just registered
-      else setMode(pendingMode);
+      else {
+        setMode(pendingMode);
+        // Registration done, mode unlocked: put them at the TOP of their
+        // new list, ready to work (Antonio) — same move as the back-to-top
+        // circle, not stranded at the bottom where the gate was.
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      }
 
       const want = pendingWant === 'pdf' ? 'pdf' : pendingWant === 'email' ? 'email' : pendingMode;
       if (typeof (window as any).gtag === 'function') {

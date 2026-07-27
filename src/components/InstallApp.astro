@@ -35,6 +35,10 @@
 <style is:global>
   .inst { margin: 2rem 0 0; }
   .inst[hidden] { display: none; }
+  /* DESKTOP ONLY (Antonio, 2026-07-27 evening): two banners polluted the
+     phone. On mobile the install pitch is a slide in the rotating
+     PromoBanner instead; this standalone banner is a desktop feature. */
+  @media (max-width: 640px) { .inst { display: none; } }
   .inst-body {
     display: flex; align-items: center; gap: 0.85rem;
     background: var(--surf-2); border: 1px solid var(--edge);
