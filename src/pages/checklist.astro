@@ -131,7 +131,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              less under the form, and the pitch sits exactly where the answer
              goes. Long placeholder ellipsizes on narrow phones; the handle
              hint is front-loaded so the cut only ever costs the tail. -->
-        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="@your.artist.instagram (optional). We will be happy to follow your work" aria-label="Artist Instagram, optional. We will be happy to follow your work" maxlength="80" />
+        <!-- Reads in cause-and-effect order (Antonio): the handle, then why
+             we want it, then that it is optional. -->
+        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="@your.artist.instagram, we will be happy to follow your work (optional)" aria-label="Artist Instagram, we will be happy to follow your work, optional" maxlength="80" />
         <!-- Register + the anti-spam promise share a row on desktop (Antonio:
              everything moves up a little); they stack again on phones. -->
         <div class="unlock-actions">
