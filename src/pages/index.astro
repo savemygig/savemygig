@@ -77,13 +77,13 @@ const SUBLINES = [
       </a>
     </nav>
 
-    <!-- Was "Straight to the fix:", which promised adjacency to the emergency
-         door. These links sit below all three doors, so that promise was
-         written for a layout that does not exist. "Common searches" describes
-         what the list actually is, works from any position, and quietly tells a
-         DJ that other DJs hit these too. -->
+    <!-- Label history: "Straight to the fix:" promised adjacency to the
+         emergency door that the layout does not have. "Common searches:" was
+         honest but 16 characters, and on a phone it pushed five links onto a
+         third line. "Top fixes:" is 10 characters, still honest (all five are
+         /fix/ articles), and buys the line back. -->
     <p class="known dim">
-      Common searches:
+      Top fixes:
       <a href="/fix/usb-not-recognized-cdj">USB not recognized</a> ·
       <a href="/fix/playlists-not-showing-cdj">Playlists not showing</a> ·
       <a href="/fix/cdj-error-e-8302">E-8302</a> ·
@@ -205,8 +205,11 @@ const SUBLINES = [
        the 0.85rem description and made the three doors read as one grey block.
        Narrow and short screens step down (rules below) so the longest title
        never wraps and the third door stays above the fold. */
+    /* Antonio, second pass: still too small on a phone. Roughly +12% across
+       the range: 17.0 -> 19.2px on a 360 Android, 19.2 -> 21.6px on an iPhone
+       15/16, 21.5 -> 24.1px on a Pro Max. Desktop is untouched, he likes it. */
     .door-title {
-      font-size: clamp(1.02rem, calc(6.4vw - 6px), 1.45rem);
+      font-size: clamp(1.14rem, calc(7.2vw - 6.5px), 1.56rem);
       margin-bottom: 0.2rem; letter-spacing: -0.015em;
     }
     .door-desc { font-size: clamp(0.79rem, calc(3.4vw + 0.3px), 1rem); line-height: 1.35; }
@@ -228,7 +231,7 @@ const SUBLINES = [
   @media (max-width: 640px) and (max-height: 700px) {
     .ask { font-size: clamp(1.5rem, 6.8vw, 1.95rem); }
     .sub { font-size: 0.88rem; min-height: 2.5rem; }
-    .door-title { font-size: 1.1rem; }
+    .door-title { font-size: 1.2rem; }
     .door-desc { font-size: 0.82rem; }
     /* Budget Androids (360x740 and similar) are the tightest real case, and
        they are common in Brazil. Tighter door padding keeps the third door
@@ -244,7 +247,7 @@ const SUBLINES = [
     .sub { font-size: 0.84rem; margin-bottom: 0.6rem; min-height: 2.2rem; line-height: 1.42; }
     .doors { gap: 0.34rem; }
     .door { padding-block: 0.56rem; }
-    .door-title { font-size: 1.02rem; }
+    .door-title { font-size: 1.1rem; }
     .door-desc { font-size: 0.8rem; line-height: 1.33; }
   }
   .known a { color: var(--text-dim); }
