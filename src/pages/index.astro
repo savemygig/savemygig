@@ -133,11 +133,10 @@ const SUBLINES = [
     content: ''; position: absolute; inset: -1px; border-radius: var(--radius);
     pointer-events: none; opacity: 0; will-change: opacity;
     box-shadow: 0 0 22px 1px var(--glow); border: 1px solid var(--glow);
-    /* Repeats forever, ten seconds apart (Antonio, second pass: 3s felt too
-       frequent). Each cycle is a 1.2s sweep followed by quiet; the stagger
-       below keeps the three doors shimmering in sequence, top to bottom,
-       instead of blinking together. Reduced-motion users see none of it. */
-    animation: doorGlow 10s ease-in-out 0s infinite both;
+    /* ONE pass on load, then done (Antonio tried repeating at 3s, then 10s,
+       then called it: once was right). The stagger walks the eye down the
+       three doors and the page goes quiet. */
+    animation: doorGlow 1.2s ease-in-out both;
   }
   .d-emergency { --glow: rgba(255,77,46,0.7); }
   .d-ready { --glow: rgba(58,216,132,0.65); }
@@ -146,9 +145,7 @@ const SUBLINES = [
   .d-ready::after { animation-delay: 0.42s; }
   .d-emergency::after { animation-delay: 1.14s; }
   .d-prevent::after { animation-delay: 1.86s; }
-  /* The sweep occupies the first 12% of the cycle (1.2s of 10s); the rest is
-     quiet, so the page breathes between passes. */
-  @keyframes doorGlow { 0%, 12%, 100% { opacity: 0; } 6% { opacity: 1; } }
+  @keyframes doorGlow { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { .door::after { animation: none; } }
 
   .door-body { flex: 1; }
