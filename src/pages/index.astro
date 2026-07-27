@@ -120,8 +120,10 @@ const SUBLINES = [
          self-measuring pattern as the H1 greeting. Order matters: the links
          most worth keeping come first. -->
     <p class="known dim" id="popularRow">
-      Popular fixes:
-      <span class="pf-item"><a href="/fix/usb-not-recognized-cdj">USB not recognized</a></span><span class="pf-item"> · <a href="/fix/cdj-error-e-8302">E-8302</a></span><span class="pf-item"> · <a href="/fix/playlists-not-showing-cdj">Playlists not showing</a></span><span class="pf-item"> · <a href="/fix/rekordbox-export-failed">Export failed</a></span><span class="pf-item"> · <a href="/fix/exfat-vs-fat32-cdj">exFAT vs FAT32</a></span>
+      <!-- "Popular:" on phones (Antonio): the shorter label buys back the
+           width for a third link on the one-line row. -->
+      <span class="pf-label-full">Popular fixes:</span><span class="pf-label-short">Popular:</span>
+      <span class="pf-item"><a href="/fix/usb-not-recognized-cdj">USB not recognized</a></span><span class="pf-item"> · <a href="/fix/cdj-error-e-8302">E-8302</a></span><span class="pf-item"> · <a href="/fix/playlists-not-showing-cdj"><span class="pf-label-full">Playlists not showing</span><span class="pf-label-short">No playlists</span></a></span><span class="pf-item"> · <a href="/fix/rekordbox-export-failed">Export failed</a></span><span class="pf-item"> · <a href="/fix/exfat-vs-fat32-cdj">exFAT vs FAT32</a></span>
     </p>
 
     <!-- A REAL search box (Antonio, third pass): it used to be an <a> styled
@@ -313,6 +315,11 @@ const SUBLINES = [
   }
   .known a { color: var(--text-dim); }
   .known a:hover { color: var(--red); }
+  .pf-label-short { display: none; }
+  @media (max-width: 640px) {
+    .pf-label-full { display: none; }
+    .pf-label-short { display: inline; }
+  }
   /* Homepage flavour of the shared search component: transparent on the page
      background (per Antonio, it reads as part of the page, not a widget) and
      full landing width, unlike the 34rem default. */
