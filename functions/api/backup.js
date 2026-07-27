@@ -17,7 +17,7 @@ const SENDER = { name: 'Save My Gig', email: 'savemygig@gmail.com' };
 // aliases so a stale client that posts the old categories still renders.
 const CAT_NAMES = {
   music: 'Music', gear: 'DJ Gear', personal: 'Personal Kit', logistics: 'Logistics',
-  backups: 'Music Backups', technical: 'Technical Kit', recovery: 'Backup & Recovery', travel: 'Travel',
+  backups: 'Music Backups', technical: 'Technical Kit', recovery: 'Rescue Kit', travel: 'Travel',
   basics: 'The basics', extras: 'Extras and add-ons',
 };
 
@@ -78,7 +78,7 @@ export async function onRequestPost({ request, env }) {
   // SyntaxError that killed EVERY Cloudflare deployment (the static build
   // passes locally, but Pages compiles functions/ at deploy time). The gate
   // now node --checks this directory so the class of bug cannot ship again.
-  const CAT_ORDER = ['music', 'gear', 'personal', 'logistics', 'backups', 'technical', 'recovery', 'travel', 'basics', 'extras'];
+  const CAT_ORDER = ['music', 'backups', 'gear', 'personal', 'logistics', 'technical', 'recovery', 'travel', 'basics', 'extras'];
   // User-created sections arrive as extra listByCat keys with their display
   // titles in catNames; they render after the standard categories.
   const catNames = catNamesIn;

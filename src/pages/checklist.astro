@@ -36,16 +36,29 @@ const groups = [
     icon: 'disc',
     blurb: 'The set itself: drives, export and compatibility.',
     items: [
-      { key: 'usb-two', level: 'basic', label: 'Two identical USB drives with the same export' },
+      { key: 'usb-two', level: 'basic', label: 'Two identical USB drives with the same export labelled A and B' },
       { key: 'format', level: 'basic', label: 'Both USB drives formatted as FAT32 + MBR for maximum compatibility' },
       { key: 'reexport', level: 'basic', label: 'Re-exported after the last library change' },
-      { key: 'tested', level: 'basic', label: 'Both USB drives tested on a CDJ or reopened in Rekordbox' },
+      { key: 'tested', level: 'basic', label: 'Both USB drives tested on a CDJ or verified in Rekordbox' },
       // Antonio's rule, and the research backs it with names: AlphaTheta pulled
       // CDJ-3000 firmware 3.30 after it emptied browse screens live. A working
       // setup on gig day is a frozen setup.
       { key: 'noupdates', level: 'basic', label: 'No updates today (Rekordbox, firmware or operating system)' },
-      { key: 'labelled', level: 'advanced', label: 'Drives labelled A and B so you know which is which' },
       { key: 'lib-format', level: 'advanced', label: 'Your export matches the club CDJ library format, no OneLibrary surprise' },
+    ],
+  },
+  {
+    id: 'backups',
+    title: 'Music Backups',
+    icon: 'sync',
+    blurb: 'When two copies aren\u2019t enough.',
+    items: [
+      { key: 'third-backup', level: 'advanced', label: 'A third copy of your music, stored separately from your main USB pair' },
+      { key: 'backup', level: 'advanced', label: 'Your Rekordbox library backed up to a cloud service' },
+      { key: 'my-settings', level: 'advanced', label: 'Player settings (My Settings) exported to your USB drives' },
+      // "latest" is lint-banned (snapshot word); "most recent" says it.
+      { key: 'backup-fresh', level: 'advanced', label: 'Your most recent music changes included in every backup copy' },
+      { key: 'recovery-plan', level: 'advanced', label: 'You have a recovery plan if all USB drives fail' },
     ],
   },
   {
@@ -56,7 +69,7 @@ const groups = [
     items: [
       { key: 'headphones', level: 'basic', label: 'Headphones' },
       { key: 'hp-adapter', level: 'basic', label: 'Headphone adapter (3.5 mm to 6.3 mm, if needed)' },
-      { key: 'laptop', level: 'basic', label: 'Laptop + charger (recommended backup for rebuilding USB drives, re-exporting playlists or emergency troubleshooting)' },
+      { key: 'laptop', level: 'advanced', label: 'Laptop + charger (recommended backup for rebuilding USB drives, re-exporting playlists or emergency troubleshooting)' },
     ],
   },
   {
@@ -94,58 +107,38 @@ const groups = [
       { key: 'transport', level: 'basic', label: 'Transport planned (to and from the venue)' },
       // "Running order" retired (Antonio): "Lineup and set times confirmed"
       // says the same thing in DJ language, so the Advanced twin went.
-    ],
-  },
-  {
-    id: 'backups',
-    title: 'Music Backups',
-    icon: 'sync',
-    blurb: 'When the pair is not enough.',
-    items: [
-      { key: 'third-backup', level: 'advanced', label: 'A third USB or SD card copy, kept separate from the pair' },
-      { key: 'backup', level: 'advanced', label: 'Rekordbox library backed up to cloud or a second drive' },
-      { key: 'emerg-playlist', level: 'advanced', label: 'Emergency playlist saved on your phone' },
-      { key: 'my-settings', level: 'advanced', label: 'My Settings exported to the drives' },
-      { key: 'cloud-set', level: 'advanced', label: 'A cloud link to your set you can download at the venue' },
+      // Travel folded in here (Antonio deleted the Travel section; its
+      // survivors keep their keys, so old ticks carry over).
+      { key: 'boarding', level: 'advanced', label: 'Boarding pass downloaded offline' },
+      { key: 'hotel', level: 'advanced', label: 'Hotel address saved offline' },
+      { key: 'adapter', level: 'advanced', label: 'A travel adapter for the destination' },
     ],
   },
   {
     id: 'technical',
     title: 'Technical Kit',
     icon: 'usb',
-    blurb: 'The cables nobody has at 1 AM.',
+    blurb: 'The small things that save big nights.',
     items: [
-      { key: 'adapters', level: 'advanced', label: 'USB-C and USB-A adapters for the booth' },
-      { key: 'cables', level: 'advanced', label: 'Spare USB cable and a short extension' },
-      { key: 'ethernet', level: 'advanced', label: 'Ethernet cable, for Pro DJ Link' },
-      { key: 'rca', level: 'advanced', label: 'RCA cables' },
-      { key: 'xlr', level: 'advanced', label: 'XLR adapter' },
+      { key: 'adapters', level: 'advanced', label: 'USB-C and USB-A adapters for modern devices and emergency connections' },
+      { key: 'cables', level: 'advanced', label: 'Spare USB cables for your laptop, phone and compatible DJ equipment' },
+      { key: 'ethernet', level: 'advanced', label: 'Ethernet cable (for Pro DJ Link and compatible setups)' },
+      { key: 'rca', level: 'advanced', label: 'One pair of RCA cables (can also be used as digital coaxial cables when needed)' },
+      { key: 'tripod', level: 'advanced', label: 'Phone tripod for recording content or streaming' },
       { key: 'power-strip', level: 'advanced', label: 'Extension lead or power strip' },
     ],
   },
   {
     id: 'recovery',
-    title: 'Backup & Recovery',
+    title: 'Rescue Kit',
     icon: 'shield',
-    blurb: 'For the night that goes sideways.',
+    blurb: 'The little things that can save a gig.',
     items: [
-      { key: 'card', level: 'advanced', label: 'Emergency Card printed, or saved on your phone' },
-      { key: 'flashlight', level: 'advanced', label: 'Small flashlight' },
-      { key: 'multitool', level: 'advanced', label: 'A small multitool or screwdriver for booth fixes' },
-      { key: 'cloth', level: 'advanced', label: 'Cleaning cloth' },
+      { key: 'card', level: 'advanced', label: 'Save My Gig Emergency Card (printed or saved on your phone)' },
+      { key: 'flashlight', level: 'advanced', label: 'Small LED flashlight' },
+      { key: 'multitool', level: 'advanced', label: 'Compact screwdriver or multitool' },
+      { key: 'cloth', level: 'advanced', label: 'Microfiber cloth' },
       { key: 'gaffer', level: 'advanced', label: 'Gaffer tape' },
-    ],
-  },
-  {
-    id: 'travel',
-    title: 'Travel',
-    icon: 'plane',
-    blurb: 'Only bites when you skip it.',
-    items: [
-      { key: 'passport', level: 'advanced', label: 'Passport, or ID that crosses the border' },
-      { key: 'boarding', level: 'advanced', label: 'Boarding pass downloaded offline' },
-      { key: 'hotel', level: 'advanced', label: 'Hotel address saved offline' },
-      { key: 'adapter', level: 'advanced', label: 'A travel adapter for the destination' },
     ],
   },
 ];
