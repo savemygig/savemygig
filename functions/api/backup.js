@@ -16,7 +16,7 @@ const SENDER = { name: 'Save My Gig', email: 'savemygig@gmail.com' };
 // New taxonomy 2026-07-27 (Antonio's checklist redesign). Old ids kept as
 // aliases so a stale client that posts the old categories still renders.
 const CAT_NAMES = {
-  music: 'Music', gear: 'DJ Gear', personal: 'Personal Essentials', logistics: 'Logistics',
+  music: 'Music', gear: 'DJ Gear', personal: 'Personal Kit', logistics: 'Logistics',
   backups: 'Music Backups', technical: 'Technical Kit', recovery: 'Backup & Recovery', travel: 'Travel',
   basics: 'The basics', extras: 'Extras and add-ons',
 };
