@@ -1,0 +1,124 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+
+// THE RUN LIST. NOT A DECISION TREE.
+//
+// Antonio's insight, and he is right: a DJ two minutes from a set cannot read
+// a screen and choose between A and B six times. Under adrenaline the CHOOSING
+// is the expensive part, not the doing.
+//
+// Aviation and emergency medicine solved this long ago: memory items. A short,
+// fixed, linear sequence run in order, no branching. The operator stops when
+// the problem goes away, and they know it went away because they can hear it.
+//
+// So the under-60-minutes path is a single screen of actions ordered by
+// (how often it works) x (how fast it is). No questions. The DJ works down and
+// stops when sound comes out. The decision TREE still exists and is still
+// good, it just belongs to the DJ who has an hour or a day, where diagnosis is
+// worth more than speed. Link to it at the bottom, not at the top.
+---
+<Tunnel title="Do This Now | Save My Gig!" status="Critical · Do this now" red srHeading="Do these in order until sound comes out">
+  <h2 style="margin-bottom:0.5rem">Do these in order.</h2>
+  <p class="dim" style="margin-bottom:1.5rem">Stop as soon as it plays. Most DJs are back on by step three.</p>
+
+  <ol class="runlist">
+    <li>
+      <strong>Pull the USB out. Count to ten. Push it back in firmly.</strong>
+      <span>Wait, some drives take 30 seconds to mount.</span>
+    </li>
+    <li>
+      <strong>Try the other slot, then the other player.</strong>
+      <span>A drive can fail on one deck and work on the next. If it reads there, play from there.</span>
+    </li>
+    <li>
+      <strong>Playlists missing but the drive shows up? Press FOLDER view.</strong>
+      <span>SOURCE, select USB, then the browse / FOLDER button. Your music is still on the stick. You lose cues and sync, you keep the gig.</span>
+    </li>
+    <li>
+      <strong>Load your second USB.</strong>
+      <span>If you carry two, this is over in ten seconds.</span>
+    </li>
+    <li>
+      <strong>Wipe the USB tip and try again.</strong>
+      <span>Sweat and booth dirt are real causes.</span>
+    </li>
+    <li>
+      <strong>Restart the player, but only if nobody is playing on it.</strong>
+      <span>USB STOP first, power off, twenty seconds, back on.</span>
+    </li>
+    <li>
+      <strong>Borrow a drive, or play off your phone into a spare channel.</strong>
+      <span>Ask the DJ before or after you. This happens to everyone.</span>
+    </li>
+  </ol>
+
+  <div class="alert-card" style="margin:1.75rem 0 1.5rem">
+    <div style="font-size:20px" aria-hidden="true">⚠️</div>
+    <div>
+      Do not let anything format or initialise your drive tonight. Your music is
+      still on it.
+    </div>
+  </div>
+
+  <nav class="pad-grid" aria-label="What next">
+    <a href="/saved?path=critical&branch=runlist" class="pad pad-green" data-event="outcome_reached" data-outcome="saved" data-path="critical">
+      <div class="pad-header">
+        <div class="led led-g"></div>
+        <div class="pad-title">I AM PLAYING</div>
+      </div>
+    </a>
+    <a href="/protocol/critical" class="pad pad-neutral" data-event="step_completed" data-step="runlist_to_tree">
+      <div class="pad-header">
+        <div class="led led-n"></div>
+        <div class="pad-title">NOTHING WORKED, AND I HAVE TIME</div>
+      </div>
+      <div class="pad-desc">Step by step diagnosis, one question at a time.</div>
+    </a>
+  </nav>
+</Tunnel>
+
+<style>
+  .runlist { list-style: none; counter-reset: rl; margin: 0; padding: 0; }
+  .runlist li {
+    counter-increment: rl;
+    position: relative;
+    padding: 0.85rem 0 0.85rem 2.6rem;
+    border-bottom: 1px solid var(--edge-soft);
+  }
+  .runlist li:last-child { border-bottom: none; }
+  .runlist li::before {
+    content: counter(rl);
+    position: absolute;
+    left: 0;
+    top: 0.8rem;
+    width: 1.85rem;
+    height: 1.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surf-2);
+    border: 1px solid var(--edge);
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  .runlist strong {
+    display: block;
+    font-size: 1.02rem;
+    line-height: 1.35;
+    margin-bottom: 0.15rem;
+  }
+  .runlist span {
+    display: block;
+    font-size: 0.87rem;
+    line-height: 1.45;
+    color: var(--text-dim);
+  }
+  @media (max-width: 420px) {
+    .runlist li { padding-left: 2.3rem; }
+    .runlist strong { font-size: 0.97rem; }
+    .runlist span { font-size: 0.83rem; }
+  }
+</style>

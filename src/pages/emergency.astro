@@ -17,38 +17,24 @@ import BetaNotice from '../components/BetaNotice.astro';
   <meta slot="head" name="format-detection" content="telephone=no" />
 
   <main class="wrap emerg">
+    <!-- ONE QUESTION, ABOVE THE FOLD, THEN ACTION.
+         This page used to put a three line headline, a testing notice, a button
+         that only scrolled down, a "stay calm" paragraph and TWO separate
+         questions in front of a DJ who is two minutes from a set. A person in
+         that state cannot read a page, they can answer one question. So: the
+         question IS the headline, the answers are the first thing on screen,
+         and every word of context moved below them. The keyword lead is still
+         on the page for search, it just sits underneath where it belongs. -->
     <p class="status-line red">EMERGENCY_MODE</p>
-    <h1 class="emerg-h1">USB not detected<br />or <span class="accent">fail?</span></h1>
-    <p class="emerg-lead">
-      Emergency guidance when USB drives fail on Pioneer CDJ-3000, CDJ-2000, XDJ units or during Rekordbox export.
-    </p>
+    <h1 class="emerg-h1">What is <span class="accent">wrong?</span></h1>
 
-    <BetaNotice variant="card" />
-
-    <div class="action-stack emerg-actions">
-      <a href="#triage" class="btn-heartbeat" data-event="generate_lead" data-label="enter_emergency_mode">
-        <span class="led led-g" aria-hidden="true"></span>
-        ENTER EMERGENCY MODE
-      </a>
-
-      <div class="alert-card" role="alert">
-        <div style="font-size:20px" aria-hidden="true">⚠️</div>
-        <div>
-          If your USB isn't responding or tracks won't load, stay calm. This guide helps you continue playing or recover your files safely later.
-        </div>
-      </div>
-    </div>
-
-    <!-- SYMPTOM FIRST, TIME SECOND.
-         This page used to open with "How long until you play?", so a DJ with no
-         sound was asked about time and then dropped into a USB flow. The
-         symptom decides the branch; time only changes what we do inside the USB
-         branch, so it is asked there and only there. -->
     <section id="triage" class="emerg-triage">
-      <h2 class="emerg-triage-h">What is wrong?</h2>
-
-      <nav class="pad-grid" style="margin-bottom:2.5rem">
-        <a href="#when" class="pad pad-neutral" data-event="symptom_selected" data-symptom="music_wont_load">
+      <!-- No second heading here. The h1 IS the question, and a screen reader
+           heading saying roughly the same thing again is one more line of
+           clutter for everyone if the utility class ever fails. The nav
+           carries the label instead. -->
+      <nav class="pad-grid" aria-label="Choose what is happening" style="margin-bottom:1.5rem">
+        <a href="/protocol/critical/now" class="pad pad-neutral" data-event="symptom_selected" data-symptom="music_wont_load">
           <div class="pad-header">
             <div class="led led-n"></div>
             <div class="pad-title">MY MUSIC WILL NOT LOAD</div>
@@ -64,18 +50,28 @@ import BetaNotice from '../components/BetaNotice.astro';
           <div class="pad-desc">A dead channel, silent master, or nothing in your headphones.</div>
         </a>
       </nav>
+
+      <BetaNotice variant="line" />
+
+      <p class="dim" style="font-size:0.86rem;margin-bottom:2.5rem">
+        Not playing tonight? <a href="#when">Fix it properly instead</a>.
+      </p>
     </section>
 
+    <p class="emerg-lead">
+      Emergency guidance when USB drives fail on Pioneer CDJ-3000, CDJ-2000, XDJ units or during Rekordbox export.
+    </p>
+
     <section id="when" class="emerg-triage">
-      <h2 class="emerg-triage-h">Music will not load: how long until you play?</h2>
+      <h2 class="emerg-triage-h">How much time do you have?</h2>
 
       <nav class="pad-grid">
-        <a href="/protocol/critical" class="pad pad-red" data-event="triage_selected" data-path="critical">
+        <a href="/protocol/critical/now" class="pad pad-red" data-event="triage_selected" data-path="critical">
           <div class="pad-header">
             <div class="led led-r"></div>
             <div class="pad-title">&lt; 60 MINUTES</div>
           </div>
-          <div class="pad-desc">Get playing now.</div>
+          <div class="pad-desc">Do this now. A list, not questions.</div>
         </a>
 
         <a href="/protocol/quick-fix" class="pad pad-yellow" data-event="triage_selected" data-path="quick_fix">

@@ -62,10 +62,7 @@ const attrs = (o: Opt, answer: string) => {
   ))}
 </nav>
 
-<style is:global>
-  /* Symptom pickers: no option is "good" or "bad", so they are neutral until
-     you touch them. Same shape and tap target as the yes/no pads. */
-  .pad-neutral { border-left-color: var(--edge); }
-  .pad-neutral:hover, .pad-neutral:focus-visible { border-left-color: var(--text-dim); }
-  .led-n { background: var(--text-faint); }
-</style>
+<!-- .pad-neutral and .led-n now live in global.css. They are part of the shared
+     pad vocabulary, and pages that write pads by hand (e.g. /emergency) need
+     them without importing this component. -->
+
