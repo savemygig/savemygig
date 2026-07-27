@@ -151,7 +151,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 ---
 <Base
   title="The Pre-Gig Checklist for DJs | Save My Gig!"
-  description="A tickable pre-gig checklist for DJs: the basics, the technical gear, and the life stuff you forget. Collapse each section, switch basic or full, track your readiness, saves on your device."
+  description="A tickable pre-gig checklist for DJs: music, gear, personal essentials and logistics. Base, Advanced or your own Custom version, with progress per section. Saves on your device."
   path="/checklist"
 >
   <main class="wrap" id="top">
@@ -180,12 +180,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     </script>
 
     <div class="mode-switch" role="group" aria-label="Checklist depth">
-      <button type="button" class="mode-btn is-on" data-mode-set="basic" aria-pressed="true">Basic</button>
-      <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Pro</button>
+      <button type="button" class="mode-btn is-on" data-mode-set="basic" aria-pressed="true">Base</button>
+      <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Advanced</button>
       <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Custom</button>
     </div>
     <div class="mode-hint dim" id="modeHintBox">
-      <span id="modeHint">Basic is the must-brings. Pro is the full kit, Custom is your own.</span>
+      <span id="modeHint">Must-brings. The essential checklist every DJ should have before leaving for a gig.</span>
       <button type="button" class="mode-hint-close" id="modeHintClose" aria-label="Dismiss">&times;</button>
     </div>
     <script is:inline>
@@ -214,7 +214,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            a professional feel charged for something we call free. It is
            "free for registered users", which is how every real tool works and
            how a working DJ expects to be treated. -->
-      <p class="unlock-title" id="unlockTitle">Register free to unlock Pro and Custom modes</p>
+      <p class="unlock-title" id="unlockTitle">Register free to unlock Advanced and Custom modes</p>
       <!-- Per-device honesty (audit finding): registration unlocks THIS device
            today, and the emailed copy is what carries the list across devices.
            When account sync ships this copy gets stronger, not corrected. -->
@@ -1479,11 +1479,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
     if (hintEl) {
-      if (m === 'advanced') hintEl.textContent = 'The full kit. Basic for the essentials, Custom to make it yours.';
-      else if (m === 'custom') hintEl.textContent = 'Your list, your rules: add, edit, delete, reorder.';
-      else hintEl.textContent = isUnlocked()
-        ? 'Basic is the must-brings. Pro is the full kit, Custom is your own.'
-        : 'Basic is the must-brings. Pro is the full kit, Custom is your own.';
+      if (m === 'advanced') hintEl.textContent = 'The full kit. Everything in Base, plus backup gear and professional extras for any situation.';
+      else if (m === 'custom') hintEl.textContent = 'Your own. Start with Advanced and tailor the checklist to your setup, workflow, and preferences.';
+      else hintEl.textContent = 'Must-brings. The essential checklist every DJ should have before leaving for a gig.';
     }
     saveMode(m);
     render();
@@ -1635,7 +1633,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   const unlockTitle = document.getElementById('unlockTitle');
   const unlockCopy = document.getElementById('unlockCopy');
-  const MODE_TITLE = 'Register free to unlock Pro and Custom modes';
+  const MODE_TITLE = 'Register free to unlock Advanced and Custom modes';
   const MODE_COPY = unlockCopy ? unlockCopy.textContent || '' : '';
   const PDF_TITLE = 'Register free to download the printable checklist';
   const PDF_COPY = 'Your list, exactly as it stands, as a clean printable PDF. Print it, fold it, keep it in your USB case, or pin it up in the booth.';
