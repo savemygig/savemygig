@@ -3,7 +3,6 @@ import Base from '../layouts/Base.astro';
 import PromoBanner from '../components/PromoBanner.astro';
 import InstallApp from '../components/InstallApp.astro';
 import Search from '../components/Search.astro';
-import { DISCOVERY } from '../data/discovery.js';
 
 // Homepage = simple "pick your pain" chooser. Rescue AND prevention, balanced:
 // three equal, neutral doors; colour lives only in the LED dots and comes up
@@ -132,15 +131,17 @@ const SUBLINES = [
          live component as /faq: focus turns the border red, results appear
          right under the box as you type, no overlay jump. The nav magnifier
          overlay stays for every other page.
-         DISCOVERY ROTATION (Antonio's spec): the placeholder is not static,
-         it rotates through src/data/discovery.js, mixing categories so a
-         visitor who never types still learns the breadth of the site. The
-         Popular fixes row above owns the urgent problems; this box owns
-         everything else, and the gate (check-discovery.mjs) proves every
-         rotating term returns real results and never duplicates that row.
-         The static placeholder below is the no-JS fallback only. -->
+         PLACEHOLDER HISTORY, do not relitigate casually: category words
+         ("a problem, an error code") -> too abstract; concrete examples ->
+         repeated the Popular fixes row; a rotating discovery pool (gate-
+         checked terms, category interleave) -> Antonio killed it 2026-07-27:
+         the promo banner below already rotates situations, two example
+         machines on one screen is noise. Final form: STATIC, one confident
+         claim in the site's voice, no examples, and it points BOTH ways
+         (Antonio: "ruin a set" alone was damage control; the site is rescue
+         AND prevention). (The rotation machinery lives in git history.) -->
     <div class="home-srch">
-      <Search placeholder="Search anything: no sound, waveforms missing, DJM-900, what is OneLibrary…" />
+      <Search placeholder="Search anything. Fix it tonight, prevent it forever." />
     </div>
 
     <PromoBanner exclude="/emergency" />
@@ -342,17 +343,6 @@ const SUBLINES = [
     .home-srch { margin-top: 0.8rem; }
     .home-srch :global(.srch-input) { font-size: 16px; }
   }
-  /* The rotating discovery hint: a span painted over the input where the
-     placeholder would sit (real placeholders cannot animate). JS-created, so
-     :global. Hidden the moment the input has focus or text. */
-  .home-srch :global(.disc-hint) {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    left: calc(0.85rem + 17px + 0.6rem); right: 2.2rem;
-    color: var(--text-faint); font-size: 16px; line-height: 1.2;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    pointer-events: none; opacity: 1; transition: opacity 0.35s ease;
-  }
-  .home-srch :global(.disc-hint.out) { opacity: 0; }
 
   @media (prefers-reduced-motion: reduce) { .door, .door-led, .door-arrow { transition: none; } }
 </style>
@@ -409,58 +399,5 @@ const SUBLINES = [
       var rT;
       window.addEventListener('resize', function () { clearTimeout(rT); rT = setTimeout(fitRow, 150); });
     }
-  })();
-</script>
-
-<script is:inline define:vars={{ POOL: DISCOVERY }}>
-  // Discovery rotation (Antonio's spec): the search box quietly showcases
-  // the breadth of the site. Terms come from src/data/discovery.js (gate-
-  // checked: every one returns real results). Categories are interleaved
-  // round-robin so two of a kind never show consecutively. The hint is a
-  // painted span, not the placeholder attribute (placeholders cannot fade);
-  // the static placeholder stays as the no-JS fallback and is cleared here.
-  (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var box = document.querySelector('.home-srch .srch-box');
-    var input = document.querySelector('.home-srch .srch-input');
-    if (!box || !input) return;
-
-    // Shuffle within each category, then round-robin across categories.
-    var cats = Object.keys(POOL).map(function (k) {
-      var a = POOL[k].slice();
-      for (var i = a.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var t = a[i]; a[i] = a[j]; a[j] = t;
-      }
-      return a;
-    }).filter(function (a) { return a.length; });
-    var seq = [];
-    for (var round = 0; cats.some(function (a) { return round < a.length; }); round++) {
-      for (var c = 0; c < cats.length; c++) if (round < cats[c].length) seq.push(cats[c][round]);
-    }
-    if (!seq.length) return;
-
-    var hint = document.createElement('span');
-    hint.className = 'disc-hint';
-    hint.setAttribute('aria-hidden', 'true');
-    var at = 0;
-    hint.textContent = 'Search anything: ' + seq[0];
-    input.placeholder = '';
-    box.appendChild(hint);
-
-    function idle() { return document.activeElement !== input && !input.value; }
-    input.addEventListener('focus', function () { hint.hidden = true; });
-    input.addEventListener('blur', function () { if (!input.value) hint.hidden = false; });
-    input.addEventListener('input', function () { hint.hidden = !!input.value || document.activeElement === input; });
-
-    setInterval(function () {
-      if (document.hidden || !idle()) return;
-      hint.classList.add('out');
-      setTimeout(function () {
-        at = (at + 1) % seq.length;
-        hint.textContent = 'Search anything: ' + seq[at];
-        hint.classList.remove('out');
-      }, 380);
-    }, 3600);
   })();
 </script>
