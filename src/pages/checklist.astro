@@ -93,9 +93,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     </div>
     <p class="mode-hint dim" id="modeHint">Basic is the must-bring list. Switch to Advanced for the full kit.</p>
 
+    <!-- One gate, two doors. This panel now also serves the PDF download, so
+         the title and first line are set from JS depending on what the DJ
+         asked for. A second unlock panel with its own copy would have drifted
+         from this one within a week. -->
     <div class="unlock" id="unlock" hidden>
-      <p class="unlock-title">Unlock Advanced and Custom</p>
-      <p class="dim unlock-copy">The full kit and your own custom lists are free. The only price is your email, call it a tiny tip that keeps this project alive. You also get Save My Gig news and the odd cool thing for your DJ career, never spam. Drop the email you actually open and you are in right away, one quick confirm and done.</p>
+      <p class="unlock-title" id="unlockTitle">Unlock Advanced and Custom</p>
+      <p class="dim unlock-copy" id="unlockCopy">The full kit and your own custom lists are free. The only price is your email, call it a tiny tip that keeps this project alive. You also get Save My Gig news and the odd cool thing for your DJ career, never spam. Drop the email you actually open and you are in right away, one quick confirm and done.</p>
       <form class="unlock-form" id="unlockForm" novalidate>
         <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your best email" required />
         <button type="submit" class="btn btn-solid">Join and unlock</button>
@@ -161,7 +165,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     </div>
 
     <div class="checklist-actions">
-      <a href="/downloads/save-my-gig-pre-gig-checklist.pdf" class="btn btn-neutral" download data-event="checklist_download" data-placement="checklist_actions">Download as PDF</a>
+      <a href="/downloads/save-my-gig-pre-gig-checklist.pdf" class="btn btn-neutral" id="pdfBtn" download data-event="checklist_download" data-placement="checklist_actions">Download the printable PDF</a>
       <button type="button" class="btn btn-neutral" id="resetBtn">Clear the list</button>
     </div>
 
@@ -533,6 +537,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   let mode: string = 'basic';
   let pendingMode: string = 'advanced';
+  // What the DJ was reaching for when the gate appeared: a mode, or the PDF.
+  let pendingWant: 'mode' | 'pdf' = 'mode';
+  const PDF_URL = '/downloads/save-my-gig-pre-gig-checklist.pdf';
   let editMode = false;
 
   const allBoxes = () => Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
@@ -988,14 +995,57 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
   });
 
+  const unlockTitle = document.getElementById('unlockTitle');
+  const unlockCopy = document.getElementById('unlockCopy');
+  const MODE_TITLE = 'Unlock Advanced and Custom';
+  const MODE_COPY = unlockCopy ? unlockCopy.textContent || '' : '';
+  const PDF_TITLE = 'Get the printable checklist';
+  const PDF_COPY = 'A clean one-page PDF with empty tick boxes. Print it, fold it, keep it in your USB case, or pin it up in the booth. It costs an email. You also get Save My Gig news and the odd cool thing for your DJ career, never spam.';
+
+  // Opens the gate with copy that matches what the DJ actually reached for.
+  function openGate() {
+    if (unlockTitle) unlockTitle.textContent = pendingWant === 'pdf' ? PDF_TITLE : MODE_TITLE;
+    if (unlockCopy) unlockCopy.textContent = pendingWant === 'pdf' ? PDF_COPY : MODE_COPY;
+    if (unlockEl) {
+      unlockEl.hidden = false;
+      unlockEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    const inp = unlockForm && unlockForm.querySelector('input');
+    if (inp) (inp as HTMLInputElement).focus();
+  }
+
+  // Starts the download without navigating away, so the DJ keeps their place
+  // and their ticked boxes.
+  function grabPdf() {
+    const a = document.createElement('a');
+    a.href = PDF_URL;
+    a.download = 'save-my-gig-pre-gig-checklist.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  // The PDF is behind the same email as Advanced and Custom. Note for whoever
+  // reads this later: this is a SOFT gate. The file is a static URL and anyone
+  // who wants it can take it. That is fine and deliberate. It is a fair ask,
+  // not a lock, and nothing safety-critical is ever behind it.
+  const pdfBtn = document.getElementById('pdfBtn');
+  if (pdfBtn) {
+    pdfBtn.addEventListener('click', (ev) => {
+      if (isUnlocked()) return;          // already a member, let the link work
+      ev.preventDefault();
+      pendingWant = 'pdf';
+      openGate();
+    });
+  }
+
   // mode buttons: Advanced and Custom are gated behind an email
   modeBtns.forEach((b) => b.addEventListener('click', () => {
     const target = b.dataset.modeSet || 'basic';
     if ((target === 'advanced' || target === 'custom') && !isUnlocked()) {
       pendingMode = target;
-      if (unlockEl) unlockEl.hidden = false;
-      const inp = unlockForm && unlockForm.querySelector('input');
-      if (inp) (inp as HTMLInputElement).focus();
+      pendingWant = 'mode';
+      openGate();
       return;
     }
     if (unlockEl) unlockEl.hidden = true;
@@ -1016,15 +1066,22 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       setUnlocked();
       setEmail(email);
       if (unlockEl) unlockEl.hidden = true;
-      setMode(pendingMode);
+
+      // Give them the thing they actually came for, immediately. The
+      // confirmation email fires afterwards in the background: nobody should
+      // wait on an inbox while standing in a hurry.
+      if (pendingWant === 'pdf') grabPdf();
+      else setMode(pendingMode);
+
+      const want = pendingWant === 'pdf' ? 'pdf' : pendingMode;
       if (typeof (window as any).gtag === 'function') {
-        (window as any).gtag('event', 'advanced_unlock', { placement: 'checklist', mode: pendingMode });
+        (window as any).gtag('event', 'advanced_unlock', { placement: 'checklist', mode: want });
       }
       try {
         await fetch('/api/subscribe', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ email, source: 'checklist-' + pendingMode }),
+          body: JSON.stringify({ email, source: 'checklist-' + want }),
         });
       } catch (e) { /* unlocked anyway; feature is free */ }
     });

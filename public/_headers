@@ -21,3 +21,21 @@
 
 /downloads/*
   Cache-Control: public, max-age=604800
+
+# The last few uncovered static files. Lighthouse flagged these as having no
+# cache lifetime, which is small (about 5 KiB) but free to fix.
+/favicon.svg
+  Cache-Control: public, max-age=2592000
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=2592000
+
+/manifest.webmanifest
+  Cache-Control: public, max-age=86400
+
+# sw.js is DELIBERATELY excluded from long caching. A service worker cached for
+# a year is a site that cannot be updated: every DJ would keep running whatever
+# rescue content was current the day they first visited. Browsers cap SW cache
+# at 24h anyway, but state the intent so nobody "optimises" this later.
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate

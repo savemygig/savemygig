@@ -8,7 +8,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const pw = require('/home/claude/.npm-global/lib/node_modules/playwright/index.js');
+const pw = require('/opt/node-tools/node_modules/playwright');
 const { chromium } = pw;
 
 const groups = [
