@@ -1,0 +1,25 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+---
+<Tunnel title="Headphone Jack | Save My Gig!" status="No_Sound · Headphones" red>
+  <div class="step-label">Now the jack</div>
+  <h2 style="margin-bottom:1rem">Now the jack</h2>
+
+  <ul class="checklist">
+    <li>Push the plug in firmly. Half-inserted is the classic.</li>
+    <li>Try the other headphone socket if the mixer has more than one.</li>
+    <li>Try the adapter the other way, or someone else's headphones.</li>
+  </ul>
+
+  <p class="tunnel-note" style="margin-top:0;margin-bottom:1.5rem">
+    You can mix without cue if you have to. Long blends, tracks you know.
+  </p>
+
+  <p class="question">Hearing it now?</p>
+
+  <Choice step="ns_phones2"
+    a={{ href: '/saved?path=no_sound&branch=jack', label: 'YES, I HEAR IT', event: 'outcome_reached', data: { outcome: 'saved', path: 'no_sound' } }}
+    b={{ href: '/protocol/no-sound/fallback', label: 'NO, STILL NOTHING' }}
+  />
+</Tunnel>

@@ -1,0 +1,22 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+// Cue routing before the jack: it is the more common cause and costs nothing.
+---
+<Tunnel title="No Cue In Headphones | Save My Gig!" status="No_Sound · Headphones" red>
+  <div class="step-label">Cue first</div>
+  <h2 style="margin-bottom:1rem">Check the cue, not the jack</h2>
+
+  <ul class="checklist">
+    <li>Press <strong>CUE</strong> on the channel you want to hear.</li>
+    <li>Turn the headphone <strong>MIX</strong> knob fully to CUE.</li>
+    <li>Turn headphone <strong>LEVEL</strong> up halfway.</li>
+  </ul>
+
+  <p class="question">Hearing it now?</p>
+
+  <Choice step="ns_phones"
+    a={{ href: '/saved?path=no_sound&branch=cue', label: 'YES, I HEAR IT', event: 'outcome_reached', data: { outcome: 'saved', path: 'no_sound' } }}
+    b={{ href: '/protocol/no-sound/phones-2', label: 'NO, STILL NOTHING' }}
+  />
+</Tunnel>

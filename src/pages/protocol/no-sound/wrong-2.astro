@@ -1,0 +1,21 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+---
+<Tunnel title="Isolate It | Save My Gig!" status="No_Sound · Quality" red>
+  <div class="step-label">30 seconds</div>
+  <h2 style="margin-bottom:1rem">Isolate it in 30 seconds</h2>
+
+  <ul class="checklist">
+    <li>Move your source to another channel. Fixed? Channel fault, stay there.</li>
+    <li>Try another output, booth against master. Fixed? Output fault, tell the house.</li>
+    <li>Still wrong everywhere? Source fault. Different cable, different device.</li>
+  </ul>
+
+  <p class="question">Playable now?</p>
+
+  <Choice step="ns_wrong2"
+    a={{ href: '/saved?path=no_sound&branch=isolate', label: 'YES, I AM ON', event: 'outcome_reached', data: { outcome: 'saved', path: 'no_sound' } }}
+    b={{ href: '/protocol/no-sound/fallback', label: 'NO, STILL WRONG' }}
+  />
+</Tunnel>

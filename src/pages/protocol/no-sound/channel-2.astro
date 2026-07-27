@@ -1,0 +1,21 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+---
+<Tunnel title="Channel Strip | Save My Gig!" status="No_Sound · Channel" red>
+  <div class="step-label">Top to bottom</div>
+  <h2 style="margin-bottom:1rem">Walk the channel strip</h2>
+
+  <ul class="checklist">
+    <li>Turn the <strong>TRIM / GAIN</strong> up to 12 o'clock.</li>
+    <li>Push the <strong>channel fader</strong> fully up.</li>
+    <li>Check the channel is not muted or switched off.</li>
+  </ul>
+
+  <p class="question">Sound now?</p>
+
+  <Choice step="ns_channel2"
+    a={{ href: '/saved?path=no_sound&branch=channel_strip', label: 'YES, IT PLAYS', event: 'outcome_reached', data: { outcome: 'saved', path: 'no_sound' } }}
+    b={{ href: '/protocol/no-sound/channel-3', label: 'NO, STILL SILENT' }}
+  />
+</Tunnel>

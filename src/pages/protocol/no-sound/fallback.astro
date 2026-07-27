@@ -1,0 +1,26 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+// Survival for the no-sound branch. Same shape as the USB branch's survival
+// screen: stop debugging, get sound out of the speakers.
+---
+<Tunnel title="Survival Mode | Save My Gig!" status="No_Sound · Survival" red>
+  <div class="step-label">Stop debugging</div>
+  <h2 style="margin-bottom:1rem">Get sound out of the speakers</h2>
+
+  <p class="dim" style="margin-bottom:1.25rem">Stop diagnosing. Anything that makes noise when it is your turn.</p>
+
+  <ul class="checklist">
+    <li>Move everything to a channel you know works, even if you share it.</li>
+    <li>Ask the DJ before or after you. They know this mixer's quirks.</li>
+    <li>Ask the sound tech for any spare input, a phone into a line channel counts.</li>
+    <li>Play from the other player's output if only one side is dead.</li>
+  </ul>
+
+  <p class="question">Did you find a way to play?</p>
+
+  <Choice step="ns_fallback"
+    a={{ href: '/saved?path=no_sound&branch=survival', label: 'YES, I AM COVERED', event: 'outcome_reached', data: { outcome: 'saved', path: 'no_sound' } }}
+    b={{ href: '/feedback?from=no_sound', label: 'NO, NOTHING WORKED', desc: 'Tell us what the mixer was doing. We will build the fix.' }}
+  />
+</Tunnel>

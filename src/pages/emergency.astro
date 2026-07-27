@@ -39,8 +39,35 @@ import BetaNotice from '../components/BetaNotice.astro';
       </div>
     </div>
 
+    <!-- SYMPTOM FIRST, TIME SECOND.
+         This page used to open with "How long until you play?", so a DJ with no
+         sound was asked about time and then dropped into a USB flow. The
+         symptom decides the branch; time only changes what we do inside the USB
+         branch, so it is asked there and only there. -->
     <section id="triage" class="emerg-triage">
-      <h2 class="emerg-triage-h">How long until you play?</h2>
+      <h2 class="emerg-triage-h">What is wrong?</h2>
+
+      <nav class="pad-grid" style="margin-bottom:2.5rem">
+        <a href="#when" class="pad pad-neutral" data-event="symptom_selected" data-symptom="music_wont_load">
+          <div class="pad-header">
+            <div class="led led-n"></div>
+            <div class="pad-title">MY MUSIC WILL NOT LOAD</div>
+          </div>
+          <div class="pad-desc">USB not detected, playlists missing, or tracks that refuse to play.</div>
+        </a>
+
+        <a href="/protocol/no-sound" class="pad pad-neutral" data-event="symptom_selected" data-symptom="no_sound">
+          <div class="pad-header">
+            <div class="led led-n"></div>
+            <div class="pad-title">THERE IS NO SOUND</div>
+          </div>
+          <div class="pad-desc">A dead channel, silent master, or nothing in your headphones.</div>
+        </a>
+      </nav>
+    </section>
+
+    <section id="when" class="emerg-triage">
+      <h2 class="emerg-triage-h">Music will not load: how long until you play?</h2>
 
       <nav class="pad-grid">
         <a href="/protocol/critical" class="pad pad-red" data-event="triage_selected" data-path="critical">

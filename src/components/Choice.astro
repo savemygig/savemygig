@@ -14,8 +14,17 @@ interface Props {
   step: string;
   a: Opt; // the green/positive option
   b: Opt; // the red/negative option
+  /** Optional 3rd and 4th options, for symptom pickers where the answer is not
+   *  yes/no but "which of these is happening". Rendered neutral, not red or
+   *  green, because none of them is the good or the bad answer. */
+  c?: Opt;
+  d?: Opt;
 }
-const { step, a, b } = Astro.props;
+const { step, a, b, c, d } = Astro.props;
+const extra = [c, d].filter(Boolean) as Opt[];
+// A yes/no pair keeps the green/red language. A list of symptoms does not:
+// colouring "one channel is silent" green would be meaningless.
+const neutral = extra.length > 0;
 
 const attrs = (o: Opt, answer: string) => {
   const out: Record<string, string> = {
@@ -28,18 +37,35 @@ const attrs = (o: Opt, answer: string) => {
 };
 ---
 <nav class="pad-grid" aria-label="Choose one">
-  <a href={a.href} class="pad pad-green" {...attrs(a, 'a')}>
+  <a href={a.href} class:list={['pad', neutral ? 'pad-neutral' : 'pad-green']} {...attrs(a, 'a')}>
     <div class="pad-header">
-      <div class="led led-g"></div>
+      <div class:list={['led', neutral ? 'led-n' : 'led-g']}></div>
       <div class="pad-title">{a.label}</div>
     </div>
     {a.desc && <div class="pad-desc">{a.desc}</div>}
   </a>
-  <a href={b.href} class="pad pad-red" {...attrs(b, 'b')}>
+  <a href={b.href} class:list={['pad', neutral ? 'pad-neutral' : 'pad-red']} {...attrs(b, 'b')}>
     <div class="pad-header">
-      <div class="led led-r"></div>
+      <div class:list={['led', neutral ? 'led-n' : 'led-r']}></div>
       <div class="pad-title">{b.label}</div>
     </div>
     {b.desc && <div class="pad-desc">{b.desc}</div>}
   </a>
+  {extra.map((o, i) => (
+    <a href={o.href} class="pad pad-neutral" {...attrs(o, i === 0 ? 'c' : 'd')}>
+      <div class="pad-header">
+        <div class="led led-n"></div>
+        <div class="pad-title">{o.label}</div>
+      </div>
+      {o.desc && <div class="pad-desc">{o.desc}</div>}
+    </a>
+  ))}
 </nav>
+
+<style is:global>
+  /* Symptom pickers: no option is "good" or "bad", so they are neutral until
+     you touch them. Same shape and tap target as the yes/no pads. */
+  .pad-neutral { border-left-color: var(--edge); }
+  .pad-neutral:hover, .pad-neutral:focus-visible { border-left-color: var(--text-dim); }
+  .led-n { background: var(--text-faint); }
+</style>

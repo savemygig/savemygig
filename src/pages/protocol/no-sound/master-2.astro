@@ -1,0 +1,21 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+---
+<Tunnel title="Follow The Cable | Save My Gig!" status="No_Sound · Master" red>
+  <div class="step-label">Out of the mixer</div>
+  <h2 style="margin-bottom:1rem">Follow the cable out</h2>
+
+  <ul class="checklist">
+    <li>Push the master output cables in firmly, both ends.</li>
+    <li>Swap the master pair for the booth output pair if there is one.</li>
+    <li>Look at the amp or the powered speakers. Are the power lights on?</li>
+  </ul>
+
+  <p class="question">Sound now?</p>
+
+  <Choice step="ns_master2"
+    a={{ href: '/saved?path=no_sound&branch=cable', label: 'YES, IT PLAYS', event: 'outcome_reached', data: { outcome: 'saved', path: 'no_sound' } }}
+    b={{ href: '/protocol/no-sound/house', label: 'NO, STILL SILENT' }}
+  />
+</Tunnel>

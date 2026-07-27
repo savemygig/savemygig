@@ -1,0 +1,21 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+---
+<Tunnel title="Input Source | Save My Gig!" status="No_Sound · Channel" red>
+  <div class="step-label">The input</div>
+  <h2 style="margin-bottom:1rem">Check the input source</h2>
+
+  <ul class="checklist">
+    <li>Find the <strong>source selector</strong> above the fader (USB / LINE / PHONO / LINK / digital).</li>
+    <li>Set it to where your music actually comes from.</li>
+    <li>Still nothing? Move your source to a working channel and play from there.</li>
+  </ul>
+
+  <p class="question">Are you playing on any channel now?</p>
+
+  <Choice step="ns_channel3"
+    a={{ href: '/saved?path=no_sound&branch=source', label: 'YES, I AM ON', event: 'outcome_reached', data: { outcome: 'saved', path: 'no_sound' } }}
+    b={{ href: '/protocol/no-sound/fallback', label: 'NO, STILL NOTHING' }}
+  />
+</Tunnel>

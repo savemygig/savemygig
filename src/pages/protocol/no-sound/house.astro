@@ -1,0 +1,27 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import Choice from '../../../components/Choice.astro';
+// Past the booth output it is the venue's chain, not the DJ's gear. The job
+// here is to hand over cleanly and keep the DJ ready, not to keep debugging.
+---
+<Tunnel title="Get The House Tech | Save My Gig!" status="No_Sound · House" red>
+  <div class="step-label">Not your gear</div>
+  <h2 style="margin-bottom:1rem">Get the house tech</h2>
+
+  <ul class="checklist">
+    <li>This is the venue's signal chain now, not your gear.</li>
+    <li>Tell them exactly: <strong>"Mixer master is up and outputting. Nothing after the booth."</strong></li>
+    <li>While they work: keep your set cued and ready to go.</li>
+  </ul>
+
+  <p class="tunnel-note" style="margin-top:0;margin-bottom:1.5rem">
+    A silent room from the house side is not your failure. Stay ready.
+  </p>
+
+  <p class="question">Did the house bring it back?</p>
+
+  <Choice step="ns_house"
+    a={{ href: '/saved?path=no_sound&branch=house', label: 'YES, I AM ON', event: 'outcome_reached', data: { outcome: 'saved', path: 'no_sound' } }}
+    b={{ href: '/protocol/no-sound/fallback', label: 'NO, STILL NOTHING' }}
+  />
+</Tunnel>
