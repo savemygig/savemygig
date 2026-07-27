@@ -6,13 +6,14 @@ import Choice from '../../../components/Choice.astro';
 <Tunnel title="Last Options | Save My Gig!" status="Critical · Fallback" red>
   <div class="review-flag">DRAFT, review pending.</div>
   <div class="step-label">Fallback</div>
-  <h2 style="margin-bottom:1rem">The USB route isn't cooperating</h2>
+  <h2 style="margin-bottom:1rem">One thing left before survival mode</h2>
 
-  <p class="dim">Two options left before survival mode:</p>
-
+  <!-- Was two bullets, the first being "try the other player or the other USB
+       slot", offered to someone five screens deep who was told on screen one
+       that we assume they did exactly that. Contradicting our own assumed line
+       is worse than never having written it. -->
   <ul class="checklist">
-    <li><strong>Try the other player or the other USB slot</strong>, mounts can fail on one deck and work on the next.</li>
-    <li><strong>Re-do the format once</strong>, choosing <span class="mono">FAT32</span> explicitly (not exFAT) and <span class="mono">MBR</span>. We recommend MBR: a GPT drive is a common cause of "formatted but unreadable".</li>
+    <li><strong>Re-do the format once</strong>, choosing <span class="mono">FAT32</span> explicitly (not exFAT) and <span class="mono">MBR</span>. A GPT drive is a common cause of "formatted but unreadable".</li>
   </ul>
 
   <p class="question">Is it reading now?</p>

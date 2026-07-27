@@ -9,15 +9,21 @@ import Choice from '../../../components/Choice.astro';
   <h2 style="margin-bottom:1rem">Verify like it's gig night</h2>
 
   <ul class="checklist">
-    <li>Eject properly. Unplug. Wait. Plug back in.</li>
+    <li>Eject, unplug, plug back in.</li>
     <li>Device loads in Rekordbox with all playlists.</li>
-    <li>Best: test on a real player (<span class="mono">SOURCE → USB</span>), tracks load, waveforms show, cues fire.</li>
+    <li>Test on a player: tracks load, waveforms show, cues fire.</li>
   </ul>
 
   <p class="question">Everything solid?</p>
 
+  <!-- The NO description used to read "Your music is already safe on the
+       computer." That is TRUE only for the DJ who came through /rescue. A DJ
+       who answered "I can replace it" back on /value was routed straight to
+       /health and never copied anything anywhere. Telling that person their
+       music is safe, on the screen where we tell them the drive is not
+       trustworthy, is the most expensive kind of error this site can make. -->
   <Choice step="fr_verify"
     a={{ href: '/saved?path=full_recovery', label: 'YES, SOLID', event: 'outcome_reached', data: { outcome: 'saved', path: 'full_recovery' } }}
-    b={{ href: '/protocol/full-recovery/retire', label: 'NO, PROBLEMS REMAIN', desc: 'Your music is already safe on the computer. It is the drive that is not trustworthy.' }}
+    b={{ href: '/protocol/full-recovery/retire', label: 'NO, PROBLEMS REMAIN', desc: 'The drive is not trustworthy. Do not put a gig on it.' }}
   />
 </Tunnel>

@@ -8,9 +8,15 @@ import Choice from '../../../components/Choice.astro';
 
   <p>Your music is still there.</p>
 
+  <!-- A consent card that named no risk. The DJ was being asked to agree to
+       something we would not tell them. Name the actual consequence, or do not
+       show a warning at all. -->
   <div class="alert-card" style="margin-bottom:1.5rem">
-    <div style="font-size:20px">⚠️</div>
-    <div><strong>Continuing involves risk.</strong></div>
+    <div style="font-size:20px" aria-hidden="true">⚠️</div>
+    <div>
+      <strong>You will erase this drive.</strong> Anything that does not copy
+      off cleanly first is gone until you can work on it properly at home.
+    </div>
   </div>
 
   <p class="question">Are you willing to temporarily copy your files to this computer and erase your USB so you can play?</p>

@@ -8,18 +8,21 @@ import Choice from '../../../components/Choice.astro';
   <div class="step-label">Step 3</div>
   <h2 style="margin-bottom:1rem">Safety copy before the rebuild</h2>
 
+  <!-- Said "We're about to format this drive", which is false on the branch the
+       DJ is actually sent down: YES here goes to /repair, which does not
+       format. The format is two screens further on and only down one route.
+       Overstating it here trains people to skim the warning that IS real. -->
   <div class="alert-card" style="margin-bottom:1.5rem">
-    <div style="font-size:20px">⚠️</div>
-    <div>We're about to format this drive. <strong>Copy your music off it first.</strong></div>
+    <div style="font-size:20px" aria-hidden="true">⚠️</div>
+    <div>Everything after this point can end in a format. <strong>Copy your music off first.</strong></div>
   </div>
 
   <ul class="checklist">
-    <li>Create a folder on the computer.</li>
-    <li>Copy the <strong>Contents</strong> folder (your music) from the USB to the computer.</li>
-    <li>If some files fail, copy what you can, skip the broken ones.</li>
+    <li>Copy the whole drive to the computer, or at minimum the <strong>Contents</strong> folder.</li>
+    <li>If some files fail, copy what you can and note which ones. Skipped files are gone for good if this drive gets formatted later, so if any of them matter, take the fresh-drive route instead and keep this one intact.</li>
   </ul>
 
-  <p class="question">Is your music safely copied to the computer?</p>
+  <p class="question">Did the copy complete?</p>
 
   <Choice step="qf_backup"
     a={{ href: '/protocol/quick-fix/repair', label: 'YES, MUSIC IS SAFE' }}

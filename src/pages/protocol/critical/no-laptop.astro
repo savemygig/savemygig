@@ -9,26 +9,20 @@ import Choice from '../../../components/Choice.astro';
   <h2 style="margin-bottom:1.25rem">Work the booth</h2>
 
   <p class="assumed">
-    Taking it out, reseating it, trying the other slot and trying the other
-    player are assumed done. These are the ones that get skipped.
+    Reseating it, the other slot, the other player and your own spare are all
+    assumed done. These are the ones that get skipped.
   </p>
 
   <ul class="checklist">
     <li><strong>PRO DJ LINK.</strong> If the booth is linked, browse and load from a drive sitting in another player. Your dead drive stops mattering.</li>
     <li><strong>Give it thirty seconds.</strong> A large library mounts slowly and looks dead while it does. Most drives get pulled before they finish.</li>
     <li><strong>FOLDER view.</strong> If the drive appears but your playlists do not, the database died and the audio did not. Browse by folder and play.</li>
-    <li><strong>Wipe the contacts, once.</strong> Worth ten seconds if you have not, not worth a third attempt.</li>
   </ul>
-
-  <p class="tunnel-note" style="margin-top:0;margin-bottom:1.5rem">
-    Older players can be fussy with very large or very new sticks. If you have a
-    smaller, simpler drive with you, it is worth a try.
-  </p>
 
   <p class="question">Does any player read it now?</p>
 
   <Choice step="no_laptop_1"
     a={{ href: '/saved?path=critical&branch=no_laptop', label: 'YES, IT IS READING', event: 'outcome_reached', data: { outcome: 'saved', path: 'critical' } }}
-    b={{ href: '/protocol/critical/second-drive', label: 'NO, STILL NOTHING' }}
+    b={{ href: '/protocol/critical/no-laptop-2', label: 'NO, STILL NOTHING' }}
   />
 </Tunnel>

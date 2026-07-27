@@ -8,11 +8,31 @@ import Choice from '../../../components/Choice.astro';
   <div class="step-label">Plan B</div>
   <h2 style="margin-bottom:1rem">Build tonight on a different drive</h2>
 
-  <p>Stop fighting the sick drive, you have time to build a healthy one.</p>
+  <p>Build tonight on a known-good drive. Recover the sick one tomorrow.</p>
 
   <ul class="checklist">
-    <li>Get <strong>any other USB drive</strong>, borrow, buy at a petrol station, anything.</li>
-    <li>Format it: <span class="mono">FAT32</span> + <span class="mono">MBR</span>.</li>
+    <li>Get <strong>any other USB drive</strong>. Your spare, another DJ's, the venue's.</li>
+  </ul>
+
+  <!-- THE MOST DANGEROUS INSTRUCTION ON THE SITE.
+       The line above tells the DJ to BORROW a drive. The line below tells them
+       to format it. Until now those two sat next to each other with nothing in
+       between, on a screen reachable from five different places, none of which
+       warned about this drive. That is a working route to erasing another DJ's
+       library in the middle of their night. The warning is not optional and it
+       goes BETWEEN the two instructions, not above them, because that is where
+       the reader is when the decision is made. -->
+  <div class="alert-card" style="margin:0 0 1.25rem">
+    <div style="font-size:20px" aria-hidden="true">⚠️</div>
+    <div>
+      <strong>If you borrowed this drive, stop and check with the owner.</strong>
+      The next step erases it completely. Someone else's library is not
+      expendable, and they may not know you are about to format it.
+    </div>
+  </div>
+
+  <ul class="checklist">
+    <li>Once you know the drive is empty or expendable, format it: <span class="mono">FAT32</span> + <span class="mono">MBR</span>.</li>
     <li>Export tonight's playlists from Rekordbox, or copy the music files you backed up.</li>
     <li>Verify: eject, replug, everything loads.</li>
   </ul>

@@ -10,9 +10,22 @@ import Choice from '../../../components/Choice.astro';
 
   <ul class="checklist">
     <li>This is the venue's signal chain now, not your gear.</li>
-    <li>Tell them exactly: <strong>"Mixer master is up and outputting. Nothing after the booth."</strong></li>
+    <!-- Was "up and outputting", which invites "how do you know?" and costs a
+         round trip. Naming the meters supplies the evidence up front. Also
+         "booth" carried three different meanings across this branch: the room,
+         the monitor knob, and the output connector. Here it is the output. -->
+    <li>Tell them exactly: <strong>"Mixer master is up, master meters are moving. Nothing after the booth output."</strong></li>
     <li>While they work: keep your set cued and ready to go.</li>
   </ul>
+
+  <!-- If a tech reaches this screen instead of the DJ, they need the opposite
+       of what the DJ needs: not who to ask, but what has already been ruled
+       out. Same .assumed pattern, pointed the other way. -->
+  <p class="assumed">
+    If you are the tech reading this: the DJ has already been through channel,
+    crossfader assign, source select, trim, master level, master insert and the
+    output cables at the mixer end. The mixer is passing signal.
+  </p>
 
   <p class="tunnel-note" style="margin-top:0;margin-bottom:1.5rem">
     A silent room from the house side is not your failure. Stay ready.

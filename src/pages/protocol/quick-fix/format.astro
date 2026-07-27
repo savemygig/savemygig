@@ -8,8 +8,24 @@ import Choice from '../../../components/Choice.astro';
   <div class="step-label">Step 4</div>
   <h2 style="margin-bottom:1rem">Format the USB clean</h2>
 
+  <!-- The consent for this format is collected two screens upstream on
+       /backup, and its YES answer routes to /repair, not here. So the only
+       screen that actually erases the drive was shipping with no warning and
+       no consent on it. Every tunnel screen is a real URL with a back button,
+       so arriving here without having just read /backup is normal, not an edge
+       case. The warning belongs on the screen that does the damage. -->
+  <div class="alert-card" style="margin:0 0 1.25rem">
+    <div style="font-size:20px" aria-hidden="true">⚠️</div>
+    <div>
+      <strong>This erases the drive completely.</strong> Anything still only on
+      this drive is gone. If any file failed to copy earlier, it is not coming
+      back after this step.
+    </div>
+  </div>
+
   <ul class="checklist">
-    <li>Right-click the drive → <strong>Format</strong> (Disk Utility on Mac: select the <em>device</em>, not the volume).</li>
+    <li>Confirm you are on the right disk: check the name and the size before you touch anything.</li>
+    <li>Format the <em>device</em>, not the volume. On Mac: Disk Utility, View, Show All Devices.</li>
     <li>Format: <span class="mono">FAT32</span> · Scheme: <span class="mono">MBR</span> · Quick format OK.</li>
   </ul>
 

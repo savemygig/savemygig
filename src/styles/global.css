@@ -438,6 +438,32 @@ a:focus-visible, button:focus-visible, input:focus-visible, .pad:focus-visible, 
   margin: 0 0 1.5rem;
 }
 
+/* Fold-away depth inside a tunnel screen. The expert never opens it and pays
+   nothing; the person who needs the term explained taps once. This is how the
+   site serves a DJ and a club tech on the same screen without writing down to
+   either of them: the term stays in the copy, the explanation hides. */
+.move-more { margin-top: 0.45rem; }
+.move-more > summary {
+  display: inline-block;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  cursor: pointer;
+  padding: 4px 0;
+  list-style: none;
+}
+.move-more > summary::-webkit-details-marker { display: none; }
+.move-more > summary::before { content: '+ '; }
+.move-more[open] > summary::before { content: '\2212 '; }
+.move-more > summary:hover { color: var(--text-dim); }
+.move-more p {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin: 0.3rem 0 0.2rem;
+}
+
 /* Screen reader only. This lived inside Tunnel.astro's scoped-global block,
    which meant it only existed on tunnel pages: every .sr-only element on a
    Base.astro page rendered as visible text. It belongs here, once, where both
