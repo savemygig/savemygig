@@ -64,9 +64,18 @@ export async function onRequestGet({ request, env }) {
   // Land them where their intent was. Someone who unlocked the checklist and
   // then confirmed used to be dumped on /card-ready, a page about a different
   // product, which reads as a bait-and-switch.
+  //
+  // THE FRAGMENT IS A MAGIC LINK (Antonio: re-registering per device "is
+  // quite stupid", and he is right). A valid click on this link proves the
+  // person owns the address, so the destination page registers THIS device:
+  // open the same email on a new phone, tap the same button, that phone is
+  // in. The email travels in the URL fragment, which never reaches server
+  // logs or analytics, and the page strips it immediately after reading it.
+  const frag = '#reg=' + btoa(encodeURIComponent(data.email))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   const dest = String(data.source || '').startsWith('checklist')
-    ? `${SITE}/checklist?confirmed=1`
-    : REDIRECT_URL;
+    ? `${SITE}/checklist?confirmed=1${frag}`
+    : `${REDIRECT_URL}${frag}`;
   return redirect(dest);
 }
 

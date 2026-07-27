@@ -60,6 +60,8 @@ function confirmEmail(confirmUrl, source) {
   const text =
     c.plain + '\n\n' +
     'Confirm your email:\n' + confirmUrl + '\n\n' +
+    'Keep this email. New phone or laptop? Open it there and tap the same ' +
+    'link: that device gets registered too.\n\n' +
     'If you did not ask for this, ignore this email and nothing happens.\n' +
     'This link works for 7 days.\n\n' +
     'Save My Gig';
@@ -84,6 +86,9 @@ function confirmEmail(confirmUrl, source) {
               <td style="padding:24px 30px 8px;">
                 <a href="${confirmUrl}" style="display:inline-block;background:#ff4d2e;color:#0a0a0b;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:800;letter-spacing:0.02em;text-transform:uppercase;text-decoration:none;padding:15px 26px;border-radius:2px;">${c.cta}</a>
               </td>
+            </tr>
+            <tr>
+              <td style="padding:14px 30px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#9a978f;"><strong style="color:#f3f1ec;">Keep this email.</strong> New phone or laptop? Open it there and tap the same button: that device gets registered too.</td>
             </tr>
             <tr>
               <td style="padding:14px 30px 30px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#6a665f;">Did not ask for this? Ignore this email and nothing happens. The link works for 7 days. Button not working? Paste this into your browser:<br /><a href="${confirmUrl}" style="color:#9a978f;word-break:break-all;">${confirmUrl}</a></td>

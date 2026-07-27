@@ -316,6 +316,29 @@ const entityGraph = {
     })();
   </script>
   <script is:inline>
+    // Magic-link device registration: the confirmation email's link carries
+    // #reg=<encoded email>. Clicking it proved ownership of the address (the
+    // token was verified server-side before the redirect), so this device is
+    // registered on the spot: same keys the checklist gate and capture forms
+    // read. Open the same email on a new phone and tap the same button, and
+    // that phone is in. The fragment is stripped immediately: it never
+    // reaches server logs, analytics, or the visible URL for more than a
+    // moment.
+    (function () {
+      var m = (location.hash || '').match(/^#reg=([A-Za-z0-9_-]+)/);
+      if (!m) return;
+      try {
+        var b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
+        var email = decodeURIComponent(atob(b64));
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+          localStorage.setItem('SMG_UNLOCKED', '1');
+          localStorage.setItem('SMG_EMAIL', email);
+        }
+      } catch (e) { /* malformed fragment: ignore */ }
+      history.replaceState(null, '', location.pathname + location.search);
+    })();
+  </script>
+  <script is:inline>
     // Register the service worker so the rescue flow works with no signal.
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
