@@ -107,11 +107,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            a professional feel charged for something we call free. It is
            "free for registered users", which is how every real tool works and
            how a working DJ expects to be treated. -->
-      <p class="unlock-title" id="unlockTitle">Register to unlock Pro and Custom</p>
+      <p class="unlock-title" id="unlockTitle">Register free to unlock Pro and Custom</p>
       <!-- Per-device honesty (audit finding): registration unlocks THIS device
            today, and the emailed copy is what carries the list across devices.
            When account sync ships this copy gets stronger, not corrected. -->
-      <p class="dim unlock-copy" id="unlockCopy">Free for registered users. Register with your email and your name and you are in right away on this device. Your list saves here; Email list sends you a copy with a link that loads it on any other device.</p>
+      <p class="dim unlock-copy" id="unlockCopy">Register with your email and your name and you are in right away on this device. Your list saves here; Email list sends you a copy with a link that loads it on any other device.</p>
       <!-- One required field, two optional ones. Antonio wanted name, surname,
            artist name and Instagram, all required, so he can follow every DJ
            who registers. The follow-back idea is genuinely good and stays. The
@@ -1306,18 +1306,18 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   const unlockTitle = document.getElementById('unlockTitle');
   const unlockCopy = document.getElementById('unlockCopy');
-  const MODE_TITLE = 'Register to unlock Pro and Custom';
+  const MODE_TITLE = 'Register free to unlock Pro and Custom';
   const MODE_COPY = unlockCopy ? unlockCopy.textContent || '' : '';
-  const PDF_TITLE = 'Register to download the printable checklist';
-  const PDF_COPY = 'Free for registered users. Your list, exactly as it stands, as a clean printable PDF. Print it, fold it, keep it in your USB case, or pin it up in the booth.';
+  const PDF_TITLE = 'Register free to download the printable checklist';
+  const PDF_COPY = 'Your list, exactly as it stands, as a clean printable PDF. Print it, fold it, keep it in your USB case, or pin it up in the booth.';
 
   // Opens the gate with copy that matches what the DJ actually reached for.
   function openGate() {
     const gateCopy = {
       pdf: { t: PDF_TITLE, c: PDF_COPY },
       email: {
-        t: 'Register to email your list',
-        c: 'Free for registered users. We send your list, exactly as it stands, to your inbox, with a link that loads it back on any device.',
+        t: 'Register free to email your list',
+        c: 'We send your list, exactly as it stands, to your inbox, with a link that loads it back on any device.',
       },
       mode: { t: MODE_TITLE, c: MODE_COPY },
     }[pendingWant] || { t: MODE_TITLE, c: MODE_COPY };
