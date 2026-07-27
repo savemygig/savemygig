@@ -44,7 +44,11 @@ const SUBLINES = [
 >
 
   <main class="landing">
-    <h1 class="ask">WHAT DO YOU WANT TO DO, <span class="accent">DJ?</span></h1>
+    <!-- "DJ?" becomes the registered visitor's artist name (first word),
+         swapped client-side so crawlers and first-timers always see the
+         brand line. Guarded to 10 chars: a long name must never wrap the
+         H1 and push the third door under the fold. -->
+    <h1 class="ask">WHAT DO YOU WANT TO DO, <span class="accent" id="askWho">DJ?</span></h1>
     <p class="sub" id="sub">
       {SUBLINES.map((line, i) => (
         <span class="sub-line" data-sub={i} hidden={i !== 0}>{line}</span>
@@ -334,6 +338,16 @@ const SUBLINES = [
       var pick = Math.floor(Math.random() * lines.length);
       for (var i = 0; i < lines.length; i++) lines[i].hidden = (i !== pick);
     }
+    // Registered visitors with an artist name get greeted by it. textContent
+    // only (never HTML), first word, 10-char cap or we keep the brand line.
+    try {
+      var who = localStorage.getItem('SMG_ARTIST');
+      var el = document.getElementById('askWho');
+      if (who && el) {
+        who = who.split(/\s+/)[0];
+        if (who.length >= 2 && who.length <= 10) el.textContent = who.toUpperCase() + '?';
+      }
+    } catch (e) { /* storage blocked, brand line stays */ }
     // "Search it" opens the same overlay as the nav magnifier. The href is a
     // real fallback (/faq carries the same search box), so this never dead-ends
     // if the nav script has not run.
