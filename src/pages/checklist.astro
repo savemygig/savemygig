@@ -36,7 +36,7 @@ const groups = [
     icon: 'disc',
     blurb: 'The set itself: drives, export and compatibility.',
     items: [
-      { key: 'usb-two', level: 'basic', label: 'Two identical USB drives with the same export labelled A and B' },
+      { key: 'usb-two', level: 'basic', label: 'Two identical USB drives with the same export, labelled A and B' },
       { key: 'format', level: 'basic', label: 'Both USB drives formatted as FAT32 + MBR for maximum compatibility' },
       { key: 'reexport', level: 'basic', label: 'Re-exported after the last library change' },
       { key: 'tested', level: 'basic', label: 'Both USB drives tested on a CDJ or verified in Rekordbox' },
@@ -44,7 +44,7 @@ const groups = [
       // CDJ-3000 firmware 3.30 after it emptied browse screens live. A working
       // setup on gig day is a frozen setup.
       { key: 'noupdates', level: 'basic', label: 'No updates today (Rekordbox, firmware or operating system)' },
-      { key: 'lib-format', level: 'advanced', label: 'Your export matches the club CDJ library format, no OneLibrary surprise' },
+      { key: 'lib-format', level: 'advanced', label: 'Export verified for the venue\u2019s equipment' },
     ],
   },
   {
@@ -53,12 +53,12 @@ const groups = [
     icon: 'sync',
     blurb: 'When two copies aren\u2019t enough.',
     items: [
-      { key: 'third-backup', level: 'advanced', label: 'A third copy of your music, stored separately from your main USB pair' },
-      { key: 'backup', level: 'advanced', label: 'Your Rekordbox library backed up to a cloud service' },
-      { key: 'my-settings', level: 'advanced', label: 'Player settings (My Settings) exported to your USB drives' },
+      { key: 'third-backup', level: 'advanced', label: 'Third copy of your music stored separately' },
+      { key: 'backup', level: 'advanced', label: 'Rekordbox library backed up to the cloud' },
+      { key: 'my-settings', level: 'advanced', label: 'My Settings exported to your USB drives' },
       // "latest" is lint-banned (snapshot word); "most recent" says it.
-      { key: 'backup-fresh', level: 'advanced', label: 'Your most recent music changes included in every backup copy' },
-      { key: 'recovery-plan', level: 'advanced', label: 'You have a recovery plan if all USB drives fail' },
+      { key: 'backup-fresh', level: 'advanced', label: 'Most recent music changes included in every backup' },
+      { key: 'recovery-plan', level: 'advanced', label: 'Recovery plan if all USB drives fail' },
     ],
   },
   {
@@ -66,10 +66,11 @@ const groups = [
     title: 'DJ Gear',
     icon: 'sliders',
     blurb: 'What you\u2019ll perform with, and what can save your set.',
+    blurbBase: 'What you\u2019ll perform with.',
     items: [
       { key: 'headphones', level: 'basic', label: 'Headphones' },
       { key: 'hp-adapter', level: 'basic', label: 'Headphone adapter (3.5 mm to 6.3 mm, if needed)' },
-      { key: 'laptop', level: 'advanced', label: 'Laptop + charger (recommended backup for rebuilding USB drives, re-exporting playlists or emergency troubleshooting)' },
+      { key: 'laptop', level: 'advanced', label: 'Laptop + charger (recommended for rebuilding USB drives, re-exporting playlists or emergency troubleshooting)' },
     ],
   },
   {
@@ -109,9 +110,11 @@ const groups = [
       // says the same thing in DJ language, so the Advanced twin went.
       // Travel folded in here (Antonio deleted the Travel section; its
       // survivors keep their keys, so old ticks carry over).
-      { key: 'boarding', level: 'advanced', label: 'Boarding pass downloaded offline' },
-      { key: 'hotel', level: 'advanced', label: 'Hotel address saved offline' },
-      { key: 'adapter', level: 'advanced', label: 'A travel adapter for the destination' },
+      { key: 'hotel', level: 'advanced', label: 'Hotel or accommodation confirmed (if applicable)' },
+      { key: 'passport-valid', level: 'advanced', label: 'Passport valid for the destination (minimum validity if required)' },
+      { key: 'visa', level: 'advanced', label: 'Visa or work permit requirements confirmed' },
+      { key: 'vaccines', level: 'advanced', label: 'Required vaccination or health certificates confirmed' },
+      { key: 'adapter', level: 'advanced', label: 'Travel adapter packed (if required)' },
     ],
   },
   {
@@ -338,7 +341,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             <button type="button" class="group-remove" data-group-hide={g.id} aria-label={`Remove section ${g.title}`}>&times;</button>
           </h3>
           <div class="group-body" id={`body-${g.id}`}>
-            <p class="dim group-blurb">{g.blurb}</p>
+            {g.blurbBase
+              ? <p class="dim group-blurb"><span class="gb-base">{g.blurbBase}</span><span class="gb-adv">{g.blurb}</span></p>
+              : <p class="dim group-blurb">{g.blurb}</p>}
             <ul class="tasks">
               {g.items.map((it) => (
                 <li class="task" data-level={it.level} data-key={it.key}>
@@ -571,6 +576,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .task { border-bottom: 1px solid var(--edge-soft); display: flex; align-items: center; }
   .task:last-child { border-bottom: none; }
   .task > label { flex: 1; }
+  /* A blurb can differ by mode (DJ Gear: Base has no laptop, so no "what
+     can save your set"). Base shows gb-base, other modes show gb-adv. */
+  #list[data-mode="basic"] .gb-adv { display: none; }
+  #list:not([data-mode="basic"]) .gb-base { display: none; }
   /* Basic mode hides the advanced items so the mobile list stays short. */
   #list[data-mode="basic"] .task[data-level="advanced"] { display: none; }
 
