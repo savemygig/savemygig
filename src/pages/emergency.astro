@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import InstallApp from '../components/InstallApp.astro';
+import BetaNotice from '../components/BetaNotice.astro';
 // Emergency landing (the browsable entry, not the sealed rescue tunnel).
 // Now uses the shared Base layout so it carries the site menu + footer and
 // lines up on the same content width as every other page. The step-by-step
@@ -21,6 +22,8 @@ import InstallApp from '../components/InstallApp.astro';
     <p class="emerg-lead">
       Emergency guidance when USB drives fail on Pioneer CDJ-3000, CDJ-2000, XDJ units or during Rekordbox export.
     </p>
+
+    <BetaNotice variant="card" />
 
     <div class="action-stack emerg-actions">
       <a href="#triage" class="btn-heartbeat" data-event="generate_lead" data-label="enter_emergency_mode">
