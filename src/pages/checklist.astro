@@ -340,6 +340,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                  sections delete outright. -->
             <button type="button" class="group-remove" data-group-hide={g.id} aria-label={`Remove section ${g.title}`}>&times;</button>
           </h3>
+          <!-- Collapsed-state notes preview (Antonio): the briefing must be
+               scannable WITHOUT expanding every section. Filled by JS from
+               the saved notes, links clickable, click-through to edit. -->
+          <div class="notes-preview" data-notes-prev={g.id}></div>
           <div class="group-body" id={`body-${g.id}`}>
             {g.blurbBase
               ? <p class="dim group-blurb"><span class="gb-base">{g.blurbBase}</span><span class="gb-adv">{g.blurb}</span></p>
@@ -367,7 +371,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                  not checklist items. Autosaves, prints, emails, restores. -->
             <div class="cat-notes">
               <button type="button" class="notes-toggle" data-notes-btn={g.id}>+ Add notes</button>
-              <textarea class="notes-area" data-notes={g.id} rows="4" maxlength="2000" placeholder={`Notes for ${g.title}: setup, contacts, times, anything this gig needs.`} aria-label={`Your notes for ${g.title}`} hidden></textarea>
+              <textarea class="notes-area" data-notes={g.id} rows="4" maxlength="2000" placeholder={`Notes for ${g.title}: setup, contacts, times, links, anything this gig needs.`} aria-label={`Your notes for ${g.title}`} hidden></textarea>
+              <span class="notes-hint" hidden>Click outside to save.</span>
             </div>
           </div>
         </section>
@@ -846,6 +851,23 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .notes-area::placeholder { color: var(--text-faint); }
   .notes-area:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .notes-area[hidden] { display: none; }
+  /* "Click outside to save.": there is no save button, say so while typing. */
+  .notes-hint { display: block; margin-top: 0.3rem; font-size: 0.75rem; color: var(--text-faint); }
+  .notes-hint[hidden] { display: none; }
+
+  /* Collapsed-state preview: only in Custom, only when the section is
+     collapsed AND has notes (.has). Muted, wraps, line breaks kept. */
+  .notes-preview { display: none; }
+  #list[data-mode="custom"] .task-group.collapsed .notes-preview.has {
+    display: block; padding: 0 1.5rem 0.95rem;
+    font-size: 0.8rem; line-height: 1.55; color: var(--text-faint);
+    white-space: pre-wrap; word-break: break-word; cursor: pointer;
+  }
+  .notes-preview a { color: var(--text-dim); text-decoration: underline; }
+  .notes-preview a:hover { color: var(--red); }
+  @media (max-width: 640px) {
+    #list[data-mode="custom"] .task-group.collapsed .notes-preview.has { padding: 0 1.2rem 0.85rem; }
+  }
 
   /* Group header icon: same monochrome stroke language as everywhere. */
   .group-ic { display: inline-flex; flex: 0 0 auto; color: var(--text-dim); margin-right: 0.55rem; }
@@ -1051,19 +1073,59 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     catch (e) { return {}; }
   }
   function saveNotes(n: Record<string, string>) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch (e) { /* blocked */ } }
-  // Wire one category's notes pair (button + textarea). Used for the fixed
-  // groups at load and for user sections as they render.
+  // Escape, keep line breaks, and make URLs clickable. Escape-first, then
+  // wrap URL tokens, so nothing a DJ types can inject markup.
+  function notesHtml(text: string): string {
+    const escN = (x: string) => x.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] || c));
+    return text.split(/(https?:\/\/[^\s<>"']+)/g).map((part, i) =>
+      i % 2 === 1
+        ? `<a href="${escN(part)}" target="_blank" rel="noopener">${escN(part)}</a>`
+        : escN(part)
+    ).join('');
+  }
+  // The collapsed-state preview under a category title: content + .has flag.
+  function updateNotesPreview(gid: string) {
+    const prev = document.querySelector<HTMLElement>(`[data-notes-prev="${gid}"]`);
+    if (!prev) return;
+    const text = (loadNotes()[gid] || '').trim();
+    prev.innerHTML = text ? notesHtml(text) : '';
+    prev.classList.toggle('has', !!text);
+  }
+  function updateAllNotesPreviews() {
+    document.querySelectorAll<HTMLElement>('[data-notes-prev]').forEach((p) =>
+      updateNotesPreview(p.getAttribute('data-notes-prev') || ''));
+  }
+  // Wire one category's notes trio (button + textarea + hint + preview).
+  // Used for the fixed groups at load and for user sections as they render.
   function wireNotes(btn: HTMLButtonElement, area: HTMLTextAreaElement, gid: string) {
     const existing = loadNotes()[gid] || '';
     if (existing) { area.value = existing; area.hidden = false; btn.hidden = true; }
+    const hint = area.parentElement ? area.parentElement.querySelector<HTMLElement>('.notes-hint') : null;
     btn.addEventListener('click', () => {
       btn.hidden = true; area.hidden = false; area.focus();
     });
+    // No save button exists; the hint says so exactly while it matters.
+    area.addEventListener('focus', () => { if (hint) hint.hidden = false; });
+    area.addEventListener('blur', () => { if (hint) hint.hidden = true; });
     area.addEventListener('input', () => {
       const n = loadNotes();
       if (area.value.trim()) n[gid] = area.value; else delete n[gid];
       saveNotes(n);
+      updateNotesPreview(gid);
     });
+    // Tapping the preview = straight into editing: expand, focus, cursor at
+    // the end. A tap on a LINK inside it navigates instead.
+    const prev = document.querySelector<HTMLElement>(`[data-notes-prev="${gid}"]`);
+    if (prev) prev.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) return;
+      const section = prev.closest('.task-group') as HTMLElement;
+      if (section) setGroupOpen(section, true, true);
+      btn.hidden = true; area.hidden = false;
+      area.focus();
+      const end = area.value.length;
+      area.setSelectionRange(end, end);
+    });
+    updateNotesPreview(gid);
   }
   function applyHiddenGroups() {
     const hidden = loadHiddenGroups();
@@ -1320,12 +1382,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       notesBtn.type = 'button'; notesBtn.className = 'notes-toggle'; notesBtn.textContent = '+ Add notes';
       const notesArea = document.createElement('textarea');
       notesArea.className = 'notes-area'; notesArea.rows = 4; notesArea.maxLength = 2000; notesArea.hidden = true;
-      notesArea.placeholder = 'Notes for ' + sec.t + ': setup, contacts, times, anything this gig needs.';
+      notesArea.placeholder = 'Notes for ' + sec.t + ': setup, contacts, times, links, anything this gig needs.';
       notesArea.setAttribute('aria-label', 'Your notes for ' + sec.t);
-      wireNotes(notesBtn, notesArea, sec.id);
-      notesWrap.appendChild(notesBtn); notesWrap.appendChild(notesArea);
+      const notesHint = document.createElement('span');
+      notesHint.className = 'notes-hint'; notesHint.hidden = true; notesHint.textContent = 'Click outside to save.';
+      const notesPrev = document.createElement('div');
+      notesPrev.className = 'notes-preview'; notesPrev.setAttribute('data-notes-prev', sec.id);
+      notesWrap.appendChild(notesBtn); notesWrap.appendChild(notesArea); notesWrap.appendChild(notesHint);
       body.appendChild(ul); body.appendChild(addRow); body.appendChild(notesWrap);
-      section.appendChild(h3); section.appendChild(body);
+      section.appendChild(h3); section.appendChild(notesPrev); section.appendChild(body);
       // Collapse behaviour, same rules as the fixed groups.
       const open = loadOpen()[sec.id] === true;
       section.classList.toggle('collapsed', !open);
@@ -1335,6 +1400,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         setGroupOpen(section, nowOpen, true);
       });
       listRoot.appendChild(section);
+      // After append: wireNotes finds the preview via document queries.
+      wireNotes(notesBtn, notesArea, sec.id);
     });
   }
 
@@ -1856,7 +1923,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       `<li class="${it.done ? 'done' : ''}"><span class="bx">${it.done ? '&#10003;' : ''}</span>${esc(it.label)}</li>`
     ).join('');
     const sections = groups.map((g) =>
-      `<section><h2>${esc(g.title)}</h2><ul>${rows(g.items)}</ul>${g.notes ? `<p class="gnotes">${esc(g.notes).replace(/\n/g, '<br />')}</p>` : ''}</section>`
+      `<section><h2>${esc(g.title)}</h2><ul>${rows(g.items)}</ul>${g.notes ? `<p class="gnotes">${notesHtml(g.notes).replace(/\n/g, '<br />')}</p>` : ''}</section>`
     ).join('');
 
     const w = window.open('', '_blank');

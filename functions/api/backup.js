@@ -100,7 +100,14 @@ export async function onRequestPost({ request, env }) {
     // The DJ's own notes for this category, under its items.
     const note = typeof notes[cat] === 'string' ? notes[cat].trim() : '';
     if (note) {
-      sectionsHtml += `<tr><td style="padding:8px 30px 3px 44px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.55;color:#9a978f;border-left:0;">${esc(note).replace(/\n/g, '<br />')}</td></tr>`;
+      // Escape first, then wrap URL tokens as links (Antonio: flyers, maps,
+      // riders, playlists must be tappable from the email too).
+      const linked = note.split(/(https?:\/\/[^\s<>"']+)/g).map((part, i) =>
+        i % 2 === 1
+          ? `<a href="${esc(part)}" style="color:#9a978f;">${esc(part)}</a>`
+          : esc(part)
+      ).join('');
+      sectionsHtml += `<tr><td style="padding:8px 30px 3px 44px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.55;color:#9a978f;">${linked.replace(/\n/g, '<br />')}</td></tr>`;
       textLines.push('Notes: ' + note.replace(/\n/g, ' / '));
     }
   });
