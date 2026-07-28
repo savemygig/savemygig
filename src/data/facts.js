@@ -121,6 +121,27 @@ export const DJM_V10 = {
   source: 'https://downloads.support.alphatheta.com/firmwares/dj-mixers/DJM-V10/DJM-V10-Firmware-Change-History-Ver120-en.pdf',
 };
 
+// DJM-REC (AlphaTheta's iPhone/iPad recording + live-streaming app).
+// Facts verified 28 Jul 2026 against AlphaTheta's own support articles
+// (URLs below). Same threshold discipline as everything else in this file.
+export const DJM_REC = {
+  checked: '28 July 2026',
+  // Official compatibility list, quoted from the support article verbatim.
+  compatibleMixers: ['DJM-V10', 'DJM-V10-LF', 'DJM-TOUR1', 'DJM-V5', 'DJM-A9', 'DJM-900NXS2', 'DJM-750MK2', 'DJM-450'],
+  // Officially supported live-streaming services, plus a Custom option
+  // (manual stream URL + key) for anything unlisted.
+  streamServices: ['Twitch', 'YouTube', 'Facebook Live', 'Instagram', 'Snapchat', 'Mixcloud Live', 'Restream'],
+  // Now Playing (track title + artist on the stream) works only on these.
+  nowPlayingServices: ['Twitch', 'YouTube', 'Facebook Live', 'Mixcloud Live', 'Restream'],
+  // DJM-900NXS2 firmware versions that fixed DJM-REC recording halts:
+  // 2.06 (2020) and again 2.08 (Jun 2026, iOS/iPadOS audio). Old venue
+  // firmware still bites; see mixer-fx-problems research doc.
+  nxs2RecHaltFixes: ['2.06', '2.08'],
+  source: 'https://support.alphatheta.com/en-US/products/4406500786329',
+  compatSource: 'https://support.alphatheta.com/en-US/articles/4410027698457',
+  streamSource: 'https://support.alphatheta.com/en-US/articles/27494335253145',
+};
+
 // FAT32 + MBR works on every player here, always. exFAT is the variable.
 // Each row: model, library format, exFAT support (with the firmware threshold
 // where one applies), and a short note. Edit here when a source-check reports
