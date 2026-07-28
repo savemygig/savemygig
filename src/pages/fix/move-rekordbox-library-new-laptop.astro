@@ -5,7 +5,15 @@ import ArticleCTA from '../../components/ArticleCTA.astro';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
+  '@id': 'https://www.savemygig.com/fix/move-rekordbox-library-new-laptop#howto',
   name: 'Move Your Rekordbox Library to a New Laptop Without Losing Cues',
+  description: 'The safe way to migrate a Rekordbox library to a new computer, cues, grids, playlists intact. And the wrong way that quietly destroys years of prep.',
+  author: { '@id': 'https://www.savemygig.com/#antonio' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'en',
+  mainEntityOfPage: 'https://www.savemygig.com/fix/move-rekordbox-library-new-laptop',
   step: [
     { '@type': 'HowToStep', name: 'Backup on the old machine', text: 'Rekordbox → File → Library → Backup Library, including music files, to an external drive.' },
     { '@type': 'HowToStep', name: 'Restore on the new machine', text: 'Install Rekordbox, then File → Library → Restore Library from that backup.' },

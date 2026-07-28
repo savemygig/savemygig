@@ -5,7 +5,15 @@ import ArticleCTA from '../../components/ArticleCTA.astro';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
+  '@id': 'https://www.savemygig.com/fix/dj-usb-backup-strategy#howto',
   name: 'The DJ USB Backup Strategy: Two Drives, Zero Panic',
+  description: 'The exact backup system professional DJs use: two identical drives, mirrored exports, physical separation. One evening to set up, a career without USB panic.',
+  author: { '@id': 'https://www.savemygig.com/#antonio' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'en',
+  mainEntityOfPage: 'https://www.savemygig.com/fix/dj-usb-backup-strategy',
   step: [
     { '@type': 'HowToStep', name: 'Buy two identical drives', text: 'Two quality 32-64GB drives, same brand and model, formatted FAT32 + MBR.' },
     { '@type': 'HowToStep', name: 'Export to both, every time', text: 'After every library change, run the same Rekordbox export to drive A and drive B.' },

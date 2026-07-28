@@ -5,9 +5,15 @@ import ArticleCTA from '../../components/ArticleCTA.astro';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/fix/waveforms-not-loading-cdj#article',
   headline: 'Waveforms Not Loading on CDJ - What It Means',
-  author: { '@type': 'Person', name: 'Antonio Afonso' },
-  publisher: { '@type': 'Organization', name: 'Save My Gig!' },
+  description: 'Tracks play but waveforms stay blank or take forever on the CDJ. Missing analysis, slow drives, or a struggling database, here\'s the fix order.',
+  author: { '@id': 'https://www.savemygig.com/#antonio' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'en',
+  mainEntityOfPage: 'https://www.savemygig.com/fix/waveforms-not-loading-cdj',
 };
 ---
 <Base

@@ -5,9 +5,15 @@ import ArticleCTA from '../../components/ArticleCTA.astro';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/fix/rekordbox-export-failed#article',
   headline: 'Rekordbox Export Failed or Corrupt - How to Recover',
-  author: { '@type': 'Person', name: 'Antonio Afonso' },
-  publisher: { '@type': 'Organization', name: 'Save My Gig!' },
+  description: 'Rekordbox export won\'t finish, or it finished but the CDJ shows nothing? The causes, the quick recovery, and how to make exports bulletproof.',
+  author: { '@id': 'https://www.savemygig.com/#antonio' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'en',
+  mainEntityOfPage: 'https://www.savemygig.com/fix/rekordbox-export-failed',
 };
 ---
 <Base
