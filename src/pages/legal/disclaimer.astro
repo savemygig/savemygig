@@ -1,18 +1,18 @@
 ---
-import Base from '../layouts/Base.astro';
-import Disclaimer from '../components/Disclaimer.astro';
+import Base from '../../layouts/Base.astro';
+import Disclaimer from '../../components/Disclaimer.astro';
 
-const UPDATED = '26 July 2026';
+const UPDATED = '28 July 2026';
 ---
 <Base
   title="Disclaimer | Save My Gig!"
   description="Save My Gig gives free general guidance on DJ storage and player problems. It is provided as is, without warranty, and you follow it at your own risk."
-  path="/disclaimer"
+  path="/legal/disclaimer"
 >
   <main class="wrap">
     <div class="status-line">LEGAL</div>
     <h1 style="margin-bottom:0.6rem">Disclaimer</h1>
-    <p class="dim" style="margin-bottom:2rem">Last updated: {UPDATED}</p>
+    <p class="dim" style="margin-bottom:2rem">Last updated: {UPDATED} · Part of <a href="/legal">the legal shelf</a></p>
 
     <Disclaimer variant="full" />
 

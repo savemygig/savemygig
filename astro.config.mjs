@@ -13,7 +13,10 @@ const EXCLUDE = [
   '/files-lost',
   '/card-ready',
   '/feedback',
-  '/privacy',
+  '/legal/privacy',
+  '/legal/terms',
+  '/legal/cookies',
+  '/partners',
   '/404',
   '/offline',
 ];

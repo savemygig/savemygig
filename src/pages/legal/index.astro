@@ -1,0 +1,77 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// Legal hub (Antonio's spec, 2026-07-28): one footer link, every legal
+// document behind it as its own page. Adding a future document = one more
+// card here + one more page in this folder; the footer never changes.
+const docs = [
+  {
+    name: 'Privacy Policy',
+    href: '/legal/privacy',
+    blurb: 'What we collect (very little), why, who processes it, and your rights.',
+  },
+  {
+    name: 'Disclaimer',
+    href: '/legal/disclaimer',
+    blurb: 'What this site is, the real risk of data loss, and the limits of our liability.',
+  },
+  {
+    name: 'Terms of Use',
+    href: '/legal/terms',
+    blurb: 'The rules for using the site, the free tools, and the registered features.',
+  },
+  {
+    name: 'Cookie Policy',
+    href: '/legal/cookies',
+    blurb: 'The one optional analytics cookie we use, and how to refuse or remove it.',
+  },
+];
+---
+<Base
+  title="Legal | Save My Gig!"
+  description="Every Save My Gig legal document in one place: Privacy Policy, Disclaimer, Terms of Use and Cookie Policy, all written in plain language."
+  path="/legal"
+>
+  <main class="wrap">
+    <div class="status-line">LEGAL</div>
+    <h1 style="margin-bottom:0.8rem">The <span class="accent">legal</span> shelf</h1>
+    <p class="dim lg-lead">
+      Everything formal lives here, written in plain language. Open the
+      document you need.
+    </p>
+
+    <div class="lg-grid">
+      {docs.map(d => (
+        <a class="lg-card" href={d.href}>
+          <span class="lg-name">{d.name}</span>
+          <span class="lg-blurb">{d.blurb}</span>
+          <span class="lg-go">Read &rarr;</span>
+        </a>
+      ))}
+    </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">
+      Questions about any of these:
+      <a href="mailto:savemygig@gmail.com">savemygig@gmail.com</a> or the
+      <a href="/feedback">feedback form</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .lg-lead { max-width: 42rem; margin-bottom: 2rem; line-height: 1.6; }
+  .lg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.9rem; }
+  .lg-card {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    padding: 1.2rem 1.3rem; text-decoration: none;
+    transition: border-color 0.15s ease;
+  }
+  .lg-card:hover { border-color: var(--red); }
+  .lg-name {
+    font-family: var(--font-display); font-weight: 800; font-size: 1.1rem;
+    text-transform: uppercase; letter-spacing: -0.01em; color: var(--text);
+  }
+  .lg-blurb { color: var(--text-dim); font-size: 0.88rem; line-height: 1.5; }
+  .lg-go { color: var(--red); font-size: 0.82rem; font-weight: 600; margin-top: 0.3rem; }
+</style>

@@ -20,7 +20,7 @@ const { variant = 'compact' } = Astro.props;
 {variant === 'compact' ? (
   <p class="dsc-compact">
     You follow these steps at your own risk. Formatting or erasing a drive can
-    permanently destroy data. <a href="/disclaimer">Full disclaimer</a>.
+    permanently destroy data. <a href="/legal/disclaimer">Full disclaimer</a>.
   </p>
 ) : (
   <div class="panel panel-warn dsc-full">
@@ -54,8 +54,8 @@ const { variant = 'compact' } = Astro.props;
       </li>
     </ul>
     <p class="dsc-foot">
-      Full terms: <a href="/disclaimer">Disclaimer</a> ·
-      <a href="/privacy">Privacy</a>
+      Full terms: <a href="/legal/disclaimer">Disclaimer</a> ·
+      <a href="/legal/privacy">Privacy</a>
     </p>
   </div>
 )}

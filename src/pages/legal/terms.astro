@@ -1,0 +1,113 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// Written 2026-07-28 from what the site actually does: free informational
+// content, free tools (checklist, Emergency Card, rescue flow), optional
+// registration via Brevo, GA4 behind consent, affiliate links possible
+// outside the rescue flow. Keep it short, accurate, expandable.
+const UPDATED = '28 July 2026';
+---
+<Base
+  title="Terms of Use | Save My Gig!"
+  description="The rules for using Save My Gig: a free resource for working DJs, provided as is, with plain conditions and no surprises."
+  path="/legal/terms"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line">LEGAL</div>
+    <h1 style="margin-bottom:0.6rem">Terms of Use</h1>
+    <p class="dim" style="margin-bottom:2rem">Last updated: {UPDATED} · Part of <a href="/legal">the legal shelf</a></p>
+
+    <h2 class="trm-sec">The agreement</h2>
+    <p>
+      Save My Gig (savemygig.com) is operated from Brazil by its founder. By
+      using the site you agree to these terms. If you do not agree with them,
+      the fix is simple: do not use the site.
+    </p>
+
+    <h2 class="trm-sec">What the service is</h2>
+    <p>
+      Save My Gig is a free resource for working DJs: guides, reference pages,
+      an emergency rescue flow, a pre-gig checklist and related tools. All of it
+      is general information, not professional advice for your specific
+      situation. The <a href="/legal/disclaimer">Disclaimer</a> covers what that
+      means in practice, including the risk of data loss, and forms part of
+      these terms.
+    </p>
+
+    <h2 class="trm-sec">Registration</h2>
+    <p>
+      Some free features ask you to register with an email address. You agree to
+      provide a real address that is yours. Registration is free, requires no
+      password, and every email we send has a one-click unsubscribe. How we
+      handle your data is described in the
+      <a href="/legal/privacy">Privacy Policy</a>. We may withdraw registered
+      features from an address that abuses them.
+    </p>
+
+    <h2 class="trm-sec">Acceptable use</h2>
+    <p>
+      Use the site as a DJ, not as a target. You agree not to disrupt or
+      overload the service, not to attempt to gain access to systems or data
+      that are not yours, not to scrape or bulk-copy the content for
+      republication, and not to use the forms to send spam or content that is
+      unlawful.
+    </p>
+
+    <h2 class="trm-sec">Our content</h2>
+    <p>
+      The content of this site (text, structure, checklists, design) is
+      © 2026 Save My Gig!™ unless stated otherwise. You are welcome to use it
+      personally, print it, and share links to it. Republishing it wholesale, or
+      presenting it as your own, is not permitted without written permission.
+      Third-party names and trademarks (AlphaTheta, Pioneer DJ, rekordbox and
+      others) belong to their respective owners; we are not affiliated with
+      them.
+    </p>
+
+    <h2 class="trm-sec">Links and affiliate links</h2>
+    <p>
+      The site links to third-party sites and products we do not control and are
+      not responsible for. Some product links may be affiliate links, meaning we
+      may earn a commission at no additional cost to you. This never changes
+      what we recommend, and there are no affiliate or sponsored links inside
+      the emergency rescue flow.
+    </p>
+
+    <h2 class="trm-sec">No warranty, limited liability</h2>
+    <p>
+      The service is provided free of charge and <strong>"as is"</strong>,
+      without warranty of any kind. To the fullest extent permitted by law, our
+      liability for any loss arising from your use of the site is excluded. The
+      full text of this exclusion is in the
+      <a href="/legal/disclaimer">Disclaimer</a>. Nothing in these terms limits
+      liability where it would be unlawful to do so.
+    </p>
+
+    <h2 class="trm-sec">Changes</h2>
+    <p>
+      We may update the site, the tools and these terms at any time. The date at
+      the top of this page tells you when the terms last changed. Continuing to
+      use the site after a change means you accept the updated terms.
+    </p>
+
+    <h2 class="trm-sec">Governing law</h2>
+    <p>
+      These terms are governed by the laws of Brazil. If a court finds part of
+      these terms unenforceable, the rest remains in force.
+    </p>
+
+    <h2 class="trm-sec">Contact</h2>
+    <p>
+      Questions about these terms:
+      <a href="mailto:savemygig@gmail.com">savemygig@gmail.com</a>, or use the
+      <a href="/feedback">feedback form</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .trm-sec { font-size: 1.1rem; margin: 2rem 0 0.7rem; text-transform: none; letter-spacing: -0.01em; }
+  main p { color: var(--text-dim); }
+  main p strong { color: var(--text); }
+</style>

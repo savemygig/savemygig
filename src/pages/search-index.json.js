@@ -12,7 +12,7 @@
  */
 const PAGES = import.meta.glob('./**/*.astro', { query: '?raw', import: 'default', eager: true });
 
-const EXCLUDE = ['/protocol/', '/saved', '/files-lost', '/card-ready', '/feedback', '/privacy', '/404', '/search'];
+const EXCLUDE = ['/protocol/', '/saved', '/files-lost', '/card-ready', '/feedback', '/legal/privacy', '/legal/terms', '/legal/cookies', '/partners', '/404', '/search'];
 
 function routeOf(file) {
   let r = file.replace(/^\.\//, '/').replace(/\.astro$/, '');

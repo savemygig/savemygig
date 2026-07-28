@@ -1,15 +1,18 @@
 ---
-import Base from '../layouts/Base.astro';
+import Base from '../../layouts/Base.astro';
+
+const UPDATED = '28 July 2026';
 ---
 <Base
-  title="Privacy and cookies | Save My Gig!"
+  title="Privacy Policy | Save My Gig!"
   description="What Save My Gig collects (very little), why, who processes it, and your rights."
-  path="/privacy"
+  path="/legal/privacy"
   noindex
 >
   <main class="wrap">
-    <div class="status-line">Privacy</div>
-    <h1 style="margin-bottom:1.5rem">PRIVACY, <span class="accent">PLAINLY</span></h1>
+    <div class="status-line">LEGAL</div>
+    <h1 style="margin-bottom:0.6rem">PRIVACY, <span class="accent">PLAINLY</span></h1>
+    <p class="dim" style="margin-bottom:2rem">Last updated: {UPDATED} · Part of <a href="/legal">the legal shelf</a></p>
 
     <p class="dim" style="margin-bottom:2rem">
       Short version: the rescue flow needs nothing from you. No account, no login, no files uploaded.
@@ -24,6 +27,7 @@ import Base from '../layouts/Base.astro';
         We use Google Analytics 4 to see which pages actually help and where people get stuck.
         It sets cookies, so we <strong>only load it after you accept</strong> on the banner.
         Decline and no analytics cookies are set, and the site works exactly the same.
+        The full detail lives in the <a href="/legal/cookies">Cookie Policy</a>.
       </p>
       <p class="dim" style="margin-bottom:0">
         To change your mind later, clear this site's data in your browser and the banner will ask again.
@@ -76,7 +80,7 @@ import Base from '../layouts/Base.astro';
     </div>
 
     <p class="dim" style="font-size:0.85rem;margin-top:2rem">
-      Last updated: July 2026 · Operated from Brazil · Contact:
+      Operated from Brazil · Contact:
       <a href="mailto:savemygig@gmail.com">savemygig@gmail.com</a> ·
       Some outbound links on the gear and recovery pages may become affiliate links; they never
       change what you pay and never appear inside the rescue flow.

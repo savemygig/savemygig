@@ -12,3 +12,9 @@
 /index.html          /                 301
 /teste.html          /                 301
 /bible               /prepare          301
+# Legal restructure 2026-07-28: standalone /privacy and /disclaimer moved
+# under the /legal hub. 301s preserve existing links and search equity.
+/privacy             /legal/privacy    301
+/privacy.html        /legal/privacy    301
+/disclaimer          /legal/disclaimer 301
+/disclaimer.html     /legal/disclaimer 301
