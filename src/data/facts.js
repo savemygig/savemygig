@@ -30,7 +30,7 @@ export const REKORDBOX = {
 export const VENDOR_LINKS = [
   { name: 'rekordbox (AlphaTheta)', url: 'https://rekordbox.com/en/support/' },
   { name: 'Serato DJ', url: 'https://serato.com/dj/downloads' },
-  { name: 'Traktor Pro', url: 'https://www.native-instruments.com/en/support/downloads/' },
+  { name: 'DJM-REC (AlphaTheta)', url: 'https://support.alphatheta.com/en-US/products/4406500786329' },
   { name: 'Engine DJ', url: 'https://enginedj.com/downloads' },
 ];
 
