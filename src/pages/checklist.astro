@@ -327,18 +327,28 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       </div>
     </div>
 
-    <!-- Named lists (Custom mode + signed in only, Antonio's rulings 4 and 5).
-         Pills switch, the field creates; deleting arms on the pill's x in
-         Edit mode, same two-tap contract as every destructive action here. -->
+    <!-- Named lists (Custom mode + signed in only, Antonio's rulings 4, 5
+         and his mobile review 2026-07-29): ONE collapsed row that names the
+         active list; tap the arrow, the pills unfold, pick, it folds back.
+         The collapse doctrine applied to lists ("harmonica"), identical on
+         phone and desktop because one behavior is simpler than two. Pills
+         switch, the field creates; deleting arms on the pill's x in Edit
+         mode, same two-tap contract as every destructive action here. -->
     <div class="list-switch" id="listSwitch" hidden>
-      <span class="ls-label">Lists</span>
-      <div class="ls-pills" id="lsPills"></div>
-      <button type="button" class="ls-new-btn" id="lsNewBtn">+ New list</button>
-      <form class="ls-new-form" id="lsNewForm" hidden>
-        <input type="text" id="lsNewName" maxlength="40" placeholder="Festival, Wedding, Residency..." aria-label="Name the new list" />
-        <button type="submit" class="add-btn">Create</button>
-      </form>
-      <p class="acct-msg" id="lsMsg" role="status" aria-live="polite"></p>
+      <button type="button" class="ls-head" id="lsHead" aria-expanded="false" aria-controls="lsBody">
+        <span class="ls-label">Lists</span>
+        <span class="ls-active" id="lsActiveName"></span>
+        <span class="ls-chev" aria-hidden="true"></span>
+      </button>
+      <div class="ls-body" id="lsBody" hidden>
+        <div class="ls-pills" id="lsPills"></div>
+        <button type="button" class="ls-new-btn" id="lsNewBtn">+ New list</button>
+        <form class="ls-new-form" id="lsNewForm" hidden>
+          <input type="text" id="lsNewName" maxlength="40" placeholder="Festival, Wedding, Residency..." aria-label="Name the new list" />
+          <button type="submit" class="add-btn">Create</button>
+        </form>
+        <p class="acct-msg" id="lsMsg" role="status" aria-live="polite"></p>
+      </div>
     </div>
 
     <!-- One toolbar, four short verbs (Antonio): Edit, Clear, Download PDF,
@@ -1064,16 +1074,31 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-msg.err { color: var(--red); }
   .acct-msg:empty { display: none; }
 
-  /* Named-list switcher (Custom + signed in). Pills, house-monochrome; the
+  /* Named-list switcher (Custom + signed in). One collapsed header row that
+     names the active list; pills unfold below it. House-monochrome; the
      active list is simply the lit one. */
-  .list-switch { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .list-switch { margin-bottom: 1rem; }
   /* Author display beats the UA's [hidden] rule (same lesson as the toolbar
      buttons on Antonio's iPhone): state it explicitly. */
   .list-switch[hidden] { display: none; }
+  .ls-head {
+    display: flex; align-items: center; gap: 0.55rem; width: 100%;
+    background: none; border: none; padding: 0.15rem 0; cursor: pointer; text-align: left;
+  }
   .list-switch .ls-label {
     color: var(--text-faint); font-family: var(--font-display); font-weight: 700;
     font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
   }
+  .ls-active { color: var(--text-dim); font-family: var(--font-body); font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  @media (hover: hover) { .ls-head:hover .ls-active { color: var(--text); } }
+  .ls-chev {
+    width: 7px; height: 7px; flex: 0 0 auto;
+    border-right: 1.5px solid var(--text-faint); border-bottom: 1.5px solid var(--text-faint);
+    transform: rotate(45deg); transition: transform 0.15s ease; margin-top: -3px;
+  }
+  .ls-head[aria-expanded="true"] .ls-chev { transform: rotate(225deg); margin-top: 3px; }
+  .ls-body { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 0.7rem; }
+  .ls-body[hidden] { display: none; }
   .ls-pills { display: flex; gap: 6px; flex-wrap: wrap; }
   .ls-pill {
     display: inline-flex; align-items: center; gap: 6px;
@@ -1112,7 +1137,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .list-switch .acct-msg { flex: 1 1 100%; margin-top: 0; }
 
   @media (prefers-reduced-motion: reduce) {
-    .meter-fill, .box, .box::after, .readiness-pct, .mode-btn, .chev { transition: none; }
+    .meter-fill, .box, .box::after, .readiness-pct, .mode-btn, .chev, .ls-chev { transition: none; }
   }
 
   /* Mobile width and alignment (kept last so it wins the cascade).
@@ -2364,9 +2389,10 @@ ${sections}
   const lsNewForm = document.getElementById('lsNewForm') as HTMLFormElement | null;
   const lsNewName = document.getElementById('lsNewName') as HTMLInputElement | null;
   const lsMsg = document.getElementById('lsMsg');
-  // Antonio's cap: main list + three of the DJ's own (Festival / Wedding /
-  // Residency being the suggested three), so the row never becomes a mess.
-  const MAX_LISTS = 4;
+  // Antonio's cap, revised on his phone review: seven lists total. The row
+  // stays tidy at any count because the pills live inside the collapsed
+  // "Lists" region (his harmonica), so the cap is about sanity, not layout.
+  const MAX_LISTS = 7;
 
   type RegList = { id: string; n: string; u: number };
   type Registry = { active: string; lists: RegList[] };
@@ -2547,6 +2573,13 @@ ${sections}
   function renderPills() {
     if (!lsPills || !acct.email) return;
     const reg = loadReg();
+    // The collapsed header names the active list, so no tap is needed just
+    // to know where you are.
+    const activeName = document.getElementById('lsActiveName');
+    if (activeName) {
+      const a = reg.lists.find((l) => l.id === reg.active);
+      activeName.textContent = a ? a.n : '';
+    }
     lsPills.innerHTML = '';
     reg.lists.forEach((l) => {
       const pill = document.createElement('button');
@@ -2608,7 +2641,7 @@ ${sections}
     if (!t) return;
     const reg = loadReg();
     if (reg.lists.length >= MAX_LISTS) {
-      if (lsMsg) { lsMsg.textContent = 'Your main list plus three of your own is the cap. Delete one you no longer play.'; lsMsg.className = 'acct-msg err'; }
+      if (lsMsg) { lsMsg.textContent = 'Seven lists is the cap. Delete one you no longer play.'; lsMsg.className = 'acct-msg err'; }
       return;
     }
     const id = 'l-' + t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 24) + '-' + Math.random().toString(36).slice(2, 6);
@@ -2904,6 +2937,19 @@ ${sections}
       } catch (e) {
         if (acctMsg2) { acctMsg2.textContent = 'No connection. Try again when you have signal.'; acctMsg2.className = 'acct-msg err'; }
       }
+    });
+  }
+
+  // The lists region folds and unfolds (Antonio: save space, especially on
+  // phones). Collapsed on every load: after a switch the page reloads, and
+  // arriving folded is exactly the calm he asked for.
+  {
+    const lsHead = document.getElementById('lsHead');
+    const lsBody = document.getElementById('lsBody');
+    if (lsHead && lsBody) lsHead.addEventListener('click', () => {
+      const open = lsBody.hidden;
+      lsBody.hidden = !open;
+      lsHead.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
   }
 

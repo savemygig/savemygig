@@ -20,10 +20,10 @@
 
 import { json, readVerifiedSession } from './_auth.js';
 
-// Antonio's cap (2026-07-29, preview review): the main list plus THREE of
-// the DJ's own — matching the three suggested names — so the switcher stays
-// one calm row and never becomes "a mess on the page" (his words).
-const MAX_LISTS = 4;
+// Antonio's cap (2026-07-29, revised on his phone review): SEVEN lists
+// total. The client presents them inside a collapsed region, so the cap is
+// about sanity, not layout.
+const MAX_LISTS = 7;
 const MAX_BLOB = 120000;
 const ID_RE = /^[a-z0-9][a-z0-9-]{0,39}$/;
 

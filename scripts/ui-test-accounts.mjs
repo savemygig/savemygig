@@ -50,6 +50,11 @@ ok(unlocked === '1', 'sign-in registered the device (ruling 3)');
 await page.click('[data-mode-set="custom"]');
 await page.waitForTimeout(300);
 ok(await page.locator('#listSwitch').isVisible(), 'switcher visible in Custom signed in');
+ok(await page.locator('#lsBody').isHidden(), 'lists region starts folded (harmonica)');
+const headName = await page.locator('#lsActiveName').textContent();
+ok(headName === 'My checklist', 'folded header names the active list: ' + headName);
+await page.click('#lsHead');
+await page.waitForTimeout(200);
 ok((await page.locator('.ls-pill').count()) === 1, 'one pill (My checklist)');
 await page.click('[data-mode-set="basic"]');
 await page.waitForTimeout(200);
@@ -67,17 +72,20 @@ await page.evaluate(() => {
 });
 await page.waitForTimeout(3200);
 
-// 4. Create Festival.
+// 4. Create Festival (ensure the region is unfolded first).
+if (await page.locator('#lsBody').isHidden()) { await page.click('#lsHead'); await page.waitForTimeout(200); }
 await page.click('#lsNewBtn');
 await page.fill('#lsNewName', 'Festival');
 await page.click('#lsNewForm .add-btn');
 await page.waitForLoadState('networkidle');
 await page.evaluate(() => document.getElementById('ck')?.remove());
 await page.waitForTimeout(1200);
+if (await page.locator('#lsBody').isHidden()) { await page.click('#lsHead'); await page.waitForTimeout(200); }
 const pills = await page.locator('.ls-pill').allTextContents();
 ok(pills.length === 2, 'two pills after create: ' + JSON.stringify(pills));
 const active = await page.locator('.ls-pill.is-on .ls-name').textContent();
 ok(active === 'Festival', 'Festival is active');
+ok((await page.locator('#lsActiveName').textContent()) === 'Festival', 'header follows the active list');
 const activeMode = await page.evaluate(() => localStorage.getItem('SMG_CHECKLIST_MODE'));
 ok(activeMode === 'custom', 'still in custom after reload, mode=' + activeMode);
 
@@ -102,7 +110,8 @@ ok(fest && JSON.parse(fest.blob).ticks['usb-two'] === true, 'Festival tick reach
 const main = server.lists.find((l) => l.id === 'main');
 ok(!!main, 'main list reached the server too');
 
-// 7. Switch back to main via pill.
+// 7. Switch back to main via pill (region folded again after the tick wait? no reload happened, still open from step 4's create->reload... unfold defensively).
+if (await page.locator('#lsBody').isHidden()) { await page.click('#lsHead'); await page.waitForTimeout(200); }
 await page.click('.ls-pill:not(.is-on)');
 await page.waitForLoadState('networkidle');
 await page.evaluate(() => document.getElementById('ck')?.remove());
