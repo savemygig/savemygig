@@ -115,32 +115,38 @@ const NIGHT = [
     <p class="dim pv-sub">Non-negotiable, in the order the night actually happens.</p>
 
     <div class="pv-band">Your music</div>
-    <div class="pv-rules">
-      {MUSIC.map((r) => (
-        <article class="pv-rule">
-          <div class="pv-n" aria-hidden="true">{r.n}</div>
-          <div class="pv-body">
-            <h3 class="pv-title">{r.title}</h3>
-            <p class="pv-text" set:html={r.body} />
-            <p class="pv-why"><span>Why it matters</span>{r.why}</p>
-          </div>
-        </article>
-      ))}
-    </div>
+    {MUSIC.map((r) => (
+      <details class="acc-sec pv-rule" name="pv-acc">
+        <summary>
+          <span class="pv-head">
+            <span class="pv-n" aria-hidden="true">{r.n}</span>
+            <h3 class="acc-h2 pv-title">{r.title}</h3>
+          </span>
+          <span class="acc-chev" aria-hidden="true"></span>
+        </summary>
+        <div class="acc-body pv-in">
+          <p class="pv-text" set:html={r.body} />
+          <p class="pv-why"><span>Why it matters</span>{r.why}</p>
+        </div>
+      </details>
+    ))}
 
     <div class="pv-band">Your night</div>
-    <div class="pv-rules">
-      {NIGHT.map((r) => (
-        <article class="pv-rule">
-          <div class="pv-n" aria-hidden="true">{r.n}</div>
-          <div class="pv-body">
-            <h3 class="pv-title">{r.title}</h3>
-            <p class="pv-text" set:html={r.body} />
-            <p class="pv-why"><span>Why it matters</span>{r.why}</p>
-          </div>
-        </article>
-      ))}
-    </div>
+    {NIGHT.map((r) => (
+      <details class="acc-sec pv-rule" name="pv-acc">
+        <summary>
+          <span class="pv-head">
+            <span class="pv-n" aria-hidden="true">{r.n}</span>
+            <h3 class="acc-h2 pv-title">{r.title}</h3>
+          </span>
+          <span class="acc-chev" aria-hidden="true"></span>
+        </summary>
+        <div class="acc-body pv-in">
+          <p class="pv-text" set:html={r.body} />
+          <p class="pv-why"><span>Why it matters</span>{r.why}</p>
+        </div>
+      </details>
+    ))}
 
     <p class="pv-close">
       Professionals do not just prepare their gear. They prepare their minds.
@@ -190,28 +196,28 @@ const NIGHT = [
     margin: 2.6rem 0 1.1rem;
   }
 
-  .pv-rules { display: flex; flex-direction: column; gap: 0.7rem; }
-
-  /* Generous, premium cards: the number anchors, the title carries the weight,
-     and "why it matters" is one quiet line that never competes with it. */
-  .pv-rule {
-    display: grid; grid-template-columns: auto 1fr; gap: 0 1.15rem;
-    background: var(--surf); border: 1px solid var(--edge);
-    border-radius: var(--radius); padding: 1.5rem 1.5rem 1.4rem;
-    transition: border-color 0.15s ease;
-  }
-  .pv-rule:hover { border-color: var(--edge-soft); }
+  /* ACCORDIONS, not open cards (Antonio, after seeing the expanded version
+     live: ten expanded rules is "a huge list", and on a phone the page ran
+     past 6000px). This is the collapse doctrine applied to the doctrine page
+     itself: number and title are the index, the reasoning is one tap away.
+     Shared .acc-sec vocabulary from global.css, so it behaves exactly like
+     the FAQ, rekordbox and hardware pages. name="pv-acc" makes them
+     exclusive: click, read, click the next, the page never grows. */
+  .pv-rule { margin-bottom: 0.7rem; }
+  .pv-head { display: flex; align-items: baseline; gap: 0.9rem; min-width: 0; }
   .pv-n {
-    font-family: var(--font-display); font-weight: 800; font-size: 1.65rem;
+    flex: 0 0 auto;
+    font-family: var(--font-display); font-weight: 800; font-size: 1.3rem;
     line-height: 1; color: var(--red); letter-spacing: -0.02em;
-    padding-top: 0.1rem; font-variant-numeric: tabular-nums;
+    font-variant-numeric: tabular-nums;
   }
   .pv-title {
     font-family: var(--font-display); font-weight: 800;
-    font-size: clamp(1.08rem, 3.4vw, 1.28rem); line-height: 1.2;
-    letter-spacing: -0.015em; text-transform: none; color: var(--text);
-    margin: 0 0 0.5rem;
+    line-height: 1.22; letter-spacing: -0.015em; text-transform: none;
+    color: var(--text);
   }
+  /* The body lines up under the title, not under the number. */
+  .pv-in { padding-left: calc(1.25rem + 1.3rem + 0.9rem); }
   .pv-text { color: var(--text-dim); font-size: 0.94rem; line-height: 1.62; margin: 0; }
   .pv-text strong { color: var(--text); }
   .pv-why {
@@ -232,10 +238,11 @@ const NIGHT = [
     max-width: 30rem; margin: 2.8rem 0 2.4rem;
   }
 
-  /* On a phone the number sits ABOVE the title: at 360px a text column beside
-     the numeral squeezes every title onto three lines. */
+  /* At 360px the numeral cannot also cost an indent: the body goes full width
+     and the gap tightens so titles keep to two lines. */
   @media (max-width: 430px) {
-    .pv-rule { grid-template-columns: 1fr; gap: 0; padding: 1.25rem 1.15rem 1.2rem; }
-    .pv-n { font-size: 1.35rem; margin-bottom: 0.45rem; }
+    .pv-head { gap: 0.65rem; }
+    .pv-n { font-size: 1.15rem; }
+    .pv-in { padding-left: 1.25rem; }
   }
 </style>
