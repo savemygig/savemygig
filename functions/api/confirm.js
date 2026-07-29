@@ -13,13 +13,17 @@
  */
 
 import { verifyToken } from './_token.js';
+import { getOrCreateUser, makeSessionToken, sessionCookie } from './_auth.js';
 
 const LIST_ID = 3; // "Emergency Card subscribers"
 const REDIRECT_URL = 'https://www.savemygig.com/card-ready';
 const SITE = 'https://www.savemygig.com';
 
-const redirect = (url) =>
-  new Response(null, { status: 302, headers: { location: url } });
+const redirect = (url, cookie) => {
+  const headers = { location: url };
+  if (cookie) headers['set-cookie'] = cookie;
+  return new Response(null, { status: 302, headers });
+};
 
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
@@ -76,7 +80,31 @@ export async function onRequestGet({ request, env }) {
   const dest = String(data.source || '').startsWith('checklist')
     ? `${SITE}/checklist?confirmed=1${frag}`
     : `${REDIRECT_URL}${frag}`;
-  return redirect(dest);
+
+  // ACCOUNTS (Antonio's Option 1, 2026-07-29): this click just proved the
+  // address, which is exactly the proof an account needs. So the same click
+  // now also creates the account and signs THIS device in — registration
+  // and account become one thing, with zero extra steps. The artist name
+  // travels inside the signed token (set at registration), so the account
+  // is born already knowing what to call the DJ. No owner notification
+  // here: subscribe.js sent it at registration time. Best effort: if the
+  // DB or session secret is missing, the card/checklist flow behaves
+  // exactly as it always did.
+  let cookie = null;
+  try {
+    if (env.DB && env.SESSION_SECRET) {
+      const user = await getOrCreateUser(env.DB, data.email, null);
+      if (data.artist && !user.artist) {
+        await env.DB.prepare(
+          "UPDATE users SET artist = ?1, instagram = COALESCE(NULLIF(?2, ''), instagram) WHERE id = ?3"
+        ).bind(String(data.artist).slice(0, 80), String(data.instagram || '').slice(0, 80), user.id).run();
+      }
+      cookie = sessionCookie(await makeSessionToken(user.id, user.email, env.SESSION_SECRET));
+    }
+  } catch (err) {
+    console.log('confirm: account creation failed, confirm still honored', String(err));
+  }
+  return redirect(dest, cookie);
 }
 
 export async function onRequest({ request }) {

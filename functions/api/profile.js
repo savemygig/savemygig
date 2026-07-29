@@ -11,9 +11,7 @@
  * completion.
  */
 
-import { json, readVerifiedSession } from './_auth.js';
-
-const SENDER = { name: 'Save My Gig', email: 'savemygig@gmail.com' };
+import { json, readVerifiedSession, saveProfile } from './_auth.js';
 
 export async function onRequestPost({ request, env }) {
   if (!env.DB) return json({ ok: false, error: 'not_configured' }, 500);
@@ -31,56 +29,12 @@ export async function onRequestPost({ request, env }) {
   }
   if (!artist) return json({ ok: false, error: 'artist_required' }, 400);
 
-  const prev = await env.DB.prepare('SELECT artist FROM users WHERE id = ?1').bind(session.uid).first();
-  // Instagram only overwrites when actually provided; an empty resubmit can
-  // never erase a stored handle (same rule subscribe.js follows in Brevo).
-  await env.DB.prepare(
-    "UPDATE users SET artist = ?1, instagram = COALESCE(NULLIF(?2, ''), instagram) WHERE id = ?3"
-  ).bind(artist, instagram, session.uid).run();
-
-  // Mirror to the Brevo contact (best effort, never blocks the save).
-  if (env.BREVO_API_KEY) {
-    try {
-      await fetch('https://api.brevo.com/v3/contacts', {
-        method: 'POST',
-        headers: { 'api-key': env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
-        body: JSON.stringify({
-          email: session.email,
-          updateEnabled: true,
-          attributes: Object.assign(
-            { SOURCE: 'account', ARTIST: artist },
-            instagram ? { INSTAGRAM: instagram } : {}
-          ),
-        }),
-      });
-    } catch (err) {
-      console.log('profile: brevo write failed', String(err));
-    }
-  }
-
-  // The follow-back notification, once, when the account first gets a name.
-  if (env.BREVO_API_KEY && (!prev || !prev.artist)) {
-    try {
-      const igLine = instagram
-        ? `Instagram: ${instagram} - https://instagram.com/${encodeURIComponent(instagram.replace(/^@/, ''))}`
-        : 'Instagram: (not given)';
-      await fetch('https://api.brevo.com/v3/smtp/email', {
-        method: 'POST',
-        headers: { 'api-key': env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
-        body: JSON.stringify({
-          sender: SENDER,
-          to: [{ email: 'savemygig@gmail.com', name: 'Save My Gig' }],
-          subject: `New account: ${artist}${instagram ? ' (' + instagram + ')' : ''}`,
-          textContent:
-            `New Save My Gig account completed\n\n` +
-            `Email: ${session.email}\nArtist: ${artist}\n${igLine}\nSource: account\n\n` +
-            `Promise on the form: every DJ who registers gets a follow.`,
-        }),
-      });
-    } catch (err) {
-      console.log('profile: owner notification failed', String(err));
-    }
-  }
+  // Shared with the gate's Google path: DB update, Brevo attribute mirror,
+  // one-time follow-back notification. No list membership from here (the
+  // completion step carries no mailing consent line).
+  await saveProfile(env, session.uid, session.email, artist, instagram, {
+    notify: true, source: 'account',
+  });
 
   return json({ ok: true, artist });
 }

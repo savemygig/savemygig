@@ -41,12 +41,19 @@ async function hmacKey(secret) {
   );
 }
 
-export async function makeToken(email, source, secret) {
+export async function makeToken(email, source, secret, artist, instagram) {
   const payload = {
     e: email,
     s: source || 'unknown',
     x: Date.now() + WEEK_MS,
   };
+  // Accounts build 2026-07-29 (Antonio's Option 1): the confirm click now
+  // also creates the account, and the account must know the artist name.
+  // The name travels INSIDE the signed token, so confirm.js can trust it
+  // the same way it trusts the email. Old links without these fields keep
+  // verifying; the checklist's completion step catches those accounts.
+  if (artist) payload.a = String(artist).slice(0, 80);
+  if (instagram) payload.i = String(instagram).slice(0, 80);
   const payloadBytes = enc.encode(JSON.stringify(payload));
   const key = await hmacKey(secret);
   const sig = new Uint8Array(await crypto.subtle.sign('HMAC', key, payloadBytes));
@@ -81,5 +88,10 @@ export async function verifyToken(token, secret) {
   if (!payload || !payload.e || !payload.x) return null;
   if (Date.now() > payload.x) return null; // link expired
 
-  return { email: payload.e, source: payload.s || 'unknown' };
+  return {
+    email: payload.e,
+    source: payload.s || 'unknown',
+    artist: payload.a || '',
+    instagram: payload.i || '',
+  };
 }

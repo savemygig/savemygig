@@ -153,4 +153,65 @@ export async function readVerifiedSession(request, env) {
   return user ? session : null;
 }
 
+/**
+ * Save artist + Instagram on the account and mirror them to Brevo. Used by
+ * the completion step (profile.js) and the gate's Google path (google.js).
+ * opts.listId: add the contact to that Brevo list too (gate registrations:
+ * consent came from the form, the address is Google-verified, so no double
+ * opt-in email is needed). opts.notify: send Antonio the follow-back
+ * notification, only when the account gets its name for the FIRST time.
+ * Brevo parts are best effort and never block.
+ */
+export async function saveProfile(env, uid, email, artist, instagram, opts = {}) {
+  const prev = await env.DB.prepare('SELECT artist FROM users WHERE id = ?1').bind(uid).first();
+  await env.DB.prepare(
+    "UPDATE users SET artist = ?1, instagram = COALESCE(NULLIF(?2, ''), instagram) WHERE id = ?3"
+  ).bind(artist, instagram || '', uid).run();
+
+  if (env.BREVO_API_KEY) {
+    try {
+      await fetch('https://api.brevo.com/v3/contacts', {
+        method: 'POST',
+        headers: { 'api-key': env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
+        body: JSON.stringify(Object.assign(
+          {
+            email,
+            updateEnabled: true,
+            attributes: Object.assign(
+              { SOURCE: opts.source || 'account', ARTIST: artist },
+              instagram ? { INSTAGRAM: instagram } : {}
+            ),
+          },
+          opts.listId ? { listIds: [opts.listId] } : {}
+        )),
+      });
+    } catch (err) {
+      console.log('saveProfile: brevo write failed', String(err));
+    }
+
+    if (opts.notify && (!prev || !prev.artist)) {
+      try {
+        const igLine = instagram
+          ? `Instagram: ${instagram} - https://instagram.com/${encodeURIComponent(instagram.replace(/^@/, ''))}`
+          : 'Instagram: (not given)';
+        await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: { 'api-key': env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
+          body: JSON.stringify({
+            sender: { name: 'Save My Gig', email: 'savemygig@gmail.com' },
+            to: [{ email: 'savemygig@gmail.com', name: 'Save My Gig' }],
+            subject: `New ${opts.source === 'checklist-google' ? 'registration' : 'account'}: ${artist}${instagram ? ' (' + instagram + ')' : ''}`,
+            textContent:
+              `New Save My Gig ${opts.source === 'checklist-google' ? 'registration (Google)' : 'account'}\n\n` +
+              `Email: ${email}\nArtist: ${artist}\n${igLine}\nSource: ${opts.source || 'account'}\n\n` +
+              `Promise on the form: every DJ who registers gets a follow.`,
+          }),
+        });
+      } catch (err) {
+        console.log('saveProfile: owner notification failed', String(err));
+      }
+    }
+  }
+}
+
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

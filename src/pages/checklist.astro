@@ -250,6 +250,20 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           <p class="unlock-note">Once in a while we share something worth your time by email: site news, new tools, or a product that helps your career. Opt out any time, one click. <a href="/legal/privacy">Privacy</a></p>
         </div>
       </form>
+      <!-- Antonio's ruling (2026-07-29): the gate is the account's front
+           door. Google replaces TYPING THE EMAIL only; artist name stays
+           required on both paths (the homepage greets by name), Instagram
+           stays optional with the same promise. The transparent blocker sits
+           over Google's iframe while the artist field is empty, because the
+           iframe's own click cannot be intercepted; it clears the moment a
+           name exists. Appears only when a Google client id is configured. -->
+      <div class="unlock-alt" id="unlockAlt" hidden>
+        <span class="unlock-or">or, with no typing:</span>
+        <div class="gsi-wrap" id="gsiGateWrap">
+          <div class="gsi-holder" id="gsiGateBtn"></div>
+          <button type="button" class="gsi-block" id="gsiGateBlock" aria-label="Add your artist name or first name first"></button>
+        </div>
+      </div>
       <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
     </div>
 
@@ -1032,6 +1046,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-profile { margin-bottom: 0.9rem; }
   .acct-profile input { flex: 1 1 100%; }
   .acct-profile[hidden] { display: none; }
+  .unlock-alt { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.9rem; }
+  .unlock-alt[hidden] { display: none; }
+  .unlock-or { color: var(--text-faint); font-size: 0.82rem; }
+  .gsi-wrap { position: relative; display: inline-block; }
+  .gsi-block { position: absolute; inset: 0; background: transparent; border: none; padding: 0; cursor: pointer; }
+  .gsi-block[hidden] { display: none; }
   .acct-del { display: inline-grid; }
   .acct-del > span { grid-area: 1 / 1; }
   .acct-del .rs-arm { visibility: hidden; }
@@ -2632,7 +2652,12 @@ ${sections}
   }
 
   // Google Identity Services: only injected when the server says a client id
-  // is configured and nobody is signed in. One Tap on THIS page only.
+  // is configured and nobody is signed in. One Tap on THIS page only. TWO
+  // buttons share one callback: the sync card (plain sign-in) and the gate
+  // (registration: artist required, joins the list, fulfils what the DJ
+  // reached for). Which one was used is tracked by pointerenter on the
+  // wrappers, because clicks inside Google's iframe never reach us.
+  let gsiFrom: 'card' | 'gate' = 'card';
   function initGoogle() {
     if (!acct.google || acct.email || document.getElementById('gsiScript')) return;
     const s = document.createElement('script');
@@ -2646,25 +2671,87 @@ ${sections}
       g.accounts.id.initialize({
         client_id: acct.google,
         callback: async (resp: { credential: string }) => {
+          const fromGate = gsiFrom === 'gate';
+          const body: any = { credential: resp.credential };
+          if (fromGate && unlockForm) {
+            const aInp = unlockForm.querySelector('input[name="artist"]') as HTMLInputElement | null;
+            const iInp = unlockForm.querySelector('input[name="instagram"]') as HTMLInputElement | null;
+            body.artist = aInp ? aInp.value.trim() : '';
+            body.instagram = iInp ? iInp.value.trim() : '';
+            body.register = true;
+          }
           try {
             const r = await fetch('/api/auth/google', {
               method: 'POST',
               headers: { 'content-type': 'application/json' },
-              body: JSON.stringify({ credential: resp.credential }),
+              body: JSON.stringify(body),
             });
             const d = await r.json();
-            if (d && d.ok && d.email) markSignedIn(d.email, d.artist || null);
-            else if (acctMsg) { acctMsg.textContent = 'Google sign-in did not go through. Use the email link below.'; acctMsg.className = 'acct-msg err'; }
+            if (d && d.ok && d.email) {
+              markSignedIn(d.email, d.artist || null);
+              if (fromGate) {
+                // Same after-registration moves as the email form: hide the
+                // gate and hand over what they actually came for.
+                if (unlockEl) unlockEl.hidden = true;
+                if (pendingWant === 'pdf') {
+                  if (!printCurrentList() && backupMsg) {
+                    backupMsg.textContent = 'You are registered. Your browser blocked the download window: tap Download list again and allow pop-ups.';
+                    backupMsg.className = 'backup-msg ok';
+                  }
+                } else if (pendingWant === 'email') {
+                  sendBackup(d.email);
+                } else {
+                  setMode(pendingMode);
+                  updateListSwitch();
+                  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                  window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+                }
+                if (typeof (window as any).gtag === 'function') {
+                  (window as any).gtag('event', 'advanced_unlock', { placement: 'checklist', mode: pendingWant === 'mode' ? pendingMode : pendingWant, method: 'google' });
+                }
+              }
+            } else {
+              const msgEl = fromGate ? unlockMsg : acctMsg;
+              if (msgEl) { msgEl.textContent = 'Google sign-in did not go through. Use your email instead.'; msgEl.className = (fromGate ? 'unlock-msg' : 'acct-msg') + ' err'; }
+            }
           } catch (e) {
-            if (acctMsg) { acctMsg.textContent = 'No connection right now. Your list is safe on this device.'; acctMsg.className = 'acct-msg err'; }
+            const msgEl = fromGate ? unlockMsg : acctMsg;
+            if (msgEl) { msgEl.textContent = 'No connection right now. Your list is safe on this device.'; msgEl.className = (fromGate ? 'unlock-msg' : 'acct-msg') + ' err'; }
           }
         },
       });
       const holder = document.getElementById('gsiBtn');
       if (holder) g.accounts.id.renderButton(holder, { theme: 'filled_black', size: 'large', text: 'continue_with', shape: 'rectangular' });
+      const gateHolder = document.getElementById('gsiGateBtn');
+      if (gateHolder) {
+        g.accounts.id.renderButton(gateHolder, { theme: 'filled_black', size: 'large', text: 'continue_with', shape: 'rectangular', width: 230 });
+        const alt = document.getElementById('unlockAlt');
+        if (alt) alt.hidden = false;
+      }
       g.accounts.id.prompt();
     };
     document.head.appendChild(s);
+  }
+
+  // The artist name stays mandatory on the Google path (Antonio: the
+  // homepage greets by name). While the field is empty a transparent
+  // blocker covers Google's button; tapping it explains and focuses.
+  {
+    const gateBlock = document.getElementById('gsiGateBlock');
+    const gateWrap = document.getElementById('gsiGateWrap');
+    const cardWrap = document.getElementById('gsiBtn');
+    const artistInp = unlockForm ? unlockForm.querySelector('input[name="artist"]') as HTMLInputElement | null : null;
+    if (gateWrap) gateWrap.addEventListener('pointerenter', () => { gsiFrom = 'gate'; });
+    if (cardWrap) cardWrap.addEventListener('pointerenter', () => { gsiFrom = 'card'; });
+    const updateGateBlock = () => {
+      if (gateBlock) gateBlock.hidden = !!(artistInp && artistInp.value.trim());
+    };
+    if (artistInp) artistInp.addEventListener('input', updateGateBlock);
+    updateGateBlock();
+    if (gateBlock) gateBlock.addEventListener('click', () => {
+      if (unlockMsg) { unlockMsg.textContent = 'Add your artist name or first name, so we know what to call you.'; unlockMsg.className = 'unlock-msg err'; }
+      if (artistInp) artistInp.focus();
+    });
   }
 
   // The account row expands and collapses.

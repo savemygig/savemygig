@@ -11,7 +11,12 @@
  * /api/auth/me for it, so client and server can never disagree).
  */
 
-import { json, b64urlDecode, makeSessionToken, sessionCookie, getOrCreateUser, ensureBrevoContact } from '../_auth.js';
+import { json, b64urlDecode, makeSessionToken, sessionCookie, getOrCreateUser, ensureBrevoContact, saveProfile } from '../_auth.js';
+
+// Same list confirm.js adds confirmed registrants to. A gate registration
+// via Google is address-verified by Google and consented on the form, so it
+// joins directly, no double opt-in email needed.
+const LIST_ID = 3;
 
 const CERTS_URL = 'https://www.googleapis.com/oauth2/v3/certs';
 
@@ -24,9 +29,18 @@ export async function onRequestPost({ request, env }) {
   if (!env.GOOGLE_CLIENT_ID) return json({ ok: false, error: 'google_not_configured' }, 500);
 
   let credential = '';
+  let artist = '';
+  let instagram = '';
+  let register = false;
   try {
     const b = await request.json();
     credential = String(b.credential || '');
+    // The GATE path (Antonio's ruling): registering via Google carries the
+    // form's artist name (required there) and optional Instagram, and joins
+    // the mailing list like a confirmed email registration would.
+    artist = String(b.artist || '').trim().slice(0, 80);
+    instagram = String(b.instagram || '').trim().slice(0, 80);
+    register = b.register === true;
   } catch (e) {
     return json({ ok: false, error: 'bad_request' }, 400);
   }
@@ -72,10 +86,20 @@ export async function onRequestPost({ request, env }) {
   }
 
   const user = await getOrCreateUser(env.DB, payload.email, payload.sub || null);
-  if (user.created) await ensureBrevoContact(env, user.email);
+  let artistOut = user.artist || null;
+  if (register && artist) {
+    // Gate registration: name + optional IG saved, contact joins the list,
+    // Antonio gets the follow-back notification (once per account).
+    await saveProfile(env, user.id, user.email, artist, instagram, {
+      notify: true, listId: LIST_ID, source: 'checklist-google',
+    });
+    artistOut = artist; // just saved; a re-register simply updates the name
+  } else if (user.created) {
+    await ensureBrevoContact(env, user.email);
+  }
   const token = await makeSessionToken(user.id, user.email, env.SESSION_SECRET);
 
-  return new Response(JSON.stringify({ ok: true, email: user.email, artist: user.artist || null }), {
+  return new Response(JSON.stringify({ ok: true, email: user.email, artist: artistOut }), {
     status: 200,
     headers: {
       'content-type': 'application/json; charset=utf-8',

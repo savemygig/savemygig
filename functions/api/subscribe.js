@@ -143,7 +143,9 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: false, error: 'not_configured' }, 500);
   }
 
-  const token = await makeToken(email.toLowerCase(), source, env.BREVO_API_KEY);
+  // Artist and Instagram ride in the signed token so the confirm click can
+  // create the ACCOUNT with the name already on it (Antonio's Option 1).
+  const token = await makeToken(email.toLowerCase(), source, env.BREVO_API_KEY, artist, instagram);
   const confirmUrl = `${SITE}/api/confirm?t=${encodeURIComponent(token)}`;
   const { subject, html, text } = confirmEmail(confirmUrl, source);
 

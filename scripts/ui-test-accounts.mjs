@@ -112,9 +112,12 @@ ok(active2 === 'My checklist', 'switched back to My checklist');
 const mainTicks = await page.evaluate(() => JSON.parse(localStorage.getItem('SMG_CHECKLIST_V1') || '{}'));
 ok(!mainTicks['usb-two'] && mainTicks['format'] === true, 'lists are separate (main kept its own tick, not Festival\'s)');
 
-// 8. Sign out.
-await page.click('#acctLine');
-await page.waitForTimeout(200);
+// 8. Sign out. The card auto-opens when the account still needs a name
+// (completion step), so only tap the row if it is actually closed.
+if (await page.locator('#acctCard').isHidden()) {
+  await page.click('#acctLine');
+  await page.waitForTimeout(200);
+}
 await page.click('#signOutBtn');
 await page.waitForTimeout(800);
 ok((await page.locator('#acctText').textContent()).includes('Sync is off'), 'signed out again');
