@@ -284,9 +284,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            pushing Email list onto a second row). -->
       <button type="button" class="btn btn-neutral" id="resetBtn">
         <span class="rs-idle"><span class="bl-full">Reset list</span><span class="bl-short">Reset</span></span>
-        <!-- "Click again" (Antonio): near the same width as "Reset list",
-             so the stacked-cell trick has almost nothing to reserve. -->
-        <span class="rs-arm" aria-hidden="true"><span class="bl-full">Click again</span><span class="bl-short">Again?</span></span>
+        <!-- "DO IT!" (Antonio, 2026-07-29, replacing his earlier "Click
+             again"): the armed press should feel like a command, not a
+             repetition. Two-tap safety unchanged; stacked-cell width trick
+             unchanged (idle state is the wider one, so nothing reflows). -->
+        <span class="rs-arm" aria-hidden="true"><span class="bl-full">DO IT!</span><span class="bl-short">DO IT!</span></span>
       </button>
       <!-- Full words on desktop, one word on a phone: four buttons at full
            length wrap the toolbar onto a second line on mobile (Antonio). -->
