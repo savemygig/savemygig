@@ -2757,8 +2757,11 @@ ${sections}
     };
     if (artistInp) artistInp.addEventListener('input', updateGateBlock);
     updateGateBlock();
+    // Antonio's copy (2026-07-29): the Google tap is the fast lane, nobody
+    // reads the fields on the way past, so this one line also carries the
+    // Instagram invitation.
     if (gateBlock) gateBlock.addEventListener('click', () => {
-      if (unlockMsg) { unlockMsg.textContent = 'Add your artist name or first name, so we know what to call you.'; unlockMsg.className = 'unlock-msg err'; }
+      if (unlockMsg) { unlockMsg.textContent = 'Add your artist name or first name, so we know what to call you + Instagram (optional).'; unlockMsg.className = 'unlock-msg err'; }
       if (artistInp) artistInp.focus();
     });
   }
