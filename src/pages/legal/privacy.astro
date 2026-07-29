@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 
-const UPDATED = '28 July 2026';
+const UPDATED = '29 July 2026';
 ---
 <Base
   title="Privacy Policy | Save My Gig!"
@@ -18,7 +18,8 @@ const UPDATED = '28 July 2026';
       Short version: the rescue flow needs nothing from you. No account, no login, no files uploaded.
       Some free features (Advanced and Custom checklists, the printable list, emailing yourself a copy)
       ask you to register with an email address. That address, plus two optional fields you can
-      leave empty, is all the personal data we ever hold.
+      leave empty, is almost all the personal data we ever hold; an optional account adds one
+      thing, a synced copy of your checklists, and its delete button removes everything.
     </p>
 
     <div class="panel">
@@ -54,7 +55,32 @@ const UPDATED = '28 July 2026';
         This data is processed by <strong>Brevo</strong> (Sendinblue SAS, France), acting as our
         processor. We do not sell, rent or share it with anyone else. Every email has a one-click
         unsubscribe, and unsubscribing removes you. Your checklist itself (items, edits, ticks)
-        is stored in your own browser on your own device, not on our servers.
+        is stored in your own browser on your own device, not on our servers, unless you create
+        an account (next section).
+      </p>
+    </div>
+
+    <!-- Accounts section v1 (2026-07-29 build), flagged for Antonio's
+         review like terms and cookies were. -->
+    <div class="panel">
+      <h3 style="margin-bottom:0.6rem">If you create an account</h3>
+      <p class="dim">
+        An account is optional and adds one thing: your checklists follow you across devices.
+        Sign-in is your <strong>email address</strong>, proven either by Google sign-in or by a
+        link we email you. There are <strong>no passwords</strong>, so there is no password of
+        yours for anyone to steal. If you use Google, we receive your email address from Google
+        and nothing else; we never see your Google password or your Google data.
+      </p>
+      <p class="dim">
+        With an account, a copy of your checklists (the items, your edits, your ticks, your
+        notes) is stored on our servers, hosted by <strong>Cloudflare</strong>, so your other
+        devices can load it. The list on each device remains stored on that device either way.
+      </p>
+      <p class="dim" style="margin-bottom:0">
+        <strong>Deleting your account</strong> is one button on the checklist page. It removes
+        your account, every synced checklist, and your email address from our records,
+        immediately, including the mailing-list contact. What stays is the copy of your list in
+        your own browser, because that one belongs to your device, not to us.
       </p>
     </div>
 

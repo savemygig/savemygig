@@ -1,0 +1,13 @@
+# LOCAL TESTING ONLY. Deliberately NOT named wrangler.toml: Cloudflare Pages
+# auto-reads that filename and it would override the dashboard's deployment
+# config. This file exists so `wrangler d1 execute -c wrangler.local.toml`
+# can reach the same local database `wrangler pages dev --d1
+# DB=savemygig-db --persist-to .wrangler-test` uses during gate testing.
+name = "savemygig-local"
+compatibility_date = "2026-01-01"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "savemygig-db"
+database_id = "savemygig-db"

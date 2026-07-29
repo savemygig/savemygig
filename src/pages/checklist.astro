@@ -262,6 +262,60 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <p class="readiness-sub" id="sub">0 ready</p>
     </section>
 
+    <!-- ACCOUNT / SYNC (2026-07-29 build, Antonio's rulings). One quiet row:
+         the whole account surface lives on this page because the checklist is
+         the only thing an account syncs (expand-before-add). Registration and
+         its gate are untouched; the account is the optional layer on top.
+         No passwords exist anywhere: Google, or an emailed one-tap link. -->
+    <div class="acct" id="acct">
+      <button type="button" class="acct-line" id="acctLine" aria-expanded="false" aria-controls="acctCard">
+        <span class="acct-dot" id="acctDot" aria-hidden="true"></span>
+        <span class="acct-text" id="acctText">Sync is off. Sign in to keep your list on every device.</span>
+      </button>
+      <div class="acct-card" id="acctCard" hidden>
+        <div id="acctOut">
+          <p class="dim acct-copy">One account, no password, ever. Your list stays saved on each device and follows you to any other.</p>
+          <!-- Google renders its own button in here when the client id is
+               configured; until then the holder is empty and email carries
+               the whole flow. -->
+          <div class="gsi-holder" id="gsiBtn"></div>
+          <form class="acct-form" id="acctForm" novalidate>
+            <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your email" />
+            <button type="submit" class="btn btn-neutral">Email me a sign-in link</button>
+          </form>
+          <p class="acct-msg" id="acctMsg" role="status" aria-live="polite"></p>
+        </div>
+        <div id="acctIn" hidden>
+          <p class="dim acct-copy">Signed in as <strong class="acct-who" id="acctEmail"></strong>. Your lists sync to this account.</p>
+          <div class="acct-actions">
+            <button type="button" class="btn btn-neutral" id="signOutBtn">Sign out</button>
+            <!-- Same stacked-cell armed pattern as Reset list: width can
+                 never change, innerHTML swaps stay banned. -->
+            <button type="button" class="btn btn-neutral acct-del" id="delAcctBtn">
+              <span class="rs-idle">Delete account</span>
+              <span class="rs-arm" aria-hidden="true">Click again</span>
+            </button>
+          </div>
+          <p class="dim acct-fine">Delete removes your account, your synced lists and your email from our records. The list on this device stays yours.</p>
+          <p class="acct-msg" id="acctMsg2" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Named lists (Custom mode + signed in only, Antonio's rulings 4 and 5).
+         Pills switch, the field creates; deleting arms on the pill's x in
+         Edit mode, same two-tap contract as every destructive action here. -->
+    <div class="list-switch" id="listSwitch" hidden>
+      <span class="ls-label">Lists</span>
+      <div class="ls-pills" id="lsPills"></div>
+      <button type="button" class="ls-new-btn" id="lsNewBtn">+ New list</button>
+      <form class="ls-new-form" id="lsNewForm" hidden>
+        <input type="text" id="lsNewName" maxlength="40" placeholder="Festival, Wedding, Residency..." aria-label="Name the new list" />
+        <button type="submit" class="add-btn">Create</button>
+      </form>
+      <p class="acct-msg" id="lsMsg" role="status" aria-live="polite"></p>
+    </div>
+
     <!-- One toolbar, four short verbs (Antonio): Edit, Clear, Download PDF,
          Email. The old layout split them across two rows a full page apart,
          with "Download the printable PDF" and "Clear the list" spelling out
@@ -932,6 +986,97 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   @media (hover: hover) { .add-own .add-btn:hover { border-color: var(--text-dim); } }
 
+  /* ACCOUNT / SYNC row: reads as one quiet line under the meter, expands to
+     a card. Same transparent-button language as the toolbar. */
+  .acct { margin-bottom: 1rem; }
+  .acct-line {
+    display: flex; align-items: center; gap: 0.55rem; width: 100%;
+    background: none; border: none; padding: 0.15rem 0; cursor: pointer;
+    color: var(--text-dim); font-family: var(--font-body); font-size: 0.82rem;
+    text-align: left;
+  }
+  @media (hover: hover) { .acct-line:hover .acct-text { color: var(--text); } }
+  .acct-dot {
+    flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--edge); border: 1px solid var(--text-faint);
+  }
+  .acct-dot.on { background: var(--green); border-color: var(--green); }
+  .acct-card {
+    margin-top: 0.7rem; padding: 1.1rem 1.2rem;
+    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+  }
+  .acct-copy { font-size: 0.88rem; margin-bottom: 0.85rem; }
+  .acct-who { color: var(--text); font-weight: 600; }
+  .gsi-holder { margin-bottom: 0.85rem; }
+  .gsi-holder:empty { display: none; }
+  .acct-form { display: flex; gap: 8px; flex-wrap: wrap; }
+  .acct-form input {
+    flex: 1 1 200px; min-width: 0; background: var(--bg); color: var(--text);
+    border: 1px solid var(--edge); border-radius: var(--radius);
+    padding: 0.7rem 0.8rem; font-family: var(--font-body); font-size: 0.9rem;
+  }
+  .acct-form input::placeholder { color: var(--text-faint); }
+  .acct-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .acct-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .acct-del { display: inline-grid; }
+  .acct-del > span { grid-area: 1 / 1; }
+  .acct-del .rs-arm { visibility: hidden; }
+  .acct-del.armed { border-color: var(--red); color: var(--red); }
+  .acct-del.armed .rs-idle { visibility: hidden; }
+  .acct-del.armed .rs-arm { visibility: visible; }
+  .acct-fine { font-size: 0.78rem; margin-top: 0.7rem; }
+  .acct-msg { font-size: 0.82rem; margin-top: 0.55rem; min-height: 0; color: var(--text-dim); }
+  .acct-msg.ok { color: var(--green); }
+  .acct-msg.err { color: var(--red); }
+  .acct-msg:empty { display: none; }
+
+  /* Named-list switcher (Custom + signed in). Pills, house-monochrome; the
+     active list is simply the lit one. */
+  .list-switch { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+  /* Author display beats the UA's [hidden] rule (same lesson as the toolbar
+     buttons on Antonio's iPhone): state it explicitly. */
+  .list-switch[hidden] { display: none; }
+  .list-switch .ls-label {
+    color: var(--text-faint); font-family: var(--font-display); font-weight: 700;
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .ls-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ls-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: none; border: 1px solid var(--edge); border-radius: var(--radius);
+    color: var(--text-dim); font-family: var(--font-body); font-size: 0.82rem;
+    padding: 0.42rem 0.7rem; cursor: pointer; max-width: 190px;
+  }
+  .ls-pill .ls-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  @media (hover: hover) { .ls-pill:hover { border-color: var(--text-dim); color: var(--text); } }
+  .ls-pill.is-on { border-color: var(--text); color: var(--text); }
+  .ls-x { display: none; border: none; background: none; color: var(--text-faint); font-size: 0.95rem; line-height: 1; padding: 0 0 0 2px; cursor: pointer; }
+  .list-switch.editing .ls-x { display: inline; }
+  .ls-pill.is-on .ls-x { display: none; }
+  .ls-x.armed { color: var(--red); }
+  .ls-new-btn {
+    background: none; border: 1px dashed var(--edge); border-radius: var(--radius);
+    color: var(--text-faint); font-family: var(--font-body); font-size: 0.82rem;
+    padding: 0.42rem 0.7rem; cursor: pointer;
+  }
+  @media (hover: hover) { .ls-new-btn:hover { color: var(--text); border-color: var(--text-dim); } }
+  .ls-new-form { display: flex; gap: 6px; flex: 1 1 100%; }
+  .ls-new-form[hidden] { display: none; }
+  .ls-new-form .add-btn {
+    flex: 0 0 auto; background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 0.8rem;
+    text-transform: uppercase; letter-spacing: 0.03em; padding: 0 1rem; cursor: pointer;
+  }
+  @media (hover: hover) { .ls-new-form .add-btn:hover { border-color: var(--text-dim); } }
+  .ls-new-form input {
+    flex: 1 1 160px; min-width: 0; background: var(--bg); color: var(--text);
+    border: 1px solid var(--edge); border-radius: var(--radius);
+    padding: 0.55rem 0.7rem; font-family: var(--font-body); font-size: 0.85rem;
+  }
+  .ls-new-form input::placeholder { color: var(--text-faint); }
+  .ls-new-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .list-switch .acct-msg { flex: 1 1 100%; margin-top: 0; }
+
   @media (prefers-reduced-motion: reduce) {
     .meter-fill, .box, .box::after, .readiness-pct, .mode-btn, .chev { transition: none; }
   }
@@ -976,6 +1121,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const HIDDENG_KEY = 'SMG_CHECKLIST_HIDDENGROUPS_V1';
   const NOTES_KEY = 'SMG_CHECKLIST_NOTES_V1';
   const EMAIL_KEY = 'SMG_EMAIL';
+  // Accounts/sync build (2026-07-29). The live SMG_CHECKLIST_* keys above
+  // always hold the ACTIVE list, so every line of existing code keeps
+  // working untouched; other named lists are parked whole under
+  // SMG_LIST_DATA_<id>. The registry knows which is which.
+  const REG_KEY = 'SMG_LISTS_V1';           // { active, lists: [{id, n, u}] }
+  const LIST_DATA_PREFIX = 'SMG_LIST_DATA_'; // parked blobs, one per inactive list
+  const DELETED_KEY = 'SMG_SYNC_DELETED_V1'; // list ids deleted locally, pending server delete
+  // Declared HERE, above everything that runs during init: tryRestore()
+  // fires early and its save* calls reach bumpActive(), which reads these.
+  const acct: { email: string | null; google: string | null } = { email: null, google: null };
+  let pushTimer: ReturnType<typeof setTimeout> | undefined;
 
   const listEl = document.getElementById('list');
   const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
@@ -1017,6 +1173,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   function save(state: Record<string, boolean>) {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* storage blocked */ }
+    bumpActive();
   }
   function saveMode(m: string) { try { localStorage.setItem(MODE_KEY, m); } catch (e) { /* blocked */ } }
   function loadOpen(): Record<string, boolean> {
@@ -1048,18 +1205,20 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   function saveCustom(c: Record<string, { k: string; t: string }[]>) {
     try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(c)); } catch (e) { /* blocked */ }
+    bumpActive();
   }
   function loadRemoved(): string[] {
     try { const raw = localStorage.getItem(REMOVED_KEY); return raw ? JSON.parse(raw) : []; }
     catch (e) { return []; }
   }
-  function saveRemoved(a: string[]) { try { localStorage.setItem(REMOVED_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } }
+  function saveRemoved(a: string[]) { try { localStorage.setItem(REMOVED_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } bumpActive(); }
   function loadSections(): { id: string; t: string }[] {
     try { const raw = localStorage.getItem(SECTIONS_KEY); return raw ? JSON.parse(raw) : []; }
     catch (e) { return []; }
   }
   function saveSections(s: { id: string; t: string }[]) {
     try { localStorage.setItem(SECTIONS_KEY, JSON.stringify(s)); } catch (e) { /* blocked */ }
+    bumpActive();
   }
   // Built-in categories the DJ removed in Custom (hidden, not deleted:
   // Reset list restores them). User sections delete outright instead.
@@ -1067,12 +1226,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     try { const raw = localStorage.getItem(HIDDENG_KEY); return raw ? JSON.parse(raw) : []; }
     catch (e) { return []; }
   }
-  function saveHiddenGroups(a: string[]) { try { localStorage.setItem(HIDDENG_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } }
+  function saveHiddenGroups(a: string[]) { try { localStorage.setItem(HIDDENG_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } bumpActive(); }
   function loadNotes(): Record<string, string> {
     try { const raw = localStorage.getItem(NOTES_KEY); return raw ? JSON.parse(raw) : {}; }
     catch (e) { return {}; }
   }
-  function saveNotes(n: Record<string, string>) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch (e) { /* blocked */ } }
+  function saveNotes(n: Record<string, string>) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch (e) { /* blocked */ } bumpActive(); }
   // Escape, keep line breaks, and make URLs clickable. Escape-first, then
   // wrap URL tokens, so nothing a DJ types can inject markup.
   function notesHtml(text: string): string {
@@ -1137,12 +1296,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     try { const raw = localStorage.getItem(ORDER_KEY); return raw ? JSON.parse(raw) : {}; }
     catch (e) { return {}; }
   }
-  function saveOrder(o: Record<string, string[]>) { try { localStorage.setItem(ORDER_KEY, JSON.stringify(o)); } catch (e) { /* blocked */ } }
+  function saveOrder(o: Record<string, string[]>) { try { localStorage.setItem(ORDER_KEY, JSON.stringify(o)); } catch (e) { /* blocked */ } bumpActive(); }
   function loadRenames(): Record<string, string> {
     try { const raw = localStorage.getItem(RENAME_KEY); return raw ? JSON.parse(raw) : {}; }
     catch (e) { return {}; }
   }
-  function saveRenames(r: Record<string, string>) { try { localStorage.setItem(RENAME_KEY, JSON.stringify(r)); } catch (e) { /* blocked */ } }
+  function saveRenames(r: Record<string, string>) { try { localStorage.setItem(RENAME_KEY, JSON.stringify(r)); } catch (e) { /* blocked */ } bumpActive(); }
   function getEmail(): string { try { return localStorage.getItem(EMAIL_KEY) || ''; } catch (e) { return ''; } }
   function setEmail(v: string) { try { localStorage.setItem(EMAIL_KEY, v); } catch (e) { /* blocked */ } }
 
@@ -2147,6 +2306,478 @@ ${sections}
       render();
     });
   }
+
+  // ======================= ACCOUNTS / SYNC =======================
+  // localStorage stays the source of truth (Antonio's ruling); the server
+  // holds copies so another signed-in device can pick them up. Conflict
+  // policy is last-write-wins per named list, no merging. MODE and OPEN are
+  // device-local on purpose: what you keep collapsed on your phone is not a
+  // property of the list.
+
+  const acctLine = document.getElementById('acctLine');
+  const acctCard = document.getElementById('acctCard');
+  const acctDot = document.getElementById('acctDot');
+  const acctText = document.getElementById('acctText');
+  const acctOut = document.getElementById('acctOut');
+  const acctIn = document.getElementById('acctIn');
+  const acctEmailEl = document.getElementById('acctEmail');
+  const acctForm = document.getElementById('acctForm') as HTMLFormElement | null;
+  const acctMsg = document.getElementById('acctMsg');
+  const acctMsg2 = document.getElementById('acctMsg2');
+  const listSwitch = document.getElementById('listSwitch');
+  const lsPills = document.getElementById('lsPills');
+  const lsNewBtn = document.getElementById('lsNewBtn');
+  const lsNewForm = document.getElementById('lsNewForm') as HTMLFormElement | null;
+  const lsNewName = document.getElementById('lsNewName') as HTMLInputElement | null;
+  const lsMsg = document.getElementById('lsMsg');
+  const MAX_LISTS = 10;
+
+  type RegList = { id: string; n: string; u: number };
+  type Registry = { active: string; lists: RegList[] };
+
+  function loadReg(): Registry {
+    try {
+      const raw = localStorage.getItem(REG_KEY);
+      if (raw) {
+        const r = JSON.parse(raw);
+        if (r && r.active && Array.isArray(r.lists) && r.lists.length) return r;
+      }
+    } catch (e) { /* fall through */ }
+    return { active: 'main', lists: [{ id: 'main', n: 'My checklist', u: 0 }] };
+  }
+  function saveReg(r: Registry) { try { localStorage.setItem(REG_KEY, JSON.stringify(r)); } catch (e) { /* blocked */ } }
+  function loadDeleted(): string[] {
+    try { const raw = localStorage.getItem(DELETED_KEY); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
+  }
+  function saveDeleted(a: string[]) { try { localStorage.setItem(DELETED_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } }
+
+  // The active list IS the live keys; a snapshot is just reading them all.
+  function snapshotLive() {
+    return {
+      ticks: load(), custom: loadCustom(), removed: loadRemoved(),
+      renames: loadRenames(), order: loadOrder(), sections: loadSections(),
+      hiddenGroups: loadHiddenGroups(), notes: loadNotes(),
+    };
+  }
+  function liveHasContent(): boolean {
+    const s = snapshotLive();
+    return Object.keys(s.ticks).length > 0 || Object.keys(s.custom).length > 0 ||
+      s.removed.length > 0 || Object.keys(s.renames).length > 0 ||
+      Object.keys(s.order).length > 0 || s.sections.length > 0 ||
+      s.hiddenGroups.length > 0 || Object.keys(s.notes).length > 0;
+  }
+  // Writes RAW (not through the save* helpers) so applying a pulled or
+  // parked blob never re-marks the list as freshly edited.
+  function applyBlobStr(str: string) {
+    let b: any = {};
+    try { b = JSON.parse(str) || {}; } catch (e) { b = {}; }
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(b.ticks || {}));
+      localStorage.setItem(CUSTOM_KEY, JSON.stringify(b.custom || {}));
+      localStorage.setItem(REMOVED_KEY, JSON.stringify(b.removed || []));
+      localStorage.setItem(RENAME_KEY, JSON.stringify(b.renames || {}));
+      localStorage.setItem(ORDER_KEY, JSON.stringify(b.order || {}));
+      localStorage.setItem(SECTIONS_KEY, JSON.stringify(b.sections || []));
+      localStorage.setItem(HIDDENG_KEY, JSON.stringify(b.hiddenGroups || []));
+      localStorage.setItem(NOTES_KEY, JSON.stringify(b.notes || {}));
+    } catch (e) { /* blocked */ }
+  }
+  function getParked(id: string): string {
+    try { return localStorage.getItem(LIST_DATA_PREFIX + id) || ''; } catch (e) { return ''; }
+  }
+  function setParked(id: string, blobStr: string) {
+    try { localStorage.setItem(LIST_DATA_PREFIX + id, blobStr); } catch (e) { /* blocked */ }
+  }
+  function dropParked(id: string) { try { localStorage.removeItem(LIST_DATA_PREFIX + id); } catch (e) { /* blocked */ } }
+
+  // Every list-mutating save* helper calls this: stamp the active list as
+  // just-edited and queue a push. Cheap and safe when signed out.
+  function bumpActive() {
+    try {
+      const reg = loadReg();
+      const a = reg.lists.find((l) => l.id === reg.active);
+      if (a) { a.u = Date.now(); saveReg(reg); }
+    } catch (e) { /* never let sync bookkeeping break a tick */ }
+    if (acct.email) {
+      if (pushTimer) clearTimeout(pushTimer);
+      pushTimer = setTimeout(() => { pushAll(false); }, 2500);
+    }
+  }
+
+  function payloadLists() {
+    const reg = loadReg();
+    return reg.lists
+      .filter((l) => (l.u || 0) > 0)
+      .map((l) => ({
+        id: l.id, name: l.n, updated_at: l.u,
+        blob: l.id === reg.active ? JSON.stringify(snapshotLive()) : (getParked(l.id) || JSON.stringify({})),
+      }))
+      .filter((l) => l.blob && l.blob !== '{}');
+  }
+  async function pushAll(keepalive: boolean) {
+    if (!acct.email) return;
+    const lists = payloadLists();
+    const deleted = loadDeleted();
+    if (!lists.length && !deleted.length) return;
+    try {
+      const res = await fetch('/api/sync', {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ lists, deleted }),
+        keepalive,
+      });
+      if (res.ok) { saveDeleted([]); setDotSynced(true); }
+    } catch (e) { /* offline: localStorage already has everything */ }
+  }
+  // A tab going to background mid-edit should not lose the last change.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && pushTimer) {
+      clearTimeout(pushTimer); pushTimer = undefined;
+      pushAll(true);
+    }
+  });
+
+  async function syncNow() {
+    if (!acct.email) return;
+    let server: { id: string; name: string; blob: string; updated_at: number }[] = [];
+    try {
+      const res = await fetch('/api/sync');
+      if (!res.ok) return;
+      const d = await res.json();
+      server = Array.isArray(d.lists) ? d.lists : [];
+    } catch (e) { return; }
+    const reg = loadReg();
+    const deleted = loadDeleted();
+    let activeChanged = false;
+    server.forEach((s) => {
+      if (deleted.indexOf(s.id) !== -1) return; // deleted here; push will clean the server
+      const local = reg.lists.find((l) => l.id === s.id);
+      if (!local) {
+        reg.lists.push({ id: s.id, n: s.name, u: s.updated_at });
+        setParked(s.id, s.blob);
+      } else if (s.updated_at > (local.u || 0)) {
+        local.n = s.name; local.u = s.updated_at;
+        if (reg.active === s.id) { applyBlobStr(s.blob); activeChanged = true; }
+        else setParked(s.id, s.blob);
+      }
+    });
+    saveReg(reg);
+    await pushAll(false); // anything locally newer or missing on the server
+    setDotSynced(true);
+    if (activeChanged) location.reload(); // fresh render from the pulled state; u now matches, so no loop
+    else renderPills();
+  }
+
+  function setDotSynced(on: boolean) { if (acctDot) acctDot.classList.toggle('on', on && !!acct.email); }
+
+  function updateAcctUI() {
+    const signedIn = !!acct.email;
+    if (acctOut) acctOut.hidden = signedIn;
+    if (acctIn) acctIn.hidden = !signedIn;
+    if (acctEmailEl) acctEmailEl.textContent = acct.email || '';
+    if (acctText) acctText.textContent = signedIn
+      ? 'Synced as ' + acct.email
+      : 'Sync is off. Sign in to keep your list on every device.';
+    setDotSynced(signedIn);
+    updateListSwitch();
+  }
+
+  function updateListSwitch() {
+    if (!listSwitch) return;
+    const show = mode === 'custom' && !!acct.email;
+    listSwitch.hidden = !show;
+    if (show) renderPills();
+  }
+
+  let pillArmTimer: ReturnType<typeof setTimeout> | undefined;
+  function renderPills() {
+    if (!lsPills || !acct.email) return;
+    const reg = loadReg();
+    lsPills.innerHTML = '';
+    reg.lists.forEach((l) => {
+      const pill = document.createElement('button');
+      pill.type = 'button';
+      pill.className = 'ls-pill' + (l.id === reg.active ? ' is-on' : '');
+      const name = document.createElement('span');
+      name.className = 'ls-name';
+      name.textContent = l.n;
+      pill.appendChild(name);
+      if (l.id !== reg.active) {
+        pill.addEventListener('click', (e) => {
+          if ((e.target as HTMLElement).classList.contains('ls-x')) return;
+          switchList(l.id);
+        });
+        // Deleting a whole list is the most destructive tap on the page:
+        // Edit mode only, and the same two-tap contract as Reset.
+        const x = document.createElement('button');
+        x.type = 'button';
+        x.className = 'ls-x';
+        x.textContent = '×';
+        x.setAttribute('aria-label', 'Delete list ' + l.n);
+        x.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!x.classList.contains('armed')) {
+            x.classList.add('armed');
+            if (pillArmTimer) clearTimeout(pillArmTimer);
+            pillArmTimer = setTimeout(() => x.classList.remove('armed'), 4000);
+            return;
+          }
+          deleteList(l.id);
+        });
+        pill.appendChild(x);
+      }
+      lsPills.appendChild(pill);
+    });
+  }
+
+  function switchList(id: string) {
+    const reg = loadReg();
+    if (id === reg.active || !reg.lists.some((l) => l.id === id)) return;
+    setParked(reg.active, JSON.stringify(snapshotLive()));
+    applyBlobStr(getParked(id) || '{}');
+    reg.active = id;
+    saveReg(reg);
+    // A full rebuild beats surgically re-rendering eight kinds of state
+    // (same call Reset makes).
+    location.reload();
+  }
+
+  function createList(name: string) {
+    const t = (name || '').trim();
+    if (!t) return;
+    const reg = loadReg();
+    if (reg.lists.length >= MAX_LISTS) {
+      if (lsMsg) { lsMsg.textContent = 'Ten lists is the cap. Delete one you no longer play.'; lsMsg.className = 'acct-msg err'; }
+      return;
+    }
+    const id = 'l-' + t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 24) + '-' + Math.random().toString(36).slice(2, 6);
+    // A new list is a fresh Custom baseline: the full Advanced set, nothing
+    // ticked, nothing customised yet (that is what Custom means here).
+    reg.lists.push({ id, n: t.slice(0, 40), u: Date.now() });
+    saveReg(reg);
+    setParked(id, JSON.stringify({}));
+    switchList(id);
+  }
+
+  function deleteList(id: string) {
+    const reg = loadReg();
+    if (id === reg.active) return; // the UI never offers this
+    reg.lists = reg.lists.filter((l) => l.id !== id);
+    saveReg(reg);
+    dropParked(id);
+    const del = loadDeleted();
+    if (del.indexOf(id) === -1) { del.push(id); saveDeleted(del); }
+    renderPills();
+    if (acct.email) pushAll(false);
+  }
+
+  function markSignedIn(email: string) {
+    acct.email = email;
+    // Signing in also registers this device (Antonio's ruling 3: same
+    // identity, the account is the layer on top).
+    setUnlocked();
+    if (!getEmail()) setEmail(email);
+    // A device that never had a registry gets one now; a list that already
+    // has real content on it deserves to reach the account without waiting
+    // for the next edit.
+    const reg = loadReg();
+    const a = reg.lists.find((l) => l.id === reg.active);
+    if (a && !a.u && liveHasContent()) a.u = Date.now();
+    saveReg(reg);
+    updateAcctUI();
+    syncNow();
+    if (typeof (window as any).gtag === 'function') {
+      (window as any).gtag('event', 'account_signin', { placement: 'checklist' });
+    }
+  }
+
+  // Google Identity Services: only injected when the server says a client id
+  // is configured and nobody is signed in. One Tap on THIS page only.
+  function initGoogle() {
+    if (!acct.google || acct.email || document.getElementById('gsiScript')) return;
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.id = 'gsiScript';
+    s.async = true;
+    s.defer = true;
+    s.onload = () => {
+      const g = (window as any).google;
+      if (!g || !g.accounts || !g.accounts.id) return;
+      g.accounts.id.initialize({
+        client_id: acct.google,
+        callback: async (resp: { credential: string }) => {
+          try {
+            const r = await fetch('/api/auth/google', {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ credential: resp.credential }),
+            });
+            const d = await r.json();
+            if (d && d.ok && d.email) markSignedIn(d.email);
+            else if (acctMsg) { acctMsg.textContent = 'Google sign-in did not go through. Use the email link below.'; acctMsg.className = 'acct-msg err'; }
+          } catch (e) {
+            if (acctMsg) { acctMsg.textContent = 'No connection right now. Your list is safe on this device.'; acctMsg.className = 'acct-msg err'; }
+          }
+        },
+      });
+      const holder = document.getElementById('gsiBtn');
+      if (holder) g.accounts.id.renderButton(holder, { theme: 'filled_black', size: 'large', text: 'continue_with', shape: 'rectangular' });
+      g.accounts.id.prompt();
+    };
+    document.head.appendChild(s);
+  }
+
+  // The account row expands and collapses.
+  if (acctLine && acctCard) acctLine.addEventListener('click', () => {
+    const open = acctCard.hidden;
+    acctCard.hidden = !open;
+    acctLine.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  // Typed email: send the one-tap link.
+  if (acctForm) {
+    let busy = false;
+    acctForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      if (busy) return;
+      const inp = acctForm.querySelector('input[name="email"]') as HTMLInputElement;
+      const email = (inp.value || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        if (acctMsg) { acctMsg.textContent = 'That email does not look right. Check it and try again.'; acctMsg.className = 'acct-msg err'; }
+        inp.focus();
+        return;
+      }
+      busy = true;
+      if (acctMsg) { acctMsg.textContent = 'Sending your link...'; acctMsg.className = 'acct-msg'; }
+      try {
+        const res = await fetch('/api/auth/email', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        if (res.status === 429) {
+          if (acctMsg) { acctMsg.textContent = 'A link is already on its way. Check your inbox, or wait a few minutes for a fresh one.'; acctMsg.className = 'acct-msg err'; }
+        } else if (res.ok) {
+          if (acctMsg) { acctMsg.textContent = 'Sent to ' + email + '. Open it on this device and tap the button: that signs you in here.'; acctMsg.className = 'acct-msg ok'; }
+        } else {
+          if (acctMsg) { acctMsg.textContent = 'Could not send right now, the problem is on our side. Try again in a minute.'; acctMsg.className = 'acct-msg err'; }
+        }
+      } catch (e) {
+        if (acctMsg) { acctMsg.textContent = 'No connection. Try again when you have signal.'; acctMsg.className = 'acct-msg err'; }
+      }
+      busy = false;
+    });
+  }
+
+  // Sign out: the session ends, the device keeps everything it has.
+  const signOutBtn = document.getElementById('signOutBtn');
+  if (signOutBtn) signOutBtn.addEventListener('click', async () => {
+    try { await fetch('/api/auth/logout', { method: 'POST' }); } catch (e) { /* cookie dies server-side next visit */ }
+    acct.email = null;
+    // Named lists are an account feature: land back on the main list so the
+    // page never strands you on a list you can no longer switch away from.
+    const reg = loadReg();
+    if (reg.active !== 'main' && reg.lists.some((l) => l.id === 'main')) { switchList('main'); return; }
+    updateAcctUI();
+  });
+
+  // Delete account: two taps, then everything server-side is gone. The
+  // device's own list stays, because it is the DJ's device.
+  const delAcctBtn = document.getElementById('delAcctBtn');
+  if (delAcctBtn) {
+    let armed = false;
+    let armTimer: ReturnType<typeof setTimeout> | undefined;
+    const disarm = () => { armed = false; if (armTimer) clearTimeout(armTimer); delAcctBtn.classList.remove('armed'); };
+    delAcctBtn.addEventListener('click', async () => {
+      if (!armed) {
+        armed = true;
+        delAcctBtn.classList.add('armed');
+        armTimer = setTimeout(disarm, 4000);
+        return;
+      }
+      disarm();
+      if (acctMsg2) { acctMsg2.textContent = 'Deleting...'; acctMsg2.className = 'acct-msg'; }
+      try {
+        const res = await fetch('/api/account', { method: 'DELETE' });
+        const d = await res.json();
+        if (res.ok && d && d.ok) {
+          acct.email = null;
+          try {
+            localStorage.removeItem(UNLOCK_KEY);
+            localStorage.removeItem(EMAIL_KEY);
+            localStorage.removeItem('SMG_ARTIST');
+            localStorage.removeItem(DELETED_KEY);
+          } catch (e) { /* blocked */ }
+          if (typeof (window as any).gtag === 'function') {
+            (window as any).gtag('event', 'account_delete', { placement: 'checklist' });
+          }
+          const reg = loadReg();
+          if (reg.active !== 'main' && reg.lists.some((l) => l.id === 'main')) { switchList('main'); return; }
+          updateAcctUI();
+          if (acctMsg) { acctMsg.textContent = 'Account deleted. Everything on our side is gone; the list on this device stays yours.'; acctMsg.className = 'acct-msg ok'; }
+        } else if (acctMsg2) {
+          acctMsg2.textContent = 'Could not delete right now, the problem is on our side. Try again in a minute.'; acctMsg2.className = 'acct-msg err';
+        }
+      } catch (e) {
+        if (acctMsg2) { acctMsg2.textContent = 'No connection. Try again when you have signal.'; acctMsg2.className = 'acct-msg err'; }
+      }
+    });
+  }
+
+  // New-list controls.
+  if (lsNewBtn && lsNewForm) lsNewBtn.addEventListener('click', () => {
+    lsNewForm.hidden = false;
+    lsNewBtn.hidden = true;
+    if (lsNewName) lsNewName.focus();
+  });
+  if (lsNewForm) lsNewForm.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    if (lsNewName) createList(lsNewName.value);
+  });
+
+  // The sign-in redirect lands here. ?signedin=1: the session cookie is
+  // already set, the /api/auth/me call below turns the row green; one line
+  // says so and the param goes away. ?signin=expired: the link was dead or
+  // used; open the card so asking again is one tap away.
+  {
+    const sp = new URLSearchParams(location.search);
+    if (sp.get('signedin') === '1') {
+      if (acctMsg) { acctMsg.textContent = 'Signed in. Your lists follow you now.'; acctMsg.className = 'acct-msg ok'; }
+      sp.delete('signedin');
+      history.replaceState(null, '', location.pathname + (sp.toString() ? '?' + sp.toString() : '') + location.hash);
+    } else if (sp.get('signin')) {
+      if (acctCard && acctLine) { acctCard.hidden = false; acctLine.setAttribute('aria-expanded', 'true'); }
+      if (acctMsg) { acctMsg.textContent = 'That sign-in link expired or was already used. Ask for a fresh one below.'; acctMsg.className = 'acct-msg err'; }
+      sp.delete('signin');
+      history.replaceState(null, '', location.pathname + (sp.toString() ? '?' + sp.toString() : '') + location.hash);
+    }
+  }
+
+  // The switcher follows the mode. setMode() runs before this block exists
+  // on the timeline, so the hook is a second listener on the same buttons
+  // (registered later = runs after setMode has done its work), not a call
+  // inside setMode that would trip the TDZ during init.
+  modeBtns.forEach((b) => b.addEventListener('click', () => updateListSwitch()));
+  // Edit mode reveals the per-pill delete, same as every other x on the page.
+  if (editToggle) editToggle.addEventListener('click', () => {
+    if (listSwitch && listEl) listSwitch.classList.toggle('editing', listEl.getAttribute('data-edit') === 'on');
+  });
+
+  // Who is signed in? Asked once per load; offline or on a static test
+  // server this fails quietly and the page is exactly what it was before
+  // accounts existed.
+  (async function initAccount() {
+    try {
+      const res = await fetch('/api/auth/me');
+      const d = await res.json();
+      if (d && d.ok) {
+        acct.google = d.google || null;
+        if (d.email) { markSignedIn(d.email); return; }
+      }
+    } catch (e) { /* signed out is the default state */ }
+    updateAcctUI();
+    initGoogle();
+  })();
 
   // back to top
   const topBtn = document.getElementById('topBtn');
