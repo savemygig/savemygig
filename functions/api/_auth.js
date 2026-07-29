@@ -102,20 +102,43 @@ export async function readSession(request, env) {
 /**
  * Find or create the user for a proven email. Also stamps last_login, and
  * records the Google sub the first time Google vouches for this address.
+ * Returns the row plus `created` so callers know a FIRST sign-in happened
+ * (that is when the Brevo contact gets made and the page asks who they are).
  */
 export async function getOrCreateUser(db, email, googleSub) {
   const now = Date.now();
   const lower = String(email).toLowerCase();
-  let user = await db.prepare('SELECT id, email, google_sub FROM users WHERE email = ?1').bind(lower).first();
+  let created = false;
+  let user = await db.prepare('SELECT id, email, google_sub, artist, instagram FROM users WHERE email = ?1').bind(lower).first();
   if (!user) {
     await db.prepare('INSERT INTO users (email, google_sub, created_at, last_login) VALUES (?1, ?2, ?3, ?3)')
       .bind(lower, googleSub || null, now).run();
-    user = await db.prepare('SELECT id, email, google_sub FROM users WHERE email = ?1').bind(lower).first();
+    user = await db.prepare('SELECT id, email, google_sub, artist, instagram FROM users WHERE email = ?1').bind(lower).first();
+    created = true;
   } else {
     await db.prepare('UPDATE users SET last_login = ?1, google_sub = COALESCE(google_sub, ?2) WHERE id = ?3')
       .bind(now, googleSub || null, user.id).run();
   }
-  return user;
+  return { ...user, created };
+}
+
+/**
+ * Best-effort Brevo contact on FIRST account sign-in (Antonio's ruling 3:
+ * the account reuses the same contact record; SOURCE=account, NO list ids,
+ * so no marketing list membership and no duplicate opt-in emails). Never
+ * blocks a sign-in.
+ */
+export async function ensureBrevoContact(env, email) {
+  if (!env.BREVO_API_KEY) return;
+  try {
+    await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: { 'api-key': env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify({ email, updateEnabled: true, attributes: { SOURCE: 'account' } }),
+    });
+  } catch (err) {
+    console.log('ensureBrevoContact failed', String(err));
+  }
 }
 
 /**

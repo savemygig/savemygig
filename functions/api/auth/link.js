@@ -11,7 +11,7 @@
  * sees ?signedin=1.
  */
 
-import { json, sha256hex, makeSessionToken, sessionCookie, getOrCreateUser } from '../_auth.js';
+import { json, sha256hex, makeSessionToken, sessionCookie, getOrCreateUser, ensureBrevoContact } from '../_auth.js';
 
 const redirect = (url, cookie) => {
   const headers = { location: url };
@@ -36,6 +36,7 @@ export async function onRequestGet({ request, env }) {
   await env.DB.prepare('UPDATE login_tokens SET used = 1 WHERE token_hash = ?1').bind(hash).run();
 
   const user = await getOrCreateUser(env.DB, row.email, null);
+  if (user.created) await ensureBrevoContact(env, user.email);
   const token = await makeSessionToken(user.id, user.email, env.SESSION_SECRET);
   return redirect(`${origin}/checklist?signedin=1`, sessionCookie(token));
 }

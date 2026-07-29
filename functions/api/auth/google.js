@@ -11,7 +11,7 @@
  * /api/auth/me for it, so client and server can never disagree).
  */
 
-import { json, b64urlDecode, makeSessionToken, sessionCookie, getOrCreateUser } from '../_auth.js';
+import { json, b64urlDecode, makeSessionToken, sessionCookie, getOrCreateUser, ensureBrevoContact } from '../_auth.js';
 
 const CERTS_URL = 'https://www.googleapis.com/oauth2/v3/certs';
 
@@ -72,9 +72,10 @@ export async function onRequestPost({ request, env }) {
   }
 
   const user = await getOrCreateUser(env.DB, payload.email, payload.sub || null);
+  if (user.created) await ensureBrevoContact(env, user.email);
   const token = await makeSessionToken(user.id, user.email, env.SESSION_SECRET);
 
-  return new Response(JSON.stringify({ ok: true, email: user.email }), {
+  return new Response(JSON.stringify({ ok: true, email: user.email, artist: user.artist || null }), {
     status: 200,
     headers: {
       'content-type': 'application/json; charset=utf-8',

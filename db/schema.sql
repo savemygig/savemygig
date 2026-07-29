@@ -10,6 +10,12 @@ CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   email TEXT NOT NULL UNIQUE COLLATE NOCASE,
   google_sub TEXT UNIQUE,
+  -- Antonio's ruling mid-build 2026-07-29: the account must know the artist
+  -- (required, the personal touch + follow-back) and their Instagram
+  -- (optional, the follow-back promise). Collected right after first
+  -- sign-in, because Google's button cannot carry custom fields.
+  artist TEXT,
+  instagram TEXT,
   created_at INTEGER NOT NULL,
   last_login INTEGER
 );

@@ -287,6 +287,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         </div>
         <div id="acctIn" hidden>
           <p class="dim acct-copy">Signed in as <strong class="acct-who" id="acctEmail"></strong>. Your lists sync to this account.</p>
+          <!-- First-sign-in completion (Antonio's ruling: the account asks
+               what the gate asks, same fields, same promise). Shows until
+               the account has an artist name; prefilled when this device
+               already knows it; never blocks sync. -->
+          <form class="acct-form acct-profile" id="acctProfile" hidden novalidate>
+            <p class="dim acct-copy" style="flex:1 1 100%;margin-bottom:0.1rem">So we know what to call you:</p>
+            <input type="text" name="artist" required autocomplete="nickname" placeholder="Artist name or first name" aria-label="Artist name or first name" maxlength="80" />
+            <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Optional: @your.artist.instagram, we will happily follow your work" aria-label="Optional: your artist Instagram, we will happily follow your work" maxlength="80" />
+            <button type="submit" class="btn btn-neutral">Save</button>
+            <p class="acct-msg" id="acctProfileMsg" role="status" aria-live="polite"></p>
+          </form>
           <div class="acct-actions">
             <button type="button" class="btn btn-neutral" id="signOutBtn">Sign out</button>
             <!-- Same stacked-cell armed pattern as Reset list: width can
@@ -1018,6 +1029,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-form input::placeholder { color: var(--text-faint); }
   .acct-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .acct-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .acct-profile { margin-bottom: 0.9rem; }
+  .acct-profile input { flex: 1 1 100%; }
+  .acct-profile[hidden] { display: none; }
   .acct-del { display: inline-grid; }
   .acct-del > span { grid-area: 1 / 1; }
   .acct-del .rs-arm { visibility: hidden; }
@@ -1130,7 +1144,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const DELETED_KEY = 'SMG_SYNC_DELETED_V1'; // list ids deleted locally, pending server delete
   // Declared HERE, above everything that runs during init: tryRestore()
   // fires early and its save* calls reach bumpActive(), which reads these.
-  const acct: { email: string | null; google: string | null } = { email: null, google: null };
+  const acct: { email: string | null; google: string | null; artist: string | null } = { email: null, google: null, artist: null };
   let pushTimer: ReturnType<typeof setTimeout> | undefined;
 
   const listEl = document.getElementById('list');
@@ -2479,6 +2493,24 @@ ${sections}
       ? 'Synced as ' + acct.email
       : 'Sync is off. Sign in to keep your list on every device.';
     setDotSynced(signedIn);
+    // Completion step: the account asks what the gate asks, until it has a
+    // name. Prefilled when this device already greeted the DJ. The card
+    // opens itself so the form is actually seen after the sign-in redirect.
+    const profileForm = document.getElementById('acctProfile') as HTMLFormElement | null;
+    if (profileForm) {
+      const needs = signedIn && !acct.artist;
+      profileForm.hidden = !needs;
+      if (needs) {
+        const a = profileForm.querySelector('input[name="artist"]') as HTMLInputElement | null;
+        if (a && !a.value) {
+          try { a.value = localStorage.getItem('SMG_ARTIST') || ''; } catch (e) { /* blocked */ }
+        }
+        if (acctCard && acctCard.hidden && acctLine) {
+          acctCard.hidden = false;
+          acctLine.setAttribute('aria-expanded', 'true');
+        }
+      }
+    }
     updateListSwitch();
   }
 
@@ -2571,12 +2603,20 @@ ${sections}
     if (acct.email) pushAll(false);
   }
 
-  function markSignedIn(email: string) {
+  function markSignedIn(email: string, artist?: string | null) {
     acct.email = email;
+    if (artist !== undefined) acct.artist = artist;
     // Signing in also registers this device (Antonio's ruling 3: same
     // identity, the account is the layer on top).
     setUnlocked();
     if (!getEmail()) setEmail(email);
+    // The artist name follows the DJ like the lists do: a new device learns
+    // it from the account, so the homepage greeting works there too.
+    if (acct.artist) {
+      try {
+        if (!localStorage.getItem('SMG_ARTIST')) localStorage.setItem('SMG_ARTIST', acct.artist.split(/\s+/)[0]);
+      } catch (e) { /* blocked */ }
+    }
     // A device that never had a registry gets one now; a list that already
     // has real content on it deserves to reach the account without waiting
     // for the next edit.
@@ -2613,7 +2653,7 @@ ${sections}
               body: JSON.stringify({ credential: resp.credential }),
             });
             const d = await r.json();
-            if (d && d.ok && d.email) markSignedIn(d.email);
+            if (d && d.ok && d.email) markSignedIn(d.email, d.artist || null);
             else if (acctMsg) { acctMsg.textContent = 'Google sign-in did not go through. Use the email link below.'; acctMsg.className = 'acct-msg err'; }
           } catch (e) {
             if (acctMsg) { acctMsg.textContent = 'No connection right now. Your list is safe on this device.'; acctMsg.className = 'acct-msg err'; }
@@ -2666,6 +2706,50 @@ ${sections}
         if (acctMsg) { acctMsg.textContent = 'No connection. Try again when you have signal.'; acctMsg.className = 'acct-msg err'; }
       }
       busy = false;
+    });
+  }
+
+  // The completion step: artist required (same rule and same error line as
+  // the gate), Instagram optional with the follow-back promise.
+  const acctProfileForm = document.getElementById('acctProfile') as HTMLFormElement | null;
+  const acctProfileMsg = document.getElementById('acctProfileMsg');
+  if (acctProfileForm) {
+    let profileBusy = false;
+    acctProfileForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      if (profileBusy) return;
+      const aInp = acctProfileForm.querySelector('input[name="artist"]') as HTMLInputElement;
+      const iInp = acctProfileForm.querySelector('input[name="instagram"]') as HTMLInputElement | null;
+      const artist = (aInp.value || '').trim();
+      const instagram = iInp ? (iInp.value || '').trim() : '';
+      if (!artist) {
+        if (acctProfileMsg) { acctProfileMsg.textContent = 'Add your artist name or first name, so we know what to call you.'; acctProfileMsg.className = 'acct-msg err'; }
+        aInp.focus();
+        return;
+      }
+      profileBusy = true;
+      try {
+        const res = await fetch('/api/profile', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ artist, instagram }),
+        });
+        const d = await res.json();
+        if (res.ok && d && d.ok) {
+          acct.artist = artist;
+          try { localStorage.setItem('SMG_ARTIST', artist.split(/\s+/)[0]); } catch (e) { /* blocked */ }
+          updateAcctUI();
+          if (acctMsg2) { acctMsg2.textContent = instagram ? 'Saved. We will happily follow your work.' : 'Saved.'; acctMsg2.className = 'acct-msg ok'; }
+          if (typeof (window as any).gtag === 'function') {
+            (window as any).gtag('event', 'account_profile', { placement: 'checklist' });
+          }
+        } else if (acctProfileMsg) {
+          acctProfileMsg.textContent = 'Could not save right now, the problem is on our side. Try again in a minute.'; acctProfileMsg.className = 'acct-msg err';
+        }
+      } catch (e) {
+        if (acctProfileMsg) { acctProfileMsg.textContent = 'No connection. Try again when you have signal.'; acctProfileMsg.className = 'acct-msg err'; }
+      }
+      profileBusy = false;
     });
   }
 
@@ -2772,7 +2856,7 @@ ${sections}
       const d = await res.json();
       if (d && d.ok) {
         acct.google = d.google || null;
-        if (d.email) { markSignedIn(d.email); return; }
+        if (d.email) { markSignedIn(d.email, d.artist || null); return; }
       }
     } catch (e) { /* signed out is the default state */ }
     updateAcctUI();

@@ -14,9 +14,17 @@ export async function onRequestGet({ request, env }) {
   // Verified against the users table: a device whose account was deleted
   // elsewhere reads as signed out, immediately.
   const session = await readVerifiedSession(request, env);
+  let artist = null;
+  if (session && env.DB) {
+    const row = await env.DB.prepare('SELECT artist FROM users WHERE id = ?1').bind(session.uid).first();
+    artist = row && row.artist ? row.artist : null;
+  }
   return json({
     ok: true,
     email: session ? session.email : null,
+    // The page shows the completion step (artist + Instagram, the same
+    // fields as the registration gate) until artist exists.
+    artist,
     google: env.GOOGLE_CLIENT_ID || null,
   });
 }
