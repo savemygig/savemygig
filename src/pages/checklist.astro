@@ -239,10 +239,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            so the box shows one thing at a time instead of everything at
            once. -->
       <p class="unlock-title" id="unlockTitle">Unlock Advanced & Custom</p>
-      <!-- Per-device honesty (audit finding): registration unlocks THIS device
-           today, and the emailed copy is what carries the list across devices.
-           When account sync ships this copy gets stronger, not corrected. -->
-      <p class="dim unlock-copy" id="unlockCopy">Access is instant, no password. The Email list button carries your list to any other device.</p>
+      <!-- Round 5, second pass (Antonio, live-testing right after the first
+           round-5 push): "access is instant, no password... you don't need
+           to say that" — cut entirely. Element stays in the DOM (id kept)
+           because openGate() still swaps its text for the PDF/email-list
+           gate variants; hidden via CSS instead of removed from markup, so
+           JS doesn't need a guard added everywhere it touches unlockCopy. -->
+      <p class="dim unlock-copy" id="unlockCopy" hidden>Access is instant, no password. The Email list button carries your list to any other device.</p>
 
       <!-- Google first now (Antonio, round 5): most DJs tap this and never
            see the fields below it. Antonio's OLD ruling required the artist
