@@ -2364,7 +2364,9 @@ ${sections}
   const lsNewForm = document.getElementById('lsNewForm') as HTMLFormElement | null;
   const lsNewName = document.getElementById('lsNewName') as HTMLInputElement | null;
   const lsMsg = document.getElementById('lsMsg');
-  const MAX_LISTS = 10;
+  // Antonio's cap: main list + three of the DJ's own (Festival / Wedding /
+  // Residency being the suggested three), so the row never becomes a mess.
+  const MAX_LISTS = 4;
 
   type RegList = { id: string; n: string; u: number };
   type Registry = { active: string; lists: RegList[] };
@@ -2580,6 +2582,13 @@ ${sections}
       }
       lsPills.appendChild(pill);
     });
+    // At the cap the "+ New list" affordance disappears entirely: a dead
+    // button would just restate the mess the cap exists to prevent.
+    if (lsNewBtn && lsNewForm) {
+      const atCap = reg.lists.length >= MAX_LISTS;
+      if (atCap) { lsNewBtn.hidden = true; lsNewForm.hidden = true; }
+      else if (lsNewForm.hidden) lsNewBtn.hidden = false;
+    }
   }
 
   function switchList(id: string) {
@@ -2599,7 +2608,7 @@ ${sections}
     if (!t) return;
     const reg = loadReg();
     if (reg.lists.length >= MAX_LISTS) {
-      if (lsMsg) { lsMsg.textContent = 'Ten lists is the cap. Delete one you no longer play.'; lsMsg.className = 'acct-msg err'; }
+      if (lsMsg) { lsMsg.textContent = 'Your main list plus three of your own is the cap. Delete one you no longer play.'; lsMsg.className = 'acct-msg err'; }
       return;
     }
     const id = 'l-' + t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 24) + '-' + Math.random().toString(36).slice(2, 6);
