@@ -94,17 +94,24 @@ import BetaNotice from '../components/BetaNotice.astro';
       Designed for working DJs facing USB errors, emergency loop mode, Rekordbox export issues or corrupted drives.
     </p>
 
+    <!-- Collapse doctrine (universalized 2026-07-28): the common-problems
+         list ships CLOSED. The header is the index; a tap opens the list.
+         Antonio's call on the emergency-tree preview review. -->
     <section class="emerg-problems">
-      <h2 class="emerg-problems-h">Common CDJ &amp; XDJ USB problems</h2>
-      <ul class="problem-list">
-        <li><a href="/fix/usb-not-recognized-cdj">USB not detected on CDJ 2000/3000 &amp; XDJ</a></li>
-        <li><a href="/fix/cdj-error-e-8302">Error E-8302, E-8305, E-8306</a></li>
-        <li><a href="/fix/playlists-not-showing-cdj">Playlists not showing</a></li>
-        <li><a href="/fix/waveforms-not-loading-cdj">Waveforms not loading</a></li>
-        <li><a href="/fix/emergency-loop-mode">Emergency Loop mode triggered</a></li>
-        <li><a href="/fix/rekordbox-export-failed">Rekordbox export failure</a></li>
-        <li><a href="/fix/rekordbox-not-detecting-usb">Rekordbox not detecting the USB</a></li>
-      </ul>
+      <details class="acc-sec">
+        <summary><h2 class="acc-h2">Common CDJ &amp; XDJ USB problems</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+        <div class="acc-body">
+          <ul class="problem-list">
+            <li><a href="/fix/usb-not-recognized-cdj">USB not detected on CDJ 2000/3000 &amp; XDJ</a></li>
+            <li><a href="/fix/cdj-error-e-8302">Error E-8302, E-8305, E-8306</a></li>
+            <li><a href="/fix/playlists-not-showing-cdj">Playlists not showing</a></li>
+            <li><a href="/fix/waveforms-not-loading-cdj">Waveforms not loading</a></li>
+            <li><a href="/fix/emergency-loop-mode">Emergency Loop mode triggered</a></li>
+            <li><a href="/fix/rekordbox-export-failed">Rekordbox export failure</a></li>
+            <li><a href="/fix/rekordbox-not-detecting-usb">Rekordbox not detecting the USB</a></li>
+          </ul>
+        </div>
+      </details>
     </section>
   </main>
 </Base>
