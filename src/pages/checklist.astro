@@ -334,7 +334,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          exist anywhere: Google, or an emailed one-tap link. -->
     <div class="acct-card" id="acctCard" hidden>
       <div id="acctOut">
-        <p class="dim acct-copy">One account, no password, ever. Your list stays saved on each device and follows you to any other.</p>
+        <!-- Round 7 (Antonio): this is now the FIRST thing shown for
+             Advanced/Custom too, not just Sync, so the wording has to work
+             as a cold open, not just a returning-user reminder. -->
+        <p class="dim acct-copy">One account, no password, ever. Your list stays saved on your account and follows you to any device you sign in on.</p>
         <!-- Google renders its own button in here when the client id is
              configured; until then the holder is empty and email carries
              the whole flow. -->
@@ -375,7 +378,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           <p class="acct-msg" id="acctProfileMsg" role="status" aria-live="polite"></p>
         </form>
         <div class="acct-actions">
-          <button type="button" class="btn btn-neutral" id="signOutBtn">Sign out</button>
+          <!-- Round 7 (Antonio): "signing out by accident" is a real risk on
+               a single tap, so this gets the same two-tap arm as Delete
+               account and Reset -- same stacked-cell trick, width can never
+               change, innerHTML swaps stay banned. -->
+          <button type="button" class="btn btn-neutral acct-signout" id="signOutBtn">
+            <span class="rs-idle">Sign out</span>
+            <span class="rs-arm" aria-hidden="true">Are you sure?</span>
+          </button>
           <!-- Same stacked-cell armed pattern as Reset list: width can
                never change, innerHTML swaps stay banned. -->
           <button type="button" class="btn btn-neutral acct-del" id="delAcctBtn">
@@ -386,7 +396,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <!-- Round 5, third pass (Antonio): this used to always show "Deletes
              your account..." even at rest, which read as a warning for
              something the DJ hadn't done yet. Empty/hidden until Delete
-             account is actually armed; JS below fills it in only then. -->
+             account is actually armed; JS below fills it in only then.
+             Round 7: re-centered under the box (it was reading left-aligned
+             against the centered buttons above it) and reworded shorter,
+             dropping the "this session stays on the device" clause. -->
         <p class="dim acct-fine err" id="acctDelFine" hidden></p>
         <p class="acct-msg" id="acctMsg2" role="status" aria-live="polite"></p>
       </div>
@@ -1209,7 +1222,20 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-del.armed { border-color: var(--red); color: var(--red); }
   .acct-del.armed .rs-idle { visibility: hidden; }
   .acct-del.armed .rs-arm { visibility: visible; }
-  .acct-fine { font-size: 0.78rem; margin-top: 0.7rem; }
+  /* Round 7: Sign out gets the same two-tap arm as Delete account. Same
+     compound-selector lesson applied proactively this time, not after the
+     fact: .acct-actions .acct-signout, not just .acct-signout, so this
+     never loses the cascade tie to global.css's .btn { display: block }
+     the way .acct-del did in round 5. */
+  .acct-actions .acct-signout { display: inline-grid; }
+  .acct-signout > span { grid-area: 1 / 1; }
+  .acct-signout .rs-arm { visibility: hidden; }
+  .acct-signout.armed { border-color: var(--red); color: var(--red); }
+  .acct-signout.armed .rs-idle { visibility: hidden; }
+  .acct-signout.armed .rs-arm { visibility: visible; }
+  /* Round 7: was reading left-aligned against the centered buttons above it
+     (Antonio). */
+  .acct-fine { font-size: 0.78rem; margin-top: 0.7rem; text-align: center; }
   .acct-fine.err { color: var(--red); }
   .acct-msg { font-size: 0.82rem; margin-top: 0.55rem; min-height: 0; color: var(--text-dim); }
   .acct-msg.ok { color: var(--green); }
@@ -1382,6 +1408,29 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const REG_KEY = 'SMG_LISTS_V1';           // { active, lists: [{id, n, u}] }
   const LIST_DATA_PREFIX = 'SMG_LIST_DATA_'; // parked blobs, one per inactive list
   const DELETED_KEY = 'SMG_SYNC_DELETED_V1'; // list ids deleted locally, pending server delete
+  // Round 7 (Antonio): Advanced/Custom now unlock through the SAME account
+  // panel as Sync, not a separate registration gate (see the mode-button
+  // handler below). Because sign-in can round-trip through a real page
+  // redirect (the magic-link path), the "I clicked Advanced" intent has to
+  // survive a full reload -- pendingMode alone (an in-memory var) does not.
+  // Stored as "mode|timestamp" and timed out at PENDING_MODE_TTL so an
+  // abandoned click from days ago can never silently re-fire on some later,
+  // unrelated sign-in.
+  const PENDING_MODE_KEY = 'SMG_PENDING_MODE';
+  const PENDING_MODE_TTL = 60 * 60 * 1000; // 1 hour
+  function setPendingMode(m: string) { try { localStorage.setItem(PENDING_MODE_KEY, m + '|' + Date.now()); } catch (e) { /* blocked */ } }
+  function clearPendingMode() { try { localStorage.removeItem(PENDING_MODE_KEY); } catch (e) { /* blocked */ } }
+  function readPendingMode(): string | null {
+    let raw: string | null = null;
+    try { raw = localStorage.getItem(PENDING_MODE_KEY); } catch (e) { return null; }
+    if (!raw) return null;
+    const [m, ts] = raw.split('|');
+    if ((m !== 'advanced' && m !== 'custom') || !ts || (Date.now() - Number(ts)) > PENDING_MODE_TTL) {
+      clearPendingMode();
+      return null;
+    }
+    return m;
+  }
   // Declared HERE, above everything that runs during init: tryRestore()
   // fires early and its save* calls reach bumpActive(), which reads these.
   const acct: { email: string | null; google: string | null; artist: string | null } = { email: null, google: null, artist: null };
@@ -2485,13 +2534,21 @@ ${sections}
     });
   }
 
-  // mode buttons: Advanced and Custom are gated behind an email
+  // mode buttons: Advanced and Custom are gated behind an account.
+  // Round 7 (Antonio, "final instructions"): this used to open a SEPARATE
+  // registration gate (#unlock) with its own copy and its own email form.
+  // He wants Advanced, Custom and Sync to all lead to the exact same place:
+  // the account card, same "one account, no password, ever" copy, same
+  // Google-first flow. So this now just opens #acctCard, exactly like
+  // clicking Sync does -- see applyPendingModeIfAny() below for what
+  // happens once sign-in actually completes.
   modeBtns.forEach((b) => b.addEventListener('click', () => {
     const target = b.dataset.modeSet || 'basic';
     if ((target === 'advanced' || target === 'custom') && !isUnlocked()) {
       pendingMode = target;
-      pendingWant = 'mode';
-      openGate();
+      setPendingMode(target);
+      if (acctCard) acctCard.hidden = false;
+      if (acctLine) acctLine.setAttribute('aria-expanded', 'true');
       return;
     }
     if (unlockEl) unlockEl.hidden = true;
@@ -2994,6 +3051,41 @@ ${sections}
     }
   }
 
+  // Round 7: if sign-in just completed because Advanced/Custom was locked
+  // (not because the DJ opened Sync on its own), hand over the mode the
+  // same way the old registration gate used to -- apply it, close the
+  // card, scroll to the top. Called from BOTH sign-in paths: the
+  // synchronous one (Google from the card) and the one that survives a
+  // full page reload (the magic-link redirect), which is exactly why the
+  // pending intent has to live in localStorage and not just a JS variable.
+  // Also preserves the marketing double opt-in the old gate fired
+  // (Antonio's ruling: account sign-in itself does NOT join the marketing
+  // list, only a plain CRM contact -- but arriving via a mode-unlock is
+  // the same funnel the old gate fed, so that specific path still sends
+  // the opt-in email, same as it always did).
+  function applyPendingModeIfAny(): boolean {
+    const pm = readPendingMode();
+    if (!pm) return false;
+    clearPendingMode();
+    setMode(pm);
+    updateListSwitch();
+    if (acctCard) acctCard.hidden = true;
+    if (acctLine) acctLine.setAttribute('aria-expanded', 'false');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    try {
+      fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email: acct.email || '', source: 'checklist-' + pm, artist: acct.artist || '', instagram: '' }),
+      });
+    } catch (e) { /* unlocked anyway; feature is free */ }
+    if (typeof (window as any).gtag === 'function') {
+      (window as any).gtag('event', 'advanced_unlock', { placement: 'checklist', mode: pm, method: 'account' });
+    }
+    return true;
+  }
+
   // Google Identity Services: only injected when the server says a client id
   // is configured and nobody is signed in. One Tap on THIS page only. TWO
   // buttons share one callback: the sync card (plain sign-in) and the gate
@@ -3052,6 +3144,13 @@ ${sections}
                 if (typeof (window as any).gtag === 'function') {
                   (window as any).gtag('event', 'advanced_unlock', { placement: 'checklist', mode: pendingWant === 'mode' ? pendingMode : pendingWant, method: 'google' });
                 }
+              } else {
+                // Card path (round 7): Google was pressed from the account
+                // card, not the (now PDF/email-only) gate. If that card was
+                // opened because Advanced/Custom was locked, hand over the
+                // mode now; if it was opened by a plain Sync click, this is
+                // a no-op and the card just stays open, unchanged.
+                applyPendingModeIfAny();
               }
             } else {
               const msgEl = fromGate ? unlockMsg : acctMsg;
@@ -3130,6 +3229,10 @@ ${sections}
     const open = acctCard.hidden;
     acctCard.hidden = !open;
     acctLine.setAttribute('aria-expanded', open ? 'true' : 'false');
+    // Round 7: a manual close means "not now" -- drop any pending
+    // Advanced/Custom intent so a later, unrelated sign-in never
+    // surprise-applies a mode the DJ never got around to confirming.
+    if (!open) clearPendingMode();
   });
 
   // Typed email: send the one-tap link.
@@ -3212,16 +3315,34 @@ ${sections}
   }
 
   // Sign out: the session ends, the device keeps everything it has.
+  // Round 7 (Antonio): this used to fire on one tap, which was too easy to
+  // hit by accident -- same two-tap arm as Delete account and Reset now.
   const signOutBtn = document.getElementById('signOutBtn');
-  if (signOutBtn) signOutBtn.addEventListener('click', async () => {
-    try { await fetch('/api/auth/logout', { method: 'POST' }); } catch (e) { /* cookie dies server-side next visit */ }
-    acct.email = null;
-    // Named lists are an account feature: land back on the main list so the
-    // page never strands you on a list you can no longer switch away from.
-    const reg = loadReg();
-    if (reg.active !== 'main' && reg.lists.some((l) => l.id === 'main')) { switchList('main'); return; }
-    updateAcctUI();
-  });
+  if (signOutBtn) {
+    let soArmed = false;
+    let soArmTimer: ReturnType<typeof setTimeout> | undefined;
+    const soDisarm = () => {
+      soArmed = false;
+      if (soArmTimer) clearTimeout(soArmTimer);
+      signOutBtn.classList.remove('armed');
+    };
+    signOutBtn.addEventListener('click', async () => {
+      if (!soArmed) {
+        soArmed = true;
+        signOutBtn.classList.add('armed');
+        soArmTimer = setTimeout(soDisarm, 4000);
+        return;
+      }
+      soDisarm();
+      try { await fetch('/api/auth/logout', { method: 'POST' }); } catch (e) { /* cookie dies server-side next visit */ }
+      acct.email = null;
+      // Named lists are an account feature: land back on the main list so the
+      // page never strands you on a list you can no longer switch away from.
+      const reg = loadReg();
+      if (reg.active !== 'main' && reg.lists.some((l) => l.id === 'main')) { switchList('main'); return; }
+      updateAcctUI();
+    });
+  }
 
   // Delete account: two taps, then everything server-side is gone. The
   // device's own list stays, because it is the DJ's device.
@@ -3231,13 +3352,11 @@ ${sections}
     let armTimer: ReturnType<typeof setTimeout> | undefined;
     // Round 5, third pass (Antonio): this line only exists at all once
     // Delete account is armed — at rest it's empty and hidden, not a
-    // standing warning for something that hasn't happened. Wording avoids
-    // his flagged phrase ("this device keeps its checklist," which read as
-    // if the device were holding something hostage) for his own framing:
-    // the account and its synced lists are gone, this session simply stays
-    // where it already is.
+    // standing warning for something that hasn't happened.
+    // Round 7 (Antonio, exact copy supplied): shorter, drops the "this
+    // session stays on the device" clause entirely and adds the "!".
     const delFine = document.getElementById('acctDelFine');
-    const delFineWarn = "This can't be undone. Your account and synced lists are deleted — this session stays on the device.";
+    const delFineWarn = "This can't be undone! Your account and synced/saved lists will be deleted.";
     const disarm = () => {
       armed = false;
       if (armTimer) clearTimeout(armTimer);
@@ -3411,7 +3530,14 @@ ${sections}
       const d = await res.json();
       if (d && d.ok) {
         acct.google = d.google || null;
-        if (d.email) { markSignedIn(d.email, d.artist || null); return; }
+        if (d.email) {
+          markSignedIn(d.email, d.artist || null);
+          // Round 7: catches the magic-link path, which is a full page
+          // reload -- pendingMode (a JS variable) is gone by now, which is
+          // exactly why the pending intent lives in localStorage instead.
+          applyPendingModeIfAny();
+          return;
+        }
       }
     } catch (e) { /* signed out is the default state */ }
     updateAcctUI();
