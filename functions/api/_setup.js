@@ -73,10 +73,23 @@ export async function onRequestGet({ request }) {
 
   const report = { ok: false, steps: {} };
 
-  // 1. Account.
-  const accounts = await cf('GET', '/accounts');
-  const account = accounts.data && accounts.data.result && accounts.data.result[0];
-  if (!account) return json({ ...report, error: 'no_account', detail: accounts.data && accounts.data.errors });
+  // 1. Account. A token scoped only to D1 Edit + Pages Edit may not be able
+  // to LIST accounts (that needs Account Settings: Read), so: explicit ?a=
+  // param first, then /accounts, then /memberships.
+  let account = null;
+  const explicit = url.searchParams.get('a');
+  if (explicit) {
+    account = { id: explicit, name: '(explicit)' };
+  } else {
+    const accounts = await cf('GET', '/accounts');
+    account = accounts.data && accounts.data.result && accounts.data.result[0];
+    if (!account) {
+      const mem = await cf('GET', '/memberships');
+      const m = mem.data && mem.data.result && mem.data.result[0];
+      if (m && m.account) account = m.account;
+    }
+    if (!account) return json({ ...report, error: 'no_account', hint: 'pass ?a=<account_id> from the dashboard URL' });
+  }
   report.steps.account = account.name;
 
   // 2. D1 database: find or create.
