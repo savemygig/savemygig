@@ -371,6 +371,19 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       </div>
     </div>
 
+    <!-- Press-and-hold explainers (Antonio's ruling, 2026-07-29): no on/off
+         mode to forget, no icon on every button. A normal tap always does
+         exactly what it does today; holding a covered control a beat longer
+         (or hovering it on a mouse) shows what it does, in the same amber
+         language as the cookie banner. This "(i)" is the one piece of new
+         UI: it never changes behavior, it only opens a static legend so the
+         gesture itself is discoverable. Kept outside .custom-toolbar's flex
+         row on purpose, so it can never disturb the four-buttons-one-row
+         layout tuned for narrow phones. -->
+    <div class="explain-row" id="explainRow" hidden>
+      <button type="button" class="explain-btn" id="explainInfoBtn" aria-label="How to see instructions for any button">(i)</button>
+    </div>
+
     <!-- One toolbar, four short verbs (Antonio): Edit, Clear, Download PDF,
          Email. The old layout split them across two rows a full page apart,
          with "Download the printable PDF" and "Clear the list" spelling out
@@ -1198,8 +1211,40 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .ls-new-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .list-switch .acct-msg { flex: 1 1 100%; margin-top: 0; }
 
+  /* Press-and-hold explainers (Antonio's ruling, 2026-07-29): the "(i)"
+     legend and every per-control popover share this look, the same amber
+     edge the cookie banner uses, so the whole thing reads as one system a
+     DJ has already seen rather than something new to learn. */
+  .explain-row { display: flex; justify-content: flex-end; margin: -0.3rem 0 0.7rem; }
+  .explain-btn {
+    display: inline-flex; align-items: center; cursor: pointer;
+    background: var(--surf); border: 1px solid var(--amber); border-radius: var(--radius);
+    color: var(--amber); font-family: var(--font-display); font-weight: 700;
+    font-size: 0.72rem; letter-spacing: 0.02em;
+    padding: 0.3rem 0.65rem;
+  }
+  @media (hover: hover) { .explain-btn:hover { background: var(--amber-dim); } }
+  /* Fixed-position, JS-placed near whatever was pressed or hovered. One at a
+     time, same as rekordbox: opening a new one always closes the last. */
+  .explain-pop {
+    position: fixed; z-index: 200; max-width: 280px;
+    background: var(--surf-2); border: 1.5px solid var(--amber); border-radius: var(--radius);
+    padding: 10px 14px; font-family: var(--font-body); font-size: 0.84rem; line-height: 1.48;
+    color: var(--text);
+    box-shadow: 0 10px 44px rgba(0, 0, 0, 0.66), 0 0 0 1px rgba(217, 164, 65, 0.18), 0 0 26px rgba(217, 164, 65, 0.14);
+    animation: explainIn 0.18s ease-out both;
+  }
+  @keyframes explainIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  /* Applied by JS to every covered control: holding it must never select
+     its text or pop the phone's native long-press menu instead of ours. */
+  .explain-target {
+    -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+    touch-action: manipulation;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .meter-fill, .box, .box::after, .readiness-pct, .mode-btn, .chev, .ls-chev { transition: none; }
+    .explain-pop { animation: none; }
   }
 
   /* Mobile width and alignment (kept last so it wins the cascade).
@@ -1937,15 +1982,119 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     renderCustom(); render();
   }
 
+  // Shared by setMode(), the locked-tap gate branch below, and the
+  // press-and-hold explainers (2026-07-29 polish): one source of copy per
+  // mode instead of the mode description living in three places. `s` is the
+  // one-line mobile stub, `f` is the full sentence used on desktop AND as
+  // the press-and-hold explainer text (a DJ who holds a button deliberately
+  // wants the fuller answer, not the space-saving stub).
+  const MODE_COPY_MAP: Record<string, { s: string; f: string }> = {
+    basic: { s: 'The must-brings, before you leave for a gig.', f: 'Must-brings. The essential checklist every DJ should have before leaving for a gig.' },
+    advanced: { s: 'The full kit: backup gear and pro extras.', f: 'The full kit. Everything in Base, plus backup gear and professional extras for any situation.' },
+    custom: { s: 'Your own list, built from Advanced to fit your setup.', f: 'Your own. Start with Advanced and tailor the checklist to your setup, workflow, and preferences.' },
+  };
   // Shared by setMode() and the locked-tap gate branch below (Antonio's
   // fix, 2026-07-29 polish): tapping a LOCKED Advanced/Custom button must
   // describe the mode being unlocked, not whatever mode is still active.
-  // Mobile copy grown a notch (his review: the old mh-s stubs read too
-  // thin) while staying shorter than the desktop mh-f sentence.
   function hintHTML(m: string): string {
-    if (m === 'advanced') return '<span class="mh-s">The full kit: backup gear and pro extras.</span><span class="mh-f">The full kit. Everything in Base, plus backup gear and professional extras for any situation.</span>';
-    if (m === 'custom') return '<span class="mh-s">Your own list, built from Advanced to fit your setup.</span><span class="mh-f">Your own. Start with Advanced and tailor the checklist to your setup, workflow, and preferences.</span>';
-    return '<span class="mh-s">The must-brings, before you leave for a gig.</span><span class="mh-f">Must-brings. The essential checklist every DJ should have before leaving for a gig.</span>';
+    const c = MODE_COPY_MAP[m] || MODE_COPY_MAP.basic;
+    return '<span class="mh-s">' + c.s + '</span><span class="mh-f">' + c.f + '</span>';
+  }
+
+  // PRESS-AND-HOLD EXPLAINERS (Antonio's ruling, 2026-07-29). No on/off mode
+  // to forget: a normal tap always does exactly what it already does. Only a
+  // sustained hold (touch) or a beat of hover (mouse) reveals an explainer,
+  // matching a gesture every phone already teaches (long-press) instead of
+  // inventing a new one. One popover at a time, amber-edged like the cookie
+  // banner. A single document-level CAPTURING click listener is what makes
+  // the "swallow the click that ends a hold" trick reliable regardless of
+  // when each button's own click handler was registered elsewhere in this
+  // file: capture-phase listeners on an ancestor always run before ANY
+  // listener on the target itself, so ordering here can never race with
+  // resetBtn/lsDelBtn/etc.'s own click handlers.
+  const EXPLAIN_HOLD_MS = 550;
+  const HAS_HOVER = (() => { try { return window.matchMedia('(hover: hover)').matches; } catch (e) { return false; } })();
+  let closeOpenExplain: (() => void) | null = null;
+  let suppressClickOn: HTMLElement | null = null;
+
+  document.addEventListener('click', (e) => {
+    if (suppressClickOn && (e.target === suppressClickOn || suppressClickOn.contains(e.target as Node))) {
+      e.preventDefault();
+      e.stopPropagation();
+      suppressClickOn = null;
+    }
+  }, true);
+
+  function closeExplain() {
+    if (closeOpenExplain) { closeOpenExplain(); closeOpenExplain = null; }
+  }
+
+  function showExplain(anchor: HTMLElement, text: string) {
+    closeExplain();
+    const pop = document.createElement('div');
+    pop.className = 'explain-pop';
+    pop.setAttribute('role', 'status');
+    pop.textContent = text;
+    document.body.appendChild(pop);
+    const r = anchor.getBoundingClientRect();
+    const margin = 10;
+    const pw = pop.offsetWidth;
+    const ph = pop.offsetHeight;
+    let left = Math.min(Math.max(r.left, margin), window.innerWidth - pw - margin);
+    let top = r.bottom + 8;
+    if (top + ph > window.innerHeight - margin) top = r.top - ph - 8;
+    if (top < margin) top = margin;
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+
+    const onOutside = (e: Event) => { if (!pop.contains(e.target as Node)) closeExplain(); };
+    const onScroll = () => closeExplain();
+    closeOpenExplain = () => {
+      pop.remove();
+      document.removeEventListener('pointerdown', onOutside, true);
+      window.removeEventListener('scroll', onScroll, true);
+    };
+    // Deferred: the pointerdown/click that triggered this popover is still
+    // bubbling when showExplain runs, listening for "outside" immediately
+    // would catch that same event and close the popover it just opened.
+    setTimeout(() => {
+      document.addEventListener('pointerdown', onOutside, true);
+      window.addEventListener('scroll', onScroll, true);
+    }, 0);
+    try { if (navigator.vibrate) navigator.vibrate(10); } catch (e) { /* not supported */ }
+  }
+
+  function attachExplainer(el: HTMLElement | null, textFn: () => string) {
+    if (!el) return;
+    el.classList.add('explain-target');
+    let holdTimer: ReturnType<typeof setTimeout> | undefined;
+    let triggered = false;
+
+    el.addEventListener('pointerdown', (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') return; // mouse uses hover below, not a hold
+      triggered = false;
+      holdTimer = setTimeout(() => {
+        triggered = true;
+        suppressClickOn = el;
+        showExplain(el, textFn());
+      }, EXPLAIN_HOLD_MS);
+    });
+    const cancelHold = () => { if (holdTimer) { clearTimeout(holdTimer); holdTimer = undefined; } };
+    el.addEventListener('pointerup', cancelHold);
+    el.addEventListener('pointercancel', cancelHold);
+    el.addEventListener('pointerleave', cancelHold);
+    el.addEventListener('contextmenu', (e: Event) => { if (triggered) e.preventDefault(); });
+
+    if (HAS_HOVER) {
+      let hoverTimer: ReturnType<typeof setTimeout> | undefined;
+      el.addEventListener('mouseenter', () => {
+        hoverTimer = setTimeout(() => showExplain(el, textFn()), EXPLAIN_HOLD_MS);
+      });
+      el.addEventListener('mouseleave', () => {
+        if (hoverTimer) clearTimeout(hoverTimer);
+        closeExplain();
+      });
+    }
   }
 
   function setMode(m: string) {
@@ -1960,6 +2109,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     // not unlocked on that device) Edit stayed tappable, which produced edit
     // state in Basic: remove buttons and green outlines with no pencil and no
     // arrows, because those are rightly Custom-only.
+    const explainRow = document.getElementById('explainRow') as HTMLElement | null;
+    if (explainRow) explainRow.hidden = false;
     if (customToolbar) {
       customToolbar.hidden = false;
       const custom = m === 'custom';
@@ -3052,6 +3203,28 @@ ${sections}
     lsDelBtn.classList.toggle('active', on);
     lsDelBtn.textContent = on ? 'Done' : 'Delete';
     if (!on) document.querySelectorAll('.ls-x.armed').forEach((x) => x.classList.remove('armed'));
+  });
+
+  // Press-and-hold explainers: the six controls Antonio's rule + review
+  // actually calls for. Reset, Download and Email are behavioral (what
+  // exactly happens is not obvious from a two-word label); Edit reuses the
+  // SAME copy as its own dismissible hint, so a DJ who dismissed that hint
+  // forever still has a way back to it; the mode buttons reuse MODE_COPY_MAP,
+  // the one place that copy lives. The Sync chip is deliberately NOT covered
+  // here, tapping it already opens a card that explains itself.
+  attachExplainer(resetBtn, () => 'Puts the list back to how it started. In Base and Advanced that clears every tick. In Custom it also undoes renames, reorders, and any items you added or removed.');
+  attachExplainer(pdfBtn, () => 'Saves your list exactly as it looks right now, current mode, order, names and ticks, as a printable PDF.');
+  attachExplainer(backupBtn, () => 'Emails your list to your inbox with a link that loads it back on any device. Needs a quick free registration first.');
+  attachExplainer(editToggle, () => 'Add notes, create sections, add items, rename, reorder or delete. Save your list when you’re done!');
+  attachExplainer(lsDelBtn, () => 'Turns on delete mode for your saved lists. Tap the × on a list once to arm it, tap again to delete it. Your active list can’t be deleted this way, switch to another list first.');
+  modeBtns.forEach((b) => attachExplainer(b, () => (MODE_COPY_MAP[b.dataset.modeSet || 'basic'] || MODE_COPY_MAP.basic).f));
+
+  // The "(i)" legend: static, always the same message, opens on a plain
+  // tap (it is not itself a covered control, it is the explanation OF the
+  // gesture). Reuses the exact same popover look as everything above.
+  const explainInfoBtn = document.getElementById('explainInfoBtn');
+  if (explainInfoBtn) explainInfoBtn.addEventListener('click', () => {
+    showExplain(explainInfoBtn, 'Press and hold any button for more detailed instructions.');
   });
 
   // The sign-in redirect lands here. ?signedin=1: the session cookie is
