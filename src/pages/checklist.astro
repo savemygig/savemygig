@@ -191,44 +191,35 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Custom</button>
       </div>
       <div class="mode-row-right">
-        <!-- Mobile-only info toggle (Antonio, 2026-07-29 round 2): desktop
-             already teaches "hover for a tooltip" by convention, so it gets
-             no button there (hidden by the hover:hover media query below).
-             Gray = off. Tap turns it amber and shows this line once; while
-             on, tapping any of the six covered controls shows that control's
-             info instead of using it. Tap again to go back to normal.
-             Replaces the earlier press-and-hold-to-reveal gesture on touch,
-             which was fiddly to time; hover-a-beat on desktop is untouched. -->
+        <!-- Info toggle (Antonio, 2026-07-30 round 3): now shown on BOTH
+             touch and desktop, but they do different jobs. On touch, off/gray
+             by default; tap turns it on/amber, shows the instruction once,
+             and while on, tapping any of the six covered controls shows that
+             control's info instead of using it. On desktop hover-a-beat
+             already always works regardless of this button, so clicking it
+             here is purely a discovery aid: on/amber just opens a static
+             reminder that hovering any control for a second explains it, off
+             again closes it. Desktop never gates real clicks behind this. -->
         <button type="button" class="explain-btn" id="explainInfoBtn" aria-label="Show button instructions" aria-pressed="false">ⓘ</button>
         <!-- Rectangle to match the toolbar buttons (Antonio: the pill "looked
-             strange"), plus a chevron so tapping it to open/close reads as an
-             affordance instead of a mystery button (his ask, 2026-07-29). Same
-             chevron the Lists header already uses, for one visual language. -->
+             strange"), a vertical divider so the status text and the chevron
+             read as two distinct parts of one button (his ask, round 3),
+             sized to match the mode-switch box beside it. Chevron now uses
+             the SAME convention as the category boxes (Music, DJ Gear): right
+             when closed, down when open, not the Lists header's up/down pair
+             (Antonio's ask, round 3: match Music, not Lists). -->
         <button type="button" class="acct-chip" id="acctLine" aria-expanded="false" aria-controls="acctCard">
-          <span id="acctChipText">Sync</span>
+          <span class="acct-chip-state" id="acctChipText">Sync</span>
+          <span class="acct-chip-div" aria-hidden="true"></span>
           <span class="ls-chev" aria-hidden="true"></span>
         </button>
       </div>
     </div>
-    <div class="mode-hint dim" id="modeHintBox">
-      <span id="modeHint"><span class="mh-s">The must-brings, before you leave for a gig.</span><span class="mh-f">Must-brings. The essential checklist every DJ should have before leaving for a gig.</span></span>
-      <button type="button" class="mode-hint-close" id="modeHintClose" aria-label="Dismiss">&times;</button>
-    </div>
-    <script is:inline>
-      (function () {
-        var box = document.getElementById('modeHintBox');
-        var x = document.getElementById('modeHintClose');
-        if (!box || !x) return;
-        var mobile = window.matchMedia('(max-width: 640px)');
-        try {
-          if (mobile.matches && localStorage.getItem('SMG_HINT_MODES_DISMISSED') === '1') box.style.display = 'none';
-        } catch (e) { /* show */ }
-        x.addEventListener('click', function () {
-          box.style.display = 'none';
-          try { localStorage.setItem('SMG_HINT_MODES_DISMISSED', '1'); } catch (e) { /* session only */ }
-        });
-      })();
-    </script>
+    <!-- Permanent tagline (Antonio, round 3): replaces the old dismissible
+         per-mode hint. With hover-a-beat and the (i) button now teaching what
+         each mode does, restating it here in a box you dismiss forever was
+         redundant, and it's one fewer thing the info system has to cover. -->
+    <p class="mode-tagline dim">The best DJs don&rsquo;t remember everything. They prepare for everything.</p>
 
     <!-- One gate, two doors. This panel now also serves the PDF download, so
          the title and first line are set from JS depending on what the DJ
@@ -317,6 +308,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              configured; until then the holder is empty and email carries
              the whole flow. -->
         <div class="gsi-holder" id="gsiBtn"></div>
+        <!-- Antonio's fix (round 3): Google above and the email field below,
+             stacked with nothing between them, read like two required steps
+             instead of two alternative sign-in paths. This divider only
+             shows when Google actually rendered a button above it (CSS,
+             keyed off #gsiBtn:empty), so it never appears as a dangling "or"
+             when Google isn't configured and email is the only path. -->
+        <span class="unlock-or acct-or" id="acctOr">or, sign in by email:</span>
         <form class="acct-form" id="acctForm" novalidate>
           <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your email" />
           <button type="submit" class="btn btn-neutral">Email me a sign-in link</button>
@@ -558,32 +556,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .mode-btn.is-on { background: var(--text); color: #0a0a0b; }
   .mode-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
-  .mode-hint { font-size: 0.85rem; margin: 0 0 1.6rem; }
-  /* Mode description: full sentence on desktop, ONE line on a phone
-     (Antonio: never two lines here). The shorts are his own tags. */
-  .mh-s { display: none; }
+  /* Static, one line, same size and margin the old dismissible hint used
+     (round 3: it's a permanent slogan now, not a tip, so it never needs
+     box treatment, a close button, or a mobile-only stub). */
+  .mode-tagline { font-size: 0.85rem; margin: 0 0 1.6rem; }
   .eh-short { display: none; }
   @media (max-width: 640px) {
-    .mh-s { display: inline; }
-    .mh-f { display: none; }
     .eh-short { display: inline; }
     .eh-full { display: none; }
-  }
-  .mode-hint-close { display: none; }
-  @media (max-width: 640px) {
-    /* On phones the hint is a dismissible tip, boxed like the edit tip. */
-    .mode-hint {
-      display: flex; align-items: flex-start; gap: 0.5rem;
-      border: 1px solid var(--edge); border-radius: var(--radius);
-      padding: 0.55rem 0.4rem 0.55rem 0.8rem;
-    }
-    .mode-hint-close {
-      display: inline-flex; align-items: center; justify-content: center;
-      flex: 0 0 auto; width: 30px; height: 30px; margin: -4px 0 0;
-      background: transparent; border: none; color: var(--text-faint);
-      font-size: 19px; line-height: 1; cursor: pointer;
-    }
-    .mode-hint-close:hover { color: var(--text); }
   }
 
   /* It is sticky, so it is on screen the whole time you work the list. That
@@ -1065,7 +1045,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   /* Rectangle, same shape language as every other button on the page
      (Antonio: the pill "looked strange" beside Reset/Download/Email). */
   .acct-chip {
-    flex: 0 0 auto; display: inline-flex; align-items: center; gap: 0.4rem;
+    flex: 0 0 auto; display: inline-flex; align-items: center; gap: 0.5rem;
     cursor: pointer; border: 1px solid var(--edge); border-radius: var(--radius);
     background: var(--surf);
     color: var(--text-faint); font-family: var(--font-display); font-weight: 700;
@@ -1074,11 +1054,27 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   @media (hover: hover) { .acct-chip:hover { color: var(--text-dim); border-color: var(--text-dim); } }
   .acct-chip.is-synced { color: var(--green); border-color: var(--green); }
-  /* Same chevron the Lists header uses: the one visual cue on this page for
-     "tap to open/close" (Antonio's ask: the chip needed some sign it does
-     that at all). */
-  .acct-chip .ls-chev { margin-top: -1px; }
-  .acct-chip[aria-expanded="true"] .ls-chev { transform: rotate(225deg); margin-top: 2px; }
+  /* Vertical divider between the status word and the chevron (Antonio,
+     round 3): the chip does one thing (open/close the card), but reads as
+     two parts, so a hairline in between makes that legible without turning
+     it into two separate buttons. Same color as the mode-switch border, so
+     it reads as one family of controls. align-self: stretch means it always
+     matches the button's own height, full width or narrow. */
+  .acct-chip-div { align-self: stretch; width: 1px; background: var(--edge); flex: 0 0 auto; }
+  /* Chevron now matches the category boxes (Music, DJ Gear), not the Lists
+     header: right when closed, down when open (Antonio's ask, round 3). The
+     shape is the same corner .ls-chev already draws, just rotated the other
+     way at each state. */
+  .acct-chip .ls-chev { transform: rotate(-45deg); margin-top: -2px; }
+  .acct-chip[aria-expanded="true"] .ls-chev { transform: rotate(45deg); margin-top: -3px; }
+  /* Desktop sizing (Antonio, round 3): the chip and the (i) button should
+     stand the same height as the mode-switch box beside them, width sized to
+     their own content rather than stretched. Mobile keeps its own compact
+     padding below, untouched. */
+  @media (hover: hover) {
+    .acct-chip, .explain-btn { height: 2.6rem; }
+    .explain-btn { width: 2.6rem; padding: 0; }
+  }
   @media (max-width: 640px) {
     /* Safety net, not the target layout: on the narrowest phones three mode
        buttons plus the chip can get tight. Wrap rather than clip or overlap. */
@@ -1095,6 +1091,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-who { color: var(--text); font-weight: 600; }
   .gsi-holder { margin-bottom: 0.85rem; }
   .gsi-holder:empty { display: none; }
+  /* Only shows when Google actually rendered a button above it, so it never
+     reads as a dangling "or" with nothing on one side of it (Antonio, round
+     3: the two paths need a visible "pick one", same fix as the gate's own
+     Google/email divider). */
+  .acct-or { display: block; margin: 0 0 0.7rem; }
+  #gsiBtn:empty + .acct-or { display: none; }
   .acct-form { display: flex; gap: 8px; flex-wrap: wrap; }
   .acct-form input {
     flex: 1 1 200px; min-width: 0; background: var(--bg); color: var(--text);
@@ -1228,10 +1230,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .explain-btn.mode-active { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
   .explain-btn[hidden] { display: none; }
-  /* Desktop already teaches "hover for a tooltip" by convention (Antonio's
-     call, round 2): no toggle needed there, hover-a-beat just works. Mobile
-     only. */
-  @media (hover: hover) { .explain-btn { display: none; } }
   /* Fixed-position, JS-placed near whatever was pressed or hovered. One at a
      time, same as rekordbox: opening a new one always closes the last. */
   .explain-pop {
@@ -1313,7 +1311,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   const fillEl = document.getElementById('meterFill');
   const subEl = document.getElementById('sub');
   const readinessEl = document.getElementById('readiness');
-  const hintEl = document.getElementById('modeHint');
   const modeBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('.mode-btn'));
   const toggles = Array.from(document.querySelectorAll<HTMLButtonElement>('.group-toggle'));
   const unlockEl = document.getElementById('unlock') as HTMLElement | null;
@@ -1990,24 +1987,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     renderCustom(); render();
   }
 
-  // Shared by setMode(), the locked-tap gate branch below, and the
-  // press-and-hold explainers (2026-07-29 polish): one source of copy per
-  // mode instead of the mode description living in three places. `s` is the
-  // one-line mobile stub, `f` is the full sentence used on desktop AND as
-  // the press-and-hold explainer text (a DJ who holds a button deliberately
-  // wants the fuller answer, not the space-saving stub).
-  const MODE_COPY_MAP: Record<string, { s: string; f: string }> = {
-    basic: { s: 'The must-brings, before you leave for a gig.', f: 'Must-brings. The essential checklist every DJ should have before leaving for a gig.' },
-    advanced: { s: 'The full kit: backup gear and pro extras.', f: 'The full kit. Everything in Base, plus backup gear and professional extras for any situation.' },
-    custom: { s: 'Your own list, built from Advanced to fit your setup.', f: 'Your own. Start with Advanced and tailor the checklist to your setup, workflow, and preferences.' },
+  // Shared by the mode buttons' own press-and-hold/hover explainers (one
+  // source of copy per mode). Round 3: this used to also feed the static
+  // dismissible hint line via hintHTML(); that line is a permanent slogan
+  // now, so the map only needs to answer "what does this mode do" for the
+  // explainer popovers.
+  const MODE_COPY_MAP: Record<string, { f: string }> = {
+    basic: { f: 'Must-brings. The essential checklist every DJ should have before leaving for a gig.' },
+    advanced: { f: 'The full kit. Everything in Base, plus backup gear and professional extras for any situation.' },
+    custom: { f: 'Your own. Start with Advanced and tailor the checklist to your setup, workflow, and preferences.' },
   };
-  // Shared by setMode() and the locked-tap gate branch below (Antonio's
-  // fix, 2026-07-29 polish): tapping a LOCKED Advanced/Custom button must
-  // describe the mode being unlocked, not whatever mode is still active.
-  function hintHTML(m: string): string {
-    const c = MODE_COPY_MAP[m] || MODE_COPY_MAP.basic;
-    return '<span class="mh-s">' + c.s + '</span><span class="mh-f">' + c.f + '</span>';
-  }
 
   // EXPLAINERS (Antonio's ruling, 2026-07-29; mode-toggle reworked round 2
   // same day). Desktop needs no UI at all: hovering a control for a beat is
@@ -2130,7 +2119,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       b.classList.toggle('is-on', on);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-    if (hintEl) hintEl.innerHTML = hintHTML(m);
     saveMode(m);
     render();
   }
@@ -2421,9 +2409,6 @@ ${sections}
     if ((target === 'advanced' || target === 'custom') && !isUnlocked()) {
       pendingMode = target;
       pendingWant = 'mode';
-      // Fix (Antonio, 2026-07-29 polish): the description under the picker
-      // must describe the mode being unlocked, not the mode still active.
-      if (hintEl) hintEl.innerHTML = hintHTML(target);
       openGate();
       return;
     }
@@ -3221,13 +3206,26 @@ ${sections}
   attachExplainer(lsDelBtn, () => 'Turns on delete mode for your saved lists. Tap the × on a list once to arm it, tap again to delete it. Your active list can’t be deleted this way, switch to another list first.');
   modeBtns.forEach((b) => attachExplainer(b, () => (MODE_COPY_MAP[b.dataset.modeSet || 'basic'] || MODE_COPY_MAP.basic).f));
 
-  // The "ⓘ" toggle (mobile only, CSS hides it wherever a mouse is present):
-  // a plain on/off, never persisted. Turning it on arms the document-level
-  // click listener above and shows this line once; turning it off closes
-  // whatever explainer happens to be open and hands the covered buttons
-  // back to their normal click handlers.
+  // The "ⓘ" toggle (round 3: shown on touch AND desktop now, doing two
+  // different jobs). Touch: a plain on/off, never persisted. Turning it on
+  // arms the document-level click listener above and shows this line once;
+  // turning it off closes whatever explainer happens to be open and hands
+  // the covered buttons back to their normal click handlers. Desktop: hover-
+  // a-beat already always works regardless of this button, so it never
+  // touches infoModeOn or the click-swallowing above, it just toggles its
+  // own amber state and shows/hides a static reminder that hovering teaches
+  // you each control.
   const explainInfoBtn = document.getElementById('explainInfoBtn');
+  let desktopInfoOn = false;
   if (explainInfoBtn) explainInfoBtn.addEventListener('click', () => {
+    if (HAS_HOVER) {
+      desktopInfoOn = !desktopInfoOn;
+      explainInfoBtn.classList.toggle('mode-active', desktopInfoOn);
+      explainInfoBtn.setAttribute('aria-pressed', String(desktopInfoOn));
+      if (desktopInfoOn) showExplain(explainInfoBtn, 'Leave your mouse over anything for a second to read its instructions.');
+      else closeExplain();
+      return;
+    }
     infoModeOn = !infoModeOn;
     explainInfoBtn.classList.toggle('mode-active', infoModeOn);
     explainInfoBtn.setAttribute('aria-pressed', String(infoModeOn));
