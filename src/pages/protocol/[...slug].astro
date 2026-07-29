@@ -1,0 +1,178 @@
+---
+import Tunnel from '../../layouts/Tunnel.astro';
+import { TREE } from '../../data/emergency-tree.js';
+import {
+  RUNLIST, RUNLIST_HEAD, RUNLIST_ASSUMED, RUNLIST_NEVER, RUNLIST_LAST_RESORT,
+} from '../../data/runlist.js';
+
+// THE TUNNEL RENDERER. Every emergency screen is generated from one node in
+// src/data/emergency-tree.js (see that file's header for the node model and
+// the architecture doc in project memory). This file owns the LOOK of a
+// screen; the tree owns the FLOW. Neither can drift from the other, and
+// scripts/check-tree.mjs proves the flow's integrity in the gate.
+//
+// The one-question rule (Antonio, 2026-07-28): every screen answers exactly
+// one question or requests exactly one action. That is enforced here
+// structurally: a node renders ONE question and ONE pad group, nothing else.
+//
+// The pads mirror components/Choice.astro (kept for non-tunnel pages) but
+// honor per-option tones from the data, which Choice's a/b green/red
+// convention cannot express (e.g. a time fork where neither answer is the
+// "good" one renders neutral).
+
+export function getStaticPaths() {
+  return Object.keys(TREE).map((id) => ({
+    params: { slug: id },
+    props: { node: TREE[id] },
+  }));
+}
+
+const { node } = Astro.props;
+
+const toneOf = (o, i) => {
+  if (o.tone) return o.tone;
+  if (node.neutral || node.options.length > 2) return 'neutral';
+  return i === 0 ? 'green' : 'red';
+};
+const padClass = (t) => (t === 'green' ? 'pad-green' : t === 'red' ? 'pad-red' : 'pad-neutral');
+const ledClass = (t) => (t === 'green' ? 'led-g' : t === 'red' ? 'led-r' : 'led-n');
+const hrefOf = (to) => (to.startsWith('/') ? to : `/protocol/${to}`);
+const answerKey = (i) => ['a', 'b', 'c', 'd'][i];
+const dataAttrs = (o, i) => {
+  const out = {
+    'data-event': o.event ?? 'step_completed',
+    'data-step': (o.data && o.data.step) ?? node.step ?? 'step',
+    'data-answer': answerKey(i),
+  };
+  for (const [k, v] of Object.entries(o.data ?? {})) if (k !== 'step') out[`data-${k}`] = v;
+  return out;
+};
+---
+<Tunnel
+  title={`${node.title} | Save My Gig!`}
+  status={node.status}
+  red={node.red}
+  heading={node.srHeading}
+>
+  {node.draft && <div class="review-flag">DRAFT, review pending.</div>}
+  {node.label && <div class="step-label">{node.label}</div>}
+  <h2 class={node.headingClass} style="margin-bottom:1rem" set:html={node.heading} />
+
+  {node.moves ? (
+    <Fragment>
+      <p class="dim" style="margin-bottom:0.9rem">{RUNLIST_HEAD}</p>
+      <p class="assumed">{RUNLIST_ASSUMED}</p>
+      <ol class="moves">
+        {RUNLIST.map((s) => (
+          <li>
+            <span class="move-verb">{s.verb}</span>
+            <span class="move-action">{s.action}</span>
+            <details class="move-more">
+              <summary>Why, and how</summary>
+              <p>{s.detail}</p>
+            </details>
+          </li>
+        ))}
+      </ol>
+      <div class="alert-card" style="margin:1.6rem 0 1.2rem">
+        <div style="font-size:20px" aria-hidden="true">⚠️</div>
+        <div>{RUNLIST_NEVER}</div>
+      </div>
+      <details class="move-more last-resort">
+        <summary>{RUNLIST_LAST_RESORT.title}</summary>
+        <p>{RUNLIST_LAST_RESORT.body}</p>
+      </details>
+    </Fragment>
+  ) : (
+    node.blocks.map((b) =>
+      b.t === 'check' ? (
+        <ul class="checklist">{b.items.map((it) => <li set:html={it} />)}</ul>
+      ) : b.t === 'alert' ? (
+        <div class="alert-card" style="margin-bottom:1.25rem">
+          <div style="font-size:20px" aria-hidden="true">{b.emoji}</div>
+          <div set:html={b.html} />
+        </div>
+      ) : b.t === 'details' ? (
+        <details class="move-more" style="margin-bottom:1.25rem">
+          <summary set:html={b.summary} />
+          <div set:html={b.html} />
+        </details>
+      ) : b.t === 'assumed' ? (
+        <p class="assumed" set:html={b.html} />
+      ) : b.t === 'note' ? (
+        <p class="tunnel-note" style="margin-bottom:1.5rem" set:html={b.html} />
+      ) : (
+        <p class="dim" style="margin-bottom:1.25rem" set:html={b.html} />
+      )
+    )
+  )}
+
+  {node.question && <p class="question">{node.question}</p>}
+
+  <nav class="pad-grid" aria-label={node.question ?? 'What next'}>
+    {node.options.map((o, i) => {
+      const tone = toneOf(o, i);
+      return (
+        <a href={hrefOf(o.to)} class:list={['pad', padClass(tone)]} {...dataAttrs(o, i)}>
+          <div class="pad-header">
+            <div class:list={['led', ledClass(tone)]}></div>
+            <div class="pad-title">{o.label}</div>
+          </div>
+          {o.desc && <div class="pad-desc">{o.desc}</div>}
+        </a>
+      );
+    })}
+  </nav>
+
+  {node.moves && (
+    <p class="tunnel-note" style="margin-top:1.6rem">
+      None of this is needed by the DJ who walked in with a cloned second drive in
+      the other pocket. That version of tonight is ten seconds long.
+      <a href="/prepare">The prevention rules</a>.
+    </p>
+  )}
+</Tunnel>
+
+<style>
+  /* Runlist type, sized to be READ AT ARM'S LENGTH IN A DARK BOOTH (from the
+     retired critical/now.astro; .assumed and .move-more live in global.css). */
+  .moves { list-style: none; counter-reset: mv; margin: 0; padding: 0; }
+  .moves li {
+    counter-increment: mv;
+    position: relative;
+    padding: 1rem 0 1rem 3rem;
+    border-bottom: 1px solid var(--edge-soft);
+  }
+  .moves li:last-child { border-bottom: none; }
+  .moves li::before {
+    content: counter(mv);
+    position: absolute;
+    left: 0;
+    top: 0.95rem;
+    width: 2.15rem;
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--text-faint);
+  }
+  .move-verb {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+  .move-action {
+    display: block;
+    font-size: 0.97rem;
+    line-height: 1.4;
+    color: var(--text-dim);
+  }
+  .last-resort { margin: 0 0 1.6rem; }
+  .last-resort > summary { text-transform: none; letter-spacing: 0; font-size: 0.88rem; }
+</style>

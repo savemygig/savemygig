@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emergency tree: USB branch example</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<style>
+  body { background:#0a0a0b; color:#f3f1ec; font-family:Inter,-apple-system,sans-serif; padding:2rem 1rem; }
+  h1 { font-size:1.3rem; text-transform:uppercase; letter-spacing:-0.01em; }
+  p { color:#9a978f; max-width:52rem; line-height:1.6; }
+  .wrap { max-width:1100px; margin:0 auto; }
+  .legend { display:flex; gap:1.2rem; margin:0.8rem 0 1.5rem; font-size:0.8rem; color:#9a978f; flex-wrap:wrap; }
+  .legend i { width:12px; height:12px; display:inline-block; border-radius:2px; margin-right:0.35rem; vertical-align:-1px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Example: the USB NOT RECOGNIZED subtree</h1>
+  <p>One of the five doors, drawn at question level. Grey = question screen (one question, 2-4 pads). Amber = action screen (numbered steps, then one forward question). Green = outcome "you are playing". Red-edged = hand-off ladder (never a dead end). Reused existing screens are marked ↺.</p>
+  <div class="legend">
+    <span><i style="background:#2a2723"></i>question</span>
+    <span><i style="background:#d9a441"></i>action</span>
+    <span><i style="background:#3ad884"></i>playing again</span>
+    <span><i style="background:#ff4d2e"></i>hand-off ladder</span>
+  </div>
+  <pre class="mermaid">
+flowchart TD
+  ROOT["/emergency root<br/>WHAT IS WRONG?<br/>(5 pads)"]:::q
+  A["usb.detected-anywhere ↺<br/>Does ANY player see the drive?"]:::q
+  B["usb.link-play ↺<br/>ACTION: LINK<br/>load it from the player that sees it<br/>→ Did it load?"]:::act
+  C["usb.time-fork ↺<br/>Playing within the hour?"]:::q
+  D["usb.restart ↺<br/>ACTION: RESTART the dead player<br/>USB STOP, 20s off<br/>→ Does it read now?"]:::act
+  E["usb.second-usb ↺<br/>Do you have your backup drive<br/>or a computer here?"]:::q
+  F["usb.rebuild ↺<br/>ACTION: re-export to the<br/>second drive properly<br/>→ Ready to play?"]:::act
+  G["usb.borrow<br/>ACTION: BORROW the drive<br/>from the DJ next to you<br/>→ Playing?"]:::act
+  OK1["OUTCOME: You are playing.<br/>After the gig: Recovery + Prevention"]:::ok
+  OK2["OUTCOME: You are playing.<br/>After the gig: rebuild the drive"]:::ok
+  H["handoff ladder<br/>phone into a spare channel,<br/>the room survives.<br/>After: Recovery owns the data"]:::ho
+
+  ROOT -->|USB NOT RECOGNIZED| A
+  A -->|YES, one player reads it| B
+  A -->|NO player sees it| C
+  B -->|LOADED| OK1
+  B -->|STILL NOTHING| C
+  C -->|YES, under an hour| D
+  C -->|NO, hours or at home| E
+  D -->|IT READS| OK1
+  D -->|STILL DEAD| G
+  E -->|YES| F
+  E -->|NO| G
+  F -->|READY| OK2
+  F -->|FAILED| G
+  G -->|PLAYING| OK1
+  G -->|NO DRIVE ANYWHERE| H
+
+  classDef q fill:#2a2723,stroke:#8a867c,color:#f3f1ec
+  classDef act fill:#d9a441,stroke:#d9a441,color:#0a0a0b
+  classDef ok fill:#3ad884,stroke:#3ad884,color:#0a0a0b
+  classDef ho fill:#151413,stroke:#ff4d2e,color:#f3f1ec
+  </pre>
+  <p>Depth check on this sketch: worst path is 5 taps from the root to the hand-off ladder, inside the 6-tap budget. The other four doors follow the same grammar.</p>
+</div>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'dark' });</script>
+</body>
+</html>

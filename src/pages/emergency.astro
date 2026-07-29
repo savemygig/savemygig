@@ -32,64 +32,63 @@ import BetaNotice from '../components/BetaNotice.astro';
            heading saying roughly the same thing again is one more line of
            clutter for everyone if the utility class ever fails. The nav
            carries the label instead. -->
+      <!-- FIVE DOORS (the decision-tree root, Antonio's ruled list
+           2026-07-28). Symptom first, always: the DJ knows what is WRONG
+           before they know how much time they have, so the time question
+           lives INSIDE the branches where it changes the route, never here.
+           Each door enters the tree in src/data/emergency-tree.js. -->
       <nav class="pad-grid" aria-label="Choose what is happening" style="margin-bottom:1.5rem">
-        <a href="/protocol/critical/now" class="pad pad-neutral" data-event="symptom_selected" data-symptom="music_wont_load">
+        <a href="/protocol/usb/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="usb_not_recognized">
           <div class="pad-header">
             <div class="led led-n"></div>
-            <div class="pad-title">MY MUSIC WILL NOT LOAD</div>
+            <div class="pad-title">USB NOT RECOGNIZED</div>
           </div>
-          <div class="pad-desc">USB not detected, playlists missing, or tracks that refuse to play.</div>
+          <div class="pad-desc">The player does not see the drive at all.</div>
         </a>
 
-        <a href="/protocol/no-sound" class="pad pad-neutral" data-event="symptom_selected" data-symptom="no_sound">
+        <a href="/protocol/music/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="music_wont_load">
+          <div class="pad-header">
+            <div class="led led-n"></div>
+            <div class="pad-title">MUSIC WON'T LOAD</div>
+          </div>
+          <div class="pad-desc">Drive mounts, but playlists are missing or tracks refuse to play.</div>
+        </a>
+
+        <a href="/protocol/sound/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="no_sound">
           <div class="pad-header">
             <div class="led led-n"></div>
             <div class="pad-title">THERE IS NO SOUND</div>
           </div>
           <div class="pad-desc">A dead channel, silent master, or nothing in your headphones.</div>
         </a>
+
+        <a href="/protocol/frozen/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="frozen_player">
+          <div class="pad-header">
+            <div class="led led-n"></div>
+            <div class="pad-title">FROZEN PLAYER</div>
+          </div>
+          <div class="pad-desc">Screen or controls locked, mid-set or idle.</div>
+        </a>
+
+        <a href="/protocol/export/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="export_failed">
+          <div class="pad-header">
+            <div class="led led-n"></div>
+            <div class="pad-title">REKORDBOX EXPORT FAILED</div>
+          </div>
+          <div class="pad-desc">The export will not finish, or the USB will not take it.</div>
+        </a>
       </nav>
 
       <BetaNotice variant="line" />
 
       <p class="dim" style="font-size:0.86rem;margin-bottom:2.5rem">
-        Not playing tonight? <a href="#when">Fix it properly instead</a>.
+        Gig already over and files lost? <a href="/recovery">Data recovery is its own path</a>.
       </p>
     </section>
 
     <p class="emerg-lead">
       Emergency guidance when USB drives fail on Pioneer CDJ-3000, CDJ-2000, XDJ units or during Rekordbox export.
     </p>
-
-    <section id="when" class="emerg-triage">
-      <h2 class="emerg-triage-h">How much time do you have?</h2>
-
-      <nav class="pad-grid">
-        <a href="/protocol/critical/now" class="pad pad-red" data-event="triage_selected" data-path="critical">
-          <div class="pad-header">
-            <div class="led led-r"></div>
-            <div class="pad-title">&lt; 60 MINUTES</div>
-          </div>
-          <div class="pad-desc">Do this now. A list, not questions.</div>
-        </a>
-
-        <a href="/protocol/quick-fix" class="pad pad-yellow" data-event="triage_selected" data-path="quick_fix">
-          <div class="pad-header">
-            <div class="led led-y"></div>
-            <div class="pad-title">1 TO 3 HOURS</div>
-          </div>
-          <div class="pad-desc">Fix it properly before soundcheck.</div>
-        </a>
-
-        <a href="/protocol/full-recovery" class="pad pad-green" data-event="triage_selected" data-path="full_recovery">
-          <div class="pad-header">
-            <div class="led led-g"></div>
-            <div class="pad-title">TOMORROW / LATER</div>
-          </div>
-          <div class="pad-desc">Rebuild it so this never repeats.</div>
-        </a>
-      </nav>
-    </section>
 
     <p class="dim emerg-note">
       Designed for working DJs facing USB errors, emergency loop mode, Rekordbox export issues or corrupted drives.

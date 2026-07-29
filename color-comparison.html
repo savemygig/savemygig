@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Save My Gig: red vs orange comparison</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0b; --surf: #151413; --edge: #2a2723;
+    --text: #f3f1ec; --dim: #9a978f; --faint: #8a867c;
+    --red: #ff4d2e; --orange: #f0862e;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: #000; color: var(--text); font-family: 'Inter', sans-serif; padding: 2rem 1rem; }
+  .intro { max-width: 980px; margin: 0 auto 2rem; }
+  .intro h1 { font-family: 'Archivo', sans-serif; font-weight: 900; text-transform: uppercase; font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .intro p { color: var(--dim); font-size: 0.95rem; line-height: 1.6; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 980px; margin: 0 auto; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .col-label { font-family: ui-monospace, Menlo, monospace; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.6rem; }
+  .mock { background: var(--bg); border: 1px solid var(--edge); border-radius: 4px; padding: 1.6rem 1.4rem; }
+  .status { font-family: ui-monospace, Menlo, monospace; font-size: 0.7rem; letter-spacing: 0.2em; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .mock h2 { font-family: 'Archivo', sans-serif; font-weight: 900; text-transform: uppercase; font-size: 2rem; line-height: 1.02; letter-spacing: -0.01em; margin-bottom: 0.9rem; }
+  .mock p.lead { color: var(--dim); font-size: 0.88rem; line-height: 1.6; margin-bottom: 1.1rem; }
+  .btn { display: inline-block; font-family: 'Archivo', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.04em; padding: 0.75rem 1.4rem; border-radius: 2px; text-decoration: none; margin-bottom: 1.1rem; }
+  .links { font-size: 0.83rem; line-height: 1.9; color: var(--dim); }
+  .links a { text-decoration: none; }
+  .card { background: var(--surf); border: 1px solid var(--edge); border-radius: 2px; padding: 0.9rem 1rem; margin-top: 1rem; }
+  .card .name { font-family: 'Archivo', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 0.95rem; }
+  .card .blurb { color: var(--dim); font-size: 0.8rem; line-height: 1.5; margin-top: 0.25rem; }
+  .card .go { font-size: 0.78rem; font-weight: 600; margin-top: 0.4rem; display: block; text-decoration: none; }
+
+  .red .accent, .red .links a, .red .go { color: var(--red); }
+  .red .dot { background: var(--red); }
+  .red .status { color: var(--red); }
+  .red .btn { background: var(--red); color: #0a0a0b; }
+
+  .org .accent, .org .links a, .org .go { color: var(--orange); }
+  .org .dot { background: var(--orange); }
+  .org .status { color: var(--orange); }
+  .org .btn { background: var(--orange); color: #0a0a0b; }
+
+  .family { max-width: 980px; margin: 2.5rem auto 0; }
+  .family h3 { font-family: 'Archivo', sans-serif; font-weight: 900; text-transform: uppercase; font-size: 1.1rem; margin-bottom: 0.8rem; }
+  .fam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  @media (max-width: 760px) { .fam-grid { grid-template-columns: 1fr; } }
+  .bible { background: #111013; border: 1px solid var(--edge); border-radius: 4px; padding: 1.6rem 1.4rem; }
+  .bible .tag { font-family: ui-monospace, Menlo, monospace; color: var(--orange); font-size: 0.7rem; letter-spacing: 0.25em; margin-bottom: 0.9rem; }
+  .bible h2 { font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 1.45rem; line-height: 1.25; margin-bottom: 0.9rem; }
+  .bible h2 .accent { color: var(--orange); }
+  .bible p { color: var(--dim); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem; }
+  .bible .btn { background: var(--orange); color: #0a0a0b; margin-bottom: 0; font-family: ui-monospace, Menlo, monospace; }
+  .note { color: var(--faint); font-size: 0.8rem; line-height: 1.6; margin-top: 1.5rem; max-width: 980px; margin-left: auto; margin-right: auto; }
+  .swatches { display: flex; gap: 1rem; margin: 0.8rem 0 0; }
+  .sw { display: flex; align-items: center; gap: 0.5rem; font-family: ui-monospace, Menlo, monospace; font-size: 0.72rem; color: var(--dim); }
+  .sw i { width: 18px; height: 18px; border-radius: 3px; display: inline-block; }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>The comparison</h1>
+  <p>Left: the site today, brand red #ff4d2e. Right: the same site if migrated to the Booth Bible orange (approx #f0862e). Same layout, same type, only the accent changes.</p>
+  <div class="swatches">
+    <span class="sw"><i style="background:#ff4d2e"></i> site red #ff4d2e</span>
+    <span class="sw"><i style="background:#f0862e"></i> Bible orange ~#f0862e</span>
+  </div>
+</div>
+
+<div class="grid">
+  <div>
+    <div class="col-label" style="color:#ff4d2e">A · Today: brand red</div>
+    <div class="mock red">
+      <div class="status"><span class="dot"></span>EMERGENCY</div>
+      <h2>Your gig is <span class="accent">not over.</span></h2>
+      <p class="lead">USB not detected, no playlists, no sound. Pick the symptom and move.</p>
+      <a class="btn" href="#">Start Emergency Mode</a>
+      <div class="links">Popular: <a href="#">USB not recognized</a> · <a href="#">E-8302</a> · <a href="#">No playlists</a></div>
+      <div class="card">
+        <div class="name">rekordbox</div>
+        <div class="blurb">Export, Device Library vs OneLibrary, and every error a CDJ throws at you.</div>
+        <a class="go" href="#">Open the guide →</a>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="col-label" style="color:#f0862e">B · If migrated: Bible orange</div>
+    <div class="mock org">
+      <div class="status"><span class="dot"></span>EMERGENCY</div>
+      <h2>Your gig is <span class="accent">not over.</span></h2>
+      <p class="lead">USB not detected, no playlists, no sound. Pick the symptom and move.</p>
+      <a class="btn" href="#">Start Emergency Mode</a>
+      <div class="links">Popular: <a href="#">USB not recognized</a> · <a href="#">E-8302</a> · <a href="#">No playlists</a></div>
+      <div class="card">
+        <div class="name">rekordbox</div>
+        <div class="blurb">Export, Device Library vs OneLibrary, and every error a CDJ throws at you.</div>
+        <a class="go" href="#">Open the guide →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="family">
+  <h3>My recommendation: one family, two temperatures</h3>
+  <div class="fam-grid">
+    <div class="mock red">
+      <div class="status"><span class="dot"></span>SAVE MY GIG</div>
+      <h2>The <span class="accent">rescue</span> tool</h2>
+      <p class="lead">Red stays. It means act now. This is the emergency room.</p>
+      <a class="btn" href="#">Start Emergency Mode</a>
+    </div>
+    <div class="bible">
+      <div class="tag">■ THE DJ BOOTH BIBLE</div>
+      <h2>SOME THINGS YOU ONLY LEARN AT <span class="accent">3AM</span>, WITH A FULL ROOM WAITING.</h2>
+      <p>Orange stays. It means sit down and read. This is the library.</p>
+      <a class="btn" href="#">Notify Me</a>
+    </div>
+  </div>
+  <p class="note">Same dark background, same type language, clearly the same house. The site keeps its urgency, the book keeps its warmth. Nobody confuses them for different brands, and neither product has to give up the color that fits its job.</p>
+</div>
+
+</body>
+</html>

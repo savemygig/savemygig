@@ -55,7 +55,7 @@ await page.evaluate(() => navigator.serviceWorker.ready);
 // The precache is not instant; wait until a deep tunnel page is actually in
 // the cache instead of sleeping and hoping.
 await page.waitForFunction(async () => {
-  const hit = await caches.match('/protocol/critical/symptom');
+  const hit = await caches.match('/protocol/music/start');
   return !!hit;
 }, null, { timeout: 20000 });
 
@@ -65,8 +65,8 @@ await ctx.setOffline(true);
 // Pages a DJ needs mid-crisis, opened COLD offline (not visited online first).
 const OFFLINE_PAGES = [
   '/emergency',
-  '/protocol/critical/symptom',
-  '/protocol/no-sound/master',
+  '/protocol/music/start',
+  '/protocol/sound/master',
   '/checklist',
   '/install',
 ];
