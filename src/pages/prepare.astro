@@ -1,53 +1,154 @@
 ---
 import Base from '../layouts/Base.astro';
 import EmailCapture from '../components/EmailCapture.astro';
+
+// THE PREVENTION HUB, rebuilt 2026-07-29 as a professional doctrine (Antonio's
+// spec, approved in full). What changed and why:
+//
+// - "The mandatory rules" became **THE PROFESSIONAL RULES**. He ruled the
+//   title stays EVERGREEN with NO COUNT in it (his own lint rule from
+//   2026-07-27 stands: a counted promise rots the day rule eleven arrives).
+//   The 01-10 numbering on the cards carries the "ten rules" feeling instead,
+//   because numbers inside a list are allowed; numbers in a PROMISE are not.
+// - Two bands, YOUR MUSIC (01-06) and YOUR NIGHT (07-10). Ten flat cards read
+//   as a wall; the bands give the page rhythm and make it scannable.
+// - Cards stay EXPANDED. No accordions here, deliberately: each rule is two
+//   short lines, so the collapse doctrine does not bite, and the whole point
+//   is that a DJ can scan the doctrine in one pass.
+// - Rule 10 is CONTINUOUS LEARNING (his call, replacing an earlier draft that
+//   pointed at the four rescue moves). It connects Prevention to the
+//   Knowledge Base and the FAQ, and it carries the page's closing thought:
+//   professionals prepare their minds, not just their gear.
+// - The old "gig day is a freeze" alert card moved INSIDE the ten as rule 07.
+// - Emoji removed from the page (banned in headings sitewide).
+// - Title and description broadened off "USB prevention": this is the
+//   Prevention Hub, not USB Prevention.
+//
+// FACT DISCIPLINE: every claim here already shipped verified elsewhere on the
+// site (facts.js, /knowledge/rekordbox, the /fix library) or is habit advice
+// that needs no source. The rekordbox backup path is the verified one from the
+// 7.2.3 manual: File > Library > Backup Library.
+
+const MUSIC = [
+  {
+    n: '01',
+    title: 'Two identical drives, every gig.',
+    body: 'The same export on both, made the same night from the same playlists. One in the bag, one in your pocket.',
+    why: 'One drive is convenience. Two drives are insurance.',
+  },
+  {
+    n: '02',
+    title: 'Format for the whole room.',
+    body: 'FAT32 with an <span class="mono">MBR</span> partition scheme is read by every Pioneer DJ and AlphaTheta player ever made. exFAT is read only by newer units, and NTFS by none of them.',
+    why: 'You are not formatting for your player. You are formatting for a booth you have never seen.',
+  },
+  {
+    n: '03',
+    title: 'Buy drives that earn their place.',
+    body: 'A no-name stick is where most of these stories begin. Carry drives with a reputation among working DJs. <a href="/gear">The drives worth carrying</a>.',
+    why: 'The cheapest part of your setup carries the only thing the night cannot replace.',
+  },
+  {
+    n: '04',
+    title: 'Export fresh, every time.',
+    body: 'Re-export tonight\'s playlists after any library change, and always <strong>export</strong> from rekordbox. Never drag audio files onto the drive by hand.',
+    why: 'An old export is a corrupt export waiting to happen. A dragged folder has no database at all.',
+  },
+  {
+    n: '05',
+    title: 'Eject like it matters.',
+    body: 'Eject from rekordbox and wait for the computer to release the drive. On a player, press <span class="mono">USB STOP</span> and let the light settle before the drive moves.',
+    why: 'Interrupting a write is the fastest way to corrupt the database you just spent an hour building.',
+  },
+  {
+    n: '06',
+    title: 'Back up the library, not just the drive.',
+    body: 'In rekordbox: <span class="mono">File &gt; Library &gt; Backup Library</span>, monthly, onto a different drive or the cloud. Your cues, grids and playlists live in the library, not on the stick.',
+    why: 'A USB is a working copy. If it is your only copy, you do not have a backup.',
+  },
+];
+
+const NIGHT = [
+  {
+    n: '07',
+    title: 'Gig day is a freeze.',
+    body: 'No rekordbox update, no player firmware, no operating system update on the day you play or the days around it. Update the week after a gig, never the day before one.',
+    why: 'A new version can bring a new problem, and the booth is where you would meet it. Player firmware has been withdrawn by its own manufacturer after playlists stopped appearing for DJs.',
+  },
+  {
+    n: '08',
+    title: 'Test it before you leave.',
+    body: 'Load a track from the drive on a player if you own one. If you do not, reopen the export in rekordbox and confirm the device and the playlists are really there.',
+    why: 'Ten seconds at home costs nothing. The same discovery in the booth costs the set.',
+  },
+  {
+    n: '09',
+    title: 'Know the booth before you walk in.',
+    body: 'Ask the promoter which players and mixer are installed, and whether they are linked. Then pack for that room: the export a CDJ-3000X reads is not the one a CDJ-2000NXS2 reads. <a href="/knowledge/rekordbox#which-player">Which player reads which</a>.',
+    why: 'Compatibility is a question you answer at home, with time, or in the booth, without it.',
+  },
+  {
+    n: '10',
+    title: 'Learn before you need it.',
+    body: 'Read one thing while nothing is wrong: an error code, a compatibility quirk, a rescue move. <a href="/knowledge">The knowledge base</a> and <a href="/faq">the FAQ</a> are built for the quiet afternoon, not only for the emergency.',
+    why: 'Nobody learns under pressure. They remember. Familiarity is what turns a disaster into an inconvenience.',
+  },
+];
 ---
 <Base
-  title="Never Again: The DJ USB Prevention System | Save My Gig!"
-  description="The exact system that makes USB failures a non-event: redundant drives, clean exports, proper ejects, and the gear that doesn't die."
+  title="The Professional Rules: Prevent DJ Gig Failures | Save My Gig!"
+  description="The habits that make gig failure a non-event: redundant drives, clean exports, proper ejects, no updates on gig day, booth research, and knowing your gear before you need to."
   path="/prepare"
 >
   <main class="wrap">
     <div class="status-line">Prevention_Hub</div>
 
     <h1 style="margin-bottom:1rem">NEVER <span class="accent">AGAIN</span></h1>
-    <p class="dim" style="margin-bottom:2rem">USB failures aren't bad luck. They're a missing system. This is the system.</p>
+    <p class="dim pv-lead">
+      Most DJ disasters are not bad luck. They are a missing system.
+      Professionals do not rely on memory or on the night going well, they rely
+      on preparation. These are the habits that stop problems before they ever
+      reach the booth.
+    </p>
 
-    <div class="panel">
-      <!-- "The seven rules" until 2026-07-27. Antonio: no count in the name,
-           because it could be seven today, eight tomorrow, twelve after that,
-           and then we fix copy sitewide forever. The lint now enforces it. -->
-      <h3 style="margin-bottom:0.75rem">The mandatory rules</h3>
-      <ol class="rules-ol">
-        <li><strong>Two identical USBs, every gig.</strong> Same export on both. One in the bag, one in your pocket.</li>
-        <li><strong>FAT32, always.</strong> NTFS never works. exFAT is a gamble in a booth you do not control, since only newer players read it. Pick <span class="mono">MBR</span> when the format tool offers you a scheme.</li>
-        <li><strong>Quality drives only.</strong> The $8 no-name stick is how this story starts. <a href="/gear">Approved drives →</a></li>
-        <li><strong>Eject properly, every time.</strong> From Rekordbox and from the player (<span class="mono">USB STOP</span>).</li>
-        <li><strong>Re-export after every library change.</strong> An old export is a corrupt export waiting to happen.</li>
-        <li><strong>Test on a player</strong> (or at least re-open in Rekordbox) before leaving home.</li>
-        <li><strong>Back up the Rekordbox library</strong> monthly to a different drive or cloud.</li>
-      </ol>
+    <h2 class="pv-h">The <span class="accent">professional</span> rules</h2>
+    <p class="dim pv-sub">Non-negotiable, in the order the night actually happens.</p>
+
+    <div class="pv-band">Your music</div>
+    <div class="pv-rules">
+      {MUSIC.map((r) => (
+        <article class="pv-rule">
+          <div class="pv-n" aria-hidden="true">{r.n}</div>
+          <div class="pv-body">
+            <h3 class="pv-title">{r.title}</h3>
+            <p class="pv-text" set:html={r.body} />
+            <p class="pv-why"><span>Why it matters</span>{r.why}</p>
+          </div>
+        </article>
+      ))}
     </div>
 
-    <!-- Antonio's rule, kept OUTSIDE the numbered list. The old reason was
-         protecting the homepage's "seven rules" count; that count is gone now,
-         but the separation still earns its place: this one is about TIME, not
-         gear, so it reads as its own law rather than one more list item. -->
-    <div class="alert-card" style="margin-top:1rem">
-      <div style="font-size:20px" aria-hidden="true">🔒</div>
-      <div>
-        <strong>And the rule about time: gig day is a freeze.</strong> No
-        rekordbox update, no firmware update, no OS update on the day you play,
-        or close to it. A fresh version can bring a fresh problem, and the booth
-        is where you will meet it. Manufacturers have pulled player firmware
-        after it emptied DJs' browse screens mid-set. Update the week after a
-        gig, never the day before one.
-      </div>
+    <div class="pv-band">Your night</div>
+    <div class="pv-rules">
+      {NIGHT.map((r) => (
+        <article class="pv-rule">
+          <div class="pv-n" aria-hidden="true">{r.n}</div>
+          <div class="pv-body">
+            <h3 class="pv-title">{r.title}</h3>
+            <p class="pv-text" set:html={r.body} />
+            <p class="pv-why"><span>Why it matters</span>{r.why}</p>
+          </div>
+        </article>
+      ))}
     </div>
+
+    <p class="pv-close">
+      Professionals do not just prepare their gear. They prepare their minds.
+    </p>
 
     <div class="panel panel-go">
       <h3 style="margin-bottom:0.6rem">Before you leave: the checklist</h3>
-      <p class="dim" style="margin-bottom:1rem">Tick off the basics, the technical gear, and the life stuff you forget on the way out. It tracks your readiness and saves on this device for next time.</p>
+      <p class="dim" style="margin-bottom:1rem">This is where the rules become a routine. Tick off the music, the technical gear and the logistics you forget on the way out. It tracks your readiness and saves on this device for next time.</p>
       <a href="/checklist" class="btn btn-go" data-event="checklist_open" data-placement="prepare">Open the pre-gig checklist</a>
     </div>
 
@@ -57,31 +158,84 @@ import EmailCapture from '../components/EmailCapture.astro';
       blurb="One page. Everything to check before you leave, and the first moves when a player refuses your drive. Read it free any time, or get the printable version emailed so it lives on your phone."
     />
 
-    <div class="grid section">
+    <div class="grid grid-2 section">
       <div class="card">
-        <h3>🔌 The gear that doesn't die</h3>
-        <p>The exact drives worth carrying, and why.</p>
+        <h3>The gear that does not die</h3>
+        <p>The exact drives worth carrying, and why DJs trust them.</p>
         <a href="/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="prepare">See the kit</a>
+      </div>
+      <div class="card">
+        <h3>Master your tools</h3>
+        <p>rekordbox, the players and the mixers in depth. Rule 10, in practice.</p>
+        <a href="/knowledge" class="btn btn-neutral" data-event="step_completed" data-step="knowledge_click" data-placement="prepare">Open the knowledge base</a>
       </div>
     </div>
   </main>
 </Base>
 
 <style>
-  /* The homepage door promises "the mandatory rules" with no count on
-     purpose; the numbers HERE are fine, a list may show its own length. */
-  .rules-ol { list-style: none; counter-reset: rl; margin: 1.2rem 0 0; padding: 0; }
-  .rules-ol li {
-    counter-increment: rl;
-    position: relative;
-    padding: 0.75rem 0 0.75rem 2.2rem;
-    border-bottom: 1px solid var(--edge-soft);
+  .pv-lead { max-width: 44rem; line-height: 1.65; margin-bottom: 2.6rem; font-size: 1.02rem; }
+  .pv-h {
+    font-size: clamp(1.5rem, 5vw, 2.05rem); text-transform: uppercase;
+    letter-spacing: -0.015em; border: none; margin-bottom: 0.35rem;
   }
-  .rules-ol li:last-child { border-bottom: none; }
-  .rules-ol li::before {
-    content: counter(rl);
-    position: absolute; left: 0; top: 0.75rem;
-    width: 1.5rem; text-align: center;
-    font-family: var(--font-display); font-weight: 800; color: var(--red);
+  .pv-sub { font-size: 0.92rem; margin-bottom: 2rem; }
+
+  /* Band headers are the index for the two halves of the doctrine: the rules
+     that protect your music, then the rules that protect your night. */
+  .pv-band {
+    font-family: var(--font-body); font-weight: 700; font-size: 0.72rem;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-faint);
+    border-bottom: 1px solid var(--edge); padding-bottom: 0.6rem;
+    margin: 2.6rem 0 1.1rem;
+  }
+
+  .pv-rules { display: flex; flex-direction: column; gap: 0.7rem; }
+
+  /* Generous, premium cards: the number anchors, the title carries the weight,
+     and "why it matters" is one quiet line that never competes with it. */
+  .pv-rule {
+    display: grid; grid-template-columns: auto 1fr; gap: 0 1.15rem;
+    background: var(--surf); border: 1px solid var(--edge);
+    border-radius: var(--radius); padding: 1.5rem 1.5rem 1.4rem;
+    transition: border-color 0.15s ease;
+  }
+  .pv-rule:hover { border-color: var(--edge-soft); }
+  .pv-n {
+    font-family: var(--font-display); font-weight: 800; font-size: 1.65rem;
+    line-height: 1; color: var(--red); letter-spacing: -0.02em;
+    padding-top: 0.1rem; font-variant-numeric: tabular-nums;
+  }
+  .pv-title {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(1.08rem, 3.4vw, 1.28rem); line-height: 1.2;
+    letter-spacing: -0.015em; text-transform: none; color: var(--text);
+    margin: 0 0 0.5rem;
+  }
+  .pv-text { color: var(--text-dim); font-size: 0.94rem; line-height: 1.62; margin: 0; }
+  .pv-text strong { color: var(--text); }
+  .pv-why {
+    margin: 0.85rem 0 0; padding-top: 0.7rem;
+    border-top: 1px solid var(--edge-soft);
+    color: var(--text-faint); font-size: 0.87rem; line-height: 1.55;
+  }
+  .pv-why span {
+    display: block; font-family: var(--font-body); font-weight: 700;
+    font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 0.22rem;
+  }
+
+  .pv-close {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(1.15rem, 4vw, 1.5rem); line-height: 1.3;
+    letter-spacing: -0.015em; color: var(--text);
+    max-width: 30rem; margin: 2.8rem 0 2.4rem;
+  }
+
+  /* On a phone the number sits ABOVE the title: at 360px a text column beside
+     the numeral squeezes every title onto three lines. */
+  @media (max-width: 430px) {
+    .pv-rule { grid-template-columns: 1fr; gap: 0; padding: 1.25rem 1.15rem 1.2rem; }
+    .pv-n { font-size: 1.35rem; margin-bottom: 0.45rem; }
   }
 </style>
