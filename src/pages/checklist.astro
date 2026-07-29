@@ -190,8 +190,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Advanced</button>
         <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Custom</button>
       </div>
+      <!-- Rectangle to match the toolbar buttons (Antonio: the pill "looked
+           strange"), plus a chevron so tapping it to open/close reads as an
+           affordance instead of a mystery button (his ask, 2026-07-29). Same
+           chevron the Lists header already uses, for one visual language. -->
       <button type="button" class="acct-chip" id="acctLine" aria-expanded="false" aria-controls="acctCard">
         <span id="acctChipText">Sync</span>
+        <span class="ls-chev" aria-hidden="true"></span>
       </button>
     </div>
     <div class="mode-hint dim" id="modeHintBox">
@@ -1042,15 +1047,23 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      state ("Synced") — gray never means "please press me" (his correction). */
   .mode-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.5rem; }
   .mode-row .mode-switch { margin-bottom: 0; }
+  /* Rectangle, same shape language as every other button on the page
+     (Antonio: the pill "looked strange" beside Reset/Download/Email). */
   .acct-chip {
-    flex: 0 0 auto; background: none; cursor: pointer;
-    border: 1px solid var(--edge); border-radius: 999px;
+    flex: 0 0 auto; display: inline-flex; align-items: center; gap: 0.4rem;
+    cursor: pointer; border: 1px solid var(--edge); border-radius: var(--radius);
+    background: var(--surf);
     color: var(--text-faint); font-family: var(--font-display); font-weight: 700;
     font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
     padding: 0.4rem 0.85rem;
   }
   @media (hover: hover) { .acct-chip:hover { color: var(--text-dim); border-color: var(--text-dim); } }
   .acct-chip.is-synced { color: var(--green); border-color: var(--green); }
+  /* Same chevron the Lists header uses: the one visual cue on this page for
+     "tap to open/close" (Antonio's ask: the chip needed some sign it does
+     that at all). */
+  .acct-chip .ls-chev { margin-top: -1px; }
+  .acct-chip[aria-expanded="true"] .ls-chev { transform: rotate(225deg); margin-top: 2px; }
   @media (max-width: 640px) {
     /* Safety net, not the target layout: on the narrowest phones three mode
        buttons plus the chip can get tight. Wrap rather than clip or overlap. */
