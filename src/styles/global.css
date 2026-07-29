@@ -560,15 +560,32 @@ html.ck-open .sticky-cta { display: none !important; }
 /* ---------- Quiet emergency CTA ----------
    Antonio's rule, extending the homepage-door principle ("emergency is never
    a permanently red box"): on calm pages the bottom emergency CTA is an exit
-   sign, not the page's job, so it is outlined red and only FILLS on
-   interaction. Solid red stays reserved for crisis surfaces: /emergency
-   itself, the rescue tunnel, and the mobile sticky CTA on fix articles. */
+   sign, not the page's job. Solid red stays reserved for crisis surfaces:
+   /emergency itself, the rescue tunnel, and the mobile sticky CTA on fix
+   articles — that part is unchanged. Round 4 (2026-07-30), checklist live
+   review: idle was fully transparent, which read as too quiet to notice;
+   idle is now a LIGHT red fill (--red-dim/--red-border, the same tokens
+   .panel-danger already uses elsewhere on the site, not a new color), and
+   it still only goes to FULL solid red on hover/active — the "never a
+   permanently red box" principle holds, only the idle state warmed up. */
 .btn-quiet-danger {
+  background: var(--red-dim); color: var(--red);
+  border: 1px solid var(--red-border);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.btn-quiet-danger:hover, .btn-quiet-danger:active { background: var(--red); border-color: var(--red); color: #0a0a0b; }
+
+/* The checklist gate's Register button borrowed .btn-quiet-danger's bold red
+   look before this round's "Start Emergency Mode"-specific redesign existed
+   as a separate concept; split off so Register (a neutral signup action, not
+   a danger/urgency one) keeps its ORIGINAL transparent-until-hover look and
+   isn't accidentally reworded into looking like a crisis action. */
+.btn-quiet-register {
   background: transparent; color: var(--red);
   border: 1px solid var(--red);
   transition: background 0.15s ease, color 0.15s ease;
 }
-.btn-quiet-danger:hover, .btn-quiet-danger:active { background: var(--red); color: #0a0a0b; }
+.btn-quiet-register:hover, .btn-quiet-register:active { background: var(--red); color: #0a0a0b; }
 
 /* ---------- Exit box ----------
    The container for the quiet emergency CTA at the bottom of calm pages.

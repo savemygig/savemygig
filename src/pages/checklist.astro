@@ -262,7 +262,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <!-- Register + the anti-spam promise share a row on desktop (Antonio:
              everything moves up a little); they stack again on phones. -->
         <div class="unlock-actions">
-          <button type="submit" class="btn btn-quiet-danger">Register</button>
+          <!-- .btn-quiet-register, not .btn-quiet-danger (round 4 split):
+               Register is a signup action, not an emergency one, and keeps
+               its original transparent-until-hover look now that
+               .btn-quiet-danger got a light-red idle fill for the actual
+               "Start Emergency Mode" buttons sitewide. -->
+          <button type="submit" class="btn btn-quiet-register">Register</button>
           <!-- Antonio's anti-spam promise, tightened twice (second pass cut
                nine words so it holds two lines beside Register). Still the
                consent line, so it stays honest about what we send. -->
