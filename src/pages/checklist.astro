@@ -190,14 +190,25 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Advanced</button>
         <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Custom</button>
       </div>
-      <!-- Rectangle to match the toolbar buttons (Antonio: the pill "looked
-           strange"), plus a chevron so tapping it to open/close reads as an
-           affordance instead of a mystery button (his ask, 2026-07-29). Same
-           chevron the Lists header already uses, for one visual language. -->
-      <button type="button" class="acct-chip" id="acctLine" aria-expanded="false" aria-controls="acctCard">
-        <span id="acctChipText">Sync</span>
-        <span class="ls-chev" aria-hidden="true"></span>
-      </button>
+      <div class="mode-row-right">
+        <!-- Mobile-only info toggle (Antonio, 2026-07-29 round 2): desktop
+             already teaches "hover for a tooltip" by convention, so it gets
+             no button there (hidden by the hover:hover media query below).
+             Gray = off. Tap turns it amber and shows this line once; while
+             on, tapping any of the six covered controls shows that control's
+             info instead of using it. Tap again to go back to normal.
+             Replaces the earlier press-and-hold-to-reveal gesture on touch,
+             which was fiddly to time; hover-a-beat on desktop is untouched. -->
+        <button type="button" class="explain-btn" id="explainInfoBtn" aria-label="Show button instructions" aria-pressed="false">ⓘ</button>
+        <!-- Rectangle to match the toolbar buttons (Antonio: the pill "looked
+             strange"), plus a chevron so tapping it to open/close reads as an
+             affordance instead of a mystery button (his ask, 2026-07-29). Same
+             chevron the Lists header already uses, for one visual language. -->
+        <button type="button" class="acct-chip" id="acctLine" aria-expanded="false" aria-controls="acctCard">
+          <span id="acctChipText">Sync</span>
+          <span class="ls-chev" aria-hidden="true"></span>
+        </button>
+      </div>
     </div>
     <div class="mode-hint dim" id="modeHintBox">
       <span id="modeHint"><span class="mh-s">The must-brings, before you leave for a gig.</span><span class="mh-f">Must-brings. The essential checklist every DJ should have before leaving for a gig.</span></span>
@@ -369,19 +380,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         </form>
         <p class="acct-msg" id="lsMsg" role="status" aria-live="polite"></p>
       </div>
-    </div>
-
-    <!-- Press-and-hold explainers (Antonio's ruling, 2026-07-29): no on/off
-         mode to forget, no icon on every button. A normal tap always does
-         exactly what it does today; holding a covered control a beat longer
-         (or hovering it on a mouse) shows what it does, in the same amber
-         language as the cookie banner. This "(i)" is the one piece of new
-         UI: it never changes behavior, it only opens a static legend so the
-         gesture itself is discoverable. Kept outside .custom-toolbar's flex
-         row on purpose, so it can never disturb the four-buttons-one-row
-         layout tuned for narrow phones. -->
-    <div class="explain-row" id="explainRow" hidden>
-      <button type="button" class="explain-btn" id="explainInfoBtn" aria-label="How to see instructions for any button">(i)</button>
     </div>
 
     <!-- One toolbar, four short verbs (Antonio): Edit, Clear, Download PDF,
@@ -1060,6 +1058,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      state ("Synced") — gray never means "please press me" (his correction). */
   .mode-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.5rem; }
   .mode-row .mode-switch { margin-bottom: 0; }
+  /* Groups the info toggle + Sync chip as one unit so .mode-row's
+     space-between still reads as "modes on the left, status on the right",
+     and so the pair wraps together on narrow phones instead of splitting. */
+  .mode-row-right { display: flex; align-items: center; gap: 0.5rem; flex: 0 0 auto; }
   /* Rectangle, same shape language as every other button on the page
      (Antonio: the pill "looked strange" beside Reset/Download/Email). */
   .acct-chip {
@@ -1082,6 +1084,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
        buttons plus the chip can get tight. Wrap rather than clip or overlap. */
     .mode-row { flex-wrap: wrap; row-gap: 0.35rem; }
     .acct-chip { font-size: 0.66rem; padding: 0.35rem 0.7rem; }
+    .explain-btn { font-size: 0.8rem; padding: 0.35rem 0.6rem; }
   }
   .acct-card {
     margin-bottom: 1rem; padding: 1.1rem 1.2rem;
@@ -1211,19 +1214,24 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .ls-new-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .list-switch .acct-msg { flex: 1 1 100%; margin-top: 0; }
 
-  /* Press-and-hold explainers (Antonio's ruling, 2026-07-29): the "(i)"
-     legend and every per-control popover share this look, the same amber
+  /* Info toggle + every per-control popover share this look, the same amber
      edge the cookie banner uses, so the whole thing reads as one system a
-     DJ has already seen rather than something new to learn. */
-  .explain-row { display: flex; justify-content: flex-end; margin: -0.3rem 0 0.7rem; }
+     DJ has already seen rather than something new to learn. The toggle
+     itself is gray until switched on (Antonio, round 2): amber on this
+     button specifically means "I am currently on", not just "here I am". */
   .explain-btn {
-    display: inline-flex; align-items: center; cursor: pointer;
-    background: var(--surf); border: 1px solid var(--amber); border-radius: var(--radius);
-    color: var(--amber); font-family: var(--font-display); font-weight: 700;
-    font-size: 0.72rem; letter-spacing: 0.02em;
-    padding: 0.3rem 0.65rem;
+    display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    color: var(--text-faint); font-family: var(--font-display); font-weight: 700;
+    font-size: 0.9rem; line-height: 1;
+    padding: 0.35rem 0.7rem;
   }
-  @media (hover: hover) { .explain-btn:hover { background: var(--amber-dim); } }
+  .explain-btn.mode-active { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
+  .explain-btn[hidden] { display: none; }
+  /* Desktop already teaches "hover for a tooltip" by convention (Antonio's
+     call, round 2): no toggle needed there, hover-a-beat just works. Mobile
+     only. */
+  @media (hover: hover) { .explain-btn { display: none; } }
   /* Fixed-position, JS-placed near whatever was pressed or hovered. One at a
      time, same as rekordbox: opening a new one always closes the last. */
   .explain-pop {
@@ -2001,32 +2009,40 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     return '<span class="mh-s">' + c.s + '</span><span class="mh-f">' + c.f + '</span>';
   }
 
-  // PRESS-AND-HOLD EXPLAINERS (Antonio's ruling, 2026-07-29). No on/off mode
-  // to forget: a normal tap always does exactly what it already does. Only a
-  // sustained hold (touch) or a beat of hover (mouse) reveals an explainer,
-  // matching a gesture every phone already teaches (long-press) instead of
-  // inventing a new one. One popover at a time, amber-edged like the cookie
-  // banner. A single document-level CAPTURING click listener is what makes
-  // the "swallow the click that ends a hold" trick reliable regardless of
+  // EXPLAINERS (Antonio's ruling, 2026-07-29; mode-toggle reworked round 2
+  // same day). Desktop needs no UI at all: hovering a control for a beat is
+  // a convention every mouse user already knows, so it just works. Touch
+  // has no hover, so it gets an explicit "ⓘ" toggle instead: off by default
+  // (gray), tap turns it on (amber) and shows the one-line instruction;
+  // while on, tapping any of the six covered controls shows THAT control's
+  // explainer instead of performing its normal action. Tap ⓘ again, back to
+  // normal. infoModeOn is a plain variable, never persisted, so it can never
+  // be left on between visits. A single document-level CAPTURING click
+  // listener is what makes intercepting those taps reliable regardless of
   // when each button's own click handler was registered elsewhere in this
   // file: capture-phase listeners on an ancestor always run before ANY
   // listener on the target itself, so ordering here can never race with
   // resetBtn/lsDelBtn/etc.'s own click handlers.
-  const EXPLAIN_HOLD_MS = 550;
+  const EXPLAIN_HOLD_MS = 1000;
   const HAS_HOVER = (() => { try { return window.matchMedia('(hover: hover)').matches; } catch (e) { return false; } })();
   let closeOpenExplain: (() => void) | null = null;
-  let suppressClickOn: HTMLElement | null = null;
+  let openAnchor: HTMLElement | null = null;
+  let infoModeOn = false;
+  const EXPLAIN_TARGETS = new Map<HTMLElement, () => string>();
 
   document.addEventListener('click', (e) => {
-    if (suppressClickOn && (e.target === suppressClickOn || suppressClickOn.contains(e.target as Node))) {
-      e.preventDefault();
-      e.stopPropagation();
-      suppressClickOn = null;
-    }
+    if (!infoModeOn) return;
+    const target = e.target as HTMLElement | null;
+    const el = target && target.closest ? (target.closest('.explain-target') as HTMLElement | null) : null;
+    if (!el || !EXPLAIN_TARGETS.has(el)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    showExplain(el, EXPLAIN_TARGETS.get(el)!());
   }, true);
 
   function closeExplain() {
     if (closeOpenExplain) { closeOpenExplain(); closeOpenExplain = null; }
+    if (openAnchor) { openAnchor.classList.remove('is-open'); openAnchor = null; }
   }
 
   function showExplain(anchor: HTMLElement, text: string) {
@@ -2046,6 +2062,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     if (top < margin) top = margin;
     pop.style.left = left + 'px';
     pop.style.top = top + 'px';
+    openAnchor = anchor;
+    anchor.classList.add('is-open');
 
     const onOutside = (e: Event) => { if (!pop.contains(e.target as Node)) closeExplain(); };
     const onScroll = () => closeExplain();
@@ -2067,24 +2085,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function attachExplainer(el: HTMLElement | null, textFn: () => string) {
     if (!el) return;
     el.classList.add('explain-target');
-    let holdTimer: ReturnType<typeof setTimeout> | undefined;
-    let triggered = false;
-
-    el.addEventListener('pointerdown', (e: PointerEvent) => {
-      if (e.pointerType === 'mouse') return; // mouse uses hover below, not a hold
-      triggered = false;
-      holdTimer = setTimeout(() => {
-        triggered = true;
-        suppressClickOn = el;
-        showExplain(el, textFn());
-      }, EXPLAIN_HOLD_MS);
-    });
-    const cancelHold = () => { if (holdTimer) { clearTimeout(holdTimer); holdTimer = undefined; } };
-    el.addEventListener('pointerup', cancelHold);
-    el.addEventListener('pointercancel', cancelHold);
-    el.addEventListener('pointerleave', cancelHold);
-    el.addEventListener('contextmenu', (e: Event) => { if (triggered) e.preventDefault(); });
-
+    EXPLAIN_TARGETS.set(el, textFn);
+    // Desktop only: hover-a-beat, independent of the mobile info toggle
+    // (the toggle never renders on a hover-capable device, so infoModeOn
+    // can never be true there).
     if (HAS_HOVER) {
       let hoverTimer: ReturnType<typeof setTimeout> | undefined;
       el.addEventListener('mouseenter', () => {
@@ -2109,8 +2113,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     // not unlocked on that device) Edit stayed tappable, which produced edit
     // state in Basic: remove buttons and green outlines with no pencil and no
     // arrows, because those are rightly Custom-only.
-    const explainRow = document.getElementById('explainRow') as HTMLElement | null;
-    if (explainRow) explainRow.hidden = false;
     if (customToolbar) {
       customToolbar.hidden = false;
       const custom = m === 'custom';
@@ -3219,12 +3221,18 @@ ${sections}
   attachExplainer(lsDelBtn, () => 'Turns on delete mode for your saved lists. Tap the × on a list once to arm it, tap again to delete it. Your active list can’t be deleted this way, switch to another list first.');
   modeBtns.forEach((b) => attachExplainer(b, () => (MODE_COPY_MAP[b.dataset.modeSet || 'basic'] || MODE_COPY_MAP.basic).f));
 
-  // The "(i)" legend: static, always the same message, opens on a plain
-  // tap (it is not itself a covered control, it is the explanation OF the
-  // gesture). Reuses the exact same popover look as everything above.
+  // The "ⓘ" toggle (mobile only, CSS hides it wherever a mouse is present):
+  // a plain on/off, never persisted. Turning it on arms the document-level
+  // click listener above and shows this line once; turning it off closes
+  // whatever explainer happens to be open and hands the covered buttons
+  // back to their normal click handlers.
   const explainInfoBtn = document.getElementById('explainInfoBtn');
   if (explainInfoBtn) explainInfoBtn.addEventListener('click', () => {
-    showExplain(explainInfoBtn, 'Press and hold any button for more detailed instructions.');
+    infoModeOn = !infoModeOn;
+    explainInfoBtn.classList.toggle('mode-active', infoModeOn);
+    explainInfoBtn.setAttribute('aria-pressed', String(infoModeOn));
+    if (infoModeOn) showExplain(explainInfoBtn, 'Tap any button to see what it does instead of using it. Tap ⓘ again to go back to normal.');
+    else closeExplain();
   });
 
   // The sign-in redirect lands here. ?signedin=1: the session cookie is
