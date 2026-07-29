@@ -42,7 +42,7 @@ ok(page.url().includes('/checklist'), 'link lands on checklist, url=' + page.url
 await page.evaluate(() => document.getElementById('ck')?.remove());
 await page.waitForTimeout(1200); // initAccount fetch
 const text = await page.locator('#acctText').textContent();
-ok(text.includes('Synced as antonio.uitest@djtest.com'), 'signed-in row text: ' + text.trim());
+ok(text.includes('Synced with antonio.uitest@djtest.com'), 'signed-in row text: ' + text.trim());
 const unlocked = await page.evaluate(() => localStorage.getItem('SMG_UNLOCKED'));
 ok(unlocked === '1', 'sign-in registered the device (ruling 3)');
 

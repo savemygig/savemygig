@@ -285,6 +285,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <button type="button" class="acct-line" id="acctLine" aria-expanded="false" aria-controls="acctCard">
         <span class="acct-dot" id="acctDot" aria-hidden="true"></span>
         <span class="acct-text" id="acctText">Sync is off. Sign in to keep your list on every device.</span>
+        <span class="ls-chev" aria-hidden="true"></span>
       </button>
       <div class="acct-card" id="acctCard" hidden>
         <div id="acctOut">
@@ -300,7 +301,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           <p class="acct-msg" id="acctMsg" role="status" aria-live="polite"></p>
         </div>
         <div id="acctIn" hidden>
-          <p class="dim acct-copy">Signed in as <strong class="acct-who" id="acctEmail"></strong>. Your lists sync to this account.</p>
+          <!-- No "Signed in as" line: the header row above already names the
+               email (Antonio's desktop review: shrink the box). -->
           <!-- First-sign-in completion (Antonio's ruling: the account asks
                what the gate asks, same fields, same promise). Shows until
                the account has an artist name; prefilled when this device
@@ -321,7 +323,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
               <span class="rs-arm" aria-hidden="true">Click again</span>
             </button>
           </div>
-          <p class="dim acct-fine">Delete removes your account, your synced lists and your email from our records. The list on this device stays yours.</p>
+          <p class="dim acct-fine">Delete erases everything on our side. The list on this device stays yours.</p>
           <p class="acct-msg" id="acctMsg2" role="status" aria-live="polite"></p>
         </div>
       </div>
@@ -1052,7 +1054,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .acct-form input::placeholder { color: var(--text-faint); }
   .acct-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
-  .acct-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  /* Sign out and Delete share one row (Antonio: smaller box). */
+  .acct-actions { display: flex; gap: 8px; }
+  .acct-actions .btn { flex: 1 1 0; min-width: 0; white-space: nowrap; text-align: center; }
+  @media (max-width: 640px) {
+    .acct-actions .btn { padding: 0.7rem 0.3rem; font-size: 0.72rem; letter-spacing: 0.01em; }
+  }
+  .acct-line[aria-expanded="true"] .ls-chev { transform: rotate(225deg); margin-top: 3px; }
   .acct-profile { margin-bottom: 0.9rem; }
   .acct-profile input { flex: 1 1 100%; }
   .acct-profile[hidden] { display: none; }
@@ -2537,8 +2545,10 @@ ${sections}
     if (acctOut) acctOut.hidden = signedIn;
     if (acctIn) acctIn.hidden = !signedIn;
     if (acctEmailEl) acctEmailEl.textContent = acct.email || '';
+    // "Synced with", not "as": it is the DJ's email, not their name
+    // (Antonio's desktop review).
     if (acctText) acctText.textContent = signedIn
-      ? 'Synced as ' + acct.email
+      ? 'Synced with ' + acct.email
       : 'Sync is off. Sign in to keep your list on every device.';
     setDotSynced(signedIn);
     // Completion step: the account asks what the gate asks, until it has a
