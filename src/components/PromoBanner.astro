@@ -106,9 +106,10 @@ const promos = ALL.filter((p) => p.href !== exclude);
     margin: 2rem auto 0;
   }
   /* Once there is room, pin it to a true 728x90 leaderboard so a real ad unit
-     fits natively rather than being scaled or downgraded. The content column is
-     720px, so this sits 4px proud on each side, which is well inside the
-     viewport at this breakpoint and never creates horizontal scroll. */
+     fits natively rather than being scaled or downgraded. The content column
+     is 728px too now (Antonio, round 5: --site-w bumped so the rest of the
+     page matches this banner instead of the other way around), so this just
+     confirms the exact width rather than sitting proud of it. */
   @media (min-width: 820px) {
     .promo-slot { width: 728px; max-width: none; }
   }

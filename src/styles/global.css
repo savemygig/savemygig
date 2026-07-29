@@ -50,8 +50,14 @@
   --radius: 2px;
   /* One shared content width + gutter so the nav, every page body, and the
      footer line up on the same left/right edge. Change it here, everything
-     follows. */
-  --site-w: 760px;
+     follows.
+     768px (Antonio, round 5): the promo banner is a true 728x90 IAB
+     leaderboard on purpose (see PromoBanner.astro), and every other box on
+     the page — doors, search, install banner — was reading a little
+     narrower than it, which stood out. 768 - (2 * 1.25rem pad) = 728px
+     content width, so the column now matches the banner exactly instead of
+     the banner sitting proud of it. Was 760px. */
+  --site-w: 768px;
   --site-pad: 1.25rem;
   /* the rescue tunnel runs narrower on purpose: one decision, less to scan */
   --tunnel-w: 620px;

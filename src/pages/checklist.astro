@@ -231,12 +231,44 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            "your email is the price". That reads like a transaction and it makes
            a professional feel charged for something we call free. It is
            "free for registered users", which is how every real tool works and
-           how a working DJ expects to be treated. -->
-      <p class="unlock-title" id="unlockTitle">Register free to unlock Advanced and Custom modes</p>
+           how a working DJ expects to be treated.
+           Round 5 (Antonio): the panel used to show the headline, the full
+           note, three fields and two sign-in paths all at once, "too much
+           information". Title cut to four words; Google is now the default
+           single action and the whole email form hides behind one toggle,
+           so the box shows one thing at a time instead of everything at
+           once. -->
+      <p class="unlock-title" id="unlockTitle">Unlock Advanced & Custom</p>
       <!-- Per-device honesty (audit finding): registration unlocks THIS device
            today, and the emailed copy is what carries the list across devices.
            When account sync ships this copy gets stronger, not corrected. -->
       <p class="dim unlock-copy" id="unlockCopy">Access is instant, no password. The Email list button carries your list to any other device.</p>
+
+      <!-- Google first now (Antonio, round 5): most DJs tap this and never
+           see the fields below it. Antonio's OLD ruling required the artist
+           name before Google would even respond (a transparent blocker sat
+           over the iframe) so the homepage greeting always had a name to
+           use; that blocker is gone now that the field it was guarding is
+           hidden by default too, which would have left Google permanently
+           blocked with no visible way to unblock it. The name still gets
+           collected, just after sign-in instead of before: the Sync card's
+           "so we know what to call you" prompt (#acctProfile, further down
+           this file) already exists for exactly this and now covers the
+           gate's Google path too, same as it already covers the card's.
+           Flagging this because it reopens a documented ruling; easy to
+           revert if that trade-off is wrong. -->
+      <div class="unlock-alt" id="unlockAlt" hidden>
+        <div class="gsi-wrap" id="gsiGateWrap">
+          <div class="gsi-holder" id="gsiGateBtn"></div>
+        </div>
+      </div>
+
+      <!-- Only revealed once Google actually renders (JS below): with no
+           Google configured there is no alternative to offer, so the form
+           stays the default, visible-on-load path instead (progressive
+           enhancement, works with JS off too). -->
+      <button type="button" class="unlock-email-toggle" id="unlockEmailToggle" hidden>No Google? No problem. Use your other email.</button>
+
       <!-- One required field, two optional ones. Antonio wanted name, surname,
            artist name and Instagram, all required, so he can follow every DJ
            who registers. The follow-back idea is genuinely good and stays. The
@@ -250,7 +282,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <!-- REQUIRED since 2026-07-27 (Antonio: the personal touch is worth
              the field, and everyone has a first name, techs included). The
              homepage greets by this name where it fits. Trade-off noted at
-             the time: a second required field costs some conversions. -->
+             the time: a second required field costs some conversions. Stays
+             required on the email path specifically: unlike Google, this
+             path never opens a session, so there is no later screen to
+             collect it in. -->
         <input type="text" name="artist" required autocomplete="nickname" placeholder="Artist name or first name" aria-label="Artist name or first name" maxlength="80" />
         <!-- The follow promise lives INSIDE the field now (Antonio): one line
              less under the form, and the pitch sits exactly where the answer
@@ -268,26 +303,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                .btn-quiet-danger got a light-red idle fill for the actual
                "Start Emergency Mode" buttons sitewide. -->
           <button type="submit" class="btn btn-quiet-register">Register</button>
-          <!-- Antonio's anti-spam promise, tightened twice (second pass cut
-               nine words so it holds two lines beside Register). Still the
-               consent line, so it stays honest about what we send. -->
-          <p class="unlock-note">Once in a while we share something worth your time by email: site news, new tools, or a product that helps your career. Opt out any time, one click. <a href="/legal/privacy">Privacy</a></p>
+          <!-- Antonio's anti-spam promise, trimmed again round 5: the ad-copy
+             framing ("site news, new tools, a product that helps your
+             career") was pulling eyes away from Register. Still honest,
+             still links Privacy, just one line now. -->
+          <p class="unlock-note">Occasional emails, unsubscribe anytime. <a href="/legal/privacy">Privacy</a></p>
         </div>
       </form>
-      <!-- Antonio's ruling (2026-07-29): the gate is the account's front
-           door. Google replaces TYPING THE EMAIL only; artist name stays
-           required on both paths (the homepage greets by name), Instagram
-           stays optional with the same promise. The transparent blocker sits
-           over Google's iframe while the artist field is empty, because the
-           iframe's own click cannot be intercepted; it clears the moment a
-           name exists. Appears only when a Google client id is configured. -->
-      <div class="unlock-alt" id="unlockAlt" hidden>
-        <span class="unlock-or">or, with no typing:</span>
-        <div class="gsi-wrap" id="gsiGateWrap">
-          <div class="gsi-holder" id="gsiGateBtn"></div>
-          <button type="button" class="gsi-block" id="gsiGateBlock" aria-label="Add your artist name or first name first"></button>
-        </div>
-      </div>
       <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
     </div>
 
@@ -331,6 +353,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <!-- The email lives here now that the chip up top just says Synced
              (Antonio: the chip is a state, not a place to read the address). -->
         <p class="dim acct-copy">Synced with <span class="acct-who" id="acctEmail"></span></p>
+        <!-- Antonio: after registering on mobile the box just sat open with
+             no cue that Sync is also the close control. One line, same dim
+             voice as the rest of this panel. -->
+        <p class="dim acct-hint">Tap Sync to close this.</p>
         <!-- First-sign-in completion (Antonio's ruling: the account asks
              what the gate asks, same fields, same promise). Shows until
              the account has an artist name; prefilled when this device
@@ -351,7 +377,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             <span class="rs-arm" aria-hidden="true">Click again</span>
           </button>
         </div>
-        <p class="dim acct-fine">Deletes your account and synced lists. This device keeps its checklist.</p>
+        <p class="dim acct-fine" id="acctDelFine">Deletes your account and synced lists. This device keeps its checklist.</p>
         <p class="acct-msg" id="acctMsg2" role="status" aria-live="polite"></p>
       </div>
     </div>
@@ -786,7 +812,18 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     text-transform: uppercase; letter-spacing: -0.01em; margin: 0 0 0.4rem;
   }
   .unlock-copy { font-size: 0.9rem; margin: 0 0 0.9rem; }
+  /* Google-first layout (round 5): the Google button sits above the fold of
+     this panel with nothing else competing with it; the toggle below reveals
+     the form only for the DJs who need it. */
+  .unlock-email-toggle {
+    display: block; background: none; border: none; padding: 0; margin: 0 0 1rem;
+    color: var(--text-dim); font-family: var(--font-body); font-size: 0.85rem;
+    text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+  }
+  .unlock-email-toggle[hidden] { display: none; }
+  @media (hover: hover) { .unlock-email-toggle:hover { color: var(--text); } }
   .unlock-form { display: flex; flex-direction: column; gap: 10px; }
+  .unlock-form[hidden] { display: none; }
   .bl-short { display: none; }
   .unlock-form input {
     width: 100%; padding: 0.9rem 1rem; font-family: inherit; font-size: 16px;
@@ -1059,7 +1096,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-chip {
     flex: 0 0 auto; display: inline-flex; align-items: center; gap: 0.5rem;
     cursor: pointer; border: 1px solid var(--edge); border-radius: var(--radius);
-    background: var(--surf);
+    /* Transparent, not filled (Antonio, round 5): no background in ANY
+       state, idle, open or synced. Only the border and text color carry
+       the state (gray idle, green synced), same "quiet until it matters"
+       language as the rest of the page. */
+    background: transparent;
     color: var(--text-faint); font-family: var(--font-display); font-weight: 700;
     font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
     padding: 0.4rem 0.85rem;
@@ -1100,6 +1141,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-card[hidden] { display: none; }
   .acct-copy { font-size: 0.88rem; margin-bottom: 0.85rem; }
   .acct-who { color: var(--text); font-weight: 600; }
+  .acct-hint { font-size: 0.8rem; margin: -0.6rem 0 0.85rem; }
   .gsi-holder { margin-bottom: 0.85rem; }
   .gsi-holder:empty { display: none; }
   /* Only shows when Google actually rendered a button above it, so it never
@@ -1129,19 +1171,26 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-profile { margin-bottom: 0.9rem; }
   .acct-profile input { flex: 1 1 100%; }
   .acct-profile[hidden] { display: none; }
-  .unlock-alt { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.9rem; }
+  .unlock-alt { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.9rem; margin-bottom: 0.9rem; }
   .unlock-alt[hidden] { display: none; }
   .unlock-or { color: var(--text-faint); font-size: 0.82rem; }
   .gsi-wrap { position: relative; display: inline-block; }
-  .gsi-block { position: absolute; inset: 0; background: transparent; border: none; padding: 0; cursor: pointer; }
-  .gsi-block[hidden] { display: none; }
-  .acct-del { display: inline-grid; }
+  /* Compound selector, not just .acct-del (Antonio, round 5 bug): this was
+     losing the cascade to global.css's .btn { display: block }, same
+     specificity but .btn loads later, so the stacked-cell trick silently
+     never applied. Both spans rendered as sequential inline text instead —
+     .rs-arm stayed invisible but still reserved its width right after
+     .rs-idle, so the centered text-align pushed the VISIBLE text off to one
+     side (left when idle, right when armed) instead of truly centering it.
+     That's the "left-justified, then jumps right on click" bug. */
+  .acct-actions .acct-del { display: inline-grid; }
   .acct-del > span { grid-area: 1 / 1; }
   .acct-del .rs-arm { visibility: hidden; }
   .acct-del.armed { border-color: var(--red); color: var(--red); }
   .acct-del.armed .rs-idle { visibility: hidden; }
   .acct-del.armed .rs-arm { visibility: visible; }
   .acct-fine { font-size: 0.78rem; margin-top: 0.7rem; }
+  .acct-fine.err { color: var(--red); }
   .acct-msg { font-size: 0.82rem; margin-top: 0.55rem; min-height: 0; color: var(--text-dim); }
   .acct-msg.ok { color: var(--green); }
   .acct-msg.err { color: var(--red); }
@@ -1234,12 +1283,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      button specifically means "I am currently on", not just "here I am". */
   .explain-btn {
     display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
-    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    /* Transparent (Antonio, round 5): matches the Sync chip, no fill in any
+       state, amber lives only in the border and glyph when it's on. */
+    background: transparent; border: 1px solid var(--edge); border-radius: var(--radius);
     color: var(--text-faint); font-family: var(--font-display); font-weight: 700;
     font-size: 0.9rem; line-height: 1;
     padding: 0.35rem 0.7rem;
   }
-  .explain-btn.mode-active { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
+  .explain-btn.mode-active { border-color: var(--amber); color: var(--amber); }
   .explain-btn[hidden] { display: none; }
   /* Fixed-position, JS-placed near whatever was pressed or hovered. One at a
      time, same as rekordbox: opening a new one always closes the last. */
@@ -2301,9 +2352,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   const unlockTitle = document.getElementById('unlockTitle');
   const unlockCopy = document.getElementById('unlockCopy');
-  const MODE_TITLE = 'Register free to unlock Advanced and Custom modes';
+  const MODE_TITLE = 'Unlock Advanced & Custom';
   const MODE_COPY = unlockCopy ? unlockCopy.textContent || '' : '';
-  const PDF_TITLE = 'Register free to download the printable checklist';
+  const PDF_TITLE = 'Unlock the printable checklist';
   const PDF_COPY = 'Your list, exactly as it stands, as a clean printable PDF. Print it, fold it, keep it in your USB case, or pin it up in the booth.';
 
   // Opens the gate with copy that matches what the DJ actually reached for.
@@ -2311,7 +2362,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     const gateCopy = {
       pdf: { t: PDF_TITLE, c: PDF_COPY },
       email: {
-        t: 'Register free to email your list',
+        t: 'Unlock: email your list',
         c: 'We send your list, exactly as it stands, to your inbox, with a link that loads it back on any device.',
       },
       mode: { t: MODE_TITLE, c: MODE_COPY },
@@ -2994,33 +3045,38 @@ ${sections}
         g.accounts.id.renderButton(gateHolder, { theme: 'filled_black', size: 'large', text: 'continue_with', shape: 'rectangular', width: 230 });
         const alt = document.getElementById('unlockAlt');
         if (alt) alt.hidden = false;
+        // Google is the default path now (round 5): once it actually
+        // renders, collapse the form behind the toggle. Without JS or
+        // without a configured client id, none of this runs and the form
+        // just stays visible, which is the only path there is.
+        if (unlockForm) unlockForm.hidden = true;
+        const toggle = document.getElementById('unlockEmailToggle');
+        if (toggle) toggle.hidden = false;
       }
       g.accounts.id.prompt();
     };
     document.head.appendChild(s);
   }
 
-  // The artist name stays mandatory on the Google path (Antonio: the
-  // homepage greets by name). While the field is empty a transparent
-  // blocker covers Google's button; tapping it explains and focuses.
+  // Which Google button was pressed: clicks inside Google's iframe never
+  // reach us, so pointerenter on the wrapper is the tell.
   {
-    const gateBlock = document.getElementById('gsiGateBlock');
     const gateWrap = document.getElementById('gsiGateWrap');
     const cardWrap = document.getElementById('gsiBtn');
-    const artistInp = unlockForm ? unlockForm.querySelector('input[name="artist"]') as HTMLInputElement | null : null;
     if (gateWrap) gateWrap.addEventListener('pointerenter', () => { gsiFrom = 'gate'; });
     if (cardWrap) cardWrap.addEventListener('pointerenter', () => { gsiFrom = 'card'; });
-    const updateGateBlock = () => {
-      if (gateBlock) gateBlock.hidden = !!(artistInp && artistInp.value.trim());
-    };
-    if (artistInp) artistInp.addEventListener('input', updateGateBlock);
-    updateGateBlock();
-    // Antonio's copy (2026-07-29): the Google tap is the fast lane, nobody
-    // reads the fields on the way past, so this one line also carries the
-    // Instagram invitation.
-    if (gateBlock) gateBlock.addEventListener('click', () => {
-      if (unlockMsg) { unlockMsg.textContent = 'Add your artist name or first name, so we know what to call you + Instagram (optional).'; unlockMsg.className = 'unlock-msg err'; }
-      if (artistInp) artistInp.focus();
+  }
+
+  // "No Google? No problem. Use your other email." (Antonio's own phrasing,
+  // round 5): reveals the email/artist/instagram form, which starts hidden
+  // once Google is the visible default path above.
+  {
+    const toggle = document.getElementById('unlockEmailToggle');
+    if (toggle) toggle.addEventListener('click', () => {
+      if (unlockForm) unlockForm.hidden = false;
+      toggle.hidden = true;
+      const inp = unlockForm && unlockForm.querySelector('input[name="email"]') as HTMLInputElement | null;
+      if (inp) inp.focus();
     });
   }
 
@@ -3128,11 +3184,24 @@ ${sections}
   if (delAcctBtn) {
     let armed = false;
     let armTimer: ReturnType<typeof setTimeout> | undefined;
-    const disarm = () => { armed = false; if (armTimer) clearTimeout(armTimer); delAcctBtn.classList.remove('armed'); };
+    // Same fine-print element, text swapped in place (Antonio, round 5): armed
+    // shows the "can't undo, press again" warning; disarming restores the
+    // normal description. Never touches the button's own width, only this
+    // paragraph below it.
+    const delFine = document.getElementById('acctDelFine');
+    const delFineNormal = delFine ? delFine.textContent || '' : '';
+    const delFineWarn = "This can't be undone. Tap Delete account again to confirm.";
+    const disarm = () => {
+      armed = false;
+      if (armTimer) clearTimeout(armTimer);
+      delAcctBtn.classList.remove('armed');
+      if (delFine) { delFine.textContent = delFineNormal; delFine.classList.remove('err'); }
+    };
     delAcctBtn.addEventListener('click', async () => {
       if (!armed) {
         armed = true;
         delAcctBtn.classList.add('armed');
+        if (delFine) { delFine.textContent = delFineWarn; delFine.classList.add('err'); }
         armTimer = setTimeout(disarm, 4000);
         return;
       }
@@ -3233,14 +3302,14 @@ ${sections}
       desktopInfoOn = !desktopInfoOn;
       explainInfoBtn.classList.toggle('mode-active', desktopInfoOn);
       explainInfoBtn.setAttribute('aria-pressed', String(desktopInfoOn));
-      if (desktopInfoOn) showExplain(explainInfoBtn, 'Leave your mouse over anything for a second to read its instructions.');
+      if (desktopInfoOn) showExplain(explainInfoBtn, 'Leave your cursor over anything for a second to read its instructions.');
       else closeExplain();
       return;
     }
     infoModeOn = !infoModeOn;
     explainInfoBtn.classList.toggle('mode-active', infoModeOn);
     explainInfoBtn.setAttribute('aria-pressed', String(infoModeOn));
-    if (infoModeOn) showExplain(explainInfoBtn, 'Tap any button to see what it does instead of using it. Tap ⓘ again to go back to normal.');
+    if (infoModeOn) showExplain(explainInfoBtn, 'Tap any button to have its function explained. Tap ⓘ again to go back to normal.');
     else closeExplain();
   });
 
