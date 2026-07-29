@@ -117,7 +117,7 @@ const entityGraph = {
       <a href="/" class="nav-brand" aria-label="Save My Gig, DJ rescue and prevention, home">
         <!-- Shield mark (Antonio's new asset, 2026-07-29). SVG scales crisp
              at any DPI; 36x42 keeps the shield's own aspect in the slot. -->
-        <img src="/images/logo-shield.svg" alt="" width="36" height="42" class="nb-seal" decoding="async" />
+        <img src="/images/logo-shield.svg" alt="" width="47" height="54" class="nb-seal" decoding="async" />
         <span class="nb-text">
           <span class="nb-name">Save My Gig<span class="accent">!</span></span>
           <span class="nb-tag">DJ rescue and prevention</span>
@@ -572,9 +572,11 @@ const entityGraph = {
     max-width: var(--site-w); margin: 0 auto; padding: 0.8rem 1.25rem;
     display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: relative;
   }
-  .nav-brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; line-height: 1; flex: 0 0 auto; }
+  /* gap tightened + seal enlarged 2026-07-29 (Antonio's mockup): the shield
+     reads bigger and the wordmark sits closer to it. */
+  .nav-brand { display: flex; align-items: center; gap: 0.45rem; text-decoration: none; line-height: 1; flex: 0 0 auto; }
   .nav-brand picture { flex: 0 0 auto; display: block; line-height: 0; }
-  .nb-seal { width: 42px; height: 42px; display: block; }
+  .nb-seal { width: 47px; height: 54px; display: block; }
   .nb-text { display: flex; flex-direction: column; gap: 3px; }
   .nb-name {
     font-family: var(--font-display); font-weight: 900; font-size: 1.36rem;
