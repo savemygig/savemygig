@@ -339,13 +339,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              configured; until then the holder is empty and email carries
              the whole flow. -->
         <div class="gsi-holder" id="gsiBtn"></div>
-        <!-- Antonio's fix (round 3): Google above and the email field below,
-             stacked with nothing between them, read like two required steps
-             instead of two alternative sign-in paths. This divider only
-             shows when Google actually rendered a button above it (CSS,
-             keyed off #gsiBtn:empty), so it never appears as a dangling "or"
-             when Google isn't configured and email is the only path. -->
-        <span class="unlock-or acct-or" id="acctOr">or, sign in by email:</span>
+        <!-- Round 5, fourth pass (Antonio): the old "or, sign in by email:"
+             divider still read as two required steps stacked together, not
+             a clear either/or — "we must clarify for the user that is not
+             very intelligent." Replaced with the SAME pattern the gate uses
+             now: Google alone by default, a toggle link reveals the email
+             form. JS below hides #acctForm and shows this toggle the moment
+             Google actually renders (mirrors the gate's #unlockEmailToggle
+             logic exactly); with no Google configured this never runs, so
+             the form just stays visible, the only path there is. -->
+        <button type="button" class="unlock-email-toggle" id="acctEmailToggle" hidden>No Google? No problem. Use your other email.</button>
         <form class="acct-form" id="acctForm" novalidate>
           <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your email" />
           <button type="submit" class="btn btn-neutral">Email me a sign-in link</button>
@@ -380,7 +383,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             <span class="rs-arm" aria-hidden="true">Click again</span>
           </button>
         </div>
-        <p class="dim acct-fine" id="acctDelFine">Deletes your account and synced lists. This device keeps its checklist.</p>
+        <!-- Round 5, third pass (Antonio): this used to always show "Deletes
+             your account..." even at rest, which read as a warning for
+             something the DJ hadn't done yet. Empty/hidden until Delete
+             account is actually armed; JS below fills it in only then. -->
+        <p class="dim acct-fine err" id="acctDelFine" hidden></p>
         <p class="acct-msg" id="acctMsg2" role="status" aria-live="polite"></p>
       </div>
     </div>
@@ -1133,13 +1140,26 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     .mode-btn { padding: 0.5rem 0.45rem; font-size: 0.72rem; letter-spacing: 0.02em; }
     .mode-switch { gap: 2px; padding: 3px; }
     .mode-row { gap: 0.3rem; }
-    .acct-chip { font-size: 0.6rem; padding: 0.32rem 0.5rem; gap: 0.3rem; }
-    .explain-btn { font-size: 0.72rem; padding: 0.32rem 0.5rem; }
+    /* Round 5, third pass (Antonio, mobile screenshot): Sync + (i) read
+       visibly smaller than Base/Advanced/Custom — grown to match, same
+       recipe as the desktop `height: 2.6rem` match above, tuned by
+       measurement for this breakpoint's own padding/font-size. */
+    .acct-chip { font-size: 0.66rem; padding: 0.75rem 0.5rem; gap: 0.3rem; }
+    /* Compound selector, not just .explain-btn (same cascade-order trap as
+       .acct-del, round 5): the base .explain-btn rule further down this
+       file is unconditional and sits AFTER this media query in source
+       order, so a plain .explain-btn override here silently lost every
+       tie. .mode-row-right .explain-btn is more specific and wins
+       regardless of where the base rule sits. */
+    .mode-row-right .explain-btn { font-size: 0.82rem; padding: 0.65rem 0.5rem; }
     .mode-row-right { gap: 0.3rem; }
   }
   .acct-card {
     margin-bottom: 1rem; padding: 1.1rem 1.2rem;
-    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    /* Green border (Antonio, round 5): the only trigger that opens this
+       card is the Sync/Synced chip, so a green outline ties the two
+       together visually the instant it opens, whether signed in or not. */
+    background: var(--surf); border: 1px solid var(--green); border-radius: var(--radius);
   }
   .acct-card[hidden] { display: none; }
   .acct-copy { font-size: 0.88rem; margin-bottom: 0.85rem; }
@@ -1147,13 +1167,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-hint { font-size: 0.8rem; margin: -0.6rem 0 0.85rem; }
   .gsi-holder { margin-bottom: 0.85rem; }
   .gsi-holder:empty { display: none; }
-  /* Only shows when Google actually rendered a button above it, so it never
-     reads as a dangling "or" with nothing on one side of it (Antonio, round
-     3: the two paths need a visible "pick one", same fix as the gate's own
-     Google/email divider). */
-  .acct-or { display: block; margin: 0 0 0.7rem; }
-  #gsiBtn:empty + .acct-or { display: none; }
   .acct-form { display: flex; gap: 8px; flex-wrap: wrap; }
+  /* Explicit, not left to the UA default (same cascade-specificity trap
+     documented on .acct-del in round 5): .acct-form sets its own display,
+     tying [hidden] at equal specificity, decided by source order alone. */
+  .acct-form[hidden] { display: none; }
   .acct-form input {
     flex: 1 1 200px; min-width: 0; background: var(--bg); color: var(--text);
     border: 1px solid var(--edge); border-radius: var(--radius);
@@ -1176,7 +1194,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-profile[hidden] { display: none; }
   .unlock-alt { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.9rem; margin-bottom: 0.9rem; }
   .unlock-alt[hidden] { display: none; }
-  .unlock-or { color: var(--text-faint); font-size: 0.82rem; }
   .gsi-wrap { position: relative; display: inline-block; }
   /* Compound selector, not just .acct-del (Antonio, round 5 bug): this was
      losing the cascade to global.css's .btn { display: block }, same
@@ -2650,7 +2667,6 @@ ${sections}
 
   const acctLine = document.getElementById('acctLine');
   const acctCard = document.getElementById('acctCard');
-  const acctChipText = document.getElementById('acctChipText');
   const acctOut = document.getElementById('acctOut');
   const acctIn = document.getElementById('acctIn');
   const acctEmailEl = document.getElementById('acctEmail');
@@ -2805,13 +2821,19 @@ ${sections}
   }
 
   // Signed-out chip is a dim verb ("Sync"), signed-in is a green state
-  // ("Synced") — Antonio's final ruling: gray must never read as "press me
-  // to sync", so the label itself changes with the state, not just the
-  // colour.
+  // Round 5, fifth pass (Antonio, resolving the round-3 open question
+  // himself): "the sync button could just say Sync. If it is gray, it's
+  // off. If it is green, it's on." SUPERSEDES the earlier "label must
+  // change with the state, not just the colour" ruling above — label now
+  // stays "Sync" always, colour alone carries the state. Agreed this is the
+  // right call when asked: the chip isn't the only place state shows up
+  // (the chevron and, once opened, "Synced with <email>" both reinforce
+  // it), and gray-vs-green is one of the safer color pairs for colorblind
+  // users since gray reads as desaturated regardless of hue perception —
+  // unlike, say, red/green. Flagged, not silently changed.
   function setDotSynced(on: boolean) {
     const synced = on && !!acct.email;
     if (acctLine) acctLine.classList.toggle('is-synced', synced);
-    if (acctChipText) acctChipText.textContent = synced ? 'Synced' : 'Sync';
   }
 
   function updateAcctUI() {
@@ -3042,7 +3064,15 @@ ${sections}
         },
       });
       const holder = document.getElementById('gsiBtn');
-      if (holder) g.accounts.id.renderButton(holder, { theme: 'filled_black', size: 'large', text: 'continue_with', shape: 'rectangular' });
+      if (holder) {
+        g.accounts.id.renderButton(holder, { theme: 'filled_black', size: 'large', text: 'continue_with', shape: 'rectangular' });
+        // Same Google-first collapse as the gate (round 5, fourth pass): once
+        // Google actually renders here, hide the email form behind its own
+        // toggle instead of showing both paths stacked and undifferentiated.
+        if (acctForm) acctForm.hidden = true;
+        const cardToggle = document.getElementById('acctEmailToggle');
+        if (cardToggle) cardToggle.hidden = false;
+      }
       const gateHolder = document.getElementById('gsiGateBtn');
       if (gateHolder) {
         g.accounts.id.renderButton(gateHolder, { theme: 'filled_black', size: 'large', text: 'continue_with', shape: 'rectangular', width: 230 });
@@ -3079,6 +3109,18 @@ ${sections}
       if (unlockForm) unlockForm.hidden = false;
       toggle.hidden = true;
       const inp = unlockForm && unlockForm.querySelector('input[name="email"]') as HTMLInputElement | null;
+      if (inp) inp.focus();
+    });
+  }
+  // Same toggle, on the Sync card's own Google/email choice (round 5,
+  // fourth pass) — identical reasoning, separate element since the card and
+  // the gate are two different forms on the page.
+  {
+    const cardToggle = document.getElementById('acctEmailToggle');
+    if (cardToggle) cardToggle.addEventListener('click', () => {
+      if (acctForm) acctForm.hidden = false;
+      cardToggle.hidden = true;
+      const inp = acctForm && acctForm.querySelector('input[name="email"]') as HTMLInputElement | null;
       if (inp) inp.focus();
     });
   }
@@ -3187,24 +3229,26 @@ ${sections}
   if (delAcctBtn) {
     let armed = false;
     let armTimer: ReturnType<typeof setTimeout> | undefined;
-    // Same fine-print element, text swapped in place (Antonio, round 5): armed
-    // shows the "can't undo, press again" warning; disarming restores the
-    // normal description. Never touches the button's own width, only this
-    // paragraph below it.
+    // Round 5, third pass (Antonio): this line only exists at all once
+    // Delete account is armed — at rest it's empty and hidden, not a
+    // standing warning for something that hasn't happened. Wording avoids
+    // his flagged phrase ("this device keeps its checklist," which read as
+    // if the device were holding something hostage) for his own framing:
+    // the account and its synced lists are gone, this session simply stays
+    // where it already is.
     const delFine = document.getElementById('acctDelFine');
-    const delFineNormal = delFine ? delFine.textContent || '' : '';
-    const delFineWarn = "This can't be undone. Tap Delete account again to confirm.";
+    const delFineWarn = "This can't be undone. Your account and synced lists are deleted — this session stays on the device.";
     const disarm = () => {
       armed = false;
       if (armTimer) clearTimeout(armTimer);
       delAcctBtn.classList.remove('armed');
-      if (delFine) { delFine.textContent = delFineNormal; delFine.classList.remove('err'); }
+      if (delFine) { delFine.hidden = true; delFine.textContent = ''; }
     };
     delAcctBtn.addEventListener('click', async () => {
       if (!armed) {
         armed = true;
         delAcctBtn.classList.add('armed');
-        if (delFine) { delFine.textContent = delFineWarn; delFine.classList.add('err'); }
+        if (delFine) { delFine.hidden = false; delFine.textContent = delFineWarn; }
         armTimer = setTimeout(disarm, 4000);
         return;
       }
@@ -3295,26 +3339,44 @@ ${sections}
   // turning it off closes whatever explainer happens to be open and hands
   // the covered buttons back to their normal click handlers. Desktop: hover-
   // a-beat already always works regardless of this button, so it never
-  // touches infoModeOn or the click-swallowing above, it just toggles its
-  // own amber state and shows/hides a static reminder that hovering teaches
-  // you each control.
+  // touches infoModeOn or the click-swallowing above, it just shows a static
+  // reminder that hovering teaches you each control.
+  // Round 5, second pass (Antonio): the desktop version used to be a real
+  // click-to-toggle (stayed amber/"on" until clicked again), which falsely
+  // implied it was a persistent mode like the mobile touch toggle actually
+  // is. It never was one on desktop — hover-a-beat already always works
+  // regardless of this button's state. Changed to match how every OTHER
+  // covered control already behaves: on while you're on it, off the moment
+  // you're not. Click still opens it (nothing here is hoverable-only,
+  // clicking is the discovery step), but leaving the button with the mouse
+  // now closes it automatically, same as attachExplainer's own
+  // mouseenter/mouseleave pattern above — no second click required, and it
+  // never sits "on" once your cursor has moved away.
   const explainInfoBtn = document.getElementById('explainInfoBtn');
   let desktopInfoOn = false;
-  if (explainInfoBtn) explainInfoBtn.addEventListener('click', () => {
-    if (HAS_HOVER) {
-      desktopInfoOn = !desktopInfoOn;
-      explainInfoBtn.classList.toggle('mode-active', desktopInfoOn);
-      explainInfoBtn.setAttribute('aria-pressed', String(desktopInfoOn));
-      if (desktopInfoOn) showExplain(explainInfoBtn, 'Leave your cursor over anything for a second to read its instructions.');
+  if (explainInfoBtn) {
+    explainInfoBtn.addEventListener('click', () => {
+      if (HAS_HOVER) {
+        desktopInfoOn = true;
+        explainInfoBtn.classList.add('mode-active');
+        explainInfoBtn.setAttribute('aria-pressed', 'true');
+        showExplain(explainInfoBtn, 'Leave your cursor over anything for a second to read its instructions.');
+        return;
+      }
+      infoModeOn = !infoModeOn;
+      explainInfoBtn.classList.toggle('mode-active', infoModeOn);
+      explainInfoBtn.setAttribute('aria-pressed', String(infoModeOn));
+      if (infoModeOn) showExplain(explainInfoBtn, 'Tap any button to have its function explained. Tap ⓘ again to go back to normal.');
       else closeExplain();
-      return;
-    }
-    infoModeOn = !infoModeOn;
-    explainInfoBtn.classList.toggle('mode-active', infoModeOn);
-    explainInfoBtn.setAttribute('aria-pressed', String(infoModeOn));
-    if (infoModeOn) showExplain(explainInfoBtn, 'Tap any button to have its function explained. Tap ⓘ again to go back to normal.');
-    else closeExplain();
-  });
+    });
+    if (HAS_HOVER) explainInfoBtn.addEventListener('mouseleave', () => {
+      if (!desktopInfoOn) return;
+      desktopInfoOn = false;
+      explainInfoBtn.classList.remove('mode-active');
+      explainInfoBtn.setAttribute('aria-pressed', 'false');
+      closeExplain();
+    });
+  }
 
   // The sign-in redirect lands here. ?signedin=1: the session cookie is
   // already set, the /api/auth/me call below turns the row green; one line
