@@ -29,8 +29,9 @@ page.on('pageerror', (e) => errors.push(String(e)));
 await page.goto(base + '/checklist', { waitUntil: 'networkidle' });
 // The consent card intercepts clicks in tests: remove it first (gate rule).
 await page.evaluate(() => document.getElementById('ck')?.remove());
-ok(await page.locator('#acctLine').isVisible(), 'account row visible');
-ok((await page.locator('#acctText').textContent()).includes('Sync is off'), 'signed-out text');
+ok(await page.locator('#acctLine').isVisible(), 'sync chip visible');
+ok((await page.locator('#acctChipText').textContent()).trim() === 'Sync', 'signed-out chip says Sync');
+ok(!(await page.locator('#acctLine').getAttribute('class') || '').includes('is-synced'), 'chip not green signed out');
 ok(await page.locator('#listSwitch').isHidden(), 'switcher hidden signed out');
 await page.click('#acctLine');
 ok(await page.locator('#acctCard').isVisible(), 'card opens');
@@ -41,8 +42,10 @@ await page.goto(base + '/api/auth/link?t=' + token, { waitUntil: 'networkidle' }
 ok(page.url().includes('/checklist'), 'link lands on checklist, url=' + page.url());
 await page.evaluate(() => document.getElementById('ck')?.remove());
 await page.waitForTimeout(1200); // initAccount fetch
-const text = await page.locator('#acctText').textContent();
-ok(text.includes('Synced with antonio.uitest@djtest.com'), 'signed-in row text: ' + text.trim());
+ok((await page.locator('#acctChipText').textContent()).trim() === 'Synced', 'signed-in chip says Synced');
+ok((await page.locator('#acctLine').getAttribute('class') || '').includes('is-synced'), 'chip green signed in');
+const emailInCard = await page.locator('#acctEmail').textContent();
+ok(emailInCard.trim() === 'antonio.uitest@djtest.com', 'email now lives inside the card: ' + emailInCard.trim());
 const unlocked = await page.evaluate(() => localStorage.getItem('SMG_UNLOCKED'));
 ok(unlocked === '1', 'sign-in registered the device (ruling 3)');
 
@@ -89,6 +92,25 @@ ok((await page.locator('#lsActiveName').textContent()) === 'Festival', 'header f
 const activeMode = await page.evaluate(() => localStorage.getItem('SMG_CHECKLIST_MODE'));
 ok(activeMode === 'custom', 'still in custom after reload, mode=' + activeMode);
 
+// 4.5 List-delete toggle (Antonio's ruling, 2026-07-29 polish): a dedicated
+// Delete mode for the lists region, separate from checklist Edit. Arm it and
+// back out WITHOUT deleting - "My checklist" is still needed at step 7.
+ok(await page.locator('.ls-x').first().isHidden(), 'delete x hidden outside delete mode');
+ok(await page.locator('.ls-pill.is-on .ls-x').count() === 0, 'the active pill has no delete x at all');
+await page.click('#lsDelBtn');
+await page.waitForTimeout(150);
+ok((await page.locator('#lsDelBtn').textContent()).trim() === 'Done', 'delete toggle label flips to Done');
+const otherX = page.locator('.ls-pill:not(.is-on) .ls-x');
+ok(await otherX.isVisible(), 'x appears on the non-active pill in delete mode');
+await otherX.click();
+await page.waitForTimeout(100);
+ok((await otherX.getAttribute('class') || '').includes('armed'), 'first tap arms the x (turns red), does not delete');
+await page.click('#lsDelBtn'); // exit delete mode
+await page.waitForTimeout(150);
+ok((await page.locator('#lsDelBtn').textContent()).trim() === 'Delete', 'delete toggle label reverts');
+ok(await otherX.isHidden(), 'x hides again outside delete mode');
+ok((await page.locator('.ls-pill').count()) === 2, 'exiting delete mode disarmed, did not delete anything');
+
 // 5. Tick something on Festival, wait for the debounced push.
 await page.evaluate(() => {
   const g = document.querySelector('.task-group[data-group="music"]');
@@ -129,7 +151,7 @@ if (await page.locator('#acctCard').isHidden()) {
 }
 await page.click('#signOutBtn');
 await page.waitForTimeout(800);
-ok((await page.locator('#acctText').textContent()).includes('Sync is off'), 'signed out again');
+ok((await page.locator('#acctChipText').textContent()).trim() === 'Sync', 'chip back to Sync after sign out');
 ok(await page.locator('#listSwitch').isHidden(), 'switcher gone signed out (ruling 5)');
 
 ok(errors.length === 0, 'zero page errors' + (errors.length ? ': ' + errors.join(' | ') : ''));

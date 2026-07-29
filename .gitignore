@@ -7,3 +7,4 @@ _smg_deploy.tgz
 .secrets/
 .wrangler-test/
 .wrangler/
+.dev.vars
