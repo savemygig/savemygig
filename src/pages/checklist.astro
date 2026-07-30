@@ -362,10 +362,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <!-- The email lives here now that the chip up top just says Synced
              (Antonio: the chip is a state, not a place to read the address). -->
         <p class="dim acct-copy">Synced with <span class="acct-who" id="acctEmail"></span></p>
-        <!-- Antonio: after registering on mobile the box just sat open with
-             no cue that Sync is also the close control. One line, same dim
-             voice as the rest of this panel. -->
-        <p class="dim acct-hint">Tap Sync to close this.</p>
+        <!-- Round 10 (Antonio): the "Tap Sync to close this." line this
+             replaced no longer earns its space -- clicking/tapping ANYWHERE
+             outside this card now closes it too (see the document-level
+             capture listener below), which is the same familiar
+             click-away-to-dismiss pattern every dropdown/popover already
+             uses, so it needs no instructions at all. -->
         <!-- First-sign-in completion (Antonio's ruling: the account asks
              what the gate asks, same fields, same promise). Shows until
              the account has an artist name; prefilled when this device
@@ -1151,7 +1153,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .acct-card[hidden] { display: none; }
   .acct-copy { font-size: 0.88rem; margin-bottom: 0.85rem; }
   .acct-who { color: var(--text); font-weight: 600; }
-  .acct-hint { font-size: 0.8rem; margin: -0.6rem 0 0.85rem; }
   .gsi-holder { margin-bottom: 0.85rem; }
   .gsi-holder:empty { display: none; }
   .acct-form { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -3354,6 +3355,26 @@ ${sections}
     // surprise-applies a mode the DJ never got around to confirming.
     if (!open) clearPendingMode();
   });
+
+  // Round 10 (Antonio, live on mobile): tapped a locked Advanced button,
+  // the card opened, and he had no way to back out -- the only close
+  // control is tapping Sync again, and nothing told him that. "If you
+  // click anywhere in the page except for the green box, it's the same
+  // as pressing sync." CAPTURE phase, not bubble: it has to run BEFORE
+  // whatever was actually clicked handles its own click, or tapping a
+  // locked Advanced/Custom button (which opens the card) would see
+  // itself land "outside" and immediately close the card it just opened.
+  // No preventDefault/stopPropagation -- this only ever closes the card
+  // as a side effect and always lets the real click keep going, same as
+  // any dropdown/popover that closes when you click away from it.
+  document.addEventListener('click', (ev) => {
+    if (!acctCard || acctCard.hidden || !acctLine) return;
+    const t = ev.target as Node;
+    if (acctCard.contains(t) || acctLine.contains(t)) return;
+    acctCard.hidden = true;
+    acctLine.setAttribute('aria-expanded', 'false');
+    clearPendingMode();
+  }, true);
 
   // Typed email: send the one-tap link.
   if (acctForm) {
