@@ -18,9 +18,14 @@ interface Props {
       <title> (Antonio, 2026-07-30: the keyword-rich title tag stays for
       Google, the share card gets the trimmed version). Falls back to title. */
   ogTitle?: string;
+  /** Social share description, when the SEO meta description would repeat
+      the ogTitle on a share card (Antonio, 2026-07-30: title already says
+      "DJ Rescue and Prevention", the description shouldn't say it again).
+      Falls back to description. */
+  ogDescription?: string;
 }
 
-const { title, description, path, noindex = false, ogImage, ogTitle } = Astro.props;
+const { title, description, path, noindex = false, ogImage, ogTitle, ogDescription } = Astro.props;
 const SITE = 'https://www.savemygig.com';
 const canonical = `${SITE}${path === '/' ? '/' : path}`;
 // Default share image (2026-07-30): landscape 1200x630, cropped from
@@ -101,7 +106,7 @@ const entityGraph = {
   <meta name="theme-color" content="#000000" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content={ogTitle ?? title} />
-  <meta property="og:description" content={description} />
+  <meta property="og:description" content={ogDescription ?? description} />
   <meta property="og:url" content={canonical} />
   <meta property="og:site_name" content="Save My Gig!" />
   <meta property="og:image" content={ogImageUrl} />
