@@ -63,8 +63,9 @@ const ok = (name, cond, detail = '') => {
     const b = document.getElementById('explainInfoBtn');
     return b ? getComputedStyle(b).fontSize : null;
   });
-  // 0.99rem at a 16px root = 15.84px.
-  ok('desktop (i) glyph is 10% bigger (~15.84px)', infoFont && Math.abs(parseFloat(infoFont) - 15.84) < 0.6, infoFont);
+  // Superseded same-day (round 11.5 follow-up): another +20% on top,
+  // 0.99rem -> 1.19rem. 1.19rem at a 16px root = 19.04px.
+  ok('desktop (i) glyph size (~19.04px, updated same round)', infoFont && Math.abs(parseFloat(infoFont) - 19.04) < 0.6, infoFont);
 
   const baseOrder = await page.evaluate(() =>
     Array.from(document.querySelectorAll('.task-group')).filter((g) => !g.hidden).map((g) => g.getAttribute('data-group')));

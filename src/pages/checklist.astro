@@ -1245,15 +1245,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   @media (hover: hover) {
     .acct-chip, .explain-btn { height: 2.6rem; }
     .explain-btn { width: 2.6rem; padding: 0; }
-    /* 10% bigger glyph (Antonio, live desktop review): same "box stays put,
-       glyph grows" split already used for the mobile version below (round
-       11's "twice that size" doubling). Base .explain-btn font-size is
-       0.9rem -> 0.99rem here, box unchanged at 2.6rem. Compound selector,
-       not a plain .explain-btn override: the same cascade-order trap
-       documented at .mode-row-right .explain-btn below applies here too --
-       the base unconditional .explain-btn rule sits AFTER this media query
-       in source order, so equal specificity would silently lose to it. */
-    .mode-row-right .explain-btn { font-size: 0.99rem; }
+    /* 10% bigger glyph (Antonio, live desktop review), then another +20%
+       on top of that same round (0.99rem -> 1.19rem) -- same "box stays
+       put, glyph grows" split already used for the mobile version below
+       (round 11's "twice that size" doubling). Box unchanged at 2.6rem.
+       Compound selector, not a plain .explain-btn override: the same
+       cascade-order trap documented at .mode-row-right .explain-btn below
+       applies here too -- the base unconditional .explain-btn rule sits
+       AFTER this media query in source order, so equal specificity would
+       silently lose to it. */
+    .mode-row-right .explain-btn { font-size: 1.19rem; }
   }
   @media (max-width: 640px) {
     /* Round 4 (Antonio): on mobile the (i) + Sync pair belongs on the SAME
@@ -1297,8 +1298,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
        height/width as the Sync chip so the row still lines up exactly as
        he asked for two messages ago -- there's easily enough headroom (a
        ~23px glyph inside a ~37px square, centered by the existing flex
-       rule) for this to just read bigger, not clip or unbalance the box. */
-    .mode-row-right .explain-btn { font-size: 1.44rem; height: 2.3rem; width: 2.3rem; padding: 0; }
+       rule) for this to just read bigger, not clip or unbalance the box.
+       ROUND 11.5 follow-up: now too big the other way -- reduced 12%
+       (1.44rem -> 1.27rem). Box stays put, same reasoning as before. */
+    .mode-row-right .explain-btn { font-size: 1.27rem; height: 2.3rem; width: 2.3rem; padding: 0; }
     .mode-row-right { gap: 0.3rem; }
   }
   .acct-card {
