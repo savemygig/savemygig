@@ -1132,15 +1132,28 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     /* Round 5, third pass (Antonio, mobile screenshot): Sync + (i) read
        visibly smaller than Base/Advanced/Custom — grown to match, same
        recipe as the desktop `height: 2.6rem` match above, tuned by
-       measurement for this breakpoint's own padding/font-size. */
-    .acct-chip { font-size: 0.66rem; padding: 0.75rem 0.5rem; gap: 0.3rem; }
+       measurement for this breakpoint's own padding/font-size.
+       UPDATED ROUND 11 (Antonio, mobile screenshot again): still not a
+       true match -- the chip's font read smaller than the mode buttons'
+       and the (i) button's read LARGER, and padding-derived sizing left
+       the (i) box taller than it was wide (a portrait rectangle, his
+       exact complaint). The desktop `@media (hover: hover)` branch above
+       already forces the chip AND the (i) button to an identical
+       EXPLICIT height (and squares the (i) button by also setting its
+       width to that same value) -- nothing mirrored that fix for touch
+       devices, so mobile only ever got padding-derived sizing, which
+       can't guarantee equal height let alone a square. Same fix, mobile
+       numbers: explicit height on both, explicit matching width on the
+       (i) button only (the chip's width still needs to fit its own
+       variable-length text), font-size matched to `.mode-btn` on both. */
+    .acct-chip { font-size: 0.72rem; height: 2.3rem; padding: 0 0.6rem; gap: 0.3rem; }
     /* Compound selector, not just .explain-btn (same cascade-order trap as
        .acct-del, round 5): the base .explain-btn rule further down this
        file is unconditional and sits AFTER this media query in source
        order, so a plain .explain-btn override here silently lost every
        tie. .mode-row-right .explain-btn is more specific and wins
        regardless of where the base rule sits. */
-    .mode-row-right .explain-btn { font-size: 0.82rem; padding: 0.65rem 0.5rem; }
+    .mode-row-right .explain-btn { font-size: 0.72rem; height: 2.3rem; width: 2.3rem; padding: 0; }
     .mode-row-right { gap: 0.3rem; }
   }
   .acct-card {
