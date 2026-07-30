@@ -487,9 +487,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             <span class="ls-btn-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 2v12M2 8h12"/></svg></span>
             <span class="ls-btn-label">New</span>
           </button>
-          <button type="button" class="ls-tool-btn ls-move-btn" id="lsMoveBtn" aria-label="Reorder or rename your lists">
+          <!-- Round 11.5 follow-up (Antonio): labeled "Move" originally, but
+               this toggle also reveals the rename pencil now, not just the
+               drag handle -- "it cannot just be Move." "Edit" was ruled out
+               deliberately: EDIT LIST already exists lower on this page for
+               a different thing (notes/sections/items), and reusing the
+               word here would read as the same control. "Manage" covers
+               rename+reorder without colliding with that button. -->
+          <button type="button" class="ls-tool-btn ls-move-btn" id="lsMoveBtn" aria-label="Manage your lists: rename or reorder">
             <span class="ls-btn-ic" aria-hidden="true"><svg viewBox="0 0 22 14" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h18"/><path d="M6 3 2 7l4 4"/><path d="M16 3l4 4-4 4"/></svg></span>
-            <span class="ls-btn-label">Move</span>
+            <span class="ls-btn-label">Manage</span>
           </button>
           <!-- Dedicated delete mode for the lists region (Antonio's ruling,
                2026-07-29 polish): separate from the checklist's own Edit
@@ -748,6 +755,19 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
 
   .task-group { padding: 0; overflow: hidden; }
+  /* Round 11.5 follow-up (Antonio, live review): global.css's shared .panel
+     class sets margin-bottom: 1.25rem, which every .task-group inherits (it
+     also carries .panel) -- that's what set the box-to-box gap between
+     Music/DJ Gear/etc, and it didn't match the 1.6rem rhythm the rest of
+     this page's stack now uses (mode-row/readiness/list-switch/custom-
+     toolbar). Overridden here, scoped to THIS page only (Astro scopes
+     component styles automatically), rather than changing .panel itself in
+     global.css, which would also move spacing on every other page that
+     uses a plain .panel for something unrelated to this rhythm. This also
+     evens out the gap before the emergency exit panel at the bottom of the
+     list, since that gap is set by the LAST .task-group's own margin-bottom,
+     not by .cta-exit's. */
+  .task-group.panel { margin-bottom: 1.6rem; }
   /* EDIT MODE IS A VISIBLE STATE (Antonio). While editing: the toggle button
      goes green, and so does every group that is open, i.e. the ones whose
      items you can actually touch right now. Collapsed groups stay neutral,
@@ -1298,10 +1318,19 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      documented on .acct-del in round 5): .acct-form sets its own display,
      tying [hidden] at equal specificity, decided by source order alone. */
   .acct-form[hidden] { display: none; }
+  /* font-size must be 16px, not smaller (round 11.5 follow-up, real bug
+     found investigating Antonio's live report): iOS Safari auto-zooms the
+     whole page in when a text input's font-size is under 16px on focus.
+     This one (0.9rem =~ 15.3px) was almost certainly why a second tester's
+     phone "felt loose" right after being asked for her artist name here --
+     the zoom triggers on focus and never resets, so the page reads as
+     pannable/swipeable afterward. .unlock-form/.add-section/.backup-form
+     inputs elsewhere on this page already got this right; this one and
+     .ls-new-form/.ls-name-edit below didn't. */
   .acct-form input {
     flex: 1 1 200px; min-width: 0; background: var(--bg); color: var(--text);
     border: 1px solid var(--edge); border-radius: var(--radius);
-    padding: 0.7rem 0.8rem; font-family: var(--font-body); font-size: 0.9rem;
+    padding: 0.7rem 0.8rem; font-family: var(--font-body); font-size: 16px;
   }
   .acct-form input::placeholder { color: var(--text-faint); }
   .acct-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
@@ -1358,7 +1387,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   /* Named-list switcher (Custom + signed in). One collapsed header row that
      names the active list; pills unfold below it. House-monochrome; the
      active list is simply the lit one. */
-  .list-switch { margin-bottom: 1rem; }
+  /* Round 11.5 follow-up (Antonio, live review): was 1rem, smaller than the
+     established 1.6rem rhythm .mode-row/.readiness/.custom-toolbar already
+     share (round 4) -- made the gap ABOVE this box (readiness's own 1.6rem
+     margin-bottom) read as bigger than the gap below it, when he wants
+     every gap in this stack the same. Matched to 1.6rem. */
+  .list-switch { margin-bottom: 1.6rem; }
   /* Author display beats the UA's [hidden] rule (same lesson as the toolbar
      buttons on Antonio's iPhone): state it explicitly. */
   .list-switch[hidden] { display: none; }
@@ -1372,12 +1406,20 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .ls-active { color: var(--text-dim); font-family: var(--font-body); font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   @media (hover: hover) { .ls-head:hover .ls-active { color: var(--text); } }
+  /* Round 11.5 follow-up (Antonio, live review): this chevron was backwards
+     -- pointing DOWN while collapsed and UP while expanded, the opposite of
+     every other accordion on the page (.chev on the category boxes: right
+     when collapsed, down when expanded -- same convention the Sync chip's
+     own .acct-chip .ls-chev override already followed since round 3). Base
+     rule now matches that convention: right (-45deg) when closed, down
+     (45deg) when open. Only affects #lsHead's chevron -- .acct-chip .ls-chev
+     below has its own more specific override and was already correct. */
   .ls-chev {
     width: 7px; height: 7px; flex: 0 0 auto;
     border-right: 1.5px solid var(--text-faint); border-bottom: 1.5px solid var(--text-faint);
-    transform: rotate(45deg); transition: transform 0.15s ease; margin-top: -3px;
+    transform: rotate(-45deg); transition: transform 0.15s ease; margin-top: -2px;
   }
-  .ls-head[aria-expanded="true"] .ls-chev { transform: rotate(225deg); margin-top: 3px; }
+  .ls-head[aria-expanded="true"] .ls-chev { transform: rotate(45deg); margin-top: -3px; }
   .ls-body { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 0.7rem; }
   .ls-body[hidden] { display: none; }
   /* Wraps on desktop (plenty of width); on a phone this becomes a single
@@ -1400,13 +1442,22 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      but the active one shows a small x in its upper corner; same two-tap
      armed contract as everything else destructive here (Reset, Delete
      account). */
+  /* Round 11.5 follow-up (real-tester report, Maya on iPhone 15 Pro): "the x
+     to choose the list to delete was so small. She could not see it." Was
+     17px with a 0.72rem (~12px) glyph -- bumped to 24px / 0.85rem, closer to
+     (if still short of) the 44px minimum tap target used elsewhere on this
+     page. Kept as a corner badge rather than moved inline, but the bigger
+     circle needs more breathing room from the next pill in the row than the
+     calm-state 6px gap gives it -- see .list-switch.deleting .ls-pills
+     below, which only widens that gap while Delete mode is actually on. */
   .ls-x {
-    display: none; position: absolute; top: -7px; right: -7px;
-    width: 17px; height: 17px; align-items: center; justify-content: center;
+    display: none; position: absolute; top: -9px; right: -9px;
+    width: 24px; height: 24px; align-items: center; justify-content: center;
     border: 1px solid var(--edge); border-radius: 50%; background: var(--bg);
-    color: var(--text-faint); font-size: 0.72rem; line-height: 1; padding: 0; cursor: pointer;
+    color: var(--text-faint); font-size: 0.85rem; line-height: 1; padding: 0; cursor: pointer;
   }
   .list-switch.deleting .ls-x { display: inline-flex; }
+  .list-switch.deleting .ls-pills { gap: 16px 10px; }
   .ls-pill.is-on .ls-x { display: none; }
   .ls-x.armed { color: var(--red); border-color: var(--red); }
   /* Round 9, split into its own "Move" mode in round 11.5 (Antonio: "why is
@@ -1445,10 +1496,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .ls-pencil:hover { color: var(--green); }
   .list-switch.moving .ls-pencil { display: inline-flex; }
+  /* 16px, not smaller -- same iOS auto-zoom-on-focus fix as .acct-form/
+     .ls-new-form inputs above. Widened slightly (was max-width: 150px) so
+     16px text isn't cramped inside the pill. */
   .ls-name-edit {
-    flex: 1 1 auto; min-width: 40px; max-width: 150px; background: var(--bg); color: var(--text);
-    border: 1px solid var(--green); border-radius: 4px; padding: 0.15rem 0.4rem;
-    font-family: var(--font-body); font-size: 0.82rem;
+    flex: 1 1 auto; min-width: 60px; max-width: 170px; background: var(--bg); color: var(--text);
+    border: 1px solid var(--green); border-radius: 4px; padding: 0.2rem 0.4rem;
+    font-family: var(--font-body); font-size: 16px;
   }
   /* Three single-purpose icon+label buttons (New / Move / Delete), replacing
      the old two-button row where Delete also revealed reorder. Icon shows
@@ -1479,10 +1533,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     text-transform: uppercase; letter-spacing: 0.03em; padding: 0 1rem; cursor: pointer;
   }
   @media (hover: hover) { .ls-new-form .add-btn:hover { border-color: var(--text-dim); } }
+  /* 16px, not smaller -- same iOS auto-zoom-on-focus fix as .acct-form
+     input above (this is the "creating a list breaks the page/zooms"
+     input Antonio reported directly). */
   .ls-new-form input {
     flex: 1 1 160px; min-width: 0; background: var(--bg); color: var(--text);
     border: 1px solid var(--edge); border-radius: var(--radius);
-    padding: 0.55rem 0.7rem; font-family: var(--font-body); font-size: 0.85rem;
+    padding: 0.55rem 0.7rem; font-family: var(--font-body); font-size: 16px;
   }
   .ls-new-form input::placeholder { color: var(--text-faint); }
   .ls-new-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
@@ -2341,6 +2398,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   document.addEventListener('click', (e) => {
     if (!infoModeOn) return;
     const target = e.target as HTMLElement | null;
+    // Round 11.5 follow-up: list pills are now explain targets too, but a
+    // pill's delete ×, rename pencil, drag handle and inline rename input
+    // are separate controls living INSIDE it with their own destructive/
+    // editing behavior. Without this, tapping any of them while info mode
+    // is also on would get swallowed to show the pill's generic "tap to
+    // switch" text instead, making Delete/Move mode unusable at the same
+    // time as info mode. Same exclusion list the pill's own click handler
+    // already uses for the identical reason.
+    if (target && (target.classList.contains('ls-x') || target.closest('.ls-drag') || target.closest('.ls-pencil') || target.closest('.ls-name-edit'))) return;
     const el = target && target.closest ? (target.closest('.explain-target') as HTMLElement | null) : null;
     if (!el || !EXPLAIN_TARGETS.has(el)) return;
     e.preventDefault();
@@ -2397,6 +2463,21 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // below.
   function setAllExplainLit(on: boolean) {
     EXPLAIN_TARGETS.forEach((_fn, el) => el.classList.toggle('info-lit', on));
+  }
+
+  // Round 11.5 follow-up (Antonio, live review): New and the list pills
+  // themselves ("Default and new also must... be yellow") weren't lighting
+  // up with everything else under info mode -- they simply had no explainer
+  // registered. Pills are rebuilt from scratch on every renderPills() call
+  // (rename, drag reorder, create, delete can all trigger one without a full
+  // page reload), so a fresh pill needs its lit state applied at creation
+  // time, not just at the next ⓘ toggle. Reading the #explainInfoBtn class
+  // directly (rather than the infoModeOn/desktopInfoOn variables) sidesteps
+  // this file's usual TDZ trap: renderPills() runs during initial page setup,
+  // before either of those `let`s further down the script has executed.
+  function isInfoLit(): boolean {
+    const btn = document.getElementById('explainInfoBtn');
+    return !!btn && btn.classList.contains('mode-active');
   }
 
   function attachExplainer(el: HTMLElement | null, textFn: () => string) {
@@ -3317,6 +3398,11 @@ ${sections}
       name.className = 'ls-name';
       name.textContent = l.n;
       pill.appendChild(name);
+      // Round 11.5 follow-up: pills are covered controls too now, same as
+      // every other button on the page -- so a DJ can see and read what
+      // tapping a pill does before they've ever tapped one.
+      attachExplainer(pill, () => 'Tap to switch to this list. Ticks, notes and any edits are saved to each list separately.');
+      if (isInfoLit()) pill.classList.add('info-lit');
       // Round 11.5: rename lives on every pill, including the active one --
       // the DJ's current list is the one most likely to need a real name.
       // Gated to Move mode, same as the drag handle appended below.
@@ -3856,7 +3942,7 @@ ${sections}
     if (!listSwitch || !lsMoveBtn) return;
     listSwitch.classList.toggle('moving', on);
     lsMoveBtn.classList.toggle('active', on);
-    if (lsMoveLabel) lsMoveLabel.textContent = on ? 'Done' : 'Move';
+    if (lsMoveLabel) lsMoveLabel.textContent = on ? 'Done' : 'Manage';
   }
   if (lsDelBtn && listSwitch) lsDelBtn.addEventListener('click', () => {
     const on = !listSwitch.classList.contains('deleting');
@@ -3879,6 +3965,12 @@ ${sections}
   attachExplainer(pdfBtn, () => 'Saves your list exactly as it looks right now, current mode, order, names and ticks, as a printable PDF.');
   attachExplainer(backupBtn, () => 'Emails your list to your inbox: the full list itself, plus a link that loads it back on any device. Needs a quick free registration first.');
   attachExplainer(editToggle, () => 'Add notes, create sections, add items, rename, reorder or delete. Save your list when you’re done!');
+  // Round 11.5 follow-up (Antonio): "the person will not understand that if
+  // it clicks there, you have a new list below" -- the Lists accordion
+  // trigger itself wasn't covered either, so its whole purpose (opens
+  // create/rename/reorder/delete) was invisible under info mode too.
+  attachExplainer(document.getElementById('lsHead'), () => 'Opens your saved lists. From here you can create a new list, rename or reorder your lists, or delete one.');
+  attachExplainer(lsNewBtn, () => 'Creates a new list, so you can plan a different night separately from this one. Type a name and save it — up to seven lists.');
   attachExplainer(lsMoveBtn, () => 'Turns on rename and reorder for your saved lists. Tap the pencil on a list to rename it, or drag it by the arrow handle to reorder.');
   attachExplainer(lsDelBtn, () => 'Turns on delete mode for your saved lists. Tap the × on a list once to arm it, tap again to delete it. Your active list can’t be deleted this way, switch to another list first.');
   modeBtns.forEach((b) => attachExplainer(b, () => (MODE_COPY_MAP[b.dataset.modeSet || 'basic'] || MODE_COPY_MAP.basic).f));
