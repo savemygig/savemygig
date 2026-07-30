@@ -84,6 +84,25 @@ const ok = (name, cond, detail = '') => {
   await page.close();
 }
 
+// ---- Backup notice: dismiss-forever via localStorage (Antonio's follow-up) ----
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
+  await page.goto(base + '/checklist', { waitUntil: 'networkidle' });
+  await page.evaluate(() => document.getElementById('ck')?.remove());
+  await page.waitForTimeout(200);
+  ok('fresh visitor sees the banner', await page.locator('#backupNote').isVisible());
+  await page.click('#bnClose');
+  await page.waitForTimeout(100);
+  ok('closing it hides the banner immediately', await page.locator('#backupNote').isHidden());
+  const stored = await page.evaluate(() => localStorage.getItem('SMG_BACKUP_NOTE_DISMISSED'));
+  ok('dismissal persisted to localStorage', stored === '1', stored);
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.evaluate(() => document.getElementById('ck')?.remove());
+  await page.waitForTimeout(200);
+  ok('stays hidden on a fresh reload (dismiss-forever, not just this view)', await page.locator('#backupNote').isHidden());
+  await page.close();
+}
+
 // ---- Legal disclaimer page: new section present ----
 {
   const page = await browser.newPage();

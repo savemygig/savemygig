@@ -190,18 +190,41 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     <!-- Round 11.5 (Antonio, "very very very important"): a standing
          reminder that this runs on servers, and servers can and do go down
          -- his own example the same day, an hour of Claude itself being
-         unreachable. Always visible, no dismiss-X: unlike the explainer
-         hints this is a liability notice, not a one-time instruction. The
-         full legal language (no warranty, DJ's own responsibility to back
-         up, planned-maintenance window) lives at /legal/disclaimer; this is
-         the short, always-on version sitting right above the very buttons
-         (Download list, Email list) that make the backup happen. -->
-    <div class="backup-note" role="note">
+         unreachable. The full legal language (no warranty, DJ's own
+         responsibility to back up, planned-maintenance window) lives at
+         /legal/disclaimer; this is the short version sitting right above
+         the very buttons (Download list, Email list) that make the backup
+         happen. UPDATED same round, Antonio's own follow-up: "this should
+         be one time only... they click it, they close it, and it will
+         never appear again unless they clean the cookies or the cache" --
+         dismiss-forever via localStorage, same mechanism the old edit-hint
+         box (round 9) and the mode-hint box (round 3) used before him.
+         Starts `hidden` in markup and is only unhidden by the inline
+         script below if not already dismissed, so a returning dismisser
+         never sees a flash of it before JS runs. -->
+    <div class="backup-note" id="backupNote" role="note" hidden>
       <p class="bn-t">
         <strong class="bn-h">Have a backup.</strong>
         This is technology, and technology can fail, including our servers. Download or print your list before you leave, and don’t rely on this site alone on gig night. Keeping a copy is on you to make. See the <a href="/legal/disclaimer">disclaimer</a>.
       </p>
+      <button type="button" class="bn-close" id="bnClose" aria-label="Dismiss this notice">&times;</button>
     </div>
+    <script is:inline>
+      (function () {
+        var KEY = 'SMG_BACKUP_NOTE_DISMISSED';
+        var box = document.getElementById('backupNote');
+        if (!box) return;
+        try {
+          if (localStorage.getItem(KEY) === '1') return; // stays hidden, dismissed before
+        } catch (e) { /* storage blocked: show it, the safer default */ }
+        box.hidden = false;
+        var closeBtn = document.getElementById('bnClose');
+        if (closeBtn) closeBtn.addEventListener('click', function () {
+          box.hidden = true;
+          try { localStorage.setItem(KEY, '1'); } catch (e) { /* blocked: won't persist, harmless */ }
+        });
+      })();
+    </script>
 
     <!-- Mode switch + the account/sync chip share one row (Antonio's ruling,
          2026-07-29 polish round: the chip lives beside Custom, not as a
@@ -860,7 +883,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      must never cover the toolbar or intercept a tap the way the cookie
      banner briefly can. */
   .backup-note {
-    margin-bottom: 1.4rem; padding: 12px 16px;
+    position: relative;
+    margin-bottom: 1.4rem; padding: 12px 2.5rem 12px 16px;
     background: var(--surf); border: 1.5px solid var(--amber); border-radius: var(--radius);
   }
   .bn-t { margin: 0; font-size: 0.86rem; line-height: 1.5; color: var(--text-dim); }
@@ -870,6 +894,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     color: var(--amber); margin-bottom: 3px;
   }
   .bn-t a { color: var(--text); text-decoration: underline; }
+  /* Dismiss-forever X (Antonio's follow-up ask): a real 44px-ish tap target
+     in the corner, same "quiet until touched" language as the rest of the
+     page -- gray at rest, brightens on hover/focus, never filled. */
+  .bn-close {
+    position: absolute; top: 6px; right: 6px;
+    width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;
+    background: none; border: 0; color: var(--text-faint); font-size: 1.35rem; line-height: 1;
+    cursor: pointer; padding: 0;
+  }
+  @media (hover: hover) { .bn-close:hover { color: var(--text); } }
+  .bn-close:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
   @media (min-width: 560px) { .bn-h { display: inline; margin-right: 6px; margin-bottom: 0; } }
   .top-actions { margin: 1.1rem 0 0; text-align: center; }
   /* Below the circle, the page ends. The gap down to the footer's top rule
