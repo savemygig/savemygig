@@ -14,12 +14,19 @@ interface Props {
   noindex?: boolean;
   /** per-page OG card, e.g. "/og/exfat-vs-fat32-cdj.png" */
   ogImage?: string;
+  /** Social share title, when it needs to be shorter/cleaner than the SEO
+      <title> (Antonio, 2026-07-30: the keyword-rich title tag stays for
+      Google, the share card gets the trimmed version). Falls back to title. */
+  ogTitle?: string;
 }
 
-const { title, description, path, noindex = false, ogImage } = Astro.props;
+const { title, description, path, noindex = false, ogImage, ogTitle } = Astro.props;
 const SITE = 'https://www.savemygig.com';
 const canonical = `${SITE}${path === '/' ? '/' : path}`;
-const ogImageUrl = `${SITE}${ogImage ?? '/images/dj-usb-not-detected-emergency.webp'}`;
+// Default share image (2026-07-30): landscape 1200x630, cropped from
+// Antonio's shield-logo social art so a shared link matches the same brand
+// mark as his social posts instead of a mismatched portrait photo.
+const ogImageUrl = `${SITE}${ogImage ?? '/images/og-share.jpg'}`;
 
 // Site-wide entity graph. Search engines and AI answer engines both weight
 // "who is this and why should I trust them" — and until now none of it was
@@ -93,7 +100,7 @@ const entityGraph = {
   {noindex ? <meta name="robots" content="noindex,follow" /> : <meta name="robots" content="index,follow" />}
   <meta name="theme-color" content="#000000" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content={title} />
+  <meta property="og:title" content={ogTitle ?? title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
   <meta property="og:site_name" content="Save My Gig!" />
