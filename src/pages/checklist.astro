@@ -1153,7 +1153,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
        order, so a plain .explain-btn override here silently lost every
        tie. .mode-row-right .explain-btn is more specific and wins
        regardless of where the base rule sits. */
-    .mode-row-right .explain-btn { font-size: 0.72rem; height: 2.3rem; width: 2.3rem; padding: 0; }
+    /* UPDATED ROUND 11, second pass (Antonio, live again): matching the
+       (i) glyph's font-size to .mode-btn's word-sized text left the
+       actual SYMBOL reading tiny -- a single circled-letter glyph doesn't
+       carry the same visual weight as a full word at the same nominal
+       font-size. Antonio's ask was explicit: "twice that size." Doubled
+       the glyph's font-size only; the box itself stays at the same
+       height/width as the Sync chip so the row still lines up exactly as
+       he asked for two messages ago -- there's easily enough headroom (a
+       ~23px glyph inside a ~37px square, centered by the existing flex
+       rule) for this to just read bigger, not clip or unbalance the box. */
+    .mode-row-right .explain-btn { font-size: 1.44rem; height: 2.3rem; width: 2.3rem; padding: 0; }
     .mode-row-right { gap: 0.3rem; }
   }
   .acct-card {
