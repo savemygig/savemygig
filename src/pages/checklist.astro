@@ -430,7 +430,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              away from editing ticks. -->
         <button type="button" class="ls-del-btn" id="lsDelBtn">Delete</button>
         <form class="ls-new-form" id="lsNewForm" hidden>
-          <input type="text" id="lsNewName" maxlength="40" placeholder="Festival, Wedding, Residency..." aria-label="Name the new list" />
+          <!-- Round 11 (Antonio): "Wedding" swapped out -- this site is
+               built for club DJs, and a wedding-DJ suggestion here reads
+               off-focus even though wedding DJs are welcome too. -->
+          <input type="text" id="lsNewName" maxlength="40" placeholder="Festival, Club, Residency, Other..." aria-label="Name the new list" />
           <button type="submit" class="add-btn">Create</button>
         </form>
         <p class="acct-msg" id="lsMsg" role="status" aria-live="polite"></p>
