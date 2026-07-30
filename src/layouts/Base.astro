@@ -658,7 +658,9 @@ const entityGraph = {
        mouse target and 35px is fine. The geometry gate still enforces 44px
        at phone widths. */
     .nav-search-btn { width: 35px; height: 35px; }
-    .nav-search-btn svg { width: 15px; height: 15px; }
+    /* 15% bigger (Antonio, live desktop review): 15px -> 17.25px. Button box
+       stays 35px, only the glyph itself grows. */
+    .nav-search-btn svg { width: 17.25px; height: 17.25px; }
   }
 
   @media (max-width: 900px) {

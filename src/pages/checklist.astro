@@ -74,23 +74,26 @@ const groups = [
     ],
   },
   {
-    id: 'personal',
-    title: 'Personal Kit',
-    icon: 'star',
-    blurb: 'The pocket check.',
+    // Reordered (Antonio, live review): Technical Kit now sits right after
+    // DJ Gear instead of after Logistics \u2014 it's cable/adapter kit, closer
+    // kin to Gear than to venue logistics. Personal Kit (below Logistics)
+    // moved the opposite direction, to the end, for the same reason: it's
+    // the pocket check, thematically last, not competing with Gear/Music
+    // for attention right up top. Net effect on Basic mode (the only place
+    // order is actually visible day-to-day, since Backups/Technical/Rescue
+    // are all-advanced and hide there): Music, DJ Gear, Logistics, Personal
+    // Kit \u2014 exactly the sequence Antonio asked for.
+    id: 'technical',
+    title: 'Technical Kit',
+    icon: 'usb',
+    blurb: 'The small things that save big nights.',
     items: [
-      { key: 'phone', level: 'basic', label: 'Phone charged' },
-      { key: 'charge-cable', level: 'basic', label: 'Charging cable + power adapter' },
-      { key: 'powerbank', level: 'basic', label: 'Power bank (recommended)' },
-      { key: 'money', level: 'basic', label: 'Wallet (cards + cash)' },
-      { key: 'docs', level: 'basic', label: 'ID / Passport / Driver\u2019s Licence (as applicable)' },
-      { key: 'keys', level: 'basic', label: 'Keys (home, hotel or car, as needed)' },
-      { key: 'earplugs', level: 'advanced', label: 'Earplugs' },
-      { key: 'water', level: 'advanced', label: 'Water bottle' },
-      { key: 'snacks', level: 'advanced', label: 'Snacks for a long night' },
-      { key: 'meds', level: 'advanced', label: 'Any medicine you need' },
-      { key: 'spare-shirt', level: 'advanced', label: 'Spare shirt' },
-      { key: 'freshen', level: 'advanced', label: 'Deodorant' },
+      { key: 'adapters', level: 'advanced', label: 'USB-C and USB-A adapters for modern devices and emergency connections' },
+      { key: 'cables', level: 'advanced', label: 'Spare USB cables for your laptop, phone and compatible DJ equipment' },
+      { key: 'ethernet', level: 'advanced', label: 'Ethernet cable (for Pro DJ Link and compatible setups)' },
+      { key: 'rca', level: 'advanced', label: 'One pair of RCA cables (can also be used as digital coaxial cables when needed)' },
+      { key: 'tripod', level: 'advanced', label: 'Phone tripod for recording content or streaming' },
+      { key: 'power-strip', level: 'advanced', label: 'Extension lead or power strip' },
     ],
   },
   {
@@ -118,17 +121,23 @@ const groups = [
     ],
   },
   {
-    id: 'technical',
-    title: 'Technical Kit',
-    icon: 'usb',
-    blurb: 'The small things that save big nights.',
+    id: 'personal',
+    title: 'Personal Kit',
+    icon: 'star',
+    blurb: 'The pocket check.',
     items: [
-      { key: 'adapters', level: 'advanced', label: 'USB-C and USB-A adapters for modern devices and emergency connections' },
-      { key: 'cables', level: 'advanced', label: 'Spare USB cables for your laptop, phone and compatible DJ equipment' },
-      { key: 'ethernet', level: 'advanced', label: 'Ethernet cable (for Pro DJ Link and compatible setups)' },
-      { key: 'rca', level: 'advanced', label: 'One pair of RCA cables (can also be used as digital coaxial cables when needed)' },
-      { key: 'tripod', level: 'advanced', label: 'Phone tripod for recording content or streaming' },
-      { key: 'power-strip', level: 'advanced', label: 'Extension lead or power strip' },
+      { key: 'phone', level: 'basic', label: 'Phone charged' },
+      { key: 'charge-cable', level: 'basic', label: 'Charging cable + power adapter' },
+      { key: 'powerbank', level: 'basic', label: 'Power bank (recommended)' },
+      { key: 'money', level: 'basic', label: 'Wallet (cards + cash)' },
+      { key: 'docs', level: 'basic', label: 'ID / Passport / Driver\u2019s Licence (as applicable)' },
+      { key: 'keys', level: 'basic', label: 'Keys (home, hotel or car, as needed)' },
+      { key: 'earplugs', level: 'advanced', label: 'Earplugs' },
+      { key: 'water', level: 'advanced', label: 'Water bottle' },
+      { key: 'snacks', level: 'advanced', label: 'Snacks for a long night' },
+      { key: 'meds', level: 'advanced', label: 'Any medicine you need' },
+      { key: 'spare-shirt', level: 'advanced', label: 'Spare shirt' },
+      { key: 'freshen', level: 'advanced', label: 'Deodorant' },
     ],
   },
   {
@@ -177,6 +186,22 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         } catch (e) { /* storage blocked: keep the intro */ }
       })();
     </script>
+
+    <!-- Round 11.5 (Antonio, "very very very important"): a standing
+         reminder that this runs on servers, and servers can and do go down
+         -- his own example the same day, an hour of Claude itself being
+         unreachable. Always visible, no dismiss-X: unlike the explainer
+         hints this is a liability notice, not a one-time instruction. The
+         full legal language (no warranty, DJ's own responsibility to back
+         up, planned-maintenance window) lives at /legal/disclaimer; this is
+         the short, always-on version sitting right above the very buttons
+         (Download list, Email list) that make the backup happen. -->
+    <div class="backup-note" role="note">
+      <p class="bn-t">
+        <strong class="bn-h">Have a backup.</strong>
+        This is technology, and technology can fail, including our servers. Download or print your list before you leave, and don’t rely on this site alone on gig night. Keeping a copy is on you to make. See the <a href="/legal/disclaimer">disclaimer</a>.
+      </p>
+    </div>
 
     <!-- Mode switch + the account/sync chip share one row (Antonio's ruling,
          2026-07-29 polish round: the chip lives beside Custom, not as a
@@ -423,12 +448,36 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       </button>
       <div class="ls-body" id="lsBody" hidden>
         <div class="ls-pills" id="lsPills"></div>
-        <button type="button" class="ls-new-btn" id="lsNewBtn">+ New</button>
-        <!-- Dedicated delete mode for the lists region (Antonio's ruling,
-             2026-07-29 polish): separate from the checklist's own Edit
-             toggle, so deleting a whole list is never one accidental tap
-             away from editing ticks. -->
-        <button type="button" class="ls-del-btn" id="lsDelBtn">Delete</button>
+        <!-- Round 11.5 (Antonio, live review): the old two-button row ("+
+             New" text button, "Delete" text button that ALSO revealed the
+             reorder handle -- his own complaint: "why is the delete button
+             giving me the option to move?") is now three separate, single-
+             purpose icon+label buttons. Icon always shows; the word label
+             hides on touch (@media hover:none below) so mobile gets a
+             compact icon row instead of three full text buttons eating the
+             line, same "icon on phone, icon+word on desktop" split already
+             used elsewhere on this page. Move icon is the EXACT SAME sideways
+             drag-handle SVG as the per-pill handle it now gates, reused
+             rather than invented, per Antonio's explicit instruction. -->
+        <div class="ls-toolbar" id="lsToolbar">
+          <button type="button" class="ls-tool-btn ls-new-btn" id="lsNewBtn" aria-label="New list">
+            <span class="ls-btn-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 2v12M2 8h12"/></svg></span>
+            <span class="ls-btn-label">New</span>
+          </button>
+          <button type="button" class="ls-tool-btn ls-move-btn" id="lsMoveBtn" aria-label="Reorder or rename your lists">
+            <span class="ls-btn-ic" aria-hidden="true"><svg viewBox="0 0 22 14" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h18"/><path d="M6 3 2 7l4 4"/><path d="M16 3l4 4-4 4"/></svg></span>
+            <span class="ls-btn-label">Move</span>
+          </button>
+          <!-- Dedicated delete mode for the lists region (Antonio's ruling,
+               2026-07-29 polish): separate from the checklist's own Edit
+               toggle, so deleting a whole list is never one accidental tap
+               away from editing ticks. Now ALSO separate from Move (above),
+               so it only ever does the one destructive thing. -->
+          <button type="button" class="ls-tool-btn ls-del-btn" id="lsDelBtn" aria-label="Delete a list">
+            <span class="ls-btn-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8h12"/></svg></span>
+            <span class="ls-btn-label">Delete</span>
+          </button>
+        </div>
         <form class="ls-new-form" id="lsNewForm" hidden>
           <!-- Round 11 (Antonio): "Wedding" swapped out -- this site is
                built for club DJs, and a wedding-DJ suggestion here reads
@@ -803,6 +852,25 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   /* Desktop: the storage promise starts its own line under the intro. */
   @media (min-width: 641px) { .intro-b { display: block; } }
+
+  /* Same amber-edge "notice" language as the cookie banner and the explainer
+     popovers (Antonio, earlier round: "the same as you have when you do the
+     login... cookies warning") -- a DJ already recognises this visual
+     vocabulary as "read this." Static and inline, not fixed/floating: it
+     must never cover the toolbar or intercept a tap the way the cookie
+     banner briefly can. */
+  .backup-note {
+    margin-bottom: 1.4rem; padding: 12px 16px;
+    background: var(--surf); border: 1.5px solid var(--amber); border-radius: var(--radius);
+  }
+  .bn-t { margin: 0; font-size: 0.86rem; line-height: 1.5; color: var(--text-dim); }
+  .bn-h {
+    display: block; font-family: var(--font-display); font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.02em; font-size: 0.72rem;
+    color: var(--amber); margin-bottom: 3px;
+  }
+  .bn-t a { color: var(--text); text-decoration: underline; }
+  @media (min-width: 560px) { .bn-h { display: inline; margin-right: 6px; margin-bottom: 0; } }
   .top-actions { margin: 1.1rem 0 0; text-align: center; }
   /* Below the circle, the page ends. The gap down to the footer's top rule
      must MATCH the 1.1rem gap up to the emergency panel (Antonio measured
@@ -1122,6 +1190,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   @media (hover: hover) {
     .acct-chip, .explain-btn { height: 2.6rem; }
     .explain-btn { width: 2.6rem; padding: 0; }
+    /* 10% bigger glyph (Antonio, live desktop review): same "box stays put,
+       glyph grows" split already used for the mobile version below (round
+       11's "twice that size" doubling). Base .explain-btn font-size is
+       0.9rem -> 0.99rem here, box unchanged at 2.6rem. Compound selector,
+       not a plain .explain-btn override: the same cascade-order trap
+       documented at .mode-row-right .explain-btn below applies here too --
+       the base unconditional .explain-btn rule sits AFTER this media query
+       in source order, so equal specificity would silently lose to it. */
+    .mode-row-right .explain-btn { font-size: 0.99rem; }
   }
   @media (max-width: 640px) {
     /* Round 4 (Antonio): on mobile the (i) + Sync pair belongs on the SAME
@@ -1268,6 +1345,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .ls-head[aria-expanded="true"] .ls-chev { transform: rotate(225deg); margin-top: 3px; }
   .ls-body { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 0.7rem; }
   .ls-body[hidden] { display: none; }
+  /* Wraps on desktop (plenty of width); on a phone this becomes a single
+     horizontal-scroll row instead (Antonio's iPhone Pro Max complaint: too
+     many pills wrapping ate the whole screen). See the max-width query
+     further down for the touch-only override. */
   .ls-pills { display: flex; gap: 6px; flex-wrap: wrap; }
   .ls-pill {
     position: relative;
@@ -1279,11 +1360,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .ls-pill .ls-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   @media (hover: hover) { .ls-pill:hover { border-color: var(--text-dim); color: var(--text); } }
   .ls-pill.is-on { border-color: var(--text); color: var(--text); }
-  /* Delete mode (Antonio's ruling, 2026-07-29 polish): a dedicated toggle
-     for the lists region, separate from the checklist's own Edit mode.
-     While on, every pill but the active one shows a small x in its upper
-     corner; same two-tap armed contract as everything else destructive
-     here (Reset, Delete account). */
+  /* Delete mode (Antonio's ruling, 2026-07-29 polish, split further in round
+     11.5): its own toggle, separate from Move below. While on, every pill
+     but the active one shows a small x in its upper corner; same two-tap
+     armed contract as everything else destructive here (Reset, Delete
+     account). */
   .ls-x {
     display: none; position: absolute; top: -7px; right: -7px;
     width: 17px; height: 17px; align-items: center; justify-content: center;
@@ -1293,9 +1374,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .list-switch.deleting .ls-x { display: inline-flex; }
   .ls-pill.is-on .ls-x { display: none; }
   .ls-x.armed { color: var(--red); border-color: var(--red); }
-  /* Round 9 (Antonio): reorder handle, same Delete/Done mode as the x above.
-     Sideways version of the checklist's task-drag -- pills sit in a row, so
-     you drag left/right, not up/down. */
+  /* Round 9, split into its own "Move" mode in round 11.5 (Antonio: "why is
+     the delete button giving me the option to move? it's a little bit
+     strange"). Sideways version of the checklist's task-drag -- pills sit in
+     a row, so you drag left/right, not up/down. */
   .ls-drag {
     display: none; background: none; border: 0; color: var(--text-faint);
     line-height: 0; cursor: grab; padding: 8px;
@@ -1305,7 +1387,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .ls-drag:hover { color: var(--text-dim); }
   .ls-drag:active { cursor: grabbing; color: var(--text); }
-  .list-switch.deleting .ls-drag { display: inline-flex; }
+  .list-switch.moving .ls-drag { display: inline-flex; }
   .ls-pill.dragging {
     background: var(--surf-2);
     box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
@@ -1314,18 +1396,45 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     cursor: grabbing;
   }
   .ls-pill.dragging .ls-drag { color: var(--green); cursor: grabbing; }
-  .ls-new-btn {
+  /* Round 11.5: real list rename, not just checklist-item rename. Lives in
+     the same Move mode as the drag handle -- Move is "organise your lists"
+     (reorder + rename), Delete is the one purely destructive toggle. Same
+     pencil glyph and click-to-edit-inline flow as the checklist item pencil
+     (makeEditButton/beginRename), just pointed at a list name instead of a
+     task label. */
+  .ls-pencil {
+    display: none; background: none; border: 0; color: var(--text-faint);
+    line-height: 0; cursor: pointer; padding: 8px;
+    min-width: 32px; min-height: 32px;
+    align-items: center; justify-content: center; flex: 0 0 auto;
+  }
+  .ls-pencil:hover { color: var(--green); }
+  .list-switch.moving .ls-pencil { display: inline-flex; }
+  .ls-name-edit {
+    flex: 1 1 auto; min-width: 40px; max-width: 150px; background: var(--bg); color: var(--text);
+    border: 1px solid var(--green); border-radius: 4px; padding: 0.15rem 0.4rem;
+    font-family: var(--font-body); font-size: 0.82rem;
+  }
+  /* Three single-purpose icon+label buttons (New / Move / Delete), replacing
+     the old two-button row where Delete also revealed reorder. Icon shows
+     always; the word label is a desktop-only enhancement (below), so mobile
+     gets a tight row of three small icon buttons instead of three full-word
+     buttons wrapping onto their own line (Antonio's mobile space complaint). */
+  .ls-toolbar { display: flex; gap: 6px; }
+  .ls-tool-btn {
+    display: inline-flex; align-items: center; justify-content: center;
     background: none; border: 1px dashed var(--edge); border-radius: var(--radius);
     color: var(--text-faint); font-family: var(--font-body); font-size: 0.82rem;
-    padding: 0.42rem 0.7rem; cursor: pointer;
+    padding: 0.42rem 0.6rem; cursor: pointer;
   }
-  @media (hover: hover) { .ls-new-btn:hover { color: var(--text); border-color: var(--text-dim); } }
-  .ls-del-btn {
-    background: none; border: 1px dashed var(--edge); border-radius: var(--radius);
-    color: var(--text-faint); font-family: var(--font-body); font-size: 0.82rem;
-    padding: 0.42rem 0.7rem; cursor: pointer;
-  }
-  @media (hover: hover) { .ls-del-btn:hover { color: var(--text); border-color: var(--text-dim); } }
+  @media (hover: hover) { .ls-tool-btn:hover { color: var(--text); border-color: var(--text-dim); } }
+  .ls-btn-ic { display: inline-flex; align-items: center; justify-content: center; }
+  /* Hidden by default (mobile default): the icon alone reads clearly enough
+     at this size, and three full words wrap the toolbar. Desktop, which has
+     the width and uses a mouse rather than a thumb, gets the word back. */
+  .ls-btn-label { display: none; }
+  @media (hover: hover) { .ls-btn-label { display: inline; margin-left: 0.35rem; } }
+  .ls-move-btn.active { color: var(--text); border-color: var(--text); border-style: solid; }
   .ls-del-btn.active { color: var(--red); border-color: var(--red); border-style: solid; }
   .ls-new-form { display: flex; gap: 6px; flex: 1 1 100%; }
   .ls-new-form[hidden] { display: none; }
@@ -1343,6 +1452,18 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .ls-new-form input::placeholder { color: var(--text-faint); }
   .ls-new-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .list-switch .acct-msg { flex: 1 1 100%; margin-top: 0; }
+  /* Phone (Antonio, iPhone Pro Max screenshot): a wrapping pill row grew
+     tall enough to push the toolbar off screen once he had more than a
+     couple of lists. One horizontal-scroll line instead -- pills never
+     shrink or wrap, the row just scrolls, same idea as a tab strip. */
+  @media (max-width: 640px) {
+    .ls-pills {
+      flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; padding-bottom: 2px;
+    }
+    .ls-pills::-webkit-scrollbar { display: none; }
+    .ls-pill { flex: 0 0 auto; max-width: 150px; }
+  }
 
   /* Info toggle + every per-control popover share this look, the same amber
      edge the cookie banner uses, so the whole thing reads as one system a
@@ -2780,10 +2901,22 @@ ${sections}
       const raw = localStorage.getItem(REG_KEY);
       if (raw) {
         const r = JSON.parse(raw);
-        if (r && r.active && Array.isArray(r.lists) && r.lists.length) return r;
+        if (r && r.active && Array.isArray(r.lists) && r.lists.length) {
+          // One-time migration (round 11.5, Antonio: "maybe you don't need to
+          // put that name, maybe you can call default"). Only the untouched
+          // starter list on 'main' still named exactly the old default text
+          // qualifies -- a DJ who deliberately renamed it is, by definition,
+          // not this case, whatever they renamed it to.
+          let migrated = false;
+          r.lists.forEach((l: RegList) => {
+            if (l.id === 'main' && l.n === 'My checklist') { l.n = 'Default'; migrated = true; }
+          });
+          if (migrated) saveReg(r);
+          return r;
+        }
       }
     } catch (e) { /* fall through */ }
-    return { active: 'main', lists: [{ id: 'main', n: 'My checklist', u: 0 }] };
+    return { active: 'main', lists: [{ id: 'main', n: 'Default', u: 0 }] };
   }
   function saveReg(r: Registry) { try { localStorage.setItem(REG_KEY, JSON.stringify(r)); } catch (e) { /* blocked */ } }
   function loadDeleted(): string[] {
@@ -2992,7 +3125,7 @@ ${sections}
   }
   function initPillDrag(handle: HTMLElement, pill: HTMLElement) {
     handle.addEventListener('pointerdown', (ev: PointerEvent) => {
-      if (!listSwitch || !listSwitch.classList.contains('deleting')) return;
+      if (!listSwitch || !listSwitch.classList.contains('moving')) return;
       const ul = lsPills as HTMLElement | null; if (!ul) return;
       ev.preventDefault();
       ev.stopPropagation();
@@ -3065,6 +3198,69 @@ ${sections}
     saveReg(reg);
   }
 
+  // Round 11.5 (Antonio): real list rename, not just a checklist item rename.
+  // Bumps just the ONE list's own timestamp (not bumpActive(), which only
+  // ever touches the active list) so a renamed inactive list still gets
+  // picked up by the next debounced push.
+  function bumpList(id: string) {
+    try {
+      const reg = loadReg();
+      const l = reg.lists.find((x) => x.id === id);
+      if (l) { l.u = Date.now(); saveReg(reg); }
+    } catch (e) { /* never let sync bookkeeping break a rename */ }
+    if (acct.email) {
+      if (pushTimer) clearTimeout(pushTimer);
+      pushTimer = setTimeout(() => { pushAll(false); }, 2500);
+    }
+  }
+  function renameList(id: string, name: string) {
+    const t = (name || '').trim().slice(0, 40);
+    if (!t) return;
+    const reg = loadReg();
+    const l = reg.lists.find((x) => x.id === id);
+    if (!l || l.n === t) return;
+    l.n = t;
+    saveReg(reg);
+    bumpList(id);
+  }
+  // Same click-to-edit-inline flow as the checklist item pencil
+  // (makeEditButton/beginRename below), pointed at a list name instead.
+  function beginPillRename(pill: HTMLElement, span: HTMLElement, id: string) {
+    if (pill.querySelector('.ls-name-edit')) return;
+    const input = document.createElement('input');
+    input.type = 'text'; input.className = 'ls-name-edit'; input.maxLength = 40;
+    input.value = span.textContent || '';
+    span.replaceWith(input);
+    input.focus();
+    const n = input.value.length;
+    input.setSelectionRange(n, n);
+    // Typing, clicking or dragging inside the field must never switch or
+    // reorder the list out from under the DJ mid-edit.
+    input.addEventListener('click', (e) => e.stopPropagation());
+    input.addEventListener('pointerdown', (e) => e.stopPropagation());
+    const commit = () => {
+      const t = (input.value || '').trim();
+      if (t) renameList(id, t);
+      renderPills(); // rebuilds the row either way, restoring the span
+    };
+    input.addEventListener('blur', commit);
+    input.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+      if (e.key === 'Escape') { input.value = span.textContent || ''; input.blur(); }
+    });
+  }
+  function makePillPencil(pill: HTMLElement, span: HTMLElement, id: string, name: string): HTMLButtonElement {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'ls-pencil';
+    b.setAttribute('aria-label', 'Rename ' + name);
+    b.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      beginPillRename(pill, span, id);
+    });
+    return b;
+  }
+
   let pillArmTimer: ReturnType<typeof setTimeout> | undefined;
   function renderPills() {
     if (!lsPills || !acct.email) return;
@@ -3086,10 +3282,14 @@ ${sections}
       name.className = 'ls-name';
       name.textContent = l.n;
       pill.appendChild(name);
+      // Round 11.5: rename lives on every pill, including the active one --
+      // the DJ's current list is the one most likely to need a real name.
+      // Gated to Move mode, same as the drag handle appended below.
+      pill.appendChild(makePillPencil(pill, name, l.id, l.n));
       if (l.id !== reg.active) {
         pill.addEventListener('click', (e) => {
           const t = e.target as HTMLElement;
-          if (t.classList.contains('ls-x') || t.closest('.ls-drag')) return;
+          if (t.classList.contains('ls-x') || t.closest('.ls-drag') || t.closest('.ls-pencil') || t.closest('.ls-name-edit')) return;
           switchList(l.id);
         });
         // Deleting a whole list is the most destructive tap on the page:
@@ -3598,30 +3798,53 @@ ${sections}
     if (lsNewName) createList(lsNewName.value);
   });
 
-  // Delete mode for the lists region (Antonio's ruling, 2026-07-29 polish):
-  // its own toggle, not borrowed from the checklist's Edit button, so a DJ
-  // editing ticks never has list-deletion armed by accident and vice versa.
-  // Turning it off disarms any pill mid-arm rather than leaving a red x
-  // behind as a trap.
+  // Round 11.5 (Antonio, live review): Delete and Move are now two separate,
+  // single-purpose toggles instead of one "Delete" button that also revealed
+  // the reorder handle ("why is the delete button giving me the option to
+  // move? it's a little bit strange"). Mutually exclusive: turning one on
+  // turns the other off, so a DJ is never in both a destructive mode and a
+  // reorganise mode at once. Each toggle's word label lives in its own
+  // .ls-btn-label span now (the button also carries an icon), so the label
+  // swap targets that span instead of the whole button's textContent.
   const lsDelBtn = document.getElementById('lsDelBtn');
-  if (lsDelBtn && listSwitch) lsDelBtn.addEventListener('click', () => {
-    const on = !listSwitch.classList.contains('deleting');
+  const lsMoveBtn = document.getElementById('lsMoveBtn');
+  const lsDelLabel = lsDelBtn && lsDelBtn.querySelector('.ls-btn-label');
+  const lsMoveLabel = lsMoveBtn && lsMoveBtn.querySelector('.ls-btn-label');
+  function setListDeleteMode(on: boolean) {
+    if (!listSwitch || !lsDelBtn) return;
     listSwitch.classList.toggle('deleting', on);
     lsDelBtn.classList.toggle('active', on);
-    lsDelBtn.textContent = on ? 'Done' : 'Delete';
+    if (lsDelLabel) lsDelLabel.textContent = on ? 'Done' : 'Delete';
     if (!on) document.querySelectorAll('.ls-x.armed').forEach((x) => x.classList.remove('armed'));
+  }
+  function setListMoveMode(on: boolean) {
+    if (!listSwitch || !lsMoveBtn) return;
+    listSwitch.classList.toggle('moving', on);
+    lsMoveBtn.classList.toggle('active', on);
+    if (lsMoveLabel) lsMoveLabel.textContent = on ? 'Done' : 'Move';
+  }
+  if (lsDelBtn && listSwitch) lsDelBtn.addEventListener('click', () => {
+    const on = !listSwitch.classList.contains('deleting');
+    if (on) setListMoveMode(false); // the two modes never run together
+    setListDeleteMode(on);
+  });
+  if (lsMoveBtn && listSwitch) lsMoveBtn.addEventListener('click', () => {
+    const on = !listSwitch.classList.contains('moving');
+    if (on) setListDeleteMode(false);
+    setListMoveMode(on);
   });
 
-  // Press-and-hold explainers: the six controls Antonio's rule + review
-  // actually calls for. Reset, Download and Email are behavioral (what
-  // exactly happens is not obvious from a two-word label); Edit reuses the
-  // SAME copy as its own dismissible hint, so a DJ who dismissed that hint
-  // forever still has a way back to it; the mode buttons reuse MODE_COPY_MAP,
-  // the one place that copy lives.
+  // Press-and-hold explainers: the controls Antonio's rule + review actually
+  // calls for. Reset, Download and Email are behavioral (what exactly
+  // happens is not obvious from a two-word label); Edit reuses the SAME copy
+  // as its own dismissible hint, so a DJ who dismissed that hint forever
+  // still has a way back to it; the mode buttons reuse MODE_COPY_MAP, the
+  // one place that copy lives.
   attachExplainer(resetBtn, () => 'Puts the list back to how it started. In Base and Advanced that clears every tick. In Custom it also undoes renames, reorders, and any items you added or removed.');
   attachExplainer(pdfBtn, () => 'Saves your list exactly as it looks right now, current mode, order, names and ticks, as a printable PDF.');
-  attachExplainer(backupBtn, () => 'Emails your list to your inbox with a link that loads it back on any device. Needs a quick free registration first.');
+  attachExplainer(backupBtn, () => 'Emails your list to your inbox: the full list itself, plus a link that loads it back on any device. Needs a quick free registration first.');
   attachExplainer(editToggle, () => 'Add notes, create sections, add items, rename, reorder or delete. Save your list when you’re done!');
+  attachExplainer(lsMoveBtn, () => 'Turns on rename and reorder for your saved lists. Tap the pencil on a list to rename it, or drag it by the arrow handle to reorder.');
   attachExplainer(lsDelBtn, () => 'Turns on delete mode for your saved lists. Tap the × on a list once to arm it, tap again to delete it. Your active list can’t be deleted this way, switch to another list first.');
   modeBtns.forEach((b) => attachExplainer(b, () => (MODE_COPY_MAP[b.dataset.modeSet || 'basic'] || MODE_COPY_MAP.basic).f));
   // Round 8 (Antonio): Sync used to be deliberately excluded ("tapping it
