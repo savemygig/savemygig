@@ -79,7 +79,11 @@ const ok = (name, cond, detail = '') => {
 
   ok('backup-note banner visible', await page.locator('.backup-note').isVisible());
   const bnText = await page.locator('.backup-note').textContent();
-  ok('banner mentions backup responsibility', /responsibility|on you/i.test(bnText || ''), bnText.trim().slice(0, 60));
+  // Superseded same-day (round 11.5 follow-up 2): copy softened after
+  // tester feedback ("technology can fail, including our servers" read as
+  // distrustful) -- now leads with "Strong advice" / "plan B and plan C" /
+  // "triple backed up", same underlying message.
+  ok('banner mentions backup responsibility', /plan b|plan c|triple backed up|download your list/i.test(bnText || ''), bnText.trim().slice(0, 60));
 
   ok('zero page errors (desktop)', errors.length === 0, errors.join(' | '));
   await page.close();
