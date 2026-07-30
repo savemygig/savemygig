@@ -2,6 +2,7 @@
 import Analytics from '../components/Analytics.astro';
 import Consent from '../components/Consent.astro';
 import Search from '../components/Search.astro';
+import { VERSION_LABEL, IS_BETA } from '../lib/version';
 import '../styles/global.css';
 
 interface Props {
@@ -283,6 +284,14 @@ const entityGraph = {
              maintained without printing a date that would itself go stale.
              Same font size as the line above (Antonio). -->
         <span class="foot-live">Updated continuously with new gear and solutions.</span>
+        <!-- Antonio (2026-07-30): visible build marker while the site is
+             still being refined, so testers have a fixed reference point
+             ("this happened on build 4") and visitors see it's actively
+             evolving rather than abandoned. IS_BETA is derived from the
+             version number itself (see lib/version.ts), so this disappears
+             on its own the day the site graduates to v1.0 -- no second
+             step to remember. -->
+        {IS_BETA && <span class="foot-version" title="Save My Gig is still being refined -- expect frequent small improvements.">{VERSION_LABEL}</span>}
       </div>
     </div>
   </footer>
@@ -506,6 +515,10 @@ const entityGraph = {
   .foot-base { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-align: center; }
   .foot-copy { font-size: 0.8rem; color: var(--text-faint); }
   .foot-live { font-size: 0.8rem; color: var(--text-faint); opacity: 0.85; }
+  /* Smaller and more muted than the two lines above it on purpose -- a build
+     marker is reference info for testers/us, not something every visitor
+     needs to read. */
+  .foot-version { font-size: 0.7rem; color: var(--text-faint); opacity: 0.6; }
   /* Desktop: centered under the social row, same 176px measure (4 x 38px
      buttons + 3 x 0.5rem gaps), one tidy stack. Antonio tried left-justified
      for an afternoon and called it back: centered with the icons wins on
