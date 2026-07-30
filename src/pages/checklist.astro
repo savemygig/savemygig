@@ -471,15 +471,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            action that requires registration, because an email needs an
            address, and the shade quietly says this one is different. -->
       <button type="button" class="btn btn-neutral btn-gated" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
-      <!-- Antonio: instructions occupy space; read once, dismiss forever. The X
-           writes localStorage so it never comes back on this device. Copy cut
-           to the four verbs the mode actually has. -->
-      <!-- The tip SHOWS the icons instead of naming them: the same pencil and
-           arrow that sit on every row, so reading the tip is already learning
-           the interface (Antonio). -->
-      <!-- Antonio's copy, updated for notes + sections; phones get the
-           compact version (same swap pattern as the mode hints). -->
-      <span class="edit-hint dim" id="editHint"><span class="eh-full">Add notes, create sections, add items, rename, reorder or delete. Save your list when you&rsquo;re done!</span><span class="eh-short">Notes, sections, items: add, rename, reorder, delete. Save when done!</span><button type="button" id="hintClose" aria-label="Dismiss this tip">&times;</button></span>
+      <!-- Round 9 (Antonio): the dismissible "Add notes, create sections..."
+           tip used to live here as a standalone box with its own dismiss-X.
+           It's redundant now that Edit list carries the identical copy as a
+           press-and-hold/tap explainer (round 8), so it was removed rather
+           than kept as a second, harder-to-dismiss copy of the same text. -->
       <form class="backup-form" id="backupForm" hidden>
         <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" />
         <button type="submit" class="btn btn-neutral">Send it</button>
@@ -620,12 +616,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .mode-btn.is-on { background: var(--text); color: #0a0a0b; }
   .mode-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
-  .eh-short { display: none; }
-  @media (max-width: 640px) {
-    .eh-short { display: inline; }
-    .eh-full { display: none; }
-  }
-
   /* It is sticky, so it is on screen the whole time you work the list. That
      makes height expensive: one line ("0 of 36 ready" + the percentage) with a
      thin bar under it, on every screen size. The READINESS label was saying
@@ -973,22 +963,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .custom-toolbar .btn:hover, .custom-toolbar .btn:active {
     color: var(--text); border-color: var(--text-dim);
   }
-  .edit-hint {
-    font-size: 0.8rem;
-    flex: 1 1 100%;
-    position: relative;
-    padding: 0.5rem 2.1rem 0.5rem 0.7rem;
-    border: 1px solid var(--edge);
-    border-radius: 2px;
-  }
-  .edit-hint[data-gone] { display: none; }
-  #hintClose {
-    position: absolute; right: 2px; top: 50%; transform: translateY(-50%);
-    background: none; border: 0; color: var(--text-faint); cursor: pointer;
-    font-size: 1.1rem; line-height: 1; padding: 8px 10px;
-  }
-  #hintClose:hover { color: var(--text); }
-  .hint-ic { vertical-align: -1px; margin: 0 1px; }
   /* Armed reset: the button itself becomes the confirmation. Both labels
      occupy the same grid cell; visibility flips, width never moves. */
   #resetBtn { display: inline-grid; }
@@ -1292,6 +1266,27 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .list-switch.deleting .ls-x { display: inline-flex; }
   .ls-pill.is-on .ls-x { display: none; }
   .ls-x.armed { color: var(--red); border-color: var(--red); }
+  /* Round 9 (Antonio): reorder handle, same Delete/Done mode as the x above.
+     Sideways version of the checklist's task-drag -- pills sit in a row, so
+     you drag left/right, not up/down. */
+  .ls-drag {
+    display: none; background: none; border: 0; color: var(--text-faint);
+    line-height: 0; cursor: grab; padding: 8px;
+    min-width: 36px; min-height: 36px;
+    align-items: center; justify-content: center;
+    touch-action: none; flex: 0 0 auto;
+  }
+  .ls-drag:hover { color: var(--text-dim); }
+  .ls-drag:active { cursor: grabbing; color: var(--text); }
+  .list-switch.deleting .ls-drag { display: inline-flex; }
+  .ls-pill.dragging {
+    background: var(--surf-2);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+    position: relative;
+    z-index: 6;
+    cursor: grabbing;
+  }
+  .ls-pill.dragging .ls-drag { color: var(--green); cursor: grabbing; }
   .ls-new-btn {
     background: none; border: 1px dashed var(--edge); border-radius: var(--radius);
     color: var(--text-faint); font-family: var(--font-body); font-size: 0.82rem;
@@ -2258,11 +2253,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       // Edit is the only Custom-exclusive button now: Email works in every
       // mode (it emails whatever list the mode shows) and sits last.
       if (editToggle) editToggle.style.display = custom ? '' : 'none';
-      // The tip explains pencil/arrows/x, which only exist in Custom. It was
-      // leaking into Basic and Advanced, describing controls that are not
-      // there. Dismissal state still wins over mode.
-      const hint = document.getElementById('editHint');
-      if (hint) hint.style.display = custom && !hint.hasAttribute('data-gone') ? '' : 'none';
     }
     modeBtns.forEach((b) => {
       const on = b.dataset.modeSet === m;
@@ -2426,16 +2416,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       const li = btn.closest('.task'); if (li) li.classList.add('removed');
       render();
     });
-  });
-
-  // The edit-instructions tip: read once, dismiss forever on this device.
-  const HINT_KEY = 'SMG_HINT_EDIT_DISMISSED';
-  const hintEl2 = document.getElementById('editHint');
-  const hintClose = document.getElementById('hintClose');
-  try { if (localStorage.getItem(HINT_KEY) === '1' && hintEl2) hintEl2.setAttribute('data-gone', '1'); } catch (e) {}
-  if (hintClose) hintClose.addEventListener('click', () => {
-    if (hintEl2) hintEl2.setAttribute('data-gone', '1');
-    try { localStorage.setItem(HINT_KEY, '1'); } catch (e) {}
   });
 
   const unlockTitle = document.getElementById('unlockTitle');
@@ -2749,6 +2729,11 @@ ${sections}
   const acctForm = document.getElementById('acctForm') as HTMLFormElement | null;
   const acctMsg = document.getElementById('acctMsg');
   const acctMsg2 = document.getElementById('acctMsg2');
+  // Round 9 (Antonio): "Saved." used to sit there forever, which once got in
+  // the way of a real tap on Delete account right after. Auto-clear it after
+  // a couple seconds -- but only if it is still the same "ok" confirmation
+  // when the timer fires, so it never wipes a later error or "Deleting...".
+  let acctMsg2ClearTimer: ReturnType<typeof setTimeout> | undefined;
   const listSwitch = document.getElementById('listSwitch');
   const lsPills = document.getElementById('lsPills');
   const lsNewBtn = document.getElementById('lsNewBtn');
@@ -2965,6 +2950,94 @@ ${sections}
     if (show) renderPills();
   }
 
+  /* ----- list reorder (drag the handle left or right, Lists Delete/Done
+     mode only). Same concept as the checklist's own task-drag, but the pills
+     live in a horizontal, wrapping row: placement tracks the nearest pill by
+     2D center distance instead of just top/bottom, and the shaft+chevrons
+     icon lies on its side to match (Antonio, round 9). */
+  function makePillDragHandle(pill: HTMLElement, name: string): HTMLButtonElement {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'ls-drag';
+    b.setAttribute('aria-label', 'Drag to reorder ' + name);
+    b.innerHTML = '<svg viewBox="0 0 22 14" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h18"/><path d="M6 3 2 7l4 4"/><path d="M16 3l4 4-4 4"/></svg>';
+    initPillDrag(b, pill);
+    return b;
+  }
+  function initPillDrag(handle: HTMLElement, pill: HTMLElement) {
+    handle.addEventListener('pointerdown', (ev: PointerEvent) => {
+      if (!listSwitch || !listSwitch.classList.contains('deleting')) return;
+      const ul = lsPills as HTMLElement | null; if (!ul) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      const grabX = ev.clientX - pill.getBoundingClientRect().left;
+      const grabY = ev.clientY - pill.getBoundingClientRect().top;
+      pill.classList.add('dragging');
+      document.body.classList.add('dragging-row');
+
+      const place = (clientX: number, clientY: number) => {
+        pill.style.transform = '';
+        const nat = pill.getBoundingClientRect();
+        const wantLeft = clientX - grabX;
+        const wantTop = clientY - grabY;
+        const cx = wantLeft + nat.width / 2;
+        const cy = wantTop + nat.height / 2;
+        const sibs = Array.from(ul.children).filter((n) => n !== pill) as HTMLElement[];
+        let closest: HTMLElement | null = null;
+        let closestDist = Infinity;
+        sibs.forEach((sib) => {
+          const r = sib.getBoundingClientRect();
+          const d = Math.hypot(cx - (r.left + r.width / 2), cy - (r.top + r.height / 2));
+          if (d < closestDist) { closestDist = d; closest = sib; }
+        });
+        if (closest) {
+          const r = (closest as HTMLElement).getBoundingClientRect();
+          const before = new Map<HTMLElement, DOMRect>();
+          sibs.forEach((s) => before.set(s, s.getBoundingClientRect()));
+          if (cx < r.left + r.width / 2) ul.insertBefore(pill, closest);
+          else ul.insertBefore(pill, (closest as HTMLElement).nextSibling);
+          sibs.forEach((s) => {
+            const before2 = before.get(s); if (!before2) return;
+            const after = s.getBoundingClientRect();
+            const dx = before2.left - after.left, dy = before2.top - after.top;
+            if (!dx && !dy) return;
+            s.style.transition = 'none';
+            s.style.transform = `translate(${dx}px, ${dy}px)`;
+            requestAnimationFrame(() => { s.style.transition = 'transform 0.16s ease'; s.style.transform = ''; });
+          });
+        }
+        pill.style.transform = '';
+        const now = pill.getBoundingClientRect();
+        pill.style.transform = `translate(${(wantLeft - now.left).toFixed(1)}px, ${(wantTop - now.top).toFixed(1)}px) scale(1.03)`;
+      };
+
+      pill.style.transition = 'transform 0.12s ease, box-shadow 0.12s ease';
+      place(ev.clientX, ev.clientY);
+      window.setTimeout(() => { if (pill.classList.contains('dragging')) pill.style.transition = ''; }, 130);
+      const move = (e: PointerEvent) => { e.preventDefault(); place(e.clientX, e.clientY); };
+      const up = () => {
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', up);
+        document.removeEventListener('pointercancel', up);
+        pill.style.transition = 'transform 0.16s ease';
+        pill.style.transform = '';
+        window.setTimeout(() => { pill.style.transition = ''; }, 190);
+        pill.classList.remove('dragging');
+        document.body.classList.remove('dragging-row');
+        savePillOrderFromDom();
+      };
+      document.addEventListener('pointermove', move, { passive: false });
+      document.addEventListener('pointerup', up);
+      document.addEventListener('pointercancel', up);
+    });
+  }
+  function savePillOrderFromDom() {
+    if (!lsPills) return;
+    const order = Array.from(lsPills.children).map((p) => (p as HTMLElement).dataset.id || '');
+    const reg = loadReg();
+    reg.lists.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+    saveReg(reg);
+  }
+
   let pillArmTimer: ReturnType<typeof setTimeout> | undefined;
   function renderPills() {
     if (!lsPills || !acct.email) return;
@@ -2981,13 +3054,15 @@ ${sections}
       const pill = document.createElement('button');
       pill.type = 'button';
       pill.className = 'ls-pill' + (l.id === reg.active ? ' is-on' : '');
+      pill.dataset.id = l.id;
       const name = document.createElement('span');
       name.className = 'ls-name';
       name.textContent = l.n;
       pill.appendChild(name);
       if (l.id !== reg.active) {
         pill.addEventListener('click', (e) => {
-          if ((e.target as HTMLElement).classList.contains('ls-x')) return;
+          const t = e.target as HTMLElement;
+          if (t.classList.contains('ls-x') || t.closest('.ls-drag')) return;
           switchList(l.id);
         });
         // Deleting a whole list is the most destructive tap on the page:
@@ -3009,6 +3084,13 @@ ${sections}
         });
         pill.appendChild(x);
       }
+      // Round 9 (Antonio): a reorder handle after the delete x, same idea as
+      // the checklist's own drag handle, but sideways since pills sit in a
+      // horizontal row. Lives in the same Delete/Done mode as the x -- one
+      // toggle reveals both, same pattern as the checklist's Edit toggle
+      // revealing pencil + drag + remove together. On for every pill,
+      // including the active one, so the active list can move too.
+      pill.appendChild(makePillDragHandle(pill, l.n));
       lsPills.appendChild(pill);
     });
     // At the cap the "+ New list" affordance disappears entirely: a dead
@@ -3338,7 +3420,14 @@ ${sections}
           acct.artist = artist;
           try { localStorage.setItem('SMG_ARTIST', artist.split(/\s+/)[0]); } catch (e) { /* blocked */ }
           updateAcctUI();
-          if (acctMsg2) { acctMsg2.textContent = instagram ? 'Saved. We will happily follow your work.' : 'Saved.'; acctMsg2.className = 'acct-msg ok'; }
+          if (acctMsg2) {
+            acctMsg2.textContent = instagram ? 'Saved. We will happily follow your work.' : 'Saved.';
+            acctMsg2.className = 'acct-msg ok';
+            if (acctMsg2ClearTimer) clearTimeout(acctMsg2ClearTimer);
+            acctMsg2ClearTimer = setTimeout(() => {
+              if (acctMsg2 && acctMsg2.classList.contains('ok')) { acctMsg2.textContent = ''; acctMsg2.className = 'acct-msg'; }
+            }, 2200);
+          }
           if (typeof (window as any).gtag === 'function') {
             (window as any).gtag('event', 'account_profile', { placement: 'checklist' });
           }
