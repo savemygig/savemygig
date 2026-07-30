@@ -80,23 +80,16 @@ import BetaNotice from '../components/BetaNotice.astro';
       </nav>
 
       <BetaNotice variant="line" />
-
-      <p class="dim" style="font-size:0.86rem;margin-bottom:2.5rem">
-        Gig already over and files lost? <a href="/recovery">Data recovery is its own path</a>.
-      </p>
     </section>
-
-    <p class="emerg-lead">
-      Emergency guidance when USB drives fail on Pioneer CDJ-3000, CDJ-2000, XDJ units or during Rekordbox export.
-    </p>
-
-    <p class="dim emerg-note">
-      Designed for working DJs facing USB errors, emergency loop mode, Rekordbox export issues or corrupted drives.
-    </p>
 
     <!-- Collapse doctrine (universalized 2026-07-28): the common-problems
          list ships CLOSED. The header is the index; a tap opens the list.
-         Antonio's call on the emergency-tree preview review. -->
+         Antonio's call on the emergency-tree preview review.
+         ORDER (Antonio, 2026-07-30): doors -> IN TESTING notice -> this
+         list -> the keyword-lead paragraph -> "files already lost" LAST.
+         Someone on /emergency already knows what the project is, so the
+         two re-explaining paragraphs that used to sit here were cut to
+         one. -->
     <section class="emerg-problems">
       <details class="acc-sec">
         <summary><h2 class="acc-h2">Common CDJ &amp; XDJ USB problems</h2><span class="acc-chev" aria-hidden="true"></span></summary>
@@ -113,6 +106,14 @@ import BetaNotice from '../components/BetaNotice.astro';
         </div>
       </details>
     </section>
+
+    <p class="emerg-lead">
+      Emergency guidance for USB failures, Rekordbox export issues, emergency loop mode and corrupted drives on Pioneer CDJ-3000, CDJ-2000 and XDJ units.
+    </p>
+
+    <p class="dim" style="font-size:0.86rem;margin-top:2rem">
+      Gig already over and files lost? <a href="/recovery">Data recovery is its own path</a>.
+    </p>
   </main>
 </Base>
 
@@ -123,7 +124,6 @@ import BetaNotice from '../components/BetaNotice.astro';
   .emerg-triage { margin-top: 1rem; }
   .emerg-triage-h { font-size: clamp(1.5rem, 5vw, 2rem); text-transform: none; letter-spacing: -0.01em; margin-bottom: 0.4rem; border: none; }
   .emerg-triage-sub { font-size: 0.95rem; margin-bottom: 1.4rem; }
-  .emerg-note { font-size: 0.95rem; line-height: 1.6; margin: 2.4rem 0; }
   .emerg-problems { margin-top: 1rem; }
   .emerg-problems-h { font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--edge); padding-bottom: 0.6rem; margin-bottom: 1rem; }
   .problem-list a { color: var(--text); text-decoration: none; }
