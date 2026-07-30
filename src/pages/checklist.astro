@@ -204,8 +204,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          never sees a flash of it before JS runs. -->
     <div class="backup-note" id="backupNote" role="note" hidden>
       <p class="bn-t">
-        <strong class="bn-h">Have a backup.</strong>
-        This is technology, and technology can fail, including our servers. Download or print your list before you leave, and don’t rely on this site alone on gig night. Keeping a copy is on you to make. See the <a href="/legal/disclaimer">disclaimer</a>.
+        <!-- ROUND 11.5 FOLLOW-UP 2: reworded after tester Maya read the
+             original ("technology can fail, including our servers") as
+             hardcore/distrustful. Antonio proposed a friendlier version
+             built around "plan b and plan c" / "triple backed up"; this is
+             that idea tightened into house style. Same underlying message
+             (no uptime guarantee, backup is on the DJ), same link to the
+             permanent, non-dismissible legal language at /legal/disclaimer
+             -- only the ON-PAGE reminder's tone changed. -->
+        <strong class="bn-h">Strong advice.</strong>
+        Even the best tech can fail, ours included. Have a plan B and a plan C: download your list and keep a printed copy before you leave. That’s triple backed up. See the <a href="/legal/disclaimer">disclaimer</a>.
       </p>
       <button type="button" class="bn-close" id="bnClose" aria-label="Dismiss this notice">&times;</button>
     </div>
