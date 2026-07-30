@@ -1355,6 +1355,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
     touch-action: manipulation;
   }
+  /* Round 8 (Antonio): clicking the (i) should show which controls have
+     extra instructions all at once, not one at a time as each is
+     hovered/tapped. Placed AFTER .acct-chip.is-synced and .mode-btn.is-on
+     on purpose -- both tie this at the same (0,2,0) specificity, and this
+     deliberately wins that tie so the green "Synced" look and the white
+     "selected mode" fill both give way to the same amber wash while info
+     mode is active. Pure class toggle, nothing else about those elements'
+     state changes, so everything reverts exactly the moment info mode
+     turns off. */
+  .explain-target.info-lit { border: 1px solid var(--amber); background: var(--amber-dim); }
 
   @media (prefers-reduced-motion: reduce) {
     .meter-fill, .box, .box::after, .readiness-pct, .mode-btn, .chev, .ls-chev { transition: none; }
@@ -2200,6 +2210,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       window.addEventListener('scroll', onScroll, true);
     }, 0);
     try { if (navigator.vibrate) navigator.vibrate(10); } catch (e) { /* not supported */ }
+  }
+
+  // Round 8 (Antonio): while info mode is on (either flavor), every covered
+  // control should be visibly lit at once, so a DJ can see at a glance what
+  // has extra instructions instead of discovering it one hover/tap at a
+  // time. Called from both the desktop and touch branches of the ⓘ toggle
+  // below.
+  function setAllExplainLit(on: boolean) {
+    EXPLAIN_TARGETS.forEach((_fn, el) => el.classList.toggle('info-lit', on));
   }
 
   function attachExplainer(el: HTMLElement | null, textFn: () => string) {
@@ -3462,14 +3481,18 @@ ${sections}
   // exactly happens is not obvious from a two-word label); Edit reuses the
   // SAME copy as its own dismissible hint, so a DJ who dismissed that hint
   // forever still has a way back to it; the mode buttons reuse MODE_COPY_MAP,
-  // the one place that copy lives. The Sync chip is deliberately NOT covered
-  // here, tapping it already opens a card that explains itself.
+  // the one place that copy lives.
   attachExplainer(resetBtn, () => 'Puts the list back to how it started. In Base and Advanced that clears every tick. In Custom it also undoes renames, reorders, and any items you added or removed.');
   attachExplainer(pdfBtn, () => 'Saves your list exactly as it looks right now, current mode, order, names and ticks, as a printable PDF.');
   attachExplainer(backupBtn, () => 'Emails your list to your inbox with a link that loads it back on any device. Needs a quick free registration first.');
   attachExplainer(editToggle, () => 'Add notes, create sections, add items, rename, reorder or delete. Save your list when you’re done!');
   attachExplainer(lsDelBtn, () => 'Turns on delete mode for your saved lists. Tap the × on a list once to arm it, tap again to delete it. Your active list can’t be deleted this way, switch to another list first.');
   modeBtns.forEach((b) => attachExplainer(b, () => (MODE_COPY_MAP[b.dataset.modeSet || 'basic'] || MODE_COPY_MAP.basic).f));
+  // Round 8 (Antonio): Sync used to be deliberately excluded ("tapping it
+  // already opens a card that explains itself") -- he asked for it to be
+  // covered too, same as everything else, since hovering it in place is
+  // faster than opening the card just to remember what it does.
+  attachExplainer(acctLine, () => 'Sync lets you sign in once, no password, and keep your list saved to your account. It follows you to any device you sign in on.');
 
   // The "ⓘ" toggle (round 3: shown on touch AND desktop now, doing two
   // different jobs). Touch: a plain on/off, never persisted. Turning it on
@@ -3499,6 +3522,7 @@ ${sections}
         explainInfoBtn.classList.add('mode-active');
         explainInfoBtn.setAttribute('aria-pressed', 'true');
         showExplain(explainInfoBtn, 'Leave your cursor over anything for a second to read its instructions.');
+        setAllExplainLit(true);
         return;
       }
       infoModeOn = !infoModeOn;
@@ -3506,6 +3530,7 @@ ${sections}
       explainInfoBtn.setAttribute('aria-pressed', String(infoModeOn));
       if (infoModeOn) showExplain(explainInfoBtn, 'Tap any button to have its function explained. Tap ⓘ again to go back to normal.');
       else closeExplain();
+      setAllExplainLit(infoModeOn);
     });
     if (HAS_HOVER) explainInfoBtn.addEventListener('mouseleave', () => {
       if (!desktopInfoOn) return;
@@ -3513,6 +3538,7 @@ ${sections}
       explainInfoBtn.classList.remove('mode-active');
       explainInfoBtn.setAttribute('aria-pressed', 'false');
       closeExplain();
+      setAllExplainLit(false);
     });
   }
 
