@@ -2848,6 +2848,26 @@ ${sections}
 
   async function syncNow() {
     if (!acct.email) return;
+    // Round 7 BUG FIX (Antonio: removed checklist sections were coming
+    // back after sync). Root cause: this used to PULL first, then push.
+    // Any local edit made in the last few seconds -- still sitting in
+    // bumpActive()'s 2.5s debounce, or just made right as a sign-in
+    // triggered this same syncNow() call -- had not reached the server
+    // yet. If the server happened to hold an older blob for this list
+    // (from before that edit) with a HIGHER updated_at than this device's
+    // pre-push local `u` -- the ordinary state right after a fresh local
+    // edit, before its own push has landed -- the pull branch below would
+    // treat that stale server copy as newer and silently overwrite the
+    // local edit, including anything removed via the x. Reproduced with a
+    // mocked stale-but-newer-timestamp server response; fixed by pushing
+    // BEFORE pulling. This is always safe to do in this order: the server
+    // enforces strictly-newer on its own end (see sync.js), so an older
+    // local push here is just a no-op there, never a rollback of
+    // something another device already stored more recently. Pushing
+    // first only ever helps: it gives this device's own latest edits a
+    // chance to become "the newest" on the server before any pull could
+    // mistake "not pushed yet" for "doesn't exist."
+    await pushAll(false);
     let server: { id: string; name: string; blob: string; updated_at: number }[] = [];
     try {
       const res = await fetch('/api/sync');
@@ -2871,7 +2891,6 @@ ${sections}
       }
     });
     saveReg(reg);
-    await pushAll(false); // anything locally newer or missing on the server
     setDotSynced(true);
     if (activeChanged) location.reload(); // fresh render from the pulled state; u now matches, so no loop
     else renderPills();
