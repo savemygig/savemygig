@@ -67,7 +67,25 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+/* Sitewide, affects every page (Antonio, live report from a second tester on
+   iPhone 15 Pro Safari): "she could, with the finger, swipe left and right
+   the site so it doesn't look nice." Checked for real horizontal overflow
+   first (Playwright/Chromium at the same 393px width: scrollWidth === 393,
+   zero elements extending past the viewport edge) -- nothing on the page is
+   actually too wide. This is iOS Safari's own horizontal rubber-band/
+   overscroll gesture, which the page never explicitly disabled. overflow-x:
+   hidden + overscroll-behavior-x: none together are the standard fix (belt
+   and suspenders: overscroll-behavior-x is the modern, precise tool for
+   exactly this; overflow-x: hidden is the older fallback and also mops up
+   any stray sub-pixel overflow). Neither breaks a genuine nested horizontal
+   scroller like the checklist's own .ls-pills row -- that keeps its own
+   local overflow-x: auto and is unaffected by the ancestor being clipped. */
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
 
 body {
   background: var(--bg);
@@ -78,6 +96,8 @@ body {
   min-height: 100dvh;
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
 }
 
 /* ---------- Type ---------- */
