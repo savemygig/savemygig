@@ -39,9 +39,28 @@ const schema = {
       <span>DJM-V10</span>
     </nav>
 
-    <div class="status-line">DJM-V10</div>
-    <h1 class="rb-h1">DJM-V10, <span class="accent">the field manual</span></h1>
-    <p class="dim rb-updated">Last verified: {UPDATED}</p>
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line">DJM-V10</div>
+        <h1 class="rb-h1">DJM-V10, <span class="accent">the field manual</span></h1>
+        <p class="dim rb-updated">Last verified: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="/images/djm-v10-panel-full.webp"
+        target="_blank"
+        rel="noopener"
+        aria-label="Open a larger photo of the DJM-V10 control panel"
+      >
+        <img
+          src="/images/djm-v10-panel-thumb.webp"
+          alt="Pioneer DJ DJM-V10 six-channel mixer control panel, top view"
+          width="375"
+          height="400"
+          loading="lazy"
+        />
+      </a>
+    </div>
 
     <div class="panel panel-go">
       <p style="margin:0">
@@ -297,6 +316,18 @@ const schema = {
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  .hw-head { display: flex; gap: 1.25rem; align-items: flex-start; justify-content: space-between; }
+  .hw-head-text { flex: 1 1 auto; min-width: 0; }
+  .hw-thumb {
+    flex: 0 0 auto; width: 110px; height: 110px; background: #f3f1ec;
+    border: 1px solid var(--edge); border-radius: 4px; padding: 0.5rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hw-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { flex-direction: column; }
+    .hw-thumb { align-self: flex-start; margin-top: 0.9rem; width: 92px; height: 92px; }
+  }
   main p { color: var(--text-dim); line-height: 1.65; }
   main p strong { color: var(--text); }
   .rb-errors { margin-bottom: 0; }
