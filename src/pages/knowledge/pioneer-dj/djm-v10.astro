@@ -316,18 +316,28 @@ const schema = {
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
-  .hw-head { display: flex; gap: 1.5rem; align-items: flex-start; justify-content: space-between; }
-  .hw-head-text { flex: 1 1 auto; min-width: 0; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning, not sized/aligned by a flex row. A flex row's height comes
+     from whichever child is taller, and which one that is (text vs photo)
+     flips depending on how many lines the headline wraps to, which changes
+     with viewport width -- that flip was leaving a gap between "Last
+     verified" and the green panel at in-between widths (Antonio,
+     2026-07-31). Anchoring to hw-head's own bottom edge (always exactly
+     where the text naturally ends, since hw-thumb is out of flow and
+     doesn't affect that height) means the photo touches the green panel
+     every time, at every width, without any height-race. flow-root on the
+     parent stops a child's collapsing bottom margin from throwing off the
+     anchor. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
   .hw-thumb {
-    flex: 0 0 auto; width: 200px; height: 200px; margin-top: 2.6rem;
-    display: flex; align-items: flex-end; justify-content: flex-end;
-    position: relative; z-index: 3;
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
   }
   .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
   @media (max-width: 640px) {
-    .hw-head { flex-direction: column; align-items: flex-start; gap: 0; }
+    .hw-head { padding-right: 0; }
     .hw-thumb {
-      align-self: center; width: 200px; height: 200px; margin-top: 0.5rem;
+      position: static; width: 200px; height: 200px; margin: 0.5rem auto 0;
       align-items: center; justify-content: center;
     }
   }
