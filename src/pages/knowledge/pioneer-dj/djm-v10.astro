@@ -55,8 +55,8 @@ const schema = {
         <img
           src="/images/djm-v10-panel-thumb.webp"
           alt="Pioneer DJ DJM-V10 six-channel mixer control panel, top view"
-          width="375"
-          height="400"
+          width="656"
+          height="700"
           loading="lazy"
         />
       </a>
@@ -316,17 +316,13 @@ const schema = {
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
-  .hw-head { display: flex; gap: 1.25rem; align-items: flex-start; justify-content: space-between; }
+  .hw-head { display: flex; gap: 1.5rem; align-items: center; justify-content: space-between; }
   .hw-head-text { flex: 1 1 auto; min-width: 0; }
-  .hw-thumb {
-    flex: 0 0 auto; width: 110px; height: 110px; background: #f3f1ec;
-    border: 1px solid var(--edge); border-radius: 4px; padding: 0.5rem;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .hw-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .hw-thumb { flex: 0 0 auto; width: 230px; display: block; }
+  .hw-thumb img { width: 100%; height: auto; display: block; }
   @media (max-width: 640px) {
-    .hw-head { flex-direction: column; }
-    .hw-thumb { align-self: flex-start; margin-top: 0.9rem; width: 92px; height: 92px; }
+    .hw-head { flex-direction: column; align-items: flex-start; }
+    .hw-thumb { align-self: center; margin-top: 0.6rem; width: 200px; }
   }
   main p { color: var(--text-dim); line-height: 1.65; }
   main p strong { color: var(--text); }
