@@ -39,9 +39,28 @@ const schema = {
       <span>CDJ-3000X</span>
     </nav>
 
-    <div class="status-line">CDJ-3000X</div>
-    <h1 class="rb-h1">CDJ-3000X, <span class="accent">the field manual</span></h1>
-    <p class="dim rb-updated">Last verified: {UPDATED}</p>
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line">CDJ-3000X</div>
+        <h1 class="rb-h1">CDJ-3000X, <span class="accent">the field manual</span></h1>
+        <p class="dim rb-updated">Last verified: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="/images/cdj-3000x-panel-full.webp"
+        target="_blank"
+        rel="noopener"
+        aria-label="Open a larger photo of the CDJ-3000X control panel"
+      >
+        <img
+          src="/images/cdj-3000x-panel-thumb.webp"
+          alt="AlphaTheta CDJ-3000X media player control panel, top view"
+          width="493"
+          height="700"
+          loading="lazy"
+        />
+      </a>
+    </div>
 
     <div class="panel panel-go">
       <p style="margin:0">
@@ -279,6 +298,14 @@ const schema = {
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  .hw-head { display: flex; gap: 1.5rem; align-items: center; justify-content: space-between; }
+  .hw-head-text { flex: 1 1 auto; min-width: 0; }
+  .hw-thumb { flex: 0 0 auto; width: 230px; display: block; position: relative; z-index: 3; }
+  .hw-thumb img { width: 100%; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { flex-direction: column; align-items: flex-start; }
+    .hw-thumb { align-self: center; margin-top: 0.6rem; width: 200px; }
+  }
   main p { color: var(--text-dim); line-height: 1.65; }
   main p strong { color: var(--text); }
   .rb-errors { margin-bottom: 0; }
