@@ -38,9 +38,28 @@ const schema = {
       <span>DJM-A9</span>
     </nav>
 
-    <div class="status-line">DJM-A9</div>
-    <h1 class="rb-h1">DJM-A9, <span class="accent">the field manual</span></h1>
-    <p class="dim rb-updated">Last verified: {UPDATED}</p>
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line">DJM-A9</div>
+        <h1 class="rb-h1">DJM-A9, <span class="accent">the field manual</span></h1>
+        <p class="dim rb-updated">Last verified: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="/images/djm-a9-panel-full.webp"
+        target="_blank"
+        rel="noopener"
+        aria-label="Open a larger photo of the DJM-A9 control panel"
+      >
+        <img
+          src="/images/djm-a9-panel-thumb.webp"
+          alt="Pioneer DJ DJM-A9 four-channel mixer control panel, top view"
+          width="445"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
 
     <div class="panel panel-go">
       <p style="margin:0">
@@ -323,6 +342,29 @@ const schema = {
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning, not sized/aligned by a flex row. That's deliberate: a flex
+     row's height comes from whichever child is taller, and which one that
+     is (text vs photo) flips depending on how many lines the headline wraps
+     to, which changes with viewport width. That flip was leaving a gap
+     between "Last verified" and the green panel at in-between widths
+     (Antonio, 2026-07-31). Anchoring to hw-head's own bottom edge (which
+     always equals wherever the text naturally ends, since hw-thumb is out
+     of flow and doesn't affect that height) means the photo touches the
+     green panel every time, at every width, without any height-race. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: static; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
   main p { color: var(--text-dim); line-height: 1.65; }
   main p strong { color: var(--text); }
   .rb-errors { margin-bottom: 0; }
