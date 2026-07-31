@@ -154,7 +154,7 @@ const entityGraph = {
         <a href="/prepare" class:list={[{ 'nav-on': path.startsWith('/prepare') }]}>Prevention</a>
         <a href="/recovery" class:list={[{ 'nav-on': path.startsWith('/recovery') }]}>Recovery</a>
         <a href="/knowledge" class:list={[{ 'nav-on': path.startsWith('/knowledge') }]}>Knowledge</a>
-        <a href="/gear" class:list={['nav-more', { 'nav-on': path.startsWith('/gear') }]}>Gear</a>
+        <a href="/gear" class:list={['nav-more', 'nav-gear-hide-mobile', { 'nav-on': path.startsWith('/gear') }]}>Gear</a>
         <a href="/about" class:list={['nav-more', { 'nav-on': path.startsWith('/about') }]}>About</a>
       </nav>
     </div>
@@ -712,6 +712,12 @@ const entityGraph = {
     .nav-links.open { display: flex; }
     .nav-links a { padding: 0.8rem 0; border-bottom: 1px solid var(--edge-soft); font-size: 0.95rem; }
     .nav-links a:last-child { border-bottom: none; }
+    /* Gear out of the mobile drawer (Antonio, 2026-07-31): on a phone,
+       "Gear" next to Checklist/Emergency/Recovery reads like it's about DJ
+       equipment, not the hardware knowledge base. Desktop already hides it
+       from the top bar via .nav-more; this just closes the mobile gap. Not
+       removed from the DOM, still reachable via /gear and in-page links. */
+    .nav-gear-hide-mobile { display: none; }
   }
 
   /* Narrowest phones: with both header buttons pinned at 44px, the brand must
