@@ -316,12 +316,12 @@ const schema = {
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
-  .hw-head { display: flex; gap: 1.5rem; align-items: flex-start; justify-content: space-between; margin-bottom: -22px; }
+  .hw-head { display: flex; gap: 1.5rem; align-items: center; justify-content: space-between; }
   .hw-head-text { flex: 1 1 auto; min-width: 0; }
   .hw-thumb { flex: 0 0 auto; width: 230px; display: block; position: relative; z-index: 3; }
   .hw-thumb img { width: 100%; height: auto; display: block; }
   @media (max-width: 640px) {
-    .hw-head { flex-direction: column; align-items: flex-start; margin-bottom: -14px; }
+    .hw-head { flex-direction: column; align-items: flex-start; }
     .hw-thumb { align-self: center; margin-top: 0.6rem; width: 200px; }
   }
   main p { color: var(--text-dim); line-height: 1.65; }
