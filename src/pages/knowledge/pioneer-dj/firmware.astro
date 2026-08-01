@@ -1,0 +1,277 @@
+---
+import Base from '../../../layouts/Base.astro';
+import EmailCapture from '../../../components/EmailCapture.astro';
+import { CHECKED, FIRMWARE_ISSUES } from '../../../data/facts.js';
+
+// THE FIRMWARE ISSUE MATRIX.
+//
+// Antonio's brief (2026-08-01): the site needs an asset worth linking to, not
+// just pages waiting to be found. This is it. Every fact was already verified
+// and stored in facts.js, but scattered across six model pages inside closed
+// accordions, so it was effectively invisible. AlphaTheta publishes this data
+// only as one change-history PDF per model; nobody aggregates it into a
+// lookup. That gap is the whole reason this page can earn citations.
+//
+// The job to be done, in one sentence: a DJ reads a version number off a deck
+// in a booth and wants to know, in seconds, what is broken on it.
+//
+// No new facts are introduced here. The page is a rendering of FIRMWARE_ISSUES.
+const UPDATED = CHECKED;
+
+// Version compare that handles 1.9 vs 1.10 correctly (string sort does not).
+function cmpVersion(a, b) {
+  const pa = String(a).split('.').map(Number);
+  const pb = String(b).split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d !== 0) return d;
+  }
+  return 0;
+}
+
+// The single most useful number per model: the version at or above which every
+// documented issue below is already resolved. Computed, not hand-maintained,
+// so it stays correct when a new entry is added to facts.js.
+const models = FIRMWARE_ISSUES.map(m => {
+  const issues = [...m.issues].sort((a, b) => cmpVersion(b.fixedIn, a.fixedIn));
+  return { ...m, issues, safeFloor: issues.length ? issues[0].fixedIn : null };
+});
+
+const totalIssues = models.reduce((n, m) => n + m.issues.length, 0);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/firmware#article',
+  headline: 'CDJ and DJM firmware issues, by version',
+  description: 'Which documented faults are live on a Pioneer DJ or AlphaTheta player or mixer at which firmware version, aggregated from AlphaTheta’s own change histories.',
+  author: { '@id': 'https://www.savemygig.com/#antonio' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-01',
+  dateModified: '2026-08-01',
+  inLanguage: 'en',
+  mainEntityOfPage: 'https://www.savemygig.com/knowledge/pioneer-dj/firmware',
+};
+---
+<Base
+  title="CDJ & DJM Firmware Issues by Version: What's Broken on That Deck | Save My Gig!"
+  description="Read the firmware version off a CDJ or DJM and see exactly which documented faults are still live on it. Aggregated from AlphaTheta's own change histories, per model, with the version that fixed each one."
+  path="/knowledge/pioneer-dj/firmware"
+  crumbName="Firmware issues by version"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span>
+      <a href="/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>Firmware issues</span>
+    </nav>
+
+    <div class="status-line sl-desktop">FIRMWARE MATRIX</div>
+    <h1 class="rb-h1">What's broken on that deck, <span class="accent">by version</span></h1>
+    <p class="dim rb-updated">Reviewed: {UPDATED}</p>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> Read the firmware version off the unit,
+        find it below, and you know what can bite you tonight. Every entry comes
+        from AlphaTheta's own published change histories, {totalIssues} documented
+        faults across {models.length} models. On gear you control, sit at or above
+        the safe version shown for it. On gear you do not control, this tells you
+        what to plan around.
+      </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
+    </div>
+
+    <div class="fw-how">
+      <h2 class="fw-how-h">Finding the version on the unit</h2>
+      <p>
+        On a CDJ or DJM, the firmware version is in the utility menu, and on
+        players it is also shown on the startup screen while the unit boots.
+        Check it at soundcheck, not at doors. If a venue deck sits below the
+        safe version, you cannot fix that on the night, but you can stop it
+        surprising you.
+      </p>
+    </div>
+
+    {models.map(m => (
+      <section class="fw-model">
+        <div class="fw-head">
+          <h2 class="fw-model-h">{m.model}</h2>
+          {m.safeFloor && (
+            <span class="fw-floor">
+              Clear at <strong>{m.safeFloor}</strong> or later
+            </span>
+          )}
+        </div>
+
+        {m.warning && (
+          <div class="fw-warn">
+            <span class="fw-warn-v">{m.warning.version}</span>
+            <span>
+              {m.warning.text}{' '}
+              <a href={m.warning.sourceUrl} target="_blank" rel="noopener">Official notice</a>
+            </span>
+          </div>
+        )}
+
+        {m.issues.length === 0 ? (
+          <p class="fw-none">{m.noneNote}</p>
+        ) : (
+          <table class="fw-table">
+            <thead>
+              <tr>
+                <th scope="col">Fixed in</th>
+                <th scope="col">Area</th>
+                <th scope="col">What was happening below that version</th>
+              </tr>
+            </thead>
+            <tbody>
+              {m.issues.map(i => (
+                <tr>
+                  <td class="fw-v"><span class="fw-vbadge">{i.fixedIn}</span></td>
+                  <td class="fw-area">
+                    {i.area}
+                    {i.midSet && <span class="fw-live" title="Can interrupt a set in progress">mid-set</span>}
+                  </td>
+                  <td>{i.symptom}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {m.note && <p class="fw-note">{m.note}</p>}
+
+        <p class="fw-links">
+          <a href={m.href}>{m.model} field manual</a>
+          <a href={m.source} target="_blank" rel="noopener">AlphaTheta change history</a>
+        </p>
+      </section>
+    ))}
+
+    <div class="panel">
+      <p style="margin:0 0 0.6rem"><strong>How to read this</strong></p>
+      <p style="margin:0 0 0.6rem">
+        A version in the "Fixed in" column is the release that resolved that
+        fault. Anything below it still has the fault. Anything at or above it
+        does not.
+      </p>
+      <p style="margin:0">
+        The <span class="fw-live fw-live-inline">mid-set</span> marker is ours,
+        not AlphaTheta's. It flags faults whose documented symptom can interrupt
+        a set already in progress, so you can tell a real risk from an
+        inconvenience at a glance. Everything else on this page is the vendor's
+        own wording, condensed.
+      </p>
+    </div>
+
+    <p class="dim fw-foot">
+      Faults only. Feature additions are left out on purpose, because a missing
+      feature does not end a set. Models appear here once their change history
+      has been read against the primary source, which is why this list is
+      shorter than the catalogue. Found something we have wrong?
+      <a href="/feedback">Tell us</a> and we will check it against the source.
+    </p>
+
+    <EmailCapture />
+  </main>
+
+  <style>
+    /* This page puts the eyebrow directly under the breadcrumb rather than
+       inside an .hw-head block, so it needs the gap the photo pages get for
+       free from that wrapper. */
+    .status-line { margin-top: 0.4rem; }
+    .rb-h1 { font-size: clamp(2.1rem, 6vw, 3.2rem); margin-bottom: 0.4rem; }
+    .rb-h1 .accent { font-size: 96%; }
+    .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+    main p { color: var(--text-dim); line-height: 1.65; }
+
+    .fw-how { margin: 2rem 0 0.6rem; }
+    .fw-how-h {
+      font-family: var(--font-display); font-size: 0.78rem; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint);
+      margin: 0 0 0.5rem;
+    }
+    .fw-how p { margin: 0; font-size: 0.95rem; }
+
+    .fw-model { margin-top: 2.4rem; }
+    .fw-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+      border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 0.9rem;
+    }
+    .fw-model-h { font-size: 1.35rem; margin: 0; line-height: 1.2; }
+    .fw-floor {
+      font-size: 0.82rem; color: var(--green);
+      font-weight: 600; white-space: nowrap;
+    }
+    .fw-floor strong { color: var(--green); }
+
+    /* The withdrawn-firmware callout. Uses the danger tone already defined
+       sitewide rather than a new colour, so it reads as the same alarm the
+       rest of the site uses. */
+    .fw-warn {
+      display: flex; gap: 0.8rem; align-items: flex-start;
+      background: var(--red-dim); border: 1px solid var(--red-border);
+      border-radius: var(--radius); padding: 0.9rem 1rem; margin-bottom: 1rem;
+      font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;
+    }
+    .fw-warn-v {
+      flex: 0 0 auto; font-weight: 800; color: var(--red);
+      font-family: var(--font-display); letter-spacing: 0.02em;
+    }
+
+    .fw-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .fw-table th {
+      text-align: left; font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-faint); font-weight: 700;
+      padding: 0 0.7rem 0.5rem 0; border-bottom: 1px solid var(--edge);
+    }
+    .fw-table td {
+      padding: 0.7rem 0.7rem 0.7rem 0; border-bottom: 1px solid var(--edge);
+      color: var(--text-dim); line-height: 1.55; vertical-align: top;
+    }
+    .fw-table tr:last-child td { border-bottom: none; }
+    .fw-v { white-space: nowrap; }
+    .fw-vbadge {
+      display: inline-block; font-family: var(--font-display); font-weight: 800;
+      font-size: 0.85rem; color: var(--text);
+      background: var(--surf-2); border: 1px solid var(--edge);
+      border-radius: var(--radius); padding: 0.15rem 0.5rem;
+    }
+    .fw-area { white-space: nowrap; color: var(--text); font-weight: 600; font-size: 0.85rem; }
+    .fw-live {
+      display: inline-block; margin-left: 0.45rem;
+      font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+      font-weight: 800; color: var(--red);
+      border: 1px solid var(--red-border); border-radius: var(--radius);
+      padding: 0.1rem 0.32rem; vertical-align: middle;
+    }
+    .fw-live-inline { margin-left: 0; }
+
+    .fw-none, .fw-note { font-size: 0.9rem; margin: 0.2rem 0 0; }
+    .fw-links { display: flex; gap: 1.2rem; flex-wrap: wrap; margin: 0.9rem 0 0; font-size: 0.85rem; }
+    .fw-foot { font-size: 0.85rem; margin: 1.6rem 0 2rem; }
+
+    /* Phones: the three-column table stops working around 640px, so each row
+       becomes a stacked block with the version badge leading. Same data, no
+       horizontal scroll, which matters because this page gets read in a booth
+       on a phone with one hand. */
+    @media (max-width: 640px) {
+      .fw-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+      .fw-table, .fw-table tbody, .fw-table tr, .fw-table td { display: block; width: 100%; }
+      .fw-table tr {
+        border-bottom: 1px solid var(--edge); padding: 0.8rem 0;
+      }
+      .fw-table tr:last-child { border-bottom: none; }
+      .fw-table td { border: none; padding: 0; }
+      .fw-v { display: inline-block; margin-right: 0.5rem; }
+      .fw-area { display: inline-block; margin-bottom: 0.35rem; }
+      .fw-head { flex-direction: column; gap: 0.2rem; }
+    }
+  </style>
+</Base>

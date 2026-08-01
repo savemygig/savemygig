@@ -92,6 +92,16 @@ const schema = {
       gear, and how to stop the same failure happening at your next gig.
     </p>
 
+    <!-- Cross-model entry point (2026-08-01). The firmware data was already on
+         every model page but locked inside closed accordions, so nobody found
+         it. Promoted here because "what is broken on this deck" is a question
+         that comes before "which model am I looking at". -->
+    <a class="pdj-matrix" href="/knowledge/pioneer-dj/firmware">
+      <span class="pdj-matrix-k">Across every model</span>
+      <span class="pdj-matrix-t">What's broken on that deck, by firmware version &rarr;</span>
+      <span class="pdj-matrix-b">Read the version off the unit and see which documented faults are still live on it.</span>
+    </a>
+
     <!-- Collapsible categories (Antonio): on a phone the six category
          headers ARE the index, tap one to expand it. On desktop there is
          room, so the inline script below opens everything before paint and
@@ -148,6 +158,24 @@ const schema = {
   .crumb a { color: var(--text-dim); text-decoration: none; }
   .crumb a:hover { color: var(--red); }
   .kb-lead { max-width: 42rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  /* Firmware matrix promo. Green (the site's "you are fine / go" tone) rather
+     than red: this is a prevention tool, not an alarm. */
+  .pdj-matrix {
+    display: block; text-decoration: none;
+    background: var(--green-dim); border: 1px solid var(--green-border);
+    border-radius: var(--radius); padding: 1.1rem 1.25rem; margin-bottom: 1.8rem;
+  }
+  .pdj-matrix-k {
+    display: block; font-family: var(--font-display); font-size: 0.68rem;
+    font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-faint); margin-bottom: 0.35rem;
+  }
+  .pdj-matrix-t {
+    display: block; color: var(--text); font-weight: 700;
+    font-size: 1.02rem; line-height: 1.3; margin-bottom: 0.3rem;
+  }
+  .pdj-matrix-b { display: block; color: var(--text-dim); font-size: 0.88rem; line-height: 1.55; }
+  .pdj-matrix:hover .pdj-matrix-t { color: var(--red); }
   .kb-h {
     font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
     margin: 0; flex: 1;

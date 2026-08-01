@@ -160,3 +160,89 @@ export const PLAYERS = [
   { m: 'OPUS-QUAD',      lib: 'OneLibrary',     exfat: 'Yes',                note: 'First OneLibrary player.' },
   { m: 'OMNIS-DUO',      lib: 'OneLibrary',     exfat: 'Yes',                note: '' },
 ];
+
+// ---------------------------------------------------------------------------
+// FIRMWARE ISSUE MATRIX (2026-08-01)
+//
+// WHY THIS EXISTS: every fact below already lived in this file, but scattered
+// across six separate model pages and buried inside collapsed accordions, so
+// nobody could answer the one question a DJ actually has in a booth: "the deck
+// says version X, what is broken on it?" AlphaTheta publishes this only as one
+// change-history PDF per model. Nobody aggregates it. This array is the
+// aggregation, and /knowledge/pioneer-dj/firmware renders it.
+//
+// FACT DISCIPLINE, unchanged: every entry restates a fix already recorded and
+// sourced in the model constants above. Nothing new is invented here. If a
+// symptom is not in AlphaTheta's own change history, it does not go in.
+//
+// `midSet` is the one editorial field: true when the documented symptom can
+// interrupt a set in progress (audio, playback, browsing, link). It is our
+// read of the vendor's own wording, not a vendor severity rating, and the page
+// says so.
+export const FIRMWARE_ISSUES = [
+  {
+    model: 'CDJ-3000',
+    href: '/knowledge/pioneer-dj/cdj-3000',
+    source: CDJ_3000.source,
+    warning: {
+      version: CDJ_3000.onelibraryWithdrawn,
+      text: 'Withdrawn by AlphaTheta. It added OneLibrary, then playlists failed to display for people exporting from older rekordbox. No music or data was deleted, and the player reverted to Device Library. Do not install this version.',
+      sourceUrl: CDJ_3000.sourceWithdrawal,
+    },
+    issues: [
+      { fixedIn: CDJ_3000.linkDjm2000nxsFix, area: 'Link', midSet: true, symptom: 'PRO DJ LINK connection with a DJM-2000NXS could fail.' },
+      { fixedIn: CDJ_3000.screenDeadFix, area: 'Display', midSet: true, symptom: 'Rare dead screen on power-on.' },
+      { fixedIn: CDJ_3000.stabilityFix, area: 'Audio', midSet: true, symptom: 'Occasional no-audio, display blackouts and system freezes on some units.' },
+      { fixedIn: CDJ_3000.browseWaitingFix, area: 'Browse', midSet: true, symptom: 'A "Waiting" popup could block the BROWSE screen entirely.' },
+      { fixedIn: CDJ_3000.emergencyLoopHotCueFix, area: 'Playback', midSet: true, symptom: 'Emergency Loop triggering wrongly during a Hot Cue pause.' },
+    ],
+  },
+  {
+    model: 'CDJ-3000X',
+    href: '/knowledge/pioneer-dj/cdj-3000x',
+    source: CDJ_3000X.source,
+    issues: [],
+    noneNote: 'A young unit. AlphaTheta has published no defect fix for it, so there is nothing to report here. This section stays empty until a documented one exists.',
+  },
+  {
+    model: 'CDJ-2000NXS2',
+    href: '/knowledge/pioneer-dj/cdj-2000nxs2',
+    source: CDJ_2000NXS2.source,
+    issues: [
+      { fixedIn: CDJ_2000NXS2.slipHotCueFix, area: 'Playback', midSet: false, symptom: 'A startup issue affecting SLIP HOT CUE behaviour.' },
+      { fixedIn: CDJ_2000NXS2.waveformColorFix, area: 'Display', midSet: false, symptom: 'Waveform colour selection went missing, then was restored.' },
+      { fixedIn: CDJ_2000NXS2.controlModeDropoutFix, area: 'Audio', midSet: true, symptom: 'Audio dropouts during Control Mode playback.' },
+    ],
+  },
+  {
+    model: 'DJM-A9',
+    href: '/knowledge/pioneer-dj/djm-a9',
+    source: DJM_A9.source,
+    issues: [
+      { fixedIn: DJM_A9.linkFreezeFix, area: 'Link', midSet: true, symptom: 'Rare freeze under heavy PRO DJ LINK network load.' },
+      { fixedIn: DJM_A9.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognized.' },
+      { fixedIn: DJM_A9.multiIoInsertFix, area: 'Routing', midSet: true, symptom: 'Insert method intermittently disabling itself when switching the Multi I/O input selector, and DVS phono input malfunction on USB-B after swapping computers across ports.' },
+    ],
+  },
+  {
+    model: 'DJM-V10 / V10-LF',
+    href: '/knowledge/pioneer-dj/djm-v10',
+    source: DJM_V10.source,
+    issues: [
+      { fixedIn: DJM_V10.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognized.' },
+      { fixedIn: DJM_V10.cdj3000LinkAudioFix, area: 'Audio', midSet: true, symptom: 'Potential audio cut-out when connected to CDJ-3000s over PRO DJ LINK.' },
+      { fixedIn: DJM_V10.midiFix, area: 'MIDI', midSet: false, symptom: 'Incorrect MIDI output under certain operation.' },
+      { fixedIn: DJM_V10.channelInputFix, area: 'Audio', midSet: true, symptom: 'Audio sometimes failing to input to a channel.' },
+    ],
+  },
+  {
+    model: 'DJM-900NXS2',
+    href: '/knowledge/pioneer-dj/djm-900nxs2',
+    source: DJM_REC.source,
+    issues: [
+      { fixedIn: DJM_REC.nxs2RecHaltFixes[1], area: 'Recording', midSet: false, symptom: 'DJM-REC recording halts affecting iOS and iPadOS audio.' },
+      { fixedIn: DJM_REC.nxs2RecHaltFixes[0], area: 'Recording', midSet: false, symptom: 'DJM-REC recording could halt part-way through a set.' },
+    ],
+    note: 'AlphaTheta has published no hardware defect fix for this mixer beyond the DJM-REC recording halts. The rest of its change history is feature work.',
+  },
+];
