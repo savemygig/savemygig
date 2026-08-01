@@ -208,7 +208,30 @@ const SUBLINES = [
   .d-emergency::after { animation-delay: 1.14s; }
   .d-prevent::after { animation-delay: 1.86s; }
   @keyframes doorGlow { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) { .door::after { animation: none; } }
+
+  /* THE CHECKLIST DOOR STAYS LIT (Antonio, 2026-08-01).
+     Doors 2 and 3 glow once and go quiet, because nobody needs them until
+     something has already gone wrong. The checklist is the one door people
+     open BEFORE the night starts. It is the only reason to visit this site
+     when nothing is broken, and it is what separates it from every other
+     troubleshooting page, so it keeps its light on. It settles to a low glow
+     instead of fading to nothing, and carries a green edge and a lit LED
+     permanently. Done by swapping the keyframes rather than adding a second
+     animation, so a settle pass can never fight the intro pass. */
+  .d-ready::after { animation-name: doorGlowStay; animation-duration: 1.9s; }
+  @keyframes doorGlowStay {
+    0% { opacity: 0; }
+    32% { opacity: 1; }
+    100% { opacity: 0.26; }
+  }
+  .d-ready { border-color: var(--green-border); }
+  .d-ready .door-led { box-shadow: 0 0 10px var(--green); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .door::after { animation: none; }
+    /* No motion, but the flagship door still reads as the lit one. */
+    .d-ready::after { opacity: 0.26; }
+  }
 
   .door-body { flex: 1; }
   .door-title {
