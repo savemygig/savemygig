@@ -45,7 +45,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line">CDJ-2000NXS2</div>
+        <div class="status-line sl-desktop">CDJ-2000NXS2</div>
         <h1 class="rb-h1">CDJ-2000NXS2, <span class="accent">the field manual</span></h1>
         <p class="dim rb-updated">Last verified: {UPDATED}</p>
       </div>
@@ -341,6 +341,7 @@ const schema = {
   .crumb a { color: var(--text-dim); text-decoration: none; }
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
   /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
      positioning -- see djm-v10.astro / djm-a9.astro / cdj-3000x.astro /

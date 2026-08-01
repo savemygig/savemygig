@@ -144,6 +144,11 @@ a { color: var(--red); }
 /* Desktop-only status tag (Antonio, first used on /checklist): the eyebrow
    earns its line on a wide screen but not above a phone H1. */
 @media (max-width: 640px) { .sl-desktop { display: none; } }
+/* Breadcrumb trail (Antonio, 2026-08-01): redundant on a phone screen where
+   the browser's own back button covers the same job, and it eats vertical
+   space above the H1 that a phone can't spare. Desktop keeps it: there's
+   room, and it's a useful map of where you are in the knowledge base. */
+@media (max-width: 640px) { .crumb { display: none; } }
 .status-line.red { color: var(--red); }
 .status-line.red::before { background: var(--red); }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
