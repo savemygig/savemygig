@@ -176,28 +176,6 @@ a { color: var(--red); }
 .panel-danger { background: var(--red-dim);   border-color: var(--red-border); }
 .panel-go     { background: var(--green-dim); border-color: var(--green-border); }
 
-/* Booth briefing kicker (Antonio, 2026-08-01): a caps label above the
-   summary paragraph. Solves the old "Booth briefing." punctuation question
-   outright, no dot or colon needed, and it never depends on where the
-   sentence after it happens to wrap. Antonio, 2026-08-01: white, not the
-   faint gray of a section eyebrow, and larger, it needs to read like the
-   bold lead-in it replaced, not a quiet label. A <div>, not a <p>: every
-   page's local "main p { color: var(--text-dim); line-height: 1.65 }" rule
-   (meant for body copy) was a <p> selector, more specific than this class
-   alone, and it was quietly overriding both the white color and the tight
-   line-height below. */
-.sv-kicker {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text);
-  margin: 0 0 0.35rem;
-}
-
 /* "The short version" collapse-to-3-lines on phone (Antonio, 2026-08-01).
    Checkbox hack: no JS, works everywhere, stays keyboard-reachable via the
    sr-only checkbox + label. Desktop is untouched, full text always shows. */
