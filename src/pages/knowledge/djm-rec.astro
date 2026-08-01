@@ -59,9 +59,7 @@ const schema = {
       </div>
       <a
         class="hw-thumb"
-        href="/images/djm-rec-panel-full.webp"
-        target="_blank"
-        rel="noopener"
+        href="#djm-rec-lightbox"
         aria-label="Open a larger screenshot of the DJM-REC app"
       >
         <img
@@ -74,15 +72,28 @@ const schema = {
       </a>
     </div>
 
+    <div class="lightbox" id="djm-rec-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/djm-rec-panel-full.webp"
+        alt="DJM-REC app on iPhone: live streaming view and the recording screen with waveform and levels"
+        loading="lazy"
+      />
+    </div>
+
     <div class="panel panel-go">
-      <p style="margin:0">
-        <strong>The short version.</strong> DJM-REC is AlphaTheta's iPhone and iPad
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> DJM-REC is AlphaTheta's iPhone and iPad
         app that records and live streams your set through <strong>one USB cable into
         a compatible DJM mixer</strong>, writing a time-stamped track list while you
         play. It sits entirely outside your playback chain: a failed recording costs
         you a file, never a set. The things that do go wrong at gigs are venue mixer
         firmware and platform quirks, and both are listed below.
       </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
     </div>
 
     <AccGroup icon="book" title="Understanding DJM-REC" />
@@ -176,6 +187,10 @@ const schema = {
         <p><strong>Avoid it next time.</strong> Treat venue gear as out of date
         until proven otherwise. The same rule that protects your USB exports
         protects your recordings.</p>
+        <p style="margin-top:1rem">
+          <strong>Firmware downloads.</strong> <a href="https://support.alphatheta.com/en-US/products/4406500786329" target="_blank" rel="noopener">Official AlphaTheta support page →</a><br />
+          <span class="dim" style="font-size:0.85rem">Broken link? <a href="/feedback">Let us know</a> and we'll fix it.</span>
+        </p>
         <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2 reference</a> <a href="#best-practice">Never debut the combination live</a></p>
       </div>
     </details>

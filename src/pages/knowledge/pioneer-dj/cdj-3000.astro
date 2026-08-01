@@ -47,9 +47,7 @@ const schema = {
       </div>
       <a
         class="hw-thumb"
-        href="/images/cdj-3000-panel-full.webp"
-        target="_blank"
-        rel="noopener"
+        href="#cdj-3000-lightbox"
         aria-label="Open a larger photo of the CDJ-3000 control panel"
       >
         <img
@@ -62,9 +60,20 @@ const schema = {
       </a>
     </div>
 
+    <div class="lightbox" id="cdj-3000-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/cdj-3000-panel-full.webp"
+        alt="Pioneer DJ CDJ-3000 media player control panel, top view"
+        loading="lazy"
+      />
+    </div>
+
     <div class="panel panel-go">
-      <p style="margin:0">
-        <strong>The short version.</strong> The high-end club standard since 2020.
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> The high-end club standard since 2020.
         Despite being newer than the NXS2 generation, it reads
         <strong>Device Library</strong>, not OneLibrary: firmware
         {CDJ_3000.onelibraryWithdrawn} briefly added OneLibrary in 2025 and was
@@ -73,6 +82,8 @@ const schema = {
         MBR scheme always works. Export from rekordbox {REKORDBOX.dualFormatFloor} or
         later and both this deck and the OneLibrary generation read the same stick.
       </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
     </div>
 
     <AccGroup icon="zap" title="Emergency fixes" />
@@ -208,6 +219,10 @@ const schema = {
         <p><strong>Do this.</strong> On gear you control, sit at
         {CDJ_3000.stabilityFix} or later and update between bookings, never before
         one.</p>
+        <p style="margin-top:1rem">
+          <strong>Firmware downloads.</strong> <a href="https://support.alphatheta.com/en-US/products/4416175863961" target="_blank" rel="noopener">Official AlphaTheta support page →</a><br />
+          <span class="dim" style="font-size:0.85rem">Broken link? <a href="/feedback">Let us know</a> and we'll fix it.</span>
+        </p>
         <p class="acc-related">Related: <a href="#firmware-330">The 3.30 story</a> <a href="/fix/emergency-loop-mode">Emergency Loop, explained</a></p>
       </div>
     </details>

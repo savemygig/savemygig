@@ -47,9 +47,7 @@ const schema = {
       </div>
       <a
         class="hw-thumb"
-        href="/images/djm-v10-panel-full.webp"
-        target="_blank"
-        rel="noopener"
+        href="#djm-v10-lightbox"
         aria-label="Open a larger photo of the DJM-V10 control panel"
       >
         <img
@@ -62,9 +60,20 @@ const schema = {
       </a>
     </div>
 
+    <div class="lightbox" id="djm-v10-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/djm-v10-panel-full.webp"
+        alt="Pioneer DJ DJM-V10 six-channel mixer control panel, top view"
+        loading="lazy"
+      />
+    </div>
+
     <div class="panel panel-go">
-      <p style="margin:0">
-        <strong>The short version.</strong> Not a bigger 900: a different desk.
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> Not a bigger 900: a different desk.
         <strong>{DJM_V10.channels} channels, {DJM_V10.eqBands}-band EQ and a
         compressor on every channel</strong>, dual headphone outputs, booth EQ,
         and an expanded send/return that combines external and built-in FX. The
@@ -73,6 +82,8 @@ const schema = {
         channel strips than your eyes expect. Walk the desk before doors, not
         during your first blend.
       </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
     </div>
 
     <AccGroup icon="zap" title="Emergency fixes" />
@@ -151,6 +162,10 @@ const schema = {
         changeover is following that setting.</p>
         <p><strong>Do this.</strong> On a V10 you control, sit at
         {DJM_V10.uaspFix} or later, updated between bookings, never before one.</p>
+        <p style="margin-top:1rem">
+          <strong>Firmware downloads.</strong> <a href="https://support.alphatheta.com/en-US/products/4416568754457" target="_blank" rel="noopener">Official AlphaTheta support page →</a><br />
+          <span class="dim" style="font-size:0.85rem">Broken link? <a href="/feedback">Let us know</a> and we'll fix it.</span>
+        </p>
         <p class="acc-related">Related: <a href="/prepare">Why gig day is a freeze</a></p>
       </div>
     </details>

@@ -46,9 +46,7 @@ const schema = {
       </div>
       <a
         class="hw-thumb"
-        href="/images/djm-a9-panel-full.webp"
-        target="_blank"
-        rel="noopener"
+        href="#djm-a9-lightbox"
         aria-label="Open a larger photo of the DJM-A9 control panel"
       >
         <img
@@ -61,9 +59,20 @@ const schema = {
       </a>
     </div>
 
+    <div class="lightbox" id="djm-a9-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/djm-a9-panel-full.webp"
+        alt="Pioneer DJ DJM-A9 four-channel mixer control panel, top view"
+        loading="lazy"
+      />
+    </div>
+
     <div class="panel panel-go">
-      <p style="margin:0">
-        <strong>The short version.</strong> The {DJM_A9.channels}-channel successor
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> The {DJM_A9.channels}-channel successor
         to the DJM-900NXS2's spot in high-end booths: {DJM_A9.beatFxCount} Beat FX,
         two independent headphone outputs, one USB-A port plus two USB-B/USB-C for
         computers, Wi-Fi for the Stagehand monitoring app, and, worth knowing
@@ -72,6 +81,8 @@ const schema = {
         Link load was fixed in {DJM_A9.linkFreezeFix}, so check the version on
         gear you do not control.
       </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
     </div>
 
     <AccGroup icon="zap" title="Emergency fixes" />
@@ -173,6 +184,10 @@ const schema = {
         doors is following that setting; check the utility menu.</p>
         <p><strong>Do this.</strong> On an A9 you control, sit at
         {DJM_A9.linkFreezeFix} or later, updated between bookings.</p>
+        <p style="margin-top:1rem">
+          <strong>Firmware downloads.</strong> <a href="https://support.alphatheta.com/en-US/products/15882401503257" target="_blank" rel="noopener">Official AlphaTheta support page →</a><br />
+          <span class="dim" style="font-size:0.85rem">Broken link? <a href="/feedback">Let us know</a> and we'll fix it.</span>
+        </p>
         <p class="acc-related">Related: <a href="/prepare">Why gig day is a freeze</a></p>
       </div>
     </details>
