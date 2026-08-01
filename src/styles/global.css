@@ -206,6 +206,55 @@ a { color: var(--red); }
   .panel-go .sv-toggle:checked ~ .sv-more-open { display: inline-block; }
 }
 
+/* ---------- Photo lightbox (Antonio, 2026-08-01) ----------
+   Product/screenshot photos are transparent PNG/webp. Linking straight to
+   the file made the browser's own image viewer open it on a plain white
+   page, which looks broken against the transparent art. This opens it
+   on-page instead, over a near-black backdrop that matches the site, with
+   no JS: the trigger link points at #<id>, :target shows the overlay. */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(6, 8, 10, 0.94);
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+.lightbox:target { display: flex; }
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+}
+.lightbox img {
+  position: relative;
+  max-width: 92vw;
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  z-index: 1;
+}
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  z-index: 2;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: var(--surf);
+  border: 1px solid var(--edge);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
 /* ---------- Buttons ---------- */
 
 .btn {
