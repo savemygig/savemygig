@@ -65,3 +65,11 @@
 /protocol/quick-fix/export            /protocol/export/export       301
 /protocol/quick-fix/fresh-usb         /protocol/export/fresh        301
 /protocol/quick-fix/verify            /protocol/export/verify       301
+
+# Knowledge base brand-folder migration 2026-08-01 (Antonio): every documented
+# product now lives under its own brand, /knowledge/<brand>/<product>. rekordbox
+# and DJM-REC are both AlphaTheta products and were the only two sitting flat.
+# Both old URLs were indexed, so these 301s carry the ranking signal over.
+# Wildcards preserve #anchors and any query string automatically.
+/knowledge/rekordbox   /knowledge/pioneer-dj/rekordbox   301
+/knowledge/djm-rec     /knowledge/pioneer-dj/djm-rec     301

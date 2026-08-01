@@ -72,7 +72,7 @@ export const TREE = {
       },
       {
         "t": "note",
-        "html": "Works on the other player but not this one? That is the library format split, not a broken drive. <a href=\"/knowledge/rekordbox#onelibrary\">What that means</a>, after the gig."
+        "html": "Works on the other player but not this one? That is the library format split, not a broken drive. <a href=\"/knowledge/pioneer-dj/rekordbox#onelibrary\">What that means</a>, after the gig."
       }
     ],
     "label": "Try this first, 15 seconds",

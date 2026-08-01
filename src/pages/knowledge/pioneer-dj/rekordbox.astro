@@ -1,9 +1,9 @@
 ---
-import Base from '../../layouts/Base.astro';
-import Disclaimer from '../../components/Disclaimer.astro';
-import EmailCapture from '../../components/EmailCapture.astro';
-import AccGroup from '../../components/AccGroup.astro';
-import { CHECKED, PLAYERS, VENDOR_LINKS, REKORDBOX } from '../../data/facts.js';
+import Base from '../../../layouts/Base.astro';
+import Disclaimer from '../../../components/Disclaimer.astro';
+import EmailCapture from '../../../components/EmailCapture.astro';
+import AccGroup from '../../../components/AccGroup.astro';
+import { CHECKED, PLAYERS, VENDOR_LINKS, REKORDBOX } from '../../../data/facts.js';
 
 // The rekordbox reference page. Restructured 2026-07-27 per Antonio's spec:
 // keep the design exactly, reorganize the content into six named groups
@@ -30,7 +30,7 @@ const players = PLAYERS;
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  '@id': 'https://www.savemygig.com/knowledge/rekordbox#article',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/rekordbox#article',
   headline: 'rekordbox: export, Device Library vs OneLibrary, and USB compatibility',
   description: 'Why a rekordbox USB mounts on a CDJ but shows no playlists, what OneLibrary and Device Library are, which players need which, and the export settings that work everywhere.',
   author: { '@id': 'https://www.savemygig.com/#antonio' },
@@ -38,7 +38,7 @@ const schema = {
   datePublished: '2026-07-26',
   dateModified: '2026-07-27',
   inLanguage: 'en',
-  mainEntityOfPage: 'https://www.savemygig.com/knowledge/rekordbox',
+  mainEntityOfPage: 'https://www.savemygig.com/knowledge/pioneer-dj/rekordbox',
   about: [
     { '@type': 'Thing', name: 'rekordbox' },
     { '@type': 'Thing', name: 'Pioneer CDJ' },
@@ -49,7 +49,7 @@ const schema = {
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  '@id': 'https://www.savemygig.com/knowledge/rekordbox#faq',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/rekordbox#faq',
   mainEntity: [
     {
       '@type': 'Question',
@@ -89,14 +89,17 @@ const faqSchema = {
 <Base
   title="rekordbox USB Guide: OneLibrary, Device Library & CDJ Compatibility | Save My Gig!"
   description="Your USB mounts on the CDJ but shows no playlists and no error? That is Device Library vs OneLibrary. The full explanation, the per-model compatibility table, and the export settings that work in every booth."
-  path="/knowledge/rekordbox"
+  path="/knowledge/pioneer-dj/rekordbox"
+  crumbName="rekordbox"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
 
   <main class="wrap wrap-wide">
     <nav class="crumb" aria-label="Breadcrumb">
-      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span> <span>rekordbox</span>
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span>
+      <a href="/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>rekordbox</span>
     </nav>
 
     <div class="hw-head">
