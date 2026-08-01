@@ -39,13 +39,41 @@ const schema = {
       <span>CDJ-3000</span>
     </nav>
 
-    <div class="status-line">CDJ-3000</div>
-    <h1 class="rb-h1">CDJ-3000, <span class="accent">the field manual</span></h1>
-    <p class="dim rb-updated">Last verified: {UPDATED}</p>
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">CDJ-3000</div>
+        <h1 class="rb-h1">CDJ-3000, <span class="accent">the field manual</span></h1>
+        <p class="dim rb-updated">Reviewed: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#cdj-3000-lightbox"
+        aria-label="Open a larger photo of the CDJ-3000 control panel"
+      >
+        <img
+          src="/images/cdj-3000-panel-thumb.webp"
+          alt="Pioneer DJ CDJ-3000 media player control panel, top view"
+          width="363"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="cdj-3000-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/cdj-3000-panel-full.webp"
+        alt="Pioneer DJ CDJ-3000 media player control panel, top view"
+        loading="lazy"
+      />
+    </div>
 
     <div class="panel panel-go">
-      <p style="margin:0">
-        <strong>The short version.</strong> The high-end club standard since 2020.
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> The high-end club standard since 2020.
         Despite being newer than the NXS2 generation, it reads
         <strong>Device Library</strong>, not OneLibrary: firmware
         {CDJ_3000.onelibraryWithdrawn} briefly added OneLibrary in 2025 and was
@@ -54,6 +82,8 @@ const schema = {
         MBR scheme always works. Export from rekordbox {REKORDBOX.dualFormatFloor} or
         later and both this deck and the OneLibrary generation read the same stick.
       </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
     </div>
 
     <AccGroup icon="zap" title="Emergency fixes" />
@@ -189,6 +219,10 @@ const schema = {
         <p><strong>Do this.</strong> On gear you control, sit at
         {CDJ_3000.stabilityFix} or later and update between bookings, never before
         one.</p>
+        <p style="margin-top:1rem">
+          <strong>Firmware downloads.</strong> <a href="https://support.alphatheta.com/en-US/products/4416175863961" target="_blank" rel="noopener">Official AlphaTheta support page →</a><br />
+          <span class="dim" style="font-size:0.85rem">Broken link? <a href="/feedback">Let us know</a> and we'll fix it.</span>
+        </p>
         <p class="acc-related">Related: <a href="#firmware-330">The 3.30 story</a> <a href="/fix/emergency-loop-mode">Emergency Loop, explained</a></p>
       </div>
     </details>
@@ -342,7 +376,29 @@ const schema = {
   .crumb a { color: var(--text-dim); text-decoration: none; }
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning, not sized/aligned by a flex row -- see djm-v10.astro /
+     djm-a9.astro / cdj-3000x.astro for the full rationale (Antonio,
+     2026-07-31: a flex row's height races between text and photo depending
+     on how many lines the headline wraps, which broke the flush touch
+     against the green panel at in-between widths). Anchoring to hw-head's
+     own bottom edge fixes it at every width. flow-root on the parent stops
+     margin collapse from throwing off the anchor. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
   main p { color: var(--text-dim); line-height: 1.65; }
   main p strong { color: var(--text); }
   .rb-errors { margin-bottom: 0; }

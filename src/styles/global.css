@@ -144,6 +144,11 @@ a { color: var(--red); }
 /* Desktop-only status tag (Antonio, first used on /checklist): the eyebrow
    earns its line on a wide screen but not above a phone H1. */
 @media (max-width: 640px) { .sl-desktop { display: none; } }
+/* Breadcrumb trail (Antonio, 2026-08-01): redundant on a phone screen where
+   the browser's own back button covers the same job, and it eats vertical
+   space above the H1 that a phone can't spare. Desktop keeps it: there's
+   room, and it's a useful map of where you are in the knowledge base. */
+@media (max-width: 640px) { .crumb { display: none; } }
 .status-line.red { color: var(--red); }
 .status-line.red::before { background: var(--red); }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
@@ -154,6 +159,9 @@ a { color: var(--red); }
 .wrap { max-width: var(--site-w); margin: 0 auto; padding: 2.2rem var(--site-pad) 4rem; }
 .wrap-wide { max-width: var(--site-w); }
 .section { margin: 3rem 0; }
+/* Antonio, 2026-08-01: shave a few px off the top on phone, on top of the
+   breadcrumb/eyebrow already being hidden there. */
+@media (max-width: 640px) { .wrap { padding-top: 1.9rem; } }
 
 /* ---------- Panels ---------- */
 
@@ -167,6 +175,85 @@ a { color: var(--red); }
 .panel-warn   { background: var(--amber-dim); border-color: rgba(217, 164, 65, 0.4); }
 .panel-danger { background: var(--red-dim);   border-color: var(--red-border); }
 .panel-go     { background: var(--green-dim); border-color: var(--green-border); }
+
+/* "The short version" collapse-to-3-lines on phone (Antonio, 2026-08-01).
+   Checkbox hack: no JS, works everywhere, stays keyboard-reachable via the
+   sr-only checkbox + label. Desktop is untouched, full text always shows. */
+.sv-toggle { }
+.sv-more { display: none; }
+.sv-more-open { display: none; }
+@media (max-width: 640px) {
+  .panel-go .sv-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .panel-go .sv-more {
+    display: inline-block;
+    margin-top: 0.6rem;
+    color: var(--red);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .panel-go .sv-more-open { display: none; }
+  .panel-go .sv-toggle:checked ~ .sv-text {
+    -webkit-line-clamp: unset;
+    display: block;
+  }
+  .panel-go .sv-toggle:checked ~ .sv-more:not(.sv-more-open) { display: none; }
+  .panel-go .sv-toggle:checked ~ .sv-more-open { display: inline-block; }
+}
+
+/* ---------- Photo lightbox (Antonio, 2026-08-01) ----------
+   Product/screenshot photos are transparent PNG/webp. Linking straight to
+   the file made the browser's own image viewer open it on a plain white
+   page, which looks broken against the transparent art. This opens it
+   on-page instead, over a near-black backdrop that matches the site, with
+   no JS: the trigger link points at #<id>, :target shows the overlay. */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(6, 8, 10, 0.94);
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+.lightbox:target { display: flex; }
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+}
+.lightbox img {
+  position: relative;
+  max-width: 92vw;
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  z-index: 1;
+}
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  z-index: 2;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: var(--surf);
+  border: 1px solid var(--edge);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  line-height: 1;
+  text-decoration: none;
+}
 
 /* ---------- Buttons ---------- */
 
@@ -666,6 +753,10 @@ html.ck-open .sticky-cta { display: none !important; }
 .acc-h2 {
   margin: 0; font-size: clamp(1.05rem, 3.6vw, 1.3rem);
   text-transform: none; letter-spacing: -0.015em;
+  /* Antonio, 2026-08-01: the global h1-h3 line-height (1.02) is tuned for
+     the big poster H1 and reads cramped once one of these wraps to two
+     lines on a phone. */
+  line-height: 1.3;
 }
 .acc-chev {
   flex: 0 0 auto; width: 9px; height: 9px; margin-top: -3px;

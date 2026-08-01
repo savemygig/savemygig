@@ -41,13 +41,41 @@ const schema = {
       <span>DJM-900NXS2</span>
     </nav>
 
-    <div class="status-line">DJM-900NXS2</div>
-    <h1 class="rb-h1">DJM-900NXS2, <span class="accent">the field manual</span></h1>
-    <p class="dim rb-updated">Last verified: {UPDATED}</p>
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">DJM-900NXS2</div>
+        <h1 class="rb-h1">DJM-900NXS2, <span class="accent">the field manual</span></h1>
+        <p class="dim rb-updated">Reviewed: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#djm-900nxs2-lightbox"
+        aria-label="Open a larger photo of the DJM-900NXS2 control panel"
+      >
+        <img
+          src="/images/djm-900nxs2-panel-thumb.webp"
+          alt="Pioneer DJ DJM-900NXS2 four-channel mixer control panel, top view"
+          width="406"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="djm-900nxs2-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/djm-900nxs2-panel-full.webp"
+        alt="Pioneer DJ DJM-900NXS2 four-channel mixer control panel, top view"
+        loading="lazy"
+      />
+    </div>
 
     <div class="panel panel-go">
-      <p style="margin:0">
-        <strong>The short version.</strong> A {DJM_900NXS2.channels}-channel professional
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> A {DJM_900NXS2.channels}-channel professional
         mixer with <strong>{DJM_900NXS2.usbPorts} USB ports</strong> (built for back-to-back
         DJs to hot-swap without cutting the music), {DJM_900NXS2.beatFxCount} Beat FX
         types and {DJM_900NXS2.soundColorFx.length} Sound Color FX on every channel.
@@ -56,6 +84,8 @@ const schema = {
         channel gain trim is before the set starts, not during it, clipping on this
         desk is a gain-staging problem, not an effects problem.
       </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
     </div>
 
     <AccGroup icon="zap" title="Emergency fixes" />
@@ -168,7 +198,11 @@ const schema = {
         specific firmware version, <a href="/feedback">tell us what happened</a> and
         we will verify and document it properly, the same way this page documents
         the CDJ-2000NXS2's real firmware history.</p>
-        <p class="acc-related">Related: <a href="https://www.pioneerdj.com/en-us/product/mixer/archive/djm-900nxs2/black/support/" rel="noopener">Official AlphaTheta support page</a></p>
+        <p style="margin-top:1rem">
+          <strong>Firmware downloads.</strong> <a href="https://support.alphatheta.com/en-US/products/4416490599449" target="_blank" rel="noopener">Official AlphaTheta support page →</a><br />
+          <span class="dim" style="font-size:0.85rem">Broken link? <a href="/feedback">Let us know</a> and we'll fix it.</span>
+        </p>
+        <p class="acc-related">Related: <a href="https://support.alphatheta.com/en-US/products/4416490599449" rel="noopener">Official AlphaTheta support page</a></p>
       </div>
     </details>
 
@@ -326,7 +360,27 @@ const schema = {
   .crumb a { color: var(--text-dim); text-decoration: none; }
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning -- see djm-v10.astro / djm-a9.astro / cdj-3000x.astro /
+     cdj-3000.astro / cdj-2000nxs2.astro for the full rationale (Antonio,
+     2026-07-31: a flex-row approach races text height against photo
+     height and breaks the flush touch at in-between widths). flow-root on
+     the parent stops margin collapse from throwing off the anchor. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
   main p { color: var(--text-dim); line-height: 1.65; }
   main p strong { color: var(--text); }
   .rb-errors { margin-bottom: 0; }

@@ -99,18 +99,48 @@ const faqSchema = {
       <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span> <span>rekordbox</span>
     </nav>
 
-    <div class="status-line">REKORDBOX</div>
-    <h1 class="rb-h1">rekordbox, <span class="accent">honestly</span></h1>
-    <p class="dim rb-updated">Last verified: {UPDATED}</p>
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">REKORDBOX</div>
+        <h1 class="rb-h1">rekordbox, <span class="accent">honestly</span></h1>
+        <p class="dim rb-updated">Reviewed: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#rekordbox-lightbox"
+        aria-label="Open a larger screenshot of rekordbox's Performance view"
+      >
+        <img
+          src="/images/rekordbox-panel-thumb.webp"
+          alt="rekordbox Performance view: two decks, waveforms, and the track browser"
+          width="500"
+          height="312"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="rekordbox-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/rekordbox-panel-full.webp"
+        alt="rekordbox Performance view: two decks, waveforms, and the track browser"
+        loading="lazy"
+      />
+    </div>
 
     <div class="panel panel-go">
-      <p style="margin:0">
-        <strong>The short version.</strong> Format the drive <strong>FAT32 with an MBR
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> Format the drive <strong>FAT32 with an MBR
         partition scheme</strong>, and export from <strong>rekordbox {REKORDBOX.dualFormatFloor} or later</strong>.
         That combination is readable by every Pioneer and AlphaTheta player in this
         article, old and new. Everything below is why, and what to do when it is
         not that simple.
       </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
     </div>
 
     <AccGroup icon="zap" title="Emergency fixes" />
@@ -403,6 +433,10 @@ const faqSchema = {
         histories stored only in OneLibrary are lost. Convert onto a fresh drive when
         you can, and never update rekordbox or firmware on gig day itself, a fresh
         version can bring a fresh problem and the booth is where you meet it.</p>
+        <p style="margin-top:1rem">
+          <strong>Software downloads.</strong> <a href="https://rekordbox.com/en/download/" target="_blank" rel="noopener">Official rekordbox download page →</a><br />
+          <span class="dim" style="font-size:0.85rem">Broken link? <a href="/feedback">Let us know</a> and we'll fix it.</span>
+        </p>
         <p class="acc-related">Related: <a href="#which-player">Per-model compatibility table</a> <a href="/prepare">Why gig day is a freeze</a></p>
       </div>
     </details>
@@ -490,6 +524,26 @@ const faqSchema = {
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning -- see the Pioneer DJ equipment pages for the full
+     rationale (Antonio, 2026-07-31: a flex-row approach races text height
+     against photo height and breaks the flush touch at in-between widths).
+     Same box for a software screenshot as for a hardware photo: the fixed
+     200x200 box plus max-width/max-height:100% on the img letterboxes any
+     aspect ratio without distortion, landscape or portrait alike. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
   main p { color: var(--text-dim); line-height: 1.65; }
   main p strong { color: var(--text); }
   .rb-tablenote { font-size: 0.88rem; margin-bottom: 0.8rem; }
