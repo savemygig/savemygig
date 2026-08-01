@@ -181,6 +181,13 @@ export const PLAYERS = [
 // says so.
 export const FIRMWARE_ISSUES = [
   {
+    model: 'CDJ-3000X',
+    href: '/knowledge/pioneer-dj/cdj-3000x',
+    source: CDJ_3000X.source,
+    issues: [],
+    noneNote: 'A young unit. AlphaTheta has published no defect fix for it, so there is nothing to report here. This section stays empty until a documented one exists.',
+  },
+  {
     model: 'CDJ-3000',
     href: '/knowledge/pioneer-dj/cdj-3000',
     source: CDJ_3000.source,
@@ -198,13 +205,6 @@ export const FIRMWARE_ISSUES = [
     ],
   },
   {
-    model: 'CDJ-3000X',
-    href: '/knowledge/pioneer-dj/cdj-3000x',
-    source: CDJ_3000X.source,
-    issues: [],
-    noneNote: 'A young unit. AlphaTheta has published no defect fix for it, so there is nothing to report here. This section stays empty until a documented one exists.',
-  },
-  {
     model: 'CDJ-2000NXS2',
     href: '/knowledge/pioneer-dj/cdj-2000nxs2',
     source: CDJ_2000NXS2.source,
@@ -212,16 +212,6 @@ export const FIRMWARE_ISSUES = [
       { fixedIn: CDJ_2000NXS2.slipHotCueFix, area: 'Playback', midSet: false, symptom: 'A startup issue affecting SLIP HOT CUE behaviour.' },
       { fixedIn: CDJ_2000NXS2.waveformColorFix, area: 'Display', midSet: false, symptom: 'Waveform colour selection went missing, then was restored.' },
       { fixedIn: CDJ_2000NXS2.controlModeDropoutFix, area: 'Audio', midSet: true, symptom: 'Audio dropouts during Control Mode playback.' },
-    ],
-  },
-  {
-    model: 'DJM-A9',
-    href: '/knowledge/pioneer-dj/djm-a9',
-    source: DJM_A9.source,
-    issues: [
-      { fixedIn: DJM_A9.linkFreezeFix, area: 'Link', midSet: true, symptom: 'Rare freeze under heavy PRO DJ LINK network load.' },
-      { fixedIn: DJM_A9.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognized.' },
-      { fixedIn: DJM_A9.multiIoInsertFix, area: 'Routing', midSet: true, symptom: 'Insert method intermittently disabling itself when switching the Multi I/O input selector, and DVS phono input malfunction on USB-B after swapping computers across ports.' },
     ],
   },
   {
@@ -233,6 +223,16 @@ export const FIRMWARE_ISSUES = [
       { fixedIn: DJM_V10.cdj3000LinkAudioFix, area: 'Audio', midSet: true, symptom: 'Potential audio cut-out when connected to CDJ-3000s over PRO DJ LINK.' },
       { fixedIn: DJM_V10.midiFix, area: 'MIDI', midSet: false, symptom: 'Incorrect MIDI output under certain operation.' },
       { fixedIn: DJM_V10.channelInputFix, area: 'Audio', midSet: true, symptom: 'Audio sometimes failing to input to a channel.' },
+    ],
+  },
+  {
+    model: 'DJM-A9',
+    href: '/knowledge/pioneer-dj/djm-a9',
+    source: DJM_A9.source,
+    issues: [
+      { fixedIn: DJM_A9.linkFreezeFix, area: 'Link', midSet: true, symptom: 'Rare freeze under heavy PRO DJ LINK network load.' },
+      { fixedIn: DJM_A9.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognized.' },
+      { fixedIn: DJM_A9.multiIoInsertFix, area: 'Routing', midSet: true, symptom: 'Insert method intermittently disabling itself when switching the Multi I/O input selector, and DVS phono input malfunction on USB-B after swapping computers across ports.' },
     ],
   },
   {

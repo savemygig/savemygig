@@ -98,15 +98,17 @@ const schema = {
     </div>
 
     {models.map(m => (
-      <section class="fw-model">
-        <div class="fw-head">
-          <h2 class="fw-model-h">{m.model}</h2>
+      <details class="acc-sec fw-model" name="fw-acc">
+        <summary>
+          <h2 class="acc-h2 fw-model-h">{m.model}</h2>
           {m.safeFloor && (
             <span class="fw-floor">
               Clear at <strong>{m.safeFloor}</strong> or later
             </span>
           )}
-        </div>
+          <span class="acc-chev" aria-hidden="true"></span>
+        </summary>
+        <div class="acc-body fw-body">
 
         {m.warning && (
           <div class="fw-warn">
@@ -150,7 +152,8 @@ const schema = {
           <a href={m.href}>{m.model} field manual</a>
           <a href={m.source} target="_blank" rel="noopener">AlphaTheta change history</a>
         </p>
-      </section>
+        </div>
+      </details>
     ))}
 
     <div class="panel">
@@ -189,6 +192,10 @@ const schema = {
     .rb-h1 .accent { font-size: 96%; }
     .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
     main p { color: var(--text-dim); line-height: 1.65; }
+    /* Every other knowledge page carries this. Without it the "Booth briefing."
+       lead-in inherits the dim paragraph colour and reads grey instead of
+       white, which is exactly what happened here (Antonio, 2026-08-01). */
+    main p strong { color: var(--text); }
 
     .fw-how { margin: 2rem 0 0.6rem; }
     .fw-how-h {
@@ -198,18 +205,22 @@ const schema = {
     }
     .fw-how p { margin: 0; font-size: 0.95rem; }
 
-    .fw-model { margin-top: 2.4rem; }
-    .fw-head {
-      display: flex; align-items: baseline; justify-content: space-between;
-      gap: 1rem; flex-wrap: wrap;
-      border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 0.9rem;
-    }
-    .fw-model-h { font-size: 1.35rem; margin: 0; line-height: 1.2; }
+    /* Accordion per model (Antonio, 2026-08-01): the full matrix open at once
+       is too much to read. Uses the site's shared .acc-sec vocabulary, and the
+       exclusive `name` means opening one closes the rest, same as every other
+       reference page. The safe version stays in the CLOSED header on purpose:
+       "which deck, and is it clear" is the whole lookup, and it should not
+       need a tap. */
+    .fw-model { margin-top: 0; }
+    .fw-model > summary { align-items: center; gap: 0.9rem; flex-wrap: wrap; }
+    .fw-model-h { flex: 1 1 auto; }
     .fw-floor {
-      font-size: 0.82rem; color: var(--green);
+      flex: 0 0 auto;
+      font-size: 0.78rem; color: var(--green);
       font-weight: 600; white-space: nowrap;
     }
     .fw-floor strong { color: var(--green); }
+    .fw-body { padding-top: 0.2rem; }
 
     /* The withdrawn-firmware callout. Uses the danger tone already defined
        sitewide rather than a new colour, so it reads as the same alarm the
