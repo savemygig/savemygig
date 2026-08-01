@@ -209,28 +209,39 @@ const SUBLINES = [
   .d-prevent::after { animation-delay: 1.86s; }
   @keyframes doorGlow { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
-  /* THE CHECKLIST DOOR STAYS LIT (Antonio, 2026-08-01).
+  /* THE CHECKLIST DOOR KEEPS PULSING (Antonio, 2026-08-01).
      Doors 2 and 3 glow once and go quiet, because nobody needs them until
      something has already gone wrong. The checklist is the one door people
-     open BEFORE the night starts. It is the only reason to visit this site
-     when nothing is broken, and it is what separates it from every other
-     troubleshooting page, so it keeps its light on. It settles to a low glow
-     instead of fading to nothing, and carries a green edge and a lit LED
-     permanently. Done by swapping the keyframes rather than adding a second
-     animation, so a settle pass can never fight the intro pass. */
-  .d-ready::after { animation-name: doorGlowStay; animation-duration: 1.9s; }
-  @keyframes doorGlowStay {
-    0% { opacity: 0; }
-    32% { opacity: 1; }
-    100% { opacity: 0.26; }
+     open BEFORE the night starts: the only reason to visit when nothing is
+     broken, and the only one a DJ recommends to another DJ in advance. So it
+     keeps asking for the eye, repeating the intro's own glow every 5s.
+     NOTE for future sessions: the "once was right" ruling in the comment
+     above still stands for ALL THREE doors pulsing, which read as noise.
+     One door pulsing is the opposite thing, a single deliberate focal point,
+     and is Antonio's explicit call. Same keyframe shape as the intro (1.2s
+     in and out) inside a 5s cycle, so the pulse is identical and only the
+     silence between them is new. Still opacity-only, so it stays on the
+     compositor with no paint and no main-thread work. */
+  .d-ready::after {
+    animation-name: doorGlowPulse;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
   }
-  .d-ready { border-color: var(--green-border); }
-  .d-ready .door-led { box-shadow: 0 0 10px var(--green); }
+  @keyframes doorGlowPulse {
+    0%   { opacity: 0; }
+    12%  { opacity: 1; }
+    24%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
 
   @media (prefers-reduced-motion: reduce) {
+    /* A looping pulse is exactly what this setting exists to stop. These
+       users get the static version instead, so the flagship door is still
+       marked, just without the movement. */
     .door::after { animation: none; }
-    /* No motion, but the flagship door still reads as the lit one. */
     .d-ready::after { opacity: 0.26; }
+    .d-ready { border-color: var(--green-border); }
+    .d-ready .door-led { box-shadow: 0 0 10px var(--green); }
   }
 
   .door-body { flex: 1; }
