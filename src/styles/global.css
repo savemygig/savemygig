@@ -176,6 +176,21 @@ a { color: var(--red); }
 .panel-danger { background: var(--red-dim);   border-color: var(--red-border); }
 .panel-go     { background: var(--green-dim); border-color: var(--green-border); }
 
+/* Booth briefing kicker (Antonio, 2026-08-01): a small-caps label above the
+   summary paragraph, same visual language as .acc-group. Solves the old
+   "Booth briefing." punctuation question outright, no dot or colon needed,
+   and it never depends on where the sentence after it happens to wrap. */
+.sv-kicker {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin: 0 0 0.5rem;
+}
+
 /* "The short version" collapse-to-3-lines on phone (Antonio, 2026-08-01).
    Checkbox hack: no JS, works everywhere, stays keyboard-reachable via the
    sr-only checkbox + label. Desktop is untouched, full text always shows. */
