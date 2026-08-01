@@ -192,11 +192,10 @@ a { color: var(--red); }
   .panel-go .sv-more {
     display: inline-block;
     margin-top: 0.6rem;
-    color: var(--text);
+    color: var(--red);
     font-weight: 600;
     font-size: 0.85rem;
     cursor: pointer;
-    text-decoration: underline;
   }
   .panel-go .sv-more-open { display: none; }
   .panel-go .sv-toggle:checked ~ .sv-text {
