@@ -159,6 +159,9 @@ a { color: var(--red); }
 .wrap { max-width: var(--site-w); margin: 0 auto; padding: 2.2rem var(--site-pad) 4rem; }
 .wrap-wide { max-width: var(--site-w); }
 .section { margin: 3rem 0; }
+/* Antonio, 2026-08-01: shave a few px off the top on phone, on top of the
+   breadcrumb/eyebrow already being hidden there. */
+@media (max-width: 640px) { .wrap { padding-top: 1.9rem; } }
 
 /* ---------- Panels ---------- */
 
@@ -172,6 +175,36 @@ a { color: var(--red); }
 .panel-warn   { background: var(--amber-dim); border-color: rgba(217, 164, 65, 0.4); }
 .panel-danger { background: var(--red-dim);   border-color: var(--red-border); }
 .panel-go     { background: var(--green-dim); border-color: var(--green-border); }
+
+/* "The short version" collapse-to-3-lines on phone (Antonio, 2026-08-01).
+   Checkbox hack: no JS, works everywhere, stays keyboard-reachable via the
+   sr-only checkbox + label. Desktop is untouched, full text always shows. */
+.sv-toggle { }
+.sv-more { display: none; }
+.sv-more-open { display: none; }
+@media (max-width: 640px) {
+  .panel-go .sv-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .panel-go .sv-more {
+    display: inline-block;
+    margin-top: 0.6rem;
+    color: var(--red);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .panel-go .sv-more-open { display: none; }
+  .panel-go .sv-toggle:checked ~ .sv-text {
+    -webkit-line-clamp: unset;
+    display: block;
+  }
+  .panel-go .sv-toggle:checked ~ .sv-more:not(.sv-more-open) { display: none; }
+  .panel-go .sv-toggle:checked ~ .sv-more-open { display: inline-block; }
+}
 
 /* ---------- Buttons ---------- */
 

@@ -67,7 +67,8 @@ const schema = {
     </div>
 
     <div class="panel panel-go">
-      <p style="margin:0">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
         <strong>The short version.</strong> Released 2016, and still the deck you are
         most likely to find in a real club booth, even next to newer gear.
         It reads <strong>Device Library only</strong>, never OneLibrary, and its USB
@@ -77,6 +78,8 @@ const schema = {
         OneLibrary player (CDJ-3000X, CDJ-1500X) can show no playlists here even
         though the USB works fine elsewhere.
       </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
     </div>
 
     <AccGroup icon="zap" title="Emergency fixes" />
