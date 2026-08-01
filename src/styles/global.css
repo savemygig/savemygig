@@ -176,18 +176,20 @@ a { color: var(--red); }
 .panel-danger { background: var(--red-dim);   border-color: var(--red-border); }
 .panel-go     { background: var(--green-dim); border-color: var(--green-border); }
 
-/* Booth briefing kicker (Antonio, 2026-08-01): a small-caps label above the
-   summary paragraph, same visual language as .acc-group. Solves the old
-   "Booth briefing." punctuation question outright, no dot or colon needed,
-   and it never depends on where the sentence after it happens to wrap. */
+/* Booth briefing kicker (Antonio, 2026-08-01): a caps label above the
+   summary paragraph. Solves the old "Booth briefing." punctuation question
+   outright, no dot or colon needed, and it never depends on where the
+   sentence after it happens to wrap. Antonio, 2026-08-01: white, not the
+   faint gray of a section eyebrow, and larger, it needs to read like the
+   bold lead-in it replaced, not a quiet label. */
 .sv-kicker {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 1rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--text-faint);
+  color: var(--text);
   margin: 0 0 0.5rem;
 }
 
