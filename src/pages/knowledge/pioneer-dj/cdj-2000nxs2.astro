@@ -8,7 +8,7 @@ import { CHECKED, CDJ_2000NXS2, REKORDBOX } from '../../../data/facts.js';
 // This is the template every future equipment page and every future
 // manufacturer copies: same eight groups, same five-part accordion voice
 // (short answer / why / fix / prevention / related), same shared .acc-*
-// classes as /knowledge/rekordbox. Do not invent operational facts. Firmware
+// classes as /knowledge/pioneer-dj/rekordbox. Do not invent operational facts. Firmware
 // history here is sourced from CDJ_2000NXS2 in src/data/facts.js, which
 // links the primary AlphaTheta document. General troubleshooting steps
 // (power, cabling, restarts) are standard practice, not model-specific
@@ -33,6 +33,7 @@ const schema = {
   title="CDJ-2000NXS2 Guide: Fixes, Known Issues & Compatibility | Save My Gig!"
   description="The CDJ-2000NXS2 field manual: what to do when it will not boot, LINK will not connect, or your USB shows no playlists, plus the firmware facts and compatibility that actually matter."
   path="/knowledge/pioneer-dj/cdj-2000nxs2"
+  crumbName="CDJ-2000NXS2"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
 
@@ -111,7 +112,7 @@ const schema = {
         <p><strong>Avoid it next time.</strong> Never format this player's drives
         exFAT, and keep rekordbox at {REKORDBOX.dualFormatFloor} or later so every
         export includes Device Library automatically.</p>
-        <p class="acc-related">Related: <a href="/fix/usb-not-recognized-cdj">Full USB troubleshooting</a> <a href="/knowledge/rekordbox#onelibrary">OneLibrary vs Device Library</a> <a href="#compatibility">Compatibility</a></p>
+        <p class="acc-related">Related: <a href="/fix/usb-not-recognized-cdj">Full USB troubleshooting</a> <a href="/knowledge/pioneer-dj/rekordbox#onelibrary">OneLibrary vs Device Library</a> <a href="#compatibility">Compatibility</a></p>
       </div>
     </details>
 
@@ -220,8 +221,8 @@ const schema = {
         <p><strong>Common mistakes.</strong> Relying entirely on memory instead of
         Hot Cues for a set you have not played before, and forgetting Hot Cues live
         in the rekordbox database, not the audio file, so an unsafe eject can lose
-        ones you just set. <a href="/knowledge/rekordbox#no-playlists">See why</a>.</p>
-        <p class="acc-related">Related: <a href="#beat-jump">Beat Jump</a> <a href="/knowledge/rekordbox#how-exports-work">How exports work</a></p>
+        ones you just set. <a href="/knowledge/pioneer-dj/rekordbox#no-playlists">See why</a>.</p>
+        <p class="acc-related">Related: <a href="#beat-jump">Beat Jump</a> <a href="/knowledge/pioneer-dj/rekordbox#how-exports-work">How exports work</a></p>
       </div>
     </details>
 
@@ -261,7 +262,7 @@ const schema = {
         <p><strong>Common mistakes.</strong> Assuming "newer venue" means "newer
         player." Plenty of high-end clubs still run CDJ-2000NXS2 pairs because they
         are proven, reliable, and everywhere in the second-hand market.</p>
-        <p class="acc-related">Related: <a href="/knowledge/rekordbox#which-player">Full compatibility table</a> <a href="/prepare">The prevention system</a></p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/rekordbox#which-player">Full compatibility table</a> <a href="/prepare">The prevention system</a></p>
       </div>
     </details>
 
@@ -282,7 +283,7 @@ const schema = {
         <p><strong>Avoid it next time.</strong> Do not update firmware on gig day,
         and do not let a rental unit's firmware go unchecked for years, an update
         between bookings is a five-minute job at home, not at the venue.</p>
-        <p class="acc-related">Related: <a href="/knowledge/rekordbox#no-playlists">Why unsafe ejects cause missing playlists</a> <a href="/prepare">The full prevention system</a></p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/rekordbox#no-playlists">Why unsafe ejects cause missing playlists</a> <a href="/prepare">The full prevention system</a></p>
       </div>
     </details>
 
@@ -302,7 +303,7 @@ const schema = {
         other Pro DJ Link mixer without a second thought.</p>
         <p><strong>Avoid it next time.</strong> Do not format a drive exFAT for this
         player, it will not be read at all.</p>
-        <p class="acc-related">Related: <a href="/knowledge/rekordbox#which-player">Per-model compatibility table</a> <a href="/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a></p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/rekordbox#which-player">Per-model compatibility table</a> <a href="/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a></p>
       </div>
     </details>
 
@@ -314,7 +315,7 @@ const schema = {
           <dt>Can this player read exFAT?</dt><dd>No. FAT32 only.</dd>
           <dt>Does it support OneLibrary?</dt><dd>No. Device Library only.</dd>
           <dt>Can I use Device Library?</dt><dd>Yes, that is the format it reads natively.</dd>
-          <dt>Can I link with a CDJ-3000 or CDJ-3000X?</dt><dd>Yes over Pro DJ Link for tempo and playback control. Whether playlists show up on each deck depends on which library format your USB carries, not on Link. <a href="/knowledge/rekordbox#which-player">Full table</a>.</dd>
+          <dt>Can I link with a CDJ-3000 or CDJ-3000X?</dt><dd>Yes over Pro DJ Link for tempo and playback control. Whether playlists show up on each deck depends on which library format your USB carries, not on Link. <a href="/knowledge/pioneer-dj/rekordbox#which-player">Full table</a>.</dd>
           <dt>Can I connect to a DJM-900NXS2?</dt><dd>Yes, this is the era-correct pairing and the most common booth combination worldwide.</dd>
           <dt>Can I use Export Mode with this player?</dt><dd>Yes, standard rekordbox Export.</dd>
         </dl>
@@ -324,7 +325,7 @@ const schema = {
     <div class="panel" style="margin-top:2rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Related guides</h2>
       <p class="dim" style="margin:0">
-        <a href="/knowledge/rekordbox">rekordbox reference</a> ·
+        <a href="/knowledge/pioneer-dj/rekordbox">rekordbox reference</a> ·
         <a href="/fix/format-usb-for-cdj">USB preparation</a> ·
         <a href="/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
         <a href="/fix/usb-not-recognized-cdj">Troubleshooting USB detection</a> ·

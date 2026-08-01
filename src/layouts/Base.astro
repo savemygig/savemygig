@@ -23,9 +23,14 @@ interface Props {
       "DJ Rescue and Prevention", the description shouldn't say it again).
       Falls back to description. */
   ogDescription?: string;
+  /** Leaf label for the BreadcrumbList (e.g. "CDJ-3000X"). Optional: when it
+      is absent the current page is simply left off the trail, which Google
+      explicitly allows, rather than printing a slug-derived guess like
+      "Cdj 3000x". Pass it on pages where the trail is worth completing. */
+  crumbName?: string;
 }
 
-const { title, description, path, noindex = false, ogImage, ogTitle, ogDescription } = Astro.props;
+const { title, description, path, noindex = false, ogImage, ogTitle, ogDescription, crumbName } = Astro.props;
 const SITE = 'https://www.savemygig.com';
 const canonical = `${SITE}${path === '/' ? '/' : path}`;
 // Default share image (2026-07-30): landscape 1200x630, cropped from
@@ -93,6 +98,48 @@ const entityGraph = {
     },
   ],
 };
+
+// BreadcrumbList (2026-08-01). This is the markup Google reads to print
+// "savemygig.com › Knowledge base › Pioneer DJ / AlphaTheta" under a result
+// instead of a raw URL. The site had visible breadcrumbs on the knowledge
+// pages but none of it was machine-readable, so search engines never showed
+// the trail. Built from the canonical path so every page gets one for free.
+//
+// Only REAL hub pages are listed here. A segment with no page behind it (the
+// /fix articles have no /fix index, for instance) is skipped rather than
+// linked, because a breadcrumb pointing at a 404 is worse than no breadcrumb.
+const CRUMB_HUBS: Record<string, string> = {
+  '/knowledge': 'Knowledge base',
+  '/knowledge/pioneer-dj': 'Pioneer DJ / AlphaTheta',
+  '/legal': 'Legal',
+};
+
+const crumbItems: { name: string; item?: string }[] = [{ name: 'Home', item: `${SITE}/` }];
+{
+  const segs = path.split('/').filter(Boolean);
+  let acc = '';
+  for (const seg of segs) {
+    acc += `/${seg}`;
+    if (acc === path) break; // the leaf is handled separately below
+    if (CRUMB_HUBS[acc]) crumbItems.push({ name: CRUMB_HUBS[acc], item: `${SITE}${acc}` });
+  }
+  // The current page. Google allows omitting it, so a page that did not pass
+  // crumbName just ends its trail at the last hub instead of guessing a name.
+  const leaf = crumbName ?? (path !== '/' ? CRUMB_HUBS[path] : undefined);
+  if (leaf) crumbItems.push({ name: leaf, item: canonical });
+}
+
+const breadcrumbSchema = crumbItems.length > 1 ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  '@id': `${canonical}#breadcrumb`,
+  itemListElement: crumbItems.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.name,
+    ...(c.item ? { item: c.item } : {}),
+  })),
+} : null;
 ---
 <!doctype html>
 <html lang="en">
@@ -120,6 +167,7 @@ const entityGraph = {
   <link rel="preload" href="/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
   <script type="application/ld+json" set:html={JSON.stringify(entityGraph)} />
+  {breadcrumbSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />}
   <Analytics />
   <slot name="head" />
 </head>

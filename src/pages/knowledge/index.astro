@@ -17,7 +17,7 @@ import { VENDOR_LINKS } from '../../data/facts.js';
 const software = [
   {
     name: 'rekordbox',
-    href: '/knowledge/rekordbox',
+    href: '/knowledge/pioneer-dj/rekordbox',
     blurb: 'Export, Device Library vs OneLibrary, library moves, and every error a CDJ throws at you.',
   },
   {
@@ -27,7 +27,7 @@ const software = [
   },
   {
     name: 'DJM-REC',
-    href: '/knowledge/djm-rec',
+    href: '/knowledge/pioneer-dj/djm-rec',
     blurb: 'AlphaTheta’s recording and live-streaming app: one USB cable into a DJM mixer, auto time-stamped track lists.',
   },
   {
@@ -58,26 +58,33 @@ const equipment = [
     blurb: 'The turntables that never left. Vinyl is not our core today, but the booth standard earns its place here.',
   },
 ];
+// Hardware lists BRANDS, not categories, exactly like Equipment above
+// (Antonio, 2026-08-01). The old list named categories ("USB drives", "SSDs",
+// "Laptops") and pointed the first one at /gear, which mixed two different
+// jobs: /gear RECOMMENDS across brands, the knowledge base DOCUMENTS one
+// product at a time under its maker. Buying guidance stays on /gear; this
+// section is the reference layer, so it follows the same
+// /knowledge/<brand>/<product> rule as everything else on the site.
 const hardware = [
   {
-    name: 'USB drives',
-    href: '/gear',
-    blurb: 'The drives that survive a night in a DJ bag, and the two-drive habit that saves a gig.',
+    name: 'SanDisk',
+    href: null,
+    blurb: 'The Extreme Pro and the official AlphaTheta DJ Flash Drive: what they do in a booth, and where they fail.',
   },
   {
-    name: 'SSDs & backup drives',
+    name: 'Samsung',
     href: null,
-    blurb: 'What actually matters for a DJ backup drive: not capacity, surviving a bag full of cables.',
+    blurb: 'BAR Plus and the portable SSD line, the drives that survive a bag full of cables.',
   },
   {
-    name: 'Audio interfaces',
+    name: 'Kingston',
     href: null,
-    blurb: 'Sound cards for hybrid and open-format sets, once the reference is built.',
+    blurb: 'DataTraveller and the budget end of the booth, where reliability is won or lost.',
   },
   {
-    name: 'Laptops for DJing',
+    name: 'Apple',
     href: null,
-    blurb: 'What actually matters in a DJ laptop: not raw specs, uptime under a set.',
+    blurb: 'MacBooks in the booth: what actually matters for uptime under a set, not raw specs.',
   },
 ];
 
@@ -144,6 +151,10 @@ const schema = {
     </div>
 
     <h2 class="kb-h" style="margin-top:2rem">Hardware</h2>
+    <p class="dim kb-sub">
+      Looking for what to buy rather than how it behaves? The drives we trust
+      are on <a href="/gear">the gear page</a>.
+    </p>
     <div class="kb-grid">
       {hardware.map(s => (
         s.href ? (
@@ -184,6 +195,10 @@ const schema = {
 
 <style>
   .kb-lead { max-width: 42rem; margin-bottom: 2rem; line-height: 1.6; }
+  /* Sits between a section heading and its card grid. The Hardware section
+     uses it to send buying-intent visitors to /gear, keeping the knowledge
+     base itself purely about how a product behaves. */
+  .kb-sub { max-width: 42rem; margin: -0.4rem 0 1rem; font-size: 0.92rem; line-height: 1.6; }
   .kb-h {
     font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
     border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;

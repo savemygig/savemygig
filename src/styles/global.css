@@ -726,7 +726,7 @@ html.ck-open .sticky-cta { display: none !important; }
 }
 
 /* ---------- Shared reference accordion ----------
-   One collapsible system for every deep-reference page: /knowledge/rekordbox
+   One collapsible system for every deep-reference page: /knowledge/pioneer-dj/rekordbox
    and the Pioneer DJ / AlphaTheta hardware pages both use it, and it is the
    template for every manufacturer added after them. Groups are plain text
    labels above a cluster of <details name="..."> elements; the shared `name`

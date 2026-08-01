@@ -1,11 +1,11 @@
 ---
-import Base from '../../layouts/Base.astro';
-import Disclaimer from '../../components/Disclaimer.astro';
-import EmailCapture from '../../components/EmailCapture.astro';
-import AccGroup from '../../components/AccGroup.astro';
-import { DJM_REC, VENDOR_LINKS } from '../../data/facts.js';
+import Base from '../../../layouts/Base.astro';
+import Disclaimer from '../../../components/Disclaimer.astro';
+import EmailCapture from '../../../components/EmailCapture.astro';
+import AccGroup from '../../../components/AccGroup.astro';
+import { DJM_REC, VENDOR_LINKS } from '../../../data/facts.js';
 
-// The DJM-REC reference page. Same template as /knowledge/rekordbox: named
+// The DJM-REC reference page. Same template as /knowledge/pioneer-dj/rekordbox: named
 // accordion groups (collapse doctrine), five-part shape inside each section
 // where it applies, facts from src/data/facts.js only.
 //
@@ -23,7 +23,7 @@ const UPDATED = F.checked;
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  '@id': 'https://www.savemygig.com/knowledge/djm-rec#article',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/djm-rec#article',
   headline: 'DJM-REC: recording and live streaming your set through a DJM mixer',
   description: 'What DJM-REC actually does, which DJM mixers officially support it, which streaming services work with track titles, and the known issues to check before you press record at a gig.',
   author: { '@id': 'https://www.savemygig.com/#antonio' },
@@ -31,7 +31,7 @@ const schema = {
   datePublished: '2026-07-28',
   dateModified: '2026-07-28',
   inLanguage: 'en',
-  mainEntityOfPage: 'https://www.savemygig.com/knowledge/djm-rec',
+  mainEntityOfPage: 'https://www.savemygig.com/knowledge/pioneer-dj/djm-rec',
   about: [
     { '@type': 'Thing', name: 'DJM-REC' },
     { '@type': 'Thing', name: 'AlphaTheta DJM mixers' },
@@ -42,13 +42,16 @@ const schema = {
 <Base
   title="DJM-REC Guide: Mixer Compatibility, Streaming & Known Issues | Save My Gig!"
   description="DJM-REC records and streams your set through one USB cable into a DJM mixer. Which mixers officially support it, where track titles work on stream, and the known issues to check before you press record."
-  path="/knowledge/djm-rec"
+  path="/knowledge/pioneer-dj/djm-rec"
+  crumbName="DJM-REC"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
 
   <main class="wrap wrap-wide">
     <nav class="crumb" aria-label="Breadcrumb">
-      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span> <span>DJM-REC</span>
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span>
+      <a href="/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>DJM-REC</span>
     </nav>
 
     <div class="hw-head">
@@ -112,7 +115,7 @@ const schema = {
         <p><strong>What it is not.</strong> It is not a player, not a library tool
         and not part of the rekordbox export chain. Nothing it does touches the USB
         drive you play from. If the app crashes mid-set, your set does not.</p>
-        <p class="acc-related">Related: <a href="#mixers">Which mixers support it</a> <a href="/knowledge/rekordbox">The rekordbox guide</a></p>
+        <p class="acc-related">Related: <a href="#mixers">Which mixers support it</a> <a href="/knowledge/pioneer-dj/rekordbox">The rekordbox guide</a></p>
       </div>
     </details>
 
@@ -297,7 +300,7 @@ const schema = {
 
 <script is:inline>
   // Deep links must work with the sections closed: opening the target
-  // section before scrolling. Same pattern as /knowledge/rekordbox.
+  // section before scrolling. Same pattern as /knowledge/pioneer-dj/rekordbox.
   (function () {
     function openTarget() {
       var id = location.hash.slice(1);
