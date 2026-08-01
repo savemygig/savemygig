@@ -51,9 +51,28 @@ const schema = {
       <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span> <span>DJM-REC</span>
     </nav>
 
-    <div class="status-line">DJM-REC</div>
-    <h1 class="rb-h1">DJM-REC, <span class="accent">on the record</span></h1>
-    <p class="dim rb-updated">Last verified: {UPDATED}</p>
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line">DJM-REC</div>
+        <h1 class="rb-h1">DJM-REC, <span class="accent">on the record</span></h1>
+        <p class="dim rb-updated">Last verified: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="/images/djm-rec-panel-full.webp"
+        target="_blank"
+        rel="noopener"
+        aria-label="Open a larger screenshot of the DJM-REC app"
+      >
+        <img
+          src="/images/djm-rec-panel-thumb.webp"
+          alt="DJM-REC app on iPhone: recording screen with waveform and levels"
+          width="247"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
 
     <div class="panel panel-go">
       <p style="margin:0">
@@ -239,6 +258,22 @@ const schema = {
   .crumb a:hover { color: var(--red); }
   .rb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.4rem; }
   .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning -- see the Pioneer DJ equipment pages / rekordbox.astro for
+     the full rationale (Antonio, 2026-07-31). */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
   main p { color: var(--text-dim); line-height: 1.65; }
   main p strong { color: var(--text); }
   .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--edge-soft); }
