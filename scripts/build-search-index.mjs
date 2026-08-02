@@ -63,7 +63,7 @@ function routeOf(file) {
 
 const ENTITIES = {
   amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
-  rarr: '→', larr: '←', times: '×', hellip: '…', mdash: '—', ndash: '–',
+  rarr: '→', larr: '←', times: '×', hellip: '…', mdash: ',', ndash: ',',
   lsquo: '‘', rsquo: '’', ldquo: '“', rdquo: '”', deg: '°', middot: '·',
 };
 

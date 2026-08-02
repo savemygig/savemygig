@@ -217,7 +217,7 @@ const schema = {
     color: var(--text-faint); font-variant-numeric: tabular-nums;
   }
   .dict-cat-chev { flex: 0 0 auto; }
-  .dict-cat[open] > summary .dict-cat-chev { transform: rotate(225deg); }
+  .dict-cat[open] > summary .dict-cat-chev { transform: rotate(45deg); margin-top: -3px; }
   .dict-cat-body { margin-bottom: 1.8rem; }
   .dict-term { margin-bottom: 0.6rem; padding: 0.95rem 1.15rem; }
   .dict-term > summary {
@@ -228,11 +228,11 @@ const schema = {
   .dict-term > summary:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
   .dict-t { font-size: 1rem; font-weight: 800; margin: 0; letter-spacing: -0.01em; text-transform: none; }
   .dict-chev {
-    flex: 0 0 auto; width: 8px; height: 8px; margin-top: -2px;
+    flex: 0 0 auto; width: 8px; height: 8px; margin-top: -1px;
     border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
-    transform: rotate(45deg); transition: transform 0.2s ease;
+    transform: rotate(-45deg); transition: transform 0.2s ease, margin-top 0.2s ease;
   }
-  .dict-term[open] > summary .dict-chev { transform: rotate(225deg); }
+  .dict-term[open] > summary .dict-chev { transform: rotate(45deg); margin-top: -3px; }
   .dict-term[open] > summary { margin-bottom: 0.5rem; }
   .dict-d { margin: 0; line-height: 1.6; font-size: 0.95rem; }
   @media (prefers-reduced-motion: reduce) { .dict-chev { transition: none; } }

@@ -4,7 +4,7 @@ import Search from '../components/Search.astro';
 
 // The single canonical FAQPage for the site. The homepage and /emergency used
 // to carry their own FAQPage blocks describing content that was not visible on
-// those pages — a structured-data policy violation, and three competing answers
+// those pages, a structured-data policy violation, and three competing answers
 // to the same question. Those were removed; this is the one source of truth.
 //
 // Every entry carries a `fix` link. The page copy has always promised "every
@@ -168,11 +168,11 @@ const schema = {
   .faq-sec > summary:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
   .faq-sec[open] > summary { margin-bottom: 0.6rem; }
   .faq-chev {
-    flex: 0 0 auto; width: 9px; height: 9px; margin-top: -3px;
+    flex: 0 0 auto; width: 9px; height: 9px; margin-top: -1px;
     border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
-    transform: rotate(45deg); transition: transform 0.2s ease;
+    transform: rotate(-45deg); transition: transform 0.2s ease, margin-top 0.2s ease;
   }
-  .faq-sec[open] > summary .faq-chev { transform: rotate(225deg); }
+  .faq-sec[open] > summary .faq-chev { transform: rotate(45deg); margin-top: -3px; }
   @media (prefers-reduced-motion: reduce) { .faq-chev { transition: none; } }
 </style>
 

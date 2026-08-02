@@ -236,14 +236,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
     <!-- Mode switch + the account/sync chip share one row (Antonio's ruling,
          2026-07-29 polish round: the chip lives beside Custom, not as a
-         full-width row under the meter). Signed out it is a dim verb, Sync —
+         full-width row under the meter). Signed out it is a dim verb, Sync ,
          tap it, it opens the box and asks you to sign in. Signed in it is a
          green state, Synced, because the sync already happened; tapping it
          just re-opens the same box to sign out, delete, or see the email. -->
     <div class="mode-row">
       <!-- Vertical dividers between the three segments (Antonio, round 4:
            this is where he actually wanted the hairline, not on the Sync
-           chip — moved here). Same recipe as everywhere else it's used:
+           chip, moved here). Same recipe as everywhere else it's used:
            align-self: stretch so it always matches the row's own height,
            colored to var(--edge). -->
       <div class="mode-switch" role="group" aria-label="Checklist depth">
@@ -266,7 +266,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <button type="button" class="explain-btn" id="explainInfoBtn" aria-label="Show button instructions" aria-pressed="false">ⓘ</button>
         <!-- Rectangle to match the toolbar buttons (Antonio: the pill "looked
              strange"). Round 4: the internal divider Antonio asked for turned
-             out to belong on the mode-switch above, not here — removed from
+             out to belong on the mode-switch above, not here, removed from
              this button, back to plain text + chevron. Chevron uses the SAME
              convention as the category boxes (Music, DJ Gear): right when
              closed, down when open, not the Lists header's up/down pair
@@ -297,7 +297,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <p class="unlock-title" id="unlockTitle">Unlock Advanced & Custom</p>
       <!-- Round 5, second pass (Antonio, live-testing right after the first
            round-5 push): "access is instant, no password... you don't need
-           to say that" — cut entirely. Element stays in the DOM (id kept)
+           to say that", cut entirely. Element stays in the DOM (id kept)
            because openGate() still swaps its text for the PDF/email-list
            gate variants; hidden via CSS instead of removed from markup, so
            JS doesn't need a guard added everywhere it touches unlockCopy. -->
@@ -400,7 +400,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <div class="gsi-holder" id="gsiBtn"></div>
         <!-- Round 5, fourth pass (Antonio): the old "or, sign in by email:"
              divider still read as two required steps stacked together, not
-             a clear either/or — "we must clarify for the user that is not
+             a clear either/or, "we must clarify for the user that is not
              very intelligent." Replaced with the SAME pattern the gate uses
              now: Google alone by default, a toggle link reveals the email
              form. JS below hides #acctForm and shows this toggle the moment
@@ -658,11 +658,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
     <!-- Round 4 (Antonio): the closing philosophy line used to sit here too
          (same sentence he'd already flagged as redundant up by the mode
-         switch, coincidentally reused verbatim — it dates back to the
+         switch, coincidentally reused verbatim, it dates back to the
          original build, 2026-07-27). Removed for the same reason: doesn't
          earn its space on this page, reads as marketing copy. No inline
          margin-top override needed now that it isn't spacing the panel away
-         from a paragraph that no longer exists — the panel falls back to
+         from a paragraph that no longer exists, the panel falls back to
          the standard .panel-to-panel gap, closer to Logistics as asked. -->
     <div class="panel cta-exit">
       <h3 style="margin-bottom:0.9rem">Already at the gig and something failed?</h3>
@@ -1218,7 +1218,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   /* Mode switch + the sync chip share a row (Antonio's ruling, 2026-07-29
      polish: the chip lives beside Custom, not a full-width row under the
      meter). Dim grey and a verb ("Sync") until signed in, then a green
-     state ("Synced") — gray never means "please press me" (his correction).
+     state ("Synced"), gray never means "please press me" (his correction).
      Round 4: margin-bottom matched to the readiness meter's own
      margin-bottom (1.6rem) so the gap above and below the readiness bar
      reads as the same rhythm, now that the mode-tagline that used to sit
@@ -1274,12 +1274,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
        line as Base/Advanced/Custom, same as desktop, not wrapped to a row
        of its own. No more flex-wrap here; instead the mode buttons and the
        chip/info pair are all tightened so the whole row fits from 360px up
-       (measured with Playwright, not eyeballed — see build notes). */
+       (measured with Playwright, not eyeballed, see build notes). */
     .mode-btn { padding: 0.5rem 0.45rem; font-size: 0.72rem; letter-spacing: 0.02em; }
     .mode-switch { gap: 2px; padding: 3px; }
     .mode-row { gap: 0.3rem; }
     /* Round 5, third pass (Antonio, mobile screenshot): Sync + (i) read
-       visibly smaller than Base/Advanced/Custom — grown to match, same
+       visibly smaller than Base/Advanced/Custom, grown to match, same
        recipe as the desktop `height: 2.6rem` match above, tuned by
        measurement for this breakpoint's own padding/font-size.
        UPDATED ROUND 11 (Antonio, mobile screenshot again): still not a
@@ -1369,7 +1369,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   /* Compound selector, not just .acct-del (Antonio, round 5 bug): this was
      losing the cascade to global.css's .btn { display: block }, same
      specificity but .btn loads later, so the stacked-cell trick silently
-     never applied. Both spans rendered as sequential inline text instead —
+     never applied. Both spans rendered as sequential inline text instead ,
      .rs-arm stayed invisible but still reserved its width right after
      .rs-idle, so the centered text-align pushed the VISIBLE text off to one
      side (left when idle, right when armed) instead of truly centering it.
@@ -2878,7 +2878,7 @@ ${sections}
       else {
         setMode(pendingMode);
         // Registration done, mode unlocked: put them at the TOP of their
-        // new list, ready to work (Antonio) — same move as the back-to-top
+        // new list, ready to work (Antonio), same move as the back-to-top
         // circle, not stranded at the bottom where the gate was.
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
@@ -3196,12 +3196,12 @@ ${sections}
   // Round 5, fifth pass (Antonio, resolving the round-3 open question
   // himself): "the sync button could just say Sync. If it is gray, it's
   // off. If it is green, it's on." SUPERSEDES the earlier "label must
-  // change with the state, not just the colour" ruling above — label now
+  // change with the state, not just the colour" ruling above, label now
   // stays "Sync" always, colour alone carries the state. Agreed this is the
   // right call when asked: the chip isn't the only place state shows up
   // (the chevron and, once opened, "Synced with <email>" both reinforce
   // it), and gray-vs-green is one of the safer color pairs for colorblind
-  // users since gray reads as desaturated regardless of hue perception —
+  // users since gray reads as desaturated regardless of hue perception ,
   // unlike, say, red/green. Flagged, not silently changed.
   function setDotSynced(on: boolean) {
     const synced = on && !!acct.email;
@@ -3696,7 +3696,7 @@ ${sections}
     });
   }
   // Same toggle, on the Sync card's own Google/email choice (round 5,
-  // fourth pass) — identical reasoning, separate element since the card and
+  // fourth pass), identical reasoning, separate element since the card and
   // the gate are two different forms on the page.
   {
     const cardToggle = document.getElementById('acctEmailToggle');
@@ -3862,7 +3862,7 @@ ${sections}
     let armed = false;
     let armTimer: ReturnType<typeof setTimeout> | undefined;
     // Round 5, third pass (Antonio): this line only exists at all once
-    // Delete account is armed — at rest it's empty and hidden, not a
+    // Delete account is armed, at rest it's empty and hidden, not a
     // standing warning for something that hasn't happened.
     // Round 7 (Antonio, exact copy supplied): shorter, drops the "this
     // session stays on the device" clause entirely and adds the "!".
@@ -3986,7 +3986,7 @@ ${sections}
   // trigger itself wasn't covered either, so its whole purpose (opens
   // create/rename/reorder/delete) was invisible under info mode too.
   attachExplainer(document.getElementById('lsHead'), () => 'Opens your saved lists. From here you can create a new list, rename or reorder your lists, or delete one.');
-  attachExplainer(lsNewBtn, () => 'Creates a new list, so you can plan a different night separately from this one. Type a name and save it — up to seven lists.');
+  attachExplainer(lsNewBtn, () => 'Creates a new list, so you can plan a different night separately from this one. Type a name and save it, up to seven lists.');
   attachExplainer(lsMoveBtn, () => 'Turns on rename and reorder for your saved lists. Tap the pencil on a list to rename it, or drag it by the arrow handle to reorder.');
   attachExplainer(lsDelBtn, () => 'Turns on delete mode for your saved lists. Tap the × on a list once to arm it, tap again to delete it. Your active list can’t be deleted this way, switch to another list first.');
   modeBtns.forEach((b) => attachExplainer(b, () => (MODE_COPY_MAP[b.dataset.modeSet || 'basic'] || MODE_COPY_MAP.basic).f));
@@ -4007,13 +4007,13 @@ ${sections}
   // Round 5, second pass (Antonio): the desktop version used to be a real
   // click-to-toggle (stayed amber/"on" until clicked again), which falsely
   // implied it was a persistent mode like the mobile touch toggle actually
-  // is. It never was one on desktop — hover-a-beat already always works
+  // is. It never was one on desktop, hover-a-beat already always works
   // regardless of this button's state. Changed to match how every OTHER
   // covered control already behaves: on while you're on it, off the moment
   // you're not. Click still opens it (nothing here is hoverable-only,
   // clicking is the discovery step), but leaving the button with the mouse
   // now closes it automatically, same as attachExplainer's own
-  // mouseenter/mouseleave pattern above — no second click required, and it
+  // mouseenter/mouseleave pattern above, no second click required, and it
   // never sits "on" once your cursor has moved away.
   const explainInfoBtn = document.getElementById('explainInfoBtn');
   let desktopInfoOn = false;
