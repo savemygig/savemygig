@@ -58,9 +58,12 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig!?\s*$/i, '');
     <!-- Every step needs a way back. Without this a mis-tap under pressure was
          only recoverable with the browser back gesture, which is unreliable on
          a phone in a dark booth. -->
+    <!-- flow_back / flow_restart events: Antonio's flow-outcome logging ask
+         (2026-08-03). GA4 attaches page_location, so the abandoned screen is
+         recorded with each event. Consent-gated like all analytics. -->
     <nav class="tunnel-exit" aria-label="Leave or restart">
-      <button type="button" class="tx-btn" id="txBack">&larr; Back one step</button>
-      <a class="tx-btn" href="/emergency">Start over</a>
+      <button type="button" class="tx-btn" id="txBack" data-event="flow_back">&larr; Back one step</button>
+      <a class="tx-btn" href="/emergency" data-event="flow_restart">Start over</a>
     </nav>
 
     <Disclaimer variant="compact" />

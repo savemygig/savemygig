@@ -194,7 +194,7 @@ export const TREE = {
     "options": [
       {
         "label": "I CAN SEE MY FILES",
-        "to": "rebuild/risk"
+        "to": "rebuild/second-usb"
       },
       {
         "label": "NOTHING / ERROR MESSAGE",
@@ -233,7 +233,7 @@ export const TREE = {
     "options": [
       {
         "label": "YES - FILES ARE VISIBLE NOW",
-        "to": "rebuild/risk"
+        "to": "rebuild/second-usb"
       },
       {
         "label": "NO - THE USB IS DEAD",
@@ -376,7 +376,7 @@ export const TREE = {
     ]
   },
   "rebuild/risk": {
-    "title": "Files Are Visible",
+    "title": "One Drive, One Decision",
     "status": "Critical · Laptop",
     "red": true,
     "blocks": [
@@ -388,21 +388,16 @@ export const TREE = {
         "t": "alert",
         "emoji": "⚠️",
         "html": "<strong>You will erase this drive.</strong> Anything that does not copy off cleanly first is gone until you can work on it properly at home."
-      },
-      {
-        "t": "note",
-        "html": "This computer has Rekordbox with <strong>your</strong> library on it? Take the <a href=\"/protocol/export/backup\">export rescue</a> instead: a fresh export keeps your cues and playlists, this route does not."
       }
     ],
     "label": "Decision point",
-    "heading": "FILES ARE VISIBLE",
-    "headingClass": "accent",
+    "heading": "One drive, one decision",
     "question": "Are you willing to temporarily copy your files to this computer and erase your USB so you can play?",
     "step": "risk_consent",
     "options": [
       {
         "label": "YES - COPY, THEN ERASE THIS DRIVE",
-        "to": "rebuild/second-usb"
+        "to": "rebuild/copy"
       },
       {
         "label": "NO - DO NOT ERASE THIS DRIVE",
@@ -417,21 +412,28 @@ export const TREE = {
     "blocks": [
       {
         "t": "dim",
-        "html": "If yes, we use that one and your original stays untouched. Safer and faster."
+        "html": "Your files are readable, so the fast, safe route comes first. With a second drive, your original never gets touched tonight."
+      },
+      {
+        "t": "note",
+        "html": "This computer has Rekordbox with <strong>your</strong> library on it? Take the <a href=\"/protocol/export/backup\">export rescue</a> instead: a fresh export keeps your cues and playlists, a raw file copy does not."
       }
     ],
-    "label": "Decision point",
-    "heading": "One more question",
+    "label": "The fast route first",
+    "heading": "FILES ARE VISIBLE",
+    "headingClass": "accent",
     "question": "Do you have another USB you can use right now?",
     "step": "second_usb",
     "options": [
       {
         "label": "YES - I HAVE ANOTHER USB",
-        "to": "rebuild/second-format"
+        "to": "rebuild/second-format",
+        "desc": "We build tonight on that one. Your original stays untouched."
       },
       {
         "label": "NO - I ONLY HAVE THIS ONE",
-        "to": "rebuild/copy"
+        "to": "rebuild/risk",
+        "desc": "Then there is one decision to make first."
       }
     ]
   },
@@ -1734,13 +1736,39 @@ export const TREE = {
       },
       {
         "label": "NOTHING WORKED, AND I HAVE TIME",
-        "to": "shared/computer",
+        "to": "usb/computer",
         "desc": "Step by step diagnosis, one question at a time.",
         "tone": "neutral",
         "event": "step_completed",
         "data": {
           "step": "runlist_to_tree"
         }
+      }
+    ]
+  },
+  "usb/computer": {
+    "title": "Do You Have a Computer?",
+    "status": "Critical_Path",
+    "red": true,
+    "blocks": [
+      {
+        "t": "dim",
+        "html": "You have done the booth moves, so we do not repeat them. With a computer we fix the drive; without one, we get you playing another way."
+      }
+    ],
+    "label": "Decision point",
+    "heading": "Goal right now: play a set.",
+    "question": "Do you have a computer right now?",
+    "step": "usb_fork_computer",
+    "options": [
+      {
+        "label": "YES, I HAVE A COMPUTER",
+        "to": "shared/usb-check"
+      },
+      {
+        "label": "NO COMPUTER",
+        "to": "shared/survival",
+        "desc": "The booth moves are done. Straight to the other ways to play."
       }
     ]
   },

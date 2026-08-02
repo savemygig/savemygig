@@ -15,7 +15,7 @@
  *
  * Bump CACHE when the precache list changes; old caches are deleted on activate.
  */
-const CACHE = 'smg-v10';
+const CACHE = 'smg-v11';
 
 // The rescue path, offline. If a page is not here it still works online.
 const PRECACHE = [
@@ -70,6 +70,7 @@ const PRECACHE = [
   '/protocol/sound/wrong',
   '/protocol/sound/wrong-2',
   '/protocol/usb/booth',
+  '/protocol/usb/computer',
   '/protocol/usb/link',
   '/protocol/usb/moves',
   '/protocol/usb/restart',
