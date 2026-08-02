@@ -63,6 +63,31 @@ const groups = [
     ],
   },
   {
+    // CABLES AND PLUGS (Antonio, 2026-08-02). Its own group for the same
+    // reason Audio files is: a DJ meets connectors as a separate class of
+    // problem from drives, formats or the library. Scope rule applies, this
+    // is booth wiring only. What you meet plugging in, what silences a
+    // channel, and the one connector you will only ever see on the speaker
+    // end. Phono vs Line leads the group because a wrong input selector is
+    // one of the classic silent-channel causes and it is not covered
+    // anywhere else on the site.
+    title: 'Cables and connectors',
+    terms: [
+      { t: 'Phono vs Line', d: 'The single most useful thing in this group. A mixer channel expects either a turntable (phono, a very quiet signal that needs extra amplification) or anything else (line: CDJs, laptops, players). Feed a line source into a phono input and it distorts horribly. Feed a turntable into a line input and it is almost silent. If a channel is dead or sounds wrong with every fader up, check this selector before you blame the cable.' },
+      { t: 'RCA (phono connector)', d: 'The two-plug pair, usually red and white, that carries stereo between most DJ equipment: player to mixer, mixer to amplifier. Unbalanced, so it does not like long runs, but it is what nearly every booth is wired with. Red is right, white or black is left. A single dead channel with a working fader is very often just this plug not fully seated.' },
+      { t: 'Coaxial (digital out)', d: 'The trap in this group: a coaxial digital output uses the same connector as an RCA plug and carries something completely different. It is a single cable of DIGITAL audio, found on some mixers as DIGITAL OUT, and it will not work plugged into an ordinary analogue RCA input. If a connection looks like a normal phono lead and produces nothing but noise or silence, check whether one end of it is digital.' },
+      { t: 'Jack (6.35mm / quarter inch)', d: 'The big headphone plug, and the connector for booth outputs and many balanced connections. Comes in two shapes that look nearly identical: TRS has two black rings and carries stereo or a balanced signal, TS has one ring and carries a single unbalanced channel. Plugging TS where TRS is expected is a quiet way to lose half your audio.' },
+      { t: 'Mini jack (3.5mm)', d: 'The small version, on phones, laptops and consumer headphones. Common in a booth only as an adapter, and adapters are exactly where handovers go wrong. If a phone has to reach the mixer, know before doors whether that adapter exists and where it is.' },
+      { t: 'XLR (also called Canon)', d: 'The three-pin locking connector, balanced, used for the mixer’s master output to the house system and for microphones. Balanced means it rejects interference over long cable runs, which is why the room is fed with it and your booth is not. Many DJs, especially outside the English-speaking world, call it a Canon: same connector, older brand name.' },
+      { t: 'Balanced vs unbalanced', d: 'Why two kinds of cable exist at all. A balanced connection (XLR, TRS jack) carries the signal twice, inverted, so noise picked up along the way cancels itself at the other end. Unbalanced (RCA, TS jack) does not, so it collects hum and interference over distance. Short runs inside the booth, unbalanced is fine. Anything crossing a stage should be balanced.' },
+      { t: 'Speakon', d: 'The chunky twist-lock speaker connector. Worth knowing precisely because you will NOT find it on DJ equipment: it lives between amplifiers and speakers, which is the venue’s side of the signal chain. If you are looking at Speakon, you are past the booth output and past where your responsibility ends.' },
+      { t: 'Ground (earth) terminal', d: 'The small screw post on a mixer for a turntable’s thin ground wire. Unconnected, a turntable channel hums audibly. If a deck is buzzing on a vinyl setup and the fader is doing nothing about it, this is the first thing to look at.' },
+      { t: 'IEC power cable', d: 'The standard three-pin kettle lead every player and mixer takes. Unglamorous and the most common cause of a unit that "will not turn on". They work loose in a rack, and venues borrow them. A spare in the bag costs almost nothing and has saved plenty of sets.' },
+      { t: 'Ethernet / LAN cable', d: 'How players and mixer talk to each other over PRO DJ LINK, and how a laptop joins that network. Ordinary network cable, nothing special about it. If LINK is refusing to connect and the settings look right, the cable and the port are worth ruling out before the settings.' },
+      { t: 'USB-A, USB-B, USB-C', d: 'Three different shapes doing different jobs on the same desk. USB-A is the flat one your drive plugs into. USB-B is the squarer one that connects a mixer to a computer for DVS or recording. USB-C appears on newer players for both storage and computer connection. The CDJ-3000X, for instance, carries one USB-A and two USB-C and no SD slot at all.' },
+    ],
+  },
+  {
     title: 'The library',
     terms: [
       { t: 'rekordbox database', d: 'The hidden index rekordbox writes onto your USB next to the music: playlists, cues, grids, waveforms. When a player mounts your drive but shows no playlists, this is usually what died or mismatched, not your music. The audio files sit untouched in their folders.' },
@@ -128,19 +153,35 @@ const schema = {
       folklore.
     </p>
 
+    {/* Two levels of accordion (Antonio, 2026-08-02). At 60 terms the flat
+        list was an enormous scroll, so the GROUP is now collapsible too:
+        pick the area, then pick the term. The group names are the index and
+        the whole dictionary fits on one screen closed.
+        Groups are deliberately NOT an exclusive `name=` set: comparing a
+        cable term against a format term is a real thing to want, and the
+        cost of leaving two open is nothing. Terms inside a group stay
+        independent for the same reason.
+        Collapsed content is still in the HTML, so the search index (built
+        from dist) and crawlers read every definition regardless. */}
     {groups.map((g) => (
-      <section class="dict-group">
-        <h2 class="dict-h">{g.title}</h2>
-        {g.terms.map((x) => (
-          <details class="panel dict-term">
-            <summary>
-              <h3 class="dict-t">{x.t}</h3>
-              <span class="dict-chev" aria-hidden="true"></span>
-            </summary>
-            <p class="dim dict-d">{x.d}</p>
-          </details>
-        ))}
-      </section>
+      <details class="dict-cat">
+        <summary>
+          <h2 class="dict-h">{g.title}</h2>
+          <span class="dict-count">{g.terms.length}</span>
+          <span class="dict-chev dict-cat-chev" aria-hidden="true"></span>
+        </summary>
+        <div class="dict-cat-body">
+          {g.terms.map((x) => (
+            <details class="panel dict-term">
+              <summary>
+                <h3 class="dict-t">{x.t}</h3>
+                <span class="dict-chev" aria-hidden="true"></span>
+              </summary>
+              <p class="dim dict-d">{x.d}</p>
+            </details>
+          ))}
+        </div>
+      </details>
     ))}
 
     <p class="dim" style="margin-top:2rem;font-size:0.9rem">
@@ -154,11 +195,30 @@ const schema = {
   .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
   .crumb a { color: var(--text-dim); text-decoration: none; }
   .crumb a:hover { color: var(--red); }
-  .dict-group { margin-bottom: 2rem; }
-  .dict-h {
-    font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
-    border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 0.9rem;
+  /* Group level. The summary keeps the old .dict-h look (uppercase label with
+     a rule under it) so the page reads the same closed as it did open, and
+     gains a term count plus a chevron. */
+  .dict-cat { margin-bottom: 0.9rem; }
+  .dict-cat > summary {
+    display: flex; align-items: center; gap: 0.7rem;
+    border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem;
+    cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
   }
+  .dict-cat > summary::-webkit-details-marker { display: none; }
+  .dict-cat > summary:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .dict-cat[open] > summary { margin-bottom: 1rem; }
+  .dict-h {
+    flex: 1 1 auto;
+    font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
+    margin: 0;
+  }
+  .dict-count {
+    flex: 0 0 auto; font-size: 0.75rem; font-weight: 700;
+    color: var(--text-faint); font-variant-numeric: tabular-nums;
+  }
+  .dict-cat-chev { flex: 0 0 auto; }
+  .dict-cat[open] > summary .dict-cat-chev { transform: rotate(225deg); }
+  .dict-cat-body { margin-bottom: 1.8rem; }
   .dict-term { margin-bottom: 0.6rem; padding: 0.95rem 1.15rem; }
   .dict-term > summary {
     display: flex; align-items: center; justify-content: space-between; gap: 1rem;
