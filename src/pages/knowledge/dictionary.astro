@@ -23,6 +23,33 @@ const groups = [
     ],
   },
   {
+    // AUDIO FILES (Antonio, 2026-08-02). Deliberately its own group rather
+    // than folded into "Drives and formats" above: that group is about FILE
+    // SYSTEMS (FAT32, exFAT, MBR), and a DJ meets both kinds of "format"
+    // while preparing the same drive. Keeping them apart is the point.
+    //
+    // SOURCES, per the fact-discipline rule: the per-format table comes from
+    // AlphaTheta's own CDJ-3000X instruction manual (DRI1956B, "Supported
+    // file formats"), and the CDJ-2000NXS2 high-resolution figures from
+    // AlphaTheta support article 4405915074969, which also states the DSD
+    // incompatibility. Nothing here is claimed for a model we have not
+    // checked; where support is unverified the entry says to confirm rather
+    // than guessing.
+    title: 'Audio files',
+    terms: [
+      { t: 'Lossy vs lossless', d: 'The distinction underneath every other entry here. Lossy formats (MP3, AAC) permanently discard audio data to save space. Lossless formats (WAV, AIFF, FLAC, Apple Lossless) keep all of it. Converting one into the other does not restore anything: an MP3 saved as WAV is a much larger file of exactly the same audio.' },
+      { t: 'MP3', d: 'The format most DJ libraries are built on. It is lossy, so data was thrown away to shrink the file and it does not come back. Players read it from 32 to 320 kbps at 44.1 or 48 kHz, which makes 320 the ceiling worth exporting. Its real advantage is that it plays on every player ever made.' },
+      { t: 'AAC', d: 'Lossy like MP3 but more efficient, so it holds up better at the same file size. Players read it from 16 to 320 kbps. One trap worth knowing: AAC and Apple Lossless both use the .m4a extension, so two completely different files look identical in a folder.' },
+      { t: 'WAV', d: 'Uncompressed audio, nothing discarded and nothing packed down, which is why it is the largest file on the drive. Players read it at 16 or 24 bit and up to 96 kHz. Its weakness is housekeeping: artist and title travel less reliably inside a WAV than in other formats, which is why WAV libraries so often show blanks where the track information should be.' },
+      { t: 'AIFF', d: 'Apple’s uncompressed format. The audio is equivalent to WAV, the difference is that AIFF carries track information reliably, which is why DJs preparing large libraries often choose it over WAV.' },
+      { t: 'FLAC', d: 'Lossless compression: noticeably smaller than WAV, with nothing discarded, so it decodes back to the original. Documented on the CDJ-3000X up to 96 kHz, and on the CDJ-2000NXS2 up to 96 kHz and 24 bit. Older players predate the format, so confirm the deck reads it before building a booth library around it.' },
+      { t: 'Apple Lossless (ALAC)', d: 'Apple’s equivalent of FLAC: compressed, nothing thrown away. Documented alongside FLAC on the CDJ-2000NXS2 and CDJ-3000X. It shares the .m4a extension with AAC, so the extension alone never tells you whether a file is lossless.' },
+      { t: 'Bit rate', d: 'How much data a lossy file spends per second, written in kbps. Higher means less was discarded and the file is bigger. For MP3 the players stop at 320 kbps, which is why that number is everywhere in DJ libraries. Bit rate says nothing about WAV, AIFF, FLAC or Apple Lossless, which are not discarding anything to begin with.' },
+      { t: 'Sample rate and bit depth', d: 'The two numbers describing how finely the audio was captured, for example 44.1 kHz and 16 bit, which is CD standard. Players handle up to 96 kHz and 24 bit on the formats that carry it. Higher is not automatically better in a club: the room, the system and the mix decide far more than these two numbers do.' },
+      { t: 'DSD (.dsf and .dff)', d: 'A high-resolution format from the audiophile world, and one of the few that simply does not play. AlphaTheta states the CDJ-2000NXS2 is not compatible with DSF or DFF files. If a track arrives in one, convert it before the gig rather than in the booth.' },
+    ],
+  },
+  {
     title: 'The library',
     terms: [
       { t: 'rekordbox database', d: 'The hidden index rekordbox writes onto your USB next to the music: playlists, cues, grids, waveforms. When a player mounts your drive but shows no playlists, this is usually what died or mismatched, not your music. The audio files sit untouched in their folders.' },
