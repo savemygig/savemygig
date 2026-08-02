@@ -129,7 +129,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "<strong>If your computer offers to format or initialise the drive, say NO.</strong> On a Mac the \"Initialize…\" button is pre-selected, so one tap destroys the partition table. Your files are still there. Choose Ignore or Eject."
+        "html": "<strong>If your computer offers to format or initialise the drive, say NO.</strong> On a Mac, do not touch \"Initialize…\": it opens Disk Utility, one step from erasing the drive. Your files are still there. Choose Ignore or Eject."
       }
     ],
     "label": "Diagnostic",
@@ -159,7 +159,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "<strong>If it offers to format or initialise the drive, say NO.</strong> Formatting now destroys files that are still recoverable."
+        "html": "<strong>If it offers to format or initialise the drive, say NO.</strong> Formatting now can wipe out files that are still recoverable."
       },
       {
         "t": "check",
@@ -727,7 +727,7 @@ export const TREE = {
       },
       {
         "t": "note",
-        "html": "On some newer mixers the assign is a menu setting, not a switch. If you see no switch, check the mixer's channel settings."
+        "html": "No ASSIGN switch anywhere? Some mixers have no crossfader at all (DJM-V10-LF, DJM-V5, rotary mixers). On those every channel already behaves as THRU, so this is not your problem. Keep going."
       }
     ],
     "label": "Check this first",
@@ -795,7 +795,7 @@ export const TREE = {
       {
         "t": "check",
         "items": [
-          "Find the <strong>source selector</strong> above the fader (USB / LINE / PHONO / LINK / digital).",
+          "Find the <strong>source selector</strong> at the top of the channel strip (USB / DIGITAL / LINE / PHONO).",
           "Set it to where your music actually comes from.",
           "Still nothing? Move your source to a working channel and play from there."
         ]
@@ -868,7 +868,7 @@ export const TREE = {
         "t": "check",
         "items": [
           "Reseat the master output cables, both ends.",
-          "Swap the master pair for the <strong>booth output</strong> pair if there is one.",
+          "Swap the master pair for the <strong>booth output</strong> pair if the plugs fit (booth out is a 1/4 inch jack pair on most DJMs, so XLR house cables need adapters).",
           "Amps powered? In most venues the rack is not in the booth, so this is usually a question for someone else, not a thing you check."
         ]
       },
@@ -987,7 +987,7 @@ export const TREE = {
         "items": [
           "Push the plug in firmly. Half-inserted is the classic.",
           "Try the other headphone socket if the mixer has more than one.",
-          "Try the adapter the other way, or someone else's headphones."
+          "Screw the adapter down fully, or try someone else's headphones."
         ]
       },
       {

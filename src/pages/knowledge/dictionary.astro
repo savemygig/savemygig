@@ -58,7 +58,7 @@ const groups = [
       { t: 'NTFS', d: 'A Windows file system. No player reads it, and rekordbox will not export to it. If a drive is NTFS, it gets reformatted before it ever sees a booth.' },
       { t: 'MBR (Master Boot Record)', d: 'One of two ways a drive describes its own layout, and the one players expect. AlphaTheta documents that the CDJ-3000 does not support the GUID scheme, so when a format tool asks, pick MBR. On a Mac this means erasing the DEVICE, not the volume, in Disk Utility.' },
       { t: 'GPT (GUID Partition Table)', d: 'The other layout scheme, and a recurring cause of "it formatted fine but the player refuses it". You get GPT by accident on a Mac when you erase the volume instead of the device.' },
-      { t: 'Quick format vs full format', d: 'Quick format rebuilds the drive’s index and is fine on a healthy drive. A full format writes to every cell, which makes it a stress test: it is what you run on a SUSPECT drive, and a drive that fails one is retired, not trusted with a gig.' },
+      { t: 'Quick format vs full format', d: 'Quick format rebuilds the drive’s index and is fine on a healthy drive. A full format works the whole drive, not just the index, which makes it a stress test: it is what you run on a SUSPECT drive, and a drive that fails one is retired, not trusted with a gig.' },
       // The physical media entries (Antonio, 2026-08-02). Deliberately kept to
       // what the site can back: the SD limits come from rekordbox's own
       // documented behaviour and the CDJ-3000X port list, and the UASP

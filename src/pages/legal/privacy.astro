@@ -1,7 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
 
-const UPDATED = '29 July 2026';
+// Corrected 2026-08-02 (legal self-review): artist name is REQUIRED by the
+// registration gate, not optional, and the old copy said otherwise; the
+// feedback form was undisclosed; Brevo stores the contact at submission,
+// before the confirm click. All three now stated honestly below.
+const UPDATED = '2 August 2026';
 ---
 <Base
   title="Privacy Policy | Save My Gig!"
@@ -17,9 +21,9 @@ const UPDATED = '29 July 2026';
     <p class="dim" style="margin-bottom:2rem">
       Short version: the rescue flow needs nothing from you. No account, no login, no files uploaded.
       Some free features (Advanced and Custom checklists, the printable list, emailing yourself a copy)
-      ask you to register with an email address. That address, plus two optional fields you can
-      leave empty, is almost all the personal data we ever hold; an optional account adds one
-      thing, a synced copy of your checklists, and its delete button removes everything.
+      ask you to register with an email address and a name, plus an optional Instagram handle you
+      can leave empty. That is almost all the personal data we ever hold; an optional account adds
+      one thing, a synced copy of your checklists, and its delete button removes everything.
     </p>
 
     <div class="panel">
@@ -38,18 +42,22 @@ const UPDATED = '29 July 2026';
     <div class="panel">
       <h3 style="margin-bottom:0.6rem">If you register</h3>
       <p class="dim">
-        Registration collects your <strong>email address</strong> (required) and, only if you choose
-        to share them, an <strong>artist name</strong> and an <strong>artist Instagram handle</strong>.
-        The email is used to unlock the registered features, to send you what you asked for (your
-        checklist, the Emergency Card), and for the occasional note that might save a gig or help
-        your career. We use double opt-in for the mailing list: you get a confirmation email first,
-        and nothing is added to the list until you click it.
+        Registration collects your <strong>email address</strong>, an <strong>artist name or first
+        name</strong> so the site knows what to call you, and, only if you choose to share it, an
+        <strong>artist Instagram handle</strong>. The email is used to unlock the registered
+        features, to send you what you asked for (your checklist, the Emergency Card), and for the
+        occasional note that might save a gig or help your career. We use double opt-in for the
+        mailing list: you get a confirmation email first, and nothing is added to the list until
+        you click it. When you submit the form we do store your details with Brevo straight away,
+        marked as unconfirmed and outside every mailing list, so no campaign can ever reach them.
+        Never click the link and you are never on the list; to have an unconfirmed record deleted,
+        write to <a href="mailto:info@savemygig.com">info@savemygig.com</a>.
       </p>
       <p class="dim">
         If you share your Instagram handle, we use it for exactly what the form says: to follow
         your work from the Save My Gig account. We also receive an internal notification email for
-        each registration so we can do that. The optional fields are never required for any feature,
-        and leaving them empty changes nothing.
+        each registration so we can do that. The Instagram field is always optional, and leaving
+        it empty changes nothing.
       </p>
       <p class="dim" style="margin-bottom:0">
         This data is processed by <strong>Brevo</strong> (Sendinblue SAS, France), acting as our
@@ -81,6 +89,17 @@ const UPDATED = '29 July 2026';
         your account, every synced checklist, and your email address from our records,
         immediately, including the mailing-list contact. What stays is the copy of your list in
         your own browser, because that one belongs to your device, not to us.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin-bottom:0.6rem">If you send feedback</h3>
+      <p class="dim" style="margin-bottom:0">
+        The feedback form sends us what you write, plus your name, email and Instagram if you
+        choose to leave them. It arrives as an email in our inbox, delivered by Brevo, and we use
+        it to read it, reply if you asked for a reply, and follow you back if you left your
+        handle. Want a message of yours deleted? Write to
+        <a href="mailto:info@savemygig.com">info@savemygig.com</a> and it is gone.
       </p>
     </div>
 
