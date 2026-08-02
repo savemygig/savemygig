@@ -44,7 +44,8 @@ export const RUNLIST = [
     verb: 'FOLDER',
     action: 'The database is gone. The music is not.',
     detail:
-      'SOURCE, select the USB, then browse in FOLDER mode. The player reads the ' +
+      'If the drive shows up at all, even with the playlists gone: SOURCE, select ' +
+      'the USB, then browse in FOLDER mode. The player reads the ' +
       'audio files directly and ignores the rekordbox database, which is the part ' +
       'that usually died. You lose cues, playlists and sync. You keep the gig. ' +
       'This is the single most useful thing on this page and the one most DJs ' +

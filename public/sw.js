@@ -30,6 +30,8 @@ const PRECACHE = [
   '/protocol/export/format',
   '/protocol/export/fresh',
   '/protocol/music/other-track',
+  '/protocol/export/errors',
+  '/protocol/export/erase',
   '/protocol/export/repair',
   '/protocol/export/start',
   '/protocol/export/usb-check',

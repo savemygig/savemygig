@@ -35,7 +35,7 @@ export const DOORS = ["usb/start","music/start","sound/start","frozen/start","ex
 
 export const TREE = {
   "music/start": {
-    "title": "What is the player showing?",
+    "title": "Can You See Your Playlists?",
     "status": "Critical_Path",
     "red": true,
     "blocks": [
@@ -52,7 +52,7 @@ export const TREE = {
       {
         "label": "NO - MY PLAYLISTS ARE GONE",
         "to": "music/folder",
-        "desc": "Very common, and usually a 15-second fix."
+        "desc": "Gone, empty, or refusing to open: all count. Usually a 15-second fix."
       },
       {
         "label": "YES, BUT TRACKS WON'T PLAY",
@@ -73,8 +73,12 @@ export const TREE = {
       {
         "t": "check",
         "items": [
-          "Load a <strong>different track</strong>, from a <strong>different playlist</strong>."
+          "Load a <strong>different track</strong>, from a <strong>different playlist</strong>. If it plays, try one more from somewhere else."
         ]
+      },
+      {
+        "t": "note",
+        "html": "Every single track refusing on an older deck can also be the file type: many pre-NXS2 players do not read FLAC or ALAC at all. The files are fine; that deck cannot decode them, and no rebuild changes that."
       }
     ],
     "label": "Before anything else",
@@ -85,7 +89,7 @@ export const TREE = {
       {
         "label": "YES, IT PLAYS",
         "to": "/saved?path=critical&branch=one_track",
-        "desc": "It was that file, not your drive. Play around it tonight; re-export or re-download it tomorrow.",
+        "desc": "It was those files, not your drive. Play around them tonight; if another one fails, come back.",
         "event": "outcome_reached",
         "data": {
           "outcome": "saved",
@@ -193,7 +197,7 @@ export const TREE = {
         "to": "rebuild/risk"
       },
       {
-        "label": "NOTHING HAPPENS",
+        "label": "NOTHING / ERROR MESSAGE",
         "to": "shared/usb-dead"
       }
     ]
@@ -252,7 +256,7 @@ export const TREE = {
         "items": [
           "<strong>PRO DJ LINK.</strong> If the booth is linked, browse and load from a drive sitting in another player. Your dead drive stops mattering.",
           "<strong>Give it thirty seconds.</strong> A large library mounts slowly and looks dead while it does. Most drives get pulled before they finish.",
-          "<strong>FOLDER view.</strong> If the drive appears but your playlists do not, the database died and the audio did not. Browse by folder and play."
+          "<strong>FOLDER view</strong>, if you have not already tried it. When the drive appears but your playlists do not, the database died and the audio did not. Browse by folder and play."
         ]
       },
       {
@@ -261,7 +265,7 @@ export const TREE = {
       }
     ],
     "draft": true,
-    "label": "Step 1 of 3",
+    "label": "Step 1 of 2",
     "heading": "Work the booth",
     "question": "Can you load and play a track on any player now?",
     "step": "no_laptop_1",
@@ -289,7 +293,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "<strong>Only if nobody is playing on this player right now.</strong> If another DJ is on, skip to the next step."
+        "html": "<strong>Only if nobody is playing on this player right now.</strong> If another DJ is on, leave it alone: answer NO below and keep moving."
       },
       {
         "t": "check",
@@ -302,7 +306,7 @@ export const TREE = {
       }
     ],
     "draft": true,
-    "label": "Step 2 of 3",
+    "label": "Step 2 of 2",
     "heading": "Restart the player",
     "question": "Does the player read the USB now?",
     "step": "no_laptop_2",
@@ -346,7 +350,7 @@ export const TREE = {
       }
     ],
     "draft": true,
-    "label": "Step 3 of 3",
+    "label": "Survival mode",
     "heading": "Survival mode: play without your USB",
     "question": "Did you find a way to play?",
     "step": "survival",
@@ -377,9 +381,17 @@ export const TREE = {
     "red": true,
     "blocks": [
       {
+        "t": "dim",
+        "html": "The full rebuild takes 15 minutes or more. On in five? Borrow a drive first, rebuild after."
+      },
+      {
         "t": "alert",
         "emoji": "⚠️",
         "html": "<strong>You will erase this drive.</strong> Anything that does not copy off cleanly first is gone until you can work on it properly at home."
+      },
+      {
+        "t": "note",
+        "html": "This computer has Rekordbox with <strong>your</strong> library on it? Take the <a href=\"/protocol/export/backup\">export rescue</a> instead: a fresh export keeps your cues and playlists, this route does not."
       }
     ],
     "label": "Decision point",
@@ -389,7 +401,7 @@ export const TREE = {
     "step": "risk_consent",
     "options": [
       {
-        "label": "YES - TEMPORARY COPY IS OK",
+        "label": "YES - COPY, THEN ERASE THIS DRIVE",
         "to": "rebuild/second-usb"
       },
       {
@@ -435,7 +447,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "<strong>This erases everything on the SECOND drive.</strong> Make sure nothing important is on it."
+        "html": "<strong>This erases everything on the SECOND drive. If you borrowed it, stop and check with the owner first.</strong> Someone else's library is not expendable, and they may not know you are about to format it."
       },
       {
         "t": "check",
@@ -477,9 +489,9 @@ export const TREE = {
       {
         "t": "check",
         "items": [
-          "Plug in your <strong>original</strong> USB alongside the second one.",
-          "Copy <strong>only the tracks you need tonight</strong> to the second drive.",
+          "Copy <strong>only the tracks you need tonight</strong> to the second drive: from the folder you already made on the computer, or straight off your original USB if it still reads.",
           "Use Search, artist name or date added, to find them fast.",
+          "If a file stalls, skip it and keep going. Whatever lands is your set.",
           "Eject both drives safely when done."
         ]
       }
@@ -496,18 +508,19 @@ export const TREE = {
       },
       {
         "label": "NO - COPY KEEPS FAILING",
-        "to": "rebuild/fallback"
+        "to": "shared/survival",
+        "desc": "The original will not give the files up tonight. Other ways to play."
       }
     ]
   },
   "rebuild/no-erase": {
-    "title": "Keep the USB Untouched",
+    "title": "Find Another USB",
     "status": "Critical · Safe Route",
     "red": true,
     "blocks": [
       {
         "t": "dim",
-        "html": "Then we need <strong>any other USB drive</strong> for tonight."
+        "html": "If you said no to erasing, your original stays untouched. Either way, tonight now runs from a different stick."
       },
       {
         "t": "check",
@@ -519,7 +532,7 @@ export const TREE = {
     ],
     "draft": true,
     "label": "Safe route",
-    "heading": "Your drive stays untouched.",
+    "heading": "We need any other USB for tonight.",
     "question": "Did you find another USB drive?",
     "step": "no_erase",
     "options": [
@@ -547,10 +560,10 @@ export const TREE = {
       {
         "t": "check",
         "items": [
-          "Plug your USB into the computer.",
           "Create a new folder on the desktop.",
           "Copy <strong>only the essential tracks</strong> you need to play.",
-          "Open the USB → use <strong>Search</strong>. Search by artist name or date added."
+          "Open the USB → use <strong>Search</strong>. Search by artist name or date added.",
+          "If a file stalls, skip it and keep going. Whatever lands is your set."
         ]
       }
     ],
@@ -565,7 +578,8 @@ export const TREE = {
       },
       {
         "label": "NO, COPY KEEPS FAILING",
-        "to": "shared/usb-dead"
+        "to": "shared/survival",
+        "desc": "This drive will not give the files up tonight. We get you playing another way; recovery comes after the gig."
       }
     ]
   },
@@ -761,19 +775,23 @@ export const TREE = {
     "options": [
       {
         "label": "ONE CHANNEL, OTHERS FINE",
-        "to": "sound/channel"
+        "to": "sound/channel",
+        "desc": "One deck silent, the rest of the mixer alive."
       },
       {
         "label": "EVERYTHING IS SILENT",
-        "to": "sound/master"
+        "to": "sound/master",
+        "desc": "Nothing from the mixer at all."
       },
       {
-        "label": "ONLY MY HEADPHONES",
-        "to": "sound/phones"
+        "label": "NO CUE IN MY HEADPHONES",
+        "to": "sound/phones",
+        "desc": "The room is fine, you just cannot pre-listen."
       },
       {
         "label": "SOUND IS THERE BUT WRONG",
-        "to": "sound/thin"
+        "to": "sound/thin",
+        "desc": "Thin, quiet, distorted or one-sided."
       }
     ]
   },
@@ -871,7 +889,7 @@ export const TREE = {
         "t": "check",
         "items": [
           "<strong>TRIM / GAIN</strong> to 12 o'clock.",
-          "Check the channel is not muted."
+          "<strong>COLOR FX off, FILTER knob to 12 o'clock.</strong> A filter swept to either end by the last DJ silences a channel with everything else looking right."
         ]
       }
     ],
@@ -1363,7 +1381,7 @@ export const TREE = {
         "items": [
           "Copy the whole drive to the computer, or at minimum the <strong>Contents</strong> folder.",
           "If some files fail, copy what you can and note which ones. Skipped files are gone for good if this drive gets formatted later, so if any of them matter, take the fresh-drive route instead and keep this one intact.",
-          "While it copies: open Rekordbox, top-left mode selector to <span class=\"mono\">EXPORT</span>. Whether your USB shows under <strong>Devices</strong> or not, the next move is the same."
+          "While it copies: open Rekordbox, top-left mode selector to <span class=\"mono\">EXPORT</span>. If your USB shows under <strong>Devices</strong>, the next screen refreshes it; if it never shows, say so on the next screen and we rebuild clean."
         ]
       }
     ],
@@ -1415,9 +1433,68 @@ export const TREE = {
         "to": "export/verify"
       },
       {
-        "label": "NO, SYNC ERRORS",
-        "to": "export/format",
-        "desc": "Deeper corruption. We rebuild the drive clean."
+        "label": "NO - ERRORS, OR DEVICE NOT SHOWING",
+        "to": "export/errors"
+      }
+    ]
+  },
+  "export/errors": {
+    "title": "Read the Error",
+    "status": "Quick_Fix",
+    "red": false,
+    "blocks": [
+      {
+        "t": "dim",
+        "html": "Ten seconds here saves a pointless format. Sync errors split into two families and only one of them is the drive's fault."
+      }
+    ],
+    "draft": true,
+    "label": "Step 3b",
+    "heading": "What is Rekordbox complaining about?",
+    "question": "What do the errors look like?",
+    "step": "qf_errors",
+    "options": [
+      {
+        "label": "FILES MISSING OR NOT FOUND",
+        "to": "export/export",
+        "desc": "Library-side, not the drive. Import the folder you backed up, then export fresh. No format needed."
+      },
+      {
+        "label": "DEVICE, WRITE OR UNKNOWN ERRORS",
+        "to": "export/erase",
+        "desc": "Then the drive side is suspect and we rebuild it clean."
+      }
+    ]
+  },
+  "export/erase": {
+    "title": "Prepare to Format",
+    "status": "Quick_Fix",
+    "red": false,
+    "blocks": [
+      {
+        "t": "dim",
+        "html": "Your safety copy from the backup step is what makes this survivable."
+      },
+      {
+        "t": "alert",
+        "emoji": "⚠️",
+        "html": "<strong>The next step ERASES this USB completely.</strong> Anything that failed to copy earlier is gone for good. If any of those files matter, stop here and take the fresh-drive route instead."
+      }
+    ],
+    "draft": true,
+    "label": "Step 3c",
+    "heading": "Prepare the USB",
+    "question": "Are you ready to erase this USB and continue?",
+    "step": "qf_erase_consent",
+    "options": [
+      {
+        "label": "YES - ERASE AND CONTINUE",
+        "to": "export/format"
+      },
+      {
+        "label": "NO - KEEP THIS DRIVE AS IT IS",
+        "to": "export/fresh",
+        "desc": "We build tonight on a different drive instead."
       }
     ]
   },
@@ -1748,7 +1825,7 @@ export const TREE = {
           "Press <strong>USB STOP</strong> if it responds, and wait for the light to stop blinking.",
           "Power off. Wait twenty seconds.",
           "Power on and let it boot fully before touching anything.",
-          "Reinsert the drive and give it thirty seconds. Big libraries mount slowly."
+          "Reinsert the drive and give it thirty seconds. Big libraries mount slowly. If the player froze while browsing, test the drive in another deck first: a corrupt database can freeze it again."
         ]
       }
     ],
