@@ -122,11 +122,31 @@
     // cover both consent buttons on /fix pages at mobile width.
     document.documentElement.classList.add('ck-open');
 
+    // The banner is position:fixed, so it SAT ON TOP of real content: on the
+    // first visit it covered the FROZEN PLAYER door on /emergency and the
+    // primary CTA on /saved (polish audit C1, 2026-08-03). Shrinking it was
+    // never the fix. Reserve exactly its own height at the foot of the page
+    // so every element can still be scrolled clear of it, whatever the
+    // viewport or the text wrap. Re-measured on resize and orientation change.
+    function reserveSpace() {
+      if (box.hidden) return;
+      var h = box.getBoundingClientRect().height;
+      document.body.style.paddingBottom = Math.ceil(h + 24) + 'px';
+    }
+    reserveSpace();
+    // One more pass after fonts settle, since wrapping changes the height.
+    setTimeout(reserveSpace, 250);
+    window.addEventListener('resize', reserveSpace);
+    window.addEventListener('orientationchange', reserveSpace);
+
     function choose(v) {
       try { localStorage.setItem(KEY, v); } catch (e) {}
       box.hidden = true;
       box.style.display = 'none'; // belt and braces, in case CSS wins
       document.documentElement.classList.remove('ck-open');
+      document.body.style.paddingBottom = '';
+      window.removeEventListener('resize', reserveSpace);
+      window.removeEventListener('orientationchange', reserveSpace);
       if (v === 'yes') loadAnalytics();
     }
     document.getElementById('ck-yes').addEventListener('click', function () { choose('yes'); });

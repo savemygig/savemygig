@@ -21,13 +21,29 @@ import {
 // "good" one renders neutral).
 
 export function getStaticPaths() {
+  // Screens that instruct or consent to formatting, erasing or deleting. Only
+  // these print the data-destruction warning at the foot (polish audit C5,
+  // 2026-08-03). Kept HERE rather than in the tree so emergency-tree.js stays
+  // untouched under the launch freeze: this is presentation, not flow.
+  // Declared inside getStaticPaths because Astro hoists this function out of
+  // the frontmatter scope, so a module-level const is not visible to it.
+  // If you add a destructive screen, add its id here.
+  const RISK_NODES = new Set([
+    'rebuild/risk',
+    'rebuild/erase',
+    'rebuild/format',
+    'rebuild/second-format',
+    'export/erase',
+    'export/format',
+    'export/fresh',
+  ]);
   return Object.keys(TREE).map((id) => ({
     params: { slug: id },
-    props: { node: TREE[id] },
+    props: { node: TREE[id], risk: RISK_NODES.has(id) },
   }));
 }
 
-const { node } = Astro.props;
+const { node, risk } = Astro.props;
 
 const toneOf = (o, i) => {
   if (o.tone) return o.tone;
@@ -53,6 +69,7 @@ const dataAttrs = (o, i) => {
   status={node.status}
   red={node.red}
   heading={node.srHeading}
+  risk={risk}
 >
   {node.draft && <div class="review-flag">DRAFT, review pending.</div>}
   {node.label && <div class="step-label">{node.label}</div>}

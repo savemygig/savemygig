@@ -4,7 +4,6 @@
 // no affiliate links, no selling. Nothing competes with the rescue.
 import Analytics from '../components/Analytics.astro';
 import Disclaimer from '../components/Disclaimer.astro';
-import BetaNotice from '../components/BetaNotice.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -14,9 +13,16 @@ interface Props {
   red?: boolean;
   /** optional visible heading; falls back to a screen-reader-only one */
   heading?: string;
+  /**
+   * True only on screens that instruct or consent to formatting, erasing or
+   * deleting. Drives which disclaimer variant renders. Default false: most
+   * screens destroy nothing, so they must not print a data-destruction
+   * warning (polish audit, 2026-08-03).
+   */
+  risk?: boolean;
 }
 
-const { title, status, red = false, heading } = Astro.props;
+const { title, status, red = false, heading, risk = false } = Astro.props;
 // Every screen needs an h1 for heading order and screen readers. Most steps
 // render their own visible <h2>, so by default we emit a hidden h1 derived
 // from the page title rather than change the visual design.
@@ -52,7 +58,11 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig!?\s*$/i, '');
   </header>
   <main class="screen" id="main">
     <h1 class="sr-only">{srHeading}</h1>
-    <BetaNotice variant="line" />
+    <!-- The IN TESTING line used to render here, on all 55 tunnel screens.
+         Removed 2026-08-03 (polish audit C4, Antonio's go): the disclosure now
+         appears ONCE, as the card on /emergency, before the DJ enters. Same
+         honesty, stated where it is read, instead of a doubt reprinted above
+         every single instruction. Reinstating is one line if that changes. -->
     <slot />
 
     <!-- Every step needs a way back. Without this a mis-tap under pressure was
@@ -66,7 +76,7 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig!?\s*$/i, '');
       <a class="tx-btn" href="/emergency" data-event="flow_restart">Start over</a>
     </nav>
 
-    <Disclaimer variant="compact" />
+    <Disclaimer variant={risk ? 'compact' : 'quiet'} />
   </main>
   <script is:inline>
     (function () {

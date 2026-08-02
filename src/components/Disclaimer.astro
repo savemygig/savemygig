@@ -7,17 +7,31 @@
  * plainly, in the places where the risk actually lives, not only buried in a
  * legal page nobody opens.
  *
- * Two variants:
- *   compact  - a single line for the rescue tunnel, where nothing may compete
- *              with the decision. Links to the full text.
+ * Three variants:
+ *   quiet    - liability line + link, for tunnel screens where NOTHING is
+ *              formatted, erased or deleted. Added 2026-08-03 after the polish
+ *              audit: the data-destruction sentence was running on all 55
+ *              screens, including ones whose own copy says "you keep the gig".
+ *              A threat printed where no risk exists reads as noise and costs
+ *              confidence at the exact moment the product should give it.
+ *   compact  - the same line PLUS the data-destruction warning, for screens
+ *              that do instruct or consent to a destructive action.
  *   full     - the block used on /disclaimer and the destructive-step pages.
+ *
+ * The rule: the warning appears where the risk actually lives. Coverage is
+ * unchanged, every screen still carries the liability line and the link.
  */
 interface Props {
-  variant?: 'compact' | 'full';
+  variant?: 'quiet' | 'compact' | 'full';
 }
 const { variant = 'compact' } = Astro.props;
 ---
-{variant === 'compact' ? (
+{variant === 'quiet' ? (
+  <p class="dsc-compact">
+    You follow these steps at your own risk.
+    <a href="/legal/disclaimer">Full disclaimer</a>.
+  </p>
+) : variant === 'compact' ? (
   <p class="dsc-compact">
     You follow these steps at your own risk. Formatting or erasing a drive can
     permanently destroy data. <a href="/legal/disclaimer">Full disclaimer</a>.
