@@ -44,7 +44,12 @@ const EXCLUDE = [
   '/404', '/search', '/offline',
 ];
 
-const BODY_CAP = 2600;
+// 4000, raised from 2600 on 2026-08-02. At 63 terms the Dictionary body was
+// being truncated after roughly the first ten definitions, so a word INSIDE a
+// definition (timecode, inside DVS) was unfindable while the term names
+// themselves were fine. Costs about 24KB across the whole index, which gzips
+// down to very little, and it is fetched once on first keystroke then cached.
+const BODY_CAP = 4000;
 
 async function walk(dir, out = []) {
   for (const e of await readdir(dir, { withFileTypes: true })) {

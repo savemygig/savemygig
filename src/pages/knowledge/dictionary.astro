@@ -13,29 +13,6 @@ import { DJM_A9, DJM_V10 } from '../../data/facts.js';
 // formats, the library, the players, the mixer and sound.
 const groups = [
   {
-    title: 'Drives and formats',
-    terms: [
-      { t: 'FAT32', d: 'The file system that every Pioneer and AlphaTheta player reads, old and new, which is why this site recommends it. Its one real limit is 4GB per FILE, not per drive, and no DJ track approaches that.' },
-      { t: 'exFAT', d: 'A newer file system. Officially supported on CDJ-3000, CDJ-3000X, CDJ-1500X, XDJ-RX3, XDJ-XZ and XDJ-AZ, refused by every CDJ-2000 including the NXS2. Most drives over 32GB ship with it from the factory, which is why a brand-new stick can fail on an older player out of the box. rekordbox writes exFAT to USB drives only, never SD cards.' },
-      { t: 'NTFS', d: 'A Windows file system. No player reads it, and rekordbox will not export to it. If a drive is NTFS, it gets reformatted before it ever sees a booth.' },
-      { t: 'MBR (Master Boot Record)', d: 'One of two ways a drive describes its own layout, and the one players expect. AlphaTheta documents that the CDJ-3000 does not support the GUID scheme, so when a format tool asks, pick MBR. On a Mac this means erasing the DEVICE, not the volume, in Disk Utility.' },
-      { t: 'GPT (GUID Partition Table)', d: 'The other layout scheme, and a recurring cause of "it formatted fine but the player refuses it". You get GPT by accident on a Mac when you erase the volume instead of the device.' },
-      { t: 'Quick format vs full format', d: 'Quick format rebuilds the drive’s index and is fine on a healthy drive. A full format writes to every cell, which makes it a stress test: it is what you run on a SUSPECT drive, and a drive that fails one is retired, not trusted with a gig.' },
-      // The physical media entries (Antonio, 2026-08-02). Deliberately kept to
-      // what the site can back: the SD limits come from rekordbox's own
-      // documented behaviour and the CDJ-3000X port list, and the UASP
-      // thresholds come from the AlphaTheta change histories already in
-      // facts.js. The SSD and HDD entries stay on physics and power, with no
-      // per-model support claims, because we have not checked those.
-      { t: 'USB stick (pen drive)', d: 'The drive nearly every gig runs on, and the one piece of equipment you actually control in someone else’s booth. FAT32 with an MBR scheme, and almost nothing surprises you. Capacity is not the thing to optimise: a drive that fails a full format is retired, and two identical smaller drives beat one big one, because the second is what saves the night.' },
-      { t: 'SD card', d: 'A second slot on some players and missing entirely on others: the CDJ-3000X has no SD slot at all, which strands a workflow built on cards. One limit applies even where the slot exists: rekordbox exports exFAT to USB drives only, never to an SD card. On SD it is FAT32 or nothing.' },
-      { t: 'SSD (solid state drive)', d: 'A drive with no moving parts. As an external USB drive it is the sturdier thing to carry into a booth, because there is nothing inside to be disturbed by bass or by a knock. The catch is not speed, it is power and protocol: a bus-powered drive asks more of a player’s USB port than a stick does, and see UASP below.' },
-      { t: 'HDD (hard disk drive)', d: 'The older kind, with a platter spinning and a head moving inside while it runs. It works, but it is the wrong body for a booth: physically vulnerable exactly when it is in use, thirstier on bus power than a stick, and one knock at the wrong moment is a different class of problem from a dropped USB. If a large library has to travel, put it on an SSD.' },
-      { t: 'UASP', d: `The faster protocol modern USB drives use to talk to the device they are plugged into. Worth knowing because AlphaTheta documented it as a genuine fault, not a theory: UASP-compatible drives were not recognised at all on the DJM-A9 before firmware ${DJM_A9.uaspFix}, or on the DJM-V10 before ${DJM_V10.uaspFix}. A drive that works everywhere and gets refused by one desk can be this, rather than the drive.` },
-      { t: 'NFC login', d: 'A way into a booth without carrying a drive at all. The CDJ-3000X carries an NFC touchpoint on its front panel: hold a phone running rekordbox for iOS or Android over the reader and it pulls up your online music. The CDJ-1500X supports the same login, by NFC or by QR code. It signs you in, it is not a way to play audio off the handset, and what arrives afterwards is your cloud library over the venue’s network.' },
-    ],
-  },
-  {
     // AUDIO FILES (Antonio, 2026-08-02). Deliberately its own group rather
     // than folded into "Drives and formats" above: that group is about FILE
     // SYSTEMS (FAT32, exFAT, MBR), and a DJ meets both kinds of "format"
@@ -63,6 +40,76 @@ const groups = [
     ],
   },
   {
+    title: 'Library and export',
+    terms: [
+      { t: 'rekordbox database', d: 'The hidden index rekordbox writes onto your USB next to the music: playlists, cues, grids, waveforms. When a player mounts your drive but shows no playlists, this is usually what died or mismatched, not your music. The audio files sit untouched in their folders.' },
+      { t: 'Device Library', d: 'The classic database format rekordbox exports to USB, the one older CDJs and XDJs read.' },
+      { t: 'OneLibrary (Device Library Plus)', d: 'The newer database format, two names for the same thing, read by CDJ-3000X, XDJ-AZ, OPUS-QUAD and OMNIS-DUO. Since rekordbox 7.2.13 a standard export writes BOTH formats to the stick, which is why this site anchors on that version: one export, every player.' },
+      { t: 'EXPORT mode', d: 'The rekordbox mode that prepares USB drives. Officially free, no subscription, confirmed by rekordbox’s own plans FAQ. PERFORMANCE mode is the other one, for playing from the laptop.' },
+      { t: 'FOLDER view', d: 'The player’s file browser. It reads your audio files directly, folder by folder, ignoring the database entirely. You lose playlists, cues and prepared waveforms; you keep the music and the gig. Move one of the emergency list for a reason.' },
+      { t: 'Library backup', d: 'File > Library > Backup Library in rekordbox 7, to a different drive or cloud. The USB in your pocket is an export, not a backup: lose the laptop library and the cues and playlists on it are the only copy left.' },
+    ],
+  },
+  {
+    title: 'Drives and file systems',
+    terms: [
+      { t: 'FAT32', d: 'The file system that every Pioneer and AlphaTheta player reads, old and new, which is why this site recommends it. Its one real limit is 4GB per FILE, not per drive, and no DJ track approaches that.' },
+      { t: 'exFAT', d: 'A newer file system. Officially supported on CDJ-3000, CDJ-3000X, CDJ-1500X, XDJ-RX3, XDJ-XZ and XDJ-AZ, refused by every CDJ-2000 including the NXS2. Most drives over 32GB ship with it from the factory, which is why a brand-new stick can fail on an older player out of the box. rekordbox writes exFAT to USB drives only, never SD cards.' },
+      { t: 'NTFS', d: 'A Windows file system. No player reads it, and rekordbox will not export to it. If a drive is NTFS, it gets reformatted before it ever sees a booth.' },
+      { t: 'MBR (Master Boot Record)', d: 'One of two ways a drive describes its own layout, and the one players expect. AlphaTheta documents that the CDJ-3000 does not support the GUID scheme, so when a format tool asks, pick MBR. On a Mac this means erasing the DEVICE, not the volume, in Disk Utility.' },
+      { t: 'GPT (GUID Partition Table)', d: 'The other layout scheme, and a recurring cause of "it formatted fine but the player refuses it". You get GPT by accident on a Mac when you erase the volume instead of the device.' },
+      { t: 'Quick format vs full format', d: 'Quick format rebuilds the drive’s index and is fine on a healthy drive. A full format writes to every cell, which makes it a stress test: it is what you run on a SUSPECT drive, and a drive that fails one is retired, not trusted with a gig.' },
+      // The physical media entries (Antonio, 2026-08-02). Deliberately kept to
+      // what the site can back: the SD limits come from rekordbox's own
+      // documented behaviour and the CDJ-3000X port list, and the UASP
+      // thresholds come from the AlphaTheta change histories already in
+      // facts.js. The SSD and HDD entries stay on physics and power, with no
+      // per-model support claims, because we have not checked those.
+      { t: 'USB stick (pen drive)', d: 'The drive nearly every gig runs on, and the one piece of equipment you actually control in someone else’s booth. FAT32 with an MBR scheme, and almost nothing surprises you. Capacity is not the thing to optimise: a drive that fails a full format is retired, and two identical smaller drives beat one big one, because the second is what saves the night.' },
+      { t: 'SD card', d: 'A second slot on some players and missing entirely on others: the CDJ-3000X has no SD slot at all, which strands a workflow built on cards. One limit applies even where the slot exists: rekordbox exports exFAT to USB drives only, never to an SD card. On SD it is FAT32 or nothing.' },
+      { t: 'SSD (solid state drive)', d: 'A drive with no moving parts. As an external USB drive it is the sturdier thing to carry into a booth, because there is nothing inside to be disturbed by bass or by a knock. The catch is not speed, it is power and protocol: a bus-powered drive asks more of a player’s USB port than a stick does, and see UASP below.' },
+      { t: 'HDD (hard disk drive)', d: 'The older kind, with a platter spinning and a head moving inside while it runs. It works, but it is the wrong body for a booth: physically vulnerable exactly when it is in use, thirstier on bus power than a stick, and one knock at the wrong moment is a different class of problem from a dropped USB. If a large library has to travel, put it on an SSD.' },
+      { t: 'UASP', d: `The faster protocol modern USB drives use to talk to the device they are plugged into. Worth knowing because AlphaTheta documented it as a genuine fault, not a theory: UASP-compatible drives were not recognised at all on the DJM-A9 before firmware ${DJM_A9.uaspFix}, or on the DJM-V10 before ${DJM_V10.uaspFix}. A drive that works everywhere and gets refused by one desk can be this, rather than the drive.` },
+    ],
+  },
+  {
+    title: 'Players',
+    terms: [
+      { t: 'PRO DJ LINK', d: 'The network that connects players and mixer. Over LINK, any player can browse and load from a drive that is physically in another player, officially supported since the CDJ-900/2000 generation. If your drive dies mid-set, the drive in the other deck is still reachable.' },
+      { t: 'USB STOP', d: 'The button you hold before pulling a drive. The manual is blunt: removing a drive (or cutting power) while the USB indicator is blinking can delete management data or make the drive unreadable. Every time, both directions: player and rekordbox.' },
+      { t: 'Emergency Loop', d: 'Official AlphaTheta behaviour, and officially named: when a track ends and no next track is loaded, the player loops the last beats instead of going silent. If you hear it, the player is doing its job; load something.' },
+      { t: 'E-8302 (CANNOT PLAY TRACK)', d: 'CDJ-3000 and CDJ-3000X error meaning the track data on the drive cannot be read correctly. The official response: try the track on another player, and re-import the file to the drive if possible. Usually a corrupt export or wrong file system, not dead hardware.' },
+      { t: 'HID mode', d: 'The mode where a player becomes a controller for software on a laptop instead of playing from its own drive. A booth surprise on older players: not all of them support it for every software.' },
+      { t: 'Firmware', d: 'The player’s own software, and part of your rig whether you like it or not. Known freezes and dropouts have official fixed-in versions; check the version in UTILITY at soundcheck. And never update anything, yours or the booth’s, on gig day.' },
+      { t: 'NFC login', d: 'A way into a booth without carrying a drive at all. The CDJ-3000X carries an NFC touchpoint on its front panel: hold a phone running rekordbox for iOS or Android over the reader and it pulls up your online music. The CDJ-1500X supports the same login, by NFC or by QR code. It signs you in, it is not a way to play audio off the handset, and what arrives afterwards is your cloud library over the venue’s network.' },
+    ],
+  },
+  {
+    title: 'Mixer and sound',
+    terms: [
+      { t: 'TRIM / GAIN', d: 'Two names for the same top-of-strip knob: how loud the source arrives in the channel, before the fader. First suspect when one channel is quiet with the fader up.' },
+      { t: 'Crossfader assign', d: 'The per-channel switch (A / THRU / B) deciding whether the crossfader controls that channel. Assigned to the wrong side, the channel is silent with every fader up: the number one silent-channel cause. On OPUS-QUAD and XDJ-AZ it lives in the on-screen settings, not on a physical switch.' },
+      { t: 'CUE / PFL', d: 'The DJ’s word and the tech’s word for the same thing: listening to a channel in your headphones before it reaches the room. If your headphones are silent, check the MIX knob is toward CUE, not MASTER, before blaming the jack.' },
+      { t: 'BOOTH output', d: 'The mixer’s second output, feeding the DJ’s own monitors, separate from MASTER which feeds the room. Two knobs, two destinations. In a pinch the booth output pair can substitute for a dead master pair.' },
+      { t: 'Master insert', d: 'A patch point on the back of some mixers where an outboard processor sits in the master signal. If something is plugged in and nothing sends audio back, the master goes silent with every fader up. If you find one patched, it is almost certainly the venue’s: ask before pulling it.' },
+      { t: 'Signal chain', d: 'The ordered path audio takes after your mixer: house processor, amplifiers, speakers. Past the booth output it belongs to the venue, and the fastest fix is the exact sentence: "Mixer master is up, master meters are moving. Nothing after the booth output."' },
+      // Added 2026-08-02 to answer the question people actually mean when they
+      // ask about "connecting a phone". Players do not read a phone over NFC;
+      // this and rekordbox on the device are the real paths.
+      { t: 'Bluetooth audio in', d: 'Some desks take wireless audio from a phone or laptop directly, the DJM-A9 among them. Genuinely useful for a handover, or for keeping the room alive between sets. It is not a performance path: latency and connection stability make it a convenience input, not a deck to mix on. Not to be confused with NFC login on the newer players, which signs you into a cloud library rather than sending any audio.' },
+      // The converter trio (Antonio, 2026-08-02). His question was where an
+      // analogue-to-digital converter belongs, and the answer is here: it is
+      // where a DJ actually meets the term, because mixer spec sheets
+      // advertise converter bit depth and nobody explains what it buys you.
+      // Soundcard and DVS sit alongside because on a modern DJM they are the
+      // same piece of silicon doing the same job, and a DJ who understands
+      // one understands all three.
+      { t: 'A/D and D/A converter', d: 'The two translations every sound in a booth goes through. A/D turns an analogue signal into numbers, D/A turns numbers back into something a speaker can move air with. Mixer spec sheets advertise these, usually as a bit depth like 32-bit, because the conversion is where a desk either preserves the recording or quietly flattens it. Nothing you operate, and nothing you can fix on the night, but it is the honest answer to why two mixers playing the same file do not sound identical.' },
+      { t: 'Soundcard (audio interface)', d: 'The hardware doing that conversion. On a laptop setup it is a separate box or one built into the controller. On a professional DJM it is built into the mixer, which is why a laptop can plug straight into the desk over USB and needs nothing else in between. When someone says the mixer "is" the soundcard, this is what they mean.' },
+      { t: 'DVS (Digital Vinyl System)', d: 'Playing digital files from a laptop while controlling them with real turntables or CDJs, using timecode: a special record or CD carrying a control signal rather than music. The mixer reads that signal through its own soundcard and the laptop follows it. It is why a DVS setup cares so much about the phono inputs and the USB connection to the computer, and why a wrong input selector kills it instantly.' },
+    ],
+  },
+  {
     // CABLES AND PLUGS (Antonio, 2026-08-02). Its own group for the same
     // reason Audio files is: a DJ meets connectors as a separate class of
     // problem from drives, formats or the library. Scope rule applies, this
@@ -87,43 +134,7 @@ const groups = [
       { t: 'USB-A, USB-B, USB-C', d: 'Three different shapes doing different jobs on the same desk. USB-A is the flat one your drive plugs into. USB-B is the squarer one that connects a mixer to a computer for DVS or recording. USB-C appears on newer players for both storage and computer connection. The CDJ-3000X, for instance, carries one USB-A and two USB-C and no SD slot at all.' },
     ],
   },
-  {
-    title: 'The library',
-    terms: [
-      { t: 'rekordbox database', d: 'The hidden index rekordbox writes onto your USB next to the music: playlists, cues, grids, waveforms. When a player mounts your drive but shows no playlists, this is usually what died or mismatched, not your music. The audio files sit untouched in their folders.' },
-      { t: 'Device Library', d: 'The classic database format rekordbox exports to USB, the one older CDJs and XDJs read.' },
-      { t: 'OneLibrary (Device Library Plus)', d: 'The newer database format, two names for the same thing, read by CDJ-3000X, XDJ-AZ, OPUS-QUAD and OMNIS-DUO. Since rekordbox 7.2.13 a standard export writes BOTH formats to the stick, which is why this site anchors on that version: one export, every player.' },
-      { t: 'EXPORT mode', d: 'The rekordbox mode that prepares USB drives. Officially free, no subscription, confirmed by rekordbox’s own plans FAQ. PERFORMANCE mode is the other one, for playing from the laptop.' },
-      { t: 'FOLDER view', d: 'The player’s file browser. It reads your audio files directly, folder by folder, ignoring the database entirely. You lose playlists, cues and prepared waveforms; you keep the music and the gig. Move one of the emergency list for a reason.' },
-      { t: 'Library backup', d: 'File > Library > Backup Library in rekordbox 7, to a different drive or cloud. The USB in your pocket is an export, not a backup: lose the laptop library and the cues and playlists on it are the only copy left.' },
-    ],
-  },
-  {
-    title: 'The players',
-    terms: [
-      { t: 'PRO DJ LINK', d: 'The network that connects players and mixer. Over LINK, any player can browse and load from a drive that is physically in another player, officially supported since the CDJ-900/2000 generation. If your drive dies mid-set, the drive in the other deck is still reachable.' },
-      { t: 'USB STOP', d: 'The button you hold before pulling a drive. The manual is blunt: removing a drive (or cutting power) while the USB indicator is blinking can delete management data or make the drive unreadable. Every time, both directions: player and rekordbox.' },
-      { t: 'Emergency Loop', d: 'Official AlphaTheta behaviour, and officially named: when a track ends and no next track is loaded, the player loops the last beats instead of going silent. If you hear it, the player is doing its job; load something.' },
-      { t: 'E-8302 (CANNOT PLAY TRACK)', d: 'CDJ-3000 and CDJ-3000X error meaning the track data on the drive cannot be read correctly. The official response: try the track on another player, and re-import the file to the drive if possible. Usually a corrupt export or wrong file system, not dead hardware.' },
-      { t: 'HID mode', d: 'The mode where a player becomes a controller for software on a laptop instead of playing from its own drive. A booth surprise on older players: not all of them support it for every software.' },
-      { t: 'Firmware', d: 'The player’s own software, and part of your rig whether you like it or not. Known freezes and dropouts have official fixed-in versions; check the version in UTILITY at soundcheck. And never update anything, yours or the booth’s, on gig day.' },
-    ],
-  },
-  {
-    title: 'The mixer and the sound',
-    terms: [
-      { t: 'TRIM / GAIN', d: 'Two names for the same top-of-strip knob: how loud the source arrives in the channel, before the fader. First suspect when one channel is quiet with the fader up.' },
-      { t: 'Crossfader assign', d: 'The per-channel switch (A / THRU / B) deciding whether the crossfader controls that channel. Assigned to the wrong side, the channel is silent with every fader up: the number one silent-channel cause. On OPUS-QUAD and XDJ-AZ it lives in the on-screen settings, not on a physical switch.' },
-      { t: 'CUE / PFL', d: 'The DJ’s word and the tech’s word for the same thing: listening to a channel in your headphones before it reaches the room. If your headphones are silent, check the MIX knob is toward CUE, not MASTER, before blaming the jack.' },
-      { t: 'BOOTH output', d: 'The mixer’s second output, feeding the DJ’s own monitors, separate from MASTER which feeds the room. Two knobs, two destinations. In a pinch the booth output pair can substitute for a dead master pair.' },
-      { t: 'Master insert', d: 'A patch point on the back of some mixers where an outboard processor sits in the master signal. If something is plugged in and nothing sends audio back, the master goes silent with every fader up. If you find one patched, it is almost certainly the venue’s: ask before pulling it.' },
-      { t: 'Signal chain', d: 'The ordered path audio takes after your mixer: house processor, amplifiers, speakers. Past the booth output it belongs to the venue, and the fastest fix is the exact sentence: "Mixer master is up, master meters are moving. Nothing after the booth output."' },
-      // Added 2026-08-02 to answer the question people actually mean when they
-      // ask about "connecting a phone". Players do not read a phone over NFC;
-      // this and rekordbox on the device are the real paths.
-      { t: 'Bluetooth audio in', d: 'Some desks take wireless audio from a phone or laptop directly, the DJM-A9 among them. Genuinely useful for a handover, or for keeping the room alive between sets. It is not a performance path: latency and connection stability make it a convenience input, not a deck to mix on. Not to be confused with NFC login on the newer players, which signs you into a cloud library rather than sending any audio.' },
-    ],
-  },
+
 ];
 
 const schema = {
