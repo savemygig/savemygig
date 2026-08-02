@@ -16,7 +16,19 @@
  * Rendered by src/pages/protocol/[...slug].astro. Integrity is enforced by
  * scripts/check-tree.mjs in the gate: unique ids, resolvable targets, all
  * nodes reachable from a door, every path reaches a terminal, 2-4 options,
- * depth budget, sw.js precache in sync.
+ * depth budget, sw.js precache in sync, every option labeled.
+ *
+ * STANDING DESIGN PRINCIPLE (Antonio, 2026-08-03): NEVER recommend a
+ * destructive action (formatting, rebuilding a database, deleting files,
+ * firmware updates, factory resets) until every reasonable non-destructive
+ * cause has been eliminated. Any step that can permanently destroy user
+ * data must be preceded by at least one additional confirmation question
+ * designed to rule out common false positives (see music/other-track: one
+ * corrupt file must never walk a DJ into erasing a healthy drive), and the
+ * destructive screen itself gates behind explicit consent. When editing
+ * this tree, trace every route into a format/erase node and name the
+ * false positive it has ruled out. If you cannot, add the ruling-out
+ * screen first.
  */
 
 export const DOORS = ["usb/start","music/start","sound/start","frozen/start","export/start"];
@@ -44,8 +56,46 @@ export const TREE = {
       },
       {
         "label": "YES, BUT TRACKS WON'T PLAY",
-        "to": "shared/computer",
+        "to": "music/other-track",
         "desc": "Error codes, or tracks that refuse to play."
+      }
+    ]
+  },
+  "music/other-track": {
+    "title": "Try Another Track",
+    "status": "Critical · Fastest check",
+    "red": true,
+    "blocks": [
+      {
+        "t": "dim",
+        "html": "One corrupt file and a dying drive look identical from where you stand. Three seconds tells them apart, and it is the difference between playing around one track and rebuilding a healthy drive for nothing."
+      },
+      {
+        "t": "check",
+        "items": [
+          "Load a <strong>different track</strong>, from a <strong>different playlist</strong>."
+        ]
+      }
+    ],
+    "label": "Before anything else",
+    "heading": "One file, or the whole drive?",
+    "question": "Does that one play?",
+    "step": "music_other_track",
+    "options": [
+      {
+        "label": "YES, IT PLAYS",
+        "to": "/saved?path=critical&branch=one_track",
+        "desc": "It was that file, not your drive. Play around it tonight; re-export or re-download it tomorrow.",
+        "event": "outcome_reached",
+        "data": {
+          "outcome": "saved",
+          "path": "critical"
+        }
+      },
+      {
+        "label": "NO, NOTHING LOADS",
+        "to": "shared/computer",
+        "desc": "Then it is the drive or the database, and we fix that."
       }
     ]
   },
@@ -166,7 +216,7 @@ export const TREE = {
         "t": "check",
         "items": [
           "Plug <strong>direct</strong>, not through a hub or a dock. Bus-powered hubs drop marginal drives.",
-          "Try <strong>another computer or a phone adapter</strong> if one is nearby."
+          "Try <strong>another computer</strong> if one is nearby. A phone adapter can prove the drive is alive, but tonight's rebuild needs a computer."
         ]
       }
     ],
@@ -204,6 +254,10 @@ export const TREE = {
           "<strong>Give it thirty seconds.</strong> A large library mounts slowly and looks dead while it does. Most drives get pulled before they finish.",
           "<strong>FOLDER view.</strong> If the drive appears but your playlists do not, the database died and the audio did not. Browse by folder and play."
         ]
+      },
+      {
+        "t": "note",
+        "html": "Old players are picky about new drives: a fast USB 3.1/3.2 stick or a very large drive can be refused by an older CDJ that reads a plain stick fine. Your drive may not be dead at all, which is exactly why borrowing works."
       }
     ],
     "draft": true,
@@ -719,7 +773,51 @@ export const TREE = {
       },
       {
         "label": "SOUND IS THERE BUT WRONG",
-        "to": "sound/wrong"
+        "to": "sound/thin"
+      }
+    ]
+  },
+  // sound/thin facts are AlphaTheta's own, already sourced for the Dictionary
+  // EQ trio (2026-08-02): -26 dB EQ-mode floor and EQ CURVE isolator mode from
+  // the DJM-900NXS2 operating instructions; the separate 3-band master
+  // isolator from the DJM-V10 specifications; booth EQ as monitor-path-only
+  // from the same manuals.
+  "sound/thin": {
+    "title": "Zero the Strip",
+    "status": "No_Sound · Quality",
+    "red": true,
+    "blocks": [
+      {
+        "t": "dim",
+        "html": "Thin, no bass, no punch? That is almost always the last DJ's settings still in the desk, not a fault. Five seconds."
+      },
+      {
+        "t": "check",
+        "items": [
+          "Sweep the channel <strong>EQ</strong> knobs to 12 o'clock. Full left is not off, but it is close: the DJM-900NXS2 cuts to -26 dB in EQ mode.",
+          "Find the <strong>isolator</strong> and set it flat. On the 900NXS2 it is the EQ CURVE switch; the V10 has a separate 3-band master isolator.",
+          "Thin in the booth but fine on the floor? That is <strong>booth EQ</strong>, a second EQ on the monitor path only. The room never heard a problem."
+        ]
+      }
+    ],
+    "label": "The five second fix",
+    "heading": "Someone else's EQ is still in the desk",
+    "question": "Full and clean now?",
+    "step": "ns_thin",
+    "options": [
+      {
+        "label": "YES, SOUNDS RIGHT",
+        "to": "/saved?path=no_sound&branch=thin",
+        "event": "outcome_reached",
+        "data": {
+          "outcome": "saved",
+          "path": "no_sound"
+        }
+      },
+      {
+        "label": "NO, STILL WRONG",
+        "to": "sound/wrong",
+        "desc": "Then we chase it: jacks, trim, cable."
       }
     ]
   },
@@ -1094,7 +1192,7 @@ export const TREE = {
     ]
   },
   "sound/fallback": {
-    "title": "Survival Mode",
+    "title": "Survival Mode: Sound",
     "status": "No_Sound · Survival",
     "red": true,
     "blocks": [
@@ -1199,7 +1297,7 @@ export const TREE = {
     ]
   },
   "export/usb-check": {
-    "title": "USB Check",
+    "title": "Export Rescue: USB Check",
     "status": "Quick_Fix",
     "red": false,
     "blocks": [],
@@ -1211,7 +1309,7 @@ export const TREE = {
     "options": [
       {
         "label": "I CAN SEE MY FILES",
-        "to": "export/rb-check"
+        "to": "export/backup"
       },
       {
         "label": "NOTHING / ERROR MESSAGE",
@@ -1241,44 +1339,12 @@ export const TREE = {
     "options": [
       {
         "label": "YES, FILES VISIBLE",
-        "to": "export/rb-check"
+        "to": "export/backup"
       },
       {
         "label": "NO, DRIVE STAYS DEAD",
         "to": "export/fresh",
         "desc": "We build tonight's USB on a different drive. Recovery of this one comes after the gig."
-      }
-    ]
-  },
-  "export/rb-check": {
-    "title": "Rekordbox Check",
-    "status": "Quick_Fix",
-    "red": false,
-    "blocks": [
-      {
-        "t": "check",
-        "items": [
-          "Open Rekordbox with the USB connected.",
-          "Top-left mode selector: <span class=\"mono\">EXPORT</span>.",
-          "Look for your USB under <strong>Devices</strong> in the left sidebar."
-        ]
-      }
-    ],
-    "draft": true,
-    "label": "Step 2",
-    "heading": "Open Rekordbox in EXPORT mode",
-    "question": "Does the device show up with your playlists?",
-    "step": "qf_rb_check",
-    "options": [
-      {
-        "label": "YES, PLAYLISTS SHOW",
-        "to": "export/backup",
-        "desc": "Good. We still copy the music off before touching anything."
-      },
-      {
-        "label": "NO, MISSING OR ERRORS",
-        "to": "export/backup",
-        "desc": "Expected. Same first move: we copy the music off, then rebuild."
       }
     ]
   },
@@ -1296,12 +1362,13 @@ export const TREE = {
         "t": "check",
         "items": [
           "Copy the whole drive to the computer, or at minimum the <strong>Contents</strong> folder.",
-          "If some files fail, copy what you can and note which ones. Skipped files are gone for good if this drive gets formatted later, so if any of them matter, take the fresh-drive route instead and keep this one intact."
+          "If some files fail, copy what you can and note which ones. Skipped files are gone for good if this drive gets formatted later, so if any of them matter, take the fresh-drive route instead and keep this one intact.",
+          "While it copies: open Rekordbox, top-left mode selector to <span class=\"mono\">EXPORT</span>. Whether your USB shows under <strong>Devices</strong> or not, the next move is the same."
         ]
       }
     ],
     "draft": true,
-    "label": "Step 3",
+    "label": "Step 2",
     "heading": "Safety copy before the rebuild",
     "question": "Did the copy complete?",
     "step": "qf_backup",
@@ -1525,8 +1592,8 @@ export const TREE = {
       },
       {
         "label": "NO, NOTHING READS IT",
-        "to": "usb/time",
-        "desc": "We pick the route that fits your clock."
+        "to": "usb/moves",
+        "desc": "The four moves. A list, not questions."
       }
     ]
   },
@@ -1564,35 +1631,8 @@ export const TREE = {
       },
       {
         "label": "NO, STILL NOTHING",
-        "to": "usb/time"
-      }
-    ]
-  },
-  "usb/time": {
-    "title": "How Long Until You Are On?",
-    "status": "Critical_Path",
-    "red": true,
-    "label": "Decision point",
-    "heading": "Goal right now: play a set.",
-    "blocks": [
-      {
-        "t": "dim",
-        "html": "Not fix the USB. That comes after the gig."
-      }
-    ],
-    "question": "How long until you are on?",
-    "step": "usb_time",
-    "neutral": true,
-    "options": [
-      {
-        "label": "UNDER AN HOUR",
         "to": "usb/moves",
         "desc": "The four moves. A list, not questions."
-      },
-      {
-        "label": "I HAVE TIME",
-        "to": "shared/computer",
-        "desc": "We fix it properly instead of working around it."
       }
     ]
   },

@@ -73,3 +73,9 @@
 # Wildcards preserve #anchors and any query string automatically.
 /knowledge/rekordbox   /knowledge/pioneer-dj/rekordbox   301
 /knowledge/djm-rec     /knowledge/pioneer-dj/djm-rec     301
+
+# 2026-08-03 emergency engine changes: usb/time deleted (moves is the default
+# now), export/rb-check merged into export/backup. Tunnel is noindex; these
+# cover bookmarks and stale offline caches.
+/protocol/usb/time        /protocol/usb/moves       301
+/protocol/export/rb-check /protocol/export/backup   301
