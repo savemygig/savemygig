@@ -180,7 +180,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
              at any DPI; 36x42 keeps the shield's own aspect in the slot. -->
         <img src="/images/logo-shield.svg" alt="" width="47" height="54" class="nb-seal" decoding="async" />
         <span class="nb-text">
-          <span class="nb-name">Save My Gig<span class="accent">!</span></span>
+          <span class="nb-name">Save <span class="accent">My</span> Gig</span>
           <span class="nb-tag">DJ rescue and prevention</span>
         </span>
       </a>
@@ -272,7 +272,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
           <img class="foot-seal" src="/images/seal-footer.webp" alt="" width="104" height="104" loading="lazy" aria-hidden="true" />
           <a href="/" class="foot-lockup" aria-label="Save My Gig, DJ rescue and prevention">
             <span class="foot-lockup-text">
-              <span class="foot-wordmark">Save My Gig<span class="accent">!</span></span>
+              <span class="foot-wordmark">Save <span class="accent">My</span> Gig</span>
               <span class="foot-tag">DJ rescue and prevention</span>
             </span>
           </a>
@@ -533,8 +533,9 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
      is the reference, so the wordmark ends exactly at the edge of the YouTube
      circle). Sizes below are measured values, not guesses. Change one and the
      block stops squaring up, so re-measure if you touch them. */
+  /* Same lockup width rule as the header: wordmark width == tagline width. */
   .foot-wordmark {
-    font-family: var(--font-display); font-weight: 900; font-size: 1.55rem; line-height: 1;
+    font-family: var(--font-display); font-weight: 900; font-size: 1.620rem; line-height: 1;
     text-transform: uppercase; letter-spacing: -0.02em; color: var(--text); text-decoration: none;
   }
   .foot-wordmark .accent { color: var(--red); }
@@ -629,7 +630,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
          row (4x32px + 3x0.4rem = 147px) is the reference; wordmark and
          tagline sizes below are MEASURED to match it at 147px. Change one,
          re-measure all three. */
-      .foot-wordmark { font-size: 1.28rem; }
+      .foot-wordmark { font-size: 1.331rem; }  /* re-measured after the "!" came off */
       .foot-tag { font-size: 0.45rem; letter-spacing: 0.25em; }
       .foot-social { gap: 0.4rem; margin-top: 0.9rem; }
       .soc-btn { width: 32px; height: 32px; }
@@ -667,8 +668,13 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
   .nav-brand picture { flex: 0 0 auto; display: block; line-height: 0; }
   .nb-seal { width: 47px; height: 54px; display: block; }
   .nb-text { display: flex; flex-direction: column; gap: 3px; }
+  /* LOCKUP WIDTH RULE (Antonio, 2026-08-03): "SAVE MY GIG" spans exactly the
+     same width as "DJ RESCUE AND PREVENTION" underneath it, so the two lines
+     start and end flush and the lockup reads as one rectangle. Every size
+     below is MEASURED against its own tagline at that breakpoint, not guessed.
+     Change the tagline size or letter-spacing and you must re-measure this. */
   .nb-name {
-    font-family: var(--font-display); font-weight: 900; font-size: 1.36rem;
+    font-family: var(--font-display); font-weight: 900; font-size: 1.395rem;
     text-transform: uppercase; letter-spacing: -0.02em; color: var(--text); white-space: nowrap;
   }
   .nb-name .accent { color: var(--red); }
@@ -749,7 +755,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
        phone width. The brand still sits left via its auto margin. */
     .site-nav { gap: 0.5rem; }
     .nav-search-btn { margin-left: 0; margin-right: 0; }
-    .nb-name { font-size: 1.55rem; }
+    .nb-name { font-size: 1.636rem; }  /* measured to the 0.62rem tagline */
     .nb-tag { font-size: 0.62rem; letter-spacing: 0.135em; }
     .nav-home { display: block; }
     .nav-links {
@@ -774,7 +780,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
      #navToggle and #navSearchBtn stay 44x44. */
   @media (max-width: 400px) {
     .site-nav { gap: 0.5rem; }
-    .nb-name { font-size: 1.32rem; }
+    .nb-name { font-size: 1.332rem; }  /* measured to the 0.55rem tagline */
     .nb-tag { font-size: 0.55rem; letter-spacing: 0.1em; }
   }
 </style>
