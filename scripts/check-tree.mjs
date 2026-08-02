@@ -93,6 +93,16 @@ for (const id of ids) for (const o of TREE[id].options) {
 }
 ok('every terminal exit reports an outcome', silentExits.length === 0, silentExits.join('; ') || 'all instrumented');
 
+// 10. Every option has a visible label. Added 2026-08-02 after the clean-sheet
+// audit found 12 unlabeled options rendering as BLANK BUTTONS, including the
+// success button on rebuild/load, live since launch. The renderer prints
+// o.label with no fallback, so a missing label is an invisible answer.
+const unlabeled = [];
+for (const id of ids) for (const o of TREE[id].options) {
+  if (!o.label || !o.label.trim()) unlabeled.push(`${id} -> ${o.to}`);
+}
+ok('every option has a visible label', unlabeled.length === 0, unlabeled.join('; ') || 'all labeled');
+
 // 9. sw.js precache contains every tree path (offline rescue can't drift).
 const sw = await readFile('public/sw.js', 'utf-8');
 const missing = ids.filter((id) => !sw.includes(`'/protocol/${id}'`));

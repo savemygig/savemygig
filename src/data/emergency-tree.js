@@ -43,6 +43,7 @@ export const TREE = {
         "desc": "Very common, and usually a 15-second fix."
       },
       {
+        "label": "YES, BUT TRACKS WON'T PLAY",
         "to": "shared/computer",
         "desc": "Error codes, or tracks that refuse to play."
       }
@@ -253,6 +254,7 @@ export const TREE = {
     "step": "no_laptop_2",
     "options": [
       {
+        "label": "YES, IT IS READING",
         "to": "/saved?path=critical&branch=no_laptop",
         "event": "outcome_reached",
         "data": {
@@ -296,6 +298,7 @@ export const TREE = {
     "step": "survival",
     "options": [
       {
+        "label": "YES, I AM PLAYING",
         "to": "/saved?path=critical&branch=survival",
         "event": "outcome_reached",
         "data": {
@@ -336,6 +339,7 @@ export const TREE = {
         "to": "rebuild/second-usb"
       },
       {
+        "label": "NO - DO NOT ERASE THIS DRIVE",
         "to": "rebuild/no-erase"
       }
     ]
@@ -400,6 +404,7 @@ export const TREE = {
         "to": "rebuild/second-copy"
       },
       {
+        "label": "NO - CAN'T FORMAT IT",
         "to": "shared/survival",
         "desc": "Survival mode: other ways to play tonight. Your USB stays untouched."
       }
@@ -436,6 +441,7 @@ export const TREE = {
         "to": "rebuild/load"
       },
       {
+        "label": "NO - COPY KEEPS FAILING",
         "to": "rebuild/fallback"
       }
     ]
@@ -607,6 +613,7 @@ export const TREE = {
         "to": "rebuild/load"
       },
       {
+        "label": "NO - COPY KEEPS FAILING",
         "to": "rebuild/fallback"
       }
     ]
@@ -637,6 +644,7 @@ export const TREE = {
     "step": "load",
     "options": [
       {
+        "label": "YES - I AM PLAYING",
         "to": "/saved?path=critical&branch=laptop",
         "event": "outcome_reached",
         "data": {
@@ -645,6 +653,7 @@ export const TREE = {
         }
       },
       {
+        "label": "NO - STILL NOT PLAYING",
         "to": "rebuild/fallback"
       }
     ]
@@ -668,6 +677,7 @@ export const TREE = {
     "step": "fallback",
     "options": [
       {
+        "label": "YES - IT IS READING",
         "to": "/saved?path=critical&branch=fallback",
         "event": "outcome_reached",
         "data": {
@@ -1443,6 +1453,7 @@ export const TREE = {
     "step": "qf_fresh_usb",
     "options": [
       {
+        "label": "YES - I AM BACK ON",
         "to": "/saved?path=quick_fix&branch=fresh_usb",
         "event": "outcome_reached",
         "data": {
@@ -1478,6 +1489,7 @@ export const TREE = {
     "step": "qf_verify",
     "options": [
       {
+        "label": "YES - EVERYTHING LOADS",
         "to": "/saved?path=quick_fix",
         "event": "outcome_reached",
         "data": {
