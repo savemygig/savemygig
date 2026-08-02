@@ -12,9 +12,18 @@
 //    ship, with zero manual upkeep on his side. Whoever is deploying
 //    (Claude, in practice) owns incrementing this by hand as part of the
 //    merge-to-main step -- see project memory's pipeline notes.
-export const VERSION_MAJOR_MINOR = '0.2';
+// GRADUATED TO 1.0 on 2026-08-03, Antonio's call on announcement day:
+// "We're announcing it publicly, asking real DJs to trust it, and the product
+// is now stable, tested and frozen. Continuing to present it as Beta v0.2
+// undermines the confidence we've just spent so much effort improving."
+// This one number is the whole switch: IS_BETA below goes false and the
+// footer badge stops rendering, exactly as it was designed to on 2026-07-30.
+// No second step, no leftover flag.
+export const VERSION_MAJOR_MINOR = '1.0';
 export const VERSION_BUILD = 1;
-export const VERSION_LABEL = `Beta v${VERSION_MAJOR_MINOR} · build ${VERSION_BUILD}`;
+// "Beta" is no longer hardcoded into the label. If a version badge is ever
+// shown again at or above 1.0, it must not lie about what it is.
+export const VERSION_LABEL = `${parseFloat(VERSION_MAJOR_MINOR) < 1 ? 'Beta ' : ''}v${VERSION_MAJOR_MINOR} · build ${VERSION_BUILD}`;
 
 // Antonio (2026-07-30): the badge should only exist while the site actually
 // IS in beta -- once VERSION_MAJOR_MINOR crosses 1.0, hide it automatically
