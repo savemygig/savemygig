@@ -88,9 +88,23 @@ const groups = [
     title: 'Mixer and sound',
     terms: [
       { t: 'TRIM / GAIN', d: 'Two names for the same top-of-strip knob: how loud the source arrives in the channel, before the fader. First suspect when one channel is quiet with the fader up.' },
+      // The EQ trio, added 2026-08-02. Deliberately NOT a frequency table: a
+      // working DJ knows the low knob is the kick, and printing "20 to 60 Hz
+      // gives weight" at a professional is the condescension the lint bans.
+      // What actually catches people in a booth is that the same knob does
+      // different things on different desks, and that the switch deciding
+      // which was set by somebody else. Sources: DJM-900NXS2 operating
+      // instructions (the EQ CURVE selector, and the -26 dB floor in EQ
+      // mode), DJM-V10 product specifications (4-band channel EQ, a SEPARATE
+      // 3-band master isolator, booth EQ), and AlphaTheta's DJM-V5 page
+      // ("4-Band EQ on each channel, inherited from the DJM-V10", 2-band
+      // booth EQ).
+      { t: 'Channel EQ (EQ / ISO)', d: 'The band knobs on each channel strip: three on most desks, four on the DJM-V10 and DJM-V5, which split the middle in two. The part worth knowing is what the bottom of the travel actually does, because it is not always silence. On the DJM-900NXS2 the published floor in EQ mode is -26 dB, a deep cut with the track still alive underneath it. If you reach for a full kill and the kick is still there, the desk is doing exactly what it is documented to do.' },
+      { t: 'Isolator', d: 'One name, two different pieces of gear, and which one you are standing at decides how the knobs behave. On the DJM-900NXS2 it is a mode: an EQ CURVE (ISOLATOR, EQ) switch on the panel, the same three knobs acting as tone controls in one position and as an isolator in the other. On the DJM-V10 it is separate hardware, a three-band master isolator sitting across the whole mix with its own crossover points. Either way, that setting is not yours. It is however the last DJ or the tech left it, and the first place you find out is the first cut you make in front of a full room.' },
       { t: 'Crossfader assign', d: 'The per-channel switch (A / THRU / B) deciding whether the crossfader controls that channel. Assigned to the wrong side, the channel is silent with every fader up: the number one silent-channel cause. On OPUS-QUAD and XDJ-AZ it lives in the on-screen settings, not on a physical switch.' },
       { t: 'CUE / PFL', d: 'The DJ’s word and the tech’s word for the same thing: listening to a channel in your headphones before it reaches the room. If your headphones are silent, check the MIX knob is toward CUE, not MASTER, before blaming the jack.' },
       { t: 'BOOTH output', d: 'The mixer’s second output, feeding the DJ’s own monitors, separate from MASTER which feeds the room. Two knobs, two destinations. In a pinch the booth output pair can substitute for a dead master pair.' },
+      { t: 'Booth EQ', d: 'A second EQ, on the booth output only, on the desks that carry one: the DJM-V10 and the DJM-V5 among them. It shapes what you hear in your monitors and touches nothing the room hears. Worth a look before you decide a system is broken, because a booth low left dumped by whoever played before you makes the monitor sound thin and lifeless while the floor is completely fine.' },
       { t: 'Master insert', d: 'A patch point on the back of some mixers where an outboard processor sits in the master signal. If something is plugged in and nothing sends audio back, the master goes silent with every fader up. If you find one patched, it is almost certainly the venue’s: ask before pulling it.' },
       { t: 'Signal chain', d: 'The ordered path audio takes after your mixer: house processor, amplifiers, speakers. Past the booth output it belongs to the venue, and the fastest fix is the exact sentence: "Mixer master is up, master meters are moving. Nothing after the booth output."' },
       // Added 2026-08-02 to answer the question people actually mean when they
