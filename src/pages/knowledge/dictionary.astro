@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { DJM_A9, DJM_V10 } from '../../data/facts.js';
 
 // THE DICTIONARY (Antonio's idea). Every term a DJ meets on this site or in a
 // booth, one tap deep. Two rules:
@@ -20,6 +21,18 @@ const groups = [
       { t: 'MBR (Master Boot Record)', d: 'One of two ways a drive describes its own layout, and the one players expect. AlphaTheta documents that the CDJ-3000 does not support the GUID scheme, so when a format tool asks, pick MBR. On a Mac this means erasing the DEVICE, not the volume, in Disk Utility.' },
       { t: 'GPT (GUID Partition Table)', d: 'The other layout scheme, and a recurring cause of "it formatted fine but the player refuses it". You get GPT by accident on a Mac when you erase the volume instead of the device.' },
       { t: 'Quick format vs full format', d: 'Quick format rebuilds the drive’s index and is fine on a healthy drive. A full format writes to every cell, which makes it a stress test: it is what you run on a SUSPECT drive, and a drive that fails one is retired, not trusted with a gig.' },
+      // The physical media entries (Antonio, 2026-08-02). Deliberately kept to
+      // what the site can back: the SD limits come from rekordbox's own
+      // documented behaviour and the CDJ-3000X port list, and the UASP
+      // thresholds come from the AlphaTheta change histories already in
+      // facts.js. The SSD and HDD entries stay on physics and power, with no
+      // per-model support claims, because we have not checked those.
+      { t: 'USB stick (pen drive)', d: 'The drive nearly every gig runs on, and the one piece of equipment you actually control in someone else’s booth. FAT32 with an MBR scheme, and almost nothing surprises you. Capacity is not the thing to optimise: a drive that fails a full format is retired, and two identical smaller drives beat one big one, because the second is what saves the night.' },
+      { t: 'SD card', d: 'A second slot on some players and missing entirely on others: the CDJ-3000X has no SD slot at all, which strands a workflow built on cards. One limit applies even where the slot exists: rekordbox exports exFAT to USB drives only, never to an SD card. On SD it is FAT32 or nothing.' },
+      { t: 'SSD (solid state drive)', d: 'A drive with no moving parts. As an external USB drive it is the sturdier thing to carry into a booth, because there is nothing inside to be disturbed by bass or by a knock. The catch is not speed, it is power and protocol: a bus-powered drive asks more of a player’s USB port than a stick does, and see UASP below.' },
+      { t: 'HDD (hard disk drive)', d: 'The older kind, with a platter spinning and a head moving inside while it runs. It works, but it is the wrong body for a booth: physically vulnerable exactly when it is in use, thirstier on bus power than a stick, and one knock at the wrong moment is a different class of problem from a dropped USB. If a large library has to travel, put it on an SSD.' },
+      { t: 'UASP', d: `The faster protocol modern USB drives use to talk to the device they are plugged into. Worth knowing because AlphaTheta documented it as a genuine fault, not a theory: UASP-compatible drives were not recognised at all on the DJM-A9 before firmware ${DJM_A9.uaspFix}, or on the DJM-V10 before ${DJM_V10.uaspFix}. A drive that works everywhere and gets refused by one desk can be this, rather than the drive.` },
+      { t: 'NFC login', d: 'A way into a booth without carrying a drive at all. The CDJ-3000X carries an NFC touchpoint on its front panel: hold a phone running rekordbox for iOS or Android over the reader and it pulls up your online music. The CDJ-1500X supports the same login, by NFC or by QR code. It signs you in, it is not a way to play audio off the handset, and what arrives afterwards is your cloud library over the venue’s network.' },
     ],
   },
   {
@@ -80,6 +93,10 @@ const groups = [
       { t: 'BOOTH output', d: 'The mixer’s second output, feeding the DJ’s own monitors, separate from MASTER which feeds the room. Two knobs, two destinations. In a pinch the booth output pair can substitute for a dead master pair.' },
       { t: 'Master insert', d: 'A patch point on the back of some mixers where an outboard processor sits in the master signal. If something is plugged in and nothing sends audio back, the master goes silent with every fader up. If you find one patched, it is almost certainly the venue’s: ask before pulling it.' },
       { t: 'Signal chain', d: 'The ordered path audio takes after your mixer: house processor, amplifiers, speakers. Past the booth output it belongs to the venue, and the fastest fix is the exact sentence: "Mixer master is up, master meters are moving. Nothing after the booth output."' },
+      // Added 2026-08-02 to answer the question people actually mean when they
+      // ask about "connecting a phone". Players do not read a phone over NFC;
+      // this and rekordbox on the device are the real paths.
+      { t: 'Bluetooth audio in', d: 'Some desks take wireless audio from a phone or laptop directly, the DJM-A9 among them. Genuinely useful for a handover, or for keeping the room alive between sets. It is not a performance path: latency and connection stability make it a convenience input, not a deck to mix on. Not to be confused with NFC login on the newer players, which signs you into a cloud library rather than sending any audio.' },
     ],
   },
 ];

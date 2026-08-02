@@ -127,7 +127,11 @@ for (const file of files) {
     u: route,
     t: title,
     d: desc,
-    h: [...new Set(heads)].slice(0, 40),
+    // Generous cap. The Dictionary alone renders one heading per term and
+    // every one of them is a search target, so a tight cap silently drops
+    // real terms off the end of the page (caught 2026-08-02: "bluetooth"
+    // fell outside a cap of 40). Headings are short, so this costs little.
+    h: [...new Set(heads)].slice(0, 120),
     b: body.slice(0, BODY_CAP),
   });
 }
