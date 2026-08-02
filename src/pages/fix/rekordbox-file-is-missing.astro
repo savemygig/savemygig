@@ -1,0 +1,165 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleCTA from '../../components/ArticleCTA.astro';
+
+// "File is Missing" in rekordbox. First of the four /fix gaps named in
+// top-10-dj-problems-2026-07-27.md, built 2026-08-02 on Antonio's go.
+//
+// FACT DISCIPLINE. Everything operational here traces to two AlphaTheta
+// support articles, both linked at the foot of the page:
+//   8974886246425 — the drive-letter cause and the iTunes cause, in their
+//                   own words: "rekordbox may not find the track if the
+//                   device's drive letter differs from the drive letter at
+//                   the time the track was imported."
+//   8113238460441 — Auto Relocate vs Relocate, the exact menu paths, the
+//                   [!] marker, and the statement that a missing file is
+//                   blocked from PLAYBACK AND EXPORT.
+// The export consequence is the part that turns a housekeeping annoyance
+// into a booth problem, so it leads the page. Nothing about silent
+// skipping is claimed: the documented behaviour is that the track is
+// blocked, which is why it is absent from the drive later.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/fix/rekordbox-file-is-missing#article',
+  headline: 'rekordbox "File is Missing" - What It Means and How to Relocate',
+  description: 'The [!] in rekordbox means the file moved, not that your music is gone. Why it happens, how Auto Relocate and Relocate work, and why a missing file never reaches your USB.',
+  author: { '@id': 'https://www.savemygig.com/#antonio' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-02',
+  dateModified: '2026-08-02',
+  inLanguage: 'en',
+  mainEntityOfPage: 'https://www.savemygig.com/fix/rekordbox-file-is-missing',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': 'https://www.savemygig.com/fix/rekordbox-file-is-missing#faq',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What does "File is Missing" mean in rekordbox?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'It means rekordbox cannot find the audio file at the location it recorded when the track was imported. The track stays in your collection, marked with [!] in the status column, but it cannot be played or exported. The audio file itself has not been deleted by rekordbox.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Why do tracks I imported from a USB drive now show File is Missing?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'AlphaTheta documents the cause: rekordbox may not find the track if the device mounts under a different drive letter than it had when the track was imported. The file is still on the drive, but the path rekordbox stored no longer resolves.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I fix missing files in rekordbox?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Open File then Display All Missing Files to reach the Missing File Manager, or right-click any track marked [!]. Auto Relocate searches the folders set in Preferences, Advanced, Database, Auto Relocate Search Folders. Relocate lets you point rekordbox at the file yourself.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Will a missing track still export to my USB?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. A file marked missing is blocked from export as well as playback, so it will not be written to the drive. If you do not clear the [!] before exporting, the track is simply absent when you plug into the player.',
+      },
+    },
+  ],
+};
+---
+<Base
+  title="rekordbox 'File is Missing': How to Relocate Your Tracks | Save My Gig!"
+  description="The [!] in rekordbox means the file moved, not that your music is gone. Why it happens, how Auto Relocate and Relocate work, and why a missing track never reaches your USB."
+  path="/fix/rekordbox-file-is-missing"
+  ogImage="/og/rekordbox-file-is-missing.png"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">File_Is_Missing</div>
+    <h1 style="margin-bottom:1.5rem"><span class="danger">FILE IS MISSING</span>:<br />YOUR MUSIC IS STILL THERE</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Short version:</strong> The <span class="mono">[!]</span> means rekordbox lost the <strong>path</strong> to the file, not the file. Your audio is where it always was. rekordbox stores where each track lives, and when that location changes the pointer breaks. The part that costs gigs is not the warning on screen: <strong>a missing file cannot be exported</strong>, so the track never reaches your USB and you find out in the booth.</p>
+    </div>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">What the [!] actually means</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p>rekordbox does not keep your music inside itself. It keeps a <strong>reference</strong> to each file: where the audio lives, plus everything you built on top of it, the cues, the grid, the waveform, the playlist membership.</p>
+        <ul class="checklist">
+          <li>The track stays in your collection, marked <span class="mono">[!]</span> in the status column.</li>
+          <li>Your cues, grids and playlists are intact. They belong to the database, not the file.</li>
+          <li>The audio file has not been deleted by rekordbox. Something moved it, renamed its folder, or changed how the drive it sits on is addressed.</li>
+          <li>Until the reference is repaired, that track will not play and will not export.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Why it happens</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ul class="checklist">
+          <li><strong>The drive mounted differently.</strong> This is the cause AlphaTheta documents for tracks imported from external devices: rekordbox may not find the track if the drive letter differs from the one it had at import. Same drive, same file, different address.</li>
+          <li><strong>You imported straight from a USB stick.</strong> Adding tracks to your collection directly from a drive that then goes with you to a gig is the common version of the above. The moment that drive is absent or mounts elsewhere, every track imported from it is missing.</li>
+          <li><strong>iTunes moved the file.</strong> AlphaTheta calls this one out specifically: with <em>Keep iTunes Media folder organized</em> switched on, editing a track's information makes iTunes relocate the file underneath you. Their recommendation is to turn that setting off before importing into rekordbox.</li>
+          <li><strong>You reorganised your music folders</strong> outside rekordbox, or renamed a parent folder.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Fix it now: Auto Relocate and Relocate</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p>Two ways in, both from rekordbox itself. Either open <span class="mono">File</span> &rarr; <span class="mono">Display All Missing Files</span> to get the Missing File Manager, or right-click any track marked <span class="mono">[!]</span>.</p>
+        <ul class="checklist">
+          <li><strong>Auto Relocate</strong> searches the folders you have listed under <span class="mono">Preferences</span> &rarr; <span class="mono">Advanced</span> &rarr; <span class="mono">Database</span> &rarr; <span class="mono">Auto Relocate Search Folders</span>. Point that at wherever your music actually lives and it does the work for a whole batch.</li>
+          <li><strong>Relocate</strong> is the manual version: you show rekordbox where the file is, one at a time. This is the one for a track that moved somewhere unusual.</li>
+          <li><strong>If the tracks came from an external drive</strong>, the other route is to give that drive the same letter it had when you imported. AlphaTheta's own recommendation, and it repairs everything from that drive at once.</li>
+          <li>Work through the Missing File Manager until it is empty, not just until tonight's playlist looks clean.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">The reason this is a booth problem</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p>A missing file is blocked from <strong>export</strong>, not only from playback. That changes what this is.</p>
+        <ul class="checklist">
+          <li>You prepare at home, export tonight's playlist, and the tracks carrying <span class="mono">[!]</span> are not written to the drive.</li>
+          <li>The playlist arrives on the player looking normal. It is just shorter than the one you built.</li>
+          <li>You discover which tracks at the moment you reach for one.</li>
+          <li>So the check is before the export, not after: clear the Missing File Manager first, then export.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Avoid it next time</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ul class="checklist">
+          <li><strong>Import from one place and keep it there.</strong> A single music folder on an internal or dedicated drive, and rekordbox pointing at it. Never build a collection out of tracks living on the USB you take to gigs.</li>
+          <li><strong>Set Auto Relocate Search Folders once</strong>, to your real music folder. It turns a future breakage into one click instead of a hunt.</li>
+          <li><strong>Move files with rekordbox open and aware</strong>, or accept that you are going to relocate them afterwards.</li>
+          <li><strong>Turn off <em>Keep iTunes Media folder organized</em></strong> before importing anything from an iTunes library.</li>
+          <li><strong>Open Display All Missing Files as part of preparing</strong>, the same way you check the drive. It takes seconds and it is the difference between finding out at home and finding out at the gig.</li>
+        </ul>
+        <p class="acc-related">Related: <a href="/fix/rekordbox-export-failed">When the export itself fails</a> <a href="/fix/playlists-not-showing-cdj">Playlists not showing on the CDJ</a> <a href="/knowledge/pioneer-dj/rekordbox">The full rekordbox reference</a></p>
+      </div>
+    </details>
+
+    <p class="dim" style="font-size:0.85rem;margin-top:1.6rem">
+      Sources, both AlphaTheta's own:
+      <a href="https://support.alphatheta.com/en-US/articles/8974886246425" target="_blank" rel="noopener">why files imported from a USB device show File is Missing</a>
+      and
+      <a href="https://support.alphatheta.com/en-US/articles/8113238460441" target="_blank" rel="noopener">how to use Auto Relocate and Relocate</a>.
+    </p>
+
+    <ArticleCTA article="file_is_missing" />
+  </main>
+</Base>
