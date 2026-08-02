@@ -100,8 +100,8 @@ const schema = {
         the crossfader assign switch can have that channel routed to the opposite
         side you are pushing, or the input selector can be set to a source that is
         not actually playing (LINE instead of USB, for example).</p>
-        <p><strong>Fix it now.</strong> Bring the channel fader fully up. Check the
-        crossfader assign switch (LEFT / THRU / RIGHT) matches where your crossfader
+        <p><strong>Fix it now.</strong> Fader up is assumed. Check the
+        crossfader assign switch (A / THRU / B) matches where your crossfader
         actually is. Confirm the input selector for that channel matches your source.
         If all three check out, move the source to a different channel to isolate
         whether the problem is the channel strip or upstream.</p>
@@ -114,9 +114,10 @@ const schema = {
 
     <details class="acc-sec" name="djm900-acc" id="faders"><summary><h2 class="acc-h2">Faders behaving unexpectedly</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Short answer.</strong> This mixer uses Magvel magnetic, contact-free
-        faders, so wear-related scratchiness is rare, but a mismatched fader curve
-        setting is a common cause of a channel that feels "wrong."</p>
+        <p><strong>Short answer.</strong> The crossfader is AlphaTheta's Magvel
+        magnetic, contact-free design, so crossfader scratchiness is rare. Channel
+        faders are conventional and do wear, but a mismatched fader curve
+        setting is the more common cause of a channel that feels "wrong."</p>
         <p><strong>Why this happens.</strong> The channel fader and crossfader curve
         are both independently adjustable, a curve set for scratching feels
         completely different from one set for smooth blending, and a previous DJ may
@@ -189,7 +190,10 @@ const schema = {
     <details class="acc-sec" name="djm900-acc" id="known-issues"><summary><h2 class="acc-h2">Firmware and known issues</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> We do not have a verified, documented
-        hardware defect to report for this mixer. This section was last checked
+        hardware defect to report for this mixer. The one documented software-side
+        issue: DJM-REC recordings could halt part-way through a set, fixed in mixer
+        firmware 2.06 and again in 2.08 for iOS/iPadOS audio, so old venue firmware
+        still bites recording. This section was last checked
         against official sources on {UPDATED}.</p>
         <p><strong>Why we are saying that plainly.</strong> This site's rule is to
         state a fact only once it is verified against a primary source. AlphaTheta
@@ -284,7 +288,7 @@ const schema = {
     <details class="acc-sec" name="djm900-acc" id="maintenance"><summary><h2 class="acc-h2">Keeping the desk reliable over years of bookings</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Cable and connector care matters more than
-        fader care on this mixer, the Magvel faders are contact-free by design.</p>
+        fader care on this mixer, and the Magvel crossfader is contact-free by design.</p>
         <p><strong>Why it matters.</strong> RCA, USB and Ethernet connectors take the
         real wear over a touring life, loose or bent pins cause the intermittent
         faults that are hardest to diagnose live.</p>

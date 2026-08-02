@@ -1,0 +1,52 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+Install_Guide
+KEEP IT WITH YOU
+Save My Gig installs as an app, a PWA: one minute, and the rescue flow lives on your device, even with no signal.
+ How it works
+Start here: what is this?
+Short answer. A progressive web app, PWA: the website itself, promoted to app status by your own browser. Not a native app from a store. No app store approved it, no update nags you, it takes almost no space, nothing to pay, and it cannot see anything on your device that the website could not already see.
+Why it matters here. The first time you open Save My Gig, your browser quietly downloads the complete rescue kit, every screen of the emergency flows, into the device's own storage. From then on, those pages load from your phone or laptop, not from the internet. When you are online you always get the live version; when you are not, the saved kit answers instead. That switch is automatic, you never choose.
+A club basement, a festival with a saturated network, a rave in the mountains: the places where gigs break are the places where websites die. This one is built not to. Installing to your home screen or Dock adds durability and speed: a real icon you can find with shaking hands, and storage the system treats as an app's, not as leftover website data to tidy away.
+What works with no signal
+Saved on your device, always available: the emergency start page and every step of all four rescue flows (the critical path for when you play within the hour, the no-sound protocol, the quick fix, the full recovery), the pre-gig checklist, the pocket emergency card, the rekordbox reference, the dictionary, and search itself. That is the entire "something is wrong right now" surface of the site, deliberately.
+Available offline only if you visited them before: the fix articles, the FAQ, the hardware pages. Anything you have opened while online stays readable without signal afterwards.
+Never available offline, by nature: anything that talks to our server, like registering or emailing yourself the checklist. Those queue up for when you are back in coverage. Your ticked checklist is different: it saves on the device itself, so it works with no signal at all times.
+The honest conditions
+We would rather you know exactly where the edges are than discover them in a booth.
+Open it once with signal first. The rescue kit downloads on your first visit. A first-ever visit with airplane mode on has nothing saved yet.
+Clearing your browser data clears the kit. "Clear history and website data" deletes everything a website stored, ours included. After a clear-out, open the site once online and the kit is back.
+On iPhone, the home screen icon is the protection. iOS can quietly purge stored data from websites you have not visited in a while. An app on your home screen is exempt from that housekeeping, which is the practical reason the install matters most on iPhone.
+Offline shows the last saved copy. New fixes and pages arrive whenever you are online; with no signal you get the kit exactly as it was last saved, which for an emergency is exactly what you need.
+Want to prove it to yourself? Open the site, switch on airplane mode, and open Emergency mode. It loads. That test takes thirty seconds and it is the whole promise, demonstrated.
+ Install it on your device
+iPhone and iPad (Safari)
+Open savemygig.com in Safari.
+Tap Share (the square with the arrow pointing up, bottom of the screen).
+Scroll the list and tap Add to Home Screen.
+Tap Add. The Save My Gig icon appears with your apps.
+From now on, open it from the icon like any app. It runs full screen, and on iPhone this step matters more than convenience: iOS treats a home screen app's storage with far more respect than a tab you visited once, which is what keeps the rescue kit on your phone long term.
+Android (Chrome)
+Open savemygig.com in Chrome.
+Tap the three-dot menu (top right).
+Tap Add to Home screen (on some phones it says Install app).
+Confirm. The icon lands on your home screen.
+Chrome may also offer the install directly with a banner or an install icon in the address bar; either route ends in the same place. Samsung Internet and Firefox have the same option under their own menus.
+Windows (Chrome or Edge)
+Open savemygig.com in Chrome or Edge.
+Look at the right end of the address bar for the install icon (a small screen with a down arrow), or open the browser menu and choose Install Save My Gig (in Edge: Apps, then Install this site as an app).
+Confirm. It opens in its own window, and you can pin it to the taskbar or Start like any program.
+Useful beyond emergencies: the checklist and the knowledge base in their own window while rekordbox has your full attention.
+Mac (Safari or Chrome)
+Safari: open savemygig.com, then File, Add to Dock. If that menu item is missing, your macOS predates the feature; use the Chrome route instead.
+Chrome: click the install icon at the right end of the address bar, or the three-dot menu, then Cast, Save and Share, Install page as app (wording varies slightly by version).
+Either way you get a Save My Gig app in your Dock that opens in its own window.
+In trouble right now?
+🚨 Start Emergency Mode
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

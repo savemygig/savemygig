@@ -1,0 +1,37 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+Drive_Size
+HOW BIG SHOULD A
+DJ USB BE?
+Short answer: 32-64GB, quality brand, and buy two. That's several thousand tracks, more music than you could play in a week of sets, with fast mounting and full FAT32 comfort.
+The track math
+MP3 320kbps: ~12MB per track → a 32GB drive holds ~2,500 tracks; 64GB ~5,000.
+Lossless (AIFF/WAV): ~40-60MB per track → 32GB ≈ 600 tracks, 64GB ≈ 1,200, still 20+ hours of music.
+A 4-hour set is 60-80 tracks. Even the lossless 32GB carries eight full sets of options.
+Why huge drives are worse in booths
+Mount time: players index the database on insert, a stuffed 256GB drive can leave you staring at a loading screen mid-changeover.
+Browsing: 20,000 tracks on a CDJ screen is not a library, it's a haystack. Curation beats capacity.
+Failure blast radius: when the everything-drive dies, everything dies. Two medium drives beat one giant one - the two-drive strategy →
+What to actually buy
+32 or 64GB from a major brand, metal body preferred (booth drinks happen), USB-A: it works on every player. USB-C ports exist only on the CDJ-3000X generation onward.
+Format FAT32 + MBR regardless of what it ships with - here's why.
+Two identical ones. Always two. The exact models we trust →
+Playing soon and still stuck?
+The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.
+ 🚨 Start Emergency Mode
+Never want to read this page again? Set up the prevention system once and this page becomes irrelevant.
+ 🛡 See the prevention checklist
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+🚨 PLAYING SOON? START EMERGENCY MODE
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

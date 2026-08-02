@@ -1,0 +1,17 @@
+Skip to content
+SAVE MY GIG
+Quick_Fix
+Clean Format
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+DRAFT, review pending.
+Step 4
+Format the USB clean
+⚠️
+This erases the drive completely. Anything still only on this drive is gone. If any file failed to copy earlier, it is not coming back after this step.
+Confirm you are on the right disk: check the name and the size before you touch anything.
+Format the device, not the volume. On Mac: Disk Utility, View, Show All Devices.
+Format: FAT32 · Scheme: MBR · Quick format OK.
+Formatted successfully?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

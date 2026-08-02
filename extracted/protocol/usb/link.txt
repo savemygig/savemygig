@@ -1,0 +1,15 @@
+Skip to content
+SAVE MY GIG
+Critical · Fastest fix
+Play Over LINK
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+Try this first
+Load from the player that sees it
+If the booth is linked over PRO DJ LINK, any player can browse and load from a drive that is physically in another one. Your own port being dead stops mattering.
+Press SOURCE on the player you want to play on.
+Select the other player’s USB (the LINK / remote device).
+Browse and load your track from there.
+Did it load?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

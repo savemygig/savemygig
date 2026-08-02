@@ -1,0 +1,36 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+Emergency_Card
+THE EMERGENCY CARD
+📱 Screenshot this page now, it works with no signal, in any booth, at 3am.
+⚡ USB DEAD AT THE BOOTH
+ Assumes you have already reseated it and tried the other deck. These are
+ the four a good DJ still forgets under pressure.
+FOLDERThe database is gone. The music is not.
+LINKPlay off the other player’s drive.
+RESTARTPower-cycle the dead player.
+BORROWTake a drive off the DJ either side of you.
+🔧 THE SACRED SETTINGS
+Format: FAT32 · Scheme: MBR · Size: 32-64 GB
+Mac: Disk Utility → Show All Devices → select the DRIVE → MS-DOS (FAT) + Master Boot Record
+Music onto gig drives ONLY via Rekordbox EXPORT mode
+Eject from Rekordbox AND the player (USB STOP). Every time.
+🚫 NEVER (under pressure)
+Never format a drive that still holds unrescued files.
+Never say YES when a computer offers to format your gig drive.
+Never keep re-plugging a drive that's failing, each mount can make recovery harder.
+Never leave home with one drive. Two identical drives, two pockets.
+Want this as a printable PDF?
+This page is free forever, screenshot it right now. If you would rather have the printable version saved in your inbox, we will send it.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+savemygig.com/emergency, the full guided rescue, free · Print this page: it's ink-friendly.
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

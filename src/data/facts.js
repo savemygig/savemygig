@@ -154,6 +154,10 @@ export const PLAYERS = [
   { m: 'CDJ-2000 / NXS', lib: 'Device Library', exfat: 'No',                 note: 'Still everywhere. FAT32 only.' },
   { m: 'CDJ-900 / 850',  lib: 'Device Library', exfat: 'No',                 note: 'FAT32 only.' },
   { m: 'XDJ-AZ',         lib: 'OneLibrary',     exfat: 'Yes',                note: '' },
+  // XDJ-AN: added to rekordbox in 7.2.16 alongside the CDJ-1500X. Filesystems
+  // (FAT16/FAT32/exFAT/HFS+) per official article
+  // support.alphatheta.com/en-US/articles/53214453591009.
+  { m: 'XDJ-AN',         lib: 'OneLibrary',     exfat: 'Yes',                note: 'Added in rekordbox 7.2.16.' },
   { m: 'XDJ-RX3',        lib: 'Device Library', exfat: 'Yes, firmware 1.11+', note: '' },
   { m: 'XDJ-XZ',         lib: 'Device Library', exfat: 'Yes, firmware 1.23+', note: '' },
   { m: 'XDJ-700',        lib: 'Device Library', exfat: 'No',                 note: 'Officially FAT32, FAT or HFS+ only.' },

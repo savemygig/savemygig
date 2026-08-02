@@ -1,0 +1,18 @@
+Skip to content
+SAVE MY GIG
+Critical · Fastest fix
+Play from FOLDER view
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+Try this first, 15 seconds
+Your tracks are probably still there
+Missing playlists usually does not mean a broken drive. The player often just cannot read the playlist database, while the music files sit on the stick untouched. FOLDER view ignores the database completely.
+Press SOURCE and select your USB.
+Switch the browse view to FOLDER.
+Load a track.
+💡
+You lose cues, grids, playlists, Sync and Quantize. You keep the gig. Fix the database properly tomorrow, not now.
+Works on the other player but not this one? That is the library format split, not a broken drive. What that means, after the gig.
+Can you load and play a track this way?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

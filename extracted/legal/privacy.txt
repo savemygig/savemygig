@@ -1,0 +1,77 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+LEGAL
+PRIVACY, PLAINLY
+Last updated: 2 August 2026 · Part of the legal shelf
+ Short version: the rescue flow needs nothing from you. No account, no login, no files uploaded.
+ Some free features (Advanced and Custom checklists, the printable list, emailing yourself a copy)
+ ask you to register with an email address and a name, plus an optional Instagram handle you
+ can leave empty. That is almost all the personal data we ever hold; an optional account adds
+ one thing, a synced copy of your checklists, and its delete button removes everything.
+Cookies and analytics
+ We use Google Analytics 4 to see which pages actually help and where people get stuck.
+ It sets cookies, so we only load it after you accept on the banner.
+ Decline and no analytics cookies are set, and the site works exactly the same.
+ The full detail lives in the Cookie Policy.
+ To change your mind later, clear this site's data in your browser and the banner will ask again.
+If you register
+ Registration collects your email address, an artist name or first
+ name so the site knows what to call you, and, only if you choose to share it, an
+ artist Instagram handle. The email is used to unlock the registered
+ features, to send you what you asked for (your checklist, the Emergency Card), and for the
+ occasional note that might save a gig or help your career. We use double opt-in for the
+ mailing list: you get a confirmation email first, and nothing is added to the list until
+ you click it. When you submit the form we do store your details with Brevo straight away,
+ marked as unconfirmed and outside every mailing list, so no campaign can ever reach them.
+ Never click the link and you are never on the list; to have an unconfirmed record deleted,
+ write to info@savemygig.com.
+ If you share your Instagram handle, we use it for exactly what the form says: to follow
+ your work from the Save My Gig account. We also receive an internal notification email for
+ each registration so we can do that. The Instagram field is always optional, and leaving
+ it empty changes nothing.
+ This data is processed by Brevo (Sendinblue SAS, France), acting as our
+ processor. We do not sell, rent or share it with anyone else. Every email has a one-click
+ unsubscribe, and unsubscribing removes you. Your checklist itself (items, edits, ticks)
+ is stored in your own browser on your own device, not on our servers, unless you create
+ an account (next section).
+If you create an account
+ An account is optional and adds one thing: your checklists follow you across devices.
+ Sign-in is your email address, proven either by Google sign-in or by a
+ link we email you. There are no passwords, so there is no password of
+ yours for anyone to steal. If you use Google, we receive your email address from Google
+ and nothing else; we never see your Google password or your Google data.
+ With an account, a copy of your checklists (the items, your edits, your ticks, your
+ notes) is stored on our servers, hosted by Cloudflare, so your other
+ devices can load it. The list on each device remains stored on that device either way.
+Deleting your account is one button on the checklist page. It removes
+ your account, every synced checklist, and your email address from our records,
+ immediately, including the mailing-list contact. What stays is the copy of your list in
+ your own browser, because that one belongs to your device, not to us.
+If you send feedback
+ The feedback form sends us what you write, plus your name, email and Instagram if you
+ choose to leave them. It arrives as an email in our inbox, delivered by Brevo, and we use
+ it to read it, reply if you asked for a reply, and follow you back if you left your
+ handle. Want a message of yours deleted? Write to
+ info@savemygig.com and it is gone.
+Your rights
+ If you are in the EU or UK, you can ask us for a copy of what we hold about you, ask us to
+ correct it, or ask us to delete it. Write to
+ info@savemygig.com and we will action it.
+ Our legal basis for the email list and the optional fields is your consent, which you can
+ withdraw at any time; deleting your data removes your address, artist name and Instagram
+ handle from our records. This applies worldwide, including under Brazil's LGPD: same
+ address, same result.
+What we never do
+ No selling of data. No tracking beyond the analytics
+ described above. We never see your music, your files, or your drives.
+ Operated from Brazil · Contact:
+ info@savemygig.com ·
+ Some outbound links on the gear and recovery pages may become affiliate links; they never
+ change what you pay and never appear inside the rescue flow.
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

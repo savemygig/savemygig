@@ -1,0 +1,297 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+REKORDBOX
+rekordbox, honestly
+Reviewed: 26 July 2026
+×
+Booth briefing. Format the drive FAT32 with an MBR
+ partition scheme, and export from rekordbox 7.2.13 or later.
+ That combination is readable by every Pioneer and AlphaTheta player in this
+ article, old and new. Everything below is why, and what to do when it is
+ not that simple.
+Read more…Read less
+ Emergency fixes
+USB mounts on the CDJ but shows no playlists
+Short answer. Nine times out of ten in 2026, this is not a
+ broken drive. It is the wrong database format, and it is the
+ most confusing failure in modern DJing because the player gives you
+ no error code at all. The stick mounts. The player is happy. Your
+ playlists are simply not there.
+Why this happens. rekordbox can write two different
+ databases onto a USB drive: Device Library, the long-standing
+ format, and OneLibrary, the newer one. A player reads one or
+ the other. If your drive carries only Device Library and you plug it into a
+ CDJ-3000X, the playlists will not appear. See what these
+ two formats actually are if you want the full picture.
+Your music is not gone. The audio files on the drive are
+ never deleted by this. It is only the playlist database the player cannot
+ see. In the FOLDER or browse view the tracks are usually still there,
+ which is exactly what saves a set while you sort the rest out later.
+Fix it now.
+At the gig, switch to FOLDER view. Your audio files are still on the drive. You lose cues, grids and playlists, but you keep playing. That is the whole point of the rescue.
+Get to rekordbox 7.2.13 or later. From this version rekordbox can write both database formats onto the same drive, so one stick works in every booth.
+Re-export your playlists to the drive. Export, do not drag and drop. Dragging audio files gives you no database at all.
+Eject properly, from rekordbox. Pulling a drive mid-write is the single most common way to corrupt the database you just built.
+Test it before you leave the house if you own a player, or arrive early enough to test on the club's.
+Avoid it next time. Keep rekordbox at 7.2.13
+ or later so every export carries both database formats, and never drag audio
+ files onto the drive by hand, only export.
+Related: OneLibrary vs Device LibraryWhich players read whichStart Emergency Mode
+What do the CDJ error codes mean?
+Short answer. Two error codes cover almost every rekordbox-related
+ stop on a CDJ-3000 or CDJ-3000X. E-8302 means the
+ player cannot read the track data at all; E-8304 and
+ E-8305 mean the file format itself is unsupported.
+These are the official definitions for the CDJ-3000 and CDJ-3000X. Older CDJs (CDJ-350 and CDJ-850 era) can map some codes differently.
+E-8302CANNOT PLAY TRACK. Officially: the track data on the storage device cannot be read correctly. Usually a corrupt export or a file system the player does not accept. Full fix →E-8304 / E-8305UNSUPPORTED FILE FORMAT. Officially: music files that cannot be played by the unit have been loaded. Re-encode the offending tracks, or re-export from rekordbox.
+Avoid it next time. Export FAT32 + MBR, keep rekordbox at
+ 7.2.13 or later, and eject from rekordbox every time, the
+ three habits that make these codes rare instead of routine.
+ We are not publishing a definition for E-8306. It does not appear on the
+ official error pages and the older manuals contradict each other. If
+ you have hit it, tell us what the screen said and what
+ fixed it, and we will document it properly.
+Related: CDJ error E-8302, full fixUSB shows no playlists
+rekordbox export failed, or the player shows nothing
+Short answer. A failed or corrupt export is a database
+ problem, not a music problem. Your tracks are almost always fine, the index
+ the CDJ reads is broken. A clean re-export fixes most cases.
+Why this happens. Either the export itself never completed
+ (a failing drive, a full drive, or a locked file), or it "finished" but landed
+ corrupt, classic after pulling the drive without ejecting it properly.
+Fix it now.
+Close rekordbox, unplug and replug the USB, reopen rekordbox in EXPORT mode.
+Check free space. An export onto a nearly-full drive corrupts silently.
+If the device shows in rekordbox: delete tonight's playlists from the device, re-sync them fresh, and eject with the eject button.
+If the device errors or will not sync: copy any music you need off the drive, format it FAT32 + MBR, and export again to the clean drive.
+Avoid it next time. Export tonight's playlists only, not
+ the whole library, a large export is where corruption tends to live, and
+ always eject from rekordbox, then wait for the OS to release the drive.
+Related: Full recovery walkthroughTracks marked File is Missing never exportCDJ error E-8302
+rekordbox is not detecting my USB at all
+Short answer. If the drive is missing from the Devices
+ list, the cause is almost always one of three things, in this order: you are
+ not in Export mode, the operating system itself cannot see the drive, or the
+ drive is formatted in a way rekordbox cannot write to.
+Why this happens. The device tree only appears in
+ EXPORT mode, not Performance or Lighting. USB hubs
+ and dongles are the single most common reason a drive mounts on the OS but
+ never reaches rekordbox. And rekordbox exports to FAT32 or exFAT only, a
+ drive formatted NTFS or APFS may mount on the computer but refuse the export.
+Fix it now.
+Confirm you are in EXPORT mode, top left of rekordbox.
+Check the computer sees the drive first, in Finder or File Explorer. If it is not there either, this is a drive or connection problem, not rekordbox.
+Plug in direct, no hub, straight into the computer.
+Restart rekordbox with the drive already inserted. Some versions only scan removable drives at launch.
+Avoid it next time. Keep the drive FAT32 + MBR, skip hubs
+ when exporting, and if the drive mounts and disappears on its own, treat that
+ as a failing drive and retire it, not a rekordbox bug.
+Related: Full walkthrough, including macOS permissionsFormat a USB for CDJs
+ Understanding rekordbox
+What are OneLibrary and Device Library?
+Short answer. Both are the index rekordbox writes to your
+ drive so a player can show your playlists, cues, grids and artwork without a
+ computer. They are two different formats, and a player reads one or the other.
+Why this exists. OneLibrary was introduced in
+ rekordbox 6.6.11 (March 2023),
+ originally for the OPUS-QUAD, and it is the format OneLibrary players expect
+ (CDJ-3000X, CDJ-1500X, OPUS-QUAD, OMNIS-DUO, XDJ-AZ, XDJ-AN). Device Library
+ is what everything before it reads.
+The trap is that the split does not follow the age of the gear the way you
+ would expect. The CDJ-3000 is a Device Library player. The CDJ-3000X
+ is a OneLibrary player. Two decks with nearly the same name, in the
+ same booth, reading different formats.
+Avoid the trap. Stop trying to remember which player reads
+ which. Keep rekordbox at 7.2.13 or later and every export
+ carries both formats on the same drive, so it stops mattering.
+Related: Full player compatibility tableFix a drive with no playlists
+How rekordbox exports actually work
+Short answer. A CDJ reads a real database, cues, grids,
+ playlists, that rekordbox writes only when you use the Export panel. Dragging
+ audio files onto the drive by hand does not create one.
+Why this matters. CDJs can still play plain audio files
+ from a FAT32 drive with no database at all, in the FOLDER view, that is the
+ core of our critical-path rescue. But Sync, Quantize, hot cues, grids and
+ playlists all come from the database, and the only way to write it is Export.
+Do this. Build your playlists in rekordbox, select the
+ device in the left-hand tree, then export (drag the playlists onto the device,
+ or use the Export panel). Eject from rekordbox, not the operating system, once
+ it finishes.
+Avoid it next time. Re-export after every library change.
+ An old export is a corrupt export waiting to happen, because everything you
+ changed since the last export exists only in rekordbox until you export again.
+Related: Playlists missing on the playerWhy a missing file silently shortens your exportThe full prevention system
+ USB & library preparation
+Is FAT32 really limited to 32GB?
+Short answer. No, and this myth costs DJs money. FAT32
+ supports volumes up to 2TB. The 32GB ceiling you have run into
+ is a limit in Windows' own formatting dialog, not in the file system.
+Why the myth exists. Windows will not let you format a
+ drive larger than 32GB as FAT32 through its normal Format dialog, so people
+ assume the file system itself has that ceiling. It does not.
+Fix it now. On Windows you can format a larger drive to
+ FAT32 with a free tool such as fat32format or its graphical
+ version guiformat (both from Ridgecrop Consultants). On a Mac,
+ Disk Utility does it natively: choose MS-DOS (FAT)
+ with a Master Boot Record scheme.
+Avoid it next time. The real FAT32 limit is
+ 4GB per file. A 320kbps MP3 is around 9MB and even a long
+ uncompressed WAV rarely passes 1GB, so for a music library it never matters.
+Related: Full formatting walkthroughMBR vs GPT
+MBR or GPT: does the partition scheme matter?
+Short answer. Use MBR (Master Boot Record).
+ AlphaTheta's own rekordbox manual documents file systems and says nothing at
+ all about partition schemes, so this is our recommendation, not a published
+ requirement, but we have seen the alternative fail too often to stay quiet.
+Why we recommend it. A GPT drive is a repeat offender in
+ the "formatted fine, player refuses it" category, and MBR costs you nothing
+ in return.
+Do this. On Mac: Disk Utility → Erase →
+ MS-DOS (FAT) + Master Boot Record.
+ On Windows, the standard Format dialog defaults to MBR for drives under 2TB, so
+ most people already have this right without knowing it.
+Avoid it next time. Do not let a formatting tool default
+ you into GPT because it looked like the modern option. For a DJ USB, it is not.
+Related: FAT32 vs exFATFormat a USB for CDJs
+Why do some USB drives work better than others?
+Short answer. Cheap, no-name sticks are how most
+ "random" USB failures at gigs actually start.
+Why this happens. A CDJ reads a drive far harder than a
+ laptop ever does. Budget drives fail under that sustained read pattern more
+ often than quality ones, and a struggling drive often gives you a warning
+ first: tracks load fine but waveforms crawl or browsing lags.
+Fix it now. If a drive is already showing that warning,
+ do not trust it for the next gig. Copy your music off and retire it.
+Avoid it next time. Buy a quality metal-bodied 32-64GB
+ drive from a brand you have heard of, and carry two identical drives with the
+ same export on both. A second drive is the only backup that works when you
+ are already standing in the booth.
+Related: Approved drivesThe DJ USB backup strategy
+ Compatibility & version notes
+Which players use OneLibrary, and which read exFAT?
+ FAT32 with MBR works on every model in this table. exFAT is the column
+ that bites.
+ | Player | Library format | Reads exFAT? | Notes
+ | CDJ-3000X | OneLibrary | Yes | No SD card slot. USB-A x1, USB-C x2.
+ | CDJ-1500X | OneLibrary | Yes | Announced July 2026. Needs rekordbox 7.2.16 or later.
+ | CDJ-3000 | Device Library | Yes, firmware 1.20+ | Device Library on firmware 3.22. Firmware 3.30 added OneLibrary but was withdrawn.
+ | CDJ-2000NXS2 | Device Library | No | The workhorse in most club booths. FAT32 only.
+ | CDJ-2000 / NXS | Device Library | No | Still everywhere. FAT32 only.
+ | CDJ-900 / 850 | Device Library | No | FAT32 only.
+ | XDJ-AZ | OneLibrary | Yes | 
+ | XDJ-RX3 | Device Library | Yes, firmware 1.11+ | 
+ | XDJ-XZ | Device Library | Yes, firmware 1.23+ | 
+ | XDJ-700 | Device Library | No | Officially FAT32, FAT or HFS+ only.
+ | OPUS-QUAD | OneLibrary | Yes | First OneLibrary player.
+ | OMNIS-DUO | OneLibrary | Yes | 
+ We have deliberately left the XDJ-1000MK2 and
+ XDJ-RX2 off this table. There is no official AlphaTheta
+ filesystem article for either, and we will not guess about a drive you are
+ going to trust with a gig. Treat both as FAT32-only and you will be fine.
+ NTFS is never supported, and this one is not folklore:
+ AlphaTheta's rekordbox manual lists NTFS as unsupported for both SD cards
+ and USB drives, so rekordbox will not even write to it.
+ Two more things straight from that manual, because both catch people out.
+ First, exFAT is a USB-only option. rekordbox can export
+ to an exFAT USB drive, but it cannot export to an exFAT SD
+ card, no matter which player you are feeding. Second, the manual
+ documents file systems and says nothing at all about partition
+ schemes, see MBR vs GPT for why we still
+ recommend MBR.
+Related: What OneLibrary and Device Library areVersion numbers worth knowing
+The rekordbox version numbers worth knowing
+Short answer. Two numbers matter more than any other
+ rekordbox fact: never use 7.2.12, and get to
+ 7.2.13 or later.
+Why this matters. 7.2.12 was withdrawn by
+ AlphaTheta because tracks exported with that version could fail to load on
+ their own hardware. It was fixed in 7.2.13, which is also
+ the first version that writes both Device Library and OneLibrary to the same
+ drive. OneLibrary itself was introduced in 6.6.11.
+Do this. Check your installed version (Preferences or
+ About, inside rekordbox) before a big show, and if you are on
+ 7.2.12, update before you export anything.
+Avoid it next time. Converting a library format is
+ one-way. AlphaTheta's own wording: if you convert when OneLibrary already
+ exists on the drive, it is overwritten, and any playlists or playback
+ histories stored only in OneLibrary are lost. Convert onto a fresh drive when
+ you can, and never update rekordbox or firmware on gig day itself, a fresh
+ version can bring a fresh problem and the booth is where you meet it.
+Software downloads.Official rekordbox download page →
+Broken link? Let us know and we'll fix it.
+Related: Per-model compatibility tableWhy gig day is a freeze
+ Best practices
+The setup that never surprises you
+Short answer. Five habits, done every time, make almost
+ every failure on this page a non-event.
+FAT32, MBR, on a 32 to 64GB drive from a brand you have heard of.
+rekordbox 7.2.13 or later, exported, not dragged.
+Two identical drives, same export on both, in different pockets.
+Eject from rekordbox, every single time.
+Test on a player before the drive ever matters.
+Related: The full seven-rule prevention systemBack up your library
+Back up your library, not just your USB
+Short answer. Back up the rekordbox library itself,
+ monthly, not just the USB you export to.
+Why this matters. The USB export is disposable, you can
+ rebuild it from the library in minutes. The library is not disposable, it
+ holds years of cues, grids and playlists that a dead laptop takes with it if
+ there is no backup.
+Do this. In rekordbox: File → Library → Backup
+ Library, to a different drive or to cloud storage.
+Avoid it next time. Do not treat the export on your gig
+ USB as your only copy of anything. It is not a backup, it is a working copy.
+Related: Move your library to a new laptopThe full prevention system
+ Tips & tricks
+Re-export after every library change
+Short answer. An old export is a corrupt export waiting
+ to happen.
+Why this happens. Every playlist edit, cue change or new
+ track after your last export lives only inside rekordbox until you export
+ again. The CDJ never sees any of it, and a stale export is also more likely
+ to have been through an unsafe eject somewhere in its history.
+Do this. Re-export tonight's playlists fresh, every time
+ you play, even if you exported "recently."
+Avoid it next time. Export tonight's set, not your whole
+ library. A large, rarely-touched export is exactly where corruption tends to
+ show up first.
+Related: How exports actually workThe full prevention system
+Before you erase anything, read this
+Formatting and erasing permanently destroys data. Once a
+ drive is formatted, the music on it is gone unless you have another copy
+ or pay for professional recovery. There is no undo.
+Copy the files off first whenever there is time. If you
+ can plug the drive into a computer and the files are visible, copy them
+ somewhere safe before you format anything.
+Make sure you are erasing the right drive. Formatting the
+ wrong device, an external backup, a second USB, your system disk, is the
+ single most expensive mistake in this whole process.
+This is general guidance, not a guarantee. Every drive,
+ player, firmware version and library is different. We cannot see your
+ setup and we cannot promise any step will work for you.
+You act at your own risk. Save My Gig accepts no
+ liability for data loss, hardware damage, missed sets or any other loss
+ arising from following this site. If the music is irreplaceable, stop and
+ speak to a data recovery professional instead.
+ Full terms: Disclaimer ·
+ Privacy
+Playing soon and it is not working?
+🚨 Start Emergency Mode
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+ Sources: AlphaTheta / Pioneer DJ official product and support pages, rekordbox
+ release notes (7.2.12 withdrawal, 7.2.13 and later) and official CDJ-3000 and
+ CDJ-3000X error code documentation, all checked 26 July 2026. Firmware and
+ software behaviour changes without notice, so re-check before a big show.
+Check the release yourself: rekordbox (AlphaTheta) · Serato DJ · DJM-REC (AlphaTheta) · Engine DJ
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

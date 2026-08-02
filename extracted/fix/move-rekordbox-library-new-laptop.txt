@@ -1,0 +1,35 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+Library_Migration
+NEW LAPTOP,
+SAME LIBRARY
+The mistake that destroys years of work: copying your music folder to the new laptop and re-importing it. Music survives, every cue, loop, grid adjustment and playlist dies. Use the built-in Library Backup instead.
+The right way (30-60 min, mostly waiting)
+Old laptop: Rekordbox → File → Library → Backup Library → choose "include music files" → target an external drive with enough space.
+New laptop: install Rekordbox, log into the same Pioneer account, then File → Library → Restore Library from the external drive.
+Verify: open your key playlists, load a few tracks, cues and grids should be exactly where you left them.
+Re-export your gig USBs fresh from the new machine, both drives, and test one on a player before the next gig.
+Cloud alternative
+Rekordbox's Cloud Library Sync (with a subscription plan) can migrate cues and playlists through Pioneer's cloud, convenient for ongoing two-computer setups. For a one-time move, the local backup is faster, free, and doesn't depend on upload speeds.
+While you're at it
+This backup file is also your disaster insurance. Make one monthly; keep it off the gig bag.
+Old laptop staying alive? Let ONE machine own the gig drives from now on, two writers corrupt device databases. Here's how that ends →
+Playing soon and still stuck?
+The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.
+ 🚨 Start Emergency Mode
+Never want to read this page again? Set up the prevention system once and this page becomes irrelevant.
+ 🛡 See the prevention checklist
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+🚨 PLAYING SOON? START EMERGENCY MODE
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

@@ -1,0 +1,123 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+FIRMWARE MATRIX
+What's broken on that deck, by firmware version
+Reviewed: 26 July 2026
+Booth briefing. Read the firmware version off the unit,
+ find it below, and you know what can bite you tonight. Every entry comes
+ from AlphaTheta's own published change histories, 17 documented
+ faults across 6 models. On gear you control, sit at or above
+ the safe version shown for it. On gear you do not control, this tells you
+ what to plan around.
+Read more…Read less
+Finding the version on the unit
+ On a CDJ or DJM, the firmware version is in the utility menu, and on
+ players it is also shown on the startup screen while the unit boots.
+ Check it at soundcheck, not at doors. If a venue deck sits below the
+ safe version, you cannot fix that on the night, but you can stop it
+ surprising you.
+CDJ-3000X
+A young unit. AlphaTheta has published no defect fix for it, so there is nothing to report here. This section stays empty until a documented one exists.
+CDJ-3000X field manualAlphaTheta change history
+CDJ-3000
+ Clear at 3.20 or later
+3.30
+ Withdrawn by AlphaTheta. It added OneLibrary, then playlists failed to display for people exporting from older rekordbox. No music or data was deleted, and the player reverted to Device Library. Do not install this version. 
+ Official notice
+ | Fixed in | Area | What was happening below that version
+ | 3.20 | 
+ Link
+ mid-set | PRO DJ LINK connection with a DJM-2000NXS could fail.
+ | 3.19 | 
+ Display
+ mid-set | Rare dead screen on power-on.
+ | 3.18 | 
+ Audio
+ mid-set | Occasional no-audio, display blackouts and system freezes on some units.
+ | 3.14 | 
+ Browse
+ mid-set | A "Waiting" popup could block the BROWSE screen entirely.
+ | 1.09 | 
+ Playback
+ mid-set | Emergency Loop triggering wrongly during a Hot Cue pause.
+CDJ-3000 field manualAlphaTheta change history
+CDJ-2000NXS2
+ Clear at 1.60 or later
+ | Fixed in | Area | What was happening below that version
+ | 1.60 | 
+ Playback
+ | A startup issue affecting SLIP HOT CUE behaviour.
+ | 1.55 | 
+ Display
+ | Waveform colour selection went missing, then was restored.
+ | 1.51 | 
+ Audio
+ mid-set | Audio dropouts during Control Mode playback.
+CDJ-2000NXS2 field manualAlphaTheta change history
+DJM-V10 / V10-LF
+ Clear at 1.16 or later
+ | Fixed in | Area | What was happening below that version
+ | 1.16 | 
+ USB
+ mid-set | UASP-compatible USB drives not recognized.
+ | 1.12 | 
+ Audio
+ mid-set | Potential audio cut-out when connected to CDJ-3000s over PRO DJ LINK.
+ | 1.07 | 
+ MIDI
+ | Incorrect MIDI output under certain operation.
+ | 1.04 | 
+ Audio
+ mid-set | Audio sometimes failing to input to a channel.
+DJM-V10 / V10-LF field manualAlphaTheta change history
+DJM-A9
+ Clear at 1.11 or later
+ | Fixed in | Area | What was happening below that version
+ | 1.11 | 
+ Link
+ mid-set | Rare freeze under heavy PRO DJ LINK network load.
+ | 1.07 | 
+ USB
+ mid-set | UASP-compatible USB drives not recognized.
+ | 1.02 | 
+ Routing
+ mid-set | Insert method intermittently disabling itself when switching the Multi I/O input selector, and DVS phono input malfunction on USB-B after swapping computers across ports.
+DJM-A9 field manualAlphaTheta change history
+DJM-900NXS2
+ Clear at 2.08 or later
+ | Fixed in | Area | What was happening below that version
+ | 2.08 | 
+ Recording
+ | DJM-REC recording halts affecting iOS and iPadOS audio.
+ | 2.06 | 
+ Recording
+ | DJM-REC recording could halt part-way through a set.
+AlphaTheta has published no hardware defect fix for this mixer beyond the DJM-REC recording halts. The rest of its change history is feature work.
+DJM-900NXS2 field manualAlphaTheta change history
+How to read this
+ A version in the "Fixed in" column is the release that resolved that
+ fault. Anything below it still has the fault. Anything at or above it
+ does not.
+ The mid-set marker is ours,
+ not AlphaTheta's. It flags faults whose documented symptom can interrupt
+ a set already in progress, so you can tell a real risk from an
+ inconvenience at a glance. Everything else on this page is the vendor's
+ own wording, condensed.
+ Faults only. Feature additions are left out on purpose, because a missing
+ feature does not end a set. Models appear here once their change history
+ has been read against the primary source, which is why this list is
+ shorter than the catalogue. Found something we have wrong?
+ Tell us and we will check it against the source.
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

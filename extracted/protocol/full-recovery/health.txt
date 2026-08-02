@@ -1,0 +1,19 @@
+Skip to content
+SAVE MY GIG
+Full_Recovery
+Drive Health Test
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+DRAFT, review pending.
+Step 2
+Test the drive with a FULL format
+A full format works the whole drive, not just the index. Stress test and clean slate in one.
+⚠️
+This wipes everything still on the drive. Only what you
+ already copied off survives. If anything on it is irreplaceable and not
+ yet copied, stop and go back.
+Format the USB: FAT32 · MBR · uncheck Quick Format.
+A full pass on a big stick takes time. That is the test working.
+Did the full format complete with no errors?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

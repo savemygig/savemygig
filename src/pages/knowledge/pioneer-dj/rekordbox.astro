@@ -80,15 +80,15 @@ const faqSchema = {
       name: 'Should I format my DJ USB as FAT32 or exFAT?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'FAT32 with an MBR partition scheme. FAT32 is read by every Pioneer and AlphaTheta player ever made. exFAT is only read by newer units, so an exFAT drive that works on a CDJ-3000 is refused by the CDJ-2000NXS2 in the next booth.',
+        text: 'FAT32 with an MBR partition scheme. FAT32 is read by every rekordbox-era Pioneer DJ and AlphaTheta player, old and new. exFAT is only read by newer units, so an exFAT drive that works on a CDJ-3000 is refused by the CDJ-2000NXS2 in the next booth.',
       },
     },
   ],
 };
 ---
 <Base
-  title="rekordbox USB Guide: OneLibrary, Device Library & CDJ Compatibility | Save My Gig!"
-  description="Your USB mounts on the CDJ but shows no playlists and no error? That is Device Library vs OneLibrary. The full explanation, the per-model compatibility table, and the export settings that work in every booth."
+  title="rekordbox USB Guide: OneLibrary vs Device Library | Save My Gig!"
+  description="USB mounts on the CDJ but shows no playlists? That is Device Library vs OneLibrary. The explanation, the compatibility table, and the export settings that work."
   path="/knowledge/pioneer-dj/rekordbox"
   crumbName="rekordbox"
 >
@@ -151,8 +151,8 @@ const faqSchema = {
     <details class="acc-sec" name="rb-acc" id="no-playlists">
       <summary><h2 class="acc-h2">USB mounts on the CDJ but shows no playlists</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Short answer.</strong> Nine times out of ten in 2026, this is not a
-        broken drive. It is the wrong <strong>database format</strong>, and it is the
+        <p><strong>Short answer.</strong> In a mixed-generation booth, this is
+        usually not a broken drive. It is the wrong <strong>database format</strong>, and it is the
         most confusing failure in modern DJing because <strong>the player gives you
         no error code at all</strong>. The stick mounts. The player is happy. Your
         playlists are simply not there.</p>
@@ -245,8 +245,9 @@ const faqSchema = {
         <p><strong>Why this happens.</strong> The device tree only appears in
         <span class="mono">EXPORT</span> mode, not Performance or Lighting. USB hubs
         and dongles are the single most common reason a drive mounts on the OS but
-        never reaches rekordbox. And rekordbox exports to FAT32 or exFAT only, a
-        drive formatted NTFS or APFS may mount on the computer but refuse the export.</p>
+        never reaches rekordbox. And rekordbox writes to FAT32, exFAT (USB drives
+        only) and, on a Mac, HFS+, never NTFS or APFS: a drive on those may mount
+        on the computer but refuse the export.</p>
         <p><strong>Fix it now.</strong></p>
         <ul class="checklist">
           <li>Confirm you are in <span class="mono">EXPORT</span> mode, top left of rekordbox.</li>
@@ -320,8 +321,9 @@ const faqSchema = {
         <p><strong>Fix it now.</strong> On Windows you can format a larger drive to
         FAT32 with a free tool such as <strong>fat32format</strong> or its graphical
         version <strong>guiformat</strong> (both from Ridgecrop Consultants). On a Mac,
-        Disk Utility does it natively: choose <span class="mono">MS-DOS (FAT)</span>
-        with a <span class="mono">Master Boot Record</span> scheme.</p>
+        use Disk Utility: choose <span class="mono">MS-DOS (FAT)</span>
+        with a <span class="mono">Master Boot Record</span> scheme, and if it
+        refuses a very large drive, guiformat on any Windows machine finishes the job.</p>
         <p><strong>Avoid it next time.</strong> The real FAT32 limit is
         <strong>4GB per file</strong>. A 320kbps MP3 is around 9MB and even a long
         uncompressed WAV rarely passes 1GB, so for a music library it never matters.</p>
@@ -341,8 +343,9 @@ const faqSchema = {
         in return.</p>
         <p><strong>Do this.</strong> On Mac: Disk Utility &rarr; Erase &rarr;
         <span class="mono">MS-DOS (FAT)</span> + <span class="mono">Master Boot Record</span>.
-        On Windows, the standard Format dialog defaults to MBR for drives under 2TB, so
-        most people already have this right without knowing it.</p>
+        On Windows, the right-click Format dialog reformats the volume without touching
+        the partition scheme, so a factory drive usually keeps the MBR it shipped with;
+        the scheme only changes if you repartition in Disk Management.</p>
         <p><strong>Avoid it next time.</strong> Do not let a formatting tool default
         you into GPT because it looked like the modern option. For a DJ USB, it is not.</p>
         <p class="acc-related">Related: <a href="#fat32">FAT32 vs exFAT</a> <a href="/fix/format-usb-for-cdj">Format a USB for CDJs</a></p>

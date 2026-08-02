@@ -1,0 +1,37 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+Format_Question
+exFAT vs FAT32:
+WHICH ONE FOR CDJs?
+The answer that never fails: FAT32 with an MBR partition map plays on every Rekordbox-compatible player ever made. exFAT works only on newer hardware. If you play in booths you don't control, FAT32 is the professional choice.
+Compatibility, honestly
+FAT32 + MBR, works on CDJ-850, 900, 2000, 2000NXS/NXS2, 3000, every XDJ. The universal key.
+exFAT, supported on CDJ-3000, CDJ-3000X, CDJ-1500X, XDJ-RX3, XDJ-XZ and XDJ-AZ (firmware matters, see the player table); refused by every CDJ-2000, including the NXS2, still common in clubs worldwide. One trap almost nobody mentions: rekordbox writes exFAT to USB drives only. It will not export to an exFAT SD card at all, whatever the player supports.
+NTFS / APFS, never. AlphaTheta's own rekordbox manual lists NTFS as unsupported on both SD cards and USB drives, so rekordbox will not export to it in the first place.
+Partition scheme, choose MBR. AlphaTheta documents file systems but not partition schemes, so treat this one as our recommendation rather than a published requirement. A drive left on GPT, which is what you get if you erase the volume instead of the device on a Mac, is a recurring cause of "it formatted fine but the player refuses it". MBR costs you nothing.
+"But FAT32 has a 4GB limit!"
+Per file, not per drive. No DJ track approaches 4GB; even a 30-minute WAV is under 1GB. The only DJs who genuinely need exFAT are the ones carrying multi-hour uncompressed recordings on their gig drive, which is its own mistake. For music libraries, the limit is irrelevant.
+The trap: how drives ship
+Most drives above 32GB ship exFAT from the factory, so a brand-new "professional" 64GB stick fails on a CDJ-2000 out of the box.
+Windows won't offer FAT32 for large drives in the Format dialog; on Mac, choose MS-DOS (FAT) in Disk Utility with Master Boot Record - full walkthrough here.
+The rule to remember
+Format for the oldest player you might ever face, not the most modern one you own. The festival main stage has CDJ-3000s; the afterparty basement has a CDJ-2000 with a cigarette burn. FAT32 plays both.
+Playing soon and still stuck?
+The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.
+ 🚨 Start Emergency Mode
+Never want to read this page again? Set up the prevention system once and this page becomes irrelevant.
+ 🛡 See the prevention checklist
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+🚨 PLAYING SOON? START EMERGENCY MODE
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

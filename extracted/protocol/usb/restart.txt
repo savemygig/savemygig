@@ -1,0 +1,18 @@
+Skip to content
+SAVE MY GIG
+Critical · No Laptop
+No Computer - Restart Player
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+DRAFT, review pending.
+Step 2 of 3
+Restart the player
+⚠️
+Only if nobody is playing on this player right now. If another DJ is on, skip to the next step.
+Remove your USB first, press USB STOP, wait for the light to stop blinking.
+Power the player off. Wait 20 seconds.
+Power back on, let it fully boot.
+Insert the USB and wait, some drives take 30+ seconds to mount.
+Does the player read the USB now?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

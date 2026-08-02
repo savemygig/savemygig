@@ -1,0 +1,13 @@
+Skip to content
+SAVE MY GIG
+Full_Recovery
+Retire the Drive
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+DRAFT, review pending.
+Step 2b
+This drive is done. Retire it.
+A drive that fails a full format will fail a gig. No exceptions, no second chances.
+Do you have another USB drive to rebuild on right now?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

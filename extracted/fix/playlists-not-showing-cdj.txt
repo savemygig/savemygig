@@ -1,0 +1,38 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+Playlists_Missing
+PLAYLISTS NOT SHOWING
+ON THE CDJ?
+Short version: if tracks play but playlists are missing, your music arrived, the Rekordbox database didn't. Either the export skipped it, the eject corrupted it, or the drive was filled by drag-and-drop instead of Rekordbox.
+Why it happens
+Files were dragged onto the USB in Finder/Explorer, that copies music, not the database. Playlists only exist after a Rekordbox EXPORT-mode sync.
+The export was interrupted or ejected unsafely, the database is written near the end of a sync; pull early and tracks survive but playlists don't.
+Mixed exports from two computers, a second computer's Rekordbox can overwrite the device database with its own (empty) view.
+Very old player firmware meeting a new Rekordbox database version.
+At the venue (5 minutes)
+No laptop? Use SOURCE → USB → FOLDER, your music is still playable by folder, tonight is safe.
+With a laptop: open Rekordbox in EXPORT mode, connect the USB, drag tonight's playlists onto the device, wait for the full sync, eject with the Rekordbox button.
+Re-insert on the player and check the PLAYLIST browse tab, not FOLDER.
+The permanent fix
+One rule: music gets on gig drives only via Rekordbox export. Never Finder, never Explorer.
+One computer owns the drive. If you must use two, let one be the only writer.
+After every library change: re-export, eject properly, verify the playlists load before leaving home.
+Playing soon and still stuck?
+The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.
+ 🚨 Start Emergency Mode
+Never want to read this page again? Set up the prevention system once and this page becomes irrelevant.
+ 🛡 See the prevention checklist
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+🚨 PLAYING SOON? START EMERGENCY MODE
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

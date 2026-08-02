@@ -1,0 +1,16 @@
+Skip to content
+SAVE MY GIG
+Full_Recovery
+Rescue Everything
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+DRAFT, review pending.
+Step 1
+Rescue everything first
+Before touching anything else: get a full copy of the drive.
+Create a folder on your computer: USB-RESCUE.
+Copy everything readable from the USB into it, the whole drive, not just music.
+Let it run; a slow copy is fine, an interrupted one is not.
+Did everything copy successfully?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

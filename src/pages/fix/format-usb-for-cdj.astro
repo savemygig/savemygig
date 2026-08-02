@@ -84,7 +84,8 @@ const faqSchema = {
       <p style="margin:0">
         <strong>The answer:</strong> <span class="mono">FAT32</span> file system,
         <span class="mono">MBR</span> partition scheme, on a 32&ndash;64&nbsp;GB drive.
-        Every Pioneer CDJ and XDJ ever made reads that combination.
+        Every rekordbox-era CDJ and XDJ reads FAT32, and MBR is the scheme we
+        recommend (the why is below).
       </p>
     </div>
 
@@ -115,7 +116,7 @@ const faqSchema = {
       </p>
       <ul class="checklist">
         <li><strong>Use a free formatter.</strong> <span class="mono">guiformat</span> (or its command-line twin <span class="mono">fat32format</span>), both from Ridgecrop Consultants, will format a large drive to FAT32 in a few seconds. This is what most DJs end up using.</li>
-        <li><strong>Windows 11 command line.</strong> Recent builds raised the built-in <span class="mono">format</span> command's FAT32 limit to 2&nbsp;TB, even though the graphical dialog still caps at 32&nbsp;GB. Open a terminal as administrator and run <span class="mono">format X: /FS:FAT32 /Q</span>, replacing X with your drive letter. Check the letter twice.</li>
+        <li><strong>Windows 11 command line.</strong> Microsoft lifted the built-in <span class="mono">format</span> command's FAT32 limit to 2&nbsp;TB (announced for Windows 11 in 2024), while the graphical dialog still caps at 32&nbsp;GB. Open a terminal as administrator and run <span class="mono">format X: /FS:FAT32 /Q</span>, replacing X with your drive letter. Check the letter twice; if your build refuses, guiformat above does the same job.</li>
         <li><strong>Shrink it.</strong> Disk Management &rarr; shrink the volume to 32&nbsp;GB &rarr; format that partition FAT32. You lose the rest of the capacity, which for a gig drive rarely matters.</li>
       </ul>
       <p>

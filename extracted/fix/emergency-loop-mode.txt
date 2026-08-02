@@ -1,0 +1,38 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+Emergency_Loop
+CDJ EMERGENCY LOOP:
+WHY IT HAPPENS, HOW TO EXIT
+Short version: the player hit the end of the audio it could read and looped the last seconds instead of going silent. It's the CDJ saving your night, not ruining it, but it means the player can't read ahead, usually because the drive is struggling.
+Why it happens
+The USB is slow, failing, or was disconnected mid-read, the player ran out of buffered audio.
+A corrupt file: the track's data ends before the track does.
+Rarely: an overloaded drive full of huge WAVs on an older player's USB port.
+In the moment
+Don't yank the USB. The loop is keeping sound in the room.
+Load your next track on the other player (from its own source if possible) and mix out of the loop.
+Once you're safe on the other deck: eject properly, reseat the drive, and watch it, one emergency loop is a warning, two is a dying drive.
+If the same track always triggers it, the file is corrupt: re-download or re-export that track.
+After the gig
+Test the drive on a computer; copy everything off it while it still reads.
+Full-format (FAT32 + MBR) and re-export, or retire the drive if the format struggles. Reliable replacements →
+Emergency loops are a symptom. The disease is a single point of failure - fix the system →
+Playing soon and still stuck?
+The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.
+ 🚨 Start Emergency Mode
+Never want to read this page again? Set up the prevention system once and this page becomes irrelevant.
+ 🛡 See the prevention checklist
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+🚨 PLAYING SOON? START EMERGENCY MODE
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

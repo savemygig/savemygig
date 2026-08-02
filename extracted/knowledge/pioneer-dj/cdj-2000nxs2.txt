@@ -1,0 +1,205 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+CDJ-2000NXS2
+CDJ-2000NXS2, the field manual
+Reviewed: 26 July 2026
+×
+Booth briefing. Released 2016, and still the deck you are
+ most likely to find in a real club booth, even next to newer gear.
+ It reads Device Library only, never OneLibrary, and its USB
+ port is FAT32 only, it does not read exFAT. Format your
+ drive FAT32 with an MBR partition scheme and export normally, and this player
+ never surprises you. What catches people out: a drive prepared only for a
+ OneLibrary player (CDJ-3000X, CDJ-1500X) can show no playlists here even
+ though the USB works fine elsewhere.
+Read more…Read less
+ Emergency fixes
+USB not recognized, or mounts with no playlists
+Short answer. If the drive does not mount at all, the
+ cause is almost always the file system. If it mounts but shows no playlists,
+ the drive was very likely exported for a OneLibrary player, and this deck
+ cannot read OneLibrary.
+Why this happens. This player reads FAT32 only, exFAT is
+ not supported here, and it reads the Device Library database
+ format only, never OneLibrary.
+Fix it now. Confirm the drive is FAT32 with an MBR
+ partition scheme. If it mounts but plays no playlists, re-export from
+ rekordbox 7.2.13 or later, which writes Device Library
+ and OneLibrary to the same drive, so one export works on both this deck and
+ newer ones. If you have no laptop, switch to FOLDER view, your audio is still
+ on the drive.
+Avoid it next time. Never format this player's drives
+ exFAT, and keep rekordbox at 7.2.13 or later so every
+ export includes Device Library automatically.
+Related: Full USB troubleshootingOneLibrary vs Device LibraryCompatibility
+Player will not boot, or the display stays black
+Short answer. Before you call it dead, this is almost
+ always power or a cable, not the unit itself.
+Why this happens. A loose IEC power cable, a dead outlet
+ on a multi-way in the booth, or a screen that is simply asleep can all look
+ identical to "the player is broken" in the dark.
+Fix it now. Check the power cable is fully seated at both
+ ends and try a different outlet. Confirm the display is not just dimmed, tap
+ it. If it still shows nothing, swap the power cable if you have a spare, and
+ try the other player's outlet to isolate the booth wiring from the unit.
+Avoid it next time. Carry a spare IEC cable, they are
+ cheap and this is one of the most common "dead gear" call-outs at a venue.
+Related: Start Emergency ModeLINK not connecting
+Pro DJ Link not connecting between players
+Short answer. If players cannot see each other's tracks
+ or BPM over LINK, it is almost always the Ethernet cable or the network
+ settings, not a fault in either deck.
+Why this happens. Pro DJ Link needs a working Ethernet
+ connection between every unit (direct, or through the switch built into a
+ matching DJM mixer), and every unit set to the same link mode.
+Fix it now. Reseat every Ethernet cable at both ends.
+ Confirm you are not accidentally using a USB cable in a LINK port, they can
+ look similar in a dark booth. Check each player's utility menu shows the
+ others in the LINK device list. If one player still will not join, restart
+ that unit alone rather than the whole chain.
+Avoid it next time. Carry a spare Ethernet cable, and
+ keep LINK cables separate from power cables in your bag so you are not
+ grabbing the wrong one under pressure.
+Related: Player will not bootDJM-900NXS2 reference
+Touchscreen frozen or unresponsive
+Short answer. A frozen 7-inch display does not mean the
+ player has stopped playing, audio and physical controls (play, cue, jog)
+ keep working independently of the touchscreen.
+Why this happens. Like any embedded touchscreen, it can
+ lock up on its own software occasionally, unrelated to the drive or the
+ track loaded.
+Fix it now. Keep mixing on the physical controls, the
+ track already loaded is not affected. If you need to load a new track and
+ the screen will not respond, finish the current track on this deck and
+ switch new selections to the other player while this one recovers or is
+ restarted at a safe moment (never mid-track if you can help it).
+Avoid it next time. Avoid firmware updates on gig day,
+ and if a screen has frozen before on a specific unit, flag it to the venue
+ or rental company before the next booking.
+Related: Start Emergency Mode
+ Known issues
+The firmware fixes worth knowing about
+Short answer. Three firmware updates fixed real,
+ documented problems on this deck. If a unit you are using has never been
+ updated, these are worth checking for.
+Why this matters. Fixed in firmware 1.51: audio
+ dropouts during Control Mode playback. Fixed in firmware 1.55:
+ waveform color selection, which had briefly gone missing, was restored.
+ Fixed in firmware 1.60: a startup issue affecting SLIP HOT CUE
+ behavior. Introduced in firmware 1.70: Beat Jump in 2, 4, 8 and
+ 16-beat increments, not a fix, but the update that added the feature most
+ people assume has always been there.
+Do this. Check the firmware version in the utility menu
+ before you rely on a rental or venue unit for anything beat-jump or
+ control-mode related.
+Avoid it next time. Update away from gig day, never the
+ day before one. A fresh firmware version can bring a fresh problem, and the
+ booth is where you meet it.
+Firmware downloads.Official AlphaTheta support page →
+Broken link? Let us know and we'll fix it.
+Related: Beat Jump, explainedEvery model, by firmware versionWhy gig day is a freeze
+ Features explained
+Hot Cues
+Short answer. Two banks of four color-illuminated Hot
+ Cues, eight per track, set from rekordbox or on the player itself.
+Why it matters. A Hot Cue jumps instantly to a saved
+ point mid-track, the mixing decision you make from your library at home
+ instead of hunting for the drop live.
+When professionals use it. Pre-set in rekordbox before
+ the gig, using the pads to catch a phrase, a drop or a vocal on the fly
+ without breaking the mix.
+Common mistakes. Relying entirely on memory instead of
+ Hot Cues for a set you have not played before, and forgetting Hot Cues live
+ in the rekordbox database, not the audio file, so an unsafe eject can lose
+ ones you just set. See why.
+Related: Beat JumpHow exports work
+Beat Jump
+Short answer. Jumps the playhead a fixed number of beats
+ forward or back (2, 4, 8 or 16), without breaking the tempo or the beatgrid.
+ Introduced in firmware 1.70.
+Why it matters. It lets you correct phrasing or skip a
+ section instantly, in perfect time, instead of nudging the jog wheel and
+ hoping.
+When professionals use it. Trimming an intro on the fly,
+ or jumping past a breakdown that does not fit the room, without the audience
+ hearing the seam.
+Common mistakes. Using Beat Jump with Quantize off, which
+ can jump off the beatgrid instead of on it, most professionals keep Quantize
+ on specifically so Beat Jump and Hot Cues land clean.
+Related: Hot CuesFirmware history
+ Professional tips
+Keep one drive that works in any booth
+Short answer. Because this deck cannot read OneLibrary,
+ the safest touring habit is a single export standard that includes both
+ formats, not two different USBs for two different booths.
+Why it matters. A drive exported from rekordbox
+ 7.2.13 or later carries Device Library and OneLibrary
+ together. One stick then works whether you land on a CDJ-2000NXS2 or a
+ CDJ-3000X, without you needing to know in advance which booth you are getting.
+Do this. Standardize on 7.2.13 or
+ later for every export, permanently, not just for gigs where you expect
+ older gear.
+Common mistakes. Assuming "newer venue" means "newer
+ player." Plenty of high-end clubs still run CDJ-2000NXS2 pairs because they
+ are proven, reliable, and everywhere in the second-hand market.
+Related: Full compatibility tableThe prevention system
+ Preventive maintenance
+Keeping a unit reliable over years of bookings
+Short answer. The habits that protect any professional
+ deck are the same ones that protect this one: safe ejects, careful cabling,
+ and disciplined firmware timing.
+Why it matters. USB ports and Ethernet ports both wear
+ with use, and a drive pulled without ejecting is still the most common way
+ an otherwise healthy unit starts throwing database errors.
+Do this. Always eject from rekordbox, or use the
+ player's own eject button, before pulling a USB. Handle Ethernet cables by
+ the connector, not the cable, to avoid stressing the port. Keep the unit
+ covered and its intake vents clear during transport and storage.
+Avoid it next time. Do not update firmware on gig day,
+ and do not let a rental unit's firmware go unchecked for years, an update
+ between bookings is a five-minute job at home, not at the venue.
+Related: Why unsafe ejects cause missing playlistsThe full prevention system
+ Compatibility
+rekordbox, library format and Pro DJ Link
+Short answer. Device Library only, FAT32 only, and Pro DJ
+ Link works with any generation of AlphaTheta / Pioneer DJ player, library
+ format is a separate question from Link compatibility.
+Why it matters. Pro DJ Link is a networking protocol,
+ every player and the DJM-900NXS2's switch speak it regardless of which
+ library format each deck reads. Library format only affects whether a given
+ USB's playlists show up on a given player.
+Do this. Export from rekordbox 7.2.13
+ or later, format drives FAT32 with MBR, and pair with a DJM-900NXS2 or any
+ other Pro DJ Link mixer without a second thought.
+Avoid it next time. Do not format a drive exFAT for this
+ player, it will not be read at all.
+Related: Per-model compatibility tableDJM-900NXS2
+ Frequently asked questions
+Quick answers
+Can this player read exFAT?No. FAT32 only.Does it support OneLibrary?No. Device Library only.Can I use Device Library?Yes, that is the format it reads natively.Can I link with a CDJ-3000 or CDJ-3000X?Yes over Pro DJ Link for tempo and playback control. Whether playlists show up on each deck depends on which library format your USB carries, not on Link. Full table.Can I connect to a DJM-900NXS2?Yes, this is the era-correct pairing and the most common booth combination worldwide.Can I use Export Mode with this player?Yes, standard rekordbox Export.
+Related guides
+rekordbox reference ·
+ USB preparation ·
+ DJM-900NXS2 ·
+ Troubleshooting USB detection ·
+ Club setup checklist
+Playing soon and it is not working?
+🚨 Start Emergency Mode
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+ Sources: AlphaTheta / Pioneer DJ official specification pages and the
+ CDJ-2000NXS2 firmware change history document, checked 26 July 2026. General
+ troubleshooting steps (power, cabling, restarts) reflect standard practice,
+ not a specific documented defect. Firmware and behaviour changes without
+ notice, re-check before a big show.
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

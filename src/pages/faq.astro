@@ -15,7 +15,7 @@ const faqs = [
   {
     id: 'usb-not-detected',
     q: 'Why is my USB not detected on a Pioneer CDJ or XDJ?',
-    a: 'The most common causes, in order: the drive is formatted as NTFS or exFAT instead of FAT32; the partition map is GPT (we recommend MBR); the Rekordbox database on the drive is corrupt (often from an unsafe eject); or the drive hardware is failing. Reseat the drive, try the second slot and the other player first, many "dead" drives are just a bad mount.',
+    a: 'The most common causes, in order: the drive is formatted as NTFS or exFAT instead of FAT32; the partition map is GPT (we recommend MBR); the Rekordbox database on the drive is corrupt (often from an unsafe eject); or the drive hardware is failing. You have already reseated it and tried the other player, so start from the file system: most "dead" drives are a wrong format, a GPT map or a corrupt database, not dead hardware.',
     fix: { href: '/fix/usb-not-recognized-cdj', label: 'Full fix: CDJ not reading your USB' },
   },
   {
@@ -33,7 +33,7 @@ const faqs = [
   {
     id: 'exfat-or-fat32',
     q: 'Should I use exFAT or FAT32 for DJing?',
-    a: 'FAT32, unless you know every player you will touch reads exFAT. FAT32 works on every Pioneer player ever made. exFAT is only read by newer units on recent firmware, so a drive that works on a CDJ-3000 can be refused by the CDJ-2000NXS2 in the next booth. FAT32 is the format that never surprises you.',
+    a: 'FAT32, unless you know every player you will touch reads exFAT. FAT32 works on every rekordbox-era Pioneer DJ and AlphaTheta player, old and new. exFAT is only read by newer units on recent firmware, so a drive that works on a CDJ-3000 can be refused by the CDJ-2000NXS2 in the next booth. FAT32 is the format that never surprises you.',
     fix: { href: '/fix/exfat-vs-fat32-cdj', label: 'Full fix: exFAT vs FAT32 on CDJs' },
   },
   {
@@ -51,7 +51,7 @@ const faqs = [
   {
     id: 'export-failed',
     q: 'What do I do when Rekordbox says the export failed?',
-    a: 'Work in order: eject and re-seat the drive, check there is free space, then delete the device playlists and re-sync fresh. If the export keeps failing, the drive itself is usually the problem, copy the music off and reformat FAT32/MBR before exporting again.',
+    a: 'Work in order: check there is free space on the drive, then delete the device playlists and re-sync fresh, ejecting with the Rekordbox eject button. If the export keeps failing, the drive itself is usually the problem, copy the music off and reformat FAT32/MBR before exporting again.',
     fix: { href: '/fix/rekordbox-export-failed', label: 'Full fix: Rekordbox export failed' },
   },
   {
@@ -69,7 +69,7 @@ const faqs = [
   {
     id: 'emergency-loop',
     q: 'What is Emergency Loop mode?',
-    a: 'When a CDJ runs out of readable audio mid-track (failing drive, corrupt file), it loops the last seconds instead of going silent. Mix out on the other player, then deal with the drive. One loop is a warning; two is a dying drive.',
+    a: 'Official behaviour: the player automatically plays a Beat Loop if it cannot start the next track when the end of the current one is reached, so the room never goes silent. If nothing was loaded, that is normal. If it fires when your next track was ready, the player could not read it: treat the drive as suspect and mix out on the other player.',
     fix: { href: '/fix/emergency-loop-mode', label: 'Full fix: Emergency Loop mode' },
   },
   {
@@ -87,7 +87,7 @@ const faqs = [
   {
     id: 'new-laptop',
     q: 'How do I move my Rekordbox library to a new laptop without losing cues?',
-    a: 'Back up the library from Rekordbox itself, move the music folder with the same structure, then restore the backup on the new machine. Copying only the audio files loses every cue, grid and playlist, which is the mistake almost everyone makes once.',
+    a: 'Use Rekordbox\'s own Backup Library with "include music files" checked, then restore that backup on the new machine. Copying only the audio files loses every cue, grid and playlist, which is the mistake almost everyone makes once.',
     fix: { href: '/fix/move-rekordbox-library-new-laptop', label: 'Full fix: move Rekordbox to a new laptop' },
   },
   {

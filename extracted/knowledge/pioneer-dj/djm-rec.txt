@@ -1,0 +1,154 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+DJM-REC
+DJM-REC, on the record
+Reviewed: 28 July 2026
+×
+Booth briefing. DJM-REC is AlphaTheta's iPhone and iPad
+ app that records and live streams your set through one USB cable into
+ a compatible DJM mixer, writing a time-stamped track list while you
+ play. It sits entirely outside your playback chain: a failed recording costs
+ you a file, never a set. The things that do go wrong at gigs are venue mixer
+ firmware and platform quirks, and both are listed below.
+Read more…Read less
+ Understanding DJM-REC
+What DJM-REC actually is
+Short answer. AlphaTheta's recording and live-streaming
+ app for iPhone and iPad. One USB cable between the device and a compatible
+ DJM mixer carries the digital audio, so there is no audio interface, no
+ cable loom and no gain guesswork in the booth.
+What it does, per AlphaTheta. High-quality recording and
+ live streaming that minimizes clipping and distortion, live streams that can
+ carry the track title and artist name, automatic time-stamped track lists as
+ you play, and simple remastering and sharing of the finished mix.
+What it is not. It is not a player, not a library tool
+ and not part of the rekordbox export chain. Nothing it does touches the USB
+ drive you play from. If the app crashes mid-set, your set does not.
+Related: Which mixers support itThe rekordbox guide
+ Compatibility
+Which mixers officially support DJM-REC
+Short answer. AlphaTheta's official compatibility list
+ names DJM-V10, DJM-V10-LF, DJM-TOUR1, DJM-V5, DJM-A9, DJM-900NXS2, DJM-750MK2 and DJM-450.
+ If the booth has a digital send/return DJM from that list, DJM-REC works
+ over one USB cable.
+The caveat that matters. Not every mixer on the list
+ supports every feature. Track and artist names on the stream, and track
+ metadata saved into the recording, work on a subset of these mixers, and
+ AlphaTheta documents that per model. Some all-in-one systems are also
+ supported, but AlphaTheta does not publish one flat list of them on the
+ pages we checked, so we are not inventing one. Check the
+ official compatibility article
+ for your exact hardware before you rely on it.
+Avoid it next time. Compatibility is a home question,
+ not a booth question. Confirm your mixer and your feature set before the
+ gig, not while the opener is playing.
+Related: DJM-900NXS2 referenceDJM-A9 referenceDJM-V10 reference
+ Live streaming
+Which streaming services work
+Short answer. Twitch, YouTube, Facebook Live, Instagram, Snapchat, Mixcloud Live, Restream are supported
+ directly, and a Custom option takes a manual stream URL and key for anything
+ else that speaks standard streaming protocols.
+One account trap, officially documented. Restream
+ accounts created through Facebook integration cannot log in to DJM-REC. If
+ your Restream login is "Continue with Facebook", sort that out at home.
+Related: Track titles on the streamKnown issues
+Track titles on the stream (Now Playing)
+Short answer. The Now Playing display, track title and
+ artist name on the stream, works on Twitch, YouTube, Facebook Live, Mixcloud Live and
+ Restream. It is not available on Instagram or Snapchat.
+Why this matters. Whether Now Playing works depends on
+ three things at once: the platform (above), the mixer model (see
+ compatibility), and an officially acknowledged issue
+ where titles sometimes fail to display at all. Treat it as a bonus for the
+ viewers, never as your set documentation.
+Related: Track info missingOfficial streaming services article
+ Known issues
+Recording halts mid-set on venue mixers
+Short answer. On the DJM-900NXS2, the booth-standard
+ mixer of the last decade, recording halts were fixed in mixer firmware
+ 2.06 and again in 2.08 for iOS and
+ iPadOS audio. A venue unit on older firmware can still stop your recording
+ cold, and it will pick the best moment of the set to do it.
+Fix it now. There is nothing to fix in the app. Check
+ the mixer's firmware version in UTILITY at soundcheck; if it predates the
+ fixes, record anyway but expect gaps, or record a backup on a second device
+ off the REC OUT.
+Avoid it next time. Treat venue gear as out of date
+ until proven otherwise. The same rule that protects your USB exports
+ protects your recordings.
+Firmware downloads.Official AlphaTheta support page →
+Broken link? Let us know and we'll fix it.
+Related: DJM-900NXS2 referenceNever debut the combination live
+Track info missing from the stream or the file
+Short answer. Two officially acknowledged issues: the
+ title or artist of the playing track sometimes is not displayed on the live
+ stream, and track information sometimes is not saved into the recording
+ file.
+What to do about it. Use the auto track list as a first
+ draft and verify it against your set after the gig, while you still remember
+ the transitions. If the track list is contractually required, radio mixes
+ and some promoters do require it, keep your own record as well.
+Related: Now Playing supportOfficial DJM-REC support page
+All-in-one systems: connect first, then record
+Short answer. Two officially acknowledged issues with
+ compatible all-in-one systems: an error can prevent the live stream from
+ starting, and connecting an all-in-one while a recording is running can stop
+ that recording.
+Avoid it next time. Order of operations: connect the
+ hardware, confirm the app sees it, then start the recording or stream. Never
+ replug mid-recording.
+Related: CompatibilityOfficial DJM-REC support page
+ Best practices
+Never debut the combination live
+Short answer. The single most repeated official fix
+ across AlphaTheta's mixers is "update the firmware", and DJM-REC breakage
+ has twice been on the receiving end of that on the DJM-900NXS2 alone. The
+ rule that follows: never debut an OS, app and firmware combination at a
+ gig.
+Do this. Update the app, the phone OS and your own
+ mixer's firmware at home, then test the exact chain you will use: this
+ phone, this cable, this mixer, this platform. At the venue, check the
+ mixer firmware at soundcheck and start the stream before doors if you can.
+ And the recording is a recording, not a backup: nothing in DJM-REC replaces
+ the USB rules that get your music to play in the first place.
+Related: The full prevention systemThe pre-gig checklist
+Before you erase anything, read this
+Formatting and erasing permanently destroys data. Once a
+ drive is formatted, the music on it is gone unless you have another copy
+ or pay for professional recovery. There is no undo.
+Copy the files off first whenever there is time. If you
+ can plug the drive into a computer and the files are visible, copy them
+ somewhere safe before you format anything.
+Make sure you are erasing the right drive. Formatting the
+ wrong device, an external backup, a second USB, your system disk, is the
+ single most expensive mistake in this whole process.
+This is general guidance, not a guarantee. Every drive,
+ player, firmware version and library is different. We cannot see your
+ setup and we cannot promise any step will work for you.
+You act at your own risk. Save My Gig accepts no
+ liability for data loss, hardware damage, missed sets or any other loss
+ arising from following this site. If the music is irreplaceable, stop and
+ speak to a data recovery professional instead.
+ Full terms: Disclaimer ·
+ Privacy
+Playing soon and it is not working?
+🚨 Start Emergency Mode
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+ Sources: AlphaTheta's official DJM-REC support pages (feature overview,
+ mixer compatibility list, supported streaming services, known-issue
+ articles) and the DJM-900NXS2 firmware change history, all checked
+ 28 July 2026. App, OS and firmware behaviour changes without notice, so
+ re-check before a big show.
+Check the release yourself: rekordbox (AlphaTheta) · Serato DJ · DJM-REC (AlphaTheta) · Engine DJ
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

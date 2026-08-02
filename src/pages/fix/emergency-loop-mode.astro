@@ -28,7 +28,11 @@ const schema = {
     <h1 style="margin-bottom:1.5rem">CDJ <span class="danger">EMERGENCY LOOP</span>:<br />WHY IT HAPPENS, HOW TO EXIT</h1>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><strong>Short version:</strong> the player hit the end of the audio it could read and looped the last seconds instead of going silent. It's the CDJ saving your night, not ruining it, but it means the player can't read ahead, usually because the drive is struggling.</p>
+      <!-- Official trigger per the CDJ-3000X manual (DRI1956B): "The unit
+           automatically plays a Beat Loop if it can't start playing the next
+           track when the end of the current track is reached." The drive-health
+           reading below is our booth interpretation of the read-failure case. -->
+      <p style="margin:0"><strong>Short version:</strong> the player reached the end of the audio it could play and looped the last beats instead of going silent. If you simply let the track run out with nothing loaded, that is the designed behaviour. If it fired while your next track was ready, or mid-track, the player could not read ahead, usually because the drive is struggling.</p>
     </div>
 
         <details class="acc-sec" name="fix-acc">
@@ -50,7 +54,7 @@ const schema = {
     <ul class="checklist">
       <li><strong>Don't yank the USB.</strong> The loop is keeping sound in the room.</li>
       <li>Load your next track on the <strong>other player</strong> (from its own source if possible) and mix out of the loop.</li>
-      <li>Once you're safe on the other deck: eject properly, reseat the drive, and watch it, one emergency loop is a warning, two is a dying drive.</li>
+      <li>Once you're safe on the other deck: eject properly and watch that drive, one unexplained emergency loop is a warning, two is a dying drive.</li>
       <li>If the same track always triggers it, the file is corrupt: re-download or re-export that track.</li>
     </ul>
 

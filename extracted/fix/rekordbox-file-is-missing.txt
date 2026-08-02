@@ -1,0 +1,59 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+File_Is_Missing
+FILE IS MISSING:
+YOUR MUSIC IS STILL THERE
+Short version: The [!] means rekordbox lost the path to the file, not the file. Your audio is where it always was. rekordbox stores where each track lives, and when that location changes the pointer breaks. The part that costs gigs is not the warning on screen: a missing file cannot be exported, so the track never reaches your USB and you find out in the booth.
+What the [!] actually means
+rekordbox does not keep your music inside itself. It keeps a reference to each file: where the audio lives, plus everything you built on top of it, the cues, the grid, the waveform, the playlist membership.
+The track stays in your collection, marked [!] in the status column.
+Your cues, grids and playlists are intact. They belong to the database, not the file.
+The audio file has not been deleted by rekordbox. Something moved it, renamed its folder, or changed how the drive it sits on is addressed.
+Until the reference is repaired, that track will not play and will not export.
+Why it happens
+The drive mounted differently. This is the cause AlphaTheta documents for tracks imported from external devices: rekordbox may not find the track if the drive letter differs from the one it had at import. Same drive, same file, different address.
+You imported straight from a USB stick. Adding tracks to your collection directly from a drive that then goes with you to a gig is the common version of the above. The moment that drive is absent or mounts elsewhere, every track imported from it is missing.
+iTunes moved the file. AlphaTheta calls this one out specifically: with Keep iTunes Media folder organized switched on, editing a track's information makes iTunes relocate the file underneath you. Their recommendation is to turn that setting off before importing into rekordbox.
+You reorganised your music folders outside rekordbox, or renamed a parent folder.
+Fix it now: Auto Relocate and Relocate
+Two ways in, both from rekordbox itself. Either open File → Display All Missing Files to get the Missing File Manager, or right-click any track marked [!].
+Auto Relocate searches the folders you have listed under Preferences → Advanced → Database → Auto Relocate Search Folders. Point that at wherever your music actually lives and it does the work for a whole batch.
+Relocate is the manual version: you show rekordbox where the file is, one at a time. This is the one for a track that moved somewhere unusual.
+If the tracks came from an external drive, the other route is to give that drive the same letter it had when you imported. AlphaTheta's own recommendation, and it repairs everything from that drive at once.
+Work through the Missing File Manager until it is empty, not just until tonight's playlist looks clean.
+The reason this is a booth problem
+A missing file is blocked from export, not only from playback. That changes what this is.
+You prepare at home, export tonight's playlist, and the tracks carrying [!] are not written to the drive.
+The playlist arrives on the player looking normal. It is just shorter than the one you built.
+You discover which tracks at the moment you reach for one.
+So the check is before the export, not after: clear the Missing File Manager first, then export.
+Avoid it next time
+Import from one place and keep it there. A single music folder on an internal or dedicated drive, and rekordbox pointing at it. Never build a collection out of tracks living on the USB you take to gigs.
+Set Auto Relocate Search Folders once, to your real music folder. It turns a future breakage into one click instead of a hunt.
+Move files with rekordbox open and aware, or accept that you are going to relocate them afterwards.
+Turn off Keep iTunes Media folder organized before importing anything from an iTunes library.
+Open Display All Missing Files as part of preparing, the same way you check the drive. It takes seconds and it is the difference between finding out at home and finding out at the gig.
+Related: When the export itself failsPlaylists not showing on the CDJThe full rekordbox reference
+ Sources, both AlphaTheta's own:
+ why files imported from a USB device show File is Missing
+ and
+ how to use Auto Relocate and Relocate.
+Playing soon and still stuck?
+The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.
+ 🚨 Start Emergency Mode
+Never want to read this page again? Set up the prevention system once and this page becomes irrelevant.
+ 🛡 See the prevention checklist
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+🚨 PLAYING SOON? START EMERGENCY MODE
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

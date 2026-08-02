@@ -1,0 +1,75 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+Prevention_Hub
+NEVER AGAIN
+ Most DJ disasters are not bad luck. They are a missing system.
+ Professionals do not rely on memory or on the night going well, they rely
+ on preparation. These are the habits that stop problems before they ever
+ reach the booth.
+The professional rules
+Non-negotiable, in the order the night actually happens.
+Your music
+01
+Two identical drives, every gig.
+The same export on both, made the same night from the same playlists. One in the bag, one in your pocket.
+Why it mattersOne drive is convenience. Two drives are insurance.
+02
+Format for the whole room.
+FAT32 with an MBR partition scheme is read by every Pioneer DJ and AlphaTheta player ever made. exFAT is read only by newer units, and NTFS by none of them.
+Why it mattersYou are not formatting for your player. You are formatting for a booth you have never seen.
+03
+Buy drives that earn their place.
+A no-name stick is where most of these stories begin. Carry drives with a reputation among working DJs. The drives worth carrying.
+Why it mattersThe cheapest part of your setup carries the only thing the night cannot replace.
+04
+Export fresh, every time.
+Re-export tonight's playlists after any library change, and always export from rekordbox. Never drag audio files onto the drive by hand.
+Why it mattersAn old export is a corrupt export waiting to happen. A dragged folder has no database at all.
+05
+Eject like it matters.
+Eject from rekordbox and wait for the computer to release the drive. On a player, press USB STOP and let the light settle before the drive moves.
+Why it mattersInterrupting a write is the fastest way to corrupt the database you just spent an hour building.
+06
+Back up the library, not just the drive.
+In rekordbox: File > Library > Backup Library, monthly, onto a different drive or the cloud. Your cues, grids and playlists live in the library, not on the stick.
+Why it mattersA USB is a working copy. If it is your only copy, you do not have a backup.
+Your night
+07
+Gig day is a freeze.
+No rekordbox update, no player firmware, no operating system update on the day you play or the days around it. Update the week after a gig, never the day before one.
+Why it mattersA new version can bring a new problem, and the booth is where you would meet it. Player firmware has been withdrawn by its own manufacturer after playlists stopped appearing for DJs.
+08
+Test it before you leave.
+Load a track from the drive on a player if you own one. If you do not, reopen the export in rekordbox and confirm the device and the playlists are really there.
+Why it mattersTen seconds at home costs nothing. The same discovery in the booth costs the set.
+09
+Know the booth before you walk in.
+Ask the promoter which players and mixer are installed, and whether they are linked. Then pack for that room: the export a CDJ-3000X reads is not the one a CDJ-2000NXS2 reads. Which player reads which.
+Why it mattersCompatibility is a question you answer at home, with time, or in the booth, without it.
+10
+Learn before you need it.
+Read one thing while nothing is wrong: an error code, a compatibility quirk, a rescue move. The knowledge base and the FAQ are built for the quiet afternoon, not only for the emergency.
+Why it mattersNobody learns under pressure. They remember. Familiarity is what turns a disaster into an inconvenience.
+ Professionals do not just prepare their gear. They prepare their minds.
+Before you leave: the checklist
+This is where the rules become a routine. Tick off the music, the technical gear and the logistics you forget on the way out. It tracks your readiness and saves on this device for next time.
+Open the pre-gig checklist
+The Emergency Card
+One page. Everything to check before you leave, and the first moves when a player refuses your drive. Read it free any time, or get the printable version emailed so it lives on your phone.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+The gear that does not die
+The exact drives worth carrying, and why DJs trust them.
+See the kit
+Master your tools
+rekordbox, the players and the mixers in depth. Rule 10, in practice.
+Open the knowledge base
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

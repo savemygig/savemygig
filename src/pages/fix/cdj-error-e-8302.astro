@@ -23,12 +23,16 @@ const schema = {
   ogImage="/og/cdj-error-e-8302.png"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <!-- E-8302 definition ("CANNOT PLAY TRACK", track data can't be read) is
+       AlphaTheta's own, from the official CDJ-3000 and CDJ-3000X error-code
+       articles: support.alphatheta.com/en-US/articles/4406135959961 and
+       /48523815124249. Verified 2026-07-26, see pioneer-compatibility research. -->
   <main class="wrap wrap-wide">
     <div class="status-line red">Error_E-8302</div>
     <h1 style="margin-bottom:1.5rem">CDJ ERROR <span class="danger">E-8302</span>:<br />WHAT IT MEANS, HOW TO FIX IT</h1>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><strong>Short version:</strong> E-8302 reads <strong>CANNOT PLAY TRACK</strong> on the CDJ-3000 and CDJ-3000X: the player cannot read the track data on your USB. Nine times out of ten it's a corrupt Rekordbox database or a wrong file system, both fixable, often before your set.</p>
+      <p style="margin:0"><strong>Short version:</strong> E-8302 reads <strong>CANNOT PLAY TRACK</strong> on the CDJ-3000 and CDJ-3000X: the player cannot read the track data on your USB. Almost always it's a corrupt Rekordbox database or a wrong file system, both fixable, often before your set.</p>
     </div>
 
         <details class="acc-sec" name="fix-acc">
@@ -48,8 +52,11 @@ const schema = {
     <details class="acc-sec" name="fix-acc">
       <summary><h2 class="acc-h2">The immediate fix (at the venue)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
+    <p class="assumed">
+      Reseating the drive and trying the other slot and the other player are
+      assumed done. Eject with <span class="mono">USB STOP</span>, never a pull.
+    </p>
     <ul class="checklist">
-      <li>Eject properly (<span class="mono">USB STOP</span>), reseat the drive, try the other slot and the other player.</li>
       <li>If another player reads it, play from that deck via Pro DJ Link.</li>
       <li>With a laptop: open the USB in Rekordbox. If Rekordbox reads it, do a fresh export of tonight's playlist. If it doesn't, copy your music files off, reformat FAT32/MBR, re-export tonight's tracks.</li>
       <li>No laptop and no player reads it: the database is gone for tonight, switch to the emergency flow below for the workaround route.</li>

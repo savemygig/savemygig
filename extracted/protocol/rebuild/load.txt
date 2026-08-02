@@ -1,0 +1,17 @@
+Skip to content
+SAVE MY GIG
+Critical · Recovery
+Step 5 - Load on the Player
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+Step 5 of 5
+Load music on the player
+On the CDJ/XDJ, press SOURCE
+Select USB
+Go to FOLDER
+Load tracks from the folder you copied.
+⚠️
+These tracks were not exported via Rekordbox, so some features may be limited (Quantize, Sync, Hot Cues). This is normal. You can still play your set.
+Can you load and play the tracks on the CDJ?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

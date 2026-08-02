@@ -1,0 +1,15 @@
+Skip to content
+SAVE MY GIG
+Quick_Fix
+Rekordbox Check
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+DRAFT, review pending.
+Step 2
+Open Rekordbox in EXPORT mode
+Open Rekordbox with the USB connected.
+Top-left mode selector: EXPORT.
+Look for your USB under Devices in the left sidebar.
+Does the device show up with your playlists?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

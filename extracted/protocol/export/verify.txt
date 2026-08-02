@@ -1,0 +1,15 @@
+Skip to content
+SAVE MY GIG
+Quick_Fix
+Verify
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+DRAFT, review pending.
+Final step
+Verify before you trust it
+Unplug the USB, wait 5 seconds, plug it back in.
+Open it in Rekordbox: device loads, playlists intact.
+If you can reach a player before your set: test it there too (SOURCE → USB).
+Does everything load correctly?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

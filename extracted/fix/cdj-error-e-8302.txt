@@ -1,0 +1,40 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+Error_E-8302
+CDJ ERROR E-8302:
+WHAT IT MEANS, HOW TO FIX IT
+Short version: E-8302 reads CANNOT PLAY TRACK on the CDJ-3000 and CDJ-3000X: the player cannot read the track data on your USB. Nine times out of ten it's a corrupt Rekordbox database or a wrong file system, both fixable, often before your set.
+What causes it
+Corrupt Rekordbox export, usually from pulling the USB without ejecting, or an interrupted sync.
+Wrong file system. NTFS is never supported, by the player or by rekordbox itself. A drive left on a GPT partition map is the other common culprit. FAT32 with an MBR scheme is the combination that works in every booth (newer CDJ-3000 firmware also reads exFAT, but FAT32 never surprises you).
+A failing drive, bad sectors right where the database lives.
+Old player firmware meeting a new Rekordbox export format.
+The immediate fix (at the venue)
+Eject properly (USB STOP), reseat the drive, try the other slot and the other player.
+If another player reads it, play from that deck via Pro DJ Link.
+With a laptop: open the USB in Rekordbox. If Rekordbox reads it, do a fresh export of tonight's playlist. If it doesn't, copy your music files off, reformat FAT32/MBR, re-export tonight's tracks.
+No laptop and no player reads it: the database is gone for tonight, switch to the emergency flow below for the workaround route.
+The permanent fix (at home)
+Full-format the drive (not quick) as FAT32 + MBR. If the full format fails or crawls, retire the drive.
+Re-export your library fresh from Rekordbox in Export mode. Never copy an old database back onto a clean drive.
+Update player firmware and Rekordbox.
+Carry two identical drives with identical exports. E-8302 on one drive is an inconvenience; on your only drive it's a disaster.
+Playing soon and still stuck?
+The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.
+ 🚨 Start Emergency Mode
+Never want to read this page again? Set up the prevention system once and this page becomes irrelevant.
+ 🛡 See the prevention checklist
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+🚨 PLAYING SOON? START EMERGENCY MODE
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

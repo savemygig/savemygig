@@ -413,7 +413,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "<strong>Do not remove either USB whilst copying.</strong>"
+        "html": "<strong>Do not remove either USB while copying.</strong>"
       },
       {
         "t": "check",
@@ -482,7 +482,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "<strong>Do not remove the USB whilst copying.</strong> Interrupting this step may cause data loss."
+        "html": "<strong>Do not remove the USB while copying.</strong> Interrupting this step may cause data loss."
       },
       {
         "t": "check",
@@ -590,7 +590,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "<strong>Do not remove the USB whilst copying.</strong> Interrupting this step may cause data loss."
+        "html": "<strong>Do not remove the USB while copying.</strong> Interrupting this step may cause data loss."
       },
       {
         "t": "dim",

@@ -1,0 +1,17 @@
+Skip to content
+SAVE MY GIG
+Critical · USB Check
+Computer Can't Read USB
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+DRAFT, review pending.
+Diagnostic
+The computer can't read it either
+Two minutes, in order:
+⚠️
+If it offers to format or initialise the drive, say NO. Formatting now can wipe out files that are still recoverable.
+Plug direct, not through a hub or a dock. Bus-powered hubs drop marginal drives.
+Try another computer or a phone adapter if one is nearby.
+Can any device see the USB now?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

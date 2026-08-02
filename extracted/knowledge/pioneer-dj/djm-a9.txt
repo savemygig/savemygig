@@ -1,0 +1,202 @@
+Skip to content
+Save My Gig!DJ rescue and prevention
+Search Save My Gig
+×
+×
+DJM-A9
+DJM-A9, the field manual
+Reviewed: 26 July 2026
+×
+Booth briefing. The 4-channel successor
+ to the DJM-900NXS2's spot in high-end booths: 14 Beat FX,
+ two independent headphone outputs, one USB-A port plus two USB-B/USB-C for
+ computers, Wi-Fi for the Stagehand monitoring app, and, worth knowing
+ before you ever need it, a built-in Bluetooth audio input.
+ Firmware history matters on this desk: a rare freeze under heavy Pro DJ
+ Link load was fixed in 1.11, so check the version on
+ gear you do not control.
+Read more…Read less
+ Emergency fixes
+A channel has no signal
+Short answer. Channel fader, crossfader assign, input
+ selector, in that order, before suspecting the desk.
+Why this happens. Same as on any four-channel desk:
+ the fader can be down, the crossfader assign can route the channel to the
+ side you are not pushing, and the input selector can sit on a source that
+ is not playing. On this desk there is one extra suspect: the Multi I/O
+ section's channel selector, if an insert was left engaged on your channel
+ by the previous DJ, the signal is detouring through gear that may not be
+ returning it.
+Fix it now. Fader up, assign checked, input selector
+ matched to your source, then check the Multi I/O routing is not inserted
+ on your channel. Still silent: move the source to another channel to
+ isolate the strip.
+Avoid it next time. A full routing pass before doors,
+ including Multi I/O state, not just faders and trims.
+Related: Gain stagingStart Emergency Mode
+Mixer frozen mid-set
+Short answer. On this desk that is not folklore: a
+ rare freeze under heavy Pro DJ Link network load was documented and fixed
+ in firmware 1.11.
+Why this happens. Booths running full Link chains
+ (players, lighting, Stagehand) push exactly the network load the fix
+ addressed. A desk still on older firmware can still do it.
+Fix it now. Audio that is already routed usually keeps
+ passing; do not power-cycle in a panic while sound is still coming out.
+ If the desk is truly locked, a restart is the only path, time it to a
+ track with a long runway, and warn the floor manager first.
+Avoid it next time. Firmware 1.11 or
+ later on any A9 you control, and report the version to the venue when a
+ rental unit freezes.
+Related: Documented fixes by version
+A USB drive the mixer refuses to see
+Short answer. If a modern, fast USB stick is invisible
+ to the mixer while older sticks work, that was a documented bug:
+ UASP-compatible drives were not recognized until firmware
+ 1.07.
+Why this happens. UASP is the faster protocol most
+ current quality drives ship with, exactly the drives a professional
+ carries.
+Fix it now. Try an older or cheaper stick for the
+ mixer-side job (recordings), and get the desk updated to
+ 1.07 or later after the night.
+Avoid it next time. Keep one plain, non-UASP stick in
+ the bag for mixer duties; it is also the stick you can lend without pain.
+Related: Drives we trust
+DVS input dead after swapping laptops
+Short answer. A documented early bug: switching a
+ PC/Mac between the USB ports could break the DVS phono input on USB-B.
+ Fixed in firmware 1.02.
+Why this happens. Back-to-back DVS sets are exactly
+ the workflow that swaps computers across ports mid-night.
+Fix it now. Re-select the input source for the
+ channel, and if it stays dead, restart your DJ software with the cable in
+ the port you intend to keep. Desk on 1.02+ does not
+ do this.
+Avoid it next time. Agree port assignments before a
+ B2B DVS night instead of hot-swapping.
+Related: Documented fixes by version
+ Known issues
+Documented fixes, by firmware version
+Short answer. Four entries in the official change
+ history matter in the real world. Fixed in 1.11: the
+ rare freeze under heavy Pro DJ Link network load. Fixed in
+ 1.07: UASP-compatible USB drives not recognized. Fixed in
+ 1.02: the insert method intermittently disabling
+ itself when switching the Multi I/O input selector, and the DVS phono
+ input malfunction on USB-B after swapping computers across ports.
+One behaviour change, not a bug: introduced in
+ 1.05, power management follows the EU Ecodesign
+ 20-minute timing. A desk that "turned itself off" between soundcheck and
+ doors is following that setting; check the utility menu.
+Do this. On an A9 you control, sit at
+ 1.11 or later, updated between bookings.
+Firmware downloads.Official AlphaTheta support page →
+Broken link? Let us know and we'll fix it.
+Related: Why gig day is a freezeEvery model, by firmware version
+ Features explained
+The Bluetooth input
+Short answer. The desk accepts wireless audio from a
+ phone or laptop as an input source, no cable, no adapter.
+Why it matters. This site's emergency doctrine treats
+ playing off a phone as the unnumbered last resort, mostly because nobody
+ carries the right cable. On an A9 booth, the cable problem is gone: if
+ every drive and every player has failed, a phone pairs straight into the
+ desk and the room stays alive while you work the real fix.
+When professionals use it. Warm-up and handover
+ moments, and as the bridge that buys minutes in a genuine multi-failure
+ night.
+Common mistakes. Treating it as a set medium rather
+ than a bridge, and forgetting to kill the phone's notification sounds
+ before pairing it to a club system.
+Related: Start Emergency Mode
+Two independent headphone outputs
+Short answer. Two headphone sections with separate
+ level and mix controls, so two DJs cue independently at the same time.
+Why it matters. On single-output desks, B2B partners
+ share one cue bus and fight over the mix knob. Here each side owns its
+ own.
+When professionals use it. Every back-to-back, and
+ handovers where the incoming DJ pre-cues while the outgoing one still
+ monitors.
+Common mistakes. Diagnosing "dead headphones" on the
+ output whose level knob a previous DJ zeroed; check both sections before
+ blaming your cans.
+Related: Cue troubleshooting on the 900NXS2
+Beat FX, including the three newer ones
+Short answer. 14 Beat FX types,
+ including Mobius, Triplet Filter and Triplet Roll, which did not exist on
+ the DJM-900NXS2.
+Why it matters. Beat-synced effects land musically
+ without manual tapping, and Mobius in particular builds endless-riser
+ tension out of any source.
+When professionals use it. Transitions and builds,
+ sparingly, the same discipline as on any FX desk.
+Common mistakes. Same as every DJM: leaving an effect
+ engaged after the mix, and trusting a wrong BPM read, confirm it before a
+ beat-synced effect goes to the room.
+Related: Beat FX on the 900NXS2
+ Professional tips
+The A9 handover routine
+Short answer. The desk is built for clean handovers,
+ two computer ports, two headphone sections, but only if both DJs claim
+ their lane before the night, not during it.
+Why it matters. The documented DVS port-swap bug
+ (fixed in 1.02) happened exactly in hot-swap
+ moments, and the Multi I/O insert state carries over between DJs
+ silently.
+Do this. Agree ports and headphone sections at
+ soundcheck, and make Multi I/O state part of your takeover glance: trims,
+ faders, assign, insert.
+Common mistakes. Inheriting the previous DJ's insert
+ routing without noticing until your channel sounds wrong.
+Related: A channel has no signal
+ Preventive maintenance
+Keeping the desk reliable
+Short answer. Connector care over everything, and
+ firmware current between bookings.
+Why it matters. This desk's real documented issues
+ were all firmware, fixed in updates; the hardware faults that remain are
+ the universal ones, worn USB and RCA connectors from years of swaps.
+Do this. Unplug by the connector, inspect cables
+ before they go in the bag, keep the desk covered in transport, and hold
+ firmware at 1.11+ with updates timed away from gigs.
+Related: The full prevention system
+ Compatibility
+Players, software and Pro DJ Link
+Short answer. Pro DJ Link with any generation of
+ player, one USB-A port plus two USB-B/USB-C computer ports, Bluetooth
+ audio in, Wi-Fi for Stagehand monitoring.
+Why it matters. The mixer does not care which library
+ format your USB carries, that is a player-side question. What it does
+ care about is firmware when the Link chain is big and busy, see the
+ freeze fixed in 1.11.
+Do this. Confirm your DVS or software license covers
+ this desk before soundcheck, and check the firmware version when walking
+ into an unfamiliar A9 booth.
+Related: CDJ-3000Player compatibility table
+ Frequently asked questions
+Quick answers
+Does the library format (Device Library or OneLibrary) affect this mixer?No, only players read the USB library. The mixer receives audio and Link data.Can I play from a phone through it?Yes, over the built-in Bluetooth input. Treat it as a bridge, not a set medium.Can two DJs cue at the same time?Yes, two independent headphone sections with separate level and mix.Can I link it with CDJ-2000NXS2s or CDJ-3000s?Yes, Pro DJ Link works across generations.Why does it refuse my fast USB stick?Firmware older than 1.07 did not recognize UASP drives. Update the desk, or use a plain stick.
+Related guides
+DJM-900NXS2 ·
+ DJM-V10 ·
+ CDJ-3000 ·
+ rekordbox reference ·
+ Club setup checklist
+Playing soon and it is not working?
+🚨 Start Emergency Mode
+Keep the Emergency Card
+We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.
+Register and send it
+ Registering is free and counts everywhere on Save My Gig. We send a
+ confirmation email first. Your address is stored with Brevo, our email
+ provider. Unsubscribe any time. Privacy
+ Sources: AlphaTheta's official DJM-A9 firmware change history and
+ specification pages, checked 26 July 2026. General troubleshooting steps
+ reflect standard mixing practice. Firmware and behaviour changes without
+ notice, re-check before a big show.
+Before you dive in.
+ Analytics cookies only, so we see which pages help DJs most.
+ Cookie policy
+DeclineAccept

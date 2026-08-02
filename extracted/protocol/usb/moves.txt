@@ -1,0 +1,30 @@
+Skip to content
+SAVE MY GIG
+Critical · Do this now
+Four moves, in order, until it plays
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+Four moves you have not tried.
+You have more time than it feels like. If a track was playing when the drive died it is still playing, and a big library can take thirty seconds to appear. Do not yank anything.
+You have already reseated it and tried the other deck.
+FOLDERThe database is gone. The music is not.
+Why, and how
+SOURCE, select the USB, then browse in FOLDER mode. The player reads the audio files directly and ignores the rekordbox database, which is the part that usually died. You lose cues, playlists and sync. You keep the gig. This is the single most useful thing on this page and the one most DJs have never tried.
+LINKPlay off the other player’s drive.
+Why, and how
+If the booth is linked over PRO DJ LINK, any player can browse and load from a drive that is physically in another one. Your own drive being dead does not matter. In a club with a proper Pioneer setup this is often the fastest fix available, and it is the one people forget when the room is looking at them.
+RESTARTPower-cycle the dead player.
+Why, and how
+USB STOP first, power off, twenty seconds, back on. It feels too drastic mid-set so people skip it, but on a player that is not in the mix it costs you nothing. Never do this to a deck that is live, and never to the deck the other DJ is on.
+BORROWTake a drive off the DJ either side of you.
+Why, and how
+Their drive is a rekordbox export like yours, so it will read. This has happened to every one of them and none of them will care. You will be playing someone else’s music, but you will be playing. Music first, pride later.
+⚠️
+Do not let anything format or initialise your drive tonight, and never say yes to a computer that offers to. Your music is still on it, and formatting is the one action you cannot undo.
+If there is no drive anywhere
+A phone into a spare channel keeps the room from going silent. Be clear with yourself about what it is: not your set continuing, the night not stopping. It also only works if you already carry a USB-C to 3.5mm adapter and a 3.5mm to twin RCA cable. No weight, no money, and worth nothing at all if it is at home.
+ None of this is needed by the DJ who walked in with a cloned second drive in
+ the other pocket. That version of tonight is ten seconds long.
+ The prevention rules.
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

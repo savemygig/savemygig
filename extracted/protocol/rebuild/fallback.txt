@@ -1,0 +1,13 @@
+Skip to content
+SAVE MY GIG
+Critical · Fallback
+Last Options
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+DRAFT, review pending.
+Fallback
+One thing left before survival mode
+Re-do the format once, choosing FAT32 explicitly (not exFAT) and MBR. A GPT drive is a common cause of "formatted but unreadable".
+Is it reading now?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.

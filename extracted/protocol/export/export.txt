@@ -1,0 +1,16 @@
+Skip to content
+SAVE MY GIG
+Quick_Fix
+Fresh Export
+IN TESTING
+ This flow is still being tuned. Trust your gear over the screen.
+DRAFT, review pending.
+Step 5
+Export tonight's music with Rekordbox
+Rekordbox in EXPORT mode, USB connected.
+Drag tonight's playlists only onto the device. Small export = fast and reliable.
+No Rekordbox library on this computer? Import the music folder you backed up first, then export it.
+Wait for the full sync, then eject with the Rekordbox eject button.
+Export finished without errors?
+ You follow these steps at your own risk. Formatting or erasing a drive can
+ permanently destroy data. Full disclaimer.
