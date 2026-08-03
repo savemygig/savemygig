@@ -126,12 +126,12 @@ const promos = ALL.filter((p) => p.href !== exclude);
     height: 100%;
     padding: 0 1.2rem 0 1.35rem;
     background: linear-gradient(90deg, var(--tone-wash) 0%, var(--surf-2) 42%);
-    border: 1px solid var(--edge);
+    border: var(--stroke) solid var(--edge);
     border-left: 3px solid var(--tone);
     border-radius: var(--radius);
     text-decoration: none;
     overflow: hidden;
-    transition: border-color 0.15s ease, filter 0.15s ease;
+    transition: border-color var(--t-fast), filter var(--t-fast);
   }
   .promo[hidden] { display: none; }
   .promo:hover { border-color: var(--tone); filter: brightness(1.14); }
@@ -141,10 +141,10 @@ const promos = ALL.filter((p) => p.href !== exclude);
   .promo-icon {
     flex: 0 0 auto;
     display: inline-flex; align-items: center; justify-content: center;
-    width: 42px; height: 42px; border-radius: 50%;
+    width: 42px; height: 42px; border-radius: var(--radius-round);
     color: var(--tone);
     background: var(--tone-wash);
-    border: 1px solid var(--tone);
+    border: var(--stroke) solid var(--tone);
   }
   .promo-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
   .promo-q {

@@ -201,25 +201,10 @@ const schema = {
   .kb-sub { max-width: 42rem; margin: -0.4rem 0 1rem; font-size: 0.92rem; line-height: 1.6; }
   .kb-h {
     font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
-    border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+    border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
   }
-  .kb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.9rem; }
-  .kb-card {
-    display: flex; flex-direction: column; gap: 0.4rem;
-    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
-    padding: 1.2rem 1.3rem; text-decoration: none;
-  }
-  .kb-live { transition: border-color 0.15s ease; }
-  .kb-live:hover { border-color: var(--red); }
-  .kb-soon { opacity: 0.62; }
-  .kb-name {
-    font-family: var(--font-display); font-weight: 800; font-size: 1.1rem;
-    text-transform: uppercase; letter-spacing: -0.01em; color: var(--text);
-  }
-  .kb-blurb { color: var(--text-dim); font-size: 0.88rem; line-height: 1.5; }
-  .kb-go { color: var(--red); font-size: 0.82rem; font-weight: 600; margin-top: 0.3rem; }
-  .kb-tag {
-    font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--text-faint); margin-top: 0.3rem;
-  }
+  /* Design language sprint, 2026-08-03: the card, the grid, the title, the
+     blurb, the go-link and the coming-soon tag all moved to global.css. They
+     were duplicated here, in the Pioneer hub, in /legal and in /partners, and
+     the four copies had already drifted apart. */
 </style>

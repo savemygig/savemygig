@@ -66,20 +66,12 @@ const partners = [];
 
 <style>
   .pt-lead { max-width: 42rem; margin-bottom: 2rem; line-height: 1.6; }
-  .pt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.9rem; }
-  .pt-card {
-    display: flex; flex-direction: column; gap: 0.5rem;
-    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
-    padding: 1.2rem 1.3rem;
-    transition: border-color 0.15s ease;
-  }
-  .pt-card:hover { border-color: var(--red); }
+  /* Design language sprint, 2026-08-03: card, grid, title and blurb now come
+     from the shared card in global.css. Note the hover went with them: a
+     partner card is not a link, so it no longer animates on hover the way the
+     four link cards elsewhere do. Movement should mean "this goes somewhere". */
   .pt-logo { width: 48px; height: 48px; object-fit: contain; margin-bottom: 0.3rem; }
-  .pt-name {
-    font-family: var(--font-display); font-weight: 800; font-size: 1.1rem;
-    text-transform: uppercase; letter-spacing: -0.01em; color: var(--text);
-  }
-  .pt-blurb { color: var(--text-dim); font-size: 0.88rem; line-height: 1.5; flex: 1; }
+  .pt-blurb { flex: 1; }
   .pt-cta { width: auto; align-self: flex-start; padding: 0.55rem 1.3rem; margin-top: 0.4rem; }
-  .pt-empty { text-align: center; color: var(--text-dim); padding: 2.2rem 1.3rem; }
+  .pt-empty { text-align: center; color: var(--text-dim); padding: var(--sp-7) var(--sp-5); }
 </style>

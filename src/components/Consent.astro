@@ -30,7 +30,7 @@
     /* Elevated + a bold amber notice edge so it reads as a distinct banner,
        not another dark card. It has to hit your face. */
     background: var(--surf-2);
-    border: 1.5px solid var(--amber);
+    border: var(--stroke) solid var(--amber);
     border-radius: var(--radius); padding: 16px 18px;
     display: flex; flex-direction: column; gap: 13px;
     box-shadow: 0 10px 44px rgba(0, 0, 0, 0.66), 0 0 0 1px rgba(217, 164, 65, 0.18), 0 0 26px rgba(217, 164, 65, 0.14);
@@ -51,15 +51,15 @@
   .ck-btn {
     font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
     font-size: 13px; letter-spacing: 0.02em; padding: 11px 20px;
-    border-radius: var(--radius); cursor: pointer; border: 1px solid var(--edge);
-    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    border-radius: var(--radius); cursor: pointer; border: var(--stroke) solid var(--edge);
+    transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
   }
   /* Both are clearly buttons. Decline is a real outlined button, not a ghost
      that melts into the panel. */
   .ck-ghost { background: transparent; color: var(--text); border-color: var(--text-faint); }
   .ck-ghost:hover { border-color: var(--text-dim); background: var(--surf); }
   .ck-solid { background: var(--red); color: #0a0a0b; border-color: var(--red); }
-  .ck-solid:hover { box-shadow: 0 0 14px rgba(255, 77, 46, 0.5); }
+  .ck-solid:hover { box-shadow: var(--shadow-focus-red); }
   @media (min-width: 560px) {
     .ck { flex-direction: row; align-items: center; gap: 20px; }
     .ck-t { flex: 1; }

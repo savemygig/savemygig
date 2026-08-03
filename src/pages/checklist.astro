@@ -586,14 +586,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           <h3 class="group-h">
             <button type="button" class="group-toggle" data-toggle={g.id} aria-expanded="true" aria-controls={`body-${g.id}`}>
               <span class="group-ic" aria-hidden="true">
-                {g.icon === 'disc' && <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>}
-                {g.icon === 'sliders' && <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M2 14h4"/><path d="M10 8h4"/><path d="M18 16h4"/></svg>}
-                {g.icon === 'star' && <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>}
-                {g.icon === 'pin' && <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>}
-                {g.icon === 'sync' && <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>}
-                {g.icon === 'usb' && <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="7" rx="1"/><path d="M12 9v11"/><path d="M8 20h8"/></svg>}
-                {g.icon === 'shield' && <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1 1 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>}
-                {g.icon === 'plane' && <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>}
+                {g.icon === 'disc' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>}
+                {g.icon === 'sliders' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M2 14h4"/><path d="M10 8h4"/><path d="M18 16h4"/></svg>}
+                {g.icon === 'star' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>}
+                {g.icon === 'pin' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>}
+                {g.icon === 'sync' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>}
+                {g.icon === 'usb' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="7" rx="1"/><path d="M12 9v11"/><path d="M8 20h8"/></svg>}
+                {g.icon === 'shield' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1 1 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>}
+                {g.icon === 'plane' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>}
               </span>
               <span class="group-title">{g.title}</span>
               <span class="group-meta">
@@ -675,7 +675,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          arrow in white on hover. -->
     <div class="top-actions">
       <button type="button" class="top-circle" id="topBtn" aria-label="Back to top">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
       </button>
     </div>
   </main>
@@ -688,7 +688,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     gap: 4px;
     padding: 4px;
     background: var(--surf);
-    border: 1px solid var(--edge);
+    border: var(--stroke) solid var(--edge);
     border-radius: var(--radius);
     margin-bottom: 0.6rem;
   }
@@ -708,7 +708,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     border-radius: var(--radius);
     padding: 0.55rem 1.2rem;
     cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition: background var(--t-fast), color var(--t-fast);
     -webkit-tap-highlight-color: transparent;
   }
   .mode-btn.is-on { background: var(--text); color: #0a0a0b; }
@@ -719,7 +719,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      what the numbers already say. */
   .readiness {
     background: var(--surf-2);
-    border: 1px solid var(--edge);
+    border: var(--stroke) solid var(--edge);
     border-radius: var(--radius);
     padding: 0.7rem 1.1rem;
     margin-bottom: 1.6rem;
@@ -748,8 +748,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     grid-area: 2 / 1 / 2 / 3;
     height: 6px;
     background: var(--bg);
-    border: 1px solid var(--edge);
-    border-radius: 999px;
+    border: var(--stroke) solid var(--edge);
+    border-radius: var(--radius-pill);
     overflow: hidden;
     margin: 0.25rem 0 0;
   }
@@ -757,7 +757,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      and reverted the same hour. His words: a red bar stresses an artist
      who packed everything for this one gig, "this is not a game". The
      meter encourages, it never judges. Do not reintroduce the gradient. */
-  .meter-fill { height: 100%; width: 0%; background: var(--green); border-radius: 999px; transition: width 0.3s ease; }
+  .meter-fill { height: 100%; width: 0%; background: var(--green); border-radius: var(--radius-pill); transition: width 0.3s ease; }
   .readiness-sub { grid-area: 1 / 1; margin: 0; font-size: 0.9rem; color: var(--text-dim); }
   .readiness.is-ready .readiness-sub { color: var(--green); }
 
@@ -837,7 +837,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     border-bottom: 2px solid var(--text-dim);
     transform: rotate(45deg);           /* points down when expanded */
     margin-top: -3px;
-    transition: transform 0.2s ease;
+    transition: transform var(--t-slow);
     flex: 0 0 auto;
   }
   .group-toggle:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
@@ -849,7 +849,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .group-blurb { margin: 0 0 0.4rem; font-size: 0.92rem; }
 
   .tasks { list-style: none; margin: 0.4rem 0 0; padding: 0; }
-  .task { border-bottom: 1px solid var(--edge-soft); display: flex; align-items: center; }
+  .task { border-bottom: var(--stroke) solid var(--edge-soft); display: flex; align-items: center; }
   .task:last-child { border-bottom: none; }
   .task > label { flex: 1; }
   /* A blurb can differ by mode (DJ Gear: Base has no laptop, so no "what
@@ -881,7 +881,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     border-radius: var(--radius);
     background: var(--bg);
     position: relative;
-    transition: background 0.15s ease, border-color 0.15s ease;
+    transition: background var(--t-fast), border-color var(--t-fast);
   }
   .box::after {
     content: '';
@@ -891,12 +891,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     border: solid #0a0a0b;
     border-width: 0 2.5px 2.5px 0;
     transform: rotate(45deg) scale(0);
-    transition: transform 0.15s ease;
+    transition: transform var(--t-fast);
   }
   .task input:checked + .box { background: var(--green); border-color: var(--green); }
   .task input:checked + .box::after { transform: rotate(45deg) scale(1); }
   .task input:focus-visible + .box { outline: 2px solid var(--green); outline-offset: 2px; }
-  .task-label { font-size: 1rem; line-height: 1.45; color: var(--text); transition: color 0.15s ease; }
+  .task-label { font-size: 1rem; line-height: 1.45; color: var(--text); transition: color var(--t-fast); }
   .task input:checked ~ .task-label {
     color: var(--text-faint);
     text-decoration: line-through;
@@ -918,7 +918,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .backup-note {
     position: relative;
     margin-bottom: 1.4rem; padding: 12px 2.5rem 12px 16px;
-    background: var(--surf); border: 1.5px solid var(--amber); border-radius: var(--radius);
+    background: var(--surf); border: var(--stroke) solid var(--amber); border-radius: var(--radius);
   }
   .bn-t { margin: 0; font-size: 0.86rem; line-height: 1.5; color: var(--text-dim); }
   .bn-h {
@@ -948,16 +948,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   main.wrap { padding-bottom: 0.4rem; }
   /* Antonio's EPK circle: transparent, thin edge, arrow brightens to white. */
   .top-circle {
-    width: 46px; height: 46px; border-radius: 50%;
+    width: 46px; height: 46px; border-radius: var(--radius-round);
     display: inline-flex; align-items: center; justify-content: center;
     background: transparent; color: var(--text-dim);
-    border: 1px solid var(--edge); cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    border: var(--stroke) solid var(--edge); cursor: pointer;
+    transition: color var(--t-fast), border-color var(--t-fast);
   }
   .top-circle:hover { color: var(--text); border-color: var(--text-dim); }
 
   .unlock {
-    background: var(--surf-2); border: 1px solid var(--edge); border-radius: var(--radius);
+    background: var(--surf-2); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     padding: 1.2rem 1.3rem; margin: 0 0 1.6rem;
   }
   .unlock[hidden] { display: none; }
@@ -981,7 +981,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .bl-short { display: none; }
   .unlock-form input {
     width: 100%; padding: 0.9rem 1rem; font-family: inherit; font-size: 16px;
-    color: var(--text); background: var(--bg); border: 1px solid var(--edge); border-radius: var(--radius);
+    color: var(--text); background: var(--bg); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
   }
   .unlock-form input::placeholder { color: var(--text-faint); }
   .unlock-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
@@ -1043,8 +1043,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      all pointer events. */
   .task.dragging {
     background: var(--surf-2);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
-    border-radius: 2px;
+    box-shadow: var(--shadow-raised);
+    border-radius: var(--radius);
     border-bottom-color: transparent;
     position: relative;
     z-index: 6;
@@ -1070,8 +1070,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .task-label-edit {
     flex: 1; min-width: 0; font: inherit; color: var(--text);
-    background: var(--surf-2); border: 1px solid var(--green);
-    border-radius: 2px; padding: 0.2rem 0.45rem;
+    background: var(--surf-2); border: var(--stroke) solid var(--green);
+    border-radius: var(--radius); padding: 0.2rem 0.45rem;
     /* The one place selection MUST work: you cannot rename what you cannot
        select. Overrides the blanket rule above. */
     user-select: text; -webkit-user-select: text;
@@ -1099,7 +1099,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .custom-toolbar .btn {
     width: auto; display: inline-block; margin: 0;
     background: transparent; color: var(--text-dim);
-    transition: color 0.15s ease, border-color 0.15s ease;
+    transition: color var(--t-fast), border-color var(--t-fast);
   }
   .custom-toolbar .btn:hover, .custom-toolbar .btn:active {
     color: var(--text); border-color: var(--text-dim);
@@ -1135,7 +1135,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     width: 100%; resize: vertical; min-height: 84px;
     padding: 0.75rem 0.9rem; font-family: inherit; font-size: 16px;
     line-height: 1.5; color: var(--text);
-    background: var(--bg); border: 1px dashed var(--edge); border-radius: var(--radius);
+    background: var(--bg); border: var(--stroke) dashed var(--edge); border-radius: var(--radius);
   }
   .notes-area::placeholder { color: var(--text-faint); }
   .notes-area:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
@@ -1166,12 +1166,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   #list[data-mode="custom"][data-edit="on"] ~ .add-section { display: flex; }
   .add-section .add-input {
     flex: 1; padding: 0.75rem 0.9rem; font-family: inherit; font-size: 16px; color: var(--text);
-    background: var(--bg); border: 1px dashed var(--edge); border-radius: var(--radius);
+    background: var(--bg); border: var(--stroke) dashed var(--edge); border-radius: var(--radius);
   }
   .add-section .add-input::placeholder { color: var(--text-faint); }
   .add-section .add-input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .add-section .add-btn {
-    flex: 0 0 auto; background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    flex: 0 0 auto; background: var(--surf); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 0.8rem;
     text-transform: uppercase; letter-spacing: 0.03em; padding: 0 1rem; cursor: pointer;
   }
@@ -1194,7 +1194,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .backup-form[hidden] { display: none; }
   .backup-form input {
     flex: 1; padding: 0.7rem 0.9rem; font-family: inherit; font-size: 16px; color: var(--text);
-    background: var(--bg); border: 1px solid var(--edge); border-radius: var(--radius);
+    background: var(--bg); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
   }
   .backup-form input::placeholder { color: var(--text-faint); }
   .backup-form .btn { margin: 0; width: auto; }
@@ -1204,12 +1204,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .backup-msg.err { color: var(--red); }
   .add-own .add-input {
     flex: 1; padding: 0.75rem 0.9rem; font-family: inherit; font-size: 16px; color: var(--text);
-    background: var(--bg); border: 1px dashed var(--edge); border-radius: var(--radius);
+    background: var(--bg); border: var(--stroke) dashed var(--edge); border-radius: var(--radius);
   }
   .add-own .add-input::placeholder { color: var(--text-faint); }
   .add-own .add-input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .add-own .add-btn {
-    flex: 0 0 auto; background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    flex: 0 0 auto; background: var(--surf); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 0.8rem;
     text-transform: uppercase; letter-spacing: 0.03em; padding: 0 1rem; cursor: pointer;
   }
@@ -1233,7 +1233,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      (Antonio: the pill "looked strange" beside Reset/Download/Email). */
   .acct-chip {
     flex: 0 0 auto; display: inline-flex; align-items: center; gap: 0.5rem;
-    cursor: pointer; border: 1px solid var(--edge); border-radius: var(--radius);
+    cursor: pointer; border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     /* Transparent, not filled (Antonio, round 5): no background in ANY
        state, idle, open or synced. Only the border and text color carry
        the state (gray idle, green synced), same "quiet until it matters"
@@ -1322,7 +1322,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     /* Green border (Antonio, round 5): the only trigger that opens this
        card is the Sync/Synced chip, so a green outline ties the two
        together visually the instant it opens, whether signed in or not. */
-    background: var(--surf); border: 1px solid var(--green); border-radius: var(--radius);
+    background: var(--surf); border: var(--stroke) solid var(--green); border-radius: var(--radius);
   }
   .acct-card[hidden] { display: none; }
   .acct-copy { font-size: 0.88rem; margin-bottom: 0.85rem; }
@@ -1345,7 +1345,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      .ls-new-form/.ls-name-edit below didn't. */
   .acct-form input {
     flex: 1 1 200px; min-width: 0; background: var(--bg); color: var(--text);
-    border: 1px solid var(--edge); border-radius: var(--radius);
+    border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     padding: 0.7rem 0.8rem; font-family: var(--font-body); font-size: 16px;
   }
   .acct-form input::placeholder { color: var(--text-faint); }
@@ -1433,7 +1433,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .ls-chev {
     width: 7px; height: 7px; flex: 0 0 auto;
     border-right: 1.5px solid var(--text-faint); border-bottom: 1.5px solid var(--text-faint);
-    transform: rotate(-45deg); transition: transform 0.15s ease; margin-top: -2px;
+    transform: rotate(-45deg); transition: transform var(--t-fast); margin-top: -2px;
   }
   .ls-head[aria-expanded="true"] .ls-chev { transform: rotate(45deg); margin-top: -3px; }
   .ls-body { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 0.7rem; }
@@ -1446,7 +1446,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .ls-pill {
     position: relative;
     display: inline-flex; align-items: center; gap: 6px;
-    background: none; border: 1px solid var(--edge); border-radius: var(--radius);
+    background: none; border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     color: var(--text-dim); font-family: var(--font-body); font-size: 0.82rem;
     padding: 0.42rem 0.7rem; cursor: pointer; max-width: 190px;
   }
@@ -1469,7 +1469,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .ls-x {
     display: none; position: absolute; top: -9px; right: -9px;
     width: 24px; height: 24px; align-items: center; justify-content: center;
-    border: 1px solid var(--edge); border-radius: 50%; background: var(--bg);
+    border: var(--stroke) solid var(--edge); border-radius: var(--radius-round); background: var(--bg);
     color: var(--text-faint); font-size: 0.85rem; line-height: 1; padding: 0; cursor: pointer;
   }
   .list-switch.deleting .ls-x { display: inline-flex; }
@@ -1492,7 +1492,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .list-switch.moving .ls-drag { display: inline-flex; }
   .ls-pill.dragging {
     background: var(--surf-2);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+    box-shadow: var(--shadow-raised);
     position: relative;
     z-index: 6;
     cursor: grabbing;
@@ -1517,7 +1517,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      16px text isn't cramped inside the pill. */
   .ls-name-edit {
     flex: 1 1 auto; min-width: 60px; max-width: 170px; background: var(--bg); color: var(--text);
-    border: 1px solid var(--green); border-radius: 4px; padding: 0.2rem 0.4rem;
+    border: var(--stroke) solid var(--green); border-radius: var(--radius); padding: 0.2rem 0.4rem;
     font-family: var(--font-body); font-size: 16px;
   }
   /* Three single-purpose icon+label buttons (New / Move / Delete), replacing
@@ -1528,7 +1528,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .ls-toolbar { display: flex; gap: 6px; }
   .ls-tool-btn {
     display: inline-flex; align-items: center; justify-content: center;
-    background: none; border: 1px dashed var(--edge); border-radius: var(--radius);
+    background: none; border: var(--stroke) dashed var(--edge); border-radius: var(--radius);
     color: var(--text-faint); font-family: var(--font-body); font-size: 0.82rem;
     padding: 0.42rem 0.6rem; cursor: pointer;
   }
@@ -1544,7 +1544,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .ls-new-form { display: flex; gap: 6px; flex: 1 1 100%; }
   .ls-new-form[hidden] { display: none; }
   .ls-new-form .add-btn {
-    flex: 0 0 auto; background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    flex: 0 0 auto; background: var(--surf); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 0.8rem;
     text-transform: uppercase; letter-spacing: 0.03em; padding: 0 1rem; cursor: pointer;
   }
@@ -1554,7 +1554,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      input Antonio reported directly). */
   .ls-new-form input {
     flex: 1 1 160px; min-width: 0; background: var(--bg); color: var(--text);
-    border: 1px solid var(--edge); border-radius: var(--radius);
+    border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     padding: 0.55rem 0.7rem; font-family: var(--font-body); font-size: 16px;
   }
   .ls-new-form input::placeholder { color: var(--text-faint); }
@@ -1582,7 +1582,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
     /* Transparent (Antonio, round 5): matches the Sync chip, no fill in any
        state, amber lives only in the border and glyph when it's on. */
-    background: transparent; border: 1px solid var(--edge); border-radius: var(--radius);
+    background: transparent; border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     color: var(--text-faint); font-family: var(--font-display); font-weight: 700;
     font-size: 0.9rem; line-height: 1;
     padding: 0.35rem 0.7rem;
@@ -1593,11 +1593,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      time, same as rekordbox: opening a new one always closes the last. */
   .explain-pop {
     position: fixed; z-index: 200; max-width: 280px;
-    background: var(--surf-2); border: 1.5px solid var(--amber); border-radius: var(--radius);
+    background: var(--surf-2); border: var(--stroke) solid var(--amber); border-radius: var(--radius);
     padding: 10px 14px; font-family: var(--font-body); font-size: 0.84rem; line-height: 1.48;
     color: var(--text);
     box-shadow: 0 10px 44px rgba(0, 0, 0, 0.66), 0 0 0 1px rgba(217, 164, 65, 0.18), 0 0 26px rgba(217, 164, 65, 0.14);
-    animation: explainIn 0.18s ease-out both;
+    animation: explainIn var(--t-fast)-out both;
   }
   @keyframes explainIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   /* Applied by JS to every covered control: holding it must never select
@@ -1615,7 +1615,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      mode is active. Pure class toggle, nothing else about those elements'
      state changes, so everything reverts exactly the moment info mode
      turns off. */
-  .explain-target.info-lit { border: 1px solid var(--amber); background: var(--amber-dim); }
+  .explain-target.info-lit { border: var(--stroke) solid var(--amber); background: var(--amber-dim); }
 
   @media (prefers-reduced-motion: reduce) {
     .meter-fill, .box, .box::after, .readiness-pct, .mode-btn, .chev, .ls-chev { transition: none; }
@@ -2044,7 +2044,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     for (const [icon, words] of SECTION_ICON_WORDS) {
       if (words.some((w) => t.indexOf(w) !== -1)) { body = SECTION_ICONS[icon]; break; }
     }
-    return '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + body + '</svg>';
+    return '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + body + '</svg>';
   }
   // User sections are real .task-group elements built here with the same
   // anatomy as the fixed ones, so every existing mechanism (counts, custom
@@ -2237,7 +2237,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       };
 
       // Animate the lift in, then go instant so the row tracks the finger 1:1.
-      li.style.transition = 'transform 0.12s ease, box-shadow 0.12s ease';
+      li.style.transition = 'transform var(--t-fast), box-shadow var(--t-fast)';
       place(ev.clientY);
       window.setTimeout(() => { if (li.classList.contains('dragging')) li.style.transition = ''; }, 130);
       const move = (e: PointerEvent) => { e.preventDefault(); place(e.clientY); };
@@ -2778,8 +2778,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .gnotes { margin: 6px 0 0 26px; padding: 8px 10px; font-size: 12px; color: #444; border-left: 2px solid #d43a1e; background: #f6f5f3; }
   h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid #d43a1e; padding-bottom: 4px; margin: 0 0 6px; }
   ul { list-style: none; margin: 0; padding: 0; }
-  li { padding: 4px 0 4px 26px; position: relative; border-bottom: 1px solid #eee; }
-  .bx { position: absolute; left: 0; top: 5px; width: 13px; height: 13px; border: 1.5px solid #444; border-radius: 2px; font-size: 11px; line-height: 13px; text-align: center; }
+  li { padding: 4px 0 4px 26px; position: relative; border-bottom: var(--stroke) solid #eee; }
+  .bx { position: absolute; left: 0; top: 5px; width: 13px; height: 13px; border: 1.5px solid #444; border-radius: var(--radius); font-size: 11px; line-height: 13px; text-align: center; }
   li.done { color: #888; text-decoration: line-through; }
   li.done .bx { background: #e8f7ee; border-color: #2f9e5f; color: #2f9e5f; }
   .foot { margin-top: 18px; color: #888; font-size: 11px; display: flex; justify-content: space-between; }
@@ -3302,7 +3302,7 @@ ${sections}
         pill.style.transform = `translate(${(wantLeft - now.left).toFixed(1)}px, ${(wantTop - now.top).toFixed(1)}px) scale(1.03)`;
       };
 
-      pill.style.transition = 'transform 0.12s ease, box-shadow 0.12s ease';
+      pill.style.transition = 'transform var(--t-fast), box-shadow var(--t-fast)';
       place(ev.clientX, ev.clientY);
       window.setTimeout(() => { if (pill.classList.contains('dragging')) pill.style.transition = ''; }, 130);
       const move = (e: PointerEvent) => { e.preventDefault(); place(e.clientX, e.clientY); };
@@ -3385,7 +3385,7 @@ ${sections}
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'ls-pencil';
     b.setAttribute('aria-label', 'Rename ' + name);
-    b.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
+    b.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
     b.addEventListener('click', (e) => {
       e.stopPropagation();
       beginPillRename(pill, span, id);

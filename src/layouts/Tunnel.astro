@@ -110,16 +110,16 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig!?\s*$/i, '');
      text. */
   .tunnel-exit {
     display: flex; gap: 10px; margin-top: 2.2rem;
-    padding-top: 1.2rem; border-top: 1px solid var(--edge-soft);
+    padding-top: 1.2rem; border-top: var(--stroke) solid var(--edge-soft);
   }
   .tx-btn {
     flex: 1; display: inline-flex; align-items: center; justify-content: center;
     min-height: 44px; padding: 11px 14px;
     font-family: var(--font-body); font-weight: 600; font-size: 0.82rem;
     letter-spacing: 0.02em; color: var(--text-dim); text-decoration: none;
-    background: transparent; border: 1px solid var(--edge);
+    background: transparent; border: var(--stroke) solid var(--edge);
     border-radius: var(--radius); cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    transition: color var(--t-fast), border-color var(--t-fast);
   }
   .tx-btn:hover { color: var(--text); border-color: var(--text-dim); }
   .tx-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }

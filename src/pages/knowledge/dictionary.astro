@@ -230,7 +230,7 @@ const schema = {
                 <h3 class="dict-t">{x.t}</h3>
                 <span class="dict-chev" aria-hidden="true"></span>
               </summary>
-              <p class="dim dict-d">{x.d}</p>
+              <div class="acc-body"><p class="dim dict-d">{x.d}</p></div>
             </details>
           ))}
         </div>
@@ -298,14 +298,17 @@ const schema = {
   /* Group level. The summary keeps the old .dict-h look (uppercase label with
      a rule under it) so the page reads the same closed as it did open, and
      gains a term count plus a chevron. */
+  /* Design language sprint, 2026-08-03: the chevron geometry, the focus ring,
+     the marker hiding and the open-state timing were all redeclared here, a
+     copy of the same code in /faq, the Pioneer hub and Detail.astro. They now
+     live once in global.css. Only what is genuinely about a dictionary stays
+     local: the term count, the target rule, the uppercase group label. */
   .dict-cat { margin-bottom: 0.9rem; }
   .dict-cat > summary {
     display: flex; align-items: center; gap: 0.7rem;
-    border-bottom: 1px solid var(--edge); padding-bottom: 0.5rem;
+    border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.5rem;
     cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
   }
-  .dict-cat > summary::-webkit-details-marker { display: none; }
-  .dict-cat > summary:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .dict-cat[open] > summary { margin-bottom: 1rem; }
   .dict-h {
     flex: 1 1 auto;
@@ -316,30 +319,19 @@ const schema = {
     flex: 0 0 auto; font-size: 0.75rem; font-weight: 700;
     color: var(--text-faint); font-variant-numeric: tabular-nums;
   }
-  .dict-cat-chev { flex: 0 0 auto; }
-  .dict-cat[open] > summary .dict-cat-chev { transform: rotate(45deg); margin-top: -3px; }
   .dict-cat-body { margin-bottom: 1.8rem; }
   /* scroll-margin keeps a deep-linked term clear of the sticky header. CSS
-     does this correctly at every zoom level; JavaScript arithmetic does not. */
-  .dict-term { margin-bottom: 0.6rem; padding: 0.95rem 1.15rem; scroll-margin-top: 88px; }
+     does this correctly at every zoom level; JavaScript arithmetic does not.
+     Padding is NOT set here any more: the shared accordion supplies it, so a
+     dictionary term and an FAQ answer are now the same box. */
+  .dict-term { margin-bottom: 0.6rem; padding: 0; scroll-margin-top: 88px; }
   .dict-cat { scroll-margin-top: 88px; }
   /* A term arrived at by link gets a brief accent rule so the eye lands on the
      right row in a long group instead of hunting. */
   .dict-term:target { border-left: 2px solid var(--red); }
-  .dict-term > summary {
-    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
-  }
-  .dict-term > summary::-webkit-details-marker { display: none; }
-  .dict-term > summary:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
   .dict-t { font-size: 1rem; font-weight: 800; margin: 0; letter-spacing: -0.01em; text-transform: none; }
-  .dict-chev {
-    flex: 0 0 auto; width: 8px; height: 8px; margin-top: -1px;
-    border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
-    transform: rotate(-45deg); transition: transform 0.2s ease, margin-top 0.2s ease;
-  }
-  .dict-term[open] > summary .dict-chev { transform: rotate(45deg); margin-top: -3px; }
-  .dict-term[open] > summary { margin-bottom: 0.5rem; }
+  /* Padding comes from the shared .acc-body wrapper, the same one the FAQ and
+     the reference pages use, so a definition sits exactly where an answer
+     does. */
   .dict-d { margin: 0; line-height: 1.6; font-size: 0.95rem; }
-  @media (prefers-reduced-motion: reduce) { .dict-chev { transition: none; } }
 </style>

@@ -227,7 +227,7 @@ const schema = {
        rest of the site uses. */
     .fw-warn {
       display: flex; gap: 0.8rem; align-items: flex-start;
-      background: var(--red-dim); border: 1px solid var(--red-border);
+      background: var(--red-dim); border: var(--stroke) solid var(--red-border);
       border-radius: var(--radius); padding: 0.9rem 1rem; margin-bottom: 1rem;
       font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;
     }
@@ -240,10 +240,10 @@ const schema = {
     .fw-table th {
       text-align: left; font-size: 0.7rem; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--text-faint); font-weight: 700;
-      padding: 0 0.7rem 0.5rem 0; border-bottom: 1px solid var(--edge);
+      padding: 0 0.7rem 0.5rem 0; border-bottom: var(--stroke) solid var(--edge);
     }
     .fw-table td {
-      padding: 0.7rem 0.7rem 0.7rem 0; border-bottom: 1px solid var(--edge);
+      padding: 0.7rem 0.7rem 0.7rem 0; border-bottom: var(--stroke) solid var(--edge);
       color: var(--text-dim); line-height: 1.55; vertical-align: top;
     }
     .fw-table tr:last-child td { border-bottom: none; }
@@ -251,7 +251,7 @@ const schema = {
     .fw-vbadge {
       display: inline-block; font-family: var(--font-display); font-weight: 800;
       font-size: 0.85rem; color: var(--text);
-      background: var(--surf-2); border: 1px solid var(--edge);
+      background: var(--surf-2); border: var(--stroke) solid var(--edge);
       border-radius: var(--radius); padding: 0.15rem 0.5rem;
     }
     .fw-area { white-space: nowrap; color: var(--text); font-weight: 600; font-size: 0.85rem; }
@@ -259,7 +259,7 @@ const schema = {
       display: inline-block; margin-left: 0.45rem;
       font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
       font-weight: 800; color: var(--red);
-      border: 1px solid var(--red-border); border-radius: var(--radius);
+      border: var(--stroke) solid var(--red-border); border-radius: var(--radius);
       padding: 0.1rem 0.32rem; vertical-align: middle;
     }
     .fw-live-inline { margin-left: 0; }
@@ -276,7 +276,7 @@ const schema = {
       .fw-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
       .fw-table, .fw-table tbody, .fw-table tr, .fw-table td { display: block; width: 100%; }
       .fw-table tr {
-        border-bottom: 1px solid var(--edge); padding: 0.8rem 0;
+        border-bottom: var(--stroke) solid var(--edge); padding: 0.8rem 0;
       }
       .fw-table tr:last-child { border-bottom: none; }
       .fw-table td { border: none; padding: 0; }

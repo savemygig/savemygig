@@ -555,14 +555,14 @@ const faqSchema = {
   .rb-tablenote { font-size: 0.88rem; margin-bottom: 0.8rem; }
   .rb-tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 1rem; }
   .rb-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 520px; }
-  .rb-table th, .rb-table td { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--edge); vertical-align: top; }
+  .rb-table th, .rb-table td { text-align: left; padding: 0.6rem 0.7rem; border-bottom: var(--stroke) solid var(--edge); vertical-align: top; }
   .rb-table thead th { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
   .rb-table tbody th { color: var(--text); font-weight: 700; white-space: nowrap; }
   .rb-table .yes { color: var(--green); }
   .rb-table .no { color: var(--red); font-weight: 700; }
-  .pill { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 999px; white-space: nowrap; }
-  .pill-one { background: rgba(217,164,65,0.14); color: var(--amber); border: 1px solid rgba(217,164,65,0.4); }
-  .pill-dev { background: rgba(154,151,143,0.1); color: var(--text-dim); border: 1px solid var(--edge); }
+  .pill { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: var(--radius-pill); white-space: nowrap; }
+  .pill-one { background: rgba(217,164,65,0.14); color: var(--amber); border: var(--stroke) solid rgba(217,164,65,0.4); }
+  .pill-dev { background: rgba(154,151,143,0.1); color: var(--text-dim); border: var(--stroke) solid var(--edge); }
   .rb-caveat { font-size: 0.88rem; border-left: 2px solid var(--edge); padding-left: 0.9rem; }
   .rb-steps { margin: 0 0 1rem 1.1rem; color: var(--text-dim); line-height: 1.7; }
   .rb-steps li { margin-bottom: 0.5rem; }
@@ -570,7 +570,7 @@ const faqSchema = {
   .rb-errors { margin-bottom: 1rem; }
   .rb-errors dt { font-family: ui-monospace, Menlo, monospace; color: var(--red); font-weight: 700; margin-top: 0.9rem; }
   .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
-  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--edge-soft); }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
   /* Anchor landing shouldn't hide the question under the top of the viewport. */
   [id] { scroll-margin-top: 1.5rem; }
 </style>

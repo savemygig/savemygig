@@ -39,38 +39,23 @@ const { q, hint, open = false } = Astro.props;
 </details>
 
 <style is:global>
-  .dt {
-    border: 1px solid var(--edge);
-    border-radius: var(--radius);
-    background: var(--surf);
-    margin-bottom: 0.7rem;
-  }
-  .dt[open] { background: var(--surf-2); border-color: var(--text-faint); }
-  .dt-q {
-    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    padding: 1rem 1.15rem; cursor: pointer; list-style: none;
-    min-height: 44px;
-  }
-  .dt-q::-webkit-details-marker { display: none; }
-  .dt-q:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
+  /* DESIGN LANGUAGE SPRINT, 2026-08-03. This component used to draw its own
+     box, its own summary padding, its own chevron (10px, a different angle,
+     with a translate correction) and its own open state. It was one of SIX
+     private accordions on the site doing one job. The box, the padding, the
+     chevron, the focus ring, the open state and the body typography now come
+     from the shared accordion in global.css, which .dt is part of.
+
+     What is left is the only thing genuinely specific to this component: a
+     two-line summary, a question with an optional hint under it. That is the
+     reason Detail exists. The rest was duplication. */
   .dt-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .dt-title {
     font-family: var(--font-display); font-weight: 700; font-size: 1rem;
     letter-spacing: -0.01em; color: var(--text); line-height: 1.3;
   }
   .dt-hint { font-size: 0.82rem; color: var(--text-dim); line-height: 1.4; }
-  /* Chevron, drawn in CSS so there is no extra request. */
-  .dt-icon {
-    flex: 0 0 auto; width: 10px; height: 10px; margin-right: 4px;
-    border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
-    transform: rotate(45deg) translate(-2px, -2px);
-    transition: transform 0.18s ease;
-  }
-  .dt[open] .dt-icon { transform: rotate(-135deg) translate(-2px, -2px); }
-  .dt-body { padding: 0 1.15rem 1.15rem; }
-  .dt-body > :last-child { margin-bottom: 0; }
-  .dt-body p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.65; }
+  .dt-body p { font-size: 0.95rem; }
   .dt-body p strong { color: var(--text); }
   .dt-body .checklist { margin-top: 0.4rem; }
-  @media (prefers-reduced-motion: reduce) { .dt-icon { transition: none; } }
 </style>

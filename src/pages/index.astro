@@ -173,15 +173,15 @@ const SUBLINES = [
      accent only comes up on hover/tap. Rescue and prevention, balanced. */
   .door {
     display: flex; align-items: center; gap: 1.1rem;
-    background: var(--surf); border: 1px solid var(--edge); border-radius: var(--radius);
+    background: var(--surf); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     padding: 1.4rem 1.5rem; text-decoration: none; color: var(--text);
-    transition: border-color 0.15s ease, background 0.15s ease, transform 0.08s ease;
+    transition: border-color var(--t-fast), background var(--t-fast), transform 0.08s ease;
   }
   .door:active { transform: scale(0.995); }
 
   .door-led {
-    flex: 0 0 auto; width: 13px; height: 13px; border-radius: 50%;
-    background: var(--text-faint); transition: background 0.15s ease, box-shadow 0.15s ease;
+    flex: 0 0 auto; width: 13px; height: 13px; border-radius: var(--radius-round);
+    background: var(--text-faint); transition: background var(--t-fast), box-shadow var(--t-fast);
   }
   .d-emergency .door-led { background: var(--red); }
   .d-ready .door-led { background: var(--green); }
@@ -194,7 +194,7 @@ const SUBLINES = [
   .door::after {
     content: ''; position: absolute; inset: -1px; border-radius: var(--radius);
     pointer-events: none; opacity: 0; will-change: opacity;
-    box-shadow: 0 0 22px 1px var(--glow); border: 1px solid var(--glow);
+    box-shadow: 0 0 22px 1px var(--glow); border: var(--stroke) solid var(--glow);
     /* ONE pass on load, then done (Antonio tried repeating at 3s, then 10s,
        then called it: once was right). The stagger walks the eye down the
        three doors and the page goes quiet. */
@@ -255,11 +255,17 @@ const SUBLINES = [
      the fold and stops them reading as a wall of grey. Both stay in the HTML,
      so search engines and AI crawlers still read the full text. */
   .dd-short { display: none; }
-  .door-arrow { flex: 0 0 auto; font-size: 1.4rem; color: var(--text-faint); transition: color 0.15s ease; }
+  .door-arrow { flex: 0 0 auto; font-size: 1.4rem; color: var(--text-faint); transition: color var(--t-fast); }
 
-  /* Colour comes up on interaction, per door. */
+  /* Colour comes up on interaction, per door.
+     Design language sprint, 2026-08-03: the three LED glows were written three
+     different ways, `var(--red)` at full strength against green and amber at
+     0.7 alpha. The consequence was visible on the homepage: touch the
+     emergency door and its light flared noticeably harder than the other two
+     doors' did, which reads as the red one being "more clickable" rather than
+     as three equal choices. One glow, one strength, per door colour. */
   .d-emergency:hover, .d-emergency:active, .d-emergency:focus-visible { border-color: var(--red); }
-  .d-emergency:hover .door-led, .d-emergency:active .door-led { box-shadow: 0 0 12px var(--red); }
+  .d-emergency:hover .door-led, .d-emergency:active .door-led { box-shadow: 0 0 12px rgba(255,77,46,0.7); }
   .d-emergency:hover .door-arrow, .d-emergency:active .door-arrow { color: var(--red); }
 
   .d-ready:hover, .d-ready:active, .d-ready:focus-visible { border-color: var(--green); }
@@ -372,7 +378,7 @@ const SUBLINES = [
     content: ''; position: absolute; inset: -1px; border-radius: var(--radius);
     pointer-events: none; opacity: 0; will-change: opacity;
     box-shadow: 0 0 18px 1px rgba(243, 241, 236, 0.35);
-    border: 1px solid rgba(243, 241, 236, 0.55);
+    border: var(--stroke) solid rgba(243, 241, 236, 0.55);
     animation: doorGlow 1.2s ease-in-out both;
     animation-delay: 2.58s;
   }
