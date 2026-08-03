@@ -1626,13 +1626,31 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      The generic .panel padding was stacking on top of the card's own inset,
      so the checkboxes sat 21px right of the Done button and 40px of the card
      was dead space on the right. Zero the panel padding and let the header and
-     the body share ONE 1.2rem inset, matched by the toolbar buttons, so the
-     group title, the checkboxes and Done all start on the same vertical line. */
+     the body share ONE inset, matched by the toolbar buttons, so the group
+     title, the checkboxes and Done all start on the same vertical line.
+
+     REBUILT 2026-08-03, after the journey sweep and Antonio's go. The page
+     used to buy its edge-to-edge card by narrowing its OWN gutter to 0.75rem
+     against the sitewide 1.25rem. That made /checklist the one page in 107
+     whose frame did not line up: a 369px column against 353px everywhere
+     else, with its left edge 8px further out than every other page.
+
+     The card now bleeds past a STANDARD gutter instead of moving the page.
+     A negative margin of exactly --site-pad puts the card edge on the
+     viewport edge, and an inset of --site-pad inside it puts the group title,
+     the checkboxes and Done on 1.25rem, the same vertical line as the page
+     heading, the toolbar, and every other page on the site. Same card, frame
+     restored, and the item text gains width because content now sits at
+     1.25rem instead of 0.75 + 1.2 = 1.95rem. */
   @media (max-width: 640px) {
-    main.wrap { padding-left: 0.75rem; padding-right: 0.75rem; }
-    .task-group.panel { padding-left: 0; padding-right: 0; }
-    .group-toggle { padding: 0.9rem 1.2rem; }
-    .group-body { padding: 0 1.2rem 0.95rem; }
+    .task-group.panel {
+      margin-left: calc(-1 * var(--site-pad));
+      margin-right: calc(-1 * var(--site-pad));
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .group-toggle { padding: 0.9rem var(--site-pad); }
+    .group-body { padding: 0 var(--site-pad) 0.95rem; }
     .task > label { padding-left: 0; padding-right: 0; }
     /* Four buttons, ONE row, on a 360px Samsung (Antonio: "breaking the line,
        doesn't look very cool"). They share the width equally; DOWNLOAD is the
