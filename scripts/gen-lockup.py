@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 """
-THE LOCKUP GENERATOR. Writes src/components/brand-lockup.svg.
+RETIRED 2026-08-03, same day it shipped. DO NOT RUN: running this would
+overwrite the CURRENT lockup, which is extracted from Antonio's Canva
+master (his ruling: "I want it just like this"), not generated from the
+web fonts. See the header of src/components/Brand.astro for the live
+extraction procedure. This file stays because it documents why the lockup
+is an image at all, and the HarfBuzz/woff2 lessons below still apply to
+any future brand-type work.
+
+THE LOCKUP GENERATOR. Wrote src/components/brand-lockup.svg.
 
 WHY THE LOCKUP IS AN IMAGE (Antonio's decision "B", 2026-08-03).
 The tagline alignment went through three generations as live text:

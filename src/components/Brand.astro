@@ -3,22 +3,31 @@
  * THE BRAND LOCKUP. Single source of truth for the wordmark + tagline.
  *
  * THE LOCKUP IS A VECTOR IMAGE, NOT LIVE TEXT (Antonio's decision "B",
- * 2026-08-03). The full story lives in scripts/gen-lockup.py, which
- * generates brand-lockup.svg; short version: live text is painted by each
- * visitor's font engine, macOS and Linux round glyph advances differently,
- * and after three generations of alignment work the last device pixel still
- * wobbled between his screen and the build's. Outlines rasterise identically
- * everywhere, so the D-under-S and E-under-G alignment is now a mathematical
- * property of the asset, not a rendering outcome.
+ * 2026-08-03): live text is painted by each visitor's font engine, macOS
+ * and Linux round glyph advances differently, and after three generations
+ * of alignment work the last device pixel still wobbled between his screen
+ * and the build's. Outlines rasterise identically everywhere.
  *
- * TO CHANGE THE LETTERING, TAGLINE, WEIGHTS OR COLOURS:
- *   edit scripts/gen-lockup.py, run  python3 scripts/gen-lockup.py,
- *   commit the regenerated SVG. Do NOT hand-edit the SVG.
+ * SOURCE OF TRUTH SINCE 2026-08-03 (his ruling: "I want it just like
+ * this"): brand-lockup.svg is EXTRACTED FROM ANTONIO'S CANVA MASTER, the
+ * design that also feeds his print/social art, not generated from the web
+ * fonts any more (scripts/gen-lockup.py is retired, kept for its history).
+ * The extraction (recorded here because the Canva file will change again):
+ *   - his export ships the shield as an embedded BITMAP; we take only the
+ *     three vector text groups and keep the site's own vector shield
+ *     (public/images/logo-shield.svg) for every shield slot.
+ *   - his colours (#ebebeb / #f74921 / #a7a89a) are remapped to the site
+ *     tokens (#f3f1ec / #ff4d2e / #9a978f) so GIG matches the house red
+ *     used everywhere else. Geometry his, palette ours.
+ *   - his tagline ink was 1 unit narrower than the wordmark; it is
+ *     stretched 0.19% so first/last ink edges match exactly, which is the
+ *     alignment rule he checks by eye.
+ *   - the viewBox is trimmed to the ink bbox, so CSS widths size the ink.
+ * TO UPDATE: get his new Canva SVG export (zip it, .svg uploads are
+ * rejected by the chat), re-run the extraction, commit. Do NOT hand-edit.
  *
- * The widths below are exact by construction: the SVG viewBox is trimmed to
- * the ink, and width = (ink-width em ratio 6.7390) x the wordmark font size
- * each variant used as text. So the lockup renders at precisely the sizes
- * Antonio approved, on every screen.
+ * The widths below carry over from the approved sizes; the new lockup's
+ * aspect (0.2044) is within 1% of the old (0.2059), so nothing moved.
  *
  * TWO VARIANTS, TWO WIDTH REFERENCES, still deliberate:
  *   full    the site header AND the rescue tunnel bar
