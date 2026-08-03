@@ -284,13 +284,22 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
                CENTERED in that space both ways (a corner-pinned version
                shipped for an hour and looked like a sticker). Desktop keeps
                the clean four-column grid, no seal. -->
-          {/* The circular seal that used to sit here on phones is GONE
-              (Antonio, 2026-08-03: "on the footer I just want SAVE MY GIG,
-              and then the social media like it was before, no SHIELD"). It
-              reverses his own 2026-07-27 call to fill the empty right half on
-              mobile: the wordmark, the tagline and the social row now stack
-              left as one clean column, which is what the rectangle rule was
-              always aiming at. */}
+          {/* RESTORED 2026-08-03. It came out earlier the same day on "on the
+              footer I just want SAVE MY GIG, and then the social media like
+              it was before, no SHIELD", which we read as covering the round
+              seal too. It did not: he meant the SHIELD. On seeing the footer
+              without it: "you took out that circular logo, and I want it
+              back." The positioning CSS below was never deleted, only this
+              tag, so this is a restore and not a rebuild.
+
+              KNOWN MISMATCH, HIS TO CLOSE: seal-footer.webp still reads
+              "SAVE MY GIG!" with the exclamation mark, while the wordmark
+              beside it has not carried one since the lettering change. The
+              two now sit side by side in the same block, which is the most
+              visible place that inconsistency could possibly be. It goes
+              away when the seal is re-exported; it is on his image list with
+              15 others. */}
+          <img class="foot-seal" src="/images/seal-footer.webp" alt="" width="104" height="104" loading="lazy" aria-hidden="true" />
           <a href="/" class="foot-lockup" aria-label="Save My Gig, DJ rescue and prevention">
             <Brand variant="footer" />
           </a>
