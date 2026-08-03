@@ -672,17 +672,16 @@ a { color: var(--red); }
    22.5x26, less than half, which is what made the rescue bar read as a
    different product. One asset, one size. */
 .tb-seal { width: 47px; height: 54px; display: block; }
-/* Demoted in the polish sprint. It was red, letterspaced and BLINKING on every
-   screen: the most visually aggressive element in the tunnel, carrying nothing
-   the DJ can act on, competing with the brand mark opposite it and with the
-   eyebrow below. It stays as quiet context, and it stops moving. */
-.top-bar .status-indicator {
-  font-family: ui-monospace, Menlo, monospace; font-size: 10.5px;
-  color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.1em;
-}
-.top-bar .status-indicator.green { color: var(--text-faint); }
-@keyframes blink { 50% { opacity: 0.4; } }
-@media (prefers-reduced-motion: reduce) { .top-bar .status-indicator { animation: none; } }
+/* DELETED 2026-08-03: `.top-bar .status-indicator`, its `.green` variant, the
+   `blink` keyframe and the reduced-motion guard for it. The polish sprint had
+   already demoted this from red, letterspaced and BLINKING down to quiet grey
+   context, on the grounds that it was the most visually aggressive element in
+   the tunnel while carrying nothing the DJ can act on. Demotion was the wrong
+   remedy: it printed NO_SOUND, NO_SOUND · HOUSE, CRITICAL_PATH, a different
+   string on every screen, in the one component that must be identical
+   everywhere. Antonio, on staging: "the header changes, it looks really
+   really bad, it's better you keep it fixed with the header and that's it."
+   `blink` had no other consumer. Deleted, not overridden. */
 
 /* Tunnel screen container */
 .screen { max-width: var(--site-w); margin: 0 auto; padding: var(--page-top) var(--site-pad) calc(60px + env(safe-area-inset-bottom)); }

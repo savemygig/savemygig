@@ -9,8 +9,21 @@ import '../styles/global.css';
 
 interface Props {
   title: string;
-  /** e.g. "CRITICAL_PATH" or "ACTIVE_TRIAGE" */
-  status: string;
+  /**
+   * DEPRECATED 2026-08-03, accepted and ignored. The status line
+   * ("NO_SOUND", "NO_SOUND · HOUSE", "CRITICAL_PATH") used to print at the
+   * right of the top bar. Antonio, on staging: "the header changes, it's
+   * strange, it looks really really bad, it's better you keep it fixed with
+   * the header and that's it." He is right, and the polish backlog had
+   * already flagged the system-log status line as unresolved: it is an
+   * affectation carrying nothing a DJ can act on, and it made the one
+   * element that should be identical on every screen change on every screen.
+   * Still accepted so the 55 tree nodes and the 7 full-recovery screens do
+   * not all need editing; `status` stays in emergency-tree.js if it is ever
+   * wanted back somewhere it can earn its place.
+   */
+  status?: string;
+  /** Deprecated with `status`: it only ever set that line's colour. */
   red?: boolean;
   /** optional visible heading; falls back to a screen-reader-only one */
   heading?: string;
@@ -23,7 +36,7 @@ interface Props {
   risk?: boolean;
 }
 
-const { title, status, red = false, heading, risk = false } = Astro.props;
+const { title, heading, risk = false } = Astro.props;
 // Every screen needs an h1 for heading order and screen readers. Most steps
 // render their own visible <h2>, so by default we emit a hidden h1 derived
 // from the page title rather than change the visual design.
@@ -62,7 +75,9 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig!?\s*$/i, '');
         <img src="/images/logo-shield.svg" alt="" width="47" height="54" class="tb-seal" decoding="async" />
         <Brand />
       </a>
-      <div class:list={['status-indicator', { green: !red }]}>{status}</div>
+      {/* The status line was here. Deleted 2026-08-03. See the `status` prop
+          note above: the header is the one element that must not change from
+          screen to screen, and this was the only thing on it that did. */}
     </div>
   </header>
   <main class="screen" id="main">
