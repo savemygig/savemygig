@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import BetaNotice from '../components/BetaNotice.astro';
 // Emergency landing (the browsable entry, not the sealed rescue tunnel).
 // Now uses the shared Base layout so it carries the site menu + footer and
 // lines up on the same content width as every other page. The step-by-step
@@ -79,13 +78,23 @@ import BetaNotice from '../components/BetaNotice.astro';
         </a>
       </nav>
 
-      <BetaNotice variant="line" />
+      {/* The testing disclosure was REMOVED here 2026-08-03 (Antonio: "fix
+           all"). It was the last instance on the site: it came off all 55
+           tunnel screens in the launch batch and survived here as the single
+           entry disclosure.
+           FOR THE RECORD: three factual claims in the flow are still unruled
+           (the other player's output when one side is dead, whether /Contents
+           alone is a sufficient audio backup, and whether deleting a device
+           playlist removes the audio). Taking the hedge off does not resolve
+           them, it stops saying so out loud. One line to put back.
+           This is an Astro comment, not an HTML one, so the words do not ship
+           in the built page and a grep of dist stays honest. */}
     </section>
 
     <!-- Collapse doctrine (universalized 2026-07-28): the common-problems
          list ships CLOSED. The header is the index; a tap opens the list.
          Antonio's call on the emergency-tree preview review.
-         ORDER (Antonio, 2026-07-30): doors -> IN TESTING notice -> this
+         ORDER (Antonio, 2026-07-30): doors -> testing notice -> this
          list -> the keyword-lead paragraph -> "files already lost" LAST.
          Someone on /emergency already knows what the project is, so the
          two re-explaining paragraphs that used to sit here were cut to

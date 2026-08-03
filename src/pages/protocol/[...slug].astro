@@ -91,8 +91,13 @@ const dataAttrs = (o, i) => {
           </li>
         ))}
       </ol>
+      {/* The emoji is gone, 2026-08-03. Every OTHER alert card in the tunnel
+          stopped rendering one in the polish sprint, under the design system
+          rule that says monochrome stroke icons always; this card was
+          hand written rather than tree driven, so the sweep missed it and it
+          became the only emoji left in the flow. The card's red rule and tint
+          already carry the weight. */}
       <div class="alert-card" style="margin:1.6rem 0 1.2rem">
-        <div style="font-size:20px" aria-hidden="true">⚠️</div>
         <div>{RUNLIST_NEVER}</div>
       </div>
       <details class="move-more last-resort">
@@ -158,26 +163,47 @@ const dataAttrs = (o, i) => {
 </Tunnel>
 
 <style>
-  /* Runlist type, sized to be READ AT ARM'S LENGTH IN A DARK BOOTH (from the
-     retired critical/now.astro; .assumed and .move-more live in global.css). */
-  .moves { list-style: none; counter-reset: mv; margin: 0; padding: 0; }
+  /* REBUILT 2026-08-03. Antonio, reviewing staging: "this whole section looks
+     amateur." He was right, and the reasons were nameable rather than taste.
+
+     WHAT WAS WRONG. The four moves sat on bare hairlines with no surface,
+     while every other list in this product sits on a card. A 1.5rem grey
+     numeral hung in the left margin at nearly the weight of the verb beside
+     it, so two display elements fought on every row. And the disclosure read
+     "+ WHY, AND HOW", a plus and minus prefix that exists nowhere else on the
+     site: a SEVENTH accordion pattern, and the most used one, since it is on
+     every tunnel screen.
+
+     WHAT IS DELIBERATE AND STAYS. The verb is still large. That is not
+     decoration, it is the arm's length legibility requirement for a dark
+     booth and it is part of the frozen engine spec. Guardrail 2: intentional
+     hierarchy does not get standardised away. What changed is the things that
+     were competing with it. */
+  .moves {
+    list-style: none; counter-reset: mv; margin: 0; padding: 0;
+    display: flex; flex-direction: column; gap: var(--sp-3);
+  }
   .moves li {
     counter-increment: mv;
     position: relative;
-    padding: 1rem 0 1rem 3rem;
-    border-bottom: var(--stroke) solid var(--edge-soft);
+    /* The shared surface: same tokens as every card and every pad. */
+    background: var(--surf);
+    border: var(--stroke) solid var(--edge);
+    border-radius: var(--radius);
+    padding: var(--sp-5) var(--sp-5) var(--sp-4) 3.1rem;
   }
-  .moves li:last-child { border-bottom: none; }
+  /* The number is a LABEL now, not a display element. It marks the order and
+     then gets out of the way of the verb. */
   .moves li::before {
     content: counter(mv);
     position: absolute;
-    left: 0;
-    top: 0.95rem;
-    width: 2.15rem;
-    text-align: center;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 1.5rem;
+    left: var(--sp-5);
+    top: calc(var(--sp-5) + 0.2rem);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
     line-height: 1;
     color: var(--text-faint);
   }
@@ -185,11 +211,13 @@ const dataAttrs = (o, i) => {
     display: block;
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: clamp(1.5rem, 7vw, 2rem);
+    /* Still big, still readable at arm's length, but the ceiling comes down
+       from 2rem: at 32px it was outrunning the screen's own heading. */
+    font-size: clamp(1.35rem, 6vw, 1.65rem);
     line-height: 1.05;
     letter-spacing: -0.01em;
     text-transform: uppercase;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.3rem;
   }
   .move-action {
     display: block;

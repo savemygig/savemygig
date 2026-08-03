@@ -614,10 +614,19 @@ a { color: var(--red); }
    product (weight 800 and +0.01em against 900 and -0.02em everywhere else). */
 .top-bar .brand {
   color: var(--text); text-decoration: none;
-  display: inline-flex; align-items: center; gap: 9px; padding: 8px 0;
+  /* inline-FLEX, and it is the only rule that may say so. Tunnel.astro used to
+     override this with inline-block and that stacked the shield above the
+     wordmark on every rescue screen. */
+  display: inline-flex; align-items: center; gap: 9px;
+  /* 11px, absorbed from the scoped rule that used to carry it: the brand is
+     the way out of the tunnel and has to be a real tap target. */
+  padding: 11px 0;
 }
 .top-bar .brand picture { display: block; flex: 0 0 auto; line-height: 0; }
-.tb-seal { width: 26px; height: 26px; display: block; }
+/* The shield's own aspect is 810 x 937.5, so 0.864. It was being drawn at
+   26x26, which squashed it into a square while the site header drew the same
+   asset correctly at 47x54. One asset cannot have two shapes. */
+.tb-seal { width: 22.5px; height: 26px; display: block; }
 /* Demoted in the polish sprint. It was red, letterspaced and BLINKING on every
    screen: the most visually aggressive element in the tunnel, carrying nothing
    the DJ can act on, competing with the brand mark opposite it and with the
@@ -660,21 +669,46 @@ a:focus-visible, button:focus-visible, input:focus-visible, .pad:focus-visible, 
    nothing; the person who needs the term explained taps once. This is how the
    site serves a DJ and a club tech on the same screen without writing down to
    either of them: the term stays in the copy, the explanation hides. */
-.move-more { margin-top: 0.45rem; }
+/* THE SEVENTH ACCORDION, folded in 2026-08-03. The design language sprint
+   counted six and missed this one, which is the most used of the lot: it is
+   on every screen in the tunnel. It disclosed with a "+" that became a "-",
+   a pattern that existed nowhere else on the site, so the one accordion a DJ
+   meets most often was the one that matched nothing.
+
+   It is a GROUP accordion, not a surface one: an inline text disclosure
+   inside a card, not a box of its own. So it takes the shared chevron, the
+   shared focus ring and the shared timing, and it does not take the box.
+   That split is the same one the FAQ and the dictionary use. */
+.move-more { margin-top: 0.55rem; }
 .move-more > summary {
-  display: inline-block;
+  display: inline-flex; align-items: center; gap: 0.45rem;
   font-size: 0.8rem;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--text-faint);
   cursor: pointer;
-  padding: 4px 0;
+  padding: 6px 0;
   list-style: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--t-fast);
 }
 .move-more > summary::-webkit-details-marker { display: none; }
-.move-more > summary::before { content: '+ '; }
-.move-more[open] > summary::before { content: '\2212 '; }
+/* The one chevron, drawn here as ::after so no markup change is needed on the
+   55 frozen tunnel screens that use this component. Geometry, stroke, angle
+   and timing are copied from nothing: they are the same values the shared
+   rule uses, kept in step by the comment above it. */
+.move-more > summary::after {
+  content: '';
+  flex: 0 0 auto; width: 7px; height: 7px; margin-top: -1px;
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--t-slow), margin-top var(--t-slow);
+}
+.move-more[open] > summary::after { transform: rotate(45deg); margin-top: -3px; }
 .move-more > summary:hover { color: var(--text-dim); }
+@media (prefers-reduced-motion: reduce) {
+  .move-more > summary::after { transition: none; }
+}
 .move-more p {
   font-size: 0.88rem;
   line-height: 1.5;

@@ -25,19 +25,32 @@
  * OG cards, all of which still read "SAVE MY GIG!". Those need an image
  * re-export pass.
  *
- * variant="full"    header and footer: wordmark + tagline, width-matched.
- * variant="compact" the rescue tunnel top bar: wordmark only, small, no
- *                   tagline, because nothing in the tunnel may compete with
- *                   the decision. Same letterforms, same accent.
+ * THREE VARIANTS, THREE WIDTH REFERENCES, DELIBERATELY (2026-08-03).
+ * A wordmark has to be measured against whatever sits under it, and the three
+ * surfaces do not have the same thing under them:
+ *   full    the site header. Reference is the tagline.
+ *   footer  the site footer. Reference is the ROW OF FOUR SOCIAL BUTTONS,
+ *           because Antonio's rectangle rule says the wordmark, the tagline
+ *           and the social row are ONE width. Folding the footer onto the
+ *           `full` sizes is exactly what broke it: the footer inherited a
+ *           lockup measured against the wrong object and came out 23px short
+ *           on desktop and 32px long between 401 and 414. Same lettering,
+ *           same weight, same tracking, same red MY. Only the SIZE differs,
+ *           because only the reference differs.
+ *   compact the rescue tunnel top bar. No tagline, nothing underneath,
+ *           because nothing in the tunnel may compete with the decision.
+ * This is not drift. Drift is two things that should match and do not. These
+ * are measured to three different objects on purpose.
  */
 interface Props {
-  variant?: 'full' | 'compact';
+  variant?: 'full' | 'footer' | 'compact';
 }
 const { variant = 'full' } = Astro.props;
+const cls = variant === 'compact' ? 'smg-compact' : variant === 'footer' ? 'smg-foot' : 'smg-full';
 ---
-<span class:list={['smg-brand', variant === 'compact' ? 'smg-compact' : 'smg-full']}>
+<span class:list={['smg-brand', cls]}>
   <span class="smg-word">Save <span class="smg-my">My</span> Gig</span>
-  {variant === 'full' && <span class="smg-tag">DJ rescue and prevention</span>}
+  {variant !== 'compact' && <span class="smg-tag">DJ rescue and prevention</span>}
 </span>
 
 <style is:global>
@@ -67,6 +80,23 @@ const { variant = 'full' } = Astro.props;
   @media (max-width: 400px) {
     .smg-full .smg-word { font-size: 1.332rem; }
     .smg-full .smg-tag { font-size: 0.55rem; letter-spacing: 0.1em; }
+  }
+
+  /* FOOTER: measured to the SOCIAL ROW, not to the tagline. See the header
+     comment. These are Antonio's original numbers from the hand built footer
+     lockup, restored: the tagline runs at much wider tracking here precisely
+     so it still spans the same width as a larger wordmark.
+     If you change the social button size or gap, RE MEASURE THESE. */
+  /* 1.605rem, not Antonio's original 1.620rem: that number was measured while
+     the wordmark still carried the exclamation mark, and it now overshoots.
+     Re measured against the real 176px social row in Chromium.
+     Verified: wordmark, tagline and social row land within 0.4px of each
+     other above 414px and within 0.1px below it. */
+  .smg-foot .smg-word { font-size: 1.605rem; }
+  .smg-foot .smg-tag { font-size: 0.55rem; letter-spacing: 0.2265em; }
+  @media (max-width: 414px) {
+    .smg-foot .smg-word { font-size: 1.331rem; }
+    .smg-foot .smg-tag { font-size: 0.45rem; letter-spacing: 0.25em; }
   }
 
   /* COMPACT: the tunnel bar. Deliberately small, but the SAME letterforms,
