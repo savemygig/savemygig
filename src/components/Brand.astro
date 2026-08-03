@@ -16,7 +16,7 @@
  *   commit the regenerated SVG. Do NOT hand-edit the SVG.
  *
  * The widths below are exact by construction: the SVG viewBox is trimmed to
- * the ink, and width = (ink-width em ratio 6.8390) x the wordmark font size
+ * the ink, and width = (ink-width em ratio 6.7390) x the wordmark font size
  * each variant used as text. So the lockup renders at precisely the sizes
  * Antonio approved, on every screen.
  *
@@ -42,12 +42,12 @@ const cls = variant === 'footer' ? 'smg-foot' : 'smg-full';
   .smg-brand { display: block; line-height: 0; }
   .smg-brand svg { display: block; width: 100%; height: auto; }
 
-  /* width = 6.8390 x the wordmark font-size each variant used as live text,
+  /* width = 6.7390 x the wordmark font-size each variant used as live text,
      so nothing moved visually in the conversion. */
-  .smg-full { width: 9.5404rem; }            /* 1.395rem word */
-  @media (max-width: 900px) { .smg-full { width: 11.1886rem; } }  /* 1.636rem */
-  @media (max-width: 400px) { .smg-full { width: 9.1095rem; } }   /* 1.332rem */
+  .smg-full { width: 9.4009rem; }            /* 1.395rem word */
+  @media (max-width: 900px) { .smg-full { width: 11.0250rem; } }  /* 1.636rem */
+  @media (max-width: 400px) { .smg-full { width: 8.9763rem; } }   /* 1.332rem */
 
-  .smg-foot { width: 10.9766rem; }           /* 1.605rem word */
-  @media (max-width: 414px) { .smg-foot { width: 9.1027rem; } }   /* 1.331rem */
+  .smg-foot { width: 10.8161rem; }           /* 1.605rem word */
+  @media (max-width: 414px) { .smg-foot { width: 8.9696rem; } }   /* 1.331rem */
 </style>

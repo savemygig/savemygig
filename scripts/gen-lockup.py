@@ -16,7 +16,15 @@ The tagline alignment went through three generations as live text:
      (the visitor's browser paints it, not us) and exactly right for an
      image. So it became an image.
 
-THE GEOMETRY, all solved in closed form, no iteration, no measurement:
+THE GEOMETRY is SHAPED BY HARFBUZZ, the same engine Chrome uses, so the
+glyph positions (including KERNING) are what the browser would have
+produced. The first generated version used raw advances without kerning
+and Antonio caught it by eye: the SAVE-MY gap came out wider than the
+text version had rendered it, because the browser had been kerning the
+E-space and space-M pairs all along. Never lay out brand type without
+shaping; the font's kern table is part of the design.
+
+Then, all solved in closed form, no iteration, no measurement:
   - Wordmark: "SAVE MY GIG", Archivo variable instanced at wght 900,
     -0.02em tracking, GIG filled brand red, rest off-white.
   - Tagline: "DJ BOOTH INTELLIGENCE", Inter instanced at wght 600, at
@@ -39,6 +47,8 @@ brand asset that changes only when the brand does, and belongs in review.
 import io
 import re
 from pathlib import Path
+
+import uharfbuzz as hb
 
 from fontTools.ttLib import TTFont
 from fontTools.varLib.instancer import instantiateVariableFont
@@ -71,6 +81,35 @@ def load(path, wght):
     return f
 
 
+def shape(path, wght, text, tracking_em=0.0, upem=None):
+    """HarfBuzz positions for `text`: [(char, x_advance_offsetted)], in font units,
+    with CSS-style tracking added after every glyph (spaces included).
+    The woff2 is DECOMPRESSED to sfnt first: HarfBuzz does not parse woff2,
+    and feeding it one fails silently, shaping at the default weight. That
+    silent failure shipped a 19% narrower wordmark on the first run of this
+    version, caught because the viewBox width printed at the end changed."""
+    tf = TTFont(str(path))
+    tf.flavor = None
+    buf_io = io.BytesIO()
+    tf.save(buf_io)
+    blob = hb.Blob(buf_io.getvalue())
+    face = hb.Face(blob)
+    font = hb.Font(face)
+    font.set_variations({"wght": wght})
+    buf = hb.Buffer()
+    buf.add_str(text)
+    buf.guess_segment_properties()
+    hb.shape(font, buf, {"kern": True, "liga": False})
+    upm = upem or face.upem
+    pos = []
+    x = 0.0
+    for info, p_ in zip(buf.glyph_infos, buf.glyph_positions):
+        ch = text[info.cluster]
+        pos.append((ch, x + p_.x_offset))
+        x += p_.x_advance + tracking_em * upm
+    return pos, upm
+
+
 def glyph_of(font, ch):
     return font.getBestCmap()[ord(ch)]
 
@@ -100,12 +139,8 @@ UPM_I = inter["head"].unitsPerEm
 
 # ---- wordmark layout, in wordmark-em units (1.0 = word font size) ----
 sA = 1.0 / UPM_A
-track = TRACK_WORD
-x = 0.0
-word_glyphs = []  # (char, x_em)
-for ch in WORD:
-    word_glyphs.append((ch, x))
-    x += advance(archivo, ch) * sA + track
+shaped_word, _ = shape(ROOT / "public" / "fonts" / "archivo-latin-wght-normal.woff2", 900, WORD, TRACK_WORD, UPM_A)
+word_glyphs = [(ch, gx * sA) for ch, gx in shaped_word]
 
 def ink_em(font, ch, s):
     b = ink(font, ch)
@@ -121,22 +156,19 @@ target_w = word_right - word_left
 
 # ---- tagline layout: natural advances + one solved extra per gap ----
 sI = TAG_SCALE / UPM_I
-adv = [advance(inter, ch) * sI for ch in TAG]
-inks = [ink_em(inter, ch, sI) for ch in TAG]
+shaped_tag, _ = shape(ROOT / "public" / "fonts" / "inter-latin-wght-normal.woff2", 600, TAG, 0.0, UPM_I)
+nat = [(ch, gx * sI) for ch, gx in shaped_tag]
+inks = [ink_em(inter, ch, sI) for ch, _ in nat]
 first_ink = next(b for b in inks if b)
 last_idx = max(i for i, b in enumerate(inks) if b)
 last_ink = inks[last_idx]
-n_gaps = len(TAG) - 1
-natural_last_x = sum(adv[:last_idx])
-# solve: x0 + natural_last_x + n_gaps_before_last*extra + last_ink_max = target_right
-# with x0 = -first_ink_min so the first glyph's ink starts at 0.
-gaps_before_last = last_idx  # a gap after every glyph before the last
+# shaped natural position of the last glyph, then one solved extra per gap
+gaps_before_last = last_idx
+natural_last_x = nat[last_idx][1] - nat[0][1]
 extra = (target_w - ((-first_ink[0]) + natural_last_x + last_ink[2])) / gaps_before_last
 tag_glyphs = []
-tx = -first_ink[0]
-for i, ch in enumerate(TAG):
-    tag_glyphs.append((ch, tx))
-    tx += adv[i] + extra
+for i, (ch, gx) in enumerate(nat):
+    tag_glyphs.append((ch, (gx - nat[0][1]) - first_ink[0] + i * extra))
 tag_top = max(b[3] for b in inks if b)
 tag_bottom = min(b[1] for b in inks if b)
 
