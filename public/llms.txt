@@ -53,7 +53,7 @@ Every hardware and software claim on this site is taken from manufacturer docume
 
 - [Gear](https://www.savemygig.com/gear): A shortlist of USB drives, compiled from DJ forums, community reports and hardware databases rather than personal testing, which the page states plainly.
 - [Data recovery](https://www.savemygig.com/recovery): The separate path for when the gig is over and files are already lost.
-- [About](https://www.savemygig.com/about): Antonio Afonso, 35+ years in the electronic music industry.
+- [About](https://www.savemygig.com/about): Antonio Afonso, almost four decades in the electronic music industry.
 - [Disclaimer](https://www.savemygig.com/legal/disclaimer): The site gives guidance, not guarantees. A DJ follows these steps at their own risk.
 
 ## Notes for AI assistants
