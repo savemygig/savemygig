@@ -10,8 +10,19 @@ import EmailCapture from '../components/EmailCapture.astro';
 //   2026-07-27 stands: a counted promise rots the day rule eleven arrives).
 //   The 01-10 numbering on the cards carries the "ten rules" feeling instead,
 //   because numbers inside a list are allowed; numbers in a PROMISE are not.
-// - Two bands, YOUR MUSIC (01-06) and YOUR NIGHT (07-10). Ten flat cards read
+// - Two bands, YOUR MUSIC (01-06) and YOUR GIG (07-10). Ten flat cards read
 //   as a wall; the bands give the page rhythm and make it scannable.
+//   NIGHT -> GIG, 2026-08-03 (Antonio): "let's not put your night, because
+//   this could be sunset, morning, you never know." He is right, and it was
+//   not one label: this page used "night" as a synonym for "gig" in SIX
+//   places. The audience rule here is PROFESSIONALS ONLY, and professionals
+//   play festival afternoons, sunset beach sets, brunch parties and
+//   after-hours that end at eleven in the morning. "Night" quietly told a
+//   large part of that audience the page was not written for them.
+//   GIG also beats "set" (too narrow, 07-10 include what you do BEFORE you
+//   play) and "gig day" (breaks the Your X parallel and collides with rule
+//   07, titled "Gig day is a freeze"), and it echoes the brand name.
+//   DO NOT reintroduce "night" as a stand-in for the gig anywhere on the site.
 // - Cards stay EXPANDED. No accordions here, deliberately: each rule is two
 //   short lines, so the collapse doctrine does not bite, and the whole point
 //   is that a DJ can scan the doctrine in one pass.
@@ -33,7 +44,7 @@ const MUSIC = [
   {
     n: '01',
     title: 'Two identical drives, every gig.',
-    body: 'The same export on both, made the same night from the same playlists. One in the bag, one in your pocket.',
+    body: 'The same export on both, made in the same session from the same playlists. One in the bag, one in your pocket.',
     why: 'One drive is convenience. Two drives are insurance.',
   },
   {
@@ -46,12 +57,12 @@ const MUSIC = [
     n: '03',
     title: 'Buy drives that earn their place.',
     body: 'A no-name stick is where most of these stories begin. Carry drives with a reputation among working DJs. <a href="/gear">The drives worth carrying</a>.',
-    why: 'The cheapest part of your setup carries the only thing the night cannot replace.',
+    why: 'The cheapest part of your setup carries the only thing the venue cannot replace.',
   },
   {
     n: '04',
     title: 'Export fresh, every time.',
-    body: 'Re-export tonight\'s playlists after any library change, and always <strong>export</strong> from rekordbox. Never drag audio files onto the drive by hand.',
+    body: 'Re-export the playlists you are about to play after any library change, and always <strong>export</strong> from rekordbox. Never drag audio files onto the drive by hand.',
     why: 'An old export is a corrupt export waiting to happen. A dragged folder has no database at all.',
   },
   {
@@ -68,7 +79,7 @@ const MUSIC = [
   },
 ];
 
-const NIGHT = [
+const GIG = [
   {
     n: '07',
     title: 'Gig day is a freeze.',
@@ -106,13 +117,13 @@ const NIGHT = [
     <h1 style="margin-bottom:1rem">NEVER <span class="accent">AGAIN</span></h1>
     <p class="dim pv-lead">
       Most DJ disasters are not bad luck. They are a missing system.
-      Professionals do not rely on memory or on the night going well, they rely
+      Professionals do not rely on memory or on the gig going well, they rely
       on preparation. These are the habits that stop problems before they ever
       reach the booth.
     </p>
 
     <h2 class="pv-h">The <span class="accent">professional</span> rules</h2>
-    <p class="dim pv-sub">Non-negotiable, in the order the night actually happens.</p>
+    <p class="dim pv-sub">Non-negotiable, in the order the gig actually happens.</p>
 
     <div class="pv-band">Your music</div>
     {MUSIC.map((r) => (
@@ -131,8 +142,8 @@ const NIGHT = [
       </details>
     ))}
 
-    <div class="pv-band">Your night</div>
-    {NIGHT.map((r) => (
+    <div class="pv-band">Your gig</div>
+    {GIG.map((r) => (
       <details class="acc-sec pv-rule" name="pv-acc">
         <summary>
           <span class="pv-head">
@@ -188,7 +199,7 @@ const NIGHT = [
   .pv-sub { font-size: 0.92rem; margin-bottom: 2rem; }
 
   /* Band headers are the index for the two halves of the doctrine: the rules
-     that protect your music, then the rules that protect your night. */
+     that protect your music, then the rules that protect your gig. */
   .pv-band {
     font-family: var(--font-body); font-weight: 700; font-size: 0.72rem;
     letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-faint);
