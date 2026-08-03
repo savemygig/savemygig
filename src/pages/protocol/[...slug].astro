@@ -105,8 +105,15 @@ const dataAttrs = (o, i) => {
       b.t === 'check' ? (
         <ul class="checklist">{b.items.map((it) => <li set:html={it} />)}</ul>
       ) : b.t === 'alert' ? (
+        /* The emoji (⚠️ and 💡) is deliberately NOT rendered any more, polish
+           sprint 2026-08-03. The design system says monochrome stroke icons
+           always, and emoji were stripped from /gear and /files-lost headers
+           under that rule; the tunnel was exempted by accident. The card's red
+           rule and tint already carry the weight, and a lightbulb sitting in a
+           danger-coloured box was telling two different stories at once. The
+           emoji stays in the tree data, unused, so nothing in the frozen flow
+           had to change to remove it. */
         <div class="alert-card" style="margin-bottom:1.25rem">
-          <div style="font-size:20px" aria-hidden="true">{b.emoji}</div>
           <div set:html={b.html} />
         </div>
       ) : b.t === 'details' ? (

@@ -1,0 +1,77 @@
+---
+/**
+ * THE BRAND LOCKUP. Single source of truth for the wordmark.
+ *
+ * WHY THIS EXISTS (2026-08-03): the wordmark was hardcoded in three places
+ * with two different stylesheets, and they had drifted. The site header and
+ * footer rendered "Save My Gig!" at weight 900 with -0.02em tracking; the
+ * emergency tunnel rendered "SAVE MY GIG" at weight 800 with +0.01em tracking
+ * from global.css, no tagline, no accent, and it never received the
+ * exclamation mark the rest of the site carried. Antonio saw the difference
+ * on production and was right: nobody designs a brand at two weights with
+ * opposite tracking on purpose. That is drift, not a variant.
+ *
+ * Now: one component, one treatment, three sizes. Change the lettering here
+ * and it propagates to the header, the footer and the rescue tunnel at once.
+ *
+ * ANTONIO'S LETTERING SPEC (2026-08-03): "SAVE MY GIG", MY in the brand red,
+ * NO exclamation mark, and in the full variant the wordmark spans exactly the
+ * width of "DJ RESCUE AND PREVENTION" beneath it so the lockup reads as one
+ * rectangle. The sizes below are MEASURED against the tagline at each
+ * breakpoint, not guessed. Change the tagline and you must re-measure.
+ *
+ * NOT fixable here: the wordmark is also baked into logo-shield.svg,
+ * seal-footer.webp, save-my-gig-seal.png, og-share.jpg and the 13 per-article
+ * OG cards, all of which still read "SAVE MY GIG!". Those need an image
+ * re-export pass.
+ *
+ * variant="full"    header and footer: wordmark + tagline, width-matched.
+ * variant="compact" the rescue tunnel top bar: wordmark only, small, no
+ *                   tagline, because nothing in the tunnel may compete with
+ *                   the decision. Same letterforms, same accent.
+ */
+interface Props {
+  variant?: 'full' | 'compact';
+}
+const { variant = 'full' } = Astro.props;
+---
+<span class:list={['smg-brand', variant === 'compact' ? 'smg-compact' : 'smg-full']}>
+  <span class="smg-word">Save <span class="smg-my">My</span> Gig</span>
+  {variant === 'full' && <span class="smg-tag">DJ rescue and prevention</span>}
+</span>
+
+<style is:global>
+  .smg-brand { display: flex; flex-direction: column; gap: 3px; line-height: 1; }
+  .smg-word {
+    font-family: var(--font-display);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  /* The one piece of colour in the mark. */
+  .smg-my { color: var(--red); }
+  .smg-tag {
+    font-family: var(--font-body); font-weight: 600;
+    text-transform: uppercase; color: var(--text-dim); white-space: nowrap;
+  }
+
+  /* FULL: header and footer. Sizes measured to the tagline at each width. */
+  .smg-full .smg-word { font-size: 1.395rem; }
+  .smg-full .smg-tag { font-size: 0.55rem; letter-spacing: 0.125em; }
+  @media (max-width: 900px) {
+    .smg-full .smg-word { font-size: 1.636rem; }
+    .smg-full .smg-tag { font-size: 0.62rem; letter-spacing: 0.135em; }
+  }
+  @media (max-width: 400px) {
+    .smg-full .smg-word { font-size: 1.332rem; }
+    .smg-full .smg-tag { font-size: 0.55rem; letter-spacing: 0.1em; }
+  }
+
+  /* COMPACT: the tunnel bar. Deliberately small, but the SAME letterforms,
+     weight, tracking and accent as everywhere else. Previously this was 14px
+     at weight 800 with positive tracking, which is what made the rescue
+     screens look like a different product. */
+  .smg-compact .smg-word { font-size: 1.02rem; }
+</style>

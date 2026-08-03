@@ -1,5 +1,6 @@
 ---
 import Analytics from '../components/Analytics.astro';
+import Brand from '../components/Brand.astro';
 import Consent from '../components/Consent.astro';
 import Search from '../components/Search.astro';
 import { VERSION_LABEL, IS_BETA } from '../lib/version';
@@ -179,10 +180,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
         <!-- Shield mark (Antonio's new asset, 2026-07-29). SVG scales crisp
              at any DPI; 36x42 keeps the shield's own aspect in the slot. -->
         <img src="/images/logo-shield.svg" alt="" width="47" height="54" class="nb-seal" decoding="async" />
-        <span class="nb-text">
-          <span class="nb-name">Save <span class="accent">My</span> Gig</span>
-          <span class="nb-tag">DJ rescue and prevention</span>
-        </span>
+        <Brand variant="full" />
       </a>
       <button class="nav-search-btn" id="navSearchBtn" aria-label="Search Save My Gig" aria-expanded="false" aria-controls="searchOverlay">
         <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -271,10 +269,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
                the clean four-column grid, no seal. -->
           <img class="foot-seal" src="/images/seal-footer.webp" alt="" width="104" height="104" loading="lazy" aria-hidden="true" />
           <a href="/" class="foot-lockup" aria-label="Save My Gig, DJ rescue and prevention">
-            <span class="foot-lockup-text">
-              <span class="foot-wordmark">Save <span class="accent">My</span> Gig</span>
-              <span class="foot-tag">DJ rescue and prevention</span>
-            </span>
+            <Brand variant="full" />
           </a>
           <div class="foot-social">
             <a class="soc-btn" href="https://www.instagram.com/savemygig/" target="_blank" rel="noopener" aria-label="Save My Gig on Instagram">
