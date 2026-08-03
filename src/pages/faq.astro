@@ -45,13 +45,13 @@ const faqs = [
   {
     id: 'export-shows-nothing',
     q: 'My export finished but the player shows nothing. Why?',
-    a: 'The database landed corrupt, classic after pulling the drive without ejecting. Delete the playlists from the device in Rekordbox, re-sync them fresh, and eject with the Rekordbox eject button. If the device errors, copy your music off, format clean, export again.',
+    a: 'The database landed corrupt, classic after pulling the drive without ejecting. First, in Rekordbox, open Preferences, DJ System, Device and check that Delete Tracks is OFF. With it on, deleting a playlist from the device also deletes the audio of every track no other playlist on that drive uses. Then delete the playlists from the device, re-sync them fresh, and eject with the Rekordbox eject button. If the device errors, copy your music off, format clean, export again.',
     fix: { href: '/fix/playlists-not-showing-cdj', label: 'Full fix: playlists not showing on the CDJ' },
   },
   {
     id: 'export-failed',
     q: 'What do I do when Rekordbox says the export failed?',
-    a: 'Work in order: check there is free space on the drive, then delete the device playlists and re-sync fresh, ejecting with the Rekordbox eject button. If the export keeps failing, the drive itself is usually the problem, copy the music off and reformat FAT32/MBR before exporting again.',
+    a: 'Work in order. Check there is free space on the drive. Then open Preferences, DJ System, Device and check that Delete Tracks is OFF, because with it on, deleting a playlist from the device also deletes the audio of every track no other playlist on that drive uses. Now delete the device playlists, re-sync fresh, and eject with the Rekordbox eject button. If the export keeps failing, the drive itself is usually the problem, copy the music off and reformat FAT32/MBR before exporting again.',
     fix: { href: '/fix/rekordbox-export-failed', label: 'Full fix: Rekordbox export failed' },
   },
   {

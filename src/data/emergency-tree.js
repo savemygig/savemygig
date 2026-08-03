@@ -1226,7 +1226,8 @@ export const TREE = {
           "Move everything to a channel you know works, even if you share it.",
           "Ask the DJ before or after you. They know this mixer's quirks.",
           "Ask the sound tech for any spare input, a phone into a line channel counts.",
-          "Play from the other player's output if only one side is dead."
+          "Keep the room going on the player that still works. One deck cannot mix, so this buys time, not a set.",
+          "On PRO DJ LINK, load your tracks from the USB still sitting in the dead player."
         ]
       }
     ],
@@ -1381,7 +1382,7 @@ export const TREE = {
       {
         "t": "check",
         "items": [
-          "Copy the whole drive to the computer, or at minimum the <strong>Contents</strong> folder.",
+          "Copy the whole drive to the computer. At minimum the <strong>Contents</strong> folder, which saves your audio but not your playlists, cues or grids: you would be digging through artist and album folders to find a track.",
           "If some files fail, copy what you can and note which ones. Skipped files are gone for good if this drive gets formatted later, so if any of them matter, take the fresh-drive route instead and keep this one intact.",
           "While it copies: open Rekordbox, top-left mode selector to <span class=\"mono\">EXPORT</span>. If your USB shows under <strong>Devices</strong>, the next screen refreshes it; if it never shows, say so on the next screen and we rebuild clean."
         ]
