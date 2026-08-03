@@ -55,9 +55,28 @@ export const CONCEPTS = [
 
   // ---------------------------------------------------------------- CONCEPTS
   // WITH a fuller article: the article wins over the dictionary line.
-  { key: 'fat32', kind: 'concept', label: 'FAT32', anchor: 'fat32', article: '/fix/exfat-vs-fat32-cdj' },
+  //
+  // REFINEMENT 2026-08-03 (Antonio). "The article wins" is right, but only
+  // when the article ANSWERS THE QUESTION THE CLICK ASKED. A reader who taps
+  // MBR is asking "what is this?", and /fix/format-usb-for-cdj never tells
+  // them: it is a procedure that USES MBR. They would land on a how-to and
+  // still not know the word. His ruling: "we will not have a dedicated page
+  // just to talk about FAT32 or MBR, it's somewhere there in the dictionary.
+  // If you see those words and click, it should go straight to the
+  // dictionary."
+  // So the test is now: does the destination DEFINE the concept, or merely
+  // use it? Define, the article wins. Use, the dictionary wins.
+  //   fat32  -> dictionary. The exFAT vs FAT32 article compares them for a
+  //             decision; it does not define the file system.
+  //   mbr    -> dictionary. See above, a formatting walkthrough.
+  //   exfat  -> ARTICLE KEPT. /fix/exfat-vs-fat32-cdj is literally titled and
+  //             built around the exFAT question, so it answers the click.
+  // HIS FUTURE IMPROVEMENT, RECORDED NOT BUILT: dedicated pages for the most
+  // common technical concepts, so these stop being dictionary lines. Until
+  // that exists, the dictionary anchor is the honest destination.
+  { key: 'fat32', kind: 'concept', label: 'FAT32', anchor: 'fat32' },
   { key: 'exfat', kind: 'concept', label: 'exFAT', anchor: 'exfat', article: '/fix/exfat-vs-fat32-cdj' },
-  { key: 'mbr', kind: 'concept', label: 'MBR', anchor: 'mbr', article: '/fix/format-usb-for-cdj', aliases: ['Master Boot Record'] },
+  { key: 'mbr', kind: 'concept', label: 'MBR', anchor: 'mbr', aliases: ['Master Boot Record'] },
   { key: 'emergency-loop', kind: 'concept', label: 'Emergency Loop', anchor: 'emergency-loop', article: '/fix/emergency-loop-mode' },
   { key: 'e-8302', kind: 'concept', label: 'E-8302', anchor: 'e-8302', article: '/fix/cdj-error-e-8302' },
   { key: 'onelibrary', kind: 'concept', label: 'OneLibrary', anchor: 'onelibrary', article: '/knowledge/pioneer-dj/rekordbox#onelibrary', aliases: ['Device Library Plus'] },

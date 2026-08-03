@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Search from '../../components/Search.astro';
 import { DJM_A9, DJM_V10 } from '../../data/facts.js';
 
 // THE DICTIONARY (Antonio's idea). Every term a DJ meets on this site or in a
@@ -205,6 +206,22 @@ const schema = {
       manufacturer documentation and the facts this site has verified, nothing
       folklore.
     </p>
+
+    {/* SEARCH, INLINE, ABOVE THE DICTIONARY (Antonio, 2026-08-03): "a
+        dedicated search box, exactly the same as the one on the landing page,
+        so the person sees this is dedicated for this area."
+        THE SAME COMPONENT, not a dictionary-specific one. There are 60 terms
+        behind two levels of accordion, so scanning for one word means opening
+        groups until you find it. A box at the top skips that entirely.
+        The placeholder is the only thing that changes, and it changes to name
+        terms rather than symptoms, because that is what somebody types here.
+        HONEST SCOPE: this searches the WHOLE SITE, not only the dictionary.
+        That is deliberate and it is the better behaviour: a DJ who types
+        FAT32 wants the definition AND the article, and the dictionary's own
+        anchors are in the index, so the terms surface first anyway. It is
+        also why this is one shared component and not a second search to
+        maintain. */}
+    <div style="margin-bottom:2rem"><Search placeholder="Search a term: FAT32, MBR, PRO DJ LINK..." /></div>
 
     {/* Two levels of accordion (Antonio, 2026-08-02). At 60 terms the flat
         list was an enormous scroll, so the GROUP is now collapsible too:

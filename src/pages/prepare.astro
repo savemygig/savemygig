@@ -1,6 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import EmailCapture from '../components/EmailCapture.astro';
+// Destinations come from the registry, never hardcoded. Move an article or
+// rename a dictionary anchor and every link on the site follows, and
+// check-concepts.mjs fails the build if a destination stops resolving.
+import { hrefFor } from '../data/concepts.js';
 
 // THE PREVENTION HUB, rebuilt 2026-07-29 as a professional doctrine (Antonio's
 // spec, approved in full). What changed and why:
@@ -50,7 +54,20 @@ const MUSIC = [
   {
     n: '02',
     title: 'Format for the whole room.',
-    body: 'FAT32 with an <span class="mono">MBR</span> partition scheme is read by every rekordbox-era Pioneer DJ and AlphaTheta player, old and new. exFAT is read only by newer units, and NTFS by none of them.',
+    // FAT32 and MBR ARE LINKED (Antonio, 2026-08-03): "if the person doesn't
+    // know what this is, you have to send it to the dictionary, otherwise the
+    // person will be stuck there. What is MBR? What is FAT32?" This rule gave
+    // an instruction in two acronyms and left a reader who did not already
+    // know them with nowhere to go.
+    // They resolve to ARTICLES, not the dictionary, because the registry rule
+    // is that a fuller article wins when one exists. hrefFor() decides, so
+    // this page never has to know which.
+    // ONLY TWO OF THE FOUR TERMS ARE LINKED. exFAT and NTFS are named here
+    // only to say do not use them, and the sentence already explains itself
+    // ("read only by newer units", "by none of them"), so a reader needs no
+    // detour to act. Four links in two sentences would be its own problem;
+    // the standing steer is that linking stays editorial, not automatic.
+    body: `<a href="${hrefFor('fat32')}">FAT32</a> with an <a href="${hrefFor('mbr')}"><span class="mono">MBR</span></a> partition scheme is read by every rekordbox-era Pioneer DJ and AlphaTheta player, old and new. exFAT is read only by newer units, and NTFS by none of them.`,
     why: 'You are not formatting for your player. You are formatting for a booth you have never seen.',
   },
   {
