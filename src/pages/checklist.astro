@@ -175,7 +175,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          cleaner); phones wrap naturally. Returning visitors on a phone have
          read this already, so it auto-hides for them and gives the space
          back, no dismiss chrome needed. -->
-    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Tick it off before you walk out, so the gig never starts with something missing. <span class="intro-b">Your list saves on this device, and registration loads it on any other.</span></p>
+    {/* COPY PASS 2026-08-03. The intro's second half used to read "so the gig
+        never starts with something missing", which buried the stakes in a
+        subordinate clause and stated them abstractly. The replacement is the
+        actual argument for using a checklist at all: home is the last place
+        anything can still be fixed. Same length.
+        The account line said "registration loads it on any other", but
+        registration does not load anything, an account does. */}
+    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Tick it off before you walk out. What you forget at home, you cannot fix in the booth. <span class="intro-b">Your list is saved on this device. An account makes it available on any other.</span></p>
     <script is:inline>
       (function () {
         try {
@@ -212,8 +219,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              (no uptime guarantee, backup is on the DJ), same link to the
              permanent, non-dismissible legal language at /legal/disclaimer
              -- only the ON-PAGE reminder's tone changed. -->
+        {/* COPY PASS 2026-08-03. The closing line was "That's triple backed
+            up", which counted the copies without saying why the third one
+            matters, and is not a phrase anyone says out loud. "Paper still
+            works when the phone is dead" gives the reason, and it is the one
+            argument that actually makes a DJ print something. 34 words
+            against the previous 37, so it is shorter and does more.
+            His plan B / plan C framing is kept: it is his, and it is what
+            made this notice read as advice instead of a disclaimer. */}
         <strong class="bn-h">Strong advice.</strong>
-        Even the best tech can fail, ours included. Have a plan B and a plan C: download your list and keep a printed copy before you leave. That’s triple backed up. See the <a href="/legal/disclaimer">disclaimer</a>.
+        Even the best tech can fail, ours included. Have a plan B and a plan C: download your list and print it. Paper still works when the phone is dead. See the <a href="/legal/disclaimer">disclaimer</a>.
       </p>
       <button type="button" class="bn-close" id="bnClose" aria-label="Dismiss this notice">&times;</button>
     </div>
