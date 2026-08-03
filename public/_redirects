@@ -58,7 +58,13 @@
 /protocol/quick-fix/no-computer       /protocol/export/find         301
 /protocol/quick-fix/usb-check         /protocol/export/usb-check    301
 /protocol/quick-fix/dead-checks       /protocol/export/dead-checks  301
-/protocol/quick-fix/rekordbox-check   /protocol/export/rb-check     301
+# Points straight at export/backup, NOT at export/rb-check. rb-check is itself
+# a 301 to backup (see below), so the old target made this a two-hop chain: a
+# crawler followed 301 -> 301 -> page. Chains waste crawl budget and leak a
+# little link equity at every hop. Found 2026-08-03 by walking every rule's
+# target against every rule's source. If you ever retarget a redirect, check
+# the new target is not itself a source in this file.
+/protocol/quick-fix/rekordbox-check   /protocol/export/backup       301
 /protocol/quick-fix/backup            /protocol/export/backup       301
 /protocol/quick-fix/repair            /protocol/export/repair       301
 /protocol/quick-fix/format            /protocol/export/format       301
