@@ -702,9 +702,25 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
      the room comes out of the link tracking and the inter link gap, which
      nobody can perceive, rather than out of the type size, which everybody
      can. Re measure both if you add a sixth nav item. */
-  .nav-links { display: flex; gap: 0.62rem; flex-wrap: nowrap; }
+  /* MEASURED, not guessed. The bar shares the 768px site column with the page
+     body, and with the brand, five links and two control squares it runs at
+     EXACTLY zero slack: 728px used of 728px available at every desktop width.
+     Nothing here can be made bigger without taking the space from something
+     else, so these three values are a distribution, not preferences.
+
+     Antonio, 2026-08-03: "the distribution of the items between the logo and
+     that box should be better distributed." It was 30px after the logo and
+     10px between links, a 3:1 ratio that read as a hole followed by one dense
+     blob of five words. The tracking pays for the change: at 0.73rem it is
+     invisible per letter and worth about 6px across the row, which buys the
+     links real air. Rhythm is now roughly 21 / 13, which keeps the logo
+     reading as its own object without stranding it.
+
+     Re measure all three if you add a sixth link, change the wordmark size,
+     or add another control. There is no headroom left to absorb it. */
+  .nav-links { display: flex; gap: 0.8rem; flex-wrap: nowrap; }
   .nav-links a {
-    font-family: var(--font-body); font-weight: 600; font-size: 0.73rem; letter-spacing: 0.01em; white-space: nowrap;
+    font-family: var(--font-body); font-weight: 600; font-size: 0.73rem; letter-spacing: 0; white-space: nowrap;
     text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color var(--t-fast);
   }
   .nav-links a:hover { color: var(--text); }
@@ -751,11 +767,13 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
        themselves. The brand is pushed left by its auto margin instead. */
     .site-nav { justify-content: flex-start; gap: 0; }
     .nav-brand { margin-right: auto; }
-    /* A hard floor on the space between the lockup and the first nav link.
-       The brand's auto margin supplies more than this on a wide screen; at
-       the column's own width it supplies nothing, and this is what stops the
-       wordmark touching CHECKLIST. */
-    .nav-links { order: 2; align-items: center; margin-left: 1.4rem; }
+    /* The space between the lockup and the first nav link. It is a hard floor,
+       not a preference: the brand's auto margin supplies nothing at the
+       column's own width, and without this the wordmark touches CHECKLIST.
+       Set against the link gap above, deliberately larger, because the logo
+       is a different kind of object from a nav item and should not read as
+       the sixth one. */
+    .nav-links { order: 2; align-items: center; margin-left: 1.3rem; }
     /* The language square and the magnifier are ONE utility pair, so they sit
        tight to each other (0.4rem) and further from the last nav link (the
        0.78rem the links use between themselves, which the nav gap already
