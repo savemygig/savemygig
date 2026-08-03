@@ -1,190 +1,53 @@
 ---
 /**
- * THE BRAND LOCKUP. Single source of truth for the wordmark.
+ * THE BRAND LOCKUP. Single source of truth for the wordmark + tagline.
  *
- * WHY THIS EXISTS (2026-08-03): the wordmark was hardcoded in three places
- * with two different stylesheets, and they had drifted. The site header and
- * footer rendered "Save My Gig!" at weight 900 with -0.02em tracking; the
- * emergency tunnel rendered "SAVE MY GIG" at weight 800 with +0.01em tracking
- * from global.css, no tagline, no accent, and it never received the
- * exclamation mark the rest of the site carried. Antonio saw the difference
- * on production and was right: nobody designs a brand at two weights with
- * opposite tracking on purpose. That is drift, not a variant.
+ * THE LOCKUP IS A VECTOR IMAGE, NOT LIVE TEXT (Antonio's decision "B",
+ * 2026-08-03). The full story lives in scripts/gen-lockup.py, which
+ * generates brand-lockup.svg; short version: live text is painted by each
+ * visitor's font engine, macOS and Linux round glyph advances differently,
+ * and after three generations of alignment work the last device pixel still
+ * wobbled between his screen and the build's. Outlines rasterise identically
+ * everywhere, so the D-under-S and E-under-G alignment is now a mathematical
+ * property of the asset, not a rendering outcome.
  *
- * Now: one component, one treatment, three sizes. Change the lettering here
- * and it propagates to the header, the footer and the rescue tunnel at once.
+ * TO CHANGE THE LETTERING, TAGLINE, WEIGHTS OR COLOURS:
+ *   edit scripts/gen-lockup.py, run  python3 scripts/gen-lockup.py,
+ *   commit the regenerated SVG. Do NOT hand-edit the SVG.
  *
- * ANTONIO'S LETTERING SPEC (2026-08-03): "SAVE MY GIG", GIG in the brand red,
- * NO exclamation mark, and in the full variant the wordmark spans exactly the
- * width of "DJ BOOTH INTELLIGENCE" beneath it so the lockup reads as one
- * rectangle. The sizes below are MEASURED against the tagline at each
- * breakpoint, not guessed. Change the tagline and you must re-measure.
+ * The widths below are exact by construction: the SVG viewBox is trimmed to
+ * the ink, and width = (ink-width em ratio 6.8390) x the wordmark font size
+ * each variant used as text. So the lockup renders at precisely the sizes
+ * Antonio approved, on every screen.
  *
- * THE TAGLINE CHANGED 2026-08-03: "DJ rescue and prevention" -> "DJ Booth
- * Intelligence". His call, and the reasoning is worth keeping because it
- * governs any future version:
- *   - The old one was REDUNDANT. "Save My Gig" already means rescue, so the
- *     tagline repeated the name in the most valuable space on the site,
- *     printed on all 107 pages.
- *   - The new one divides the work: the NAME carries urgency, the TAGLINE
- *     carries depth. Together they claim a category rather than describing a
- *     service, and the site can now back that claim (60-term dictionary,
- *     firmware matrix, eight hardware references, thirteen fix guides).
- *   - It sets up the book. Antonio's "DJ Booth Bible" ships in about two
- *     months, so "Booth" becomes the word the brand owns across both, and
- *     each one sells the other. This is why "Intelligence" is not an AI
- *     claim: it is the field-intelligence sense, anchored to a physical
- *     place by "Booth".
- * NOTE the tagline is SHORTER than the old one (21 characters against 24),
- * so every letter-spacing value below had to grow to keep the rectangle. They
- * are measured, not estimated. Verified equal to within 1px at every
- * breakpoint in both variants.
- *
- * NOT fixable here: the wordmark is also baked into logo-shield.svg,
- * seal-footer.webp, save-my-gig-seal.png, og-share.jpg and the 13 per-article
- * OG cards, all of which still read "SAVE MY GIG!". Those need an image
- * re-export pass.
- *
- * TWO VARIANTS, TWO WIDTH REFERENCES, DELIBERATELY (2026-08-03).
- * A wordmark has to be measured against whatever sits under it, and the two
- * surfaces do not have the same thing under them:
- *   full    the site header AND the rescue tunnel bar. Reference is the
- *           tagline.
- *   footer  the site footer. Reference is the ROW OF FOUR SOCIAL BUTTONS,
- *           because Antonio's rectangle rule says the wordmark, the tagline
- *           and the social row are ONE width. Folding the footer onto the
- *           `full` sizes is exactly what broke it: the footer inherited a
- *           lockup measured against the wrong object and came out 23px short
- *           on desktop and 32px long between 401 and 414. Same lettering,
- *           same weight, same tracking, same red MY. Only the SIZE differs,
- *           because only the reference differs.
- * This is not drift. Drift is two things that should match and do not. These
- * are measured to two different objects on purpose.
- *
- * `compact` DELETED 2026-08-03. It existed for the rescue top bar, at a
- * 1.02rem wordmark beside a 22.5x26 shield with no tagline, against the site
- * header's 1.395rem beside 47x54 with one. Antonio, on staging: "the upper
- * part is still looking very bad, it looks really bad, this is like this in
- * many pages." He was right and the measurement was worse than it looked:
- * the rescue bar was nearly the same HEIGHT as the site header while the
- * mark inside it was less than half the size, so it read as a full bar with
- * a small logo floating in it. The justification on file was that nothing in
- * the tunnel may compete with the decision on screen. That argument holds for
- * the NAV, which stays out. It never held for the brand, because shrinking
- * the mark bought no space back. One wordmark size for every header now.
+ * TWO VARIANTS, TWO WIDTH REFERENCES, still deliberate:
+ *   full    the site header AND the rescue tunnel bar
+ *   footer  sized to the SOCIAL ROW (his rectangle rule: wordmark, tagline
+ *           and social row are ONE width; change the social buttons and the
+ *           footer sizes here must be re-derived)
+ * Accessibility: the SVG carries role="img" and an aria-label with the full
+ * brand line, so assistive tech reads words, not paths.
  */
+import lockup from './brand-lockup.svg?raw';
+
 interface Props {
   variant?: 'full' | 'footer';
 }
 const { variant = 'full' } = Astro.props;
 const cls = variant === 'footer' ? 'smg-foot' : 'smg-full';
-
-// THE TAGLINE IS ALIGNED BY CONSTRUCTION, NOT BY MEASUREMENT (2026-08-03).
-// The first approach set a letter-spacing value solved against painted pixels
-// in headless Chromium, verified to 0.00px, and Antonio's production
-// screenshot STILL showed the E ending 2px past the G. Same font file,
-// different engine: macOS and Linux round glyph advances differently, and
-// over 21 letters the rounding drift accumulates. A constant solved on one
-// machine can never guarantee another, and it silently breaks again the day
-// the tagline text changes.
-// So the tagline is now one flex row, one span per letter, with
-// justify-content: space-between. The FIRST letter is pinned to the lockup's
-// left edge and the LAST letter to its right edge by layout, and the browser
-// distributes the gaps itself, exactly, on every OS at every zoom. Spaces
-// become nbsp spans so word gaps stay visibly wider than letter gaps.
-// Change TAG below to anything and the alignment holds with no re-measuring.
-const TAG = 'DJ Booth Intelligence';
-const tagChars = [...TAG].map((c) => (c === ' ' ? ' ' : c));
 ---
-<span class:list={['smg-brand', cls]}>
-  <span class="smg-word">Save My <span class="smg-accent">Gig</span></span>
-  {/* Letter spans are hidden from assistive tech; the sr-only span carries
-      the real string so a screen reader hears words, not 21 letters. */}
-  <span class="smg-tag">
-    <span class="sr-only">{TAG}</span>
-    <span class="smg-tag-row" aria-hidden="true">{tagChars.map((c) => <span>{c}</span>)}</span>
-  </span>
-</span>
+<span class:list={['smg-brand', cls]} set:html={lockup} />
 
 <style is:global>
-  .smg-brand { display: flex; flex-direction: column; gap: 3px; line-height: 1; }
-  .smg-word {
-    font-family: var(--font-display);
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: -0.02em;
-    color: var(--text);
-    white-space: nowrap;
-  }
-  /* THE ONE PIECE OF COLOUR IN THE MARK, and it moved 2026-08-03.
-     It was on "My" (Save white, MY red, Gig white). Antonio asked to see the
-     alternatives side by side at real size and chose GIG.
-     Why it is better: the accent now lands at the END, so the lockup
-     finishes on the red instead of being interrupted mid-phrase. The old
-     arrangement split the mark into three chunks, white red white, and the
-     eye stopped twice. It also holds together better small, because a middle
-     accent leaves two white islands either side of the red while an end
-     accent does not, and the mark lives small in the mobile header.
-     Named for its ROLE, not its content: it was `.smg-my`, which would have
-     been a lie the moment the accent moved, and did not survive one move. */
-  .smg-accent { color: var(--red); }
-  /* NO letter-spacing and NO width numbers here, on purpose. The tagline's
-     edges are pinned to the wordmark by the flex row below, so the rectangle
-     is exact by construction on every OS, every zoom, every future wording.
-     The frontmatter comment carries the full story: a solved letter-spacing
-     measured 0.00px in headless Chromium and still drifted 2px on Antonio's
-     Mac, because font engines round glyph advances differently. Never bring
-     letter-spacing back to hit a width. */
-  .smg-tag {
-    display: block;
-    font-family: var(--font-body); font-weight: 600;
-    text-transform: uppercase; color: var(--text-dim); white-space: nowrap;
-  }
-  .smg-tag-row { display: flex; justify-content: space-between; }
-  /* Side-bearing compensation, the ONLY constants left in the alignment.
-     TUNED AGAINST ANTONIO'S OWN SCREENSHOTS (2026-08-03, v1.0.4 review): at
-     this point the deltas are single DEVICE pixels at 2x, below what any
-     headless measurement can settle, so his Mac's rendering is the reference
-     instrument. His header showed the tagline 1 device px inside on both
-     ends (so both paddings came down), his footer 1 device px long on the
-     right (so that padding went up). If this ever needs touching again, ask
-     him for fresh screenshots and measure THOSE; do not re-solve locally.
-     Flex pins the letter BOXES to the edges; the visible ink sits a hair
-     inside a box (a glyph's side bearing). The Archivo G carries more right
-     bearing than the Inter E, so without this the E's ink ended 1px past the
-     G's. Bearings are metrics inside the font file, identical on every OS
-     and engine, so unlike the letter-spacing these constants CANNOT drift
-     between my render and Antonio's screen. Measured per variant against
-     painted ink at 1x, 2x and 3x. */
-  /* padding-left 0.5px: Antonio's falcon-eye report against a ~6x zoom
-     screenshot, the D's ink starting a hair left of the S's. Half a pixel is
-     the smallest honest step at this size; it moves ONLY the first letter,
-     space-between re-absorbs it, the E stays pinned. */
-  .smg-full .smg-tag-row { padding-right: 0.5px; }
-  .smg-foot .smg-tag-row { padding-left: 0.5px; padding-right: 1px; }
+  .smg-brand { display: block; line-height: 0; }
+  .smg-brand svg { display: block; width: 100%; height: auto; }
 
-  /* FULL: header (site and rescue bar). Only the SIZES live here now. */
-  .smg-full .smg-word { font-size: 1.395rem; }
-  .smg-full .smg-tag { font-size: 0.55rem; }
-  @media (max-width: 900px) {
-    .smg-full .smg-word { font-size: 1.636rem; }
-    .smg-full .smg-tag { font-size: 0.62rem; }
-  }
-  @media (max-width: 400px) {
-    .smg-full .smg-word { font-size: 1.332rem; }
-    .smg-full .smg-tag { font-size: 0.55rem; }
-  }
+  /* width = 6.8390 x the wordmark font-size each variant used as live text,
+     so nothing moved visually in the conversion. */
+  .smg-full { width: 9.5404rem; }            /* 1.395rem word */
+  @media (max-width: 900px) { .smg-full { width: 11.1886rem; } }  /* 1.636rem */
+  @media (max-width: 400px) { .smg-full { width: 9.1095rem; } }   /* 1.332rem */
 
-  /* FOOTER: the wordmark is sized to the SOCIAL ROW (Antonio's rectangle
-     rule: wordmark, tagline and social row are ONE width). The tagline no
-     longer needs its own numbers, it stretches to the wordmark.
-     If you change the social button size or gap, re-measure the WORD sizes. */
-  .smg-foot .smg-word { font-size: 1.605rem; }
-  .smg-foot .smg-tag { font-size: 0.55rem; }
-  @media (max-width: 414px) {
-    .smg-foot .smg-word { font-size: 1.331rem; }
-    .smg-foot .smg-tag { font-size: 0.45rem; }
-  }
-
-  /* No third size. The rescue bar uses `full`, same as the site header. */
+  .smg-foot { width: 10.9766rem; }           /* 1.605rem word */
+  @media (max-width: 414px) { .smg-foot { width: 9.1027rem; } }   /* 1.331rem */
 </style>
