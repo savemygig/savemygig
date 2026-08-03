@@ -59,8 +59,18 @@
      the banner sitting proud of it. Was 760px. */
   --site-w: 768px;
   --site-pad: 1.25rem;
-  /* the rescue tunnel runs narrower on purpose: one decision, less to scan */
-  --tunnel-w: 620px;
+  /* THE TUNNEL NO LONGER HAS ITS OWN WIDTH (2026-08-03).
+     It ran at 620px against the site's 768px, "narrower on purpose: one
+     decision, less to scan". The intent was sound and the execution was not:
+     walking /emergency -> /protocol -> /saved the content column went
+     728 -> 580 -> 728 and the left edge jumped 74px right and back. Antonio
+     found it on staging and called it what it is, a page that squeezes and
+     then enlarges. A 20% jump in the middle of a rescue reads as a broken
+     layout, not as a change of mode.
+     The "less to scan" goal is delivered by the CONTENT design, one question
+     per screen at around 69 words, not by the container. So there is one
+     column now, and --tunnel-w is gone rather than aliased, because a token
+     that only equals another token is a decoy. */
   --font-display: 'Archivo', 'Arial Black', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
@@ -584,7 +594,13 @@ a { color: var(--red); }
   .pad:hover { border-color: var(--text-faint); background: var(--surf-2); }
   .pad:hover::after { color: var(--text); transform: translateY(-50%) translateX(3px); }
 }
-@media (min-width: 720px) { .pad { padding: 22px 46px 22px 24px; } .pad-title { font-size: 18px; } }
+/* The desktop bump used to reset .pad's padding to a hand picked
+   22/46/22/24, which is how the rescue option cards ended up on different
+   spacing from every .panel and .card on the site: 22px against 20px, found
+   by the journey sweep, 2026-08-03. The reason for a desktop rule at all was
+   the title size, so that is all it does now. Padding comes from the scale
+   like everything else. */
+@media (min-width: 720px) { .pad-title { font-size: 18px; } }
 
 /* Tunnel top bar */
 /* SOLID, not glass. Antonio caught this on Android: a translucent sticky bar
@@ -604,7 +620,7 @@ a { color: var(--red); }
 /* The bar spans the page but its contents align to the SAME column as the
    step content below it, so the brand never floats off in the far corner. */
 .top-bar-inner {
-  max-width: var(--tunnel-w); margin: 0 auto;
+  max-width: var(--site-w); margin: 0 auto;
   display: flex; justify-content: space-between; align-items: center; gap: 1rem;
 }
 /* The wordmark itself now comes from components/Brand.astro (variant="compact")
@@ -640,7 +656,7 @@ a { color: var(--red); }
 @media (prefers-reduced-motion: reduce) { .top-bar .status-indicator { animation: none; } }
 
 /* Tunnel screen container */
-.screen { max-width: var(--tunnel-w); margin: 0 auto; padding: var(--page-top) var(--site-pad) calc(60px + env(safe-area-inset-bottom)); }
+.screen { max-width: var(--site-w); margin: 0 auto; padding: var(--page-top) var(--site-pad) calc(60px + env(safe-area-inset-bottom)); }
 /* The tunnel used to override the heading scale with its own clamps, so an h2
    in a rescue screen was a different size from an h2 anywhere else on the
    site. It now inherits the one scale. The tunnel stays visually calmer

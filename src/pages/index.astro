@@ -159,6 +159,12 @@ const SUBLINES = [
 
 <style>
   .landing { max-width: var(--site-w); margin: 0 auto; padding: 2rem var(--site-pad) 1rem; }
+  /* THE ONE DELIBERATE EXCEPTION to the global h1 scale, and it stays.
+     The homepage heading is tuned per breakpoint against a hard requirement:
+     all three doors fully visible on load on every phone, which fold-check
+     enforces in the gate. Four measured sizes below, not a private scale
+     somebody forgot to delete. Journey sweep 2026-08-03 flags this page; it
+     is a decision, not drift. */
   .ask { font-size: clamp(2rem, 9vw, 3.2rem); margin-bottom: 0.6rem; }
   /* min-height reserves space for the longest rotating subline so the doors
      never jump. Now that every subline is capped at ~52 characters they all fit

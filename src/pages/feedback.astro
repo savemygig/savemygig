@@ -67,7 +67,7 @@ import Base from '../layouts/Base.astro';
 
 <style is:global>
   .fb-page { max-width: var(--site-w); }
-  .fb-h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0.9rem; }
+  .fb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.9rem; }
   .fb-lead { color: var(--text-dim); font-size: 1rem; line-height: 1.6; max-width: 40rem; margin-bottom: 2.2rem; }
 
   .fbp-form { display: flex; flex-direction: column; }
