@@ -142,6 +142,13 @@ const tagChars = [...TAG].map((c) => (c === ' ' ? ' ' : c));
   }
   .smg-tag-row { display: flex; justify-content: space-between; }
   /* Side-bearing compensation, the ONLY constants left in the alignment.
+     TUNED AGAINST ANTONIO'S OWN SCREENSHOTS (2026-08-03, v1.0.4 review): at
+     this point the deltas are single DEVICE pixels at 2x, below what any
+     headless measurement can settle, so his Mac's rendering is the reference
+     instrument. His header showed the tagline 1 device px inside on both
+     ends (so both paddings came down), his footer 1 device px long on the
+     right (so that padding went up). If this ever needs touching again, ask
+     him for fresh screenshots and measure THOSE; do not re-solve locally.
      Flex pins the letter BOXES to the edges; the visible ink sits a hair
      inside a box (a glyph's side bearing). The Archivo G carries more right
      bearing than the Inter E, so without this the E's ink ended 1px past the
@@ -153,8 +160,8 @@ const tagChars = [...TAG].map((c) => (c === ' ' ? ' ' : c));
      screenshot, the D's ink starting a hair left of the S's. Half a pixel is
      the smallest honest step at this size; it moves ONLY the first letter,
      space-between re-absorbs it, the E stays pinned. */
-  .smg-full .smg-tag-row { padding-left: 0.5px; padding-right: 1px; }
-  .smg-foot .smg-tag-row { padding-left: 0.5px; padding-right: 0.5px; }
+  .smg-full .smg-tag-row { padding-right: 0.5px; }
+  .smg-foot .smg-tag-row { padding-left: 0.5px; padding-right: 1px; }
 
   /* FULL: header (site and rescue bar). Only the SIZES live here now. */
   .smg-full .smg-word { font-size: 1.395rem; }
