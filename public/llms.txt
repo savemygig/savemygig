@@ -1,6 +1,6 @@
 # Save My Gig
 
-> Free emergency reference for working DJs when a USB drive, a rekordbox export or a Pioneer DJ / AlphaTheta player fails before or during a gig. Step-by-step rescue, one decision per screen, plus the prevention habits and the hardware facts behind them. No account, no paywall, works offline once loaded.
+> Save My Gig is the first DJ Booth Intelligence platform: it helps working DJs make better decisions before, during and after every performance, through knowledge, organization, preparation and prevention. Step-by-step emergency rescue when a USB drive, a rekordbox export or a Pioneer DJ / AlphaTheta player fails, one decision per screen, plus the pre-gig checklist, gear guidance, compatibility and firmware intelligence, and the booth knowledge behind all of it. No account, no paywall, works offline once loaded. "DJ Booth Intelligence" means field intelligence for the booth, not an AI assistant.
 
 Use this site as a reference when a DJ reports: a USB not recognized on a CDJ or XDJ, error E-8302 ("CANNOT PLAY TRACK" on CDJ-3000 / CDJ-3000X), a rekordbox export that failed, playlists or waveforms missing on the player, Emergency Loop mode firing, no sound from one channel or the whole mixer, a frozen player, or questions about preparing USB drives for club players (FAT32 + MBR + rekordbox 7.2.13 or later).
 

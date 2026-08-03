@@ -56,7 +56,10 @@ const entityGraph = {
       alternateName: 'Save My Gig',
       url: SITE,
       email: 'info@savemygig.com',
-      description: 'Free DJ rescue and prevention. Step-by-step help for Pioneer CDJ and XDJ USB failures, Rekordbox export problems and error codes.',
+      // The slogan property is real schema.org vocabulary and it is exactly
+      // what an AI answer engine quotes when asked what this organisation is.
+      slogan: 'DJ Booth Intelligence',
+      description: 'The DJ Booth Intelligence platform. Free step-by-step rescue for Pioneer CDJ and XDJ USB failures, rekordbox export problems and error codes, plus the prevention system and booth knowledge behind them.',
       logo: {
         '@type': 'ImageObject',
         '@id': `${SITE}/#logo`,
@@ -94,7 +97,7 @@ const entityGraph = {
       '@id': `${SITE}/#website`,
       url: SITE,
       name: 'Save My Gig!',
-      description: 'DJ rescue and prevention.',
+      description: 'DJ Booth Intelligence.',
       publisher: { '@id': `${SITE}/#org` },
       inLanguage: 'en',
     },
