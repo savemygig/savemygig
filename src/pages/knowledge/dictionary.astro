@@ -27,16 +27,16 @@ const groups = [
     // than guessing.
     title: 'Audio files',
     terms: [
-      { t: 'Lossy vs lossless', d: 'The distinction underneath every other entry here. Lossy formats (MP3, AAC) permanently discard audio data to save space. Lossless formats (WAV, AIFF, FLAC, Apple Lossless) keep all of it. Converting one into the other does not restore anything: an MP3 saved as WAV is a much larger file of exactly the same audio.' },
+      { id: 'lossy-vs-lossless', t: 'Lossy vs lossless', d: 'The distinction underneath every other entry here. Lossy formats (MP3, AAC) permanently discard audio data to save space. Lossless formats (WAV, AIFF, FLAC, Apple Lossless) keep all of it. Converting one into the other does not restore anything: an MP3 saved as WAV is a much larger file of exactly the same audio.' },
       { t: 'MP3', d: 'The format most DJ libraries are built on. It is lossy, so data was thrown away to shrink the file and it does not come back. Players read it from 32 to 320 kbps at 44.1 or 48 kHz, which makes 320 the ceiling worth exporting. Its real advantage is that it plays on every player ever made.' },
       { t: 'AAC', d: 'Lossy like MP3 but more efficient, so it holds up better at the same file size. Players read it from 16 to 320 kbps. One trap worth knowing: AAC and Apple Lossless both use the .m4a extension, so two completely different files look identical in a folder.' },
       { t: 'WAV', d: 'Uncompressed audio, nothing discarded and nothing packed down, which is why it is the largest file on the drive. Players read it at 16 or 24 bit and up to 96 kHz. Its weakness is housekeeping: artist and title travel less reliably inside a WAV than in other formats, which is why WAV libraries so often show blanks where the track information should be.' },
       { t: 'AIFF', d: 'Apple’s uncompressed format. The audio is equivalent to WAV, the difference is that AIFF carries track information reliably, which is why DJs preparing large libraries often choose it over WAV.' },
       { t: 'FLAC', d: 'Lossless compression: noticeably smaller than WAV, with nothing discarded, so it decodes back to the original. Documented on the CDJ-3000X up to 96 kHz, and on the CDJ-2000NXS2 up to 96 kHz and 24 bit. Older players predate the format, so confirm the deck reads it before building a booth library around it.' },
-      { t: 'Apple Lossless (ALAC)', d: 'Apple’s equivalent of FLAC: compressed, nothing thrown away. Documented alongside FLAC on the CDJ-2000NXS2 and CDJ-3000X. It shares the .m4a extension with AAC, so the extension alone never tells you whether a file is lossless.' },
+      { id: 'alac', t: 'Apple Lossless (ALAC)', d: 'Apple’s equivalent of FLAC: compressed, nothing thrown away. Documented alongside FLAC on the CDJ-2000NXS2 and CDJ-3000X. It shares the .m4a extension with AAC, so the extension alone never tells you whether a file is lossless.' },
       { t: 'Bit rate', d: 'How much data a lossy file spends per second, written in kbps. Higher means less was discarded and the file is bigger. For MP3 the players stop at 320 kbps, which is why that number is everywhere in DJ libraries. Bit rate says nothing about WAV, AIFF, FLAC or Apple Lossless, which are not discarding anything to begin with.' },
-      { t: 'Sample rate and bit depth', d: 'The two numbers describing how finely the audio was captured, for example 44.1 kHz and 16 bit, which is CD standard. Players handle up to 96 kHz and 24 bit on the formats that carry it. Higher is not automatically better in a club: the room, the system and the mix decide far more than these two numbers do.' },
-      { t: 'DSD (.dsf and .dff)', d: 'A high-resolution format from the audiophile world, and one of the few that simply does not play. AlphaTheta states the CDJ-2000NXS2 is not compatible with DSF or DFF files. If a track arrives in one, convert it before the gig rather than in the booth.' },
+      { id: 'sample-rate', t: 'Sample rate and bit depth', d: 'The two numbers describing how finely the audio was captured, for example 44.1 kHz and 16 bit, which is CD standard. Players handle up to 96 kHz and 24 bit on the formats that carry it. Higher is not automatically better in a club: the room, the system and the mix decide far more than these two numbers do.' },
+      { id: 'dsd', t: 'DSD (.dsf and .dff)', d: 'A high-resolution format from the audiophile world, and one of the few that simply does not play. AlphaTheta states the CDJ-2000NXS2 is not compatible with DSF or DFF files. If a track arrives in one, convert it before the gig rather than in the booth.' },
     ],
   },
   {
@@ -44,7 +44,7 @@ const groups = [
     terms: [
       { t: 'rekordbox database', d: 'The hidden index rekordbox writes onto your USB next to the music: playlists, cues, grids, waveforms. When a player mounts your drive but shows no playlists, this is usually what died or mismatched, not your music. The audio files sit untouched in their folders.' },
       { t: 'Device Library', d: 'The classic database format rekordbox exports to USB, the one older CDJs and XDJs read.' },
-      { t: 'OneLibrary (Device Library Plus)', d: 'The newer database format, two names for the same thing, read by CDJ-3000X, CDJ-1500X, XDJ-AZ, XDJ-AN, OPUS-QUAD and OMNIS-DUO. Since rekordbox 7.2.13 a standard export writes BOTH formats to the stick, which is why this site anchors on that version: one export, every player.' },
+      { id: 'onelibrary', t: 'OneLibrary (Device Library Plus)', d: 'The newer database format, two names for the same thing, read by CDJ-3000X, CDJ-1500X, XDJ-AZ, XDJ-AN, OPUS-QUAD and OMNIS-DUO. Since rekordbox 7.2.13 a standard export writes BOTH formats to the stick, which is why this site anchors on that version: one export, every player.' },
       { t: 'EXPORT mode', d: 'The rekordbox mode that prepares USB drives. Officially free, no subscription, confirmed by rekordbox’s own plans FAQ. PERFORMANCE mode is the other one, for playing from the laptop.' },
       { t: 'FOLDER view', d: 'The player’s file browser. It reads your audio files directly, folder by folder, ignoring the database entirely. You lose playlists, cues and prepared waveforms; you keep the music and the gig. It is move one of the emergency list for a reason: most DJs have never tried it and do not know the audio still plays with the database gone.' },
       { t: 'Library backup', d: 'File > Library > Backup Library in rekordbox 7, to a different drive or cloud. The USB in your pocket is an export, not a backup: lose the laptop library and the cues and playlists on it are the only copy left.' },
@@ -56,19 +56,19 @@ const groups = [
       { t: 'FAT32', d: 'The file system that every Pioneer and AlphaTheta player reads, old and new, which is why this site recommends it. Its one real limit is 4GB per FILE, not per drive, and no DJ track approaches that.' },
       { t: 'exFAT', d: 'A newer file system. Officially supported on CDJ-3000, CDJ-3000X, CDJ-1500X, XDJ-RX3, XDJ-XZ, XDJ-AZ, XDJ-AN, OPUS-QUAD and OMNIS-DUO, refused by every CDJ-2000 including the NXS2. Most drives over 32GB ship with it from the factory, which is why a brand-new stick can fail on an older player out of the box. rekordbox writes exFAT to USB drives only, never SD cards.' },
       { t: 'NTFS', d: 'A Windows file system. No player reads it, and rekordbox will not export to it. If a drive is NTFS, it gets reformatted before it ever sees a booth.' },
-      { t: 'MBR (Master Boot Record)', d: 'One of two ways a drive describes its own layout, and the one players expect. AlphaTheta documents that the CDJ-3000 does not support the GUID scheme, so when a format tool asks, pick MBR. On a Mac this means erasing the DEVICE, not the volume, in Disk Utility.' },
-      { t: 'GPT (GUID Partition Table)', d: 'The other layout scheme, and a recurring cause of "it formatted fine but the player refuses it". You get GPT by accident on a Mac when you erase the volume instead of the device.' },
-      { t: 'Quick format vs full format', d: 'Quick format rebuilds the drive’s index and is fine on a healthy drive. A full format works the whole drive, not just the index, which makes it a stress test: it is what you run on a SUSPECT drive, and a drive that fails one is retired, not trusted with a gig.' },
+      { id: 'mbr', t: 'MBR (Master Boot Record)', d: 'One of two ways a drive describes its own layout, and the one players expect. AlphaTheta documents that the CDJ-3000 does not support the GUID scheme, so when a format tool asks, pick MBR. On a Mac this means erasing the DEVICE, not the volume, in Disk Utility.' },
+      { id: 'gpt', t: 'GPT (GUID Partition Table)', d: 'The other layout scheme, and a recurring cause of "it formatted fine but the player refuses it". You get GPT by accident on a Mac when you erase the volume instead of the device.' },
+      { id: 'quick-vs-full-format', t: 'Quick format vs full format', d: 'Quick format rebuilds the drive’s index and is fine on a healthy drive. A full format works the whole drive, not just the index, which makes it a stress test: it is what you run on a SUSPECT drive, and a drive that fails one is retired, not trusted with a gig.' },
       // The physical media entries (Antonio, 2026-08-02). Deliberately kept to
       // what the site can back: the SD limits come from rekordbox's own
       // documented behaviour and the CDJ-3000X port list, and the UASP
       // thresholds come from the AlphaTheta change histories already in
       // facts.js. The SSD and HDD entries stay on physics and power, with no
       // per-model support claims, because we have not checked those.
-      { t: 'USB stick (pen drive)', d: 'The drive nearly every gig runs on, and the one piece of equipment you actually control in someone else’s booth. FAT32 with an MBR scheme, and almost nothing surprises you. Capacity is not the thing to optimise: a drive that fails a full format is retired, and two identical smaller drives beat one big one, because the second is what saves the night.' },
+      { id: 'usb-stick', t: 'USB stick (pen drive)', d: 'The drive nearly every gig runs on, and the one piece of equipment you actually control in someone else’s booth. FAT32 with an MBR scheme, and almost nothing surprises you. Capacity is not the thing to optimise: a drive that fails a full format is retired, and two identical smaller drives beat one big one, because the second is what saves the night.' },
       { t: 'SD card', d: 'A second slot on some players and missing entirely on others: the CDJ-3000X has no SD slot at all, which strands a workflow built on cards. One limit applies even where the slot exists: rekordbox exports exFAT to USB drives only, never to an SD card. On SD it is FAT32 or nothing.' },
-      { t: 'SSD (solid state drive)', d: 'A drive with no moving parts. As an external USB drive it is the sturdier thing to carry into a booth, because there is nothing inside to be disturbed by bass or by a knock. The catch is not speed, it is power and protocol: a bus-powered drive asks more of a player’s USB port than a stick does, and see UASP below.' },
-      { t: 'HDD (hard disk drive)', d: 'The older kind, with a platter spinning and a head moving inside while it runs. It works, but it is the wrong body for a booth: physically vulnerable exactly when it is in use, thirstier on bus power than a stick, and one knock at the wrong moment is a different class of problem from a dropped USB. If a large library has to travel, put it on an SSD.' },
+      { id: 'ssd', t: 'SSD (solid state drive)', d: 'A drive with no moving parts. As an external USB drive it is the sturdier thing to carry into a booth, because there is nothing inside to be disturbed by bass or by a knock. The catch is not speed, it is power and protocol: a bus-powered drive asks more of a player’s USB port than a stick does, and see UASP below.' },
+      { id: 'hdd', t: 'HDD (hard disk drive)', d: 'The older kind, with a platter spinning and a head moving inside while it runs. It works, but it is the wrong body for a booth: physically vulnerable exactly when it is in use, thirstier on bus power than a stick, and one knock at the wrong moment is a different class of problem from a dropped USB. If a large library has to travel, put it on an SSD.' },
       { t: 'UASP', d: `The faster protocol modern USB drives use to talk to the device they are plugged into. Worth knowing because AlphaTheta documented it as a genuine fault, not a theory: UASP-compatible drives were not recognised at all on the DJM-A9 before firmware ${DJM_A9.uaspFix}, or on the DJM-V10 before ${DJM_V10.uaspFix}. A drive that works everywhere and gets refused by one desk can be this, rather than the drive.` },
     ],
   },
@@ -81,7 +81,7 @@ const groups = [
       // "The unit automatically plays a Beat Loop if it can't start playing the
       // next track when the end of the current track is reached."
       { t: 'Emergency Loop', d: 'Official AlphaTheta behaviour, and officially named: the player automatically plays a Beat Loop if it cannot start the next track when the end of the current one is reached, instead of going silent. If nothing was loaded, it is doing its job; load something. If your next track WAS ready and it still fired, the player could not read it: treat the drive as suspect.' },
-      { t: 'E-8302 (CANNOT PLAY TRACK)', d: 'CDJ-3000 and CDJ-3000X error meaning the track data on the drive cannot be read correctly. The official response: try the track on another player, and re-import the file to the drive if possible. Usually a corrupt export or wrong file system, not dead hardware.' },
+      { id: 'e-8302', t: 'E-8302 (CANNOT PLAY TRACK)', d: 'CDJ-3000 and CDJ-3000X error meaning the track data on the drive cannot be read correctly. The official response: try the track on another player, and re-import the file to the drive if possible. Usually a corrupt export or wrong file system, not dead hardware.' },
       { t: 'HID mode', d: 'The mode where a player becomes a controller for software on a laptop instead of playing from its own drive. A booth surprise on older players: not all of them support it for every software.' },
       { t: 'Firmware', d: 'The player’s own software, and part of your rig whether you like it or not. Known freezes and dropouts have official fixed-in versions; check the version in UTILITY at soundcheck. And never update anything, yours or the booth’s, on gig day.' },
       { t: 'NFC login', d: 'A way into a booth without carrying a drive at all. The CDJ-3000X carries an NFC touchpoint on its front panel: hold a phone running rekordbox for iOS or Android over the reader and it pulls up your online music. The CDJ-1500X supports the same login, by NFC or by QR code. It signs you in, it is not a way to play audio off the handset, and what arrives afterwards is your cloud library over the venue’s network.' },
@@ -90,7 +90,7 @@ const groups = [
   {
     title: 'Mixer and sound',
     terms: [
-      { t: 'TRIM / GAIN', d: 'Two names for the same top-of-strip knob: how loud the source arrives in the channel, before the fader. First suspect when one channel is quiet with the fader up.' },
+      { id: 'trim-gain', t: 'TRIM / GAIN', d: 'Two names for the same top-of-strip knob: how loud the source arrives in the channel, before the fader. First suspect when one channel is quiet with the fader up.' },
       // The EQ trio, added 2026-08-02. Deliberately NOT a frequency table: a
       // working DJ knows the low knob is the kick, and printing "20 to 60 Hz
       // gives weight" at a professional is the condescension the lint bans.
@@ -102,13 +102,13 @@ const groups = [
       // 3-band master isolator, booth EQ), and AlphaTheta's DJM-V5 page
       // ("4-Band EQ on each channel, inherited from the DJM-V10", 2-band
       // booth EQ).
-      { t: 'Channel EQ (EQ / ISO)', d: 'The band knobs on each channel strip: three on most desks, four on the DJM-V10 and DJM-V5, which split the middle in two. The part worth knowing is what the bottom of the travel actually does, because it is not always silence. On the DJM-900NXS2 the published floor in EQ mode is -26 dB, a deep cut with the track still alive underneath it. If you reach for a full kill and the kick is still there, the desk is doing exactly what it is documented to do.' },
+      { id: 'channel-eq', t: 'Channel EQ (EQ / ISO)', d: 'The band knobs on each channel strip: three on most desks, four on the DJM-V10 and DJM-V5, which split the middle in two. The part worth knowing is what the bottom of the travel actually does, because it is not always silence. On the DJM-900NXS2 the published floor in EQ mode is -26 dB, a deep cut with the track still alive underneath it. If you reach for a full kill and the kick is still there, the desk is doing exactly what it is documented to do.' },
       { t: 'Isolator', d: 'One name, two different pieces of gear, and which one you are standing at decides how the knobs behave. On the DJM-900NXS2 it is a mode: an EQ CURVE (ISOLATOR, EQ) switch on the panel, the same three knobs acting as tone controls in one position and as an isolator in the other. On the DJM-V10 it is separate hardware, a three-band master isolator sitting across the whole mix with its own crossover points. Either way, that setting is not yours. It is however the last DJ or the tech left it, and the first place you find out is the first cut you make in front of a full room.' },
       // OPUS-QUAD has a physical CROSSFADER ASSIGN (A, THRU, B) selector per its
       // manual (DRI1795D); the old "on-screen settings" claim was wrong and the
       // "number one cause" superlative was unsourced. Corrected 2026-08-02.
       { t: 'Crossfader assign', d: 'The per-channel switch (A / THRU / B) deciding whether the crossfader controls that channel. Assigned to the wrong side, the channel is silent with every fader up: a classic silent-channel cause. Some mixers have no crossfader at all (DJM-V10-LF, DJM-V5); on those every channel behaves as THRU.' },
-      { t: 'CUE / PFL', d: 'The DJ’s word and the tech’s word for the same thing: listening to a channel in your headphones before it reaches the room. If your headphones are silent, check the MIX knob is toward CUE, not MASTER, before blaming the jack.' },
+      { id: 'cue-pfl', t: 'CUE / PFL', d: 'The DJ’s word and the tech’s word for the same thing: listening to a channel in your headphones before it reaches the room. If your headphones are silent, check the MIX knob is toward CUE, not MASTER, before blaming the jack.' },
       { t: 'BOOTH output', d: 'The mixer’s second output, feeding the DJ’s own monitors, separate from MASTER which feeds the room. Two knobs, two destinations. In a pinch the booth output pair can substitute for a dead master pair.' },
       { t: 'Booth EQ', d: 'A second EQ, on the booth output only, on the desks that carry one: the DJM-V10 and the DJM-V5 among them. It shapes what you hear in your monitors and touches nothing the room hears. Worth a look before you decide a system is broken, because a booth low left dumped by whoever played before you makes the monitor sound thin and lifeless while the floor is completely fine.' },
       { t: 'Master insert', d: 'A patch point on the back of some mixers where an outboard processor sits in the master signal. If something is plugged in and nothing sends audio back, the master goes silent with every fader up. If you find one patched, it is almost certainly the venue’s: ask before pulling it.' },
@@ -124,9 +124,9 @@ const groups = [
       // Soundcard and DVS sit alongside because on a modern DJM they are the
       // same piece of silicon doing the same job, and a DJ who understands
       // one understands all three.
-      { t: 'A/D and D/A converter', d: 'The two translations every sound in a booth goes through. A/D turns an analogue signal into numbers, D/A turns numbers back into something a speaker can move air with. Mixer spec sheets advertise these, usually as a bit depth like 32-bit, because the conversion is where a desk either preserves the recording or quietly flattens it. Nothing you operate, and nothing you can fix on the night, but it is the honest answer to why two mixers playing the same file do not sound identical.' },
-      { t: 'Soundcard (audio interface)', d: 'The hardware doing that conversion. On a laptop setup it is a separate box or one built into the controller. On a professional DJM it is built into the mixer, which is why a laptop can plug straight into the desk over USB and needs nothing else in between. When someone says the mixer "is" the soundcard, this is what they mean.' },
-      { t: 'DVS (Digital Vinyl System)', d: 'Playing digital files from a laptop while controlling them with real turntables or CDJs, using timecode: a special record or CD carrying a control signal rather than music. The mixer reads that signal through its own soundcard and the laptop follows it. It is why a DVS setup cares so much about the phono inputs and the USB connection to the computer, and why a wrong input selector kills it instantly.' },
+      { id: 'converters', t: 'A/D and D/A converter', d: 'The two translations every sound in a booth goes through. A/D turns an analogue signal into numbers, D/A turns numbers back into something a speaker can move air with. Mixer spec sheets advertise these, usually as a bit depth like 32-bit, because the conversion is where a desk either preserves the recording or quietly flattens it. Nothing you operate, and nothing you can fix on the night, but it is the honest answer to why two mixers playing the same file do not sound identical.' },
+      { id: 'soundcard', t: 'Soundcard (audio interface)', d: 'The hardware doing that conversion. On a laptop setup it is a separate box or one built into the controller. On a professional DJM it is built into the mixer, which is why a laptop can plug straight into the desk over USB and needs nothing else in between. When someone says the mixer "is" the soundcard, this is what they mean.' },
+      { id: 'dvs', t: 'DVS (Digital Vinyl System)', d: 'Playing digital files from a laptop while controlling them with real turntables or CDJs, using timecode: a special record or CD carrying a control signal rather than music. The mixer reads that signal through its own soundcard and the laptop follows it. It is why a DVS setup cares so much about the phono inputs and the USB connection to the computer, and why a wrong input selector kills it instantly.' },
     ],
   },
   {
@@ -141,29 +141,51 @@ const groups = [
     title: 'Cables and connectors',
     terms: [
       { t: 'Phono vs Line', d: 'The single most useful thing in this group. A mixer channel expects either a turntable (phono, a very quiet signal that needs extra amplification) or anything else (line: CDJs, laptops, players). Feed a line source into a phono input and it distorts horribly. Feed a turntable into a line input and it is almost silent. If a channel is dead or sounds wrong with every fader up, check this selector before you blame the cable.' },
-      { t: 'RCA (phono connector)', d: 'The two-plug pair, usually red and white, that carries stereo between most DJ equipment: player to mixer, mixer to amplifier. Unbalanced, so it does not like long runs, but it is what nearly every booth is wired with. Red is right, white or black is left. A single dead channel with a working fader is very often just this plug not fully seated.' },
-      { t: 'Coaxial (digital out)', d: 'The trap in this group: a coaxial digital output uses the same connector as an RCA plug and carries something completely different. It is a single cable of DIGITAL audio, found on some mixers as DIGITAL OUT, and it will not work plugged into an ordinary analogue RCA input. If a connection looks like a normal phono lead and produces nothing but noise or silence, check whether one end of it is digital.' },
-      { t: 'Jack (6.35mm / quarter inch)', d: 'The big headphone plug, and the connector for booth outputs and many balanced connections. Comes in two shapes that look nearly identical: TRS has two black rings and carries stereo or a balanced signal, TS has one ring and carries a single unbalanced channel. Plugging TS where TRS is expected is a quiet way to lose half your audio.' },
-      { t: 'Mini jack (3.5mm)', d: 'The small version, on phones, laptops and consumer headphones. Common in a booth only as an adapter, and adapters are exactly where handovers go wrong. If a phone has to reach the mixer, know before doors whether that adapter exists and where it is.' },
-      { t: 'XLR (also called Canon)', d: 'The three-pin locking connector, balanced, used for the mixer’s master output to the house system and for microphones. Balanced means it rejects interference over long cable runs, which is why the room is fed with it and your booth is not. Many DJs, especially outside the English-speaking world, call it a Canon: same connector, older brand name.' },
+      { id: 'rca', t: 'RCA (phono connector)', d: 'The two-plug pair, usually red and white, that carries stereo between most DJ equipment: player to mixer, mixer to amplifier. Unbalanced, so it does not like long runs, but it is what nearly every booth is wired with. Red is right, white or black is left. A single dead channel with a working fader is very often just this plug not fully seated.' },
+      { id: 'coaxial', t: 'Coaxial (digital out)', d: 'The trap in this group: a coaxial digital output uses the same connector as an RCA plug and carries something completely different. It is a single cable of DIGITAL audio, found on some mixers as DIGITAL OUT, and it will not work plugged into an ordinary analogue RCA input. If a connection looks like a normal phono lead and produces nothing but noise or silence, check whether one end of it is digital.' },
+      { id: 'jack', t: 'Jack (6.35mm / quarter inch)', d: 'The big headphone plug, and the connector for booth outputs and many balanced connections. Comes in two shapes that look nearly identical: TRS has two black rings and carries stereo or a balanced signal, TS has one ring and carries a single unbalanced channel. Plugging TS where TRS is expected is a quiet way to lose half your audio.' },
+      { id: 'mini-jack', t: 'Mini jack (3.5mm)', d: 'The small version, on phones, laptops and consumer headphones. Common in a booth only as an adapter, and adapters are exactly where handovers go wrong. If a phone has to reach the mixer, know before doors whether that adapter exists and where it is.' },
+      { id: 'xlr', t: 'XLR (also called Canon)', d: 'The three-pin locking connector, balanced, used for the mixer’s master output to the house system and for microphones. Balanced means it rejects interference over long cable runs, which is why the room is fed with it and your booth is not. Many DJs, especially outside the English-speaking world, call it a Canon: same connector, older brand name.' },
       { t: 'Balanced vs unbalanced', d: 'Why two kinds of cable exist at all. A balanced connection (XLR, TRS jack) carries the signal twice, inverted, so noise picked up along the way cancels itself at the other end. Unbalanced (RCA, TS jack) does not, so it collects hum and interference over distance. Short runs inside the booth, unbalanced is fine. Anything crossing a stage should be balanced.' },
       { t: 'Speakon', d: 'The chunky twist-lock speaker connector. Worth knowing precisely because you will NOT find it on DJ equipment: it lives between amplifiers and speakers, which is the venue’s side of the signal chain. If you are looking at Speakon, you are past the booth output and past where your responsibility ends.' },
-      { t: 'Ground (earth) terminal', d: 'The small screw post on a mixer for a turntable’s thin ground wire. Unconnected, a turntable channel hums audibly. If a deck is buzzing on a vinyl setup and the fader is doing nothing about it, this is the first thing to look at.' },
+      { id: 'ground-terminal', t: 'Ground (earth) terminal', d: 'The small screw post on a mixer for a turntable’s thin ground wire. Unconnected, a turntable channel hums audibly. If a deck is buzzing on a vinyl setup and the fader is doing nothing about it, this is the first thing to look at.' },
       { t: 'IEC power cable', d: 'The standard three-pin kettle lead every player and mixer takes. Unglamorous and the most common cause of a unit that "will not turn on". They work loose in a rack, and venues borrow them. A spare in the bag costs almost nothing and has saved plenty of sets.' },
-      { t: 'Ethernet / LAN cable', d: 'How players and mixer talk to each other over PRO DJ LINK, and how a laptop joins that network. Ordinary network cable, nothing special about it. If LINK is refusing to connect and the settings look right, the cable and the port are worth ruling out before the settings.' },
-      { t: 'USB-A, USB-B, USB-C', d: 'Three different shapes doing different jobs on the same desk. USB-A is the flat one your drive plugs into. USB-B is the squarer one that connects a mixer to a computer for DVS or recording. USB-C appears on newer players for both storage and computer connection. The CDJ-3000X, for instance, carries one USB-A and two USB-C and no SD slot at all.' },
+      { id: 'ethernet-cable', t: 'Ethernet / LAN cable', d: 'How players and mixer talk to each other over PRO DJ LINK, and how a laptop joins that network. Ordinary network cable, nothing special about it. If LINK is refusing to connect and the settings look right, the cable and the port are worth ruling out before the settings.' },
+      { id: 'usb-connectors', t: 'USB-A, USB-B, USB-C', d: 'Three different shapes doing different jobs on the same desk. USB-A is the flat one your drive plugs into. USB-B is the squarer one that connects a mixer to a computer for DVS or recording. USB-C appears on newer players for both storage and computer connection. The CDJ-3000X, for instance, carries one USB-A and two USB-C and no SD slot at all.' },
     ],
   },
 
 ];
 
+// STABLE ANCHORS (2026-08-03). Every term and every group is addressable, so
+// anything on the site can link straight to an explanation instead of dropping
+// the reader at the top of a 59-term page to hunt for it.
+//
+// The id is stored EXPLICITLY on the awkward labels rather than always derived,
+// because a derived slug changes the moment a label is edited and would break
+// every link pointing at it, silently. Clean labels fall back to the slug.
+// scripts/check-concepts.mjs fails the build if any registry destination points
+// at an anchor that does not exist in the built page.
+const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+const termId = (x) => x.id ?? slug(x.t);
+const groupId = (g) => g.id ?? slug(g.title);
+
+const SITE = 'https://www.savemygig.com';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'DefinedTermSet',
-  '@id': 'https://www.savemygig.com/knowledge/dictionary#terms',
+  '@id': `${SITE}/knowledge/dictionary#terms`,
   name: 'The DJ reliability dictionary',
+  // Each term now carries its own @id and url, so the anchors are
+  // machine-readable too: a search or answer engine can cite one definition
+  // instead of the whole page.
   hasDefinedTerm: groups.flatMap((g) => g.terms.map((x) => ({
-    '@type': 'DefinedTerm', name: x.t, description: x.d,
+    '@type': 'DefinedTerm',
+    '@id': `${SITE}/knowledge/dictionary#${termId(x)}`,
+    url: `${SITE}/knowledge/dictionary#${termId(x)}`,
+    name: x.t,
+    description: x.d,
+    inDefinedTermSet: `${SITE}/knowledge/dictionary#terms`,
   }))),
 };
 ---
@@ -195,7 +217,7 @@ const schema = {
         Collapsed content is still in the HTML, so the search index (built
         from dist) and crawlers read every definition regardless. */}
     {groups.map((g) => (
-      <details class="dict-cat">
+      <details class="dict-cat" id={groupId(g)}>
         <summary>
           <h2 class="dict-h">{g.title}</h2>
           <span class="dict-count">{g.terms.length}</span>
@@ -203,7 +225,7 @@ const schema = {
         </summary>
         <div class="dict-cat-body">
           {g.terms.map((x) => (
-            <details class="panel dict-term">
+            <details class="panel dict-term" id={termId(x)}>
               <summary>
                 <h3 class="dict-t">{x.t}</h3>
                 <span class="dict-chev" aria-hidden="true"></span>
@@ -220,6 +242,53 @@ const schema = {
       and it gets added.
     </p>
   </main>
+
+  <script is:inline>
+    /*
+     * DEEP LINKING INTO THE DICTIONARY.
+     *
+     * A link like /knowledge/dictionary#fat32 has to do three things, and the
+     * browser only sometimes does the first: open the TERM, open the GROUP
+     * that contains it (this is a nested accordion, so one is not enough),
+     * and land the reader on it rather than under the sticky header.
+     *
+     * Chromium auto-expands a <details> when you navigate to a fragment inside
+     * it; Safari and Firefox have been inconsistent about it, and none of them
+     * handle the nested case or the scroll offset. So this walks up the tree
+     * opening every <details> ancestor. Without JS the anchor still resolves
+     * and the content is still in the HTML, it just may land closed.
+     *
+     * hashchange matters as much as load: a link to another term FROM the
+     * dictionary changes only the fragment, which fires no navigation.
+     */
+    (function () {
+      function reveal(hash) {
+        if (!hash || hash.length < 2) return;
+        var el;
+        try { el = document.getElementById(decodeURIComponent(hash.slice(1))); }
+        catch (e) { return; }
+        if (!el) return;
+
+        for (var n = el; n && n !== document.body; n = n.parentNode) {
+          if (n.tagName === 'DETAILS') n.open = true;
+        }
+
+        // Let the accordions finish expanding before measuring where to scroll.
+        requestAnimationFrame(function () {
+          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          el.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+          // Announce it: without this a screen reader stays where it was.
+          var s = el.querySelector('summary');
+          if (s) {
+            s.setAttribute('tabindex', '-1');
+            s.focus({ preventScroll: true });
+          }
+        });
+      }
+      reveal(window.location.hash);
+      window.addEventListener('hashchange', function () { reveal(window.location.hash); });
+    })();
+  </script>
 </Base>
 
 <style>
@@ -250,7 +319,13 @@ const schema = {
   .dict-cat-chev { flex: 0 0 auto; }
   .dict-cat[open] > summary .dict-cat-chev { transform: rotate(45deg); margin-top: -3px; }
   .dict-cat-body { margin-bottom: 1.8rem; }
-  .dict-term { margin-bottom: 0.6rem; padding: 0.95rem 1.15rem; }
+  /* scroll-margin keeps a deep-linked term clear of the sticky header. CSS
+     does this correctly at every zoom level; JavaScript arithmetic does not. */
+  .dict-term { margin-bottom: 0.6rem; padding: 0.95rem 1.15rem; scroll-margin-top: 88px; }
+  .dict-cat { scroll-margin-top: 88px; }
+  /* A term arrived at by link gets a brief accent rule so the eye lands on the
+     right row in a long group instead of hunting. */
+  .dict-term:target { border-left: 2px solid var(--red); }
   .dict-term > summary {
     display: flex; align-items: center; justify-content: space-between; gap: 1rem;
     cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
