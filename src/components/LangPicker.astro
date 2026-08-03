@@ -197,7 +197,17 @@ const NOTICES = {
      Not three permanent rows. A once ever preference must not sit at the same
      visual weight as seven destinations. */
   @media (max-width: 900px) {
-    .lang { display: block; width: 100%; }
+    /* The row now sits ABOVE About, so it needs the drawer's own rule under
+       it to keep the rhythm going. The links get theirs from `.nav-links a`,
+       which cannot match a <details>. */
+    .lang {
+      display: block; width: 100%;
+      border-bottom: var(--stroke) solid var(--edge-soft);
+    }
+    /* Except when it is open: the panel below it already reads as its own
+       block, and a rule between the row and its own contents would cut the
+       thing in half. */
+    .lang[open] { border-bottom-color: transparent; }
     .lang-sum {
       display: flex; align-items: center; justify-content: flex-start;
       gap: var(--sp-3);

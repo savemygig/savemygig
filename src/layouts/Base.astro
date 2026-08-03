@@ -201,17 +201,23 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
         <a href="/prepare" class:list={[{ 'nav-on': path.startsWith('/prepare') }]}>Prevention</a>
         <a href="/recovery" class:list={[{ 'nav-on': path.startsWith('/recovery') }]}>Recovery</a>
         <a href="/knowledge" class:list={[{ 'nav-on': path.startsWith('/knowledge') }]}>Knowledge</a>
-        <a href="/gear" class:list={['nav-more', 'nav-gear-hide-mobile', { 'nav-on': path.startsWith('/gear') }]}>Gear</a>
-        <a href="/about" class:list={['nav-more', { 'nav-on': path.startsWith('/about') }]}>About</a>
         <!-- The language picker lives INSIDE the nav, once, so there is one
-             instance and one implementation. On desktop the nav is a row, so
-             it renders as a square immediately left of the search button.
-             On a phone the nav IS the drawer, so it renders as a row of
-             options in the drawer. Neither case needs a second copy.
-             Search keeps the far right corner on purpose: it is a repeat
+             instance and one implementation. On desktop the nav is a row and
+             it renders as a square immediately left of the search button; on
+             a phone the nav IS the drawer and it renders as a collapsing row.
+             Neither case needs a second copy.
+             ABOVE Gear and About (Antonio, 2026-08-03: "shouldn't about be
+             the last thing in the hamburger?"). On a phone that puts ABOUT
+             back at the bottom, where the story of the site closes the menu.
+             On desktop it changes nothing at all: Gear and About are
+             .nav-more and hidden there, so the square still lands directly
+             after KNOWLEDGE either way.
+             Search keeps the far right corner regardless: it is a repeat
              action and that corner is the spot people hit without looking.
              Language is a once ever action, so it sits inboard of it. -->
         <LangPicker />
+        <a href="/gear" class:list={['nav-more', 'nav-gear-hide-mobile', { 'nav-on': path.startsWith('/gear') }]}>Gear</a>
+        <a href="/about" class:list={['nav-more', { 'nav-on': path.startsWith('/about') }]}>About</a>
       </nav>
     </div>
   </header>
