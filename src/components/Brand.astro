@@ -60,7 +60,7 @@ const { variant = 'full' } = Astro.props;
 const cls = variant === 'footer' ? 'smg-foot' : 'smg-full';
 ---
 <span class:list={['smg-brand', cls]}>
-  <span class="smg-word">Save <span class="smg-my">My</span> Gig</span>
+  <span class="smg-word">Save My <span class="smg-accent">Gig</span></span>
   <span class="smg-tag">DJ rescue and prevention</span>
 </span>
 
@@ -74,8 +74,18 @@ const cls = variant === 'footer' ? 'smg-foot' : 'smg-full';
     color: var(--text);
     white-space: nowrap;
   }
-  /* The one piece of colour in the mark. */
-  .smg-my { color: var(--red); }
+  /* THE ONE PIECE OF COLOUR IN THE MARK, and it moved 2026-08-03.
+     It was on "My" (Save white, MY red, Gig white). Antonio asked to see the
+     alternatives side by side at real size and chose GIG.
+     Why it is better: the accent now lands at the END, so the lockup
+     finishes on the red instead of being interrupted mid-phrase. The old
+     arrangement split the mark into three chunks, white red white, and the
+     eye stopped twice. It also holds together better small, because a middle
+     accent leaves two white islands either side of the red while an end
+     accent does not, and the mark lives small in the mobile header.
+     Named for its ROLE, not its content: it was `.smg-my`, which would have
+     been a lie the moment the accent moved, and did not survive one move. */
+  .smg-accent { color: var(--red); }
   .smg-tag {
     font-family: var(--font-body); font-weight: 600;
     text-transform: uppercase; color: var(--text-dim); white-space: nowrap;
