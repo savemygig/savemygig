@@ -149,7 +149,11 @@ const tagChars = [...TAG].map((c) => (c === ' ' ? ' ' : c));
      and engine, so unlike the letter-spacing these constants CANNOT drift
      between my render and Antonio's screen. Measured per variant against
      painted ink at 1x, 2x and 3x. */
-  .smg-full .smg-tag-row { padding-right: 1px; }
+  /* padding-left 0.5px: Antonio's falcon-eye report against a ~6x zoom
+     screenshot, the D's ink starting a hair left of the S's. Half a pixel is
+     the smallest honest step at this size; it moves ONLY the first letter,
+     space-between re-absorbs it, the E stays pinned. */
+  .smg-full .smg-tag-row { padding-left: 0.5px; padding-right: 1px; }
   .smg-foot .smg-tag-row { padding-left: 0.5px; padding-right: 0.5px; }
 
   /* FULL: header (site and rescue bar). Only the SIZES live here now. */
