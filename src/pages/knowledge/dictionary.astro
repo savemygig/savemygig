@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Search from '../../components/Search.astro';
 import { DJM_A9, DJM_V10 } from '../../data/facts.js';
 
 // THE DICTIONARY (Antonio's idea). Every term a DJ meets on this site or in a
@@ -207,21 +206,39 @@ const schema = {
       folklore.
     </p>
 
-    {/* SEARCH, INLINE, ABOVE THE DICTIONARY (Antonio, 2026-08-03): "a
-        dedicated search box, exactly the same as the one on the landing page,
-        so the person sees this is dedicated for this area."
-        THE SAME COMPONENT, not a dictionary-specific one. There are 60 terms
-        behind two levels of accordion, so scanning for one word means opening
-        groups until you find it. A box at the top skips that entirely.
-        The placeholder is the only thing that changes, and it changes to name
-        terms rather than symptoms, because that is what somebody types here.
-        HONEST SCOPE: this searches the WHOLE SITE, not only the dictionary.
-        That is deliberate and it is the better behaviour: a DJ who types
-        FAT32 wants the definition AND the article, and the dictionary's own
-        anchors are in the index, so the terms surface first anyway. It is
-        also why this is one shared component and not a second search to
-        maintain. */}
-    <div style="margin-bottom:2rem"><Search placeholder="Search a term: FAT32, MBR, PRO DJ LINK..." /></div>
+    {/* A FILTER, NOT A SEARCH (Antonio, 2026-08-03): "can this search box be
+        specific to search inside the dictionary only?"
+        WHY THE SHARED SEARCH COMPONENT CANNOT DO THIS. The site index is
+        PER PAGE, and all 60 terms live on this one page, so the dictionary is
+        exactly ONE entry in search-index.json. Scoping that box to the
+        dictionary would return a single result: this page, the one you are
+        already on.
+        SO IT FILTERS INSTEAD. Every term is already in the DOM, so typing
+        narrows the list in place: non-matching terms hide, groups with no
+        match hide, groups with a match open themselves, and a single match
+        opens its own definition. No navigation, no index, no request, works
+        offline like the rest of the rescue kit.
+        His follow-up question, "how are you going to open an accordion with a
+        search box, is it possible?", has two answers. Here, nothing navigates
+        so there is nothing to open across a page load. And for LINKS into the
+        dictionary (/knowledge/dictionary#mbr from the prevention page) the
+        existing deep-link script already opens both accordion levels and
+        scrolls the term into view; measured at 393.
+        Deliberately the same BOX as the site search so it reads as the same
+        tool. Same border, radius, focus ring, icon and clear button. */}
+    <div class="dict-filter" data-dict-filter>
+      <div class="srch-box">
+        <svg class="srch-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label class="sr-only" for="dictFilter">Filter the dictionary</label>
+        <input id="dictFilter" type="search" class="srch-input" autocomplete="off"
+               placeholder="Filter terms: FAT32, MBR, PRO DJ LINK..."
+               aria-describedby="dictFilterCount" />
+        <button type="button" class="srch-clear" id="dictFilterClear" aria-label="Clear filter" hidden>&times;</button>
+      </div>
+      {/* Live region: a filter that silently reorders the page is invisible to
+          a screen reader without one. */}
+      <p class="dict-filter-count" id="dictFilterCount" role="status" aria-live="polite"></p>
+    </div>
 
     {/* Two levels of accordion (Antonio, 2026-08-02). At 60 terms the flat
         list was an enormous scroll, so the GROUP is now collapsible too:
@@ -306,6 +323,133 @@ const schema = {
       window.addEventListener('hashchange', function () { reveal(window.location.hash); });
     })();
   </script>
+
+  <script is:inline>
+    /**
+     * THE DICTIONARY FILTER (Antonio, 2026-08-03).
+     *
+     * NOT the site search. The site index is per PAGE and all 60 terms live
+     * on this one, so scoping the shared search box here would return a single
+     * result: this page. Everything needed is already in the DOM, so this
+     * filters in place instead. No index, no request, works offline.
+     *
+     * WHAT IT DOES, as you type:
+     *   term does not match      -> hidden
+     *   group has no match       -> hidden
+     *   group has a match        -> shown and OPENED, so matches are visible
+     *                               without a second tap
+     *   exactly one match        -> its definition opens too, because at that
+     *                               point the definition IS the answer
+     *   empty                    -> everything restored to the shipped state,
+     *                               closed, in original order
+     *
+     * It matches the TERM and its DEFINITION, not just the term, so somebody
+     * who half-remembers the idea ("partition") finds MBR without knowing the
+     * acronym, which is the whole reason a beginner is on this page.
+     *
+     * STATE IS RESTORED, NOT REMEMBERED. The filter records which accordions
+     * it opened and closes exactly those on clear, so a term the reader had
+     * opened by hand stays open. `data-hide` is an attribute, never an inline
+     * style, so the page returns to precisely how it shipped.
+     */
+    (function () {
+      var wrap = document.querySelector('[data-dict-filter]');
+      var input = document.getElementById('dictFilter');
+      var clear = document.getElementById('dictFilterClear');
+      var count = document.getElementById('dictFilterCount');
+      if (!wrap || !input) return;
+
+      var groups = [].slice.call(document.querySelectorAll('.dict-cat'));
+      var opened = [];
+
+      function textOf(el) {
+        return (el.textContent || '').toLowerCase().replace(/\s+/g, ' ');
+      }
+
+      // Cached once: 60 terms re-read on every keystroke is wasted work, and
+      // the content is static.
+      var index = groups.map(function (g) {
+        return {
+          group: g,
+          terms: [].slice.call(g.querySelectorAll('.dict-term')).map(function (t) {
+            return { el: t, hay: textOf(t) };
+          }),
+        };
+      });
+
+      function restore() {
+        index.forEach(function (g) {
+          g.group.removeAttribute('data-hide');
+          g.terms.forEach(function (t) { t.el.removeAttribute('data-hide'); });
+        });
+        opened.forEach(function (el) { el.open = false; });
+        opened = [];
+      }
+
+      function apply(q) {
+        q = q.trim().toLowerCase();
+        if (clear) clear.hidden = !q;
+
+        if (!q) {
+          restore();
+          if (count) count.textContent = '';
+          return;
+        }
+
+        restore();
+        var hits = 0;
+        var lastTerm = null;
+
+        index.forEach(function (g) {
+          var groupHits = 0;
+          g.terms.forEach(function (t) {
+            if (t.hay.indexOf(q) === -1) {
+              t.el.setAttribute('data-hide', '');
+            } else {
+              groupHits++; hits++; lastTerm = t.el;
+            }
+          });
+          if (!groupHits) {
+            g.group.setAttribute('data-hide', '');
+          } else if (!g.group.open) {
+            g.group.open = true;
+            opened.push(g.group);
+          }
+        });
+
+        // One result: the definition is the answer, so show it.
+        if (hits === 1 && lastTerm && !lastTerm.open) {
+          lastTerm.open = true;
+          opened.push(lastTerm);
+        }
+
+        if (count) {
+          count.textContent = hits === 0
+            ? 'No terms match "' + q + '". Try a shorter word, or tell us and it gets added.'
+            : hits + (hits === 1 ? ' term' : ' terms');
+        }
+      }
+
+      var t;
+      input.addEventListener('input', function () {
+        clearTimeout(t);
+        t = setTimeout(function () { apply(input.value); }, 90);
+      });
+
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { input.value = ''; apply(''); }
+      });
+
+      if (clear) clear.addEventListener('click', function () {
+        input.value = ''; apply(''); input.focus();
+      });
+
+      // A deep link must never land on a term the filter is hiding.
+      window.addEventListener('hashchange', function () {
+        if (input.value) { input.value = ''; apply(''); }
+      });
+    })();
+  </script>
 </Base>
 
 <style>
@@ -320,6 +464,22 @@ const schema = {
      copy of the same code in /faq, the Pioneer hub and Detail.astro. They now
      live once in global.css. Only what is genuinely about a dictionary stays
      local: the term count, the target rule, the uppercase group label. */
+  /* FULL WIDTH (Antonio: "can you make the box as wide as the text below?
+     otherwise it looks quite strange, the box being so small"). He is right:
+     the shared .srch caps at 34rem, which is correct under a homepage hero
+     and wrong above a full-width list, where a short box reads as a stray
+     element rather than the control for the page. The cap is NOT overridden
+     globally, because the homepage and /faq both want it. This is a
+     dictionary-only control that borrows the search BOX styling. */
+  .dict-filter { width: 100%; margin-bottom: 2rem; }
+  .dict-filter-count {
+    font-size: 0.82rem; color: var(--text-faint);
+    margin-top: 0.6rem; min-height: 1.2em;
+  }
+  /* Hidden by the filter. A plain attribute so the script never touches
+     inline styles and the page restores exactly as it shipped. */
+  .dict-cat[data-hide], .dict-term[data-hide] { display: none; }
+
   .dict-cat { margin-bottom: 0.9rem; }
   .dict-cat > summary {
     display: flex; align-items: center; gap: 0.7rem;
