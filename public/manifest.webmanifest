@@ -1,7 +1,7 @@
 {
-  "name": "Save My Gig, DJ Booth Intelligence",
+  "name": "Save My Gig",
   "short_name": "Save My Gig",
-  "description": "Free step-by-step help when a USB or player fails before a set, plus the pre-gig checklist. Works offline once installed.",
+  "description": "DJ Booth Intelligence. Free step-by-step help when a USB or player fails before a set, plus the pre-gig checklist. Works offline once installed.",
   "id": "/",
   "start_url": "/?src=pwa",
   "scope": "/",
@@ -10,11 +10,30 @@
   "background_color": "#0a0a0b",
   "theme_color": "#0a0a0b",
   "lang": "en",
-  "categories": ["utilities", "music", "productivity"],
+  "categories": [
+    "utilities",
+    "music",
+    "productivity"
+  ],
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
     {
@@ -22,14 +41,24 @@
       "short_name": "Emergency",
       "description": "Something is failing right now",
       "url": "/emergency?src=pwa",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Pre-gig checklist",
       "short_name": "Checklist",
       "description": "Tick it off before you leave",
       "url": "/checklist?src=pwa",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
