@@ -50,9 +50,17 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig!?\s*$/i, '');
   <a href="#main" class="skip-link">Skip to content</a>
   <header class="top-bar">
     <div class="top-bar-inner">
+      {/* SAME LOCKUP AS THE SITE HEADER (Antonio, 2026-08-03). Same shield at
+          47x54, same wordmark, same tagline, same gap. The NAV is still out:
+          nothing in the tunnel may compete with the decision on screen, and
+          seven escape routes in front of a DJ mid-rescue is what this layout
+          exists to prevent. But the brand was never what competed, and
+          rendering it at half size only made the site look assembled from
+          parts. If you change .nav-brand in Base.astro, change .top-bar .brand
+          in global.css with it: one lockup, two surfaces. */}
       <a href="/" class="brand" aria-label="Save My Gig, home">
-        <img src="/images/logo-shield.svg" alt="" width="23" height="26" class="tb-seal" decoding="async" />
-        <Brand variant="compact" />
+        <img src="/images/logo-shield.svg" alt="" width="47" height="54" class="tb-seal" decoding="async" />
+        <Brand />
       </a>
       <div class:list={['status-indicator', { green: !red }]}>{status}</div>
     </div>

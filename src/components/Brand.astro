@@ -25,10 +25,11 @@
  * OG cards, all of which still read "SAVE MY GIG!". Those need an image
  * re-export pass.
  *
- * THREE VARIANTS, THREE WIDTH REFERENCES, DELIBERATELY (2026-08-03).
- * A wordmark has to be measured against whatever sits under it, and the three
+ * TWO VARIANTS, TWO WIDTH REFERENCES, DELIBERATELY (2026-08-03).
+ * A wordmark has to be measured against whatever sits under it, and the two
  * surfaces do not have the same thing under them:
- *   full    the site header. Reference is the tagline.
+ *   full    the site header AND the rescue tunnel bar. Reference is the
+ *           tagline.
  *   footer  the site footer. Reference is the ROW OF FOUR SOCIAL BUTTONS,
  *           because Antonio's rectangle rule says the wordmark, the tagline
  *           and the social row are ONE width. Folding the footer onto the
@@ -37,20 +38,30 @@
  *           on desktop and 32px long between 401 and 414. Same lettering,
  *           same weight, same tracking, same red MY. Only the SIZE differs,
  *           because only the reference differs.
- *   compact the rescue tunnel top bar. No tagline, nothing underneath,
- *           because nothing in the tunnel may compete with the decision.
  * This is not drift. Drift is two things that should match and do not. These
- * are measured to three different objects on purpose.
+ * are measured to two different objects on purpose.
+ *
+ * `compact` DELETED 2026-08-03. It existed for the rescue top bar, at a
+ * 1.02rem wordmark beside a 22.5x26 shield with no tagline, against the site
+ * header's 1.395rem beside 47x54 with one. Antonio, on staging: "the upper
+ * part is still looking very bad, it looks really bad, this is like this in
+ * many pages." He was right and the measurement was worse than it looked:
+ * the rescue bar was nearly the same HEIGHT as the site header while the
+ * mark inside it was less than half the size, so it read as a full bar with
+ * a small logo floating in it. The justification on file was that nothing in
+ * the tunnel may compete with the decision on screen. That argument holds for
+ * the NAV, which stays out. It never held for the brand, because shrinking
+ * the mark bought no space back. One wordmark size for every header now.
  */
 interface Props {
-  variant?: 'full' | 'footer' | 'compact';
+  variant?: 'full' | 'footer';
 }
 const { variant = 'full' } = Astro.props;
-const cls = variant === 'compact' ? 'smg-compact' : variant === 'footer' ? 'smg-foot' : 'smg-full';
+const cls = variant === 'footer' ? 'smg-foot' : 'smg-full';
 ---
 <span class:list={['smg-brand', cls]}>
   <span class="smg-word">Save <span class="smg-my">My</span> Gig</span>
-  {variant !== 'compact' && <span class="smg-tag">DJ rescue and prevention</span>}
+  <span class="smg-tag">DJ rescue and prevention</span>
 </span>
 
 <style is:global>
@@ -99,9 +110,5 @@ const cls = variant === 'compact' ? 'smg-compact' : variant === 'footer' ? 'smg-
     .smg-foot .smg-tag { font-size: 0.45rem; letter-spacing: 0.25em; }
   }
 
-  /* COMPACT: the tunnel bar. Deliberately small, but the SAME letterforms,
-     weight, tracking and accent as everywhere else. Previously this was 14px
-     at weight 800 with positive tracking, which is what made the rescue
-     screens look like a different product. */
-  .smg-compact .smg-word { font-size: 1.02rem; }
+  /* No third size. The rescue bar uses `full`, same as the site header. */
 </style>

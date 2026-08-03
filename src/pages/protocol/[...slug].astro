@@ -50,8 +50,17 @@ const toneOf = (o, i) => {
   if (node.neutral || node.options.length > 2) return 'neutral';
   return i === 0 ? 'green' : 'red';
 };
-const padClass = (t) => (t === 'green' ? 'pad-green' : t === 'red' ? 'pad-red' : 'pad-neutral');
-const ledClass = (t) => (t === 'green' ? 'led-g' : t === 'red' ? 'led-r' : 'led-n');
+// AMBER IS NOW REACHABLE (Antonio, 2026-08-03: "yellow is not so bad, red is
+// super bad"). .pad-yellow and .led-y have existed in global.css since the
+// original build and this renderer could never emit them, so every option
+// that was neither the good nor the bad answer fell back to a grey dot that
+// told the DJ nothing. The colour is the severity: green you are fine, amber
+// you are constrained, red the room is at risk. Set `tone` per option in
+// emergency-tree.js; the fallback below only covers plain yes/no nodes.
+const padClass = (t) =>
+  t === 'green' ? 'pad-green' : t === 'red' ? 'pad-red' : t === 'amber' ? 'pad-yellow' : 'pad-neutral';
+const ledClass = (t) =>
+  t === 'green' ? 'led-g' : t === 'red' ? 'led-r' : t === 'amber' ? 'led-y' : 'led-n';
 const hrefOf = (to) => (to.startsWith('/') ? to : `/protocol/${to}`);
 const answerKey = (i) => ['a', 'b', 'c', 'd'][i];
 const dataAttrs = (o, i) => {

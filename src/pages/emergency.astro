@@ -35,11 +35,19 @@ import Base from '../layouts/Base.astro';
            2026-07-28). Symptom first, always: the DJ knows what is WRONG
            before they know how much time they have, so the time question
            lives INSIDE the branches where it changes the route, never here.
-           Each door enters the tree in src/data/emergency-tree.js. -->
+           Each door enters the tree in src/data/emergency-tree.js.
+
+           ALL FIVE DOTS ARE RED (Antonio, 2026-08-03: "the dots before the
+           title should be red because this is emergency"). Not decoration.
+           Under the severity language a dot says HOW BAD, and on this screen
+           there is no mild option: USB dead, music dead, sound dead, player
+           dead, export dead. Every door is a gig at risk, so every door is
+           red. Amber and green start INSIDE the branches, where the answers
+           genuinely differ in severity. -->
       <nav class="pad-grid" aria-label="Choose what is happening" style="margin-bottom:1.5rem">
         <a href="/protocol/usb/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="usb_not_recognized">
           <div class="pad-header">
-            <div class="led led-n"></div>
+            <div class="led led-r"></div>
             <div class="pad-title">USB NOT RECOGNIZED</div>
           </div>
           <div class="pad-desc">The player does not see the drive at all.</div>
@@ -47,7 +55,7 @@ import Base from '../layouts/Base.astro';
 
         <a href="/protocol/music/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="music_wont_load">
           <div class="pad-header">
-            <div class="led led-n"></div>
+            <div class="led led-r"></div>
             <div class="pad-title">MUSIC WON'T LOAD</div>
           </div>
           <div class="pad-desc">Drive mounts, but playlists are missing or tracks refuse to play.</div>
@@ -55,7 +63,7 @@ import Base from '../layouts/Base.astro';
 
         <a href="/protocol/sound/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="no_sound">
           <div class="pad-header">
-            <div class="led led-n"></div>
+            <div class="led led-r"></div>
             <div class="pad-title">THERE IS NO SOUND</div>
           </div>
           <div class="pad-desc">A dead channel, silent master, or nothing in your headphones.</div>
@@ -63,7 +71,7 @@ import Base from '../layouts/Base.astro';
 
         <a href="/protocol/frozen/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="frozen_player">
           <div class="pad-header">
-            <div class="led led-n"></div>
+            <div class="led led-r"></div>
             <div class="pad-title">FROZEN PLAYER</div>
           </div>
           <div class="pad-desc">Screen or controls locked, mid-set or idle.</div>
@@ -71,7 +79,7 @@ import Base from '../layouts/Base.astro';
 
         <a href="/protocol/export/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="export_failed">
           <div class="pad-header">
-            <div class="led led-n"></div>
+            <div class="led led-r"></div>
             <div class="pad-title">REKORDBOX EXPORT FAILED</div>
           </div>
           <div class="pad-desc">The export will not finish, or the USB will not take it.</div>
@@ -91,33 +99,31 @@ import Base from '../layouts/Base.astro';
            in the built page and a grep of dist stays honest. */}
     </section>
 
-    <!-- Collapse doctrine (universalized 2026-07-28): the common-problems
-         list ships CLOSED. The header is the index; a tap opens the list.
-         Antonio's call on the emergency-tree preview review.
-         ORDER (Antonio, 2026-07-30): doors -> testing notice -> this
-         list -> the keyword-lead paragraph -> "files already lost" LAST.
-         Someone on /emergency already knows what the project is, so the
-         two re-explaining paragraphs that used to sit here were cut to
-         one. -->
-    <section class="emerg-problems">
-      <details class="acc-sec">
-        <summary><h2 class="acc-h2">Common CDJ &amp; XDJ USB problems</h2><span class="acc-chev" aria-hidden="true"></span></summary>
-        <div class="acc-body">
-          <ul class="problem-list">
-            <li><a href="/fix/usb-not-recognized-cdj">USB not detected on CDJ 2000/3000 &amp; XDJ</a></li>
-            <li><a href="/fix/cdj-error-e-8302">Error E-8302, E-8305, E-8306</a></li>
-            <li><a href="/fix/playlists-not-showing-cdj">Playlists not showing</a></li>
-            <li><a href="/fix/waveforms-not-loading-cdj">Waveforms not loading</a></li>
-            <li><a href="/fix/emergency-loop-mode">Emergency Loop mode triggered</a></li>
-            <li><a href="/fix/rekordbox-export-failed">Rekordbox export failure</a></li>
-            <li><a href="/fix/rekordbox-not-detecting-usb">Rekordbox not detecting the USB</a></li>
-          </ul>
-        </div>
-      </details>
-    </section>
-
+    <!-- ORDER, REVISED (Antonio, 2026-08-03): doors -> this paragraph ->
+         the problems list -> "files already lost" LAST. It used to sit under
+         the list, which left the closed accordion floating directly under
+         five cards with nothing explaining what the page was. The paragraph
+         is the keyword lead AND the sentence that frames the list beneath
+         it, so it belongs between the two. Supersedes the 2026-07-30 order,
+         which had the testing notice in this slot; that notice is gone. -->
     <p class="emerg-lead">
       Emergency guidance for USB failures, Rekordbox export issues, emergency loop mode and corrupted drives on Pioneer CDJ-3000, CDJ-2000 and XDJ units.
+    </p>
+
+    <!-- THE COMMON PROBLEMS LIST WAS REMOVED HERE 2026-08-03 (Antonio: "if
+         something is making the project weaker, it's better we don't have it
+         for now"). All seven rows WERE working links to /fix articles, but
+         they were styled `color: var(--text); text-decoration: none` with the
+         only affordance being a hover colour, and hover does not exist on a
+         phone. So on mobile they rendered as plain text beside a red dash and
+         read as a list of problems with no solutions: a dead end, on the page
+         where a dead end costs a gig.
+         VERIFIED BEFORE REMOVING: each of the seven articles keeps 4 to 8
+         other inbound pages in dist, so nothing was orphaned.
+         Content, both defects and where it could go instead are preserved in
+         `parked-emergency-problems-list-2026-08-03.md`. -->
+    <p class="emerg-next">
+      Five routes today. More are being built, and they land here first.
     </p>
 
     <p class="dim" style="font-size:0.86rem;margin-top:2rem">
@@ -137,6 +143,9 @@ import Base from '../layouts/Base.astro';
   .emerg-triage { margin-top: 1rem; }
   .emerg-triage-h { font-size: clamp(1.5rem, 5vw, 2rem); text-transform: none; letter-spacing: -0.01em; margin-bottom: 0.4rem; border: none; }
   .emerg-triage-sub { font-size: 0.95rem; margin-bottom: 1.4rem; }
+  /* Quieter than the lead above it: this is a note about the future, not
+     something a DJ in trouble has to read. */
+  .emerg-next { color: var(--text-faint); font-size: 0.86rem; margin-top: 1.4rem; }
   .emerg-problems { margin-top: 1rem; }
   .emerg-problems-h { font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.6rem; margin-bottom: 1rem; }
   .problem-list a { color: var(--text); text-decoration: none; }

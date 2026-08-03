@@ -383,6 +383,9 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
       t.addEventListener('click', () => {
         const open = l.classList.toggle('open');
         t.setAttribute('aria-expanded', open ? 'true' : 'false');
+        // The glyph becomes an X in CSS; the label has to say the same thing
+        // to anyone using a screen reader.
+        t.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       });
     }
     const sBtn = document.getElementById('navSearchBtn');
@@ -759,7 +762,24 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
     border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; padding: 0;
   }
-  .nav-toggle .bar { width: 18px; height: 2px; background: var(--text); display: block; }
+  .nav-toggle .bar {
+    width: 18px; height: 2px; background: var(--text); display: block;
+    transition: transform var(--t-fast), opacity var(--t-fast);
+  }
+  /* OPEN STATE = AN X (Antonio, 2026-08-03). The bars used to stay three bars
+     while the drawer was open, so nothing on screen said "tap here again to
+     close". He asked for them to move into a square; the X is the shape
+     everyone already reads as close and it costs the same animation.
+     Hooked on aria-expanded, which the toggle script already maintains, so
+     there is no second source of truth for "is the menu open".
+     Geometry: 2px bars on a 4px gap, so each outer bar travels exactly 6px to
+     meet the middle one before it rotates. */
+  .nav-toggle[aria-expanded='true'] .bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle[aria-expanded='true'] .bar:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded='true'] .bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-toggle .bar { transition: none; }
+  }
   .nav-toggle:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
   /* Secondary destinations: in the drawer on mobile, footer on desktop. */

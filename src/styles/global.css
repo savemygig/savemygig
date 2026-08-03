@@ -95,6 +95,13 @@
   /* Distance from the header to the first thing on the page. ONE value, so
      a site page and a rescue screen begin at exactly the same height. */
   --page-top: 1.9rem;
+  /* Distance from the last line of content to the footer rule. Was a bare
+     4rem in .wrap, which stacked on the footer's own 2.4rem margin for 6.4rem
+     of dead air (Antonio, 2026-08-03: "a huge space, reduce it to half").
+     A token because it is the same decision as --page-top and drifted for
+     exactly the reason --page-top was tokenised: nobody could see the total
+     without adding two numbers in two files. */
+  --page-bottom: 2rem;
 
   /* ------------------------------------------------------------------
      SHAPE, MOTION AND DEPTH (design language sprint, 2026-08-03).
@@ -220,7 +227,7 @@ a { color: var(--red); }
 
 /* ---------- Layout ---------- */
 
-.wrap { max-width: var(--site-w); margin: 0 auto; padding: var(--page-top) var(--site-pad) 4rem; }
+.wrap { max-width: var(--site-w); margin: 0 auto; padding: var(--page-top) var(--site-pad) var(--page-bottom); }
 .wrap-wide { max-width: var(--site-w); }
 .section { margin: 3rem 0; }
 /* The phone adjustment now lives in the --page-top token, so the tunnel gets
@@ -476,7 +483,9 @@ a { color: var(--red); }
 
 .site-footer {
   border-top: var(--stroke) solid var(--edge);
-  margin-top: 2.4rem;
+  /* 1.2rem, was 2.4rem. Together with --page-bottom this halves the desktop
+     gap above the footer rule from 6.4rem to 3.2rem, exactly as asked. */
+  margin-top: 1.2rem;
   padding: 2.2rem 0 2rem;
   text-align: left;
   color: var(--text-faint);
@@ -579,20 +588,31 @@ a { color: var(--red); }
   position: relative; overflow: hidden;
 }
 .pad:active { transform: scale(0.99); }
-.pad::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
-.pad::after { content: '\2192'; position: absolute; right: 18px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--text-faint); transition: color var(--t-fast), transform var(--t-fast); }
-.pad-red::before { background: var(--red); }
-.pad-yellow::before { background: var(--amber); }
-.pad-green::before { background: var(--green); }
+/* EACH PAD CARRIES ITS OWN COLOUR (Antonio, 2026-08-03: "they should turn red
+   when you pass with the cursor, they are just turning white").
+   He was pointing at one screen but the cause was global: hover went to
+   --text-faint for every pad on the site, so the rail, the border and the
+   arrow all agreed on a colour that means nothing. One token per tone fixes
+   it once, and it CANNOT lie: a green option cannot glow red on hover,
+   because the hover reads the same variable the rail does. */
+.pad { --tone: var(--red); }
+.pad-red { --tone: var(--red); }
+.pad-yellow { --tone: var(--amber); }
+.pad-green { --tone: var(--green); }
+/* Neutral has no severity, so it rests invisible and borrows the house red on
+   hover. There is no fourth colour meaning "this one is fine actually". */
+.pad-neutral { --tone: var(--red); }
+.pad::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--tone); transition: background var(--t-fast); }
 .pad-neutral::before { background: var(--edge); }
-@media (hover: hover) { .pad-neutral:hover::before { background: var(--text-dim); } }
+.pad::after { content: '\2192'; position: absolute; right: 18px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--text-faint); transition: color var(--t-fast), transform var(--t-fast); }
 .pad-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .pad-header .led { width: 9px; height: 9px; }
 .pad-title { font-family: var(--font-display); font-size: 17px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.01em; }
 .pad-desc { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
 @media (hover: hover) {
-  .pad:hover { border-color: var(--text-faint); background: var(--surf-2); }
-  .pad:hover::after { color: var(--text); transform: translateY(-50%) translateX(3px); }
+  .pad:hover { border-color: var(--tone); background: var(--surf-2); }
+  .pad:hover::before { background: var(--tone); }
+  .pad:hover::after { color: var(--tone); transform: translateY(-50%) translateX(3px); }
 }
 /* The desktop bump used to reset .pad's padding to a hand picked
    22/46/22/24, which is how the rescue option cards ended up on different
@@ -609,13 +629,20 @@ a { color: var(--red); }
    unreadable is unacceptable. A frosted bar is a nice effect; on the emergency
    path legibility outranks it, and an opaque bar cannot smear. */
 .top-bar {
-  position: sticky; top: 0; z-index: 50;
+  /* NOT STICKY (Antonio's ruling, 2026-08-03). It was `position: sticky` here
+     while the site header scrolls away, so the two headers never behaved the
+     same on any journey. Pinning an 80px bar on a phone costs rescue content
+     on the one screen where content is the product, and the way out is not
+     lost: every rescue screen already ends with Back one step and Start over.
+     If this is ever reinstated, reinstate it on .site-nav-wrap too. */
   background: var(--bg);
   /* --edge-soft to match the site header exactly. It was --edge here, a
      harder line, which is one of the small tells that made the rescue
      screens feel like a different site. */
   border-bottom: var(--stroke) solid var(--edge-soft);
-  padding: calc(10px + env(safe-area-inset-top)) var(--site-pad) 10px;
+  /* 0.8rem, the SAME vertical padding .site-nav uses. It was 10px, so the two
+     bars were different heights carrying different-sized marks. */
+  padding: calc(0.8rem + env(safe-area-inset-top)) var(--site-pad) 0.8rem;
 }
 /* The bar spans the page but its contents align to the SAME column as the
    step content below it, so the brand never floats off in the far corner. */
@@ -633,16 +660,18 @@ a { color: var(--red); }
   /* inline-FLEX, and it is the only rule that may say so. Tunnel.astro used to
      override this with inline-block and that stacked the shield above the
      wordmark on every rescue screen. */
-  display: inline-flex; align-items: center; gap: 9px;
-  /* 11px, absorbed from the scoped rule that used to carry it: the brand is
-     the way out of the tunnel and has to be a real tap target. */
-  padding: 11px 0;
+  /* 0.45rem, matching .nav-brand exactly. Was 9px. */
+  display: inline-flex; align-items: center; gap: 0.45rem; line-height: 1;
+  /* No padding. The shield is 54px tall on its own, which is already a
+     generous tap target; the old 11px existed only to give a 26px mark
+     enough height to tap. */
 }
 .top-bar .brand picture { display: block; flex: 0 0 auto; line-height: 0; }
-/* The shield's own aspect is 810 x 937.5, so 0.864. It was being drawn at
-   26x26, which squashed it into a square while the site header drew the same
-   asset correctly at 47x54. One asset cannot have two shapes. */
-.tb-seal { width: 22.5px; height: 26px; display: block; }
+/* The shield's own aspect is 810 x 937.5, so 0.864. 47x54 is the site
+   header's size and now the only size: the tunnel drew the same asset at
+   22.5x26, less than half, which is what made the rescue bar read as a
+   different product. One asset, one size. */
+.tb-seal { width: 47px; height: 54px; display: block; }
 /* Demoted in the polish sprint. It was red, letterspaced and BLINKING on every
    screen: the most visually aggressive element in the tunnel, carrying nothing
    the DJ can act on, competing with the brand mark opposite it and with the
@@ -794,10 +823,14 @@ html.ck-open .sticky-cta { display: none !important; }
 }
 @media print { .to-top { display: none !important; } }
 
-/* ---------- Desktop comfort ---------- */
-@media (min-width: 900px) {
-  .screen { padding-top: 44px; }
-}
+/* DELETED 2026-08-03: `@media (min-width:900px) { .screen { padding-top:44px } }`.
+   --page-top exists so that a site page and a rescue screen begin at exactly
+   the same height, and this override quietly broke that on desktop: 44px
+   against the token's 30.4px, so crossing from /emergency into the tunnel
+   dropped the content 14px. It was compensating for the tunnel bar being
+   shorter than the site header, which it no longer is. Antonio caught the
+   symptom on staging: "it's jumping, it's squeezing and then it's enlarging
+   again, everything has to be standard." One token, no exceptions. */
 
 /* ---------- Draft flags: hidden in public, kept in source ----------
    The 29 screens that carry .review-flag still await Antonio's expert

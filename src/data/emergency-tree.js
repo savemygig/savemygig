@@ -774,26 +774,39 @@ export const TREE = {
     "heading": "Your music is fine. This is routing.",
     "question": "Where is the sound missing?",
     "step": "ns_entry",
+    // SEVERITY, NOT SYMMETRY (Antonio, 2026-08-03). These four were all grey,
+    // which said the four are equally bad. They are not: exactly one of them
+    // means the room is silent. Red is reserved for that one.
     "options": [
       {
         "label": "ONE CHANNEL, OTHERS FINE",
         "to": "sound/channel",
-        "desc": "One deck silent, the rest of the mixer alive."
+        "desc": "One deck silent, the rest of the mixer alive.",
+        // You still have a working deck to mix on.
+        "tone": "amber"
       },
       {
         "label": "EVERYTHING IS SILENT",
         "to": "sound/master",
-        "desc": "Nothing from the mixer at all."
+        "desc": "Nothing from the mixer at all.",
+        // The only one where the room has no music. This is the red level.
+        "tone": "red"
       },
       {
         "label": "NO CUE IN MY HEADPHONES",
         "to": "sound/phones",
-        "desc": "The room is fine, you just cannot pre-listen."
+        "desc": "The room is fine, you just cannot pre-listen.",
+        // Green under the time-pressure rule, not amber. Its own description
+        // says the room is fine. The crowd cannot tell, nothing is at risk,
+        // and the DJ can fix this between tracks. Colouring it amber would
+        // have told a DJ to hurry over something nobody else can hear.
+        "tone": "green"
       },
       {
         "label": "SOUND IS THERE BUT WRONG",
         "to": "sound/thin",
-        "desc": "Thin, quiet, distorted or one-sided."
+        "desc": "Thin, quiet, distorted or one-sided.",
+        "tone": "amber"
       }
     ]
   },
@@ -1739,7 +1752,14 @@ export const TREE = {
         "label": "NOTHING WORKED, AND I HAVE TIME",
         "to": "usb/computer",
         "desc": "Step by step diagnosis, one question at a time.",
-        "tone": "neutral",
+        // GREEN, and Antonio overruled me to get here. I called it red on
+        // the grounds that the four moves had all failed, which is severity
+        // reasoning. He ruled the axis is TIME PRESSURE, not severity: "if
+        // he has time, it's green, it's not urgent." The label says I HAVE
+        // TIME in as many words, and the route it opens is a calm step by
+        // step diagnosis. Nothing here has to happen in the next sixty
+        // seconds, so nothing here is red.
+        "tone": "green",
         "event": "step_completed",
         "data": {
           "step": "runlist_to_tree"
@@ -1792,12 +1812,19 @@ export const TREE = {
       {
         "label": "IT IS PLAYING THE ROOM",
         "to": "frozen/live",
-        "desc": "We move the room first, restart second."
+        "desc": "We move the room first, restart second.",
+        // Amber, not red: the room still HAS music. What you have lost is
+        // your freedom to act, because the deck you would restart is the
+        // one the crowd is hearing, and the track has an end.
+        "tone": "amber"
       },
       {
         "label": "IT IS IDLE, NOT IN THE MIX",
         "to": "frozen/restart",
-        "desc": "Then it can be restarted without risk."
+        "desc": "Then it can be restarted without risk.",
+        // Green. Its own description says "without risk", which is the
+        // definition of the green level.
+        "tone": "green"
       }
     ]
   },
