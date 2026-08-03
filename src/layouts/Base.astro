@@ -69,32 +69,26 @@ const entityGraph = {
         caption: 'Save My Gig!',
       },
       image: { '@id': `${SITE}/#logo` },
-      // "Co-founder", not "founder" (Antonio, 2026-08-03): there is a second
-      // co-founder who is deliberately NOT named anywhere public, and schema
-      // IS public (it ships in every page's HTML). So the title is accurate
-      // without naming anyone: co-founder implies the other without
-      // identifying them. Who it is lives in project memory, not in code.
-      founder: { '@id': `${SITE}/#antonio` },
+      // NO founder property, and no Person in this graph, BY DECISION
+      // (2026-08-03): Save My Gig is a faceless company, made by DJs for
+      // DJs. No individual is named anywhere public, and schema IS public,
+      // it ships in every page's source. Articles carry the ORGANIZATION as
+      // author (valid schema.org, common for publications). The knowsAbout
+      // list moved here from the old Person so the expertise signal stays.
+      // Do not reintroduce personal names into any public surface.
+      knowsAbout: [
+        'Pioneer CDJ',
+        'Pioneer XDJ',
+        'rekordbox',
+        'DJ USB troubleshooting',
+        'FAT32 formatting',
+        'DJ data recovery',
+      ],
       sameAs: [
         'https://www.instagram.com/savemygig/',
         'https://www.tiktok.com/@savemygig',
         'https://x.com/savemygig',
         'https://www.youtube.com/@savemygig',
-      ],
-    },
-    {
-      '@type': 'Person',
-      '@id': `${SITE}/#antonio`,
-      name: 'Antonio Afonso',
-      jobTitle: 'DJ and co-founder of Save My Gig',
-      worksFor: { '@id': `${SITE}/#org` },
-      knowsAbout: [
-        'Pioneer CDJ',
-        'Pioneer XDJ',
-        'Rekordbox',
-        'DJ USB troubleshooting',
-        'FAT32 formatting',
-        'DJ data recovery',
       ],
     },
     {
