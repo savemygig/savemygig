@@ -912,7 +912,8 @@ html.ck-open .sticky-cta { display: none !important; }
 .dict-cat > summary::-webkit-details-marker,
 .dict-term > summary::-webkit-details-marker,
 .kb-cat > summary::-webkit-details-marker,
-.dt > summary::-webkit-details-marker { display: none; }
+.dt > summary::-webkit-details-marker,
+.lang > summary::-webkit-details-marker { display: none; }
 /* ONE focus ring on the whole site: red, the accent. The green rings were
    never a decision, they were five copies of one accident. */
 .acc-sec > summary:focus-visible,
@@ -936,7 +937,7 @@ summary:focus-visible {
    open, everywhere. Detail.astro drew a 10px one at a different angle with a
    translate correction; the dictionary, the FAQ and the Pioneer hub each
    drew their own copy of this. */
-.acc-chev, .faq-chev, .dict-chev, .dict-cat-chev, .kb-chev, .dt-icon {
+.acc-chev, .faq-chev, .dict-chev, .dict-cat-chev, .kb-chev, .dt-icon, .lang-chev {
   flex: 0 0 auto; width: 9px; height: 9px; margin-top: -1px;
   border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
   transform: rotate(-45deg); transition: transform var(--t-slow), margin-top var(--t-slow);
@@ -946,7 +947,8 @@ summary:focus-visible {
 .dict-cat[open] > summary .dict-cat-chev,
 .dict-term[open] > summary .dict-chev,
 .kb-cat[open] > summary .kb-chev,
-.dt[open] > summary .dt-icon { transform: rotate(45deg); margin-top: -3px; }
+.dt[open] > summary .dt-icon,
+.lang[open] > summary .lang-chev { transform: rotate(45deg); margin-top: -3px; }
 /* The open summary keeps its own breathing room instead of four pages each
    inventing one (0.5rem, 0.6rem, 1rem were all in production). */
 .acc-sec[open] > summary,
@@ -968,5 +970,5 @@ summary:focus-visible {
 .acc-related a { color: var(--red); text-decoration: none; font-weight: 600; margin-right: 0.9rem; }
 .acc-related a:hover { text-decoration: underline; }
 @media (prefers-reduced-motion: reduce) {
-  .acc-chev, .faq-chev, .dict-chev, .dict-cat-chev, .kb-chev, .dt-icon { transition: none; }
+  .acc-chev, .faq-chev, .dict-chev, .dict-cat-chev, .kb-chev, .dt-icon, .lang-chev { transition: none; }
 }
