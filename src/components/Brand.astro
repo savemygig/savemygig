@@ -14,11 +14,31 @@
  * Now: one component, one treatment, three sizes. Change the lettering here
  * and it propagates to the header, the footer and the rescue tunnel at once.
  *
- * ANTONIO'S LETTERING SPEC (2026-08-03): "SAVE MY GIG", MY in the brand red,
+ * ANTONIO'S LETTERING SPEC (2026-08-03): "SAVE MY GIG", GIG in the brand red,
  * NO exclamation mark, and in the full variant the wordmark spans exactly the
- * width of "DJ RESCUE AND PREVENTION" beneath it so the lockup reads as one
+ * width of "DJ BOOTH INTELLIGENCE" beneath it so the lockup reads as one
  * rectangle. The sizes below are MEASURED against the tagline at each
  * breakpoint, not guessed. Change the tagline and you must re-measure.
+ *
+ * THE TAGLINE CHANGED 2026-08-03: "DJ rescue and prevention" -> "DJ Booth
+ * Intelligence". His call, and the reasoning is worth keeping because it
+ * governs any future version:
+ *   - The old one was REDUNDANT. "Save My Gig" already means rescue, so the
+ *     tagline repeated the name in the most valuable space on the site,
+ *     printed on all 107 pages.
+ *   - The new one divides the work: the NAME carries urgency, the TAGLINE
+ *     carries depth. Together they claim a category rather than describing a
+ *     service, and the site can now back that claim (60-term dictionary,
+ *     firmware matrix, eight hardware references, thirteen fix guides).
+ *   - It sets up the book. Antonio's "DJ Booth Bible" ships in about two
+ *     months, so "Booth" becomes the word the brand owns across both, and
+ *     each one sells the other. This is why "Intelligence" is not an AI
+ *     claim: it is the field-intelligence sense, anchored to a physical
+ *     place by "Booth".
+ * NOTE the tagline is SHORTER than the old one (21 characters against 24),
+ * so every letter-spacing value below had to grow to keep the rectangle. They
+ * are measured, not estimated. Verified equal to within 1px at every
+ * breakpoint in both variants.
  *
  * NOT fixable here: the wordmark is also baked into logo-shield.svg,
  * seal-footer.webp, save-my-gig-seal.png, og-share.jpg and the 13 per-article
@@ -61,7 +81,7 @@ const cls = variant === 'footer' ? 'smg-foot' : 'smg-full';
 ---
 <span class:list={['smg-brand', cls]}>
   <span class="smg-word">Save My <span class="smg-accent">Gig</span></span>
-  <span class="smg-tag">DJ rescue and prevention</span>
+  <span class="smg-tag">DJ Booth Intelligence</span>
 </span>
 
 <style is:global>
@@ -93,14 +113,14 @@ const cls = variant === 'footer' ? 'smg-foot' : 'smg-full';
 
   /* FULL: header and footer. Sizes measured to the tagline at each width. */
   .smg-full .smg-word { font-size: 1.395rem; }
-  .smg-full .smg-tag { font-size: 0.55rem; letter-spacing: 0.125em; }
+  .smg-full .smg-tag { font-size: 0.55rem; letter-spacing: 0.2321em; margin-left: 0em; }
   @media (max-width: 900px) {
     .smg-full .smg-word { font-size: 1.636rem; }
-    .smg-full .smg-tag { font-size: 0.62rem; letter-spacing: 0.135em; }
+    .smg-full .smg-tag { font-size: 0.62rem; letter-spacing: 0.2474em; margin-left: 0.0504em; }
   }
   @media (max-width: 400px) {
     .smg-full .smg-word { font-size: 1.332rem; }
-    .smg-full .smg-tag { font-size: 0.55rem; letter-spacing: 0.1em; }
+    .smg-full .smg-tag { font-size: 0.55rem; letter-spacing: 0.2063em; margin-left: 0em; }
   }
 
   /* FOOTER: measured to the SOCIAL ROW, not to the tagline. See the header
@@ -114,10 +134,10 @@ const cls = variant === 'footer' ? 'smg-foot' : 'smg-full';
      Verified: wordmark, tagline and social row land within 0.4px of each
      other above 414px and within 0.1px below it. */
   .smg-foot .smg-word { font-size: 1.605rem; }
-  .smg-foot .smg-tag { font-size: 0.55rem; letter-spacing: 0.2265em; }
+  .smg-foot .smg-tag { font-size: 0.55rem; letter-spacing: 0.3734em; margin-left: 0.0568em; }
   @media (max-width: 414px) {
     .smg-foot .smg-word { font-size: 1.331rem; }
-    .smg-foot .smg-tag { font-size: 0.45rem; letter-spacing: 0.25em; }
+    .smg-foot .smg-tag { font-size: 0.45rem; letter-spacing: 0.3944em; margin-left: 0em; }
   }
 
   /* No third size. The rescue bar uses `full`, same as the site header. */
