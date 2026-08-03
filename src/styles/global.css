@@ -63,6 +63,31 @@
   --tunnel-w: 620px;
   --font-display: 'Archivo', 'Arial Black', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* ------------------------------------------------------------------
+     THE SPACING SCALE (design system sprint, 2026-08-03).
+     Every surface and control used to carry its own hand-picked padding:
+     panels at 1.5rem, cards at 1.4rem, buttons at 1.05rem, answer pads at
+     20px, page tops at 2.2rem against the tunnel's 26px. Individually
+     defensible, collectively the reason the site read as a collection of
+     pages rather than one product. One scale now, referenced everywhere.
+     Change a step here and the whole site moves together.
+     ------------------------------------------------------------------ */
+  --sp-1: 0.25rem;   /*  4px */
+  --sp-2: 0.5rem;    /*  8px */
+  --sp-3: 0.75rem;   /* 12px */
+  --sp-4: 1rem;      /* 16px, the standard gap between stacked blocks */
+  --sp-5: 1.25rem;   /* 20px, the standard padding inside any surface */
+  --sp-6: 1.5rem;    /* 24px */
+  --sp-7: 2rem;      /* 32px, between sections */
+  --sp-8: 3rem;      /* 48px */
+
+  /* Distance from the header to the first thing on the page. ONE value, so
+     a site page and a rescue screen begin at exactly the same height. */
+  --page-top: 1.9rem;
+}
+@media (max-width: 640px) {
+  :root { --page-top: 1.5rem; }
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -156,12 +181,11 @@ a { color: var(--red); }
 
 /* ---------- Layout ---------- */
 
-.wrap { max-width: var(--site-w); margin: 0 auto; padding: 2.2rem var(--site-pad) 4rem; }
+.wrap { max-width: var(--site-w); margin: 0 auto; padding: var(--page-top) var(--site-pad) 4rem; }
 .wrap-wide { max-width: var(--site-w); }
 .section { margin: 3rem 0; }
-/* Antonio, 2026-08-01: shave a few px off the top on phone, on top of the
-   breadcrumb/eyebrow already being hidden there. */
-@media (max-width: 640px) { .wrap { padding-top: 1.9rem; } }
+/* The phone adjustment now lives in the --page-top token, so the tunnel gets
+   it too instead of only site pages. */
 
 /* ---------- Panels ---------- */
 
@@ -169,8 +193,8 @@ a { color: var(--red); }
   background: var(--surf);
   border: 1px solid var(--edge);
   border-radius: var(--radius);
-  padding: 1.5rem;
-  margin-bottom: 1.25rem;
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-4);
 }
 .panel-warn   { background: var(--amber-dim); border-color: rgba(217, 164, 65, 0.4); }
 .panel-danger { background: var(--red-dim);   border-color: var(--red-border); }
@@ -260,8 +284,8 @@ a { color: var(--red); }
 .btn {
   display: block;
   width: 100%;
-  padding: 1.05rem 1.4rem;
-  margin-bottom: 0.9rem;
+  padding: var(--sp-4) var(--sp-5);
+  margin-bottom: var(--sp-4);
   border-radius: var(--radius);
   border: 1px solid var(--edge);
   background: var(--surf);
@@ -352,7 +376,7 @@ a { color: var(--red); }
   background: var(--surf);
   border: 1px solid var(--edge);
   border-radius: var(--radius);
-  padding: 1.4rem;
+  padding: var(--sp-5);
   display: flex;
   flex-direction: column;
 }
@@ -488,7 +512,7 @@ a { color: var(--red); }
   background: var(--surf);
   border: 1px solid var(--edge);
   border-radius: var(--radius);
-  padding: 20px 44px 20px 22px;
+  padding: var(--sp-5) 44px var(--sp-5) var(--sp-5);
   text-decoration: none; color: var(--text);
   transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
   position: relative; overflow: hidden;
@@ -520,8 +544,11 @@ a { color: var(--red); }
 .top-bar {
   position: sticky; top: 0; z-index: 50;
   background: var(--bg);
-  border-bottom: 1px solid var(--edge);
-  padding: calc(10px + env(safe-area-inset-top)) 20px 10px;
+  /* --edge-soft to match the site header exactly. It was --edge here, a
+     harder line, which is one of the small tells that made the rescue
+     screens feel like a different site. */
+  border-bottom: 1px solid var(--edge-soft);
+  padding: calc(10px + env(safe-area-inset-top)) var(--site-pad) 10px;
 }
 /* The bar spans the page but its contents align to the SAME column as the
    step content below it, so the brand never floats off in the far corner. */
@@ -553,9 +580,11 @@ a { color: var(--red); }
 @media (prefers-reduced-motion: reduce) { .top-bar .status-indicator { animation: none; } }
 
 /* Tunnel screen container */
-.screen { max-width: var(--tunnel-w); margin: 0 auto; padding: 26px 20px calc(60px + env(safe-area-inset-bottom)); }
-.screen h1 { font-size: clamp(1.7rem, 6.5vw, 2.4rem); }
-.screen h2 { font-size: clamp(1.4rem, 5vw, 1.9rem); }
+.screen { max-width: var(--tunnel-w); margin: 0 auto; padding: var(--page-top) var(--site-pad) calc(60px + env(safe-area-inset-bottom)); }
+/* The tunnel used to override the heading scale with its own clamps, so an h2
+   in a rescue screen was a different size from an h2 anywhere else on the
+   site. It now inherits the one scale. The tunnel stays visually calmer
+   through its narrower column, not through a second set of type sizes. */
 
 /* ---------- Accessibility: visible focus ---------- */
 a:focus-visible, button:focus-visible, input:focus-visible, .pad:focus-visible, .btn:focus-visible {
