@@ -201,23 +201,24 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
         <a href="/prepare" class:list={[{ 'nav-on': path.startsWith('/prepare') }]}>Prevention</a>
         <a href="/recovery" class:list={[{ 'nav-on': path.startsWith('/recovery') }]}>Recovery</a>
         <a href="/knowledge" class:list={[{ 'nav-on': path.startsWith('/knowledge') }]}>Knowledge</a>
+        <a href="/gear" class:list={['nav-more', 'nav-gear-hide-mobile', { 'nav-on': path.startsWith('/gear') }]}>Gear</a>
+        <!-- "About us", not "About" (Antonio, 2026-08-03): in the drawer the
+             one word sat short against CHECKLIST and KNOWLEDGE and the column
+             read ragged. Nav label only; the footer column keeps the short
+             form, where a compact list of links is the right register. -->
+        <a href="/about" class:list={['nav-more', { 'nav-on': path.startsWith('/about') }]}>About us</a>
         <!-- The language picker lives INSIDE the nav, once, so there is one
              instance and one implementation. On desktop the nav is a row and
-             it renders as a square immediately left of the search button; on
-             a phone the nav IS the drawer and it renders as a collapsing row.
-             Neither case needs a second copy.
-             ABOVE Gear and About (Antonio, 2026-08-03: "shouldn't about be
-             the last thing in the hamburger?"). On a phone that puts ABOUT
-             back at the bottom, where the story of the site closes the menu.
-             On desktop it changes nothing at all: Gear and About are
-             .nav-more and hidden there, so the square still lands directly
-             after KNOWLEDGE either way.
-             Search keeps the far right corner regardless: it is a repeat
-             action and that corner is the spot people hit without looking.
-             Language is a once ever action, so it sits inboard of it. -->
+             it renders as a square left of the search button; on a phone the
+             nav IS the drawer and it renders as a collapsing row.
+             LAST, after About (Antonio, 2026-08-03, second pass). It sat
+             between Knowledge and About for one build and he was right that
+             it read wrong: a setting mixed into the middle of a list of
+             places. Last is where a setting goes. What was missing the FIRST
+             time it sat last was not the position, it was separation, so the
+             row now closes the destinations with a gap and its own rule
+             instead of pretending to be an eighth destination. -->
         <LangPicker />
-        <a href="/gear" class:list={['nav-more', 'nav-gear-hide-mobile', { 'nav-on': path.startsWith('/gear') }]}>Gear</a>
-        <a href="/about" class:list={['nav-more', { 'nav-on': path.startsWith('/about') }]}>About</a>
       </nav>
     </div>
   </header>

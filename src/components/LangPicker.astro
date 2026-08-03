@@ -197,17 +197,19 @@ const NOTICES = {
      Not three permanent rows. A once ever preference must not sit at the same
      visual weight as seven destinations. */
   @media (max-width: 900px) {
-    /* The row now sits ABOVE About, so it needs the drawer's own rule under
-       it to keep the rhythm going. The links get theirs from `.nav-links a`,
-       which cannot match a <details>. */
+    /* SEPARATED, not just placed last. The row sat last once before and read
+       as an eighth destination, then sat between Knowledge and About and read
+       as a setting dropped into the middle of a list of places. Neither was a
+       position problem. A setting goes after the destinations, and it needs
+       to LOOK like a different kind of thing when it gets there: the
+       destination list closes, there is a gap, then this. */
     .lang {
       display: block; width: 100%;
-      border-bottom: var(--stroke) solid var(--edge-soft);
+      /* Gap only, NO rule of its own. About already closes the destination
+         list with its own hairline, so a border here printed two lines with
+         a gap between them. The gap is the separation. */
+      margin-top: var(--sp-4);
     }
-    /* Except when it is open: the panel below it already reads as its own
-       block, and a rule between the row and its own contents would cut the
-       thing in half. */
-    .lang[open] { border-bottom-color: transparent; }
     .lang-sum {
       display: flex; align-items: center; justify-content: flex-start;
       gap: var(--sp-3);
