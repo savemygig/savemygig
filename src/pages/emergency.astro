@@ -127,7 +127,11 @@ import Base from '../layouts/Base.astro';
 </Base>
 
 <style>
-  .emerg-h1 { font-size: clamp(2.1rem, 8vw, 3.4rem); margin-bottom: 0.9rem; }
+  /* Size comes from the global h1 scale. It carried its own clamp with a
+     2.1rem floor against the global 2rem, which nobody would ever have
+     noticed on a desktop (both clamp to 3.4rem) but showed up on a phone as
+     34px here against 32px on every other page. Journey sweep, 2026-08-03. */
+  .emerg-h1 { margin-bottom: 0.9rem; }
   .emerg-lead { color: var(--text-dim); font-size: 1rem; line-height: 1.6; max-width: 40rem; margin-bottom: 2rem; }
   .emerg-actions { max-width: 100%; margin: 0 0 2.6rem; }
   .emerg-triage { margin-top: 1rem; }
