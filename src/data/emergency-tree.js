@@ -346,7 +346,7 @@ export const TREE = {
       {
         "t": "details",
         "summary": "If there is no drive anywhere",
-        "html": "<p> A phone into a spare channel keeps the room from going silent. Be clear with yourself about what it is: not your set continuing, the night not stopping. It only works if you already carry a USB-C to 3.5mm adapter and a 3.5mm to twin RCA cable. </p>"
+        "html": "<p> A phone into a spare channel keeps the room from going silent. Be clear with yourself about what it is: not your set continuing, the room not stopping. It only works if you already carry a USB-C to 3.5mm adapter and a 3.5mm to twin RCA cable. </p>"
       }
     ],
     "draft": true,

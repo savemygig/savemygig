@@ -86,7 +86,7 @@ const groups = [
     id: 'technical',
     title: 'Technical Kit',
     icon: 'usb',
-    blurb: 'The small things that save big nights.',
+    blurb: 'The small things that save big gigs.',
     items: [
       { key: 'adapters', level: 'advanced', label: 'USB-C and USB-A adapters for modern devices and emergency connections' },
       { key: 'cables', level: 'advanced', label: 'Spare USB cables for your laptop, phone and compatible DJ equipment' },
@@ -134,7 +134,7 @@ const groups = [
       { key: 'keys', level: 'basic', label: 'Keys (home, hotel or car, as needed)' },
       { key: 'earplugs', level: 'advanced', label: 'Earplugs' },
       { key: 'water', level: 'advanced', label: 'Water bottle' },
-      { key: 'snacks', level: 'advanced', label: 'Snacks for a long night' },
+      { key: 'snacks', level: 'advanced', label: 'Snacks for a long gig' },
       { key: 'meds', level: 'advanced', label: 'Any medicine you need' },
       { key: 'spare-shirt', level: 'advanced', label: 'Spare shirt' },
       { key: 'freshen', level: 'advanced', label: 'Deodorant' },
@@ -4026,7 +4026,7 @@ ${sections}
   // trigger itself wasn't covered either, so its whole purpose (opens
   // create/rename/reorder/delete) was invisible under info mode too.
   attachExplainer(document.getElementById('lsHead'), () => 'Opens your saved lists. From here you can create a new list, rename or reorder your lists, or delete one.');
-  attachExplainer(lsNewBtn, () => 'Creates a new list, so you can plan a different night separately from this one. Type a name and save it, up to seven lists.');
+  attachExplainer(lsNewBtn, () => 'Creates a new list, so you can plan a different gig separately from this one. Type a name and save it, up to seven lists.');
   attachExplainer(lsMoveBtn, () => 'Turns on rename and reorder for your saved lists. Tap the pencil on a list to rename it, or drag it by the arrow handle to reorder.');
   attachExplainer(lsDelBtn, () => 'Turns on delete mode for your saved lists. Tap the × on a list once to arm it, tap again to delete it. Your active list can’t be deleted this way, switch to another list first.');
   modeBtns.forEach((b) => attachExplainer(b, () => (MODE_COPY_MAP[b.dataset.modeSet || 'basic'] || MODE_COPY_MAP.basic).f));

@@ -100,7 +100,7 @@ export const RUNLIST_LAST_RESORT = {
   title: 'If there is no drive anywhere',
   body:
     'A phone into a spare channel keeps the room from going silent. Be clear ' +
-    'with yourself about what it is: not your set continuing, the night not ' +
+    'with yourself about what it is: not your set continuing, the room not ' +
     'stopping. It also only works if you already carry a USB-C to 3.5mm adapter ' +
     'and a 3.5mm to twin RCA cable. No weight, no money, and worth nothing at ' +
     'all if it is at home.',
