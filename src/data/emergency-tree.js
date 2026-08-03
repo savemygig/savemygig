@@ -52,12 +52,16 @@ export const TREE = {
       {
         "label": "NO - MY PLAYLISTS ARE GONE",
         "to": "music/folder",
-        "desc": "Gone, empty, or refusing to open: all count. Usually a 15-second fix."
+        "desc": "Gone, empty, or refusing to open: all count. Usually a 15-second fix.",
+        // Symptom split, not a choice: neither branch is the safe one.
+        "tone": "amber"
       },
       {
         "label": "YES, BUT TRACKS WON'T PLAY",
         "to": "music/other-track",
-        "desc": "Error codes, or tracks that refuse to play."
+        "desc": "Error codes, or tracks that refuse to play.",
+        // Same split: a symptom answer never earns green.
+        "tone": "amber"
       }
     ]
   },
@@ -172,7 +176,9 @@ export const TREE = {
       },
       {
         "label": "NO COMPUTER",
-        "to": "usb/booth"
+        "to": "usb/booth",
+        // Resource NO with a live route: costs options, not the gig.
+        "tone": "amber"
       }
     ]
   },
@@ -401,7 +407,9 @@ export const TREE = {
       },
       {
         "label": "NO - DO NOT ERASE THIS DRIVE",
-        "to": "rebuild/no-erase"
+        "to": "rebuild/no-erase",
+        // Declining destruction is caution, never the red answer.
+        "tone": "amber"
       }
     ]
   },
@@ -611,7 +619,9 @@ export const TREE = {
       },
       {
         "label": "NO - STOP HERE",
-        "to": "rebuild/no-erase"
+        "to": "rebuild/no-erase",
+        // Same: stopping before an erase is legitimate, not failure.
+        "tone": "amber"
       }
     ]
   },
@@ -1291,7 +1301,9 @@ export const TREE = {
       },
       {
         "label": "NO, NOT RIGHT NOW",
-        "to": "export/find"
+        "to": "export/find",
+        // No computer yet: slower path, still a path.
+        "tone": "amber"
       }
     ]
   },
@@ -1326,7 +1338,9 @@ export const TREE = {
       {
         "label": "NO, SWITCH TO WORKAROUNDS",
         "to": "usb/moves",
-        "desc": "No computer means no real repair. We use the critical path to get you playing."
+        "desc": "No computer means no real repair. We use the critical path to get you playing.",
+        // Giving up the repair for workarounds is a trade, not a loss.
+        "tone": "amber"
       }
     ]
   },
@@ -1473,12 +1487,16 @@ export const TREE = {
       {
         "label": "FILES MISSING OR NOT FOUND",
         "to": "export/export",
-        "desc": "Library-side, not the drive. Import the folder you backed up, then export fresh. No format needed."
+        "desc": "Library-side, not the drive. Import the folder you backed up, then export fresh. No format needed.",
+        // Symptom split: both answers just name the problem.
+        "tone": "amber"
       },
       {
         "label": "DEVICE, WRITE OR UNKNOWN ERRORS",
         "to": "export/erase",
-        "desc": "Then the drive side is suspect and we rebuild it clean."
+        "desc": "Then the drive side is suspect and we rebuild it clean.",
+        // Same split, other family.
+        "tone": "amber"
       }
     ]
   },
@@ -1510,7 +1528,9 @@ export const TREE = {
       {
         "label": "NO - KEEP THIS DRIVE AS IT IS",
         "to": "export/fresh",
-        "desc": "We build tonight on a different drive instead."
+        "desc": "We build tonight on a different drive instead.",
+        // Keeping the drive intact has a real route. Caution, not danger.
+        "tone": "amber"
       }
     ]
   },
