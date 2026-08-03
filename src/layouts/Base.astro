@@ -2,6 +2,7 @@
 import Analytics from '../components/Analytics.astro';
 import Brand from '../components/Brand.astro';
 import Consent from '../components/Consent.astro';
+import LangPicker from '../components/LangPicker.astro';
 import Search from '../components/Search.astro';
 import { VERSION_LABEL, IS_BETA } from '../lib/version';
 import '../styles/global.css';
@@ -202,6 +203,15 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
         <a href="/knowledge" class:list={[{ 'nav-on': path.startsWith('/knowledge') }]}>Knowledge</a>
         <a href="/gear" class:list={['nav-more', 'nav-gear-hide-mobile', { 'nav-on': path.startsWith('/gear') }]}>Gear</a>
         <a href="/about" class:list={['nav-more', { 'nav-on': path.startsWith('/about') }]}>About</a>
+        <!-- The language picker lives INSIDE the nav, once, so there is one
+             instance and one implementation. On desktop the nav is a row, so
+             it renders as a square immediately left of the search button.
+             On a phone the nav IS the drawer, so it renders as a row of
+             options in the drawer. Neither case needs a second copy.
+             Search keeps the far right corner on purpose: it is a repeat
+             action and that corner is the spot people hit without looking.
+             Language is a once ever action, so it sits inboard of it. -->
+        <LangPicker />
       </nav>
     </div>
   </header>
@@ -684,9 +694,17 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
     text-transform: uppercase; color: var(--text-dim);
   }
   .nav-home { display: none; }
-  .nav-links { display: flex; gap: 0.78rem; flex-wrap: nowrap; }
+  /* MEASURED, not guessed (2026-08-03, adding the language square). The nav
+     bar shares the 768px site column with everything else, and before the
+     language control landed the row filled it to the last pixel: the brand's
+     auto margin had collapsed to zero and the wordmark was touching
+     CHECKLIST. Antonio's call was "adjust all the letters to make room", so
+     the room comes out of the link tracking and the inter link gap, which
+     nobody can perceive, rather than out of the type size, which everybody
+     can. Re measure both if you add a sixth nav item. */
+  .nav-links { display: flex; gap: 0.62rem; flex-wrap: nowrap; }
   .nav-links a {
-    font-family: var(--font-body); font-weight: 600; font-size: 0.73rem; letter-spacing: 0.04em; white-space: nowrap;
+    font-family: var(--font-body); font-weight: 600; font-size: 0.73rem; letter-spacing: 0.01em; white-space: nowrap;
     text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color var(--t-fast);
   }
   .nav-links a:hover { color: var(--text); }
@@ -733,8 +751,16 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
        themselves. The brand is pushed left by its auto margin instead. */
     .site-nav { justify-content: flex-start; gap: 0; }
     .nav-brand { margin-right: auto; }
-    .nav-links { order: 2; }
-    .nav-search-btn { order: 3; margin-left: 0.78rem; }
+    /* A hard floor on the space between the lockup and the first nav link.
+       The brand's auto margin supplies more than this on a wide screen; at
+       the column's own width it supplies nothing, and this is what stops the
+       wordmark touching CHECKLIST. */
+    .nav-links { order: 2; align-items: center; margin-left: 1.4rem; }
+    /* The language square and the magnifier are ONE utility pair, so they sit
+       tight to each other (0.4rem) and further from the last nav link (the
+       0.78rem the links use between themselves, which the nav gap already
+       supplies to the language square). */
+    .nav-search-btn { order: 3; margin-left: 0.4rem; }
     /* Desktop only: 20% smaller per Antonio (44px reads too big next to the
        nav links). Mobile keeps 44px, that is a touch target; desktop is a
        mouse target and 35px is fine. The geometry gate still enforces 44px

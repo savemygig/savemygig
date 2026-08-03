@@ -1,0 +1,277 @@
+---
+/**
+ * THE LANGUAGE PICKER.
+ *
+ * Antonio, 2026-08-03: EN, ES and PT in the header, and clicking Spanish or
+ * Portuguese shows a message IN THAT LANGUAGE, because the site itself is not
+ * translated yet. Telling a Spanish speaker "coming soon" in English is the
+ * one place where doing it in English would be a joke at their expense.
+ *
+ * SHAPE. This is deliberately the same square as the search button: same box,
+ * same border, same radius, same hover, same focus ring, same desktop
+ * shrink. Two identical squares read as one utility cluster. A text pill next
+ * to an icon button would have been a seventh control shape on a site that
+ * just spent a sprint getting down to one of everything.
+ *
+ * ORDER. Search keeps the far right corner. Search is a repeat action and the
+ * corner is the position people hit without looking, especially in a booth
+ * under time pressure. Language is a once ever action, so it sits inboard of
+ * it. That was Antonio's own mockup and it is the right way round.
+ *
+ * WHERE IT LIVES PER BREAKPOINT. Desktop puts the square in the bar. Phones do
+ * NOT: the bar already carries the brand, the search button and the hamburger,
+ * and at 360px those come to 306px of a 320px column. A third 44px control
+ * overflows, and the touch targets are not negotiable. So on a phone the
+ * picker becomes a row inside the drawer, next to the other secondary
+ * destinations, which is what a once ever preference deserves anyway.
+ *
+ * NOT IN THE TUNNEL. The rescue top bar carries the brand and nothing else by
+ * design. Nothing may compete with the decision on screen.
+ *
+ * WHEN PT AND ES ACTUALLY SHIP: replace the two notices with real hrefs, add
+ * hreflang alternates in Base.astro, and persist the choice. Until then this
+ * deliberately stores nothing, because there is nothing yet to remember.
+ */
+// ACCENTS ARE NOT OPTIONAL. A first draft of this shipped "Espanol" and
+// "Portugues" unaccented and it looked exactly like what it was: a site that
+// could not be bothered. The no dashes rule in this codebase is about em and
+// en dashes, it has never had anything to do with diacritics.
+const LANGS = [
+  { code: 'en', label: 'EN', name: 'English', live: true },
+  { code: 'es', label: 'ES', name: 'Español', live: false },
+  { code: 'pt', label: 'PT', name: 'Português', live: false },
+];
+
+// Written to a speaker's standard. Both notices deliberately sidestep the
+// pt-PT against pt-BR split and the regional Spanish splits: "está en camino"
+// and "está a caminho" read correctly on both sides of each language.
+const NOTICES = {
+  es: {
+    title: 'Español muy pronto',
+    body: 'Save My Gig todavía está solo en inglés. La versión en español está en camino.',
+    back: 'Volver',
+  },
+  pt: {
+    title: 'Português em breve',
+    body: 'O Save My Gig ainda está só em inglês. A versão em português está a caminho.',
+    back: 'Voltar',
+  },
+};
+---
+<div class="lang">
+  <button
+    type="button"
+    class="lang-btn"
+    id="langBtn"
+    aria-label="Language, English selected"
+    aria-haspopup="true"
+    aria-expanded="false"
+    aria-controls="langPop"
+  >EN</button>
+
+  <div class="lang-pop" id="langPop" role="dialog" aria-label="Choose a language" hidden>
+    <div class="lang-list" id="langList">
+      {LANGS.map((l) => (
+        <button
+          type="button"
+          class:list={['lang-opt', { 'lang-opt-on': l.live }]}
+          data-lang={l.code}
+          lang={l.code}
+          aria-current={l.live ? 'true' : undefined}
+        >
+          <span class="lang-code">{l.label}</span>
+          <span class="lang-name">{l.name}</span>
+          {!l.live && <span class="lang-soon" lang="en">Soon</span>}
+        </button>
+      ))}
+    </div>
+
+    {(['es', 'pt'] as const).map((code) => (
+      <div class="lang-note" id={`langNote-${code}`} lang={code} hidden>
+        <p class="lang-note-t">{NOTICES[code].title}</p>
+        <p class="lang-note-b">{NOTICES[code].body}</p>
+        <!-- The way back is in the same language as the notice. Dropping into
+             English for the one word that gets clicked would undo the point
+             of writing the notice in their language at all. -->
+        <button type="button" class="lang-note-x" data-back>{NOTICES[code].back}</button>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .lang { position: relative; display: inline-flex; flex: 0 0 auto; }
+
+  /* Same square as .nav-search-btn. If you change one, change both: they are
+     one utility pair and the whole point is that they match. */
+  .lang-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: var(--tap-min); height: var(--tap-min); flex: 0 0 auto;
+    background: transparent; border: var(--stroke) solid var(--edge);
+    border-radius: var(--radius);
+    font-family: var(--font-body); font-weight: 700; font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--text-dim); cursor: pointer; padding: 0;
+    transition: color var(--t-fast), border-color var(--t-fast);
+  }
+  .lang-btn:hover { color: var(--text); border-color: var(--text-dim); }
+  .lang-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+  .lang-pop {
+    position: absolute; top: calc(100% + 0.5rem); right: 0; z-index: 60;
+    min-width: 15rem;
+    background: var(--surf); border: var(--stroke) solid var(--edge);
+    border-radius: var(--radius); box-shadow: var(--shadow-raised);
+    padding: var(--sp-2);
+  }
+  .lang-pop[hidden] { display: none; }
+
+  .lang-list { display: flex; flex-direction: column; }
+  /* `display` beats the `hidden` attribute, so without this the notice was
+     rendering UNDERNEATH the three options instead of replacing them. */
+  .lang-list[hidden] { display: none; }
+  .lang-opt {
+    display: flex; align-items: center; gap: var(--sp-3);
+    width: 100%; min-height: var(--tap-min);
+    padding: var(--sp-2) var(--sp-3);
+    background: transparent; border: 0; border-radius: var(--radius);
+    text-align: left; cursor: pointer;
+    transition: background var(--t-fast), color var(--t-fast);
+  }
+  .lang-opt:hover { background: var(--surf-2); }
+  .lang-opt:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
+  .lang-code {
+    flex: 0 0 auto; width: 1.9rem;
+    font-family: var(--font-body); font-weight: 700; font-size: 0.74rem;
+    letter-spacing: 0.06em; color: var(--text);
+  }
+  .lang-name {
+    flex: 1 1 auto;
+    font-family: var(--font-body); font-size: 0.88rem; color: var(--text-dim);
+  }
+  /* The live language is marked with the accent, the same way every other
+     current state on the site is marked. */
+  .lang-opt-on .lang-code { color: var(--red); }
+  .lang-soon {
+    flex: 0 0 auto; font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-faint);
+  }
+
+  .lang-note { padding: var(--sp-3); }
+  .lang-note[hidden] { display: none; }
+  .lang-note-t {
+    font-family: var(--font-display); font-weight: 800; font-size: 0.98rem;
+    text-transform: uppercase; letter-spacing: -0.01em; color: var(--text);
+    margin-bottom: var(--sp-2);
+  }
+  .lang-note-b {
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-dim);
+    margin-bottom: var(--sp-3);
+  }
+  .lang-note-x {
+    min-height: var(--tap-min); padding: 0;
+    background: transparent; border: 0; cursor: pointer;
+    font-family: var(--font-body); font-weight: 600; font-size: 0.82rem;
+    color: var(--red);
+  }
+  .lang-note-x:hover { text-decoration: underline; }
+  .lang-note-x:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+  /* DESKTOP. The square shrinks with the search button so the pair stays a
+     pair: 35px is a mouse target, 44px is a thumb. */
+  @media (min-width: 901px) {
+    .lang-btn { width: 35px; height: 35px; font-size: 0.68rem; }
+  }
+
+  /* PHONES. The bar has no room for a third control, so the picker moves into
+     the drawer as a full width row and the popover stops floating. */
+  @media (max-width: 900px) {
+    .lang { display: block; width: 100%; }
+    .lang-btn { display: none; }
+    .lang-pop {
+      position: static; display: block; min-width: 0;
+      border: 0; box-shadow: none; background: transparent; padding: 0;
+    }
+    .lang-pop[hidden] { display: block; }
+    .lang-opt { padding-left: 0; padding-right: 0; }
+    .lang-note { padding-left: 0; padding-right: 0; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('langBtn');
+    var pop = document.getElementById('langPop');
+    var list = document.getElementById('langList');
+    if (!btn || !pop || !list) return;
+
+    // True only where the popover actually floats. On a phone the whole thing
+    // is laid out inline inside the drawer, so there is nothing to open, close,
+    // or trap focus in.
+    function floating() { return window.matchMedia('(min-width: 901px)').matches; }
+
+    function notes() { return pop.querySelectorAll('.lang-note'); }
+
+    function showList() {
+      list.hidden = false;
+      notes().forEach(function (n) { n.hidden = true; });
+    }
+
+    function showNote(code) {
+      var note = document.getElementById('langNote-' + code);
+      if (!note) return;
+      list.hidden = true;
+      notes().forEach(function (n) { n.hidden = n !== note; });
+      var back = note.querySelector('[data-back]');
+      if (back && floating()) back.focus();
+    }
+
+    function open() {
+      if (!floating()) return;
+      showList();
+      pop.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+    }
+
+    function close(refocus) {
+      if (!floating()) return;
+      pop.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      showList();
+      if (refocus) btn.focus();
+    }
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (pop.hidden) open(); else close(false);
+    });
+
+    pop.addEventListener('click', function (e) {
+      var opt = e.target.closest ? e.target.closest('.lang-opt') : null;
+      if (opt) {
+        var code = opt.getAttribute('data-lang');
+        // English is what you are already reading, so choosing it is a no op.
+        if (code === 'en') { close(true); return; }
+        showNote(code);
+        return;
+      }
+      if (e.target.closest && e.target.closest('[data-back]')) showList();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (pop.hidden) return;
+      if (!pop.contains(e.target) && e.target !== btn) close(false);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !pop.hidden) close(true);
+    });
+
+    // Crossing the breakpoint with the popover open would otherwise leave the
+    // drawer copy hidden, because `hidden` is an attribute, not a media query.
+    window.addEventListener('resize', function () {
+      if (floating()) { if (pop.hidden) showList(); }
+      else { pop.hidden = false; showList(); }
+    });
+  })();
+</script>
