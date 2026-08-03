@@ -175,14 +175,21 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          cleaner); phones wrap naturally. Returning visitors on a phone have
          read this already, so it auto-hides for them and gives the space
          back, no dismiss chrome needed. -->
-    {/* COPY PASS 2026-08-03. The intro's second half used to read "so the gig
-        never starts with something missing", which buried the stakes in a
-        subordinate clause and stated them abstractly. The replacement is the
-        actual argument for using a checklist at all: home is the last place
-        anything can still be fixed. Same length.
-        The account line said "registration loads it on any other", but
-        registration does not load anything, an account does. */}
-    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Tick it off before you walk out. What you forget at home, you cannot fix in the booth. <span class="intro-b">Your list is saved on this device. An account makes it available on any other.</span></p>
+    {/* COPY PASS 2026-08-03, REVERTED THE SAME DAY. A rewrite replaced the
+        second half with "What you forget at home, you cannot fix in the
+        booth". Antonio: "I think this was easier to understand", meaning
+        the original. He is right on two counts and this line is now
+        PROTECTED, so do not "improve" it again:
+        1. The rewrite used an INVERSION, which is a rhetorical structure
+           rather than plain speech. It reads punchier and parses slower, and
+           this page is opened by someone packing to leave.
+        2. This copy is going to Spanish and Portuguese. Inversions translate
+           stilted; plain declarative sentences survive translation intact.
+        Same reasoning protects "registration loads it on any other", which
+        the rewrite split into two sentences to be technically precise about
+        registration versus account. Nobody misreads it, and one flowing
+        sentence beats two correct ones here. */}
+    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Tick it off before you walk out, so the gig never starts with something missing. <span class="intro-b">Your list saves on this device, and registration loads it on any other.</span></p>
     <script is:inline>
       (function () {
         try {
