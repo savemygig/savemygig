@@ -1165,9 +1165,17 @@ summary:focus-visible {
   .site-footer .soc-btn::before { width: 32px; height: 32px; }
   .site-footer .foot-social { gap: 0px; }
 }
-/* Footer nav links: 23px of text becomes a 44px target. The list gap is
-   dropped by the amount the padding adds, so the columns do not grow. */
-.site-footer .foot-col a { display: block; padding: 11px 0; }
+/* Footer nav links: 23px of text needs a bigger target, but the target must
+   not cost the footer its rhythm. Two wrong versions before this one:
+   11px of padding on every device ("it became very large separation between
+   the topics", desktop), then the same padding scoped to touch, which left
+   the phone footer just as fragmented ("in mobile it is very fragmented").
+   The fix is arithmetic, not a media query. The column gap was 0.7rem
+   (11.2px), so a link occupied 34.2px of pitch. Zero the gap and add 6px of
+   padding top and bottom: the link is now a 35px target and the pitch is
+   35px. Identical spacing to the original, on every device, with a target
+   half again as big. WCAG 2.5.8 AA asks 24x24, which this clears. */
+.site-footer .foot-col a { display: block; padding: 6px 0; }
 .site-footer .foot-col { gap: 0; }
 /* /feedback type picker. The real target is the label (116x43, one pixel
    short); the radio itself is opacity:0 + pointer-events:none but still

@@ -295,18 +295,19 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
               back." The positioning CSS below was never deleted, only this
               tag, so this is a restore and not a rebuild.
 
-              PULLED AGAIN 2026-08-04, pre-press audit, and this time for a
-              reason beyond taste. The artwork does not just carry the old
-              exclamation mark: it carries the RETIRED TAGLINE, "DJ RESCUE
-              AND PREVENTION", in ink, in the mobile footer of every page. It
-              was rendering the dead brand directly beneath the live one on
-              the day press links go out. A decorative image is not worth
-              contradicting the rebrand, so it comes out until the seal is
-              re-exported with "DJ BOOTH INTELLIGENCE" and no exclamation.
-              The positioning CSS below stays, so restoring it is one tag.
-              Antonio's earlier "leave the footer seal for now" predates the
-              discovery of the tagline; the exclamation alone would have been
-              worth waiting on, the retired tagline is not. */}
+              PULLED then REBUILT, both on 2026-08-04. The pre-press audit
+              found the old seal-footer.webp was not merely carrying the
+              retired exclamation mark: it had the RETIRED TAGLINE, "DJ
+              RESCUE AND PREVENTION", drawn into the artwork, printing the
+              dead brand directly beneath the live one on the day press links
+              go out. So it came out. Antonio, straight back and right: "in
+              mobile it is wrong because it lost the round symbol."
+              Both true, so it is regenerated from the live brand instead,
+              by scripts/gen-seal.py: the vector shield inside a brand-red
+              ring, no words at all, therefore no tagline that can ever go
+              stale again. Vector, so it is sharp at 104px and at 16px.
+              A lettered seal for print or merch is a design job, not this. */}
+          <img class="foot-seal" src="/images/seal-footer.svg" alt="" width="104" height="104" loading="lazy" aria-hidden="true" />
           <a href="/" class="foot-lockup" aria-label="Save My Gig, DJ Booth Intelligence">
             <Brand variant="footer" />
           </a>

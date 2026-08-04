@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+import lockupPrint from '../components/brand-lockup-print.svg?raw';
+import printQr from '../components/print-qr.svg?raw';
 
 /**
  * Interactive pre-gig checklist. Prevention side, outside the tunnel.
@@ -705,6 +707,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
       </button>
     </div>
+
+    {/* PRINT ARTWORK, parked in the page so the download works OFFLINE
+        (2026-08-04). The PDF is written into a blank window with
+        document.write, so it has no origin and no stylesheet: a relative
+        <img src> would not resolve and an absolute one would need signal,
+        which is exactly what a DJ in a basement booth does not have. The
+        service worker already caches this page, so shipping the artwork
+        inside it means the printout is identical online and offline.
+        Both are display:none and aria-hidden: they are data, not content. */}
+    <template id="printLockup" set:html={lockupPrint} />
+    <template id="printQr" set:html={printQr} />
   </main>
 </Base>
 
@@ -2803,38 +2816,174 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       if (items.length || notes) groups.push({ title, notes, items });
     });
 
+    const total = groups.reduce((n, g) => n + g.items.length, 0);
+    const done = groups.reduce((n, g) => n + g.items.filter((i) => i.done).length, 0);
+
     const rows = (items: { label: string; done: boolean }[]) => items.map((it) =>
       `<li class="${it.done ? 'done' : ''}"><span class="bx">${it.done ? '&#10003;' : ''}</span>${esc(it.label)}</li>`
     ).join('');
-    const sections = groups.map((g) =>
-      `<section><h2>${esc(g.title)}</h2><ul>${rows(g.items)}</ul>${g.notes ? `<p class="gnotes">${notesHtml(g.notes).replace(/\n/g, '<br />')}</p>` : ''}</section>`
-    ).join('');
+    const sectionHtml = (g: typeof groups[number]) =>
+      `<section><h2>${esc(g.title)}</h2><ul>${rows(g.items)}</ul>${g.notes ? `<p class="gnotes">${notesHtml(g.notes).replace(/\n/g, '<br />')}</p>` : ''}</section>`;
+
+    // COLUMN BALANCING IN JS, NOT IN CSS (2026-08-04).
+    // The first rebuild used `column-count: 2`, which is the obvious answer
+    // and the wrong one: CSS multicol inside paged media fragments badly in
+    // Chrome. With the 48-item Advanced list it pushed EVERY section past the
+    // first column and printed a completely blank page one. So the split is
+    // computed here instead, greedily, by estimated height (one unit per row
+    // plus two for the heading and two more for a notes block). Two plain
+    // blocks side by side cannot fragment the way a multicol container does,
+    // and because each column ends up roughly half as tall, nothing needs to
+    // break in the first place.
+    const weight = (g: typeof groups[number]) => g.items.length + 2 + (g.notes ? 2 : 0);
+    const colA: typeof groups = [];
+    const colB: typeof groups = [];
+    let wA = 0, wB = 0;
+    groups.forEach((g) => {
+      // Keep source order within each column: a DJ reads Music before Logistics.
+      if (wA <= wB) { colA.push(g); wA += weight(g); } else { colB.push(g); wB += weight(g); }
+    });
+    // Short lists go SINGLE column. Two columns is what makes a 48-row
+    // Advanced sheet fit, but it made the 19-row Base sheet sit in the top
+    // half of the paper with the bottom half blank, which looks like the
+    // print failed rather than like a designed sheet. Above 22 rows the page
+    // needs the second column; below it, one roomy column fills the sheet.
+    const twoUp = groups.length > 1 && total > 22;
+    const sections = twoUp
+      ? `<div class="col">${colA.map(sectionHtml).join('')}</div><div class="col">${colB.map(sectionHtml).join('')}</div>`
+      : `<div class="col">${groups.map(sectionHtml).join('')}</div>`;
+
+    // DENSITY. A 19-item Base list set at the density a 48-item Advanced list
+    // needs would leave half the sheet blank, which reads as unfinished. The
+    // sheet picks one of three densities from the row count so every mode
+    // fills its page instead of floating at the top of it.
+    const density = total <= 22 ? 'roomy' : total <= 40 ? 'normal' : 'tight';
+
+    const modeLabel = mode === 'advanced' ? 'Advanced' : mode === 'custom' ? 'Custom' : 'Base';
+    const d = new Date();
+    const stamp = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    const fileStamp = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const art = (id: string) => (document.getElementById(id) as HTMLTemplateElement | null)?.innerHTML || '';
 
     const w = window.open('', '_blank');
     if (!w) return false; // popup blocked; callers tell the user, not silence
-    w.document.write(`<!doctype html><html><head><meta charset="utf-8" />
-<title>save-my-gig-pre-gig-checklist</title>
+    w.document.write(`<!doctype html><html lang="en"><head><meta charset="utf-8" />
+<title>save-my-gig-checklist-${fileStamp}</title>
 <style>
-  /* Ink-friendly on purpose: light page, dark text, real boxes to tick by hand. */
-  body { font: 14px/1.5 Arial, Helvetica, sans-serif; color: #111; margin: 36px; }
-  .brand { color: #d43a1e; font-weight: 800; letter-spacing: 0.14em; font-size: 11px; text-transform: uppercase; }
-  h1 { font-size: 26px; margin: 2px 0 2px; text-transform: uppercase; letter-spacing: -0.01em; }
-  .sub { color: #666; font-size: 12px; margin: 0 0 18px; }
-  section { break-inside: avoid; margin-bottom: 14px; }
-  .gnotes { margin: 6px 0 0 26px; padding: 8px 10px; font-size: 12px; color: #444; border-left: 2px solid #d43a1e; background: #f6f5f3; }
-  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid #d43a1e; padding-bottom: 4px; margin: 0 0 6px; }
+  /* THE PRINTED SHEET, rebuilt 2026-08-04: better organized, better
+     publicity, and one page.
+     NOTE FOR WHOEVER EDITS THIS NEXT: everything between these backticks is
+     DATA, not source. It is written into the print window verbatim, so a
+     comment here ships to the visitor and no minifier will ever strip it.
+     The faceless check caught a first name in this very block.
+
+     WHY IT USED TO SPILL ONTO A SECOND PAGE CARRYING ONE LINE OF TEXT:
+     nothing here controlled the page box. The old sheet set body{margin:36px}
+     and left the rest to whatever the browser chose, so the real height
+     depended on the visitor's paper size, default print margins and font
+     metrics. It cleared an A4 page by about 20px, which is not a margin, it
+     is luck. Letter paper is 18mm shorter than A4, macOS renders Arial
+     slightly wider than Linux, and Advanced mode adds rows: any one of those
+     pushed the footer alone onto page two.
+
+     THREE THINGS MAKE ONE PAGE STRUCTURAL NOW, not lucky:
+       1. @page owns the margin, so the sheet is the same on every machine
+          and every paper size, and no browser default gets a vote.
+       2. The columns halve the height. Even Custom with every row showing
+          fits, and Base now clears the page with room to spare instead of
+          20px.
+       3. The footer is position:fixed, so in paged media it is painted into
+          the page margin. A fixed element CANNOT generate a page of its own,
+          which is the specific bug he saw. Worst case it repeats on page two
+          of a very long Custom list, which is correct behaviour for a
+          running footer. */
+  @page { margin: 11mm 12mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font: 10.5pt/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #111; margin: 0;
+    /* The footer is fixed, so it is painted OVER the content box. Reserve its
+       height here or the last row of a full sheet is printed under it: the
+       48-row Advanced list lost the word "Deodorant" to exactly that. */
+    padding: 0 0 13mm;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+
+  /* Masthead. The lockup is the real brand asset, recoloured for ink: the
+     off-white becomes near-black, the warm grey becomes mid-grey, and GIG
+     keeps the brand red, so a printed sheet and the screen agree. */
+  .mast { display: flex; align-items: flex-end; justify-content: space-between; gap: 10mm;
+          border-bottom: 2px solid #ff4d2e; padding-bottom: 3mm; margin-bottom: 5mm; }
+  .mast-lock svg { display: block; width: 46mm; height: auto; }
+  .mast-meta { text-align: right; font-size: 8pt; line-height: 1.5; color: #666; white-space: nowrap; }
+  .mast-meta b { display: block; font-size: 9pt; color: #111; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  h1 { font-size: 17pt; line-height: 1.1; margin: 0 0 1mm; text-transform: uppercase; letter-spacing: -0.01em; }
+  .sub { color: #666; font-size: 8.5pt; margin: 0 0 5mm; }
+  .sub b { color: #111; }
+
+  /* Two plain blocks side by side, balanced in JS. Not multicol: see the
+     note in the builder for why that printed a blank first page.
+     Density is picked from the row count so a 19-item Base sheet and a
+     48-item Advanced sheet both fill their page instead of one of them
+     floating in the top third. */
+  .cols { display: flex; align-items: flex-start; gap: 9mm; }
+  .col { flex: 1 1 0; min-width: 0; }
+  /* Tuned against LETTER, not A4: US paper is 18mm shorter, so a sheet that
+     fits Letter fits both, and a sheet tuned on A4 spills in the US. Measured
+     empirically at 933px of content against Letter's ~960px box, so the Base
+     sheet fills its page and still has nowhere to overflow to. */
+  body.roomy  { --rowpad: 1.5mm; --rowsize: 9.8pt;  --seclead: 4.4mm; --bx: 3.9mm; }
+  body.normal { --rowpad: 1.2mm; --rowsize: 9.4pt;  --seclead: 4mm;   --bx: 3.6mm; }
+  /* The 48-row Advanced list cleared A4 at 1.0mm/9.2pt but needed a second
+     Letter page. 0.9mm/9pt fits BOTH, and 9pt is still comfortably above the
+     8pt floor where a checklist stops being readable in booth light. */
+  body.tight  { --rowpad: 0.8mm; --rowsize: 8.8pt;  --seclead: 3.3mm; --bx: 3.3mm; }
+  section { break-inside: avoid; margin: 0 0 var(--seclead); }
+  h2 { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.1em; color: #111;
+       border-bottom: 1px solid #cfcbc4; padding-bottom: 1.2mm; margin: 0 0 2.5mm; }
   ul { list-style: none; margin: 0; padding: 0; }
-  li { padding: 4px 0 4px 26px; position: relative; border-bottom: var(--stroke) solid #eee; }
-  .bx { position: absolute; left: 0; top: 5px; width: 13px; height: 13px; border: 1.5px solid #444; border-radius: var(--radius); font-size: 11px; line-height: 13px; text-align: center; }
-  li.done { color: #888; text-decoration: line-through; }
-  li.done .bx { background: #e8f7ee; border-color: #2f9e5f; color: #2f9e5f; }
-  .foot { margin-top: 18px; color: #888; font-size: 11px; display: flex; justify-content: space-between; }
-</style></head><body>
-<div class="brand">Save My Gig</div>
+  li { position: relative; padding: var(--rowpad) 0 var(--rowpad) 7mm;
+       font-size: var(--rowsize); line-height: 1.35; break-inside: avoid; }
+  /* Real boxes, big enough to tick with a pen in a dark booth. The old sheet
+     wrote var(--stroke) and var(--radius) here, which are defined in the
+     site's stylesheet and do NOT exist in this document: both declarations
+     were invalid, so the boxes had no radius and the rows had no rule. */
+  .bx { position: absolute; left: 0; top: 1.5mm; width: var(--bx); height: var(--bx);
+        border: 0.9pt solid #555; border-radius: 0.6mm; font-size: 8pt;
+        line-height: calc(var(--bx) - 0.4mm); text-align: center; }
+  li.done { color: #8a8a8a; }
+  li.done .bx { border-color: #2f9e5f; color: #2f9e5f; }
+  .gnotes { margin: 1.5mm 0 0 6.5mm; padding: 1.8mm 2.5mm; font-size: 8.5pt; color: #444;
+            border-left: 2px solid #ff4d2e; background: #f6f5f3; break-inside: avoid; }
+
+  /* Fixed, therefore painted in the page margin, therefore incapable of
+     creating the orphan page this replaced. */
+  .foot { position: fixed; left: 0; right: 0; bottom: 0;
+          display: flex; align-items: center; justify-content: space-between; gap: 6mm;
+          border-top: 1px solid #ddd; padding-top: 2mm; font-size: 7.5pt; color: #666; }
+  .foot-l b { color: #111; }
+  .foot-r { display: flex; align-items: center; gap: 2.5mm; text-align: right; }
+  /* 16mm, not 13: at 33 modules a 13mm code is 0.39mm per module, which is
+     under the ~0.5mm most phone cameras want off paper in booth light. */
+  .foot-r svg { display: block; width: 16mm; height: 16mm; }
+  .qr-cap { line-height: 1.35; }
+  .qr-cap b { display: block; color: #111; font-size: 8pt; }
+</style></head><body class="${density}">
+<div class="mast">
+  <div class="mast-lock">${art('printLockup')}</div>
+  <div class="mast-meta"><b>${esc(modeLabel)} list</b>${esc(stamp)}</div>
+</div>
 <h1>Pre-gig checklist</h1>
-<p class="sub">Your list, exactly as it stood when you downloaded it. savemygig.com/checklist</p>
-${sections}
-<div class="foot"><span>Something failing at the booth? savemygig.com/emergency</span><span>savemygig.com</span></div>
+<p class="sub"><b>${done} of ${total} ready</b> when this was printed. Tick the rest before you walk out.</p>
+<div class="cols">${sections}</div>
+<div class="foot">
+  <div class="foot-l">Something failing at the booth? <b>savemygig.com/emergency</b></div>
+  <div class="foot-r">
+    <div class="qr-cap"><b>savemygig.com</b>Scan for your own checklist.<br />Free, no account.</div>
+    ${art('printQr')}
+  </div>
+</div>
 <script>window.onload = function () { window.print(); };<\/script>
 </body></html>`);
     w.document.close();
