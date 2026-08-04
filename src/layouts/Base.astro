@@ -21,8 +21,8 @@ interface Props {
       Google, the share card gets the trimmed version). Falls back to title. */
   ogTitle?: string;
   /** Social share description, when the SEO meta description would repeat
-      the ogTitle on a share card (Antonio, 2026-07-30: title already says
-      "DJ Rescue and Prevention", the description shouldn't say it again).
+      the ogTitle on a share card (Antonio, 2026-07-30: if the title already
+      carries the positioning line, the description shouldn't repeat it).
       Falls back to description. */
   ogDescription?: string;
   /** Leaf label for the BreadcrumbList (e.g. "CDJ-3000X"). Optional: when it
@@ -52,8 +52,7 @@ const entityGraph = {
     {
       '@type': 'Organization',
       '@id': `${SITE}/#org`,
-      name: 'Save My Gig!',
-      alternateName: 'Save My Gig',
+      name: 'Save My Gig',
       url: SITE,
       email: 'info@savemygig.com',
       // The slogan property is real schema.org vocabulary and it is exactly
@@ -66,7 +65,7 @@ const entityGraph = {
         url: `${SITE}/images/save-my-gig-seal.png`,
         width: 512,
         height: 512,
-        caption: 'Save My Gig!',
+        caption: 'Save My Gig',
       },
       image: { '@id': `${SITE}/#logo` },
       // NO founder property, and no Person in this graph, BY DECISION
@@ -95,7 +94,7 @@ const entityGraph = {
       '@type': 'WebSite',
       '@id': `${SITE}/#website`,
       url: SITE,
-      name: 'Save My Gig!',
+      name: 'Save My Gig',
       description: 'DJ Booth Intelligence.',
       publisher: { '@id': `${SITE}/#org` },
       inLanguage: 'en',
@@ -161,7 +160,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
   <meta property="og:title" content={ogTitle ?? title} />
   <meta property="og:description" content={ogDescription ?? description} />
   <meta property="og:url" content={canonical} />
-  <meta property="og:site_name" content="Save My Gig!" />
+  <meta property="og:site_name" content="Save My Gig" />
   <meta property="og:image" content={ogImageUrl} />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -376,7 +375,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
              actual registration exists; never "upgrade" the ™. -->
         <!-- On narrow phones the dot-joined line wrapped raggedly (Antonio,
              S10e). The separator becomes a deliberate line break there. -->
-        <span class="foot-copy">© 2026 Save My Gig!&trade;<span class="fc-sep"> · </span><span class="fc-rest">Built by DJs who've been there.</span></span>
+        <span class="foot-copy">© 2026 Save My Gig&trade;<span class="fc-sep"> · </span><span class="fc-rest">Built by DJs who've been there.</span></span>
         <!-- Alive-signal, per Antonio's homepage review: says the project is
              maintained without printing a date that would itself go stale.
              Same font size as the line above (Antonio). -->

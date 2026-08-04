@@ -40,7 +40,7 @@ const { title, heading, risk = false } = Astro.props;
 // Every screen needs an h1 for heading order and screen readers. Most steps
 // render their own visible <h2>, so by default we emit a hidden h1 derived
 // from the page title rather than change the visual design.
-const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig!?\s*$/i, '');
+const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig?\s*$/i, '');
 ---
 <!doctype html>
 <html lang="en">
