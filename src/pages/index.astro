@@ -427,9 +427,24 @@ const SUBLINES = [
     // list view breathes, instead of a dropdown pinned low on the page. The
     // overlay opener focuses its own input, so typing lands there. Without
     // JS the box is still a working inline search via the component itself.
+    // NEVER on `focus` (2026-08-04): tabbing THROUGH the field counts as a
+    // focus, so the keyboard walked straight into the overlay, and because
+    // the overlay sits before #main with no focus trap, Tab looped forever
+    // over the same handful of stops. 56 of 75 focusables on this page,
+    // including the cookie Accept and Decline buttons, were unreachable by
+    // keyboard. Hand off on DELIBERATE activation only: a pointer click, or
+    // Enter/Space while the field has focus. Tab past it and nothing opens.
     var homeIn = document.querySelector('.home-srch .srch-input');
     var navBtn = document.getElementById('navSearchBtn');
-    if (homeIn && navBtn) homeIn.addEventListener('focus', function () { navBtn.click(); });
+    if (homeIn && navBtn) {
+      homeIn.addEventListener('click', function () { navBtn.click(); });
+      homeIn.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          navBtn.click();
+        }
+      });
+    }
 
     // Popular fixes: ONE line, never two (Antonio). The layout measures
     // itself: hide links from the end until the row height is a single

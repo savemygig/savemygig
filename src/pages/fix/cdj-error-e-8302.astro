@@ -7,7 +7,7 @@ const schema = {
   '@type': 'TechArticle',
   '@id': 'https://www.savemygig.com/fix/cdj-error-e-8302#article',
   headline: 'CDJ Error E-8302 - What It Means and How to Fix It',
-  description: 'Error E-8302 on a Pioneer CDJ means the player can\'t read your USB\'s data, usually a corrupt Rekordbox database. Here\'s the immediate fix and the permanent one.',
+  description: 'Error E-8302 on a Pioneer CDJ means the player can\'t read your USB\'s data, usually a corrupt rekordbox database. Here\'s the immediate fix and the permanent one.',
   author: { '@id': 'https://www.savemygig.com/#org' },
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   datePublished: '2026-07-24',
@@ -18,7 +18,7 @@ const schema = {
 ---
 <Base
   title="CDJ Error E-8302 - What It Means and How to Fix It | Save My Gig!"
-  description="Error E-8302 on a Pioneer CDJ means the player can't read your USB's data, usually a corrupt Rekordbox database. Here's the immediate fix and the permanent one."
+  description="Error E-8302 on a Pioneer CDJ means the player can't read your USB's data, usually a corrupt rekordbox database. Here's the immediate fix and the permanent one."
   path="/fix/cdj-error-e-8302"
   ogImage="/og/cdj-error-e-8302.png"
 >
@@ -32,17 +32,17 @@ const schema = {
     <h1 style="margin-bottom:1.5rem">CDJ ERROR <span class="danger">E-8302</span>:<br />WHAT IT MEANS, HOW TO FIX IT</h1>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><strong>Short version:</strong> E-8302 reads <strong>CANNOT PLAY TRACK</strong> on the CDJ-3000 and CDJ-3000X: the player cannot read the track data on your USB. Almost always it's a corrupt Rekordbox database or a wrong file system, both fixable, often before your set.</p>
+      <p style="margin:0"><strong>Short version:</strong> E-8302 reads <strong>CANNOT PLAY TRACK</strong> on the CDJ-3000 and CDJ-3000X: the player cannot read the track data on your USB. Those are the two players AlphaTheta documents the code for, and DJs report it on earlier CDJ-2000 units as well, where it means the same thing. Almost always it's a corrupt rekordbox database or a wrong file system, both fixable, often before your set.</p>
     </div>
 
         <details class="acc-sec" name="fix-acc">
       <summary><h2 class="acc-h2">What causes it</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <ul class="checklist">
-      <li><strong>Corrupt Rekordbox export</strong>, usually from pulling the USB without ejecting, or an interrupted sync.</li>
+      <li><strong>A corrupt rekordbox export</strong>, usually from pulling the USB without ejecting, or an interrupted sync.</li>
       <li><strong>Wrong file system.</strong> NTFS is never supported, by the player or by rekordbox itself. A drive left on a GPT partition map is the other common culprit. <span class="mono">FAT32</span> with an <span class="mono">MBR</span> scheme is the combination that works in every booth (newer CDJ-3000 firmware also reads exFAT, but FAT32 never surprises you).</li>
       <li><strong>A failing drive</strong>, bad sectors right where the database lives.</li>
-      <li><strong>Old player firmware</strong> meeting a new Rekordbox export format.</li>
+      <li><strong>Old player firmware</strong> meeting a new rekordbox export format.</li>
     </ul>
 
     
@@ -58,7 +58,7 @@ const schema = {
     </p>
     <ul class="checklist">
       <li>If another player reads it, play from that deck via Pro DJ Link.</li>
-      <li>With a laptop: open the USB in Rekordbox. If Rekordbox reads it, do a fresh export of tonight's playlist. If it doesn't, copy your music files off, reformat FAT32/MBR, re-export tonight's tracks.</li>
+      <li>With a laptop: open the USB in rekordbox. If it reads the drive, do a fresh export of tonight's playlist. If it doesn't, copy your music files off, reformat FAT32/MBR, re-export tonight's tracks.</li>
       <li>No laptop and no player reads it: the database is gone for tonight, switch to the emergency flow below for the workaround route.</li>
     </ul>
 
@@ -71,8 +71,8 @@ const schema = {
       <div class="acc-body">
     <ul class="checklist">
       <li>Full-format the drive (not quick) as <span class="mono">FAT32</span> + <span class="mono">MBR</span>. If the full format fails or crawls, retire the drive.</li>
-      <li>Re-export your library fresh from Rekordbox in Export mode. Never copy an old database back onto a clean drive.</li>
-      <li>Update player firmware and Rekordbox.</li>
+      <li>Re-export your library fresh from rekordbox in Export mode. Never copy an old database back onto a clean drive.</li>
+      <li>Update player firmware and rekordbox.</li>
       <li>Carry two identical drives with identical exports. E-8302 on one drive is an inconvenience; on your only drive it's a disaster.</li>
     </ul>
       </div>

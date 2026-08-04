@@ -6,8 +6,8 @@ const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
   '@id': 'https://www.savemygig.com/fix/rekordbox-not-detecting-usb#article',
-  headline: 'Rekordbox Not Detecting USB - Why the Device Won\'t Show and How to Fix It',
-  description: 'Rekordbox won\'t show your USB in Export mode? The real reasons the device is missing, and the fixes, in order, so you can export before the gig, not during it.',
+  headline: 'USB Not Detected in rekordbox - Why the Device Will Not Show and How to Fix It',
+  description: 'USB missing from the Devices list in rekordbox Export mode? The real reasons the device is missing, and the fixes, in order, so you can export before the gig, not during it.',
   author: { '@id': 'https://www.savemygig.com/#org' },
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   datePublished: '2026-07-24',
@@ -17,8 +17,8 @@ const schema = {
 };
 ---
 <Base
-  title="Rekordbox Not Detecting USB? Device Not Showing, Fixed | Save My Gig!"
-  description="Rekordbox won't show your USB in Export mode? The real reasons the device is missing, and the fixes, in order, so you can export before the gig, not during it."
+  title="USB Not Detected in rekordbox? Device Not Showing, Fixed | Save My Gig!"
+  description="USB missing from the Devices list in rekordbox Export mode? The real reasons the device is missing, and the fixes, in order, so you can export before the gig, not during it."
   path="/fix/rekordbox-not-detecting-usb"
   ogImage="/og/rekordbox-not-detecting-usb.png"
 >
@@ -28,17 +28,17 @@ const schema = {
     <h1 style="margin-bottom:1.5rem">REKORDBOX WON'T SEE YOUR <span class="danger">USB</span>?<br />FIX IT BEFORE THE GIG</h1>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><strong>Short version:</strong> if the drive is missing from the Devices list, the cause is almost always one of three things: you are not in Export mode, the operating system itself cannot see the drive, or the drive is formatted in a way Rekordbox cannot write to. Check them in that order.</p>
+      <p style="margin:0"><strong>Short version:</strong> if the drive is missing from the Devices list, the cause is almost always one of three things: you are not in Export mode, the operating system itself cannot see the drive, or the drive is formatted in a way rekordbox cannot write to. Check them in that order.</p>
     </div>
 
         <details class="acc-sec" name="fix-acc">
       <summary><h2 class="acc-h2">The 60-second checks</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <ul class="checklist">
-      <li><strong>Confirm you are in Export mode.</strong> The device tree with your USB only appears in Export. Top-left of Rekordbox, switch from Performance or Lighting to <span class="mono">EXPORT</span>.</li>
-      <li><strong>Check the computer sees the drive first.</strong> Open Finder (Mac) or File Explorer (Windows). If the USB is not there either, this is not a Rekordbox problem, it is a drive or connection problem. Reseat it, try another port, skip the hub.</li>
-      <li><strong>Plug in direct, no hub.</strong> USB hubs and dongles are the single most common reason a drive mounts on the OS but never reaches Rekordbox. Straight into the computer.</li>
-      <li><strong>Restart Rekordbox with the drive already inserted.</strong> Some versions only scan removable drives at launch. Insert first, then open the app.</li>
+      <li><strong>Confirm you are in Export mode.</strong> The device tree with your USB only appears in Export. Top-left of rekordbox, switch from Performance or Lighting to <span class="mono">EXPORT</span>.</li>
+      <li><strong>Check the computer sees the drive first.</strong> Open Finder (Mac) or File Explorer (Windows). If the USB is not there either, this is not a rekordbox problem, it is a drive or connection problem. Reseat it, try another port, skip the hub.</li>
+      <li><strong>Plug in direct, no hub.</strong> USB hubs and dongles are the single most common reason a drive mounts on the OS but never reaches rekordbox. Straight into the computer.</li>
+      <li><strong>Restart rekordbox with the drive already inserted.</strong> Some versions only scan removable drives at launch. Insert first, then open the app.</li>
     </ul>
 
     
@@ -49,8 +49,8 @@ const schema = {
       <summary><h2 class="acc-h2">Still missing? The real causes</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <ul class="checklist">
-      <li><strong>macOS permissions.</strong> Newer macOS blocks apps from removable drives until you allow it. System Settings, Privacy and Security, Files and Folders (or Removable Volumes), turn Rekordbox on, then relaunch. This one traps a lot of people after an OS update.</li>
-      <li><strong>Wrong format.</strong> Rekordbox exports to <span class="mono">FAT32</span> or <span class="mono">exFAT</span> only. A drive formatted NTFS (common on Windows) or APFS (Mac) may mount on the computer but will not accept an export. The safe answer for every CDJ is <span class="mono">FAT32</span> plus <span class="mono">MBR</span>. <a href="/fix/format-usb-for-cdj">Format walkthrough here</a>.</li>
+      <li><strong>macOS permissions.</strong> Newer macOS blocks apps from removable drives until you allow it. System Settings, Privacy and Security, Files and Folders (or Removable Volumes), turn rekordbox on, then relaunch. This one traps a lot of people after an OS update.</li>
+      <li><strong>Wrong format.</strong> Exports go to <span class="mono">FAT32</span>, <span class="mono">exFAT</span> (USB drives only) and, on macOS, <span class="mono">HFS+</span>, never NTFS or APFS. A drive formatted NTFS (common on Windows) or APFS (Mac) may mount on the computer but will not accept an export. The safe answer for every CDJ is <span class="mono">FAT32</span> plus <span class="mono">MBR</span>. <a href="/fix/format-usb-for-cdj">Format walkthrough here</a>.</li>
       <li><strong>Write protection.</strong> Some drives have a physical lock switch, and some arrive read-only. If the OS shows it but nothing can be copied to it, that is the cause.</li>
       <li><strong>A failing drive.</strong> If it mounts, disappears, and reappears, or throws read errors in Finder or Explorer, the hardware is going. Copy your music off now and retire it. <a href="/fix/dj-usb-backup-strategy">Why two identical drives</a>.</li>
     </ul>
@@ -62,7 +62,7 @@ const schema = {
     <details class="acc-sec" name="fix-acc">
       <summary><h2 class="acc-h2">If the gig is soon</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-    <p>If you have the tracks on your computer, the fastest safe route is to reformat a working drive <span class="mono">FAT32</span> plus <span class="mono">MBR</span>, export fresh from Rekordbox, and eject properly with the Rekordbox eject button. If the drive that failed holds the only copy of anything, do not format it, treat it as recovery. The emergency flow below walks the whole thing step by step, including what to do when there is no time left.</p>
+    <p>If you have the tracks on your computer, the fastest safe route is to reformat a working drive <span class="mono">FAT32</span> plus <span class="mono">MBR</span>, export fresh from rekordbox, and eject properly with the rekordbox eject button. If the drive that failed holds the only copy of anything, do not format it, treat it as recovery. The emergency flow below walks the whole thing step by step, including what to do when there is no time left.</p>
       </div>
     </details>
 

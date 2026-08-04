@@ -52,7 +52,5 @@ Allow: /
 # --- Everyone else ---
 User-agent: *
 Allow: /
-Disallow: /preview/
-Disallow: /lab.html
 
 Sitemap: https://www.savemygig.com/sitemap-index.xml

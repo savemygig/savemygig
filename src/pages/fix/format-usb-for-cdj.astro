@@ -39,28 +39,10 @@ const schema = {
   ],
 };
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  '@id': 'https://www.savemygig.com/fix/format-usb-for-cdj#faq',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'Why is FAT32 not in the Windows format list?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Because the drive is larger than 32GB. That is a limit in the Windows formatting dialog, not in FAT32 itself, which supports volumes up to 2TB. Use the free guiformat tool from Ridgecrop Consultants, or format from the command line on Windows 11, or shrink the drive to a 32GB partition.' },
-    },
-    {
-      '@type': 'Question',
-      name: 'Why is there no Scheme option in Mac Disk Utility?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Because you selected the volume instead of the physical device. Choose View then Show All Devices, and select the top-level drive entry rather than the indented one beneath it. The Scheme dropdown only appears when the device itself is selected.' },
-    },
-    {
-      '@type': 'Question',
-      name: 'My USB formatted fine but the CDJ still will not read it. Why?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Usually the partition scheme. The drive is GPT rather than MBR, which formats and mounts perfectly on a computer but is a common cause of a player refusing it. Re-erase it selecting the device rather than the volume, and choose Master Boot Record. Check the file system too: it must be FAT32, and never NTFS, which AlphaTheta lists as unsupported.' },
-    },
-  ],
-};
+// The FAQPage block that used to sit here was removed on 2026-08-04: its
+// questions and answers were paraphrases that did not appear verbatim in the
+// visible page text, which is exactly what Google's structured data policy
+// forbids. The HowTo schema above describes content that is on the page.
 ---
 <Base
   title="How to Format a USB for Pioneer CDJ (FAT32 + MBR) | Save My Gig!"
@@ -69,7 +51,6 @@ const faqSchema = {
   ogImage="/og/format-usb-for-cdj.png"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
 
   <main class="wrap wrap-wide">
     <nav class="crumb" aria-label="Breadcrumb">
@@ -96,7 +77,7 @@ const faqSchema = {
     <h2 class="art-h2">The 60-second version</h2>
     <ol class="art-steps">
       <li><strong>Mac:</strong> Disk Utility &rarr; View &rarr; <strong>Show All Devices</strong> &rarr; select the <strong>drive</strong>, not the volume &rarr; Erase &rarr; <span class="mono">MS-DOS (FAT)</span> + <span class="mono">Master Boot Record</span>.</li>
-      <li><strong>Windows:</strong> right-click the drive in Explorer &rarr; Format &rarr; <span class="mono">FAT32</span> &rarr; Quick format is fine.</li>
+      <li><strong>Windows:</strong> right-click the drive in Explorer &rarr; Format &rarr; <span class="mono">FAT32</span> &rarr; quick format is fine on a drive you trust. On a drive you suspect, untick quick and let the full format run: it works the whole drive, so it doubles as a stress test.</li>
       <li>Put music on it with <strong>rekordbox 7.2.13 or later in EXPORT mode</strong>. Do not drag files.</li>
       <li>Load a track from it on a player <strong>before the drive matters</strong>.</li>
     </ol>
@@ -154,7 +135,7 @@ const faqSchema = {
       hint="Four causes, in the order worth checking."
     >
       <ul class="checklist">
-        <li><strong>The scheme is GPT, not MBR.</strong> The usual suspect, and invisible from the computer. Re-erase selecting the device rather than the volume (see above). On Windows check Disk Management &rarr; right-click the disk &rarr; Properties &rarr; Volumes. To be straight with you: AlphaTheta documents which file systems rekordbox writes, and says nothing about partition schemes, so MBR is our recommendation rather than a published rule. It costs nothing and it removes a variable.</li>
+        <li><strong>The scheme is GPT, not MBR.</strong> The usual suspect, and invisible from the computer. Re-erase selecting the device rather than the volume (see above). On Windows check Disk Management &rarr; right-click the disk &rarr; Properties &rarr; Volumes. AlphaTheta documents this for specific models: their support articles state that the CDJ-3000 (article 4406135001625) and the XDJ-AN (article 53214453591009) do not support the GUID Partition Map. For the rest of the range no scheme is published, so MBR is the manufacturer's documented answer where they name one and our recommendation everywhere else. It costs nothing and it removes a variable.</li>
         <li><strong>It is exFAT, not FAT32.</strong> Drives above 32&nbsp;GB ship exFAT from the factory, so a brand-new "professional" 64&nbsp;GB stick fails on an older CDJ out of the box. If you are using an <strong>SD card</strong> rather than a USB stick, exFAT is not an option at all: rekordbox will not export to an exFAT SD card.</li>
         <li><strong>The music was dragged on, not exported.</strong> The player may show nothing at all in playlist view. Try the <strong>FOLDER</strong> browse button: if the tracks are there, that is what happened.</li>
         <li><strong>The drive itself is failing.</strong> If it formats but errors partway through copying, stop trusting it. <a href="/fix/dj-usb-backup-strategy">Two identical drives, always &rarr;</a></li>
@@ -174,7 +155,7 @@ const faqSchema = {
 
     <Detail
       q="What size drive should I buy?"
-      hint="32-64 GB. Bigger is genuinely worse here."
+      hint="32-64 GB. Bigger is worse here."
     >
       <p>
         32&ndash;64&nbsp;GB is the sweet spot: big enough for a full working library,
@@ -184,7 +165,10 @@ const faqSchema = {
       <p>
         The FAT32 limit worth knowing is <strong>4&nbsp;GB per file</strong>, not per
         drive. A 320kbps MP3 is around 9&nbsp;MB, and even a long uncompressed WAV
-        rarely passes 1&nbsp;GB, so for a music library it never comes up.
+        rarely passes 1&nbsp;GB, so for a music library it never comes up. FAT32 has
+        other ceilings, a 2&nbsp;TB volume limit and the per-model file and folder
+        counts AlphaTheta publishes in support article 4406512510105, but none of
+        them reach a 32&ndash;64&nbsp;GB gig drive either.
         <a href="/fix/best-usb-size-for-djing">More on sizing &rarr;</a> ·
         <a href="/gear">Drives that behave &rarr;</a>
       </p>

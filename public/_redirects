@@ -10,7 +10,6 @@
 # The sitemap moved from a hand-written /sitemap.xml to the generated index.
 /sitemap.xml         /sitemap-index.xml 301
 /index.html          /                 301
-/teste.html          /                 301
 /bible               /prepare          301
 # Legal restructure 2026-07-28: standalone /privacy and /disclaimer moved
 # under the /legal hub. 301s preserve existing links and search equity.
@@ -72,7 +71,7 @@
 /protocol/quick-fix/fresh-usb         /protocol/export/fresh        301
 /protocol/quick-fix/verify            /protocol/export/verify       301
 
-# Knowledge base brand-folder migration 2026-08-01 (Antonio): every documented
+# Knowledge base brand-folder migration 2026-08-01: every documented
 # product now lives under its own brand, /knowledge/<brand>/<product>. rekordbox
 # and DJM-REC are both AlphaTheta products and were the only two sitting flat.
 # Both old URLs were indexed, so these 301s carry the ranking signal over.

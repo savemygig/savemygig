@@ -7,7 +7,7 @@ const schema = {
   '@type': 'TechArticle',
   '@id': 'https://www.savemygig.com/fix/exfat-vs-fat32-cdj#article',
   headline: 'exFAT vs FAT32 for CDJs - Which Format Actually Works',
-  description: 'Which format works on CDJ-2000, CDJ-3000 and XDJ players? The honest compatibility table, the 4GB myth, and the one setup that works everywhere.',
+  description: 'Which format works on CDJ-2000, CDJ-3000 and XDJ players? The compatibility table, the 4GB myth, and the one setup that works everywhere.',
   author: { '@id': 'https://www.savemygig.com/#org' },
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   datePublished: '2026-07-24',
@@ -18,7 +18,7 @@ const schema = {
 ---
 <Base
   title="exFAT vs FAT32 for CDJ USB Drives - The Real Answer | Save My Gig!"
-  description="Which format works on CDJ-2000, CDJ-3000 and XDJ players? The honest compatibility table, the 4GB myth, and the one setup that works everywhere."
+  description="Which format works on CDJ-2000, CDJ-3000 and XDJ players? The compatibility table, the 4GB myth, and the one setup that works everywhere."
   path="/fix/exfat-vs-fat32-cdj"
   ogImage="/og/exfat-vs-fat32-cdj.png"
 >
@@ -28,11 +28,11 @@ const schema = {
     <h1 style="margin-bottom:1.5rem">exFAT vs <span class="accent">FAT32</span>:<br>WHICH ONE FOR CDJs?</h1>
 
     <div class="panel panel-go">
-      <p style="margin:0"><strong>The answer that never fails:</strong> FAT32 with an MBR partition map plays on every Rekordbox-compatible player ever made. exFAT works only on newer hardware. If you play in booths you don't control, FAT32 is the professional choice.</p>
+      <p style="margin:0"><strong>The answer that never fails:</strong> FAT32 with an MBR partition map plays on every rekordbox-compatible player ever made. exFAT works only on newer hardware. If you play in booths you don't control, FAT32 is the professional choice.</p>
     </div>
 
         <details class="acc-sec" name="fix-acc">
-      <summary><h2 class="acc-h2">Compatibility, honestly</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h2 class="acc-h2">Compatibility in detail</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <ul class="checklist">
       <li><span class="mono">FAT32 + MBR</span>, works on CDJ-850, 900, 2000, 2000NXS/NXS2, 3000, every XDJ. The universal key.</li>
@@ -43,7 +43,7 @@ const schema = {
            narrow and too vague, and omitted the NXS2. -->
       <li><span class="mono">exFAT</span>, supported on CDJ-3000, CDJ-3000X, CDJ-1500X, XDJ-RX3, XDJ-XZ and XDJ-AZ (firmware matters, see the <a href="/knowledge/pioneer-dj/rekordbox#which-player">player table</a>); <strong>refused by every CDJ-2000, including the NXS2</strong>, still common in clubs worldwide. One trap almost nobody mentions: rekordbox writes exFAT to <strong>USB drives only</strong>. It will not export to an exFAT <strong>SD card</strong> at all, whatever the player supports.</li>
       <li><span class="mono">NTFS / APFS</span>, never. AlphaTheta's own rekordbox manual lists NTFS as unsupported on both SD cards and USB drives, so rekordbox will not export to it in the first place.</li>
-      <li><span class="mono">Partition scheme</span>, choose <span class="mono">MBR</span>. AlphaTheta documents file systems but not partition schemes, so treat this one as our recommendation rather than a published requirement. A drive left on GPT, which is what you get if you erase the volume instead of the device on a Mac, is a recurring cause of "it formatted fine but the player refuses it". MBR costs you nothing.</li>
+      <li><span class="mono">Partition scheme</span>, choose <span class="mono">MBR</span>. AlphaTheta documents this for specific models: their support articles state that the CDJ-3000 (article 4406135001625) and the XDJ-AN (article 53214453591009) do not support the GUID Partition Map. For the rest of the range the manual is silent on schemes, so MBR is the manufacturer's documented answer where they name one and our recommendation everywhere else. A drive left on GPT, which is what you get if you erase the volume instead of the device on a Mac, is a recurring cause of "it formatted fine but the player refuses it". MBR costs you nothing.</li>
     </ul>
 
     
@@ -53,7 +53,7 @@ const schema = {
     <details class="acc-sec" name="fix-acc">
       <summary><h2 class="acc-h2">"But FAT32 has a 4GB limit!"</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-    <p>Per file, not per drive. No DJ track approaches 4GB; even a 30-minute WAV is under 1GB. The only DJs who genuinely need exFAT are the ones carrying multi-hour uncompressed recordings on their gig drive, which is its own mistake. For music libraries, the limit is irrelevant.</p>
+    <p>Per file, not per drive, and it is the one limit that matters. No DJ track approaches 4GB; even a 30-minute WAV is under 1GB. The only DJs who need exFAT are the ones carrying multi-hour uncompressed recordings on their gig drive, which is its own mistake. FAT32 has other ceilings, a 2TB volume limit and the per-model file and folder counts AlphaTheta publishes in support article 4406512510105, but on a 32 to 64GB music drive none of them come up.</p>
 
     
       </div>

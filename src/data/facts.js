@@ -242,7 +242,10 @@ export const FIRMWARE_ISSUES = [
   {
     model: 'DJM-900NXS2',
     href: '/knowledge/pioneer-dj/djm-900nxs2',
-    source: DJM_REC.source,
+    // Corrected 2026-08-04: this used DJM_REC.source, which is the DJM-REC APP
+    // support page, so the firmware row cited the wrong document entirely.
+    // Points at AlphaTheta's own DJM-900NXS2 support article instead.
+    source: 'https://support.alphatheta.com/en-US/articles/4404624354969',
     issues: [
       { fixedIn: DJM_REC.nxs2RecHaltFixes[1], area: 'Recording', midSet: false, symptom: 'DJM-REC recording halts affecting iOS and iPadOS audio.' },
       { fixedIn: DJM_REC.nxs2RecHaltFixes[0], area: 'Recording', midSet: false, symptom: 'DJM-REC recording could halt part-way through a set.' },

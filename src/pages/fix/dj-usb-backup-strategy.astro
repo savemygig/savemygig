@@ -16,7 +16,7 @@ const schema = {
   mainEntityOfPage: 'https://www.savemygig.com/fix/dj-usb-backup-strategy',
   step: [
     { '@type': 'HowToStep', name: 'Buy two identical drives', text: 'Two quality 32-64GB drives, same brand and model, formatted FAT32 + MBR.' },
-    { '@type': 'HowToStep', name: 'Export to both, every time', text: 'After every library change, run the same Rekordbox export to drive A and drive B.' },
+    { '@type': 'HowToStep', name: 'Export to both, every time', text: 'After every library change, run the same rekordbox export to drive A and drive B.' },
     { '@type': 'HowToStep', name: 'Separate them physically', text: 'One drive in the bag, one on your keys or in your pocket. Never together.' },
   ],
 };
@@ -51,7 +51,7 @@ const schema = {
     <ul class="checklist">
       <li><strong>Buy two identical drives</strong>, same brand, same model, same size. Identical drives behave identically on players. <a href="/gear">The models we trust →</a></li>
       <li><strong>Format both:</strong> <span class="mono">FAT32</span> + <span class="mono">MBR</span>. <a href="/fix/format-usb-for-cdj">Step-by-step →</a></li>
-      <li><strong>Export to both, back to back,</strong> in Rekordbox EXPORT mode. Same playlists, same order. Eject each with the Rekordbox button.</li>
+      <li><strong>Export to both, back to back,</strong> in rekordbox EXPORT mode. Same playlists, same order. Eject each with the rekordbox button.</li>
       <li><strong>Label them.</strong> A and B, tape or marker. In a dark booth you want zero thinking.</li>
     </ul>
 
@@ -66,7 +66,7 @@ const schema = {
       <li>Library changed this week? Re-export to <strong>both</strong> drives. An outdated backup is a trap.</li>
       <li>Drive A in the gig bag. Drive B on your keychain or jacket. <strong>Never the same pocket, never the same bag.</strong></li>
       <li>At the booth: play from A. If A misbehaves mid-set, eject, insert B, keep mixing. That's the whole emergency plan.</li>
-      <li>Once a month: back up the Rekordbox library itself (File → Library → Backup Library) to a third place, cloud or home drive.</li>
+      <li>Once a month: back up the rekordbox library itself (File → Library → Backup Library) to a third place, cloud or home drive.</li>
     </ul>
 
     
@@ -74,9 +74,10 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="fix-acc">
-      <summary><h2 class="acc-h2">The failure math</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h2 class="acc-h2">What a second drive actually removes</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-    <p>A quality drive fails rarely; call it once in hundreds of gigs. Two independent drives failing at the same gig is that number squared, effectively never. You cannot buy that reliability in one perfect drive at any price; you can have it for the cost of a second cheap one.</p>
+    <p>Two drives are not two independent chances. You export to both from the same laptop, back to back, from the same library, so the causes that arrive through the export arrive on both: a bad export, a withdrawn rekordbox version, two sticks from the same production batch. Claiming the odds multiply into nothing would be wrong.</p>
+    <p>What the second drive does remove is the failure that actually ends gigs: one physical drive dying, or being dropped, lost or corrupted, in one booth, with the room waiting. That failure is common, it is the one you cannot fix on site, and the answer to it is a fifteen-second swap. You cannot buy that in one perfect drive at any price; you can have it for the cost of a second cheap one.</p>
       </div>
     </details>
 

@@ -32,45 +32,10 @@ const schema = {
   mainEntityOfPage: 'https://www.savemygig.com/fix/rekordbox-file-is-missing',
 };
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  '@id': 'https://www.savemygig.com/fix/rekordbox-file-is-missing#faq',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'What does "File is Missing" mean in rekordbox?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'It means rekordbox cannot find the audio file at the location it recorded when the track was imported. The track stays in your collection, marked with [!] in the status column, but it cannot be played or exported. The audio file itself has not been deleted by rekordbox.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Why do tracks I imported from a USB drive now show File is Missing?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'AlphaTheta documents the cause: rekordbox may not find the track if the device mounts under a different drive letter than it had when the track was imported. The file is still on the drive, but the path rekordbox stored no longer resolves.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I fix missing files in rekordbox?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Open File then Display All Missing Files to reach the Missing File Manager, or right-click any track marked [!]. Auto Relocate searches the folders set in Preferences, Advanced, Database, Auto Relocate Search Folders. Relocate lets you point rekordbox at the file yourself.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Will a missing track still export to my USB?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'No. A file marked missing is blocked from export as well as playback, so it will not be written to the drive. If you do not clear the [!] before exporting, the track is simply absent when you plug into the player.',
-      },
-    },
-  ],
-};
+// The FAQPage block that used to sit here was removed on 2026-08-04: its four
+// question and answer pairs were paraphrases of the accordions below rather
+// than the visible text itself, which is what Google's structured data policy
+// forbids. The TechArticle schema above describes content that is on the page.
 ---
 <Base
   title="rekordbox 'File is Missing': How to Relocate Your Tracks | Save My Gig!"
@@ -79,7 +44,6 @@ const faqSchema = {
   ogImage="/og/rekordbox-file-is-missing.png"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
   <main class="wrap wrap-wide">
     <div class="status-line red">File_Is_Missing</div>
     <h1 style="margin-bottom:1.5rem"><span class="danger">FILE IS MISSING</span>:<br />YOUR MUSIC IS STILL THERE</h1>

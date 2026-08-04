@@ -184,6 +184,25 @@ h1 { font-size: clamp(2rem, 8vw, 3.4rem); text-transform: uppercase; }
 h2 { font-size: clamp(1.4rem, 5vw, 2.1rem); font-weight: 800; letter-spacing: -0.015em; }
 h3 { font-size: clamp(1.1rem, 3.6vw, 1.35rem); font-weight: 800; letter-spacing: -0.01em; }
 
+/* THE PROMOTED PANEL HEADING (2026-08-04, accessibility pass).
+   /about, /gear, /recovery, /files-lost, /legal/privacy and /legal/cookies
+   all went h1 straight to h3: no h2 anywhere, a heading-level skip on six
+   pages. The first panel heading on each is now an h2, which is the correct
+   LEVEL, but the h2 scale is a page-title size and these are peers of the
+   h3 panel headings stacked directly under them: "Cookies and analytics" at
+   33.6px above "If you register" at 21.6px read as a mistake. So the level
+   moves and the SIZE does not.
+   The selector is deliberately narrow. Every other h2 that opens a div.panel
+   on this site either carries its own inline font-size (the /faq and
+   /knowledge "Related guides" boxes, which beat this rule anyway) or a class
+   that sizes it (.dsc-h on the Disclaimer), and :not([class]) keeps this off
+   them. section.panel is excluded too, which is what /saved and the
+   /checklist category panels use. */
+div.panel > h2:first-child:not([class]) {
+  font-size: clamp(1.1rem, 3.6vw, 1.35rem);
+  letter-spacing: -0.01em;
+}
+
 .accent { color: var(--red); }
 .danger { color: var(--red); }
 .dim { color: var(--text-dim); }
@@ -769,15 +788,60 @@ a:focus-visible, button:focus-visible, input:focus-visible, .pad:focus-visible, 
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-/* ---------- Print ---------- */
+/* ---------- Print ----------
+   THE CHECKLIST IS THE PAGE THAT TELLS YOU TO PRINT IT, so print is a real
+   surface here, not a courtesy. Four bugs fixed 2026-08-04, all of them
+   invisible on screen:
+     1. html kept var(--bg). body:#fff only paints the body BOX, so every
+        sheet printed a near-black field around and below it; page two of the
+        checklist PDF came out ~80% solid black ink.
+     2. Task groups ship collapsed, so all 48 checkboxes were display:none
+        and the "printable checklist" printed with nothing to tick.
+     3. The colour reset named h1/h2/h3, but the category name lives in a
+        .group-title span INSIDE the heading and its own colour won: 1.09:1
+        on white. Same for the task labels and the checkbox squares, which
+        carried var(--bg) and printed as solid black blocks.
+     4. The header printed (it is header.site-nav-wrap; the .top-bar rule
+        hides the TUNNEL bar, a different element), and so did the on-screen
+        chrome that means nothing on paper.
+   The `.checklist li` selector below is KEPT: it matches nothing on
+   /checklist (that page uses .task/.task-label) but it is real and needed on
+   /files-lost, /gear, /card and the /fix articles. The checklist's own
+   elements are added alongside it rather than replacing it. */
 @media print {
-  body { background: #fff !important; color: #000 !important; }
+  /* The page canvas is html, not body. Both, or the ink stays. */
+  html, body { background: #fff !important; color: #000 !important; }
   .panel, .alert-card, .pad, .card { background: #fff !important; border: var(--stroke) solid #999 !important; color: #000 !important; }
   .checklist li, .pad-desc, .dim, .question, h1, h2, h3 { color: #000 !important; }
+  /* The elements that actually CARRY the text inside those headings. */
+  .group-title, .group-h, .group-count, .group-blurb,
+  .task, .task-label, .tasks li, .custom-tasks li, .notes-preview { color: #000 !important; }
   .mono { background: #eee !important; color: #000 !important; }
   .top-bar, .site-footer, .review-flag, .sticky-cta { display: none !important; }
+  /* The site header, which is NOT .top-bar. */
+  header.site-nav-wrap, .so, .skip-link { display: none !important; }
   .pad-grid { display: flex !important; }
   .status-line { display: none; }
+
+  /* Every group body prints, collapsed or not: a blank checklist is not a
+     checklist. Also unhides the notes preview's collapsed-only styling. */
+  .task-group .group-body { display: block !important; }
+
+  /* A tickable box on paper: white fill, black edge, and the checked state
+     stays legible without relying on the green fill. */
+  .box { background: #fff !important; border-color: #000 !important; }
+  .task input:checked + .box { background: #fff !important; border-color: #000 !important; }
+  .task input:checked + .box::after { border-color: #000 !important; }
+
+  /* On-screen chrome that has no meaning on paper. */
+  .mode-row, .mode-switch, .explain-btn, .acct-chip, .acct-card,
+  .custom-toolbar, .backup-form, .add-own, .group-remove, .task-remove,
+  .notes-toggle, .notes-area, .notes-hint, .chev, .ls-chev,
+  .ck, .list-switch { display: none !important; }
+  /* Back to top: .to-top is the sitewide one, .top-circle is /checklist's
+     own copy of the same control. Both, or the checklist keeps printing a
+     floating circle in the middle of the sheet. */
+  .to-top, .top-circle { display: none !important; }
 }
 
 /* ---------- Sticky mobile emergency CTA on articles ----------
@@ -1020,3 +1084,94 @@ summary:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .acc-chev, .faq-chev, .dict-chev, .dict-cat-chev, .kb-chev, .dt-icon, .lang-chev { transition: none; }
 }
+
+/* ---------- Narrow-phone overflow repairs (2026-08-04) ----------
+   html and body both carry overflow-x:hidden, so nothing here announced
+   itself: the site simply CUT the overflowing controls off and looked fine.
+   Measured at a 320px viewport (iPhone SE 1 / Galaxy Fold cover screen):
+     - the header hamburger sat at x 284.3..328.3, 8.3px amputated;
+     - the footer share row measured 329.8px wide and pushed the
+       "Copy to paste" button to x 286.8..329.8, ~70% off-screen;
+     - /checklist's Sync chip ran to x 349.4, clipped by 29.4px, with its
+       chevron (x 330.4) entirely off the screen.
+   All three are fixed by letting things shrink or wrap at this width only;
+   360px and up is untouched. */
+
+/* (a) HEADER. The brand lockup is a fixed 204.3px (59px shield + 143.6px
+   vector lockup) and the nav's own padding and gaps take the rest, which
+   leaves the 44x44 hamburger 8px short of the viewport. Brand.astro owns the
+   lockup width and is not ours to edit, so the override lives here: shrink
+   the lockup ink and tighten the nav gutter until the button fits, keeping
+   both 44x44 tap targets intact. */
+@media (max-width: 359px) {
+  .site-nav { padding-left: 0.75rem; padding-right: 0.75rem; gap: 0.5rem; }
+  .smg-full { width: 7.3rem; }
+  .nb-seal { width: 48px; height: 55.2px; }
+  .nav-search-btn { margin-left: 0; }
+}
+
+/* (b) FOOTER SHARE ROW. The <=640px block sets flex-wrap:nowrap to hold the
+   pills on one line, which is right on a 390px phone and impossible at 320:
+   the row cannot be narrower than its content, so the last button walks off
+   the edge. Wrapping is restored at 360 and below; two short rows beat one
+   unreachable button. Two classes + element so it outranks the layout's own
+   single-class rule wherever the two sheets land in the bundle. */
+@media (max-width: 360px) {
+  .site-footer .foot-share .foot-share-btns { flex-wrap: wrap; }
+}
+
+/* (c) /checklist MODE ROW. The depth switch and the info + Sync cluster are
+   one nowrap-by-default flex row; below 360 the Sync chip has nowhere to go.
+   Let the row wrap and let the two halves fill the width they land on. */
+@media (max-width: 359px) {
+  .mode-row { flex-wrap: wrap; row-gap: 0.5rem; }
+  .mode-row .mode-switch { flex: 1 1 100%; }
+  .mode-row .mode-row-right { flex: 1 1 100%; justify-content: flex-start; }
+}
+
+/* ---------- Tap targets: the 44x44 floor (2026-08-04) ----------
+   WCAG 2.5.5 (AAA) / 2.5.8 (AA, 24x24) both failed in the footer and on
+   /feedback. Measured before: .share-btn 43x38 (the icon-only "Copy to
+   paste" pill on a phone), .soc-btn 32x32, .foot-col a 165x23, and the
+   /feedback type radios 13x13. Height is added, never icon weight: the
+   glyphs and type sizes are untouched, only the box around them grows, and
+   the column gaps below give back the height the padding takes so the
+   footer stays roughly the size Antonio signed off. */
+.site-footer .share-btn,
+.foot-share-btns .share-btn { min-width: 44px; min-height: 44px; }
+/* SOCIAL BUTTONS. The button box becomes a real 44x44 target, but the CIRCLE
+   you see keeps the size Antonio measured (38px, 32px below 414px), because
+   the footer's "rectangle rule" ties the social row's ink to the wordmark
+   width and a 37%-bigger circle would rewrite that whole block. So the box
+   grows invisibly and the circle is painted by a centred pseudo-element at
+   the old diameter. The gap comes in by what the box grew, so the row's ink
+   moves as little as the 44px floor allows (147px -> 164px at phone sizes,
+   nothing on desktop). Icon size, colour and hover behaviour are unchanged. */
+.site-footer .soc-btn {
+  position: relative; width: 44px; height: 44px;
+  background: transparent; border-color: transparent;
+}
+.site-footer .soc-btn::before {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 38px; height: 38px; transform: translate(-50%, -50%);
+  border-radius: var(--radius-round);
+  background: var(--surf); border: var(--stroke) solid var(--edge);
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+.site-footer .soc-btn:hover::before { border-color: var(--text-dim); background: var(--surf-2); }
+.site-footer .soc-btn svg { position: relative; }
+.site-footer .foot-social { gap: 2px; }
+@media (max-width: 414px) {
+  .site-footer .soc-btn::before { width: 32px; height: 32px; }
+  .site-footer .foot-social { gap: 0px; }
+}
+/* Footer nav links: 23px of text becomes a 44px target. The list gap is
+   dropped by the amount the padding adds, so the columns do not grow. */
+.site-footer .foot-col a { display: block; padding: 11px 0; }
+.site-footer .foot-col { gap: 0; }
+/* /feedback type picker. The real target is the label (116x43, one pixel
+   short); the radio itself is opacity:0 + pointer-events:none but still
+   reports a 13x13 box to auditing tools, so it is sized up too. Neither
+   change is visible: the label already centres its text. */
+.fbp-seg label { min-height: 44px; display: inline-flex; align-items: center; }
+.fbp-seg input[type="radio"] { width: 44px; height: 44px; }

@@ -605,7 +605,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     <div id="list" data-mode="basic" data-edit="off">
       {groups.map((g) => (
         <section class="panel task-group" data-group={g.id}>
-          <h3 class="group-h">
+          {/* h2, not h3 (2026-08-04): the page went h1 straight to h3 with no
+              h2 anywhere, and these category panels ARE the top level under
+              LEAVE HOME READY, all seven of them peers. Nothing moves: every
+              size in this header comes from .group-title / .group-count /
+              .group-ic, never from the heading element's own scale. */}
+          <h2 class="group-h">
             <button type="button" class="group-toggle" data-toggle={g.id} aria-expanded="true" aria-controls={`body-${g.id}`}>
               <span class="group-ic" aria-hidden="true">
                 {g.icon === 'disc' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>}
@@ -627,7 +632,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                  groups this HIDES (Reset list brings them back); user
                  sections delete outright. -->
             <button type="button" class="group-remove" data-group-hide={g.id} aria-label={`Remove section ${g.title}`}>&times;</button>
-          </h3>
+          </h2>
           <!-- Collapsed-state notes preview (Antonio): the briefing must be
                scannable WITHOUT expanding every section. Filled by JS from
                the saved notes, links clickable, click-through to edit. -->
@@ -2100,7 +2105,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       section.className = 'panel task-group';
       section.setAttribute('data-group', sec.id);
       section.setAttribute('data-user-section', '1');
-      const h3 = document.createElement('h3'); h3.className = 'group-h';
+      // h2, matching the built-in category panels above (2026-08-04).
+      const gh = document.createElement('h2'); gh.className = 'group-h';
       const btn = document.createElement('button');
       btn.type = 'button'; btn.className = 'group-toggle';
       btn.setAttribute('data-toggle', sec.id); btn.setAttribute('aria-expanded', 'true');
@@ -2124,7 +2130,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         saveSections(loadSections().filter((s) => s.id !== sec.id));
         renderSections(); renderCustom(); render();
       });
-      h3.appendChild(btn); h3.appendChild(del);
+      gh.appendChild(btn); gh.appendChild(del);
       const body = document.createElement('div'); body.className = 'group-body'; body.id = 'body-' + sec.id;
       const ul = document.createElement('ul'); ul.className = 'tasks';
       const addRow = document.createElement('div'); addRow.className = 'add-own';
@@ -2152,7 +2158,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       notesPrev.className = 'notes-preview'; notesPrev.setAttribute('data-notes-prev', sec.id);
       notesWrap.appendChild(notesBtn); notesWrap.appendChild(notesArea); notesWrap.appendChild(notesHint);
       body.appendChild(ul); body.appendChild(addRow); body.appendChild(notesWrap);
-      section.appendChild(h3); section.appendChild(notesPrev); section.appendChild(body);
+      section.appendChild(gh); section.appendChild(notesPrev); section.appendChild(body);
       // Collapse behaviour, same rules as the fixed groups.
       const open = loadOpen()[sec.id] === true;
       section.classList.toggle('collapsed', !open);

@@ -403,7 +403,11 @@ export const TREE = {
     "options": [
       {
         "label": "YES - COPY, THEN ERASE THIS DRIVE",
-        "to": "rebuild/copy"
+        "to": "rebuild/copy",
+        // Consenting to an irreversible erase is never green. The card above
+        // says this cannot be undone, so the pad cannot say "safe". Amber is
+        // the honest reading: it costs you, and you have chosen it.
+        "tone": "amber"
       },
       {
         "label": "NO - DO NOT ERASE THIS DRIVE",
@@ -441,7 +445,10 @@ export const TREE = {
       {
         "label": "NO - I ONLY HAVE THIS ONE",
         "to": "rebuild/risk",
-        "desc": "Then there is one decision to make first."
+        "desc": "Then there is one decision to make first.",
+        // Resource NO with a live route: costs options, not the gig. Same
+        // shape as shared/computer NO, so the same colour.
+        "tone": "amber"
       }
     ]
   },
@@ -452,7 +459,7 @@ export const TREE = {
     "blocks": [
       {
         "t": "dim",
-        "html": "Your original drive stays untouched."
+        "html": "Tonight gets built on the second drive. Whatever state your first one is in, nothing more happens to it from here."
       },
       {
         "t": "alert",
@@ -475,14 +482,31 @@ export const TREE = {
     "question": "Is the second USB formatted?",
     "step": "second_usb_format",
     "options": [
+      // All three carry an explicit tone. With more than two options the
+      // renderer falls back to neutral, and this screen is too consequential
+      // to say nothing with colour.
       {
         "label": "YES - FORMATTED",
-        "to": "rebuild/second-copy"
+        "to": "rebuild/second-copy",
+        // Green: the drive is ready and the fast route is open.
+        "tone": "green"
       },
       {
         "label": "NO - CAN'T FORMAT IT",
         "to": "shared/survival",
-        "desc": "Survival mode: other ways to play tonight. Your USB stays untouched."
+        "desc": "Survival mode: other ways to play tonight.",
+        // Declining or failing to destroy is caution, never red. It costs
+        // you the fast route, not the gig.
+        "tone": "amber"
+      },
+      {
+        "label": "I CANNOT ERASE THIS DRIVE",
+        "to": "shared/survival",
+        "desc": "Borrowed, or the owner said no. That is the right call, and there are other ways to play tonight.",
+        // The alert above tells a DJ to check with the owner. Until now the
+        // only way to act on that answer was to claim a technical failure
+        // that never happened. Honouring someone else's library is caution.
+        "tone": "amber"
       }
     ]
   },
@@ -530,7 +554,7 @@ export const TREE = {
     "blocks": [
       {
         "t": "dim",
-        "html": "If you said no to erasing, your original stays untouched. Either way, tonight now runs from a different stick."
+        "html": "Tonight now runs from a different stick. Whatever state your original drive is in, nothing more happens to it here: it gets looked at properly after the gig, on a computer, with time."
       },
       {
         "t": "check",
@@ -615,7 +639,11 @@ export const TREE = {
     "options": [
       {
         "label": "YES - ERASE AND CONTINUE",
-        "to": "rebuild/format"
+        "to": "rebuild/format",
+        // Same as rebuild/risk: green on the pad that erases the drive told
+        // a DJ pattern-matching on colour that this was the safe answer.
+        // Amber: it costs you, and you have chosen it.
+        "tone": "amber"
       },
       {
         "label": "NO - STOP HERE",
@@ -1018,6 +1046,7 @@ export const TREE = {
       {
         "t": "check",
         "items": [
+          "<strong>Master fader down before you touch a connector.</strong> Back up after. Hot-plugging into a live PA sends a full-level thump through it and can kill drivers.",
           "Reseat the master output cables, both ends.",
           "Swap the master pair for the <strong>booth output</strong> pair if the plugs fit (booth out is a 1/4 inch jack pair on most DJMs, so XLR house cables need adapters).",
           "Amps powered? In most venues the rack is not in the booth, so this is usually a question for someone else, not a thing you check."
@@ -1174,6 +1203,7 @@ export const TREE = {
       {
         "t": "check",
         "items": [
+          "<strong>Master fader down before you touch a connector.</strong> Back up after. The room is playing, and hot-plugging into a live PA can kill drivers.",
           "Reseat every jack in the path. Half-inserted causes one-sided sound.",
           "Set <strong>TRIM</strong> so the channel meter peaks orange, never red.",
           "Swap the suspect cable. Cables fail more often than gear."
@@ -1269,9 +1299,19 @@ export const TREE = {
         }
       },
       {
-        "label": "NO, NOTHING WORKED",
+        // ROUTE REVIEWED 2026-08-04 and deliberately KEPT. The obvious fix
+        // was to send this to shared/survival, the critical path's safety
+        // net. It does not fit a silent room: its heading is "play without
+        // your USB", two of its three moves are about reading a drive on
+        // another player or a laptop, and its own NO exits to /files-lost,
+        // a file-recovery page, for a DJ whose files are fine. Sending a
+        // no-sound failure there would tell them we lost track of their
+        // problem. sound/fallback already carries the survival moves that
+        // do apply. What was actually wrong was the LABEL: it promised
+        // help and delivered a form. It now says so plainly instead.
+        "label": "NO, I AM OUT OF MOVES",
         "to": "/feedback?from=no_sound",
-        "desc": "Tell us what the mixer was doing. We will build the fix.",
+        "desc": "This is the end of the no-sound flow. What comes next is a form, not a fix: tell us what the mixer was doing and we build the answer for the next DJ.",
         "event": "outcome_reached",
         "data": {
           "outcome": "handoff",
@@ -1295,15 +1335,29 @@ export const TREE = {
     "question": "Do you have access to a computer with Rekordbox on it?",
     "step": "qf_computer",
     "options": [
+      // Three options now, so every one carries an explicit tone: past two
+      // the renderer falls back to neutral and the colour would say nothing.
       {
         "label": "YES, WITH REKORDBOX",
-        "to": "export/usb-check"
+        "to": "export/usb-check",
+        // Green: a computer with Rekordbox means you have the time and the
+        // tools to fix this properly.
+        "tone": "green"
       },
       {
         "label": "NO, NOT RIGHT NOW",
         "to": "export/find",
         // No computer yet: slower path, still a path.
         "tone": "amber"
+      },
+      {
+        "label": "I AM ON IN MINUTES",
+        "to": "usb/moves",
+        "desc": "Skip the repair. Straight to the booth workarounds.",
+        // Red: the paragraph above offered this route and no pad did it, so
+        // a DJ read an instruction with no control. Red is the time reading,
+        // not the severity one: you are on in minutes, so move now.
+        "tone": "red"
       }
     ]
   },
@@ -1348,7 +1402,13 @@ export const TREE = {
     "title": "Export Rescue: USB Check",
     "status": "Quick_Fix",
     "red": false,
-    "blocks": [],
+    "blocks": [
+      {
+        "t": "alert",
+        "emoji": "⚠️",
+        "html": "<strong>The moment the drive mounts, the computer may offer to format or initialise it. Say NO.</strong> On a Mac the button is labelled \"Initialize…\" and it opens Disk Utility, one step from wiping the drive. Nothing is lost yet. Choose Ignore or Eject, then answer below."
+      }
+    ],
     "draft": true,
     "label": "Step 1",
     "heading": "Check the USB on the computer",
@@ -1443,6 +1503,11 @@ export const TREE = {
         "html": "<strong>Check your Collection first.</strong> If this is a borrowed or venue computer and the Collection is empty, do NOT delete anything. There would be nothing to put back. Use the music you just backed up instead."
       },
       {
+        "t": "alert",
+        "emoji": "⚠️",
+        "html": "<strong>Deleting the playlists on the device deletes tonight's cues and grids with them.</strong> The backup two steps back saved audio only. Your Collection on this computer still holds the cues and grids, and the drive gets them back when the fresh sync finishes. Between those two moments they exist in one place only."
+      },
+      {
         "t": "check",
         "items": [
           "In Rekordbox, on the <strong>device</strong>: delete tonight's playlists.",
@@ -1523,7 +1588,11 @@ export const TREE = {
     "options": [
       {
         "label": "YES - ERASE AND CONTINUE",
-        "to": "export/format"
+        "to": "export/format",
+        // Third consent screen, same correction. The alert above says
+        // anything that failed to copy is gone for good; a green pad under
+        // that sentence contradicts it. Amber: chosen, and it costs you.
+        "tone": "amber"
       },
       {
         "label": "NO - KEEP THIS DRIVE AS IT IS",

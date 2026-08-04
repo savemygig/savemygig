@@ -46,45 +46,10 @@ const schema = {
   ],
 };
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/rekordbox#faq',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'Why does my USB show no playlists on a CDJ-3000X?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Because the drive was exported in Device Library format and the CDJ-3000X reads OneLibrary. The player mounts the drive and shows no error code, the playlists simply are not there. Re-export from rekordbox 7.2.13 or later, which writes both formats to the same drive.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What is the difference between OneLibrary and Device Library?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'They are two different database formats rekordbox writes onto a USB drive. Device Library is the long-standing format read by the CDJ-3000, CDJ-2000NXS2 and older players. OneLibrary is the newer format required by the CDJ-3000X, CDJ-1500X, XDJ-AZ, OPUS-QUAD and OMNIS-DUO. A drive carrying only one of them will look empty on a player that reads the other.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Which rekordbox version exports both OneLibrary and Device Library?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Use rekordbox 7.2.13 or later. Do not use 7.2.12: it was withdrawn because tracks exported with it could fail to load on AlphaTheta and Pioneer DJ hardware.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Should I format my DJ USB as FAT32 or exFAT?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'FAT32 with an MBR partition scheme. FAT32 is read by every rekordbox-era Pioneer DJ and AlphaTheta player, old and new. exFAT is only read by newer units, so an exFAT drive that works on a CDJ-3000 is refused by the CDJ-2000NXS2 in the next booth.',
-      },
-    },
-  ],
-};
+// The FAQPage block that used to sit here was removed on 2026-08-04: its four
+// question and answer pairs were paraphrases of the accordions below rather
+// than the visible text itself, which is what Google's structured data policy
+// forbids. The TechArticle schema above describes content that is on the page.
 ---
 <Base
   title="rekordbox USB Guide: OneLibrary vs Device Library | Save My Gig!"
@@ -93,7 +58,6 @@ const faqSchema = {
   crumbName="rekordbox"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
 
   <main class="wrap wrap-wide">
     <nav class="crumb" aria-label="Breadcrumb">
@@ -105,7 +69,7 @@ const faqSchema = {
     <div class="hw-head">
       <div class="hw-head-text">
         <div class="status-line sl-desktop">REKORDBOX</div>
-        <h1 class="rb-h1">rekordbox, <span class="accent">honestly</span></h1>
+        <h1 class="rb-h1">rekordbox, <span class="accent">explained</span></h1>
         <p class="dim rb-updated">Reviewed: {UPDATED}</p>
       </div>
       <a
@@ -173,13 +137,14 @@ const faqSchema = {
         <p><strong>Fix it now.</strong></p>
         <ol class="rb-steps">
           <li><strong>At the gig, switch to FOLDER view.</strong> Your audio files are still on the drive. You lose cues, grids and playlists, but you keep playing. That is the whole point of the rescue.</li>
-          <li><strong>Get to rekordbox {REKORDBOX.dualFormatFloor} or later.</strong> From this version rekordbox can write both database formats onto the same drive, so one stick works in every booth.</li>
+          <li><strong>Get to rekordbox {REKORDBOX.dualFormatFloor} or later.</strong> From this version rekordbox can write both database formats onto the same drive, so one stick works in every booth. Each drive needs one manual step first: right-click <strong>OneLibrary</strong> on the device and choose <strong>Convert from Device Library</strong>, per AlphaTheta's OneLibrary Compatible USB Device Export guide. Once per drive, not once per export.</li>
           <li><strong>Re-export your playlists to the drive.</strong> Export, do not drag and drop. Dragging audio files gives you no database at all.</li>
           <li><strong>Eject properly, from rekordbox.</strong> Pulling a drive mid-write is the single most common way to corrupt the database you just built.</li>
           <li><strong>Test it before you leave the house</strong> if you own a player, or arrive early enough to test on the club's.</li>
         </ol>
         <p><strong>Avoid it next time.</strong> Keep rekordbox at {REKORDBOX.dualFormatFloor}
-        or later so every export carries both database formats, and never drag audio
+        or later and run the one-time <strong>Convert from Device Library</strong> on each
+        drive, after which every export carries both database formats. And never drag audio
         files onto the drive by hand, only export.</p>
         <p class="acc-related">Related: <a href="#onelibrary">OneLibrary vs Device Library</a> <a href="#which-player">Which players read which</a> <a href="/emergency">Start Emergency Mode</a></p>
       </div>
@@ -280,8 +245,11 @@ const faqSchema = {
         is a OneLibrary player.</strong> Two decks with nearly the same name, in the
         same booth, reading different formats.</p>
         <p><strong>Avoid the trap.</strong> Stop trying to remember which player reads
-        which. Keep rekordbox at {REKORDBOX.dualFormatFloor} or later and every export
-        carries both formats on the same drive, so it stops mattering.</p>
+        which. Keep rekordbox at {REKORDBOX.dualFormatFloor} or later, and convert each
+        drive once: right-click <strong>OneLibrary</strong> on the device and choose
+        <strong>Convert from Device Library</strong>, the step AlphaTheta's OneLibrary
+        Compatible USB Device Export guide requires. After that every export carries both
+        formats on the same drive, so it stops mattering.</p>
         <p class="acc-related">Related: <a href="#which-player">Full player compatibility table</a> <a href="#no-playlists">Fix a drive with no playlists</a></p>
       </div>
     </details>
@@ -324,9 +292,12 @@ const faqSchema = {
         use Disk Utility: choose <span class="mono">MS-DOS (FAT)</span>
         with a <span class="mono">Master Boot Record</span> scheme, and if it
         refuses a very large drive, guiformat on any Windows machine finishes the job.</p>
-        <p><strong>Avoid it next time.</strong> The real FAT32 limit is
+        <p><strong>Avoid it next time.</strong> The FAT32 limit that matters is
         <strong>4GB per file</strong>. A 320kbps MP3 is around 9MB and even a long
-        uncompressed WAV rarely passes 1GB, so for a music library it never matters.</p>
+        uncompressed WAV rarely passes 1GB, so for a music library it never comes up.
+        There are other ceilings, the 2TB volume limit above and the per-model file and
+        folder counts AlphaTheta publishes in support article 4406512510105, but a gig
+        drive does not reach them.</p>
         <p class="acc-related">Related: <a href="/fix/format-usb-for-cdj">Full formatting walkthrough</a> <a href="#mbr-gpt">MBR vs GPT</a></p>
       </div>
     </details>
@@ -335,9 +306,11 @@ const faqSchema = {
       <summary><h2 class="acc-h2">MBR or GPT: does the partition scheme matter?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Use <strong>MBR</strong> (Master Boot Record).
-        AlphaTheta's own rekordbox manual documents file systems and says nothing at
-        all about partition schemes, so this is our recommendation, not a published
-        requirement, but we have seen the alternative fail too often to stay quiet.</p>
+        AlphaTheta documents this for specific models: their support articles state that
+        the CDJ-3000 (article 4406135001625) and the XDJ-AN (article 53214453591009) do
+        not support the GUID Partition Map. The rekordbox manual itself covers file
+        systems and not partition schemes, so MBR is the manufacturer's documented answer
+        where they name one, and our recommendation across the rest of the range.</p>
         <p><strong>Why we recommend it.</strong> A GPT drive is a repeat offender in
         the "formatted fine, player refuses it" category, and MBR costs you nothing
         in return.</p>
@@ -411,9 +384,10 @@ const faqSchema = {
           First, <strong>exFAT is a USB-only option</strong>. rekordbox can export
           to an exFAT USB drive, but it cannot export to an exFAT <strong>SD
           card</strong>, no matter which player you are feeding. Second, the manual
-          documents file systems and says nothing at all about <strong>partition
-          schemes</strong>, see <a href="#mbr-gpt">MBR vs GPT</a> for why we still
-          recommend MBR.
+          covers file systems rather than <strong>partition schemes</strong>, but the
+          per-model support articles do name one: AlphaTheta states that the CDJ-3000
+          and the XDJ-AN do not support the GUID Partition Map. See
+          <a href="#mbr-gpt">MBR vs GPT</a> for why we recommend MBR across the range.
         </p>
         <p class="acc-related">Related: <a href="#onelibrary">What OneLibrary and Device Library are</a> <a href="#version-notes">Version numbers worth knowing</a></p>
       </div>
@@ -427,9 +401,14 @@ const faqSchema = {
         <strong>{REKORDBOX.dualFormatFloor}</strong> or later.</p>
         <p><strong>Why this matters.</strong> {REKORDBOX.withdrawn} was withdrawn by
         AlphaTheta because tracks exported with that version could fail to load on
-        their own hardware. It was fixed in {REKORDBOX.dualFormatFloor}, which is also
-        the first version that writes both Device Library and OneLibrary to the same
-        drive. OneLibrary itself was introduced in {REKORDBOX.deviceLibraryPlusIntro}.</p>
+        their own hardware. It was fixed in {REKORDBOX.dualFormatFloor}. For writing both
+        Device Library and OneLibrary to the same drive AlphaTheta names
+        {REKORDBOX.withdrawn} or later as the floor, and because that version was
+        withdrawn, {REKORDBOX.dualFormatFloor} is the first one worth installing. The
+        dual format is not automatic on an existing drive: AlphaTheta's OneLibrary
+        Compatible USB Device Export guide has you right-click <strong>OneLibrary</strong>
+        on the device once and choose <strong>Convert from Device Library</strong>.
+        OneLibrary itself was introduced in {REKORDBOX.deviceLibraryPlusIntro}.</p>
         <p><strong>Do this.</strong> Check your installed version (Preferences or
         About, inside rekordbox) before a big show, and if you are on
         {REKORDBOX.withdrawn}, update before you export anything.</p>
@@ -461,7 +440,7 @@ const faqSchema = {
           <li><strong>Eject from rekordbox</strong>, every single time.</li>
           <li><strong>Test on a player</strong> before the drive ever matters.</li>
         </ul>
-        <p class="acc-related">Related: <a href="/prepare">The full seven-rule prevention system</a> <a href="#backup">Back up your library</a></p>
+        <p class="acc-related">Related: <a href="/prepare">The full prevention system</a> <a href="#backup">Back up your library</a></p>
       </div>
     </details>
 

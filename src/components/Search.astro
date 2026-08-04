@@ -188,5 +188,38 @@ const { placeholder = 'Search: USB not detected, FAT32, E-8302...' } = Astro.pro
     document.addEventListener('click', function (e) {
       if (!wrap.contains(e.target)) { out.hidden = true; input.setAttribute('aria-expanded', 'false'); }
     });
+
+    // FOCUS TRAP (2026-08-04). When this instance is the one inside the
+    // header's search overlay, that overlay declares aria-modal="true" but
+    // did nothing to hold focus: Tab walked straight out of the dialog and
+    // through the page behind it, which is exactly what aria-modal promises
+    // a screen-reader user it will not do. The inline boxes (homepage, /faq)
+    // are not in a dialog, so closest() finds nothing and they are untouched.
+    // Escape and its focus return live in Base.astro and are left alone.
+    var dlg = wrap.closest('[role="dialog"][aria-modal="true"]');
+    if (dlg && !dlg.dataset.trapped) {
+      dlg.dataset.trapped = '1';
+      var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]),' +
+        ' select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      // Re-queried on every Tab rather than cached once on open, because the
+      // result list is built as you type: caching would leave the hits out
+      // of the cycle and trap you on the input.
+      var tabbable = function () {
+        return Array.prototype.filter.call(dlg.querySelectorAll(FOCUSABLE), function (el) {
+          return !el.hasAttribute('hidden') && el.getClientRects().length > 0;
+        });
+      };
+      // The dialog is only laid out while its wrapper is shown, so a live
+      // client rect is the open test; no need to watch the hidden attribute.
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab' || !dlg.getClientRects().length) return;
+        var list = tabbable();
+        if (!list.length) return;
+        var first = list[0], last = list[list.length - 1], a = document.activeElement;
+        if (!dlg.contains(a)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); return; }
+        if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+      }, true);
+    }
   });
 </script>

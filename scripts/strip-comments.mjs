@@ -77,20 +77,31 @@ console.log(`Strip comments: ${touched} pages cleaned, ${(bytes / 1024).toFixed(
 
 // The assertion that motivated this script: no personal names in anything a
 // visitor can download. Extend the list if the faceless rule ever gains names.
+//
+// SCOPE WIDENED 2026-08-04, after the pre-press audit. The old version checked
+// only .html plus llms.txt, so it never looked at anything copied verbatim out
+// of public/. A first name sat in a code comment in sw.js, which every visitor
+// fetches, and shipped for weeks with the gate passing. Now EVERY text file in
+// dist is scanned: js, json, txt, svg, webmanifest, _redirects, _headers.
 const FORBIDDEN = ['Antonio', 'Afonso'];
+const TEXT_EXT = ['.html', '.js', '.mjs', '.json', '.txt', '.svg', '.xml', '.css', '.webmanifest'];
+const TEXT_NAMED = ['_redirects', '_headers'];
+const textFiles = [];
+(function walkAll(dir) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) walkAll(p);
+    else if (TEXT_EXT.some((x) => e.name.endsWith(x)) || TEXT_NAMED.includes(e.name)) textFiles.push(p);
+  }
+})(DIST);
 const leaks = [];
-for (const f of files) {
-  const html = fs.readFileSync(f, 'utf8');
-  for (const name of FORBIDDEN) if (html.includes(name)) leaks.push(`${path.relative(DIST, f)}: ${name}`);
-}
-const llms = path.join(DIST, 'llms.txt');
-if (fs.existsSync(llms)) {
-  const t = fs.readFileSync(llms, 'utf8');
-  for (const name of FORBIDDEN) if (t.includes(name)) leaks.push(`llms.txt: ${name}`);
+for (const f of textFiles) {
+  const t = fs.readFileSync(f, 'utf8');
+  for (const name of FORBIDDEN) if (t.includes(name)) leaks.push(`${path.relative(DIST, f)}: ${name}`);
 }
 if (leaks.length) {
   console.error('Strip comments FAIL: personal names still public');
   leaks.slice(0, 10).forEach((l) => console.error('  ' + l));
   process.exit(1);
 }
-console.log('Faceless check PASS (no personal names in public HTML or llms.txt)');
+console.log(`Faceless check PASS (no personal names in ${textFiles.length} public text files)`);

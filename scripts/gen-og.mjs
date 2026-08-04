@@ -43,7 +43,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // tone: 'green' reference or prevention, the reader has time
 const CARDS = [
   { slug: 'usb-not-recognized-cdj',            tone: 'red',   title: 'USB NOT RECOGNIZED',       sub: 'The fastest checks, in order' },
-  { slug: 'cdj-error-e-8302',                  tone: 'red',   title: 'ERROR E-8302',             sub: 'CANNOT READ DATA, fixable on-site' },
+  { slug: 'cdj-error-e-8302',                  tone: 'red',   title: 'ERROR E-8302',             sub: 'CANNOT PLAY TRACK, fixable on site' },
   { slug: 'playlists-not-showing-cdj',         tone: 'red',   title: 'PLAYLISTS MISSING?',       sub: 'Tracks play, playlists gone, the fix' },
   { slug: 'rekordbox-export-failed',           tone: 'red',   title: 'EXPORT FAILED?',           sub: 'rekordbox to USB, repaired' },
   { slug: 'rekordbox-file-is-missing',         tone: 'red',   title: '"FILE IS MISSING"',        sub: 'Your music is still there' },

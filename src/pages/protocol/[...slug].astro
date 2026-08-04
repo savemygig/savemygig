@@ -35,6 +35,11 @@ export function getStaticPaths() {
     'rebuild/second-format',
     'export/erase',
     'export/format',
+    // Added 2026-08-04. It reads as a repair, but the first instruction on
+    // the screen deletes tonight's playlists off the device, and with them
+    // the cues and grids the backup two steps earlier did not save. That is
+    // a data-destruction screen whatever its title says.
+    'export/repair',
     'export/fresh',
   ]);
   return Object.keys(TREE).map((id) => ({
@@ -80,7 +85,7 @@ const dataAttrs = (o, i) => {
   heading={node.srHeading}
   risk={risk}
 >
-  {node.draft && <div class="review-flag">DRAFT, review pending.</div>}
+  {node.draft && import.meta.env.DEV && <div class="review-flag">DRAFT, review pending.</div>}
   {node.label && <div class="step-label">{node.label}</div>}
   <h2 class={node.headingClass} style="margin-bottom:1rem" set:html={node.heading} />
 

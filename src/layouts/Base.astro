@@ -64,8 +64,8 @@ const entityGraph = {
         '@type': 'ImageObject',
         '@id': `${SITE}/#logo`,
         url: `${SITE}/images/save-my-gig-seal.png`,
-        width: 400,
-        height: 400,
+        width: 512,
+        height: 512,
         caption: 'Save My Gig!',
       },
       image: { '@id': `${SITE}/#logo` },
@@ -154,7 +154,9 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
   {noindex ? <meta name="robots" content="noindex,follow" /> : <meta name="robots" content="index,follow" />}
-  <meta name="theme-color" content="#000000" />
+  {/* Matches --bg and the manifest theme_color, so the browser chrome is the
+      same black as the page instead of a flatter pure black beside it. */}
+  <meta name="theme-color" content="#0a0a0b" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content={ogTitle ?? title} />
   <meta property="og:description" content={ogDescription ?? description} />
@@ -248,11 +250,11 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
           <p class="foot-share-h">Every DJ knows a DJ who needs this:</p>
         </div>
         <div class="foot-share-btns">
-          <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp" href="https://wa.me/?text=Save%20My%20Gig%2C%20free%20DJ%20rescue%20and%20prevention%2C%20for%20when%20your%20USB%20dies%20before%20a%20set.%20https%3A%2F%2Fwww.savemygig.com">
+          <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp" href="https://wa.me/?text=Save%20My%20Gig%2C%20DJ%20Booth%20Intelligence%2C%20for%20when%20your%20USB%20dies%20before%20a%20set.%20https%3A%2F%2Fwww.savemygig.com">
             <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.1 14.9l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 0 1 12 4zm4.3 9.8c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1l-.7 1c-.2.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.5-1.1v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3c-.3.3-1 1-1 2.3s1 2.7 1.1 2.9 2 3.1 4.9 4.3c1.8.7 2.5.8 3.4.6.5 0 1.4-.5 1.6-1.1.2-.5.2-1 .1-1.1z"/></svg>
             <span>WhatsApp</span>
           </a>
-          <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on Telegram" href="https://t.me/share/url?url=https%3A%2F%2Fwww.savemygig.com&text=Save%20My%20Gig%2C%20free%20DJ%20rescue%20and%20prevention">
+          <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on Telegram" href="https://t.me/share/url?url=https%3A%2F%2Fwww.savemygig.com&text=Save%20My%20Gig%2C%20DJ%20Booth%20Intelligence">
             <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 2.9 11.6c-1.1.4-1 1.5-.1 1.8l4.7 1.5 1.8 5.7c.2.5.4.7.9.7.4 0 .7-.2 1-.5l2.3-2.3 4.9 3.6c.9.5 1.6.2 1.8-.8l3.3-15.4c.3-1.2-.4-1.8-1.6-1.3zM8.7 14.2l9-5.6c.4-.3.8-.1.5.2l-7.3 6.6-.3 3z"/></svg>
             <span>Telegram</span>
           </a>
@@ -260,9 +262,9 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
                (Antonio). On a phone the labels on X and Copy disappear and
                those two go back to icon pills, which is what keeps the row on
                one line. -->
-          <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on Twitter" href="https://twitter.com/intent/tweet?text=Save%20My%20Gig%2C%20free%20DJ%20rescue%20and%20prevention&url=https%3A%2F%2Fwww.savemygig.com">
+          <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on X" href="https://x.com/intent/post?text=Save%20My%20Gig%2C%20DJ%20Booth%20Intelligence&url=https%3A%2F%2Fwww.savemygig.com">
             <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7 8 8.3 11H17l-5-6.6L6.3 21H3l7.6-8.7L2.5 2H10l4.5 6L18.9 2zm-1.1 17h1.7L7.3 3.8H5.5L17.8 19z"/></svg>
-            <span class="sb-opt">Twitter</span>
+            <span class="sb-opt">X</span>
           </a>
           <!-- "Copy to paste" only on desktop (Antonio, 2026-07-30): mobile
                keeps the icon-only pill (.sb-opt already hides there). The
@@ -294,14 +296,18 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
               back." The positioning CSS below was never deleted, only this
               tag, so this is a restore and not a rebuild.
 
-              KNOWN MISMATCH, HIS TO CLOSE: seal-footer.webp still reads
-              "SAVE MY GIG!" with the exclamation mark, while the wordmark
-              beside it has not carried one since the lettering change. The
-              two now sit side by side in the same block, which is the most
-              visible place that inconsistency could possibly be. It goes
-              away when the seal is re-exported; it is on his image list with
-              15 others. */}
-          <img class="foot-seal" src="/images/seal-footer.webp" alt="" width="104" height="104" loading="lazy" aria-hidden="true" />
+              PULLED AGAIN 2026-08-04, pre-press audit, and this time for a
+              reason beyond taste. The artwork does not just carry the old
+              exclamation mark: it carries the RETIRED TAGLINE, "DJ RESCUE
+              AND PREVENTION", in ink, in the mobile footer of every page. It
+              was rendering the dead brand directly beneath the live one on
+              the day press links go out. A decorative image is not worth
+              contradicting the rebrand, so it comes out until the seal is
+              re-exported with "DJ BOOTH INTELLIGENCE" and no exclamation.
+              The positioning CSS below stays, so restoring it is one tag.
+              Antonio's earlier "leave the footer seal for now" predates the
+              discovery of the tagline; the exclamation alone would have been
+              worth waiting on, the retired tagline is not. */}
           <a href="/" class="foot-lockup" aria-label="Save My Gig, DJ Booth Intelligence">
             <Brand variant="footer" />
           </a>
@@ -324,7 +330,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
                icon row. -->
           <a class="foot-bmc" href="https://www.buymeacoffee.com/savemygig" target="_blank" rel="noopener" data-event="affiliate_click" data-program="bmc" data-placement="footer">
             <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a3 3 0 0 1 0 6h-1"/><path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M7 2v2"/><path d="M11 2v2"/></svg>
-            <span>Buy me a coffee</span>
+            <span>Buy us a coffee</span>
           </a>
         </div>
 
@@ -338,7 +344,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
           <a href="/recovery">Data recovery</a>
           <a href="/faq">FAQ</a>
         </nav>
-        <nav class="foot-col" aria-label="Prevent">
+        <nav class="foot-col" aria-label="Prepare">
           <span class="foot-col-h">Prepare</span>
           <!-- Checklist first (Antonio): it is the daily tool, same logic as
                the nav. Gear swapped for Dictionary in the footer (Antonio,

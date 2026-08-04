@@ -32,9 +32,19 @@ function cmpVersion(a, b) {
 // The single most useful number per model: the version at or above which every
 // documented issue below is already resolved. Computed, not hand-maintained,
 // so it stays correct when a new entry is added to facts.js.
+// A withdrawn version sitting ABOVE the computed floor must never be swallowed
+// by an open-ended "or later": the CDJ-3000 floor is 3.20, and 3.30 is
+// withdrawn, so "3.20 or later" would tell an owner the withdrawn release is
+// clear. Where facts.js carries a `warning` above the floor, the floor is
+// rendered bounded and the withdrawn version is named.
 const models = FIRMWARE_ISSUES.map(m => {
   const issues = [...m.issues].sort((a, b) => cmpVersion(b.fixedIn, a.fixedIn));
-  return { ...m, issues, safeFloor: issues.length ? issues[0].fixedIn : null };
+  const safeFloor = issues.length ? issues[0].fixedIn : null;
+  const floorException =
+    m.warning && safeFloor && cmpVersion(m.warning.version, safeFloor) > 0
+      ? m.warning.version
+      : null;
+  return { ...m, issues, safeFloor, floorException };
 });
 
 const totalIssues = models.reduce((n, m) => n + m.issues.length, 0);
@@ -104,6 +114,9 @@ const schema = {
           {m.safeFloor && (
             <span class="fw-floor">
               Clear at <strong>{m.safeFloor}</strong> or later
+              {m.floorException && (
+                <Fragment>, except <strong class="fw-floor-except">{m.floorException}</strong> (withdrawn)</Fragment>
+              )}
             </span>
           )}
           <span class="acc-chev" aria-hidden="true"></span>
@@ -221,6 +234,9 @@ const schema = {
       font-weight: 600; white-space: nowrap;
     }
     .fw-floor strong { color: var(--green); }
+    /* The withdrawn version named in the closed header is an exclusion, not a
+       clear version, so it must not read green. */
+    .fw-floor .fw-floor-except { color: var(--red); }
     .fw-body { padding-top: 0.2rem; }
 
     /* The withdrawn-firmware callout. Uses the danger tone already defined
