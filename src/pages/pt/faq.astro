@@ -1,0 +1,218 @@
+---
+import Base from '../../layouts/Base.astro';
+import Search from '../../components/Search.astro';
+
+// FAQ, BRAZILIAN PORTUGUESE. Source of truth for structure, the entry model,
+// the FAQPage contract and the CSS: src/pages/faq.astro. Only the copy, the
+// /pt hrefs and the language of the markup differ.
+//
+// The `id` of every entry stays in English on purpose: it is a URL fragment,
+// not copy, and search results, deep links and the English page all point at
+// the same anchors.
+//
+// Every question name and every acceptedAnswer string below is rendered
+// verbatim into the visible page from this same array, and every `id` becomes
+// a real element id, so all 16 anchors resolve. If you ever hand-write a
+// Question the loop does not print, you have broken the FAQPage contract.
+const faqs = [
+  {
+    id: 'usb-not-detected',
+    q: 'Por que o CDJ ou o XDJ não reconhece meu pen drive?',
+    a: 'As causas mais comuns, em ordem: o drive está formatado em NTFS ou exFAT em vez de FAT32; o mapa de partição é GPT (recomendamos MBR); o banco de dados do rekordbox no drive está corrompido, quase sempre depois de uma ejeção mal feita; ou o hardware do drive está morrendo. Você já recolocou o drive e já testou o outro player, então comece pelo sistema de arquivos: a maioria dos drives "mortos" é formato errado, mapa GPT ou banco de dados corrompido, não hardware queimado.',
+    fix: { href: '/pt/fix/usb-not-recognized-cdj', label: 'Solução completa: o CDJ não lê o seu USB' },
+  },
+  {
+    id: 'e-8302',
+    q: 'O que significa o erro E-8302 no CDJ?',
+    a: 'No CDJ-3000 e no CDJ-3000X, E-8302 aparece como "CANNOT PLAY TRACK": o player não consegue ler os dados da track no drive, na maioria das vezes um export do rekordbox corrompido ou um sistema de arquivos errado. Esses dois players são os que a AlphaTheta documenta para o código, e DJs relatam o mesmo erro em CDJ-2000 mais antigos, onde significa a mesma coisa. Com um notebook por perto dá para resolver ali mesmo: exporte tudo de novo pelo rekordbox, ou, depois de copiar para outro lugar tudo o que existe só naquele drive, formate em FAT32/MBR e exporte de novo. Nunca formate um drive que ainda guarda a sua única cópia de alguma coisa.',
+    fix: { href: '/pt/fix/cdj-error-e-8302', label: 'Solução completa: erro E-8302 no CDJ' },
+  },
+  {
+    id: 'format-usb',
+    q: 'Como formatar um pen drive para CDJ?',
+    a: 'Sistema de arquivos FAT32, esquema de partição MBR (Master Boot Record). No Mac: Utilitário de Disco → Exibir Todos os Dispositivos → selecione o drive (não o volume) → Apagar → MS-DOS (FAT) + Master Boot Record. No Windows, a janela de formatação nativa só oferece FAT32 até 32 GB; para um drive de 64 GB use o guiformat, que é gratuito, e o passo a passo completo está no link abaixo. Use um drive de qualidade, de 32 a 64 GB.',
+    fix: { href: '/pt/fix/format-usb-for-cdj', label: 'Solução completa: formatar um pen drive para CDJ, passo a passo' },
+  },
+  {
+    id: 'exfat-or-fat32',
+    q: 'exFAT ou FAT32 para tocar?',
+    a: 'FAT32, a não ser que você tenha certeza de que todo player em que vai encostar lê exFAT. FAT32 funciona em qualquer player Pioneer DJ e AlphaTheta da era rekordbox, antigo ou novo. exFAT só é lido por unidades mais recentes com firmware atual, então um drive que roda num CDJ-3000 pode ser recusado pelo CDJ-2000NXS2 da booth ao lado. FAT32 é o formato que nunca te surpreende.',
+    fix: { href: '/pt/fix/exfat-vs-fat32-cdj', label: 'Solução completa: exFAT ou FAT32 no CDJ' },
+  },
+  {
+    id: 'not-exported',
+    q: 'Dá para tocar tracks que não foram exportadas pelo rekordbox?',
+    a: 'Dá. O CDJ toca arquivos de áudio comuns de um USB em FAT32 pela visão FOLDER. Você perde cues, beatgrids, playlists, Sync e Quantize, mas fica com a gig. É o coração do nosso resgate de rota crítica.',
+    fix: { href: '/pt/emergency', label: 'Abrir o Emergency Mode' },
+  },
+  {
+    id: 'export-shows-nothing',
+    q: 'O export terminou, mas o player não mostra nada. Por quê?',
+    a: 'O banco de dados chegou corrompido, o clássico de quem tirou o drive sem ejetar. Primeiro, no rekordbox, abra Preferences, DJ System, Device e confira se Delete Tracks está desligado. Com essa opção ligada, apagar uma playlist do dispositivo apaga junto o áudio de toda track que nenhuma outra playlist daquele drive usa. Depois apague as playlists do dispositivo, sincronize tudo de novo e ejete pelo botão de ejetar do rekordbox. Se o dispositivo der erro, copie sua música para fora, formate limpo e exporte outra vez.',
+    fix: { href: '/pt/fix/playlists-not-showing-cdj', label: 'Solução completa: playlists não aparecem no CDJ' },
+  },
+  {
+    id: 'export-failed',
+    q: 'O que fazer quando o rekordbox diz que o export falhou?',
+    a: 'Trabalhe em ordem. Veja se ainda sobra espaço no drive. Depois abra Preferences, DJ System, Device e confira se Delete Tracks está desligado, porque com ela ligada apagar uma playlist do dispositivo apaga junto o áudio de toda track que nenhuma outra playlist daquele drive usa. Agora apague as playlists do dispositivo, sincronize tudo de novo e ejete pelo botão de ejetar do rekordbox. Se o export continuar falhando, o problema costuma ser o próprio drive: copie a música para fora e formate em FAT32/MBR antes de exportar de novo.',
+    fix: { href: '/pt/fix/rekordbox-export-failed', label: 'Solução completa: export do rekordbox falhou' },
+  },
+  {
+    id: 'rekordbox-no-usb',
+    q: 'Por que o rekordbox não reconhece meu pen drive?',
+    a: 'Se o sistema operacional enxerga o drive e o rekordbox não, quase sempre é o sistema de arquivos ou o mapa de partição, não o software. Confirme que o drive está em FAT32 com esquema MBR e reinicie o rekordbox com o drive já conectado.',
+    fix: { href: '/pt/fix/rekordbox-not-detecting-usb', label: 'Solução completa: rekordbox não reconhece o USB' },
+  },
+  {
+    id: 'waveforms',
+    q: 'Por que os waveforms não carregam no meu CDJ?',
+    a: 'O áudio está no drive, mas os dados de análise sumiram ou não podem ser lidos. Em geral as tracks foram copiadas na mão em vez de exportadas pelo rekordbox, ou o export foi interrompido. Analise de novo no rekordbox, exporte do jeito certo e os waveforms voltam.',
+    fix: { href: '/pt/fix/waveforms-not-loading-cdj', label: 'Solução completa: waveforms não carregam' },
+  },
+  {
+    id: 'emergency-loop',
+    q: 'O que é o Emergency Loop?',
+    a: 'Comportamento oficial: o player entra sozinho em um Beat Loop quando não consegue iniciar a próxima track ao chegar no fim da atual, para que a sala não fique em silêncio. Se não havia nada carregado, é normal. Se ele dispara com a sua próxima track já pronta, o player não conseguiu ler ela: trate o drive como suspeito e saia da mixagem pelo outro player.',
+    fix: { href: '/pt/fix/emergency-loop-mode', label: 'Solução completa: o Emergency Loop' },
+  },
+  {
+    id: 'how-many-drives',
+    q: 'Quantos pen drives levar para uma gig?',
+    a: 'Dois, idênticos, com o mesmo export nos dois. Um segundo drive é o único backup que funciona quando você já está de pé na booth, e transforma uma gig perdida numa troca de dez segundos.',
+    fix: { href: '/pt/fix/dj-usb-backup-strategy', label: 'Solução completa: a estratégia de backup em USB' },
+  },
+  {
+    id: 'usb-size',
+    q: 'Qual o melhor tamanho de pen drive para DJ?',
+    a: 'De 32 a 64 GB é o ponto certo. Grande o bastante para uma biblioteca de trabalho inteira, pequeno o bastante para formatar em FAT32 sem briga. Drives maiores demoram mais para formatar, mais para escanear e não servem para mais nada em uma gig.',
+    fix: { href: '/pt/fix/best-usb-size-for-djing', label: 'Solução completa: o tamanho ideal de USB para DJ' },
+  },
+  {
+    id: 'new-laptop',
+    q: 'Como levar minha biblioteca do rekordbox para outro notebook sem perder os cues?',
+    a: 'Use o Backup Library do próprio rekordbox com "include music files" marcado e restaure esse backup na máquina nova. Copiar só os arquivos de áudio perde todo cue, beatgrid e playlist, que é o erro que quase todo mundo comete uma vez.',
+    fix: { href: '/pt/fix/move-rekordbox-library-new-laptop', label: 'Solução completa: levar o rekordbox para outro notebook' },
+  },
+  {
+    id: 'works-offline',
+    q: 'O Save My Gig funciona sem internet?',
+    a: 'O kit de resgate funciona, e isso é projeto. Na sua primeira visita o site salva no seu dispositivo a página de entrada da emergência, todos os passos dos quatro fluxos de resgate, o checklist, o cartão de bolso, a referência de rekordbox, o dicionário e a busca, e a partir daí tudo isso abre sem sinal nenhum. As condições: você precisa ter aberto o site uma vez conectado, e limpar os dados do navegador apaga o kit até a próxima visita online. Adicionar à tela de início é o que protege melhor o kit salvo, principalmente no iPhone.',
+    fix: { href: '/pt/install', label: 'Como instalar, em qualquer dispositivo' },
+  },
+  {
+    id: 'is-it-free',
+    q: 'O Save My Gig é grátis mesmo?',
+    a: 'É. Sem cadastro e sem paywall, nunca. Se ele salvar a sua gig, você pode nos pagar um café, mas só depois que estiver seguro.',
+    fix: { href: '/pt/about', label: 'A história por trás do Save My Gig' },
+  },
+  {
+    id: 'which-drives',
+    q: 'Quais pen drives comprar para tocar?',
+    a: 'Um drive de qualidade, com corpo de metal, de 32 a 64 GB e de uma marca grande. E compre dois iguais, sempre. Nossa página de equipamento lista os modelos exatos em que confiamos.',
+    fix: { href: '/pt/gear', label: 'Ver o equipamento em que confiamos' },
+  },
+];
+
+// The @id is #webpage, NOT #faq: Base.astro emits a WebPage node on the same
+// URL and FAQPage is a subtype of WebPage, so sharing the @id merges them into
+// ONE node. Every @id and url here sits on the /pt URL, never the English one:
+// pointing two languages at one node would hand an answer engine Portuguese
+// prose labelled English.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': 'https://www.savemygig.com/pt/faq#webpage',
+  url: 'https://www.savemygig.com/pt/faq',
+  name: 'FAQ de pen drive e CDJ para DJs',
+  about: [
+    { '@type': 'Thing', name: 'Pioneer DJ CDJ' },
+    { '@type': 'Thing', name: 'rekordbox' },
+    { '@type': 'Thing', name: 'Problemas de pen drive para DJ' },
+  ],
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  inLanguage: 'pt-BR',
+  mainEntity: faqs.map(f => ({
+    '@type': 'Question',
+    name: f.q,
+    url: `https://www.savemygig.com/pt/faq#${f.id}`,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: f.a,
+      url: `https://www.savemygig.com/pt/faq#${f.id}`,
+    },
+  })),
+};
+---
+<Base
+  title="FAQ de DJ: pen drive, CDJ e rekordbox | Save My Gig"
+  description="USB não reconhecido, E-8302, export do rekordbox, formatar em FAT32, Emergency Loop: as perguntas que todo DJ faz, respondidas por quem já passou por elas."
+  path="/faq"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line">FAQ</div>
+    <h1 style="margin-bottom:0.5rem">PERGUNTAS DA <span class="accent">BOOTH</span></h1>
+    <p class="dim" style="margin-bottom:1.2rem">Resposta curta primeiro. Cada uma leva à solução completa.</p>
+
+    <div style="margin-bottom:2rem"><Search placeholder="Busque: USB não reconhecido, FAT32, E-8302..." /></div>
+
+    <!-- Collapsed by default: the questions are the index, the person expands
+         the answer they came for. FAQPage schema and search engines still get
+         every answer, it is all in the HTML. -->
+    {faqs.map(f => (
+      <details class="panel faq-sec" id={f.id}>
+        <summary>
+          <h2 class="faq-q">{f.q}</h2>
+          <span class="faq-chev" aria-hidden="true"></span>
+        </summary>
+        <div class="acc-body">
+          <p class="dim faq-a">{f.a}</p>
+          <a href={f.fix.href} class="faq-fix">{f.fix.label} &rarr;</a>
+        </div>
+      </details>
+    ))}
+
+    <div class="panel cta-exit" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">A pergunta é urgente porque você toca daqui a pouco?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="faq"><span aria-hidden="true">🚨</span> Abrir o Emergency Mode</a>
+    </div>
+  </main>
+</Base>
+
+<style>
+  /* The summary layout, the chevron, the focus ring and the open state live
+     once in global.css under the shared accordion. Only the question's own
+     typography is local, because only that is specific to the FAQ. */
+  .faq-q { font-size: 1.15rem; font-weight: 800; margin: 0; letter-spacing: -0.01em; }
+  /* .faq-sec inherits .panel's surface; the shared accordion supplies the
+     padding on the summary and .acc-body supplies it on the answer. */
+  .faq-sec { padding: 0; }
+</style>
+
+<script is:inline>
+  // Deep links (search results and #anchors) open the closed answer first.
+  (function () {
+    function openTarget() {
+      var id = location.hash.slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (el && el.tagName === 'DETAILS' && !el.open) el.open = true;
+      if (el) el.scrollIntoView();
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
+  })();
+</script>
+
+<style>
+  .faq-a { margin-bottom: 0.8rem; }
+  .faq-fix {
+    font-family: var(--font-body); font-weight: 600; font-size: 0.85rem;
+    color: var(--red); text-decoration: none;
+  }
+  .faq-fix:hover { text-decoration: underline; }
+  /* Anchor landing shouldn't hide the question under the top of the viewport. */
+  .panel[id] { scroll-margin-top: 1.5rem; }
+</style>

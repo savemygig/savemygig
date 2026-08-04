@@ -1,0 +1,140 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// EMERGENCY LANDING, BRAZILIAN PORTUGUESE. Source of truth for structure,
+// classes, CSS and the ItemList shape: src/pages/emergency.astro. Only the
+// human readable copy, the /pt hrefs and the language of the markup differ.
+// The sealed rescue tunnel under /pt/protocol/ stays deliberately menu free.
+//
+// The ItemList is a straight transcription of the visible <nav> below: same
+// five titles, same five one line descriptions, same five hrefs, same order.
+// If you change a door, change it here in the same commit.
+const doors = [
+  { name: 'USB NÃO RECONHECIDO', description: 'O player não enxerga o drive de jeito nenhum.', href: '/pt/protocol/usb/start' },
+  { name: 'A MÚSICA NÃO CARREGA', description: 'O drive é lido, mas as playlists sumiram ou as tracks não tocam.', href: '/pt/protocol/music/start' },
+  { name: 'NÃO SAI SOM', description: 'Canal mudo, MASTER sem sinal ou nada no fone.', href: '/pt/protocol/sound/start' },
+  { name: 'PLAYER TRAVADO', description: 'Tela ou controles travados, no meio do set ou parado.', href: '/pt/protocol/frozen/start' },
+  { name: 'EXPORT DO rekordbox FALHOU', description: 'O export não termina, ou o USB não aceita.', href: '/pt/protocol/export/start' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': 'https://www.savemygig.com/pt/emergency#doors',
+  name: 'Sintomas de emergência de DJ e suas rotas de resgate',
+  description: 'Os cinco sintomas que o Emergency Mode faz a triagem, cada um abrindo a sua própria rota de resgate passo a passo, uma decisão por tela.',
+  numberOfItems: doors.length,
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  isPartOf: { '@id': 'https://www.savemygig.com/pt/emergency#webpage' },
+  inLanguage: 'pt-BR',
+  itemListElement: doors.map((d, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: d.name,
+    description: d.description,
+    url: `https://www.savemygig.com${d.href}`,
+  })),
+};
+---
+<Base
+  title="Emergência de DJ: USB, som e player travado | Save My Gig"
+  description="Pen drive não reconhecido, playlists sumidas, sem som, player travado ou export do rekordbox falhando: escolha o sintoma e siga o passo a passo. Grátis, sem cadastro."
+  path="/emergency"
+  lang="pt"
+>
+  <meta slot="head" name="format-detection" content="telephone=no" />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap emerg">
+    <!-- UMA PERGUNTA, ACIMA DA DOBRA, DEPOIS AÇÃO. Quem está a dois minutos
+         do set não consegue ler uma página, consegue responder uma pergunta.
+         A pergunta É o título, as respostas são a primeira coisa na tela, e
+         todo o contexto vem abaixo delas. -->
+    <p class="status-line red">EMERGENCY_MODE</p>
+    <h1 class="emerg-h1">O que <span class="accent">deu errado?</span></h1>
+
+    <section id="triage" class="emerg-triage">
+      <!-- AS CINCO PORTAS, a raiz da árvore de decisão. Sintoma primeiro,
+           sempre: o DJ sabe o que ESTÁ ERRADO antes de saber quanto tempo
+           tem, então a pergunta do tempo mora dentro dos ramos, onde muda a
+           rota, nunca aqui.
+           TODOS OS CINCO PONTOS SÃO VERMELHOS. Não é decoração: no idioma de
+           severidade um ponto diz O QUANTO É GRAVE, e nesta tela não existe
+           opção leve. USB morto, música morta, som morto, player morto,
+           export morto. Amarelo e verde começam DENTRO dos ramos. -->
+      <nav class="pad-grid" aria-label="Escolha o que está acontecendo" style="margin-bottom:1.5rem">
+        <a href="/pt/protocol/usb/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="usb_not_recognized">
+          <div class="pad-header">
+            <div class="led led-r"></div>
+            <div class="pad-title">USB NÃO RECONHECIDO</div>
+          </div>
+          <div class="pad-desc">O player não enxerga o drive de jeito nenhum.</div>
+        </a>
+
+        <a href="/pt/protocol/music/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="music_wont_load">
+          <div class="pad-header">
+            <div class="led led-r"></div>
+            <div class="pad-title">A MÚSICA NÃO CARREGA</div>
+          </div>
+          <div class="pad-desc">O drive é lido, mas as playlists sumiram ou as tracks não tocam.</div>
+        </a>
+
+        <a href="/pt/protocol/sound/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="no_sound">
+          <div class="pad-header">
+            <div class="led led-r"></div>
+            <div class="pad-title">NÃO SAI SOM</div>
+          </div>
+          <div class="pad-desc">Canal mudo, MASTER sem sinal ou nada no fone.</div>
+        </a>
+
+        <a href="/pt/protocol/frozen/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="frozen_player">
+          <div class="pad-header">
+            <div class="led led-r"></div>
+            <div class="pad-title">PLAYER TRAVADO</div>
+          </div>
+          <div class="pad-desc">Tela ou controles travados, no meio do set ou parado.</div>
+        </a>
+
+        <a href="/pt/protocol/export/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="export_failed">
+          <div class="pad-header">
+            <div class="led led-r"></div>
+            <div class="pad-title">EXPORT DO rekordbox FALHOU</div>
+          </div>
+          <div class="pad-desc">O export não termina, ou o USB não aceita.</div>
+        </a>
+      </nav>
+    </section>
+
+    <!-- ORDEM: portas, este parágrafo, depois a saída para recuperação. O
+         parágrafo é a entrada de busca E a frase que explica o que é esta
+         página, então fica entre os dois. -->
+    <p class="emerg-lead">
+      Socorro para falhas de pen drive, problemas de export do rekordbox, Emergency Loop e drives corrompidos em Pioneer CDJ-3000, CDJ-2000 e XDJ.
+    </p>
+
+    <p class="emerg-next">
+      Cinco rotas hoje. Outras estão em construção e chegam aqui primeiro.
+    </p>
+
+    <p class="dim" style="font-size:0.86rem;margin-top:2rem">
+      A gig já acabou e os arquivos sumiram? <a href="/pt/recovery">A recuperação de dados tem um caminho só dela</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  /* Size comes from the global h1 scale. */
+  .emerg-h1 { margin-bottom: 0.9rem; }
+  .emerg-lead { color: var(--text-dim); font-size: 1rem; line-height: 1.6; max-width: 40rem; margin-bottom: 2rem; }
+  .emerg-actions { max-width: 100%; margin: 0 0 2.6rem; }
+  .emerg-triage { margin-top: 1rem; }
+  .emerg-triage-h { font-size: clamp(1.5rem, 5vw, 2rem); text-transform: none; letter-spacing: -0.01em; margin-bottom: 0.4rem; border: none; }
+  .emerg-triage-sub { font-size: 0.95rem; margin-bottom: 1.4rem; }
+  /* Quieter than the lead above it: a note about the future, not something a
+     DJ in trouble has to read. */
+  .emerg-next { color: var(--text-faint); font-size: 0.86rem; margin-top: 1.4rem; }
+  .emerg-problems { margin-top: 1rem; }
+  .emerg-problems-h { font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.6rem; margin-bottom: 1rem; }
+  .problem-list a { color: var(--text); text-decoration: none; }
+  .problem-list a:hover { color: var(--red); }
+</style>

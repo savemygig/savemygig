@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+// 404, BRAZILIAN PORTUGUESE. Source of truth for structure and classes:
+// src/pages/404.astro. Only the copy and the /pt hrefs differ.
+---
+<Base
+  title="Cabo errado | Save My Gig"
+  description="Esta página não existe. Mas a sua gig ainda pode ser salva."
+  path="/404"
+  lang="pt"
+  noindex
+>
+  <main class="wrap" style="padding-top:4rem">
+    <div class="status-line red" style="justify-content:center">Sinal_Perdido</div>
+    <h1 class="danger" style="margin-bottom:1rem">404 - CABO ERRADO</h1>
+    <p class="dim" style="margin-bottom:2rem">Esta página não está plugada. Mas se o seu USB acabou de morrer antes de uma gig, você está a dois toques da solução.</p>
+    <a href="/pt/emergency" class="btn btn-solid" style="max-width:24rem;margin:0 auto"><span aria-hidden="true">🚨</span> Abrir o Emergency Mode</a>
+    <p style="margin-top:1.5rem"><a href="/pt" class="dim" style="text-decoration:none">← Início</a></p>
+  </main>
+</Base>

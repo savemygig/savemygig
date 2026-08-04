@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { LANGS } from './src/i18n/registry.js';
 
 // Pages that must never appear in the sitemap: the sealed rescue tunnel
 // (noindex by design), outcome pages, and utility pages. Everything else is
@@ -20,6 +21,17 @@ const EXCLUDE = [
   '/404',
   '/offline',
 ];
+
+// Prefixes of languages that are NOT published yet. While `live` is false the
+// registry already makes those pages noindex; the sitemap has to agree, or a
+// build advertises an unpublished translation to Google. The previous filter
+// only stripped the prefix before testing EXCLUDE, which was enough while the
+// rescue tunnel was the only translated route (it is excluded in every
+// language). The moment ordinary /pt pages existed, seven of them walked
+// straight into sitemap-0.xml and check-i18n.mjs failed. Publishing a
+// language is still one flag in the registry: flip `live` and its URLs appear
+// here, together with the hreflang alternates and the indexable robots tag.
+const DEAD_PREFIXES = LANGS.filter((l) => l.prefix && !l.live).map((l) => l.prefix);
 
 export default defineConfig({
   site: 'https://www.savemygig.com',
@@ -81,6 +93,8 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         const raw = page.replace('https://www.savemygig.com', '');
+        // An unpublished language is invisible, full stop.
+        if (DEAD_PREFIXES.some((p) => raw === p || raw.startsWith(p + '/'))) return false;
         // Strip a language prefix before testing. EXCLUDE is written in
         // canonical English paths, so without this the rescue tunnel was
         // excluded in English and ADVERTISED in Portuguese and Spanish: 53

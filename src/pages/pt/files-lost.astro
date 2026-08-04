@@ -1,0 +1,60 @@
+---
+import Base from '../../layouts/Base.astro';
+import EmailCapture from '../../components/EmailCapture.astro';
+// FILES LOST, BRAZILIAN PORTUGUESE. Source of truth for structure, panels and
+// classes: src/pages/files-lost.astro. Only the copy and the /pt hrefs differ.
+---
+<Base
+  title="Perdeu os arquivos? Esta é a rota de recuperação | Save My Gig"
+  description="Não deu para salvar o seu pen drive na hora. Os arquivos ainda podem estar vivos: o que fazer agora, e o que não fazer de jeito nenhum."
+  path="/files-lost"
+  lang="pt"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line red">Modo_Recuperacao</div>
+
+    <h1 style="margin-bottom:1rem">A gig foi dura.<br /><span class="accent">Os arquivos ainda podem estar vivos.</span></h1>
+    <p class="dim" style="margin-bottom:2rem">"Não é possível ler" quase nunca quer dizer "sumiu". Na nossa experiência, a maioria dos pen drives que falham ainda guarda os dados; o que o drive não consegue mais é apresentar eles. O que você fizer agora decide se dá para recuperar.</p>
+
+    <div class="panel panel-danger">
+      <h2 style="margin-bottom:0.75rem">Primeiro: pare de usar o drive</h2>
+      <ul class="checklist">
+        <li><strong>Não formate.</strong> Formatar pode destruir as chances de recuperação.</li>
+        <li><strong>Não fique reconectando ele</strong> nos players, cada montagem pode piorar a situação.</li>
+        <li>Deixe ele de lado até chegar a um computador com software de recuperação.</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.75rem">Etapa 1 - Software de recuperação</h2>
+      <p class="dim">Se o computador detecta o drive de alguma forma, mesmo sem mostrar arquivo nenhum, o software costuma conseguir tirar a música de lá. Duas ferramentas que a gente usaria de verdade:</p>
+      <p class="dim" style="font-size:0.85rem">As ferramentas da próxima página podem render uma comissão para nós, sem custo extra para você. Isso nunca muda o que recomendamos, e não existem links pagos dentro do Emergency Mode.</p>
+      <a href="/pt/recovery" class="btn btn-go" data-event="affiliate_click" data-program="recovery_page" data-placement="files_lost">
+        <span aria-hidden="true">🛠</span> Ver as ferramentas →
+      </a>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.75rem">Etapa 2 - Se o drive morreu de vez</h2>
+      <p class="dim" style="margin-bottom:0">Sem luz, não detectado em lugar nenhum, ou levou pancada ou água: o software não alcança. Um laboratório de recuperação alcança, abrindo o drive e lendo a memória direto. É caro, então só para arquivos insubstituíveis. <a href="/pt/recovery#lab">Quando usar um laboratório →</a></p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.75rem">Etapa 3 - Que esta seja a última vez</h2>
+      <p class="dim">Os DJs com quem isso nunca acontece não são sortudos, eles têm um sistema. Dá para montar em uma noite.</p>
+      <a href="/pt/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="files_lost"><span aria-hidden="true">🛡</span> Montar o sistema de prevenção
+      </a>
+    </div>
+
+    <EmailCapture
+      source="files-lost"
+      title="Nunca mais passe por isso"
+      blurb="Mandamos por e-mail o Cartão de Emergência para imprimir e o checklist pré-gig. Na próxima vez que um drive morrer, vai ser um contratempo de cinco minutos, não um set perdido. Sem spam, cancele em um clique."
+    />
+
+    <p class="dim" style="margin-top:2rem">
+      <a href="/pt/feedback">Conte o que aconteceu →</a>
+    </p>
+  </main>
+</Base>

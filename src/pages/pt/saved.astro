@@ -1,0 +1,60 @@
+---
+import Base from '../../layouts/Base.astro';
+import EmailCapture from '../../components/EmailCapture.astro';
+// OUTCOME PAGE, BRAZILIAN PORTUGUESE. Source of truth for structure, panels,
+// the no_sound query guard and the classes: src/pages/saved.astro. Only the
+// copy and the /pt hrefs differ.
+---
+<Base
+  title="Você voltou a tocar | Save My Gig"
+  description="Deu certo. O seu set está salvo. Agora, como garantir que isso não aconteça de novo."
+  path="/saved"
+  lang="pt"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line" >Pronto_Pra_Tocar</div>
+
+    <h1 class="accent" style="margin-bottom:1rem">VOCÊ VOLTOU A TOCAR.</h1>
+    <p style="margin-bottom:0.5rem">A sala está tocando de novo. <strong>O resto é o seu set.</strong></p>
+    <p class="dim" style="margin-bottom:3rem">Depois da gig: apague os arquivos temporários de qualquer computador que você usou.</p>
+
+    <section class="panel panel-go" style="margin-bottom:1.5rem">
+      <h2 style="margin-bottom:0.75rem">Nunca mais passe por essa emergência</h2>
+      <p class="dim">Esta teve final feliz. A próxima não tem garantia, a menos que você crie a garantia. O sistema de prevenção leva mais ou menos uma hora para montar.</p>
+      <a href="/pt/prepare" class="btn btn-solid" data-event="step_completed" data-step="prepare_click" data-placement="saved_hero"><span aria-hidden="true">🛡</span> Montar o sistema de prevenção
+      </a>
+    </section>
+
+    <!-- Escondido para quem chegou pelo ramo de falta de som: a premissa
+         daquele ramo é que nada quebrou no drive (um assign de crossfader, um
+         cabo, um cue mix). Mandar esse DJ aposentar um drive que nunca falhou
+         soa como um site que não estava ouvindo, justo na página onde a
+         confiança é paga. -->
+    <section class="panel" id="retirePanel" style="margin-bottom:1.5rem">
+      <h3 style="margin-bottom:0.75rem">Aposente o drive que te traiu</h3>
+      <p class="dim">Um USB que falhou uma vez vai falhar de novo. Estes são os drives que não fazem isso:</p>
+      <a href="/pt/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="saved"><span aria-hidden="true">🔌</span> Ver os drives aprovados
+      </a>
+    </section>
+    <script>
+      if (new URLSearchParams(location.search).get('path') === 'no_sound') {
+        const p = document.getElementById('retirePanel');
+        if (p) p.remove();
+      }
+    </script>
+
+    <div style="margin-bottom:1.5rem">
+      <EmailCapture
+        source="saved"
+        title="Guarde o Cartão de Emergência"
+        blurb="A referência rápida de uma página para desastres com USB. É grátis para ler quando quiser, e mandamos por e-mail a versão para imprimir, para ela ficar no seu celular na próxima booth escura."
+      />
+    </div>
+
+    <p class="dim" style="margin-top:2rem">
+      Isto salvou a sua gig? <a href="https://buymeacoffee.com/savemygig" data-event="affiliate_click" data-program="bmc" data-placement="saved">Pague um café pra gente</a>
+      · ou só <a href="mailto:info@savemygig.com">conte que funcionou</a>
+    </p>
+  </main>
+</Base>

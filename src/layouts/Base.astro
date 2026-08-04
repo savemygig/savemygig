@@ -389,8 +389,8 @@ const entityGraph = {
                never destroyed and needs no restore step. -->
           <button type="button" class="share-btn" id="shareCopy" aria-label="Copy link">
             <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
-            <span class="sb-opt">Copy to paste</span>
-            <span class="sb-copied">Copied!</span>
+            <span class="sb-opt">{S.footer.copy}</span>
+            <span class="sb-copied">{S.footer.copied}</span>
           </button>
         </div>
       </div>
@@ -509,7 +509,7 @@ const entityGraph = {
       </div>
     </div>
   </footer>
-  <Consent />
+  <Consent lang={lang} />
   <script>
     const t = document.getElementById('navToggle');
     const l = document.getElementById('navLinks');

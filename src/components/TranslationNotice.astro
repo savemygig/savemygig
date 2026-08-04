@@ -79,17 +79,17 @@ const show = lang !== DEFAULT_LANG && !inEmergency;
 
 const COPY = {
   pt: {
-    lead: 'O Save My Gig nasceu em inglês. Esta versão em português foi feita com carinho, para soar como um DJ brasileiro falaria, não como uma tradução.',
-    joke: 'Ainda não está perfeita, e talvez nunca fique.',
-    ask: 'Mas a gente quer chegar perto. Se alguma palavra soar estranha, conta pra gente.',
+    lead: 'O Save My Gig nasceu em inglês. Esta versão foi feita com carinho, mas ainda não está perfeita. Se alguma palavra soar estranha, conta pra gente.',
+    joke: '',
+    ask: '',
     cta: 'Falar com a gente',
     subject: 'Versão em português: uma sugestão',
     close: 'Fechar aviso',
   },
   es: {
-    lead: 'Save My Gig nació en inglés. Esta versión en español fue hecha con cariño, para sonar como hablaría un DJ, no como una traducción.',
-    joke: 'Todavía no está perfecta, y quizás nunca lo esté.',
-    ask: 'Pero queremos acercarnos. Si alguna palabra suena rara, cuéntanos.',
+    lead: 'Save My Gig nació en inglés. Esta versión fue hecha con cariño, pero todavía no está perfecta. Si alguna palabra suena rara, cuéntanos.',
+    joke: '',
+    ask: '',
     cta: 'Escríbenos',
     subject: 'Versión en español: una sugerencia',
     close: 'Cerrar aviso',
@@ -100,14 +100,12 @@ const c = COPY[lang];
 {show && c && (
   <div class="tx-notice" id="txNotice" data-lang={lang} hidden>
     <div class="tx-body">
-      <p class="tx-lead">{c.lead}</p>
-      <p class="tx-joke">{c.joke} {c.ask}</p>
-      <a
+      <p class="tx-lead">{c.lead} <a
         class="tx-cta"
         href={`mailto:info@savemygig.com?subject=${encodeURIComponent(c.subject)}`}
         data-event="translation_report"
         data-lang={lang}
-      >{c.cta}</a>
+      >{c.cta}</a></p>
     </div>
     <button type="button" class="tx-close" id="txClose" aria-label={c.close}>
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -157,13 +155,18 @@ const c = COPY[lang];
     border: var(--stroke) solid var(--edge);
     border-radius: var(--radius);
     background: var(--surf-1);
-    padding: 0.85rem 0.9rem 0.85rem 1rem;
-    margin: 0 0 1.75rem;
+    padding: 0.7rem 0.75rem 0.7rem 0.85rem;
+    margin: 0 0 1.1rem;
   }
   .tx-notice[hidden] { display: none; }
   .tx-body { flex: 1 1 auto; min-width: 0; }
+  /* HEIGHT IS A FEATURE HERE. The first version was three blocks and cost
+     227px at 390px wide, which pushed the homepage's third door BELOW THE
+     FOLD on a 360x740 Android, the exact device class the homepage CSS calls
+     out as common in Brazil. A note about translation quality is not worth a
+     door. One paragraph, inline link, tighter box: about 110px. */
   .tx-lead {
-    margin: 0 0 0.3rem; font-size: 0.86rem; line-height: 1.5; color: var(--text-dim);
+    margin: 0; font-size: 0.84rem; line-height: 1.45; color: var(--text-dim);
   }
   .tx-joke {
     margin: 0 0 0.55rem; font-size: 0.86rem; line-height: 1.5; color: var(--text-dim);

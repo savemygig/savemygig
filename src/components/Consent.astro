@@ -6,17 +6,29 @@
  * and is remembered. Deliberately small and anchored to the bottom so it
  * never covers the emergency CTA, and it is hidden inside the rescue tunnel
  * (the Tunnel layout does not include this component).
+ *
+ * LANGUAGE AWARE 2026-08-04. This shipped in English on the Portuguese
+ * homepage, which made it the FIRST thing a Brazilian DJ read on a page that
+ * had otherwise been rewritten for them. A consent banner is also the one
+ * element on the site that is legally required to be understood, so English
+ * here is not merely untidy. Caught by reading a screenshot of /pt, not by
+ * any check: nothing in the build knew this component had words in it.
  */
+import { t } from '../i18n/ui';
+import { localizedPath, DEFAULT_LANG } from '../i18n/registry';
+interface Props { lang?: string; }
+const { lang = DEFAULT_LANG } = Astro.props;
+const S = t(lang).consent;
 ---
-<div id="ck" class="ck" role="dialog" aria-label="Cookie choice" hidden>
+<div id="ck" class="ck" role="dialog" aria-label={S.aria} hidden>
   <p class="ck-t">
-    <strong class="ck-h">Before you dive in.</strong>
-    Analytics cookies only, so we see which pages help DJs most.
-    <a href="/legal/cookies">Cookie policy</a>
+    <strong class="ck-h">{S.head}</strong>
+    {S.body}
+    <a href={localizedPath('/legal/cookies', lang)}>{S.policy}</a>
   </p>
   <div class="ck-b">
-    <button type="button" id="ck-no" class="ck-btn ck-ghost">Decline</button>
-    <button type="button" id="ck-yes" class="ck-btn ck-solid">Accept</button>
+    <button type="button" id="ck-no" class="ck-btn ck-ghost">{S.decline}</button>
+    <button type="button" id="ck-yes" class="ck-btn ck-solid">{S.accept}</button>
   </div>
 </div>
 

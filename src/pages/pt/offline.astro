@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+// OFFLINE FALLBACK, BRAZILIAN PORTUGUESE. Source of truth for structure and
+// classes: src/pages/offline.astro. Shown when a page is requested that was
+// never cached and there is no signal, so it deliberately points at the parts
+// that DO work offline.
+---
+<Base
+  title="Você está offline | Save My Gig"
+  description="Sem conexão agora."
+  path="/offline"
+  lang="pt"
+  noindex={true}
+>
+  <main class="wrap">
+    <div class="status-line">NO_SIGNAL</div>
+    <h1 style="margin-bottom:1rem">Sem conexão.<br /><span class="accent">O resgate continua funcionando.</span></h1>
+    <p class="dim" style="margin-bottom:2rem">
+      Esta página não foi salva no seu dispositivo, mas o fluxo de emergência e
+      o checklist foram. Eles funcionam sem sinal nenhum.
+    </p>
+
+    <a href="/pt/emergency" class="btn btn-solid"><span aria-hidden="true">🚨</span> Emergency Mode</a>
+    <a href="/pt/checklist" class="btn btn-neutral">Checklist pré-gig</a>
+    <a href="/pt" class="btn btn-neutral">Início</a>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.9rem">
+      Reconecte e todo o resto volta.
+    </p>
+  </main>
+</Base>

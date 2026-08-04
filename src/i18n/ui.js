@@ -66,6 +66,14 @@ export const UI = {
       builtBy: "Built by DJs who've been there.",
       updated: 'Updated continuously with new gear and solutions.',
     },
+    consent: {
+      aria: 'Cookie choice',
+      head: 'Before you dive in.',
+      body: 'Analytics cookies only, so we see which pages help DJs most.',
+      policy: 'Cookie policy',
+      decline: 'Decline',
+      accept: 'Accept',
+    },
     lang: { label: 'Language' },
   },
 
@@ -125,6 +133,16 @@ export const UI = {
       builtBy: 'Feito por DJs que já passaram por isso.',
       updated: 'Atualizado continuamente com novos equipamentos e soluções.',
     },
+    consent: {
+      aria: 'Escolha de cookies',
+      head: 'Antes de começar.',
+      // "Analytics" stays: it is the word Brazilians use for this, and the
+      // cookie policy it links to uses it too.
+      body: 'Só cookies de analytics, para a gente saber quais páginas ajudam mais os DJs.',
+      policy: 'Política de cookies',
+      decline: 'Recusar',
+      accept: 'Aceitar',
+    },
     lang: { label: 'Idioma' },
   },
 
@@ -179,6 +197,14 @@ export const UI = {
       feedback: 'Feedback',
       builtBy: 'Hecho por DJs que ya pasaron por esto.',
       updated: 'Actualizado continuamente con nuevos equipos y soluciones.',
+    },
+    consent: {
+      aria: 'Preferencia de cookies',
+      head: 'Antes de entrar.',
+      body: 'Solo cookies de analytics, para saber qué páginas ayudan más a los DJs.',
+      policy: 'Política de cookies',
+      decline: 'Rechazar',
+      accept: 'Aceptar',
     },
     lang: { label: 'Idioma' },
   },
