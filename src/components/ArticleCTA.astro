@@ -11,17 +11,15 @@ const { article } = Astro.props;
 <div class="panel cta-exit" style="margin-top:3rem">
   <h3 style="margin-bottom:0.75rem">Playing soon and still stuck?</h3>
   <p class="dim">The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.</p>
-  <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement={`article_${article}`}>
-    🚨 Start Emergency Mode
+  <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement={`article_${article}`}><span aria-hidden="true">🚨</span> Start Emergency Mode
   </a>
 </div>
 <div class="panel" style="margin-top:1rem">
   <p class="dim" style="margin-bottom:0.75rem"><strong>Never want to read this page again?</strong> Set up the prevention system once and this page becomes irrelevant.</p>
-  <a href="/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement={`article_${article}`}>
-    🛡 See the prevention checklist
+  <a href="/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement={`article_${article}`}><span aria-hidden="true">🛡</span> See the prevention checklist
   </a>
 </div>
 <div style="margin-top:1rem">
   <EmailCapture source={`article_${article}`} />
 </div>
-<a href="/emergency" class="sticky-cta" data-event="begin_checkout" data-placement={`article_${article}_sticky`}>🚨 PLAYING SOON? START EMERGENCY MODE</a>
+<a href="/emergency" class="sticky-cta" data-event="begin_checkout" data-placement={`article_${article}_sticky`}><span aria-hidden="true">🚨</span> PLAYING SOON? START EMERGENCY MODE</a>

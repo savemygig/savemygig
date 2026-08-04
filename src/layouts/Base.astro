@@ -5,6 +5,8 @@ import Consent from '../components/Consent.astro';
 import LangPicker from '../components/LangPicker.astro';
 import Search from '../components/Search.astro';
 import { VERSION_LABEL, IS_BETA } from '../lib/version';
+import { byCode, liveLangs, localizedPath, DEFAULT_LANG, anyTranslationLive } from '../i18n/registry';
+import { t } from '../i18n/ui';
 import '../styles/global.css';
 
 interface Props {
@@ -30,11 +32,30 @@ interface Props {
       explicitly allows, rather than printing a slug-derived guess like
       "Cdj 3000x". Pass it on pages where the trail is worth completing. */
   crumbName?: string;
+  /** Language code for THIS page: 'en' | 'pt' | 'es'. Defaults to English.
+      `path` is always the ENGLISH path either way, e.g. "/checklist": the
+      canonical URL, the hreflang set and every internal link are derived
+      from it, so a translated page never has to know its own prefix. */
+  lang?: string;
 }
 
-const { title, description, path, noindex = false, ogImage, ogTitle, ogDescription, crumbName } = Astro.props;
+const { title, description, path, noindex = false, ogImage, ogTitle, ogDescription, crumbName, lang = DEFAULT_LANG } = Astro.props;
+const L = byCode(lang);
+const S = t(lang);
+/** Localize an internal path for the CURRENT language. Every nav, footer and
+    layout link goes through this, so a Portuguese page cannot link a reader
+    back into English by accident. */
+const lp = (p) => localizedPath(p, lang);
+/** THE SEO GUARANTEE, in one expression. hreflang is emitted ONLY between
+    languages that are actually live. While pt and es are unpublished this
+    array is empty, so no page ever tells a crawler that a translation
+    exists, and the English site's markup is byte-identical to what it was
+    before i18n landed. Publishing is flipping `live` in the registry, which
+    turns on the alternates, the sitemap entries and the indexable robots tag
+    together, which is the only safe order. */
+const alternates = anyTranslationLive() ? liveLangs() : [];
 const SITE = 'https://www.savemygig.com';
-const canonical = `${SITE}${path === '/' ? '/' : path}`;
+const canonical = `${SITE}${localizedPath(path === '/' ? '/' : path, lang)}`;
 // Default share image (2026-07-30): landscape 1200x630, cropped from
 // Antonio's shield-logo social art so a shared link matches the same brand
 // mark as his social posts instead of a mismatched portrait photo.
@@ -145,17 +166,33 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
 } : null;
 ---
 <!doctype html>
-<html lang="en">
+<html lang={L.tag} dir={L.dir}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
-  {noindex ? <meta name="robots" content="noindex,follow" /> : <meta name="robots" content="index,follow" />}
+  {/* An unpublished language is noindex REGARDLESS of the page's own flag.
+      This is the belt to the registry's braces: even if a translated page
+      were somehow added to the sitemap, the page itself refuses indexing. */}
+  {noindex || !L.live
+    ? <meta name="robots" content={L.live ? 'noindex,follow' : 'noindex,nofollow'} />
+    : <meta name="robots" content="index,follow" />}
   {/* Matches --bg and the manifest theme_color, so the browser chrome is the
       same black as the page instead of a flatter pure black beside it. */}
   <meta name="theme-color" content="#0a0a0b" />
+  {/* hreflang. Reciprocal and self-referencing, which is what Google
+      requires: every version lists every version INCLUDING itself, and
+      x-default points at English as the catch-all for languages we do not
+      serve. Empty while nothing is published. */}
+  {alternates.map((a) => (
+    <link rel="alternate" hreflang={a.tag} href={`${SITE}${localizedPath(path === '/' ? '/' : path, a.code)}`} />
+  ))}
+  {alternates.length > 0 && (
+    <link rel="alternate" hreflang="x-default" href={`${SITE}${path === '/' ? '/' : path}`} />
+  )}
+  <meta property="og:locale" content={L.ogLocale} />
   <meta property="og:type" content="website" />
   <meta property="og:title" content={ogTitle ?? title} />
   <meta property="og:description" content={ogDescription ?? description} />
@@ -180,7 +217,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
   <a href="#main" class="skip-link">Skip to content</a>
   <header class="site-nav-wrap">
     <div class="site-nav">
-      <a href="/" class="nav-brand" aria-label="Save My Gig, DJ Booth Intelligence, home">
+      <a href={lp("/")} class="nav-brand" aria-label={S.aria.brandHome}>
         <!-- Shield mark (Antonio's new asset, 2026-07-29). SVG scales crisp
              at any DPI; 36x42 keeps the shield's own aspect in the slot. -->
         <img src="/images/logo-shield.svg" alt="" width="47" height="54" class="nb-seal" decoding="async" />
@@ -193,23 +230,23 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
       </button>
       <nav class="nav-links" id="navLinks" aria-label="Site">
-        <a href="/" class="nav-home">Home</a>
+        <a href={lp("/")} class="nav-home">{S.home}</a>
         <!-- Order mirrors the three homepage doors: Checklist, Emergency,
              Prevention. Recovery and Knowledge follow. The nav and the doors
              must not disagree about what comes first. The checklist leads
              because it is the daily tool; the rescue is one tap behind it and
              most DJs in trouble arrive straight on /fix or /emergency anyway. -->
-        <a href="/checklist" class:list={[{ 'nav-on': path.startsWith('/checklist') }]}>Checklist</a>
-        <a href="/emergency" class:list={[{ 'nav-on': path.startsWith('/emergency') || path.startsWith('/protocol') }]}>Emergency</a>
-        <a href="/prepare" class:list={[{ 'nav-on': path.startsWith('/prepare') }]}>Prevention</a>
-        <a href="/recovery" class:list={[{ 'nav-on': path.startsWith('/recovery') }]}>Recovery</a>
-        <a href="/knowledge" class:list={[{ 'nav-on': path.startsWith('/knowledge') }]}>Knowledge</a>
-        <a href="/gear" class:list={['nav-more', 'nav-gear-hide-mobile', { 'nav-on': path.startsWith('/gear') }]}>Gear</a>
+        <a href={lp("/checklist")} class:list={[{ 'nav-on': path.startsWith('/checklist') }]}>{S.nav.checklist}</a>
+        <a href={lp("/emergency")} class:list={[{ 'nav-on': path.startsWith('/emergency') || path.startsWith('/protocol') }]}>{S.nav.emergency}</a>
+        <a href={lp("/prepare")} class:list={[{ 'nav-on': path.startsWith('/prepare') }]}>{S.nav.prepare}</a>
+        <a href={lp("/recovery")} class:list={[{ 'nav-on': path.startsWith('/recovery') }]}>{S.nav.recovery}</a>
+        <a href={lp("/knowledge")} class:list={[{ 'nav-on': path.startsWith('/knowledge') }]}>{S.nav.knowledge}</a>
+        <a href={lp("/gear")} class:list={['nav-more', 'nav-gear-hide-mobile', { 'nav-on': path.startsWith('/gear') }]}>{S.nav.gear}</a>
         <!-- "About us", not "About" (Antonio, 2026-08-03): in the drawer the
              one word sat short against CHECKLIST and KNOWLEDGE and the column
              read ragged. Nav label only; the footer column keeps the short
              form, where a compact list of links is the right register. -->
-        <a href="/about" class:list={['nav-more', { 'nav-on': path.startsWith('/about') }]}>About us</a>
+        <a href={lp("/about")} class:list={['nav-more', { 'nav-on': path.startsWith('/about') }]}>{S.nav.about}</a>
         <!-- The language picker lives INSIDE the nav, once, so there is one
              instance and one implementation. On desktop the nav is a row and
              it renders as a square left of the search button; on a phone the
@@ -246,7 +283,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
                below are the punchline. -->
           <!-- Colon, not a period (Antonio): the line INTRODUCES the share
                buttons below it, so it ends the way an introduction does. -->
-          <p class="foot-share-h">Every DJ knows a DJ who needs this:</p>
+          <p class="foot-share-h">{S.footer.shareLead}</p>
         </div>
         <div class="foot-share-btns">
           <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp" href="https://wa.me/?text=Save%20My%20Gig%2C%20DJ%20Booth%20Intelligence%2C%20for%20when%20your%20USB%20dies%20before%20a%20set.%20https%3A%2F%2Fwww.savemygig.com">
@@ -308,7 +345,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
               stale again. Vector, so it is sharp at 104px and at 16px.
               A lettered seal for print or merch is a design job, not this. */}
           <img class="foot-seal" src="/images/seal-footer.svg" alt="" width="104" height="104" loading="lazy" aria-hidden="true" />
-          <a href="/" class="foot-lockup" aria-label="Save My Gig, DJ Booth Intelligence">
+          <a href={lp("/")} class="foot-lockup" aria-label="Save My Gig, DJ Booth Intelligence">
             <Brand variant="footer" />
           </a>
           <div class="foot-social">
@@ -330,7 +367,7 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
                icon row. -->
           <a class="foot-bmc" href="https://www.buymeacoffee.com/savemygig" target="_blank" rel="noopener" data-event="affiliate_click" data-program="bmc" data-placement="footer">
             <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a3 3 0 0 1 0 6h-1"/><path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M7 2v2"/><path d="M11 2v2"/></svg>
-            <span>Buy us a coffee</span>
+            <span>{S.footer.coffee}</span>
           </a>
         </div>
 
@@ -339,10 +376,10 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
           <!-- Order per Antonio: install leads (the installed app IS rescue,
                it guides with no internet), then the crisis doors. "As an
                app", precisely: a PWA is the site installing AS one. -->
-          <a href="/install">Install as an app</a>
-          <a href="/emergency">Emergency mode</a>
-          <a href="/recovery">Data recovery</a>
-          <a href="/faq">FAQ</a>
+          <a href={lp("/install")}>{S.footer.install}</a>
+          <a href={lp("/emergency")}>{S.footer.emergencyMode}</a>
+          <a href={lp("/recovery")}>{S.footer.dataRecovery}</a>
+          <a href={lp("/faq")}>{S.footer.faq}</a>
         </nav>
         <nav class="foot-col" aria-label="Prepare">
           <span class="foot-col-h">Prepare</span>
@@ -350,17 +387,17 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
                the nav. Gear swapped for Dictionary in the footer (Antonio,
                2026-07-30) -- Gear still lives in the top nav and on-page
                links, this is just the footer's fourth slot. -->
-          <a href="/checklist">Checklist</a>
-          <a href="/prepare">Prevention</a>
-          <a href="/knowledge/dictionary">Dictionary</a>
-          <a href="/knowledge">Knowledge base</a>
+          <a href={lp("/checklist")}>{S.footer.checklist}</a>
+          <a href={lp("/prepare")}>{S.footer.prevention}</a>
+          <a href={lp("/knowledge/dictionary")}>{S.footer.dictionary}</a>
+          <a href={lp("/knowledge")}>{S.footer.knowledgeBase}</a>
         </nav>
         <nav class="foot-col" aria-label="More">
           <span class="foot-col-h">More</span>
-          <a href="/about">About</a>
-          <a href="/partners">Partners</a>
-          <a href="/legal">Legal</a>
-          <a href="/feedback">Feedback</a>
+          <a href={lp("/about")}>{S.footer.about}</a>
+          <a href={lp("/partners")}>{S.footer.partners}</a>
+          <a href={lp("/legal")}>{S.footer.legal}</a>
+          <a href={lp("/feedback")}>{S.footer.feedback}</a>
         </nav>
       </div>
 
