@@ -1,0 +1,262 @@
+---
+import Tunnel from '../../../layouts/Tunnel.astro';
+import { TREE } from '../../../data/emergency-tree.es.js';
+
+// THE TUNNEL RENDERER, SPANISH. Structural copy of
+// src/pages/protocol/[...slug].astro: same node model, same pad logic, same
+// tone fallback, same analytics attributes. The only differences are the tree
+// it reads (emergency-tree.es.js), the language it declares, the /es prefix on
+// every internal link, and the handful of strings this file owns rather than
+// the tree. If you change the English renderer, change this one with it.
+//
+// THE FOUR MOVES ARE INLINE HERE, and deliberately. src/data/runlist.js is the
+// English source of truth for the printable card and the English tunnel, and
+// it must not be edited from a translation task. Until there is a
+// runlist.es.js shared with a Spanish /card, the Spanish moves live here.
+// If you add a Spanish card page, lift these five constants into
+// src/data/runlist.es.js and import them in both places.
+const RUNLIST_HEAD =
+  'Tienes más tiempo del que parece. Si había un track sonando cuando murió el ' +
+  'USB, sigue sonando, y una librería grande puede tardar treinta segundos en ' +
+  'aparecer. No arranques nada de golpe.';
+
+const RUNLIST_ASSUMED =
+  'Ya lo reconectaste y ya probaste el otro deck.';
+
+const RUNLIST = [
+  {
+    verb: 'FOLDER',
+    action: 'La base de datos murió. La música no.',
+    detail:
+      'Si el USB aparece, aunque sea sin playlists: SOURCE, elige el USB y navega ' +
+      'en modo FOLDER. El reproductor lee los archivos de audio directo e ignora ' +
+      'la base de datos de rekordbox, que es la parte que suele morir. Pierdes ' +
+      'cues, playlists y sync. Te quedas con el gig. Esto es lo más útil de esta ' +
+      'página y lo que la mayoría de los DJs nunca ha probado.',
+  },
+  {
+    verb: 'LINK',
+    action: 'Toca desde el USB del otro reproductor.',
+    detail:
+      'Si el booth está enlazado por PRO DJ LINK, cualquier reproductor puede ' +
+      'buscar y cargar desde un USB que está físicamente en otro. Que tu USB esté ' +
+      'muerto deja de importar. En un club con un setup Pioneer DJ completo suele ' +
+      'ser el arreglo más rápido que hay, y es el que se olvida cuando toda la ' +
+      'sala te está mirando.',
+  },
+  {
+    verb: 'REINICIA',
+    action: 'Apaga y enciende el reproductor muerto.',
+    detail:
+      'Primero USB STOP, apaga, veinte segundos, enciende. Se siente demasiado ' +
+      'drástico a mitad del set y por eso se salta, pero en un reproductor que no ' +
+      'está en la mezcla no te cuesta nada. Nunca lo hagas en un deck que está al ' +
+      'aire, y nunca en el deck del otro DJ.',
+  },
+  {
+    verb: 'PIDE',
+    action: 'Pídele el USB al DJ que va antes o después de ti.',
+    detail:
+      'Su USB es un export de rekordbox como el tuyo, así que va a leer. Esto les ' +
+      'ha pasado a todos y a ninguno le va a molestar. Vas a estar tocando música ' +
+      'de otra persona, pero vas a estar tocando. Primero la música, el orgullo ' +
+      'después.',
+  },
+];
+
+const RUNLIST_NEVER =
+  'No dejes que nada formatee ni inicialice tu USB hoy, y nunca le digas que sí ' +
+  'a una computadora que se ofrece a hacerlo. Tu música sigue ahí, y formatear ' +
+  'es la única acción que no se puede deshacer.';
+
+const RUNLIST_LAST_RESORT = {
+  title: 'Si no hay ningún USB por ningún lado',
+  body:
+    'Un celular en un canal libre evita que la sala se quede en silencio. Ten ' +
+    'claro qué es: no es que tu set siga, es que la sala no se detiene. Y solo ' +
+    'funciona si ya cargas un adaptador de USB-C a 3.5mm y un cable de 3.5mm a ' +
+    'doble RCA. No pesa, no cuesta, y no sirve de nada si está en tu casa.',
+};
+
+export function getStaticPaths() {
+  // Same list as the English renderer, and it must stay identical: these are
+  // node ids, not prose. Screens that instruct or consent to formatting,
+  // erasing or deleting print the data-destruction disclaimer at the foot.
+  const RISK_NODES = new Set([
+    'rebuild/risk',
+    'rebuild/erase',
+    'rebuild/format',
+    'rebuild/second-format',
+    'export/erase',
+    'export/format',
+    'export/repair',
+    'export/fresh',
+  ]);
+  return Object.keys(TREE).map((id) => ({
+    params: { slug: id },
+    props: { node: TREE[id], risk: RISK_NODES.has(id) },
+  }));
+}
+
+const { node, risk } = Astro.props;
+
+const toneOf = (o, i) => {
+  if (o.tone) return o.tone;
+  if (node.neutral || node.options.length > 2) return 'neutral';
+  return i === 0 ? 'green' : 'red';
+};
+const padClass = (t) =>
+  t === 'green' ? 'pad-green' : t === 'red' ? 'pad-red' : t === 'amber' ? 'pad-yellow' : 'pad-neutral';
+const ledClass = (t) =>
+  t === 'green' ? 'led-g' : t === 'red' ? 'led-r' : t === 'amber' ? 'led-y' : 'led-n';
+// The only routing difference from the English renderer: every internal link
+// stays inside /es. Node ids are never translated, so the id maps straight
+// through and the Spanish tunnel is a mirror of the English one.
+const hrefOf = (to) => (to.startsWith('/') ? `/es${to}` : `/es/protocol/${to}`);
+const answerKey = (i) => ['a', 'b', 'c', 'd'][i];
+const dataAttrs = (o, i) => {
+  const out = {
+    'data-event': o.event ?? 'step_completed',
+    'data-step': (o.data && o.data.step) ?? node.step ?? 'step',
+    'data-answer': answerKey(i),
+  };
+  for (const [k, v] of Object.entries(o.data ?? {})) if (k !== 'step') out[`data-${k}`] = v;
+  return out;
+};
+---
+<Tunnel
+  lang="es"
+  title={`${node.title} | Save My Gig`}
+  status={node.status}
+  red={node.red}
+  heading={node.srHeading}
+  risk={risk}
+>
+  {node.draft && import.meta.env.DEV && <div class="review-flag">BORRADOR, revisión pendiente.</div>}
+  {node.label && <div class="step-label">{node.label}</div>}
+  <h2 class={node.headingClass} style="margin-bottom:1rem" set:html={node.heading} />
+
+  {node.moves ? (
+    <Fragment>
+      <p class="dim" style="margin-bottom:0.9rem">{RUNLIST_HEAD}</p>
+      <p class="assumed">{RUNLIST_ASSUMED}</p>
+      <ol class="moves">
+        {RUNLIST.map((s) => (
+          <li>
+            <span class="move-verb">{s.verb}</span>
+            <span class="move-action">{s.action}</span>
+            <details class="move-more">
+              <summary>Por qué, y cómo</summary>
+              <p>{s.detail}</p>
+            </details>
+          </li>
+        ))}
+      </ol>
+      <div class="alert-card" style="margin:1.6rem 0 1.2rem">
+        <div>{RUNLIST_NEVER}</div>
+      </div>
+      <details class="move-more last-resort">
+        <summary>{RUNLIST_LAST_RESORT.title}</summary>
+        <p>{RUNLIST_LAST_RESORT.body}</p>
+      </details>
+    </Fragment>
+  ) : (
+    node.blocks.map((b) =>
+      b.t === 'check' ? (
+        <ul class="checklist">{b.items.map((it) => <li set:html={it} />)}</ul>
+      ) : b.t === 'alert' ? (
+        /* The emoji in the tree data is deliberately not rendered, same as the
+           English renderer: monochrome stroke icons only. */
+        <div class="alert-card" style="margin-bottom:1.25rem">
+          <div set:html={b.html} />
+        </div>
+      ) : b.t === 'details' ? (
+        <details class="move-more" style="margin-bottom:1.25rem">
+          <summary set:html={b.summary} />
+          <div set:html={b.html} />
+        </details>
+      ) : b.t === 'assumed' ? (
+        <p class="assumed" set:html={b.html} />
+      ) : b.t === 'note' ? (
+        <p class="tunnel-note" style="margin-bottom:1.5rem" set:html={b.html} />
+      ) : (
+        <p class="dim" style="margin-bottom:1.25rem" set:html={b.html} />
+      )
+    )
+  )}
+
+  {node.question && <p class="question">{node.question}</p>}
+
+  <nav class="pad-grid" aria-label={node.question ?? 'Qué sigue'}>
+    {node.options.map((o, i) => {
+      const tone = toneOf(o, i);
+      return (
+        <a href={hrefOf(o.to)} class:list={['pad', padClass(tone)]} {...dataAttrs(o, i)}>
+          <div class="pad-header">
+            <div class:list={['led', ledClass(tone)]}></div>
+            <div class="pad-title">{o.label}</div>
+          </div>
+          {o.desc && <div class="pad-desc">{o.desc}</div>}
+        </a>
+      );
+    })}
+  </nav>
+
+  {node.moves && (
+    <p class="tunnel-note" style="margin-top:1.6rem">
+      Nada de esto le hace falta al DJ que llegó con un segundo USB clonado en el
+      otro bolsillo. Esa versión del gig dura diez segundos.
+      <a href="/es/prepare">Las reglas de prevención</a>.
+    </p>
+  )}
+</Tunnel>
+
+<style>
+  /* Same rules as the English renderer. Kept as a copy rather than shared
+     because Astro scoped styles are per component; if you change one, change
+     the other. See the English file for why the numeral is a label and the
+     verb is still large: arm's length legibility in a dark booth. */
+  .moves {
+    list-style: none; counter-reset: mv; margin: 0; padding: 0;
+    display: flex; flex-direction: column; gap: var(--sp-3);
+  }
+  .moves li {
+    counter-increment: mv;
+    position: relative;
+    background: var(--surf);
+    border: var(--stroke) solid var(--edge);
+    border-radius: var(--radius);
+    padding: var(--sp-5) var(--sp-5) var(--sp-4) 3.1rem;
+  }
+  .moves li::before {
+    content: counter(mv);
+    position: absolute;
+    left: var(--sp-5);
+    top: calc(var(--sp-5) + 0.2rem);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--text-faint);
+  }
+  .move-verb {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.35rem, 6vw, 1.65rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .move-action {
+    display: block;
+    font-size: 0.97rem;
+    line-height: 1.4;
+    color: var(--text-dim);
+  }
+  .last-resort { margin: 0 0 1.6rem; }
+  .last-resort > summary { text-transform: none; letter-spacing: 0; font-size: 0.88rem; }
+</style>

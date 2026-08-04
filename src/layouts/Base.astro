@@ -7,6 +7,7 @@ import Search from '../components/Search.astro';
 import { VERSION_LABEL, IS_BETA } from '../lib/version';
 import { byCode, liveLangs, localizedPath, DEFAULT_LANG, anyTranslationLive } from '../i18n/registry';
 import { t } from '../i18n/ui';
+import TranslationNotice from '../components/TranslationNotice.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -345,6 +346,10 @@ const entityGraph = {
   </div>
 
   <div id="main">
+    {/* Sits ABOVE the page's own <main class="wrap">, so it needs the site
+        container itself or it would run edge to edge. Bottom padding only:
+        the page below brings its own --page-top. */}
+    <div class="tx-wrap"><TranslationNotice lang={lang} path={path} /></div>
     <slot />
   </div>
   <footer class="site-footer">

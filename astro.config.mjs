@@ -80,7 +80,15 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) => {
-        const path = page.replace('https://www.savemygig.com', '');
+        const raw = page.replace('https://www.savemygig.com', '');
+        // Strip a language prefix before testing. EXCLUDE is written in
+        // canonical English paths, so without this the rescue tunnel was
+        // excluded in English and ADVERTISED in Portuguese and Spanish: 53
+        // /pt/protocol/ URLs walked straight into the sitemap the moment the
+        // translated routes existed. They are noindex either way, but a
+        // sitemap entry for a noindex page is a crawl-budget waste and a
+        // contradiction, and for an unpublished language it is a leak.
+        const path = raw.replace(/^\/(pt|es)(?=\/|$)/, '') || '/';
         return !EXCLUDE.some((x) => path === x || path.startsWith(x));
       },
       // Freshness signal. Both classic search and AI answer engines weight

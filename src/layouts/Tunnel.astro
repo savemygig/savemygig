@@ -5,6 +5,7 @@
 import Analytics from '../components/Analytics.astro';
 import Brand from '../components/Brand.astro';
 import Disclaimer from '../components/Disclaimer.astro';
+import { byCode, DEFAULT_LANG } from '../i18n/registry.js';
 import '../styles/global.css';
 
 interface Props {
@@ -38,9 +39,23 @@ interface Props {
       it is for the AI crawlers robots.txt allows into the tunnel, which use
       it to describe the step when citing it. */
   description?: string;
+  /**
+   * Language code from the registry, for <html lang>. ADDITIVE, 2026-08-04:
+   * the tunnel used to hardcode lang="en", which was correct while the
+   * rescue flow existed only in English. The pt renderer at
+   * src/pages/pt/protocol/[...slug].astro passes lang="pt", and a screen
+   * whose <html lang> lies about its language is read wrong by screen
+   * readers and by every answer engine robots.txt lets in here. Defaults to
+   * the canonical language, so every existing English screen is byte
+   * identical.
+   */
+  lang?: string;
 }
 
-const { title, heading, risk = false, description } = Astro.props;
+const { title, heading, risk = false, description, lang = DEFAULT_LANG } = Astro.props;
+// BCP 47 tag, not the bare code: pt is served to Brazil and the registry
+// resolves it to pt-BR.
+const htmlLang = byCode(lang).tag;
 
 // SELF-REFERENCING CANONICAL, added 2026-08-04 by the i18n SEO guard, which
 // found all 60 tunnel screens shipping with no canonical at all. These pages
@@ -63,7 +78,7 @@ const canonical = SITE + (Astro.url.pathname.replace(/\.html$/, '').replace(/\/$
 const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig?\s*$/i, '');
 ---
 <!doctype html>
-<html lang="en">
+<html lang={htmlLang}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />

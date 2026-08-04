@@ -1,0 +1,155 @@
+---
+/**
+ * THE TRANSLATION NOTICE. Antonio's idea, 2026-08-04.
+ *
+ * His brief: when someone lands on the Portuguese or Spanish site, tell them
+ * once that the original is English and that this version is AI-assisted, ask
+ * them to be gentle about anything that reads wrong, and invite them to
+ * report it. He suggested a light joke about the robot team, which is right:
+ * an apology reads as a warning about quality, a joke reads as confidence
+ * plus honesty, and honesty about how this was made is the same instinct that
+ * made the site say "no official answer exists" instead of inventing one.
+ *
+ * FOUR RULES IT OBEYS, all of them load-bearing:
+ *
+ * 1. NEVER IN AN EMERGENCY. It does not render on /emergency, anywhere under
+ *    /protocol, or on the outcome pages. The Emergency Engine's founding rule
+ *    is that nothing competes with the decision on screen, and a DJ two
+ *    minutes from a set does not need a note about translation quality. This
+ *    is enforced in the component, not left to whoever adds a page.
+ *
+ * 2. ONCE, EVER, PER LANGUAGE. Dismissal is remembered in localStorage. A
+ *    notice that returns is an interruption, not a courtesy.
+ *
+ * 3. IT IS A STRIP, NOT A MODAL. Nothing is blocked, nothing is centred over
+ *    the page, no overlay. It sits in the flow at the top of main and can be
+ *    ignored completely.
+ *
+ * 4. IT SHIPS HIDDEN AND IS REVEALED BY SCRIPT. Rendering it visible and
+ *    hiding it on load would move the page after paint, which is the layout
+ *    shift we just spent a pass removing. Hidden first, shown only if the
+ *    visitor has not dismissed it, so a returning reader never sees a flash.
+ *
+ * The report link is a mailto, deliberately: /feedback does not exist in
+ * Portuguese or Spanish yet, and sending someone who just read a sentence in
+ * their own language to an English form would undo the point of the notice.
+ */
+import { DEFAULT_LANG } from '../i18n/registry';
+
+interface Props {
+  lang: string;
+  /** English canonical path of the page, used only to stay out of the flow. */
+  path: string;
+}
+const { lang, path } = Astro.props;
+
+// Rule 1, in code. Extend this list rather than adding conditions at call sites.
+const SILENT = ['/emergency', '/protocol', '/saved', '/files-lost', '/card-ready'];
+const inEmergency = SILENT.some((p) => path === p || path.startsWith(p + '/'));
+const show = lang !== DEFAULT_LANG && !inEmergency;
+
+const COPY = {
+  pt: {
+    lead: 'Esta versão em português foi traduzida com IA avançada a partir do original em inglês, seguindo um glossário técnico próprio.',
+    joke: 'Nosso time de robôs trabalha rápido, mas de vez em quando escapa uma palavra estranha.',
+    ask: 'Se você encontrar alguma, avisa a gente. A gente corrige.',
+    cta: 'Avisar a gente',
+    subject: 'Tradução PT: encontrei algo estranho',
+    close: 'Fechar aviso',
+  },
+  es: {
+    lead: 'Esta versión en español fue traducida con IA avanzada desde el original en inglés, siguiendo un glosario técnico propio.',
+    joke: 'Nuestro equipo de robots trabaja rápido, pero de vez en cuando se escapa una palabra rara.',
+    ask: 'Si encuentras alguna, avísanos. La corregimos.',
+    cta: 'Avisarnos',
+    subject: 'Traducción ES: encontré algo raro',
+    close: 'Cerrar aviso',
+  },
+};
+const c = COPY[lang];
+---
+{show && c && (
+  <div class="tx-notice" id="txNotice" data-lang={lang} hidden>
+    <div class="tx-body">
+      <p class="tx-lead">{c.lead}</p>
+      <p class="tx-joke">{c.joke} {c.ask}</p>
+      <a
+        class="tx-cta"
+        href={`mailto:info@savemygig.com?subject=${encodeURIComponent(c.subject)}`}
+        data-event="translation_report"
+        data-lang={lang}
+      >{c.cta}</a>
+    </div>
+    <button type="button" class="tx-close" id="txClose" aria-label={c.close}>
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+)}
+
+{show && c && (
+  <script is:inline define:vars={{ lang }}>
+    (function () {
+      var el = document.getElementById('txNotice');
+      if (!el) return;
+      var KEY = 'SMG_TX_NOTICE_' + lang;
+      var seen = false;
+      try { seen = localStorage.getItem(KEY) === '1'; } catch (e) { /* private mode */ }
+      // Shown only when unseen. A returning reader never gets a flash because
+      // the element ships hidden and is only ever revealed, never hidden back.
+      if (!seen) el.hidden = false;
+      var close = document.getElementById('txClose');
+      if (close) close.addEventListener('click', function () {
+        el.hidden = true;
+        try { localStorage.setItem(KEY, '1'); } catch (e) { /* nothing to do */ }
+      });
+    })();
+  </script>
+)}
+
+<style is:global>
+  /* The layout renders this above the page's own .wrap, so it carries the
+     site container itself. Padding-bottom only: the page below already
+     brings --page-top. */
+  .tx-wrap {
+    max-width: var(--site-w); margin: 0 auto;
+    padding: var(--page-top) var(--site-pad) 0;
+  }
+  .tx-wrap:empty { display: none; }
+
+  /* Quiet by construction: the amber rail marks it as information, the same
+     way the site's advisory panels do, and nothing here competes with the
+     page's own first heading. */
+  .tx-notice {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    border: var(--stroke) solid var(--edge);
+    border-left: 3px solid var(--amber);
+    border-radius: var(--radius);
+    background: var(--surf-1);
+    padding: 0.85rem 0.9rem 0.85rem 1rem;
+    margin: 0 0 1.75rem;
+  }
+  .tx-notice[hidden] { display: none; }
+  .tx-body { flex: 1 1 auto; min-width: 0; }
+  .tx-lead {
+    margin: 0 0 0.3rem; font-size: 0.86rem; line-height: 1.5; color: var(--text-dim);
+  }
+  .tx-joke {
+    margin: 0 0 0.55rem; font-size: 0.86rem; line-height: 1.5; color: var(--text-dim);
+  }
+  .tx-cta {
+    font-size: 0.82rem; font-weight: 700; color: var(--red); text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+  .tx-cta:hover { text-decoration: underline; }
+  .tx-close {
+    flex: 0 0 auto; width: 44px; height: 44px; margin: -0.5rem -0.4rem 0 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: none; border: 0; color: var(--text-faint); cursor: pointer;
+    border-radius: var(--radius);
+  }
+  .tx-close:hover { color: var(--text); }
+  @media (max-width: 480px) {
+    .tx-lead, .tx-joke { font-size: 0.82rem; }
+  }
+  @media print { .tx-notice { display: none !important; } }
+</style>
