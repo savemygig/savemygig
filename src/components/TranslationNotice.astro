@@ -10,6 +10,22 @@
  * plus honesty, and honesty about how this was made is the same instinct that
  * made the site say "no official answer exists" instead of inventing one.
  *
+ * HUMANS FIRST, AND THIS IS NOT A DETAIL. The first draft said "our team of
+ * robots". Antonio caught it immediately: "otherwise it seems like everything
+ * is made by AI, and it is not." He is right, and the cost would have been
+ * larger than the joke. This site's entire trust argument is human
+ * experience: almost four decades in booths, written by DJs who have stood
+ * next to the failure. A visitor's first sentence in their own language
+ * saying "robots" quietly hands that away, and no amount of good copy
+ * downstream buys it back.
+ *
+ * So the notice now leads with WHO WROTE IT, and only then explains how the
+ * translation was produced. The joke keeps the machines in it because that is
+ * true and it is charming, but they are the junior partner in the sentence.
+ * "Advanced AI" also went: the brand does not brag about its tools, and
+ * calling your own translation advanced is exactly the kind of claim the
+ * pre-press audit spent a day removing everywhere else.
+ *
  * FOUR RULES IT OBEYS, all of them load-bearing:
  *
  * 1. NEVER IN AN EMERGENCY. It does not render on /emergency, anywhere under
@@ -50,16 +66,16 @@ const show = lang !== DEFAULT_LANG && !inEmergency;
 
 const COPY = {
   pt: {
-    lead: 'Esta versão em português foi traduzida com IA avançada a partir do original em inglês, seguindo um glossário técnico próprio.',
-    joke: 'Nosso time de robôs trabalha rápido, mas de vez em quando escapa uma palavra estranha.',
+    lead: 'O Save My Gig é escrito por DJs, em inglês. Esta versão em português foi traduzida com ajuda de IA, seguindo nosso próprio glossário técnico.',
+    joke: 'Nosso time de humanos e máquinas trabalha rápido, mas de vez em quando escapa uma palavra estranha.',
     ask: 'Se você encontrar alguma, avisa a gente. A gente corrige.',
     cta: 'Avisar a gente',
     subject: 'Tradução PT: encontrei algo estranho',
     close: 'Fechar aviso',
   },
   es: {
-    lead: 'Esta versión en español fue traducida con IA avanzada desde el original en inglés, siguiendo un glosario técnico propio.',
-    joke: 'Nuestro equipo de robots trabaja rápido, pero de vez en cuando se escapa una palabra rara.',
+    lead: 'Save My Gig lo escriben DJs, en inglés. Esta versión en español fue traducida con ayuda de IA, siguiendo nuestro propio glosario técnico.',
+    joke: 'Nuestro equipo de humanos y máquinas trabaja rápido, pero de vez en cuando se escapa una palabra rara.',
     ask: 'Si encuentras alguna, avísanos. La corregimos.',
     cta: 'Avisarnos',
     subject: 'Traducción ES: encontré algo raro',
