@@ -10,21 +10,34 @@
  * plus honesty, and honesty about how this was made is the same instinct that
  * made the site say "no official answer exists" instead of inventing one.
  *
- * HUMANS FIRST, AND THIS IS NOT A DETAIL. The first draft said "our team of
- * robots". Antonio caught it immediately: "otherwise it seems like everything
- * is made by AI, and it is not." He is right, and the cost would have been
- * larger than the joke. This site's entire trust argument is human
- * experience: almost four decades in booths, written by DJs who have stood
- * next to the failure. A visitor's first sentence in their own language
- * saying "robots" quietly hands that away, and no amount of good copy
- * downstream buys it back.
+ * IT TOOK THREE DRAFTS AND THE THIRD IS THE RIGHT ONE.
  *
- * So the notice now leads with WHO WROTE IT, and only then explains how the
- * translation was produced. The joke keeps the machines in it because that is
- * true and it is charming, but they are the junior partner in the sentence.
- * "Advanced AI" also went: the brand does not brag about its tools, and
- * calling your own translation advanced is exactly the kind of claim the
- * pre-press audit spent a day removing everywhere else.
+ * Draft 1 said "our team of robots". Antonio: "otherwise it seems like
+ * everything is made by AI, and it is not." Correct, and the cost would have
+ * dwarfed the joke. This site's whole trust argument is human experience,
+ * almost four decades of it, written by DJs who have stood next to the
+ * failure. A visitor's first sentence in their own language saying "robots"
+ * hands that away, and no amount of good copy downstream buys it back.
+ *
+ * Draft 2 led with the DJs and demoted the machines to a joke. Better, still
+ * wrong, and Antonio saw why: "you can even take out AI or robots if you
+ * want. The important thing is to let them know that this is made with love.
+ * It's not perfect, we'll never be, but we want it to be every time close to
+ * perfection, and their help is very welcome."
+ *
+ * That is the whole message, and none of it depends on the method. Naming the
+ * tooling up front does active harm: it makes a reader scan for mistakes
+ * instead of reading, and it invites them to discount the content before the
+ * first paragraph. We do not tell anyone which text editor the English was
+ * written in either. Nothing here is a lie by omission: the notice says
+ * plainly that the original is English and that this version is new, and if
+ * anyone asks how it was made we answer straight.
+ *
+ * What is left is the truth that matters to the reader: this was made with
+ * care, it is not perfect yet, and their correction is genuinely wanted. That
+ * is also the brand's oldest instinct, the same one behind "no official
+ * answer exists" and "made by DJs for DJs": say the honest thing, then ask
+ * the community for help.
  *
  * FOUR RULES IT OBEYS, all of them load-bearing:
  *
@@ -66,19 +79,19 @@ const show = lang !== DEFAULT_LANG && !inEmergency;
 
 const COPY = {
   pt: {
-    lead: 'O Save My Gig é escrito por DJs, em inglês. Esta versão em português foi traduzida com ajuda de IA, seguindo nosso próprio glossário técnico.',
-    joke: 'Nosso time de humanos e máquinas trabalha rápido, mas de vez em quando escapa uma palavra estranha.',
-    ask: 'Se você encontrar alguma, avisa a gente. A gente corrige.',
-    cta: 'Avisar a gente',
-    subject: 'Tradução PT: encontrei algo estranho',
+    lead: 'O Save My Gig nasceu em inglês. Esta versão em português foi feita com carinho, para soar como um DJ brasileiro falaria, não como uma tradução.',
+    joke: 'Ainda não está perfeita, e talvez nunca fique.',
+    ask: 'Mas a gente quer chegar perto. Se alguma palavra soar estranha, conta pra gente.',
+    cta: 'Falar com a gente',
+    subject: 'Versão em português: uma sugestão',
     close: 'Fechar aviso',
   },
   es: {
-    lead: 'Save My Gig lo escriben DJs, en inglés. Esta versión en español fue traducida con ayuda de IA, siguiendo nuestro propio glosario técnico.',
-    joke: 'Nuestro equipo de humanos y máquinas trabaja rápido, pero de vez en cuando se escapa una palabra rara.',
-    ask: 'Si encuentras alguna, avísanos. La corregimos.',
-    cta: 'Avisarnos',
-    subject: 'Traducción ES: encontré algo raro',
+    lead: 'Save My Gig nació en inglés. Esta versión en español fue hecha con cariño, para sonar como hablaría un DJ, no como una traducción.',
+    joke: 'Todavía no está perfecta, y quizás nunca lo esté.',
+    ask: 'Pero queremos acercarnos. Si alguna palabra suena rara, cuéntanos.',
+    cta: 'Escríbenos',
+    subject: 'Versión en español: una sugerencia',
     close: 'Cerrar aviso',
   },
 };
@@ -135,10 +148,13 @@ const c = COPY[lang];
   /* Quiet by construction: the amber rail marks it as information, the same
      way the site's advisory panels do, and nothing here competes with the
      page's own first heading. */
+  /* NO COLOURED RAIL. The first version used the amber rail the site's
+     advisory panels use, which was wrong on the site's own terms: amber means
+     "this is costing you". This is a welcome, not a warning, so it takes the
+     plain panel treatment and lets the link carry the only colour. */
   .tx-notice {
     display: flex; align-items: flex-start; gap: 0.75rem;
     border: var(--stroke) solid var(--edge);
-    border-left: 3px solid var(--amber);
     border-radius: var(--radius);
     background: var(--surf-1);
     padding: 0.85rem 0.9rem 0.85rem 1rem;
