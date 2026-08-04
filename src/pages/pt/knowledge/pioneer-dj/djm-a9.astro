@@ -1,0 +1,406 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { CHECKED, DJM_A9 } from '../../../../data/facts.js';
+
+// DJM-A9, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors and CSS: src/pages/knowledge/pioneer-dj/djm-a9.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(CHECKED);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/djm-a9#article',
+  headline: 'DJM-A9: a referência operacional',
+  description: 'O que todo DJ precisa saber antes de trabalhar num DJM-A9: as correções de firmware documentadas, as conferências de emergência para um canal mudo, o truque do Bluetooth como último recurso e a compatibilidade.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-27',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/djm-a9#webpage' },
+  image: 'https://www.savemygig.com/images/djm-a9-panel-full.webp',
+};
+---
+<Base
+  title="DJM-A9: canal sem som, firmware e compatibilidade | Save My Gig"
+  description="Manual de campo do DJM-A9: as correções de firmware documentadas, as conferências de emergência para um canal mudo e o Bluetooth embutido como fonte de áudio de último recurso."
+  path="/knowledge/pioneer-dj/djm-a9"
+  crumbName="DJM-A9"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>DJM-A9</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">DJM-A9</div>
+        <h1 class="rb-h1">DJM-A9, <span class="accent">o manual de campo</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#djm-a9-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do DJM-A9"
+      >
+        <img
+          src="/images/djm-a9-panel-thumb.webp"
+          alt="Painel de controle do mixer de quatro canais Pioneer DJ DJM-A9, visto de cima"
+          width="444"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="djm-a9-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/djm-a9-panel-full.webp"
+        alt="Painel de controle do mixer de quatro canais Pioneer DJ DJM-A9, visto de cima"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> O sucessor de {DJM_A9.channels} canais
+        do lugar que o DJM-900NXS2 ocupa nas booths de ponta: {DJM_A9.beatFxCount}
+        Beat FX, duas saídas de fone independentes, uma porta USB-A e mais duas
+        USB-B/USB-C para computadores, Wi-Fi para o app de monitoramento
+        Stagehand, e, vale saber antes de precisar, <strong>uma entrada de áudio
+        Bluetooth embutida</strong>. O histórico de firmware importa nesta mesa:
+        um travamento raro sob carga pesada de Pro DJ Link foi corrigido no
+        {DJM_A9.linkFreezeFix}, então confira a versão em equipamento que não é
+        seu.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="djma9-acc" id="no-signal">
+      <summary><h3 class="acc-h2">Um canal está sem sinal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Fader de canal, assign do crossfader,
+        seletor de entrada, nessa ordem, antes de suspeitar da mesa.</p>
+        <p><strong>Por que isso acontece.</strong> O mesmo que em qualquer mesa de
+        quatro canais: o fader pode estar embaixo, o assign do crossfader pode
+        estar mandando o canal para o lado que você não está empurrando, e o
+        seletor de entrada pode estar numa fonte que não está tocando. Nesta mesa
+        existe um suspeito a mais: o seletor de canal da seção Multi I/O. Se o DJ
+        anterior deixou um insert ativo no seu canal, o sinal está desviando por
+        um equipamento que pode não estar devolvendo ele.</p>
+        <p><strong>Resolva agora.</strong> Fader para cima, assign conferido,
+        seletor de entrada casado com a sua fonte, e então confira se o
+        roteamento Multi I/O não está com insert no seu canal. Continua mudo:
+        passe a fonte para outro canal para isolar o canal suspeito.</p>
+        <p><strong>Evite da próxima vez.</strong> Uma passada completa de
+        roteamento antes de abrir as portas, incluindo o estado do Multi I/O, não
+        só faders e trims.</p>
+        <p class="acc-related">Relacionados: <a href="#dvs-input">Entrada DVS não passa</a> <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djma9-acc" id="mixer-freeze">
+      <summary><h3 class="acc-h2">Mixer travado no meio do set</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Nesta mesa isso não é lenda: um
+        travamento raro sob carga pesada de rede Pro DJ Link foi documentado e
+        corrigido no firmware {DJM_A9.linkFreezeFix}.</p>
+        <p><strong>Por que isso acontece.</strong> Booths rodando correntes de Link
+        completas (players, iluminação, Stagehand) geram exatamente a carga de
+        rede que a correção tratou. Uma mesa ainda em firmware antigo continua
+        podendo travar.</p>
+        <p><strong>Resolva agora.</strong> O áudio que já está roteado costuma
+        continuar passando. Não desligue e ligue no desespero enquanto ainda está
+        saindo som. Se a mesa estiver realmente travada, reiniciar é o único
+        caminho, então escolha uma track com bastante pista pela frente e avise o
+        responsável da casa primeiro.</p>
+        <p><strong>Evite da próxima vez.</strong> Firmware {DJM_A9.linkFreezeFix}
+        ou mais recente em qualquer A9 que seja seu, e informe a versão à casa
+        quando uma unidade de locação travar.</p>
+        <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas por versão</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djma9-acc" id="usb-not-recognized">
+      <summary><h3 class="acc-h2">Um pen drive que o mixer se recusa a enxergar</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Se um pen drive moderno e rápido é
+        invisível para o mixer enquanto pen drives mais antigos funcionam, isso
+        era um bug documentado: drives compatíveis com UASP não eram reconhecidos
+        até o firmware {DJM_A9.uaspFix}.</p>
+        <p><strong>Por que isso acontece.</strong> UASP é o protocolo mais rápido
+        que a maioria dos drives de qualidade já traz de fábrica, exatamente os
+        drives que um profissional carrega.</p>
+        <p><strong>Resolva agora.</strong> Use um pen drive mais antigo ou mais
+        simples para o trabalho do lado do mixer (as gravações), e atualize a mesa
+        para {DJM_A9.uaspFix} ou mais recente depois da gig.</p>
+        <p><strong>Evite da próxima vez.</strong> Mantenha na bag um pen drive
+        simples, sem UASP, para as funções do mixer. É também aquele que você pode
+        emprestar sem dor.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/gear">Drives em que confiamos</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djma9-acc" id="dvs-input">
+      <summary><h3 class="acc-h2">Entrada DVS morta depois de trocar de notebook</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Um bug documentado do começo: mudar um
+        PC/Mac entre as portas USB podia quebrar a entrada phono de DVS na USB-B.
+        Corrigido no firmware {DJM_A9.multiIoInsertFix}.</p>
+        <p><strong>Por que isso acontece.</strong> Sets de DVS em back to back são
+        exatamente o fluxo de trabalho que troca computadores de porta no meio do
+        set.</p>
+        <p><strong>Resolva agora.</strong> Selecione de novo a fonte de entrada do
+        canal, e se ela continuar morta, reinicie o seu software de DJ com o cabo
+        na porta em que você pretende ficar. Uma mesa em {DJM_A9.multiIoInsertFix}+
+        não faz isso.</p>
+        <p><strong>Evite da próxima vez.</strong> Combine as portas antes de um set
+        de DVS em B2B em vez de trocar com tudo ligado.</p>
+        <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas por versão</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="djma9-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Correções documentadas, por versão de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Quatro entradas do histórico oficial de
+        mudanças importam no mundo real. Corrigido no {DJM_A9.linkFreezeFix}: o
+        travamento raro sob carga pesada de rede Pro DJ Link. Corrigido no
+        {DJM_A9.uaspFix}: drives USB compatíveis com UASP não reconhecidos.
+        Corrigido no {DJM_A9.multiIoInsertFix}: o método de insert se desativando
+        de forma intermitente ao mudar o seletor de entrada do Multi I/O, e o
+        defeito na entrada phono de DVS na USB-B depois de trocar computadores
+        entre as portas.</p>
+        <p><strong>Uma mudança de comportamento, e não um bug:</strong> introduzido
+        no {DJM_A9.ecoStandbyIntro}, o gerenciamento de energia segue o tempo de 20
+        minutos do Ecodesign da União Europeia. Uma mesa que "se desligou sozinha"
+        entre a passagem de som e a abertura das portas está seguindo essa
+        configuração. Confira o menu de utilitários.</p>
+        <p><strong>Faça assim.</strong> Num A9 que é seu, fique em
+        {DJM_A9.linkFreezeFix} ou mais recente, atualizado entre uma gig e
+        outra.</p>
+        <p style="margin-top:1rem">
+          <strong>Downloads de firmware.</strong> <a href="https://support.alphatheta.com/en-US/products/15882401503257" target="_blank" rel="noopener">Página oficial de suporte da AlphaTheta →</a><br />
+          <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/pt/prepare">Por que dia de gig não se atualiza nada</a> <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="djma9-acc" id="bluetooth">
+      <summary><h3 class="acc-h2">A entrada Bluetooth</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A mesa aceita áudio sem fio de um
+        celular ou notebook como fonte de entrada, sem cabo e sem adaptador.</p>
+        <p><strong>Por que importa.</strong> A doutrina de emergência deste site
+        trata tocar do celular como o último recurso sem número, principalmente
+        porque ninguém carrega o cabo certo. Numa booth com A9, o problema do cabo
+        acabou: se todo drive e todo player falharam, um celular pareia direto na
+        mesa e a sala continua viva enquanto você trabalha na solução de
+        verdade.</p>
+        <p><strong>Quando profissionais usam.</strong> Em momentos de aquecimento e
+        de passagem de bastão, e como a ponte que compra minutos numa gig com
+        falha múltipla de verdade.</p>
+        <p><strong>Erros comuns.</strong> Tratar isso como meio para tocar o set em
+        vez de ponte, e esquecer de matar os sons de notificação do celular antes
+        de pareá-lo num sistema de clube.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djma9-acc" id="dual-headphones">
+      <summary><h3 class="acc-h2">Duas saídas de fone independentes</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Duas seções de fone com controles de
+        nível e de mix separados, então dois DJs fazem cue de forma independente ao
+        mesmo tempo.</p>
+        <p><strong>Por que importa.</strong> Em mesas de saída única, os parceiros
+        de B2B dividem um barramento de cue só e brigam pelo knob de mix. Aqui cada
+        lado tem o seu.</p>
+        <p><strong>Quando profissionais usam.</strong> Em todo back to back, e nas
+        passagens de bastão em que o DJ que entra já faz o pré-cue enquanto o que
+        sai ainda monitora.</p>
+        <p><strong>Erros comuns.</strong> Diagnosticar "fone morto" na saída cujo
+        knob de nível um DJ anterior zerou. Confira as duas seções antes de culpar
+        o seu fone.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/djm-900nxs2#headphones-not-working">Diagnóstico de cue no 900NXS2</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djma9-acc" id="beat-fx">
+      <summary><h3 class="acc-h2">Beat FX, incluindo os três mais novos</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {DJM_A9.beatFxCount} tipos de Beat FX,
+        incluindo Mobius, Triplet Filter e Triplet Roll, que não existiam no
+        DJM-900NXS2.</p>
+        <p><strong>Por que importa.</strong> Efeitos sincronizados ao beat caem no
+        lugar musicalmente sem você bater o tempo na mão, e o Mobius em especial
+        constrói uma tensão de subida infinita a partir de qualquer fonte.</p>
+        <p><strong>Quando profissionais usam.</strong> Em transições e subidas, com
+        parcimônia, a mesma disciplina de qualquer mesa com FX.</p>
+        <p><strong>Erros comuns.</strong> Os mesmos de todo DJM: deixar um efeito
+        ativo depois da mixagem, e confiar numa leitura de BPM errada. Confirme o
+        BPM antes de mandar um efeito sincronizado para a sala.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/djm-900nxs2#beat-fx">Beat FX no 900NXS2</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas profissionais" />
+
+    <details class="acc-sec" name="djma9-acc" id="handover">
+      <summary><h3 class="acc-h2">A rotina de passagem de bastão no A9</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A mesa foi feita para passagens de
+        bastão limpas, duas portas de computador, duas seções de fone, mas só se os
+        dois DJs marcarem o seu território antes do set, não durante.</p>
+        <p><strong>Por que importa.</strong> O bug documentado de troca de porta em
+        DVS (corrigido no {DJM_A9.multiIoInsertFix}) acontecia exatamente nos
+        momentos de troca com tudo ligado, e o estado do insert do Multi I/O passa
+        de um DJ para o outro em silêncio.</p>
+        <p><strong>Faça assim.</strong> Combine as portas e as seções de fone na
+        passagem de som, e inclua o estado do Multi I/O na sua olhada de assumir a
+        mesa: trims, faders, assign, insert.</p>
+        <p><strong>Erros comuns.</strong> Herdar o roteamento de insert do DJ
+        anterior e só perceber quando o seu canal soa errado.</p>
+        <p class="acc-related">Relacionados: <a href="#no-signal">Um canal está sem sinal</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção preventiva" />
+
+    <details class="acc-sec" name="djma9-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Manter a mesa confiável</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Cuidado com os conectores acima de tudo,
+        e firmware em dia entre uma gig e outra.</p>
+        <p><strong>Por que importa.</strong> Os problemas documentados de verdade
+        desta mesa eram todos de firmware, corrigidos em atualizações. Os defeitos
+        de hardware que sobram são os universais, conectores USB e RCA gastos por
+        anos de troca.</p>
+        <p><strong>Faça assim.</strong> Desconecte pelo conector, inspecione os
+        cabos antes de eles voltarem para a bag, mantenha a mesa coberta no
+        transporte, e segure o firmware em {DJM_A9.linkFreezeFix}+ com as
+        atualizações marcadas longe das gigs.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="djma9-acc" id="compatibility">
+      <summary><h3 class="acc-h2">Players, software e Pro DJ Link</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Pro DJ Link entre gerações de players,
+        uma porta USB-A e mais duas portas USB-B/USB-C para computador, entrada de
+        áudio Bluetooth, Wi-Fi para o monitoramento pelo Stagehand.</p>
+        <p><strong>Por que importa.</strong> O mixer não liga para qual formato de
+        biblioteca o seu USB carrega, isso é uma questão do lado do player. O que
+        ele liga é para o firmware quando a corrente de Link está grande e
+        movimentada, veja o travamento corrigido no {DJM_A9.linkFreezeFix}.</p>
+        <p><strong>Faça assim.</strong> Confirme que a sua licença de DVS ou de
+        software cobre esta mesa antes da passagem de som, e confira a versão de
+        firmware ao entrar numa booth com A9 que você não conhece.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/cdj-3000">CDJ-3000</a> <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Perguntas frequentes" />
+
+    <details class="acc-sec" name="djma9-acc" id="faq">
+      <summary><h3 class="acc-h2">Respostas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>O formato de biblioteca (Device Library ou OneLibrary) afeta este mixer?</dt><dd>Não, só os players leem a biblioteca do USB. O mixer recebe áudio e dados de Link.</dd>
+          <dt>Dá para tocar do celular por ele?</dt><dd>Dá, pela entrada Bluetooth embutida. Trate isso como ponte, não como meio para tocar o set.</dd>
+          <dt>Dois DJs podem fazer cue ao mesmo tempo?</dt><dd>Podem, são duas seções de fone independentes, com nível e mix separados.</dd>
+          <dt>Dá para fazer link com CDJ-2000NXS2 ou CDJ-3000?</dt><dd>Dá, o Pro DJ Link funciona entre gerações.</dd>
+          <dt>Por que ele recusa o meu pen drive rápido?</dt><dd>Firmware anterior ao {DJM_A9.uaspFix} não reconhecia drives UASP. Atualize a mesa, ou use um pen drive simples.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guias relacionados</h2>
+      <p class="dim" style="margin:0">
+        <a href="/pt/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
+        <a href="/pt/knowledge/pioneer-dj/djm-v10">DJM-V10</a> ·
+        <a href="/pt/knowledge/pioneer-dj/cdj-3000">CDJ-3000</a> ·
+        <a href="/pt/knowledge/pioneer-dj/rekordbox">Referência do rekordbox</a> ·
+        <a href="/pt/checklist">Checklist pré-gig</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_djma9"><span aria-hidden="true">🚨</span> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_djma9" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: o histórico oficial de mudanças de firmware do DJM-A9 da AlphaTheta
+      e as páginas de especificação, conferidos em {UPDATED}. Os passos gerais de
+      diagnóstico refletem a prática padrão de mixagem. Firmware e comportamento
+      mudam sem aviso, confira de novo antes de um show grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning, not sized/aligned by a flex row. Rationale in the English
+     source file, which is the source of truth for this CSS. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

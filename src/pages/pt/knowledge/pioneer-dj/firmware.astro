@@ -1,0 +1,376 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import { CHECKED, FIRMWARE_ISSUES } from '../../../../data/facts.js';
+
+// MATRIZ DE FIRMWARE, BRAZILIAN PORTUGUESE. Source of truth for the data, the
+// version arithmetic, the accordion, the table and the CSS:
+// src/pages/knowledge/pioneer-dj/firmware.astro. Only the human readable copy
+// and the /pt hrefs differ. If the English page changes, change this one in
+// the same commit.
+//
+// facts.js is language neutral for versions and URLs and ENGLISH for the
+// prose fields (`area`, `symptom`, `note`, `noneNote`, `warning.text`). It is
+// a shared data file, so it is not translated in place: the maps below
+// translate those strings at render time and fall back to the English string
+// if facts.js gains an entry this file has not seen yet. A new entry then
+// shows up in English rather than disappearing.
+const UPDATED = CHECKED;
+
+const MONTHS = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+// CHECKED is an English date string in facts.js. Rendered, not rewritten.
+const ptDate = (s) => {
+  const m = /^(\d{1,2}) (\w+) (\d{4})$/.exec(String(s));
+  return m && MONTHS[m[2]] ? `${m[1]} de ${MONTHS[m[2]]} de ${m[3]}` : String(s);
+};
+
+const AREA = {
+  Link: 'Link',
+  Display: 'Tela',
+  Audio: 'Áudio',
+  Browse: 'Browse',
+  Playback: 'Reprodução',
+  USB: 'USB',
+  MIDI: 'MIDI',
+  Routing: 'Roteamento',
+  Recording: 'Gravação',
+};
+
+const SYMPTOM = {
+  'PRO DJ LINK connection with a DJM-2000NXS could fail.':
+    'A conexão PRO DJ LINK com um DJM-2000NXS podia falhar.',
+  'Rare dead screen on power-on.':
+    'Tela morta ao ligar o aparelho, em casos raros.',
+  'Occasional no-audio, display blackouts and system freezes on some units.':
+    'Em algumas unidades, ausência de áudio ocasional, tela apagando e travamento do sistema.',
+  'A "Waiting" popup could block the BROWSE screen entirely.':
+    'Um aviso "Waiting" podia travar a tela BROWSE por completo.',
+  'Emergency Loop triggering wrongly during a Hot Cue pause.':
+    'Emergency Loop disparando na hora errada durante uma pausa em Hot Cue.',
+  'A startup issue affecting SLIP HOT CUE behaviour.':
+    'Um problema na inicialização afetando o comportamento do SLIP HOT CUE.',
+  'Waveform colour selection went missing, then was restored.':
+    'A seleção de cor do waveform sumiu e depois voltou.',
+  'Audio dropouts during Control Mode playback.':
+    'Quedas de áudio tocando em Control Mode.',
+  'UASP-compatible USB drives not recognized.':
+    'Drives USB compatíveis com UASP não eram reconhecidos.',
+  'Potential audio cut-out when connected to CDJ-3000s over PRO DJ LINK.':
+    'Possível corte de áudio ligado a CDJ-3000 por PRO DJ LINK.',
+  'Incorrect MIDI output under certain operation.':
+    'Saída MIDI incorreta em determinadas operações.',
+  'Audio sometimes failing to input to a channel.':
+    'O áudio às vezes não entrava em um canal.',
+  'Rare freeze under heavy PRO DJ LINK network load.':
+    'Travamento raro sob carga pesada na rede PRO DJ LINK.',
+  'Insert method intermittently disabling itself when switching the Multi I/O input selector, and DVS phono input malfunction on USB-B after swapping computers across ports.':
+    'O insert se desligando sozinho de vez em quando ao trocar o seletor de entrada Multi I/O, e defeito na entrada phono do DVS na USB-B depois de trocar os computadores de porta.',
+  'DJM-REC recording halts affecting iOS and iPadOS audio.':
+    'Paradas de gravação do DJM-REC afetando o áudio no iOS e no iPadOS.',
+  'DJM-REC recording could halt part-way through a set.':
+    'A gravação do DJM-REC podia parar no meio do set.',
+};
+
+const LONG = {
+  'A young unit. AlphaTheta has published no defect fix for it, so there is nothing to report here. This section stays empty until a documented one exists.':
+    'Unidade nova. A AlphaTheta não publicou nenhuma correção de defeito para ela, então não há nada a relatar aqui. Esta seção fica vazia até existir uma correção documentada.',
+  'AlphaTheta has published no hardware defect fix for this mixer beyond the DJM-REC recording halts. The rest of its change history is feature work.':
+    'A AlphaTheta não publicou nenhuma correção de defeito de hardware para este mixer além das paradas de gravação do DJM-REC. O resto do histórico de mudanças é recurso novo.',
+  'Withdrawn by AlphaTheta. It added OneLibrary, then playlists failed to display for people exporting from older rekordbox. No music or data was deleted, and the player reverted to Device Library. Do not install this version.':
+    'Retirada pela AlphaTheta. Ela trouxe o OneLibrary, e aí as playlists deixaram de aparecer para quem exportava de um rekordbox mais antigo. Nenhuma música e nenhum dado foram apagados, e o player voltou para o Device Library. Não instale esta versão.',
+};
+
+const tr = (map, s) => (s == null ? s : map[s] ?? s);
+
+// Version compare that handles 1.9 vs 1.10 correctly (string sort does not).
+function cmpVersion(a, b) {
+  const pa = String(a).split('.').map(Number);
+  const pb = String(b).split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d !== 0) return d;
+  }
+  return 0;
+}
+
+// The single most useful number per model: the version at or above which every
+// documented issue below is already resolved. Computed, not hand-maintained.
+// A withdrawn version sitting ABOVE the computed floor is named separately so
+// an open-ended "or later" never swallows it.
+const models = FIRMWARE_ISSUES.map(m => {
+  const issues = [...m.issues].sort((a, b) => cmpVersion(b.fixedIn, a.fixedIn));
+  const safeFloor = issues.length ? issues[0].fixedIn : null;
+  const floorException =
+    m.warning && safeFloor && cmpVersion(m.warning.version, safeFloor) > 0
+      ? m.warning.version
+      : null;
+  return { ...m, issues, safeFloor, floorException };
+});
+
+const totalIssues = models.reduce((n, m) => n + m.issues.length, 0);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/firmware#article',
+  headline: 'Problemas de firmware de CDJ e DJM, por versão',
+  description: 'Quais falhas documentadas estão vivas num player ou mixer Pioneer DJ e AlphaTheta em cada versão de firmware, reunidas dos históricos de mudanças da própria AlphaTheta.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-01',
+  dateModified: '2026-08-01',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/firmware#webpage' },
+};
+---
+<Base
+  title="Problemas de firmware do CDJ e do DJM por versão | Save My Gig"
+  description="Leia a versão de firmware no CDJ ou no DJM e veja quais falhas documentadas ainda estão vivas nele. Direto dos históricos de mudanças da AlphaTheta, modelo a modelo."
+  path="/knowledge/pioneer-dj/firmware"
+  crumbName="Problemas de firmware por versão"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>Problemas de firmware</span>
+    </nav>
+
+    <div class="status-line sl-desktop">MATRIZ DE FIRMWARE</div>
+    <h1 class="rb-h1">O que está quebrado naquele player, <span class="accent">por versão de firmware</span></h1>
+    <p class="dim rb-updated">Conferido: {ptDate(UPDATED)}</p>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> Leia a versão de firmware no
+        aparelho, ache ela aqui embaixo, e você sabe o que pode te morder hoje.
+        Cada entrada vem dos históricos de mudanças publicados pela própria
+        AlphaTheta: {totalIssues} falhas documentadas em {models.length} modelos.
+        No equipamento que é seu, fique na versão segura indicada para ele ou
+        acima dela. No equipamento que não é seu, isto diz o que você precisa
+        contornar.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <div class="fw-how">
+      <h2 class="fw-how-h">Onde achar a versão no aparelho</h2>
+      <p>
+        Num CDJ ou num DJM, a versão do firmware fica no menu UTILITY, e nos
+        players ela também aparece na tela de inicialização enquanto o aparelho
+        liga. Confira no soundcheck, não na hora de abrir a casa. Se o player da
+        casa estiver abaixo da versão segura, você não resolve isso na booth,
+        mas dá para não ser pego de surpresa.
+      </p>
+    </div>
+
+    {models.map(m => (
+      <details class="acc-sec fw-model" name="fw-acc">
+        <summary>
+          {/* Model names and firmware version strings are read off the
+              unit itself, so they must never be auto-translated. */}
+          <h2 class="acc-h2 fw-model-h" translate="no">{m.model}</h2>
+          {m.safeFloor && (
+            <span class="fw-floor">
+              Limpo na <strong translate="no">{m.safeFloor}</strong> ou acima
+              {m.floorException && (
+                <Fragment>, menos a <strong class="fw-floor-except" translate="no">{m.floorException}</strong> (retirada)</Fragment>
+              )}
+            </span>
+          )}
+          <span class="acc-chev" aria-hidden="true"></span>
+        </summary>
+        <div class="acc-body fw-body">
+
+        {m.warning && (
+          <div class="fw-warn">
+            <span class="fw-warn-v" translate="no">{m.warning.version}</span>
+            <span>
+              {tr(LONG, m.warning.text)}{' '}
+              <a href={m.warning.sourceUrl} target="_blank" rel="noopener">Aviso oficial</a>
+            </span>
+          </div>
+        )}
+
+        {m.issues.length === 0 ? (
+          <p class="fw-none">{tr(LONG, m.noneNote)}</p>
+        ) : (
+          <table class="fw-table">
+            {/* Every model on this page renders one of these, so without a
+                caption a screen reader user meets a dozen identical unnamed
+                three-column tables. */}
+            <caption class="sr-only">Falhas documentadas no {m.model}, e a versão de firmware que corrigiu cada uma</caption>
+            <thead>
+              <tr>
+                <th scope="col">Corrigido na</th>
+                <th scope="col">Área</th>
+                <th scope="col">O que acontecia abaixo dessa versão</th>
+              </tr>
+            </thead>
+            <tbody>
+              {m.issues.map(i => (
+                <tr>
+                  <td class="fw-v"><span class="fw-vbadge" translate="no">{i.fixedIn}</span></td>
+                  <td class="fw-area">
+                    {tr(AREA, i.area)}
+                    {i.midSet && <span class="fw-live" title="Pode interromper um set em andamento">meio do set</span>}
+                  </td>
+                  <td>{tr(SYMPTOM, i.symptom)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {m.note && <p class="fw-note">{tr(LONG, m.note)}</p>}
+
+        <p class="fw-links">
+          <a href={`/pt${m.href}`}>Manual de campo do {m.model}</a>
+          {/* Six models render this row, so the accessible name names the
+              model instead of repeating one anonymous link six times. */}
+          <a href={m.source} target="_blank" rel="noopener"
+             aria-label={`Histórico de mudanças da AlphaTheta para o ${m.model}`}>Histórico de mudanças AlphaTheta</a>
+        </p>
+        </div>
+      </details>
+    ))}
+
+    <div class="panel">
+      <p style="margin:0 0 0.6rem"><strong>Como ler isto</strong></p>
+      <p style="margin:0 0 0.6rem">
+        A versão na coluna "Corrigido na" é a release que resolveu aquela falha.
+        Qualquer coisa abaixo dela ainda tem a falha. Qualquer coisa nela ou
+        acima dela, não.
+      </p>
+      <p style="margin:0">
+        O marcador <span class="fw-live fw-live-inline">meio do set</span> é
+        nosso, não da AlphaTheta. Ele sinaliza falhas cujo sintoma documentado
+        pode interromper um set já em andamento, para você separar risco real de
+        aborrecimento num relance. Todo o resto desta página é a redação do
+        próprio fabricante, condensada.
+      </p>
+    </div>
+
+    <p class="dim fw-foot">
+      Só falhas. Recursos novos ficam de fora de propósito, porque recurso
+      faltando não acaba com um set. Um modelo entra aqui quando o histórico de
+      mudanças dele já foi lido contra a fonte primária, e é por isso que esta
+      lista é menor que o catálogo. Achou alguma coisa errada aqui?
+      <a href="/pt/feedback">Conte pra gente</a> e a gente confere contra a fonte.
+    </p>
+
+    <EmailCapture />
+  </main>
+
+  <style>
+    /* This page puts the eyebrow directly under the breadcrumb rather than
+       inside an .hw-head block, so it needs the gap the photo pages get for
+       free from that wrapper. */
+    .status-line { margin-top: 0.4rem; }
+    /* size comes from the global h1 scale, 2026-08-03 */
+    .rb-h1 { margin-bottom: 0.4rem; }
+    .rb-h1 .accent { font-size: 96%; }
+    .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+    main p { color: var(--text-dim); line-height: 1.65; }
+    /* Without this the lead-in inherits the dim paragraph colour and reads
+       grey instead of white. */
+    main p strong { color: var(--text); }
+
+    .fw-how { margin: 2rem 0 0.6rem; }
+    .fw-how-h {
+      font-family: var(--font-display); font-size: 0.78rem; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint);
+      margin: 0 0 0.5rem;
+    }
+    .fw-how p { margin: 0; font-size: 0.95rem; }
+
+    /* Accordion per model: the full matrix open at once is too much to read.
+       Uses the site's shared .acc-sec vocabulary, and the exclusive `name`
+       means opening one closes the rest. The safe version stays in the CLOSED
+       header on purpose: "which deck, and is it clear" is the whole lookup. */
+    .fw-model { margin-top: 0; }
+    .fw-model > summary { align-items: center; gap: 0.9rem; flex-wrap: wrap; }
+    .fw-model-h { flex: 1 1 auto; }
+    .fw-floor {
+      flex: 0 0 auto;
+      font-size: 0.78rem; color: var(--green);
+      font-weight: 600; white-space: nowrap;
+    }
+    .fw-floor strong { color: var(--green); }
+    /* The withdrawn version named in the closed header is an exclusion, not a
+       clear version, so it must not read green. */
+    .fw-floor .fw-floor-except { color: var(--red); }
+    .fw-body { padding-top: 0.2rem; }
+
+    /* The withdrawn-firmware callout. Uses the danger tone already defined
+       sitewide rather than a new colour. */
+    .fw-warn {
+      display: flex; gap: 0.8rem; align-items: flex-start;
+      background: var(--red-dim); border: var(--stroke) solid var(--red-border);
+      border-radius: var(--radius); padding: 0.9rem 1rem; margin-bottom: 1rem;
+      font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;
+    }
+    .fw-warn-v {
+      flex: 0 0 auto; font-weight: 800; color: var(--red);
+      font-family: var(--font-display); letter-spacing: 0.02em;
+    }
+
+    .fw-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .fw-table th {
+      text-align: left; font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-faint); font-weight: 700;
+      padding: 0 0.7rem 0.5rem 0; border-bottom: var(--stroke) solid var(--edge);
+    }
+    .fw-table td {
+      padding: 0.7rem 0.7rem 0.7rem 0; border-bottom: var(--stroke) solid var(--edge);
+      color: var(--text-dim); line-height: 1.55; vertical-align: top;
+    }
+    .fw-table tr:last-child td { border-bottom: none; }
+    .fw-v { white-space: nowrap; }
+    .fw-vbadge {
+      display: inline-block; font-family: var(--font-display); font-weight: 800;
+      font-size: 0.85rem; color: var(--text);
+      background: var(--surf-2); border: var(--stroke) solid var(--edge);
+      border-radius: var(--radius); padding: 0.15rem 0.5rem;
+    }
+    .fw-area { white-space: nowrap; color: var(--text); font-weight: 600; font-size: 0.85rem; }
+    .fw-live {
+      display: inline-block; margin-left: 0.45rem;
+      font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+      font-weight: 800; color: var(--red);
+      border: var(--stroke) solid var(--red-border); border-radius: var(--radius);
+      padding: 0.1rem 0.32rem; vertical-align: middle;
+    }
+    .fw-live-inline { margin-left: 0; }
+
+    .fw-none, .fw-note { font-size: 0.9rem; margin: 0.2rem 0 0; }
+    .fw-links { display: flex; gap: 1.2rem; flex-wrap: wrap; margin: 0.9rem 0 0; font-size: 0.85rem; }
+    .fw-foot { font-size: 0.85rem; margin: 1.6rem 0 2rem; }
+
+    /* Phones: the three-column table stops working around 640px, so each row
+       becomes a stacked block with the version badge leading. Same data, no
+       horizontal scroll, which matters because this page gets read in a booth
+       on a phone with one hand. */
+    @media (max-width: 640px) {
+      .fw-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+      .fw-table, .fw-table tbody, .fw-table tr, .fw-table td { display: block; width: 100%; }
+      .fw-table tr {
+        border-bottom: var(--stroke) solid var(--edge); padding: 0.8rem 0;
+      }
+      .fw-table tr:last-child { border-bottom: none; }
+      .fw-table td { border: none; padding: 0; }
+      .fw-v { display: inline-block; margin-right: 0.5rem; }
+      .fw-area { display: inline-block; margin-bottom: 0.35rem; }
+      .fw-head { flex-direction: column; gap: 0.2rem; }
+    }
+  </style>
+</Base>

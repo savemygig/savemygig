@@ -1,0 +1,460 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { DJM_A9, DJM_V10 } from '../../../data/facts.js';
+
+// O DICIONÁRIO, BRAZILIAN PORTUGUESE. Source of truth for the structure, the
+// group order, the two-level accordion, the deep-link script, the filter
+// script and the CSS: src/pages/knowledge/dictionary.astro. Only the human
+// readable copy and the /pt hrefs differ. If the English page changes, change
+// this one in the same commit.
+//
+// THE ANCHORS ARE THE CONTRACT. Every `id` below is byte-identical to the
+// English page, because ids are URLs: /pt/knowledge/dictionary#fat32 has to
+// resolve, the deep links from other pages point at these fragments, and
+// scripts/check-concepts.mjs fails the build if one goes missing. The English
+// page derives an id from the label whenever `id` is absent, which would move
+// the anchor the instant a label is translated, so EVERY term and EVERY group
+// here carries its id explicitly instead of relying on the fallback.
+//
+// THE TERM STAYS ENGLISH, THE DEFINITION IS PORTUGUESE. The point of the page
+// is to explain the English word a DJ reads on a player screen or hears in a
+// booth. Where a Brazilian genuinely uses a Portuguese word for the thing
+// (pen drive, P10, P2, placa de som, cabo Canon), the definition carries it,
+// so the filter finds the term from whichever word the reader types.
+const groups = [
+  {
+    id: 'audio-files',
+    title: 'Arquivos de áudio',
+    terms: [
+      { id: 'lossy-vs-lossless', t: 'Lossy vs lossless', d: 'A distinção que está por baixo de todas as outras entradas daqui. Formatos lossy, com perda (MP3, AAC), jogam dados de áudio fora para sempre, para ocupar menos espaço. Formatos lossless, sem perda (WAV, AIFF, FLAC, Apple Lossless), guardam tudo. Converter um no outro não recupera nada: um MP3 salvo como WAV é um arquivo muito maior com exatamente o mesmo áudio.' },
+      { id: 'mp3', t: 'MP3', d: 'O formato em que a maioria das bibliotecas de DJ foi construída. É lossy, com perda, então dados foram jogados fora para encolher o arquivo e eles não voltam. Os players leem de 32 a 320 kbps em 44,1 ou 48 kHz, o que faz de 320 o teto que vale a pena exportar. A vantagem real dele é alcance: toca em praticamente todo player que você vai encontrar numa booth de trabalho. Não literalmente todo player já fabricado, o CDJ-1000 original e o CDJ-100S são anteriores à reprodução de MP3, mas qualquer coisa da era rekordbox para cá lê.' },
+      { id: 'aac', t: 'AAC', d: 'Lossy como o MP3, porém mais eficiente, então se segura melhor no mesmo tamanho de arquivo. Os players leem de 16 a 320 kbps. Uma armadilha que vale conhecer: AAC e Apple Lossless usam os dois a extensão .m4a, então dois arquivos completamente diferentes ficam idênticos dentro de uma pasta.' },
+      { id: 'wav', t: 'WAV', d: 'Áudio sem compressão, nada descartado e nada compactado, e é por isso que é o maior arquivo do drive. Os players leem em 16 ou 24 bit e até 96 kHz. A fraqueza dele é organização: artista e título viajam de forma menos confiável dentro de um WAV do que em outros formatos, e é por isso que biblioteca de WAV vive mostrando campo em branco onde deveria estar a informação da track.' },
+      { id: 'aiff', t: 'AIFF', d: 'O formato sem compressão da Apple. O áudio equivale ao WAV, a diferença é que o AIFF carrega a informação da track de forma confiável, e é por isso que DJ que prepara biblioteca grande costuma escolher ele em vez do WAV.' },
+      { id: 'flac', t: 'FLAC', d: 'Compressão lossless, sem perda: bem menor que o WAV, sem descartar nada, então volta a decodificar para o original. Documentado no CDJ-3000X até 96 kHz, e no CDJ-2000NXS2 até 96 kHz e 24 bit. Players mais antigos são anteriores ao formato, então confirme que o player lê antes de montar uma biblioteca de booth em cima dele.' },
+      { id: 'alac', t: 'Apple Lossless (ALAC)', d: 'O equivalente da Apple ao FLAC: comprimido, sem jogar nada fora. Documentado ao lado do FLAC no CDJ-2000NXS2 e no CDJ-3000X. Divide a extensão .m4a com o AAC, então a extensão sozinha nunca diz se um arquivo é lossless.' },
+      { id: 'bit-rate', t: 'Bit rate', d: 'Quanto dado um arquivo lossy gasta por segundo, escrito em kbps: a taxa de bits. Mais alto significa que menos foi descartado e que o arquivo é maior. Em MP3 os players param em 320 kbps, e é por isso que esse número está em toda parte nas bibliotecas de DJ. Bit rate não diz nada sobre WAV, AIFF, FLAC ou Apple Lossless, que não estão descartando nada para começo de conversa.' },
+      { id: 'sample-rate', t: 'Sample rate e bit depth', d: 'Os dois números que descrevem com que precisão o áudio foi capturado, por exemplo 44,1 kHz e 16 bit, que é o padrão de CD: a taxa de amostragem e a profundidade de bits. Os players aguentam até 96 kHz e 24 bit nos formatos que carregam isso. Mais alto não é automaticamente melhor num clube: a sala, o sistema e a mixagem decidem muito mais do que esses dois números.' },
+      { id: 'dsd', t: 'DSD (.dsf e .dff)', d: 'Um formato de alta resolução vindo do mundo audiófilo, e um dos poucos que simplesmente não toca. A AlphaTheta declara que o CDJ-2000NXS2 não é compatível com arquivos DSF nem DFF. Se uma track chegar em um deles, converta antes da gig, não na booth.' },
+    ],
+  },
+  {
+    id: 'library-and-export',
+    title: 'Biblioteca e export',
+    terms: [
+      { id: 'rekordbox-database', t: 'Banco de dados do rekordbox', d: 'O índice escondido que o rekordbox grava no seu pen drive ao lado da música: playlists, cues, grids, waveforms. Quando um player monta o seu drive mas não mostra playlist nenhuma, quase sempre foi isso que morreu ou que não bateu, não a sua música. Os arquivos de áudio continuam intactos nas pastas deles.' },
+      { id: 'device-library', t: 'Device Library', d: 'O formato clássico de banco de dados que o rekordbox exporta para o USB, o que os CDJs e XDJs mais antigos leem.' },
+      { id: 'onelibrary', t: 'OneLibrary (Device Library Plus)', d: 'O formato de banco de dados mais novo, dois nomes para a mesma coisa, lido por CDJ-3000X, CDJ-1500X, XDJ-AZ, XDJ-AN, OPUS-QUAD e OMNIS-DUO. A partir do rekordbox 7.2.13 um export consegue gravar OS DOIS formatos no mesmo pen drive, e é por isso que este site se apoia nessa versão: um export, todos os players. Antes disso vem um passo manual por drive: clique com o botão direito em OneLibrary no dispositivo e escolha Convert from Device Library, como a AlphaTheta descreve no guia OneLibrary Compatible USB Device Export.' },
+      { id: 'export-mode', t: 'Modo EXPORT', d: 'O modo do rekordbox que prepara pen drives. Oficialmente gratuito, sem assinatura, confirmado pelo próprio FAQ de planos do rekordbox. O outro é o modo PERFORMANCE, para tocar direto do notebook.' },
+      { id: 'folder-view', t: 'Visão FOLDER', d: 'O navegador de arquivos do player. Ele lê os seus arquivos de áudio direto, pasta por pasta, ignorando o banco de dados por completo. Você perde playlists, cues e waveforms preparadas; fica com a música e com a gig. É o movimento número um da lista de emergência por um motivo: a maioria dos DJs nunca testou e não sabe que o áudio continua tocando com o banco de dados morto.' },
+      { id: 'library-backup', t: 'Backup da biblioteca', d: 'File > Library > Backup Library no rekordbox 7, para outro drive ou para a nuvem. O USB no seu bolso é um export, não um backup: se o notebook se perder, os cues e as playlists que estavam nele eram a única cópia que existia.' },
+    ],
+  },
+  {
+    id: 'drives-and-file-systems',
+    title: 'Drives e sistemas de arquivos',
+    terms: [
+      { id: 'fat32', t: 'FAT32', d: 'O sistema de arquivos que todo player Pioneer DJ e AlphaTheta lê, antigo e novo, e é por isso que este site recomenda ele. O limite que importa é de 4GB por ARQUIVO, não por drive, e nenhuma track de DJ chega perto disso. Existem outros, um teto de 2TB por volume e as contagens de arquivos e pastas por modelo que a AlphaTheta publica no artigo de suporte 4406512510105, mas drive de gig não alcança nenhum deles.' },
+      { id: 'exfat', t: 'exFAT', d: 'Um sistema de arquivos mais novo. Oficialmente suportado em CDJ-3000, CDJ-3000X, CDJ-1500X, XDJ-RX3, XDJ-XZ, XDJ-AZ, XDJ-AN, OPUS-QUAD e OMNIS-DUO, e recusado por todo CDJ-2000, incluindo o NXS2. A maioria dos drives acima de 32GB já sai de fábrica com ele, e é por isso que um pen drive novinho pode falhar num player mais antigo direto da embalagem. O rekordbox grava exFAT só em drives USB, nunca em cartão SD.' },
+      { id: 'ntfs', t: 'NTFS', d: 'Um sistema de arquivos do Windows. Nenhum player lê, e o rekordbox não exporta para ele. Se um drive está em NTFS, ele é formatado de novo antes de chegar perto de uma booth.' },
+      { id: 'mbr', t: 'MBR (Master Boot Record)', d: 'Uma das duas formas de um drive descrever o próprio layout, e a que os players esperam. A AlphaTheta documenta que o CDJ-3000 não suporta o esquema GUID, então quando a ferramenta de formatação perguntar o esquema de partição, escolha MBR. No Mac isso significa apagar o DISPOSITIVO, não o volume, no Utilitário de Disco.' },
+      { id: 'gpt', t: 'GPT (GUID Partition Table)', d: 'O outro esquema de partição, e causa recorrente do clássico "formatou certinho e o player recusa". Você cai em GPT sem querer no Mac, quando apaga o volume em vez do dispositivo.' },
+      { id: 'quick-vs-full-format', t: 'Formatação rápida ou completa', d: 'As duas formas de formatar um drive. A formatação rápida reconstrói o índice do drive e serve bem num drive saudável. A formatação completa trabalha o drive inteiro, não só o índice, o que a transforma num teste de estresse: é o que você roda num drive SUSPEITO, e drive que reprova numa formatação completa é aposentado, não levado para uma gig.' },
+      { id: 'usb-stick', t: 'Pen drive (USB stick)', d: 'O drive em que quase toda gig roda, e a única peça de equipamento que você realmente controla dentro da booth dos outros. FAT32 com esquema MBR, e quase nada te surpreende. Capacidade não é o que otimizar: drive que reprova numa formatação completa é aposentado, e dois drives menores e idênticos ganham de um grandão, porque o segundo é o que salva a gig.' },
+      { id: 'sd-card', t: 'Cartão SD', d: 'Um segundo slot em alguns players e completamente ausente em outros: o CDJ-3000X não tem slot de SD nenhum, o que deixa a pé todo fluxo de trabalho montado em cima de cartão. Um limite vale mesmo onde o slot existe: o rekordbox exporta exFAT só para drives USB, nunca para cartão SD. No SD é FAT32 ou nada.' },
+      { id: 'ssd', t: 'SSD (disco de estado sólido)', d: 'Um drive sem nenhuma peça móvel. Como drive USB externo é a coisa mais robusta para levar numa booth, porque não tem nada lá dentro para ser sacudido pelo grave ou por um esbarrão. O problema dele não é velocidade, é energia e protocolo: um drive alimentado pela própria porta pede mais da USB do player do que um pen drive pede, e veja UASP logo abaixo.' },
+      { id: 'hdd', t: 'HDD (disco rígido)', d: 'O tipo mais antigo, o HD, com um prato girando e uma cabeça se movendo lá dentro enquanto ele funciona. Funciona, mas é o corpo errado para uma booth: fisicamente vulnerável justamente enquanto está em uso, mais sedento de energia na porta USB do que um pen drive, e um esbarrão na hora errada é outra classe de problema, bem pior que um USB que caiu no chão. Se uma biblioteca grande precisa viajar, coloque num SSD.' },
+      { id: 'uasp', t: 'UASP', d: `O protocolo mais rápido que os drives USB modernos usam para conversar com o aparelho em que estão plugados. Vale conhecer porque a AlphaTheta documentou isso como defeito de verdade, não como teoria: drives compatíveis com UASP simplesmente não eram reconhecidos no DJM-A9 antes do firmware ${DJM_A9.uaspFix}, nem no DJM-V10 antes do ${DJM_V10.uaspFix}. Um drive que funciona em todo lugar e é recusado por uma mesa só pode ser isso, e não o drive.` },
+    ],
+  },
+  {
+    id: 'players',
+    title: 'Players',
+    terms: [
+      { id: 'pro-dj-link', t: 'PRO DJ LINK', d: 'A rede que conecta os players e o mixer. Pelo LINK, qualquer player consegue navegar e carregar de um drive que está fisicamente em outro player, com suporte oficial desde a geração CDJ-900/2000. Se o seu drive morrer no meio do set, o drive que está no outro player continua alcançável.' },
+      { id: 'usb-stop', t: 'USB STOP', d: 'O botão que você segura antes de arrancar um drive. O manual é seco: remover um drive (ou cortar a energia) enquanto o indicador de USB está piscando pode apagar dados de gerenciamento ou deixar o drive ilegível. Toda vez, nos dois lados: USB STOP no player, ejetar pelo botão de ejetar no rekordbox.' },
+      { id: 'emergency-loop', t: 'Emergency Loop', d: 'Comportamento oficial da AlphaTheta, e com nome oficial: o player toca automaticamente um Beat Loop quando não consegue iniciar a próxima track ao chegar no fim da atual, em vez de ficar mudo. Se não havia nada carregado, ele está fazendo o trabalho dele; carregue alguma coisa. Se a sua próxima track ESTAVA pronta e mesmo assim ele disparou, o player não conseguiu ler: trate o drive como suspeito.' },
+      { id: 'e-8302', t: 'E-8302 (CANNOT PLAY TRACK)', d: 'Erro que significa que os dados da track no drive não podem ser lidos corretamente. A AlphaTheta documenta ele para o CDJ-3000 e o CDJ-3000X, e DJs relatam o mesmo código em CDJ-2000 mais antigos, onde significa a mesma coisa. A resposta oficial: teste a track em outro player, e reimporte o arquivo para o drive se der. Normalmente é export corrompido ou sistema de arquivos errado, não hardware morto.' },
+      { id: 'hid-mode', t: 'Modo HID', d: 'O modo em que um player vira controlador de um software no notebook, em vez de tocar do próprio drive. Uma surpresa de booth nos players mais antigos: nem todos suportam isso para todo software.' },
+      { id: 'firmware', t: 'Firmware', d: 'O software do próprio player, e parte do seu setup querendo você ou não. Se o player travou ou o áudio caiu, muitos desses casos conhecidos têm versão de correção oficial; confira a versão em UTILITY no soundcheck. E nunca atualize nada, nem seu nem da casa, em dia de gig.' },
+      { id: 'nfc-login', t: 'Login por NFC', d: 'Um jeito de entrar numa booth sem carregar drive nenhum. O CDJ-3000X tem um ponto de NFC no painel frontal: encoste um celular rodando o rekordbox para iOS ou Android sobre o leitor e ele puxa a sua música online. O CDJ-1500X aceita o mesmo login, por NFC ou por QR code. Ele te autentica, não é uma forma de tocar áudio a partir do aparelho, e o que chega depois é a sua biblioteca na nuvem pela rede da casa.' },
+    ],
+  },
+  {
+    id: 'mixer-and-sound',
+    title: 'Mixer e som',
+    terms: [
+      { id: 'trim-gain', t: 'TRIM / GAIN', d: 'Dois nomes para o mesmo botão no topo do canal: o quanto a fonte chega alta no canal, antes do fader. Primeiro suspeito quando um canal está baixo com o fader lá em cima.' },
+      { id: 'channel-eq', t: 'EQ do canal (EQ / ISO)', d: 'Os botões de banda em cada canal: três na maioria das mesas, quatro no DJM-V10 e no DJM-V5, que dividem o médio em dois. A parte que vale saber é o que o fim do curso faz de verdade, porque nem sempre é silêncio. No DJM-900NXS2 o piso publicado no modo EQ é -26 dB, um corte profundo com a track ainda viva por baixo. Se você vai atrás de um kill completo e o kick continua lá, a mesa está fazendo exatamente o que está documentado.' },
+      { id: 'isolator', t: 'Isolator', d: 'Um nome, dois equipamentos diferentes, e a mesa em que você está decide como os botões se comportam. No DJM-900NXS2 é um modo: uma chave EQ CURVE (ISOLATOR, EQ) no painel, os mesmos três botões agindo como controle de tom numa posição e como isolador na outra. No DJM-V10 é hardware separado, um isolador de três bandas em cima da mix inteira, com pontos de corte próprios. De qualquer jeito, esse ajuste não é seu. Ele está como o último DJ ou o técnico deixou, e a primeira vez que você descobre é no primeiro corte que faz na frente da pista cheia.' },
+      { id: 'crossfader-assign', t: 'Crossfader assign', d: 'A chave por canal (A / THRU / B) que decide se o crossfader controla aquele canal. Atribuído para o lado errado, o canal fica mudo com todos os faders em cima: causa clássica de canal sem som. Alguns mixers não têm crossfader nenhum (DJM-V10-LF, DJM-V5); neles todo canal se comporta como THRU.' },
+      { id: 'cue-pfl', t: 'CUE / PFL', d: 'A palavra do DJ e a palavra do técnico para a mesma coisa: escutar um canal no fone antes de ele chegar na sala. Se o seu fone está mudo, confira se o botão MIX está para o lado do CUE, e não do MASTER, antes de culpar a entrada.' },
+      { id: 'booth-output', t: 'Saída BOOTH', d: 'A segunda saída do mixer, alimentando os monitores do próprio DJ, separada do MASTER, que alimenta a sala. Dois botões, dois destinos. No aperto, o par da saída BOOTH pode substituir um par de master morto.' },
+      { id: 'booth-eq', t: 'Booth EQ', d: 'Um segundo equalizador, só na saída de booth, nas mesas que trazem um: o DJM-V10 e o DJM-V5 entre elas. Ele molda o que você ouve nos seus monitores e não encosta em nada do que a sala ouve. Vale olhar antes de decidir que um sistema está quebrado, porque um grave de booth derrubado por quem tocou antes de você deixa o monitor fino e sem vida enquanto a pista está perfeitamente bem.' },
+      { id: 'master-insert', t: 'Insert do MASTER', d: 'Um ponto de conexão na traseira de alguns mixers, onde um processador externo entra no sinal de master. Se tem alguma coisa plugada ali e nada devolve áudio, o master fica mudo com todos os faders em cima. Se você achar um insert ligado, quase certamente é da casa: pergunte antes de puxar.' },
+      { id: 'signal-chain', t: 'Cadeia de sinal', d: 'O caminho ordenado que o áudio faz depois do seu mixer: processador da casa, amplificadores, caixas. Passando da saída de booth, aquilo é da casa, e a solução mais rápida é a frase exata: "O master do mixer está em cima, os medidores de master estão se mexendo. Não sai nada depois da saída de booth."' },
+      { id: 'bluetooth-audio-in', t: 'Entrada de áudio Bluetooth', d: 'Algumas mesas aceitam áudio sem fio direto de um celular ou de um notebook, o DJM-A9 entre elas. Útil numa passagem de bastão, ou para manter a sala viva entre sets. Não é caminho de performance: latência e estabilidade de conexão fazem dela uma entrada de conveniência, não um deck para mixar. Não confunda com o login por NFC dos players mais novos, que te autentica numa biblioteca na nuvem em vez de mandar áudio.' },
+      { id: 'converters', t: 'Conversor A/D e D/A', d: 'As duas traduções por onde todo som de uma booth passa. O A/D transforma um sinal analógico em números, o D/A transforma números de volta em algo que faz uma caixa mover ar. Ficha técnica de mixer anuncia isso, normalmente como uma profundidade de bits tipo 32-bit, porque a conversão é onde uma mesa ou preserva a gravação ou achata ela em silêncio. Nada que você opere, e nada que você conserte na booth, mas é a resposta honesta para por que dois mixers tocando o mesmo arquivo não soam iguais.' },
+      { id: 'soundcard', t: 'Placa de som (interface de áudio)', d: 'O hardware que faz essa conversão. Num setup de notebook é uma caixinha separada ou uma placa embutida na controladora. Num DJM profissional ela é embutida no mixer, e é por isso que um notebook pluga direto na mesa por USB e não precisa de mais nada no meio. Quando alguém diz que o mixer "é" a placa de som, é disso que está falando.' },
+      { id: 'dvs', t: 'DVS (Digital Vinyl System)', d: 'Tocar arquivos digitais de um notebook controlando eles com toca-discos ou CDJs de verdade, usando timecode: um disco ou CD especial que carrega um sinal de controle em vez de música. O mixer lê esse sinal pela própria placa de som e o notebook obedece. É por isso que um setup DVS liga tanto para as entradas phono e para a conexão USB com o computador, e por isso que um seletor de entrada errado mata tudo na hora.' },
+    ],
+  },
+  {
+    id: 'cables-and-connectors',
+    title: 'Cabos e conectores',
+    terms: [
+      { id: 'phono-vs-line', t: 'Phono vs Line', d: 'A coisa mais útil deste grupo. Um canal de mixer espera ou um toca-discos (phono, um sinal muito fraco que precisa de amplificação extra) ou qualquer outra coisa (line: CDJs, notebooks, players). Mande uma fonte de linha para uma entrada phono e ela distorce horrivelmente. Mande um toca-discos para uma entrada de linha e ela fica quase muda. Se um canal está morto ou soando errado com todos os faders em cima, confira esse seletor antes de culpar o cabo.' },
+      { id: 'rca', t: 'RCA (conector phono)', d: 'O par de plugues, normalmente vermelho e branco, que leva o estéreo entre a maior parte do equipamento de DJ: player para mixer, mixer para amplificador. Desbalanceado, então não gosta de tirada longa, mas é com ele que quase toda booth é cabeada. Vermelho é o direito, branco ou preto é o esquerdo. Um canal morto sozinho com o fader funcionando é muitas vezes só esse plugue mal encaixado.' },
+      { id: 'coaxial', t: 'Coaxial (saída digital)', d: 'A armadilha deste grupo: uma saída digital coaxial usa o mesmo conector de um plugue RCA e carrega uma coisa completamente diferente. É um cabo único de áudio DIGITAL, encontrado em alguns mixers como DIGITAL OUT, e não funciona plugado numa entrada RCA analógica comum. Se uma conexão parece um cabo phono normal e só produz ruído ou silêncio, veja se uma das pontas dela é digital.' },
+      { id: 'jack', t: 'Jack (6,35 mm / P10)', d: 'O plugue grande de fone, que no Brasil todo mundo chama de P10, e o conector das saídas de booth e de muita conexão balanceada. Vem em duas formas quase idênticas: o TRS tem dois anéis pretos e carrega estéreo ou um sinal balanceado, o TS tem um anel só e carrega um único canal desbalanceado. Plugar TS onde se espera TRS é um jeito silencioso de perder metade do seu áudio.' },
+      { id: 'mini-jack', t: 'Mini jack (3,5 mm / P2)', d: 'A versão pequena, o P2, dos celulares, notebooks e fones de consumo. Comum numa booth só como adaptador, e adaptador é exatamente onde passagem de bastão dá errado. Se um celular precisa chegar no mixer, saiba antes de a casa abrir se esse adaptador existe e onde ele está.' },
+      { id: 'xlr', t: 'XLR (também chamado de Canon)', d: 'O conector de três pinos com trava, balanceado, usado na saída de master do mixer para o sistema da casa e para microfones. Balanceado significa que ele rejeita interferência em tiradas longas de cabo, e é por isso que a sala é alimentada com ele e a sua booth não. Muito DJ, principalmente fora do mundo de língua inglesa, chama de Canon: mesmo conector, nome de marca antigo.' },
+      { id: 'balanced-vs-unbalanced', t: 'Balanceado ou desbalanceado', d: 'Por que existem dois tipos de cabo. Uma conexão balanceada (XLR, jack TRS) leva o sinal duas vezes, invertido, então o ruído pego no caminho se cancela sozinho do outro lado. A desbalanceada (RCA, jack TS) não faz isso, então junta zumbido e interferência ao longo da distância. Tirada curta dentro da booth, desbalanceado serve. Qualquer coisa que atravesse um palco deveria ser balanceada.' },
+      { id: 'speakon', t: 'Speakon', d: 'O conector grosso de caixa, com trava de giro. Vale conhecer justamente porque você NÃO vai encontrar ele em equipamento de DJ: ele vive entre amplificadores e caixas, que é o lado da casa na cadeia de sinal. Se você está olhando para um Speakon, já passou da saída de booth e já passou de onde a sua responsabilidade termina.' },
+      { id: 'ground-terminal', t: 'Terminal de terra (GND)', d: 'O pequeno parafuso no mixer para o fio fino de terra de um toca-discos, o aterramento. Desconectado, o canal do toca-discos zumbe de forma audível. Se um deck está zumbindo num setup de vinil e o fader não está resolvendo nada, esse é o primeiro lugar para olhar.' },
+      { id: 'iec-power-cable', t: 'Cabo de força IEC', d: 'O cabo tripolar padrão que todo player e todo mixer recebe. Sem nenhum glamour, e a causa mais comum de um aparelho que "não liga". Eles afrouxam dentro do rack, e as casas pegam emprestado. Um reserva na bag custa quase nada e já salvou muito set.' },
+      { id: 'ethernet-cable', t: 'Cabo Ethernet / LAN', d: 'Como os players e o mixer conversam entre si pelo PRO DJ LINK, e como um notebook entra nessa rede. Cabo de rede comum, nada de especial nele. Se o LINK está se recusando a conectar e as configurações parecem certas, vale descartar o cabo e a porta antes de mexer nas configurações.' },
+      { id: 'usb-connectors', t: 'USB-A, USB-B, USB-C', d: 'Três formatos diferentes fazendo trabalhos diferentes na mesma mesa. O USB-A é o achatado onde o seu drive entra. O USB-B é o mais quadrado, que liga um mixer a um computador para DVS ou gravação. O USB-C aparece nos players mais novos tanto para armazenamento quanto para conexão com computador. O CDJ-3000X, por exemplo, tem um USB-A, dois USB-C e nenhum slot de SD.' },
+    ],
+  },
+
+];
+
+// STABLE ANCHORS. Identical helpers to the English page. Every term and every
+// group carries an explicit `id` above, so the slug fallback never fires here
+// and no translated label can move an anchor.
+const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+const termId = (x) => x.id ?? slug(x.t);
+const groupId = (g) => g.id ?? slug(g.title);
+
+const SITE = 'https://www.savemygig.com';
+// DEFINEDTERMSET. Every @id and url sits on the /pt URL, never the English
+// one, and every name and description is the same string the page prints,
+// because both come from `groups`.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  '@id': `${SITE}/pt/knowledge/dictionary#terms`,
+  url: `${SITE}/pt/knowledge/dictionary`,
+  name: 'O dicionário de confiabilidade do DJ',
+  description: 'Termos definidos que um DJ encontra numa booth, agrupados em arquivos de áudio, biblioteca e export, drives e sistemas de arquivos, players, mixer e som, e cabos e conectores. Toda definição vem da documentação do fabricante ou de material já verificado neste site.',
+  inLanguage: 'pt-BR',
+  publisher: { '@id': `${SITE}/#org` },
+  isPartOf: { '@id': `${SITE}/pt/knowledge/dictionary#webpage` },
+  mainEntityOfPage: { '@id': `${SITE}/pt/knowledge/dictionary#webpage` },
+  hasDefinedTerm: groups.flatMap((g) => g.terms.map((x) => ({
+    '@type': 'DefinedTerm',
+    '@id': `${SITE}/pt/knowledge/dictionary#${termId(x)}`,
+    url: `${SITE}/pt/knowledge/dictionary#${termId(x)}`,
+    name: x.t,
+    description: x.d,
+    inLanguage: 'pt-BR',
+    inDefinedTermSet: { '@id': `${SITE}/pt/knowledge/dictionary#terms` },
+  }))),
+};
+---
+<Base
+  title="Dicionário do DJ: FAT32, MBR e OneLibrary | Save My Gig"
+  description="Os termos que decidem se o seu pen drive toca: FAT32, MBR, OneLibrary, PRO DJ LINK, Emergency Loop, crossfader assign. Direto, conferido com o fabricante."
+  path="/knowledge/dictionary"
+  crumbName="Dicionário"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap">
+    <p class="crumb"><a href="/pt/knowledge">Base de conhecimento</a> / Dicionário</p>
+    <div class="status-line">DICIONARIO</div>
+    <h1 style="margin-bottom:0.8rem">As palavras que <span class="accent">salvam gigs</span></h1>
+    <p class="dim" style="max-width:42rem;margin-bottom:2rem;line-height:1.6">
+      Todo termo deste site e da booth, a um toque de distância. Definido a
+      partir da documentação do fabricante e dos fatos que este site já
+      verificou, nada de folclore.
+    </p>
+
+    {/* A FILTER, NOT A SEARCH. The site index is PER PAGE and all the terms
+        live on this one page, so scoping the shared search box here would
+        return a single result: this page. Everything is already in the DOM, so
+        typing narrows the list in place: non-matching terms hide, groups with
+        no match hide, groups with a match open themselves, and a single match
+        opens its own definition. No navigation, no index, no request, works
+        offline like the rest of the rescue kit.
+        Deliberately the same BOX as the site search so it reads as the same
+        tool. Same border, radius, focus ring, icon and clear button. */}
+    <div class="dict-filter" data-dict-filter>
+      <div class="srch-box">
+        <svg class="srch-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label class="sr-only" for="dictFilter">Filtrar o dicionário</label>
+        <input id="dictFilter" type="search" class="srch-input" autocomplete="off"
+               placeholder="Filtre os termos: FAT32, MBR, PRO DJ LINK..."
+               aria-describedby="dictFilterCount" />
+        <button type="button" class="srch-clear" id="dictFilterClear" aria-label="Limpar filtro" hidden>&times;</button>
+      </div>
+      {/* Live region: a filter that silently reorders the page is invisible to
+          a screen reader without one. */}
+      <p class="dict-filter-count" id="dictFilterCount" role="status" aria-live="polite"></p>
+    </div>
+
+    {/* Two levels of accordion. The GROUP is collapsible too: pick the area,
+        then pick the term. The group names are the index and the whole
+        dictionary fits on one screen closed.
+        Groups are deliberately NOT an exclusive `name=` set: comparing a cable
+        term against a format term is a real thing to want. Terms inside a
+        group stay independent for the same reason.
+        Collapsed content is still in the HTML, so the search index (built from
+        dist) and crawlers read every definition regardless. */}
+    {groups.map((g) => (
+      <details class="dict-cat" id={groupId(g)}>
+        <summary>
+          <h2 class="dict-h">{g.title}</h2>
+          <span class="dict-count">{g.terms.length}</span>
+          <span class="dict-chev dict-cat-chev" aria-hidden="true"></span>
+        </summary>
+        <div class="dict-cat-body">
+          {g.terms.map((x) => (
+            <details class="panel dict-term" id={termId(x)}>
+              <summary>
+                <h3 class="dict-t">{x.t}</h3>
+                <span class="dict-chev" aria-hidden="true"></span>
+              </summary>
+              <div class="acc-body"><p class="dim dict-d">{x.d}</p></div>
+            </details>
+          ))}
+        </div>
+      </details>
+    ))}
+
+    <p class="dim" style="margin-top:2rem;font-size:0.9rem">
+      Falta alguma palavra que te confundiu numa booth? <a href="/pt/feedback">Conte pra gente</a>
+      e ela entra.
+    </p>
+  </main>
+
+  <script is:inline>
+    /*
+     * DEEP LINKING INTO THE DICTIONARY.
+     *
+     * A link like /pt/knowledge/dictionary#fat32 has to do three things, and
+     * the browser only sometimes does the first: open the TERM, open the GROUP
+     * that contains it (this is a nested accordion, so one is not enough),
+     * and land the reader on it rather than under the sticky header.
+     *
+     * Chromium auto-expands a <details> when you navigate to a fragment inside
+     * it; Safari and Firefox have been inconsistent about it, and none of them
+     * handle the nested case or the scroll offset. So this walks up the tree
+     * opening every <details> ancestor. Without JS the anchor still resolves
+     * and the content is still in the HTML, it just may land closed.
+     *
+     * hashchange matters as much as load: a link to another term FROM the
+     * dictionary changes only the fragment, which fires no navigation.
+     */
+    (function () {
+      function reveal(hash) {
+        if (!hash || hash.length < 2) return;
+        var el;
+        try { el = document.getElementById(decodeURIComponent(hash.slice(1))); }
+        catch (e) { return; }
+        if (!el) return;
+
+        for (var n = el; n && n !== document.body; n = n.parentNode) {
+          if (n.tagName === 'DETAILS') n.open = true;
+        }
+
+        // Let the accordions finish expanding before measuring where to scroll.
+        requestAnimationFrame(function () {
+          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          el.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+          // Announce it: without this a screen reader stays where it was.
+          var s = el.querySelector('summary');
+          if (s) {
+            s.setAttribute('tabindex', '-1');
+            s.focus({ preventScroll: true });
+          }
+        });
+      }
+      reveal(window.location.hash);
+      window.addEventListener('hashchange', function () { reveal(window.location.hash); });
+    })();
+  </script>
+
+  <script is:inline>
+    /**
+     * THE DICTIONARY FILTER.
+     *
+     * NOT the site search. Everything needed is already in the DOM, so this
+     * filters in place. No index, no request, works offline.
+     *
+     * WHAT IT DOES, as you type:
+     *   term does not match      -> hidden
+     *   group has no match       -> hidden
+     *   group has a match        -> shown and OPENED, so matches are visible
+     *                               without a second tap
+     *   exactly one match        -> its definition opens too, because at that
+     *                               point the definition IS the answer
+     *   empty                    -> everything restored to the shipped state,
+     *                               closed, in original order
+     *
+     * It matches the TERM and its DEFINITION, not just the term, so somebody
+     * who half-remembers the idea ("partição") finds MBR without knowing the
+     * acronym, which is the whole reason a beginner is on this page. It is
+     * also why the Portuguese definitions carry the Brazilian words for
+     * things the term itself names in English.
+     *
+     * STATE IS RESTORED, NOT REMEMBERED. The filter records which accordions
+     * it opened and closes exactly those on clear, so a term the reader had
+     * opened by hand stays open. `data-hide` is an attribute, never an inline
+     * style, so the page returns to precisely how it shipped.
+     */
+    (function () {
+      var wrap = document.querySelector('[data-dict-filter]');
+      var input = document.getElementById('dictFilter');
+      var clear = document.getElementById('dictFilterClear');
+      var count = document.getElementById('dictFilterCount');
+      if (!wrap || !input) return;
+
+      var groups = [].slice.call(document.querySelectorAll('.dict-cat'));
+      var opened = [];
+
+      function textOf(el) {
+        return (el.textContent || '').toLowerCase().replace(/\s+/g, ' ');
+      }
+
+      // Cached once: 60 terms re-read on every keystroke is wasted work, and
+      // the content is static.
+      var index = groups.map(function (g) {
+        return {
+          group: g,
+          terms: [].slice.call(g.querySelectorAll('.dict-term')).map(function (t) {
+            return { el: t, hay: textOf(t) };
+          }),
+        };
+      });
+
+      function restore() {
+        index.forEach(function (g) {
+          g.group.removeAttribute('data-hide');
+          g.terms.forEach(function (t) { t.el.removeAttribute('data-hide'); });
+        });
+        opened.forEach(function (el) { el.open = false; });
+        opened = [];
+      }
+
+      function apply(q) {
+        q = q.trim().toLowerCase();
+        if (clear) clear.hidden = !q;
+
+        if (!q) {
+          restore();
+          if (count) count.textContent = '';
+          return;
+        }
+
+        restore();
+        var hits = 0;
+        var lastTerm = null;
+
+        index.forEach(function (g) {
+          var groupHits = 0;
+          g.terms.forEach(function (t) {
+            if (t.hay.indexOf(q) === -1) {
+              t.el.setAttribute('data-hide', '');
+            } else {
+              groupHits++; hits++; lastTerm = t.el;
+            }
+          });
+          if (!groupHits) {
+            g.group.setAttribute('data-hide', '');
+          } else if (!g.group.open) {
+            g.group.open = true;
+            opened.push(g.group);
+          }
+        });
+
+        // One result: the definition is the answer, so show it.
+        if (hits === 1 && lastTerm && !lastTerm.open) {
+          lastTerm.open = true;
+          opened.push(lastTerm);
+        }
+
+        if (count) {
+          count.textContent = hits === 0
+            ? 'Nenhum termo combina com "' + q + '". Tente uma palavra mais curta, ou conte pra gente e ela entra.'
+            : hits + (hits === 1 ? ' termo' : ' termos');
+        }
+      }
+
+      var t;
+      input.addEventListener('input', function () {
+        clearTimeout(t);
+        t = setTimeout(function () { apply(input.value); }, 90);
+      });
+
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { input.value = ''; apply(''); }
+      });
+
+      if (clear) clear.addEventListener('click', function () {
+        input.value = ''; apply(''); input.focus();
+      });
+
+      // A deep link must never land on a term the filter is hiding.
+      window.addEventListener('hashchange', function () {
+        if (input.value) { input.value = ''; apply(''); }
+      });
+    })();
+  </script>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  /* Group level. The summary keeps the .dict-h look (uppercase label with a
+     rule under it) so the page reads the same closed as it did open, and gains
+     a term count plus a chevron. The chevron geometry, the focus ring, the
+     marker hiding and the open-state timing all live in global.css. Only what
+     is genuinely about a dictionary stays local: the term count, the target
+     rule, the uppercase group label. */
+  /* FULL WIDTH: the shared .srch caps at 34rem, which is correct under a
+     homepage hero and wrong above a full-width list. The cap is NOT overridden
+     globally, because the homepage and /faq both want it. */
+  .dict-filter { width: 100%; margin-bottom: 2rem; }
+  .dict-filter-count {
+    font-size: 0.82rem; color: var(--text-faint);
+    margin-top: 0.6rem; min-height: 1.2em;
+  }
+  /* Hidden by the filter. A plain attribute so the script never touches
+     inline styles and the page restores exactly as it shipped. */
+  .dict-cat[data-hide], .dict-term[data-hide] { display: none; }
+
+  .dict-cat { margin-bottom: 0.9rem; }
+  .dict-cat > summary {
+    display: flex; align-items: center; gap: 0.7rem;
+    border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.5rem;
+    cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
+  }
+  .dict-cat[open] > summary { margin-bottom: 1rem; }
+  .dict-h {
+    flex: 1 1 auto;
+    font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
+    margin: 0;
+  }
+  .dict-count {
+    flex: 0 0 auto; font-size: 0.75rem; font-weight: 700;
+    color: var(--text-faint); font-variant-numeric: tabular-nums;
+  }
+  .dict-cat-body { margin-bottom: 1.8rem; }
+  /* scroll-margin keeps a deep-linked term clear of the sticky header. CSS
+     does this correctly at every zoom level; JavaScript arithmetic does not.
+     Padding is NOT set here any more: the shared accordion supplies it, so a
+     dictionary term and an FAQ answer are now the same box. */
+  .dict-term { margin-bottom: 0.6rem; padding: 0; scroll-margin-top: 88px; }
+  .dict-cat { scroll-margin-top: 88px; }
+  /* A term arrived at by link gets a brief accent rule so the eye lands on the
+     right row in a long group instead of hunting. */
+  .dict-term:target { border-left: 2px solid var(--red); }
+  .dict-t { font-size: 1rem; font-weight: 800; margin: 0; letter-spacing: -0.01em; text-transform: none; }
+  /* Padding comes from the shared .acc-body wrapper, the same one the FAQ and
+     the reference pages use, so a definition sits exactly where an answer
+     does. */
+  .dict-d { margin: 0; line-height: 1.6; font-size: 0.95rem; }
+</style>

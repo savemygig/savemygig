@@ -1,0 +1,218 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { VENDOR_LINKS } from '../../../data/facts.js';
+
+// BASE DE CONHECIMENTO, BRAZILIAN PORTUGUESE. Source of truth for structure,
+// classes, the three lists and the CollectionPage contract:
+// src/pages/knowledge/index.astro. Only the human readable copy and the /pt
+// hrefs differ. If the English page changes, change this one in the same
+// commit.
+const software = [
+  {
+    name: 'rekordbox',
+    href: '/pt/knowledge/pioneer-dj/rekordbox',
+    blurb: 'Export, Device Library ou OneLibrary, mudanças de biblioteca e todo erro que um CDJ joga na sua cara.',
+  },
+  {
+    name: 'Serato DJ',
+    href: null,
+    blurb: 'Crates, biblioteca offline e como tocar nos CDJs da casa saindo de um setup Serato.',
+  },
+  {
+    name: 'DJM-REC',
+    href: '/pt/knowledge/pioneer-dj/djm-rec',
+    blurb: 'O app de gravação e transmissão ao vivo da AlphaTheta: um cabo USB no mixer DJM e a lista de tracks com horário automático.',
+  },
+  {
+    name: 'Engine DJ',
+    href: null,
+    blurb: 'Preparação da biblioteca Engine, players SC Live e Prime, e a travessia para uma booth Pioneer.',
+  },
+];
+const equipment = [
+  {
+    name: 'Pioneer DJ / AlphaTheta',
+    href: '/pt/knowledge/pioneer-dj',
+    blurb: 'CDJs, XDJs, mixers DJM e all-in-ones: problemas conhecidos por versão de firmware, e os hábitos que evitam cada um deles.',
+  },
+  {
+    name: 'Denon DJ',
+    href: null,
+    blurb: 'Players SC e a linha Prime, assim que a referência da AlphaTheta estiver completa.',
+  },
+  {
+    name: 'Allen & Heath',
+    href: null,
+    blurb: 'Os mixers Xone que têm DJ fiel: filtros, manias conhecidas e a convivência com booths de CDJ e toca-discos.',
+  },
+  {
+    name: 'Technics',
+    href: null,
+    blurb: 'Os toca-discos que nunca saíram de cena. Vinil não é o nosso foco, mas o padrão de booth merece lugar aqui.',
+  },
+];
+const hardware = [
+  {
+    name: 'SanDisk',
+    href: null,
+    blurb: 'O Extreme Pro e o DJ Flash Drive oficial da AlphaTheta: o que eles fazem numa booth, e onde falham.',
+  },
+  {
+    name: 'Samsung',
+    href: null,
+    blurb: 'O BAR Plus e a linha de SSD portátil, os drives que sobrevivem a uma bag cheia de cabo.',
+  },
+  {
+    name: 'Kingston',
+    href: null,
+    blurb: 'DataTraveler e a faixa mais barata da booth, onde a confiabilidade se ganha ou se perde.',
+  },
+  {
+    name: 'Apple',
+    href: null,
+    blurb: 'MacBooks na booth: o que realmente importa para aguentar um set inteiro, não a ficha técnica.',
+  },
+];
+
+// The ItemList carries only the entries that HAVE a page, exactly like the
+// English file. The "Em breve" brands stay out on purpose.
+const collected = [...software, ...equipment, ...hardware].filter((x) => x.href);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': 'https://www.savemygig.com/pt/knowledge#webpage',
+  url: 'https://www.savemygig.com/pt/knowledge',
+  name: 'Base de conhecimento de software, equipamento e hardware de DJ',
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  inLanguage: 'pt-BR',
+  about: [
+    { '@type': 'Thing', name: 'rekordbox' },
+    { '@type': 'Thing', name: 'Equipamento de DJ Pioneer DJ e AlphaTheta' },
+    { '@type': 'Thing', name: 'Pen drives e armazenamento para DJ' },
+  ],
+  mainEntity: {
+    '@type': 'ItemList',
+    '@id': 'https://www.savemygig.com/pt/knowledge#list',
+    name: 'Páginas de referência da base de conhecimento do Save My Gig',
+    numberOfItems: collected.length,
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    itemListElement: collected.map((x, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: x.name,
+      description: x.blurb,
+      url: `https://www.savemygig.com${x.href}`,
+    })),
+  },
+};
+---
+<Base
+  title="Base de conhecimento de DJ: rekordbox, CDJ e drives | Save My Gig"
+  description="Referência das ferramentas que rodam o seu set: export e formatos de biblioteca do rekordbox, DJM-REC, players e mixers Pioneer DJ e AlphaTheta, e os drives."
+  path="/knowledge"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap">
+    <div class="status-line">BASE_DE_CONHECIMENTO</div>
+    <h1 style="margin-bottom:0.8rem">Domine suas <span class="accent">ferramentas</span></h1>
+    <p class="dim kb-lead">
+      Suas ferramentas são o software que roda a sua biblioteca, o equipamento
+      que toca ela e o hardware que guarda o backup. Esta é a camada de
+      referência das três: o que cada uma faz de verdade, onde ela quebra, e
+      como impedir que ela estrague a sua gig.
+    </p>
+
+    <h2 class="kb-h">Software</h2>
+    <div class="kb-grid">
+      {software.map(s => (
+        s.href ? (
+          <a class="kb-card kb-live" href={s.href}>
+            <span class="kb-name">{s.name}</span>
+            <span class="kb-blurb">{s.blurb}</span>
+            <span class="kb-go">Abrir o guia &rarr;</span>
+          </a>
+        ) : (
+          <div class="kb-card kb-soon">
+            <span class="kb-name">{s.name}</span>
+            <span class="kb-blurb">{s.blurb}</span>
+            <span class="kb-tag">Em breve</span>
+          </div>
+        )
+      ))}
+    </div>
+
+    <h2 class="kb-h" style="margin-top:2rem">Equipamento</h2>
+    <div class="kb-grid">
+      {equipment.map(s => (
+        s.href ? (
+          <a class="kb-card kb-live" href={s.href}>
+            <span class="kb-name">{s.name}</span>
+            <span class="kb-blurb">{s.blurb}</span>
+            <span class="kb-go">Abrir o guia &rarr;</span>
+          </a>
+        ) : (
+          <div class="kb-card kb-soon">
+            <span class="kb-name">{s.name}</span>
+            <span class="kb-blurb">{s.blurb}</span>
+            <span class="kb-tag">Em breve</span>
+          </div>
+        )
+      ))}
+    </div>
+
+    <h2 class="kb-h" style="margin-top:2rem">Hardware</h2>
+    <p class="dim kb-sub">
+      Procurando o que comprar em vez de como a coisa se comporta? Os drives em
+      que confiamos estão na <a href="/pt/gear">página de equipamento</a>.
+    </p>
+    <div class="kb-grid">
+      {hardware.map(s => (
+        s.href ? (
+          <a class="kb-card kb-live" href={s.href}>
+            <span class="kb-name">{s.name}</span>
+            <span class="kb-blurb">{s.blurb}</span>
+            <span class="kb-go">Abrir o guia &rarr;</span>
+          </a>
+        ) : (
+          <div class="kb-card kb-soon">
+            <span class="kb-name">{s.name}</span>
+            <span class="kb-blurb">{s.blurb}</span>
+            <span class="kb-tag">Em breve</span>
+          </div>
+        )
+      ))}
+    </div>
+
+    <p class="dim" style="margin-top:1.6rem">
+      Procurando uma falha específica? O <a href="/pt/faq">FAQ responde todas as
+      perguntas comuns</a> e liga para a biblioteca de soluções inteira. Acabou
+      de esbarrar numa palavra que não conhece? <a href="/pt/knowledge/dictionary">O
+      dicionário</a> define cada termo que decide se o seu USB toca ou não.
+    </p>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">Qual ferramenta está faltando nesta lista?</h2>
+      <p class="dim" style="margin-bottom:1rem">A gente constrói o que os DJs pedem de verdade. Diga o que você usa e isso sobe na fila.</p>
+      <a href="/pt/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Conte o que você usa</a>
+    </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">Downloads oficiais e notas de versão: {VENDOR_LINKS.map((v, i) => (<Fragment>{i > 0 ? ' · ' : ''}<a href={v.url} rel="noopener">{v.name}</a></Fragment>))}</p>
+  </main>
+</Base>
+
+<style>
+  .kb-lead { max-width: 42rem; margin-bottom: 2rem; line-height: 1.6; }
+  /* Sits between a section heading and its card grid. The Hardware section
+     uses it to send buying-intent visitors to /gear, keeping the knowledge
+     base itself purely about how a product behaves. */
+  .kb-sub { max-width: 42rem; margin: -0.4rem 0 1rem; font-size: 0.92rem; line-height: 1.6; }
+  .kb-h {
+    font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
+    border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+  }
+  /* The card, the grid, the title, the blurb, the go-link and the coming-soon
+     tag all live in global.css. */
+</style>

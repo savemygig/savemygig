@@ -1,0 +1,621 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import Disclaimer from '../../../../components/Disclaimer.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { CHECKED, PLAYERS, VENDOR_LINKS, REKORDBOX } from '../../../../data/facts.js';
+
+// rekordbox, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors, the table contract, the script and the CSS:
+// src/pages/knowledge/pioneer-dj/rekordbox.astro. Only the human readable copy
+// and the /pt hrefs differ.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(CHECKED);
+
+// The table rows come from PLAYERS in facts.js, which is language neutral for
+// the model and the library format (product identifiers, never translated) but
+// carries English prose in `exfat` and `note`. Those two are copy, so they are
+// rendered in Portuguese here. The CLASS on the exFAT cell still tests the
+// original English value, exactly like the English page.
+const players = PLAYERS;
+const exfatPt = (v) => (v === 'Yes' ? 'Sim' : v === 'No' ? 'Não' : v.replace(/^Yes,/, 'Sim,'));
+const NOTES_PT = {
+  'CDJ-3000X': 'Sem slot de cartão SD. USB-A x1, USB-C x2.',
+  'CDJ-1500X': 'Anunciado em julho de 2026. Precisa do rekordbox 7.2.16 ou mais recente.',
+  'CDJ-3000': 'Device Library no firmware 3.22. O firmware 3.30 acrescentou OneLibrary, mas foi retirado do ar.',
+  'CDJ-2000NXS2': 'O cavalo de batalha da maioria das booths de clube. Só FAT32.',
+  'CDJ-2000 / NXS': 'Ainda está em todo lugar. Só FAT32.',
+  'CDJ-900 / 850': 'Só FAT32.',
+  'XDJ-AN': 'Incluído no rekordbox 7.2.16.',
+  'XDJ-700': 'Oficialmente só FAT32, FAT ou HFS+.',
+  'OPUS-QUAD': 'Primeiro player com OneLibrary.',
+};
+const notePt = (p) => NOTES_PT[p.m] ?? p.note;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/rekordbox#article',
+  headline: 'rekordbox: export, Device Library e OneLibrary, e a compatibilidade de USB',
+  description: 'Por que um USB do rekordbox é reconhecido pelo CDJ mas não mostra playlists, o que são OneLibrary e Device Library, qual player pede qual formato, e os ajustes de export que funcionam em qualquer lugar.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-26',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/rekordbox#webpage' },
+  image: 'https://www.savemygig.com/images/rekordbox-panel-full.webp',
+  about: [
+    { '@type': 'Thing', name: 'rekordbox' },
+    { '@type': 'Thing', name: 'Pioneer CDJ' },
+    { '@type': 'Thing', name: 'OneLibrary' },
+  ],
+};
+---
+<Base
+  title="USB do rekordbox: OneLibrary ou Device Library | Save My Gig"
+  description="O USB é reconhecido no CDJ mas não mostra playlists? Isso é Device Library contra OneLibrary. A explicação, a tabela de compatibilidade e os ajustes de export."
+  path="/knowledge/pioneer-dj/rekordbox"
+  crumbName="rekordbox"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>rekordbox</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">REKORDBOX</div>
+        <h1 class="rb-h1">rekordbox, <span class="accent">explicado</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#rekordbox-lightbox"
+        aria-label="Abrir uma captura de tela maior da visão Performance do rekordbox"
+      >
+        <img
+          src="/images/rekordbox-panel-thumb.webp"
+          alt="Visão Performance do rekordbox: dois decks, waveforms e o navegador de tracks"
+          width="500"
+          height="312"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="rekordbox-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/rekordbox-panel-full.webp"
+        alt="Visão Performance do rekordbox: dois decks, waveforms e o navegador de tracks"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> Formate o drive em <strong>FAT32 com
+        esquema de partição MBR</strong>, e exporte pelo <strong>rekordbox
+        {REKORDBOX.dualFormatFloor} ou mais recente</strong>. Essa combinação é lida
+        por todo player Pioneer e AlphaTheta deste artigo, antigo ou novo. Tudo o
+        que vem abaixo é o porquê, e o que fazer quando não é tão simples assim.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="rb-acc" id="no-playlists">
+      <summary><h3 class="acc-h2">O USB é reconhecido no CDJ mas não mostra playlists</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Numa booth de gerações misturadas, isso
+        normalmente não é um drive quebrado. É o <strong>formato de banco de
+        dados</strong> errado, e é a falha mais confusa do DJing moderno porque
+        <strong>o player não te dá código de erro nenhum</strong>. O pen drive é
+        reconhecido. O player fica feliz. As suas playlists simplesmente não estão
+        lá.</p>
+        <p><strong>Por que isso acontece.</strong> O rekordbox pode gravar dois
+        bancos de dados diferentes num drive USB: <strong>Device Library</strong>, o
+        formato de sempre, e <strong>OneLibrary</strong>, o mais novo. Cada player lê
+        um ou o outro. Se o seu drive carrega só Device Library e você coloca ele num
+        CDJ-3000X, as playlists não vão aparecer. Veja <a href="#onelibrary">o que
+        esses dois formatos são de fato</a> se você quiser o quadro completo.</p>
+        <div class="panel panel-go">
+          <p style="margin:0">
+            <strong>A sua música não sumiu.</strong> Os arquivos de áudio no drive
+            nunca são apagados por causa disso. É só o banco de dados das playlists
+            que o player não enxerga. Na visão FOLDER ou na navegação as tracks
+            costumam continuar lá, e é exatamente isso que salva um set enquanto você
+            resolve o resto depois.
+          </p>
+        </div>
+        <p><strong>Resolva agora.</strong></p>
+        <ol class="rb-steps">
+          <li><strong>Na gig, mude para a visão FOLDER.</strong> Os seus arquivos de áudio continuam no drive. Você perde cues, grids e playlists, mas segue tocando. É esse o sentido do resgate.</li>
+          <li><strong>Chegue ao rekordbox {REKORDBOX.dualFormatFloor} ou mais recente.</strong> A partir dessa versão o rekordbox grava os dois formatos de banco de dados no mesmo drive, então um pen drive só funciona em qualquer booth. Cada drive precisa de um passo manual antes: clique com o botão direito em <strong>OneLibrary</strong> no dispositivo e escolha <strong>Convert from Device Library</strong>, conforme o guia OneLibrary Compatible USB Device Export da AlphaTheta. Uma vez por drive, não uma vez por export.</li>
+          <li><strong>Exporte as suas playlists de novo para o drive.</strong> Exporte, não arraste e solte. Arrastar arquivos de áudio não gera banco de dados nenhum.</li>
+          <li><strong>Ejete direito, pelo rekordbox.</strong> Puxar um drive no meio da gravação é a forma mais comum de corromper o banco de dados que você acabou de montar.</li>
+          <li><strong>Teste antes de sair de casa</strong> se você tem um player, ou chegue cedo o bastante para testar no do clube.</li>
+        </ol>
+        <p><strong>Evite da próxima vez.</strong> Mantenha o rekordbox em
+        {REKORDBOX.dualFormatFloor} ou mais recente e rode o
+        <strong>Convert from Device Library</strong> uma única vez em cada drive.
+        Depois disso, todo export carrega os dois formatos de banco de dados. E nunca
+        arraste arquivos de áudio para o drive na mão, só exporte.</p>
+        <p class="acc-related">Relacionados: <a href="#onelibrary">OneLibrary e Device Library</a> <a href="#which-player">Qual player lê qual</a> <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="rb-acc" id="errors">
+      <summary><h3 class="acc-h2">O que significam os códigos de erro do CDJ?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Dois códigos de erro cobrem quase toda
+        parada ligada ao rekordbox num CDJ-3000 ou CDJ-3000X. <span class="mono" translate="no">E-8302</span> significa que o
+        player não consegue ler os dados da track de jeito nenhum. <span class="mono" translate="no">E-8304</span> e
+        <span class="mono" translate="no">E-8305</span> significam que o próprio formato do arquivo não é suportado.</p>
+        <p class="rb-caveat">Estas são as definições oficiais para o CDJ-3000 e o CDJ-3000X. CDJs mais antigos (da era CDJ-350 e CDJ-850) podem mapear alguns códigos de outra forma.</p>
+        {/* translate="no" nos próprios códigos: são strings impressas na tela do
+            player, e um navegador que traduz a página sozinho não pode
+            transformar E-8302 em outra coisa, ou o leitor deixa de conseguir
+            casar a página com a tela na frente dele. */}
+        <dl class="rb-errors">
+          <dt translate="no">E-8302</dt>
+          <dd><strong>CANNOT PLAY TRACK.</strong> Oficialmente: os dados da track no dispositivo de armazenamento não podem ser lidos corretamente. Em geral um export corrompido ou um sistema de arquivos que o player não aceita. <a href="/pt/fix/cdj-error-e-8302">Solução completa &rarr;</a></dd>
+          <dt translate="no">E-8304 / E-8305</dt>
+          <dd><strong>UNSUPPORTED FILE FORMAT.</strong> Oficialmente: foram carregados arquivos de música que a unidade não consegue tocar. Converta de novo as tracks problemáticas, ou exporte tudo outra vez pelo rekordbox.</dd>
+        </dl>
+        <p><strong>Evite da próxima vez.</strong> Exporte em FAT32 + MBR, mantenha o
+        rekordbox em {REKORDBOX.dualFormatFloor} ou mais recente, e ejete pelo
+        rekordbox toda vez. São os três hábitos que tornam esses códigos raros em vez
+        de rotina.</p>
+        <p class="rb-caveat">
+          Não estamos publicando uma definição para o E-8306. Ele não aparece nas
+          páginas oficiais de erro e os manuais antigos se contradizem. Se você bateu
+          nele, <a href="/pt/feedback">conte para a gente o que a tela dizia</a> e o
+          que resolveu, e nós documentamos direito.
+        </p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/cdj-error-e-8302">Erro E-8302 no CDJ, solução completa</a> <a href="#no-playlists">O USB não mostra playlists</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="rb-acc" id="export-failed">
+      <summary><h3 class="acc-h2">O export do rekordbox falhou, ou o player não mostra nada</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Um export que falhou ou saiu corrompido é
+        problema de banco de dados, não de música. As suas tracks quase sempre estão
+        íntegras, o que quebrou foi o índice que o CDJ lê. Um export limpo, feito de
+        novo, resolve a maioria dos casos.</p>
+        <p><strong>Por que isso acontece.</strong> Ou o export nunca terminou (drive
+        falhando, drive cheio, ou um arquivo travado), ou ele "terminou" e chegou
+        corrompido, o clássico de quem puxou o drive sem ejetar direito.</p>
+        <p><strong>Resolva agora.</strong></p>
+        <ul class="checklist">
+          <li>Feche o rekordbox, tire e recoloque o USB, abra o rekordbox de novo no modo <span class="mono" translate="no">EXPORT</span>.</li>
+          <li>Confira o espaço livre. Um export num drive quase cheio corrompe em silêncio.</li>
+          <li>Se o dispositivo aparece no rekordbox: apague do dispositivo as playlists de hoje, sincronize tudo de novo e ejete pelo botão de ejetar.</li>
+          <li>Se o dispositivo der erro ou não sincronizar: copie para fora toda música que você precisa, formate em FAT32 + MBR, e exporte de novo para o drive limpo.</li>
+        </ul>
+        <p><strong>Evite da próxima vez.</strong> Exporte só as playlists de hoje, não
+        a biblioteca inteira, porque é num export grande que a corrupção costuma
+        morar, e sempre ejete pelo rekordbox, depois espere o sistema liberar o
+        drive.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/rekordbox-export-failed">Passo a passo completo de recuperação</a> <a href="/pt/fix/rekordbox-file-is-missing">Tracks marcadas como File is Missing nunca são exportadas</a> <a href="/pt/fix/cdj-error-e-8302">Erro E-8302 no CDJ</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="rb-acc" id="not-detected">
+      <summary><h3 class="acc-h2">O rekordbox não está detectando o meu USB</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Se o drive não aparece na lista de
+        Devices, a causa quase sempre é uma destas três, nesta ordem: você não está
+        no modo Export, o próprio sistema operacional não enxerga o drive, ou o drive
+        está formatado de um jeito em que o rekordbox não consegue gravar.</p>
+        <p><strong>Por que isso acontece.</strong> A árvore de dispositivos só aparece
+        no modo <span class="mono" translate="no">EXPORT</span>, não no Performance nem no Lighting. Hubs USB e
+        adaptadores são a razão mais comum de um drive ser reconhecido pelo sistema e
+        nunca chegar ao rekordbox. E o rekordbox grava em FAT32, exFAT (só em drives
+        USB) e, no Mac, HFS+, nunca em NTFS nem APFS: um drive nesses formatos pode
+        ser reconhecido pelo computador e ainda assim recusar o export.</p>
+        <p><strong>Resolva agora.</strong></p>
+        <ul class="checklist">
+          <li>Confirme que você está no modo <span class="mono" translate="no">EXPORT</span>, no canto superior esquerdo do rekordbox.</li>
+          <li>Confira antes se o computador enxerga o drive, no Finder ou no Explorador de Arquivos. Se ele também não estiver lá, o problema é o drive ou a conexão, não o rekordbox.</li>
+          <li>Ligue direto, sem hub, na porta do computador.</li>
+          <li>Reinicie o rekordbox com o drive já inserido. Algumas versões só varrem drives removíveis ao abrir.</li>
+        </ul>
+        <p><strong>Evite da próxima vez.</strong> Mantenha o drive em FAT32 + MBR,
+        deixe os hubs de fora na hora de exportar, e se o drive é reconhecido e some
+        sozinho, trate isso como um drive falhando e aposente ele, não como um bug do
+        rekordbox.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/rekordbox-not-detecting-usb">Passo a passo completo, incluindo as permissões do macOS</a> <a href="/pt/fix/format-usb-for-cdj">Formatar um USB para CDJ</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Entendendo o rekordbox" />
+
+    <details class="acc-sec" name="rb-acc" id="onelibrary">
+      <summary><h3 class="acc-h2">O que são OneLibrary e Device Library?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Os dois são o índice que o rekordbox grava
+        no seu drive para que um player consiga mostrar as suas playlists, cues, grids
+        e capas sem computador. São dois formatos diferentes, e cada player lê um ou o
+        outro.</p>
+        <p><strong>Por que isso existe.</strong> O OneLibrary foi introduzido no
+        <strong>rekordbox {REKORDBOX.deviceLibraryPlusIntro}</strong> (março de 2023),
+        originalmente para o OPUS-QUAD, e é o formato que os players OneLibrary
+        esperam (CDJ-3000X, CDJ-1500X, OPUS-QUAD, OMNIS-DUO, XDJ-AZ, XDJ-AN). O Device
+        Library é o que tudo o que veio antes lê.</p>
+        <p>A armadilha é que a divisão não segue a idade do equipamento do jeito que
+        você esperaria. <strong>O CDJ-3000 é um player Device Library. O CDJ-3000X é
+        um player OneLibrary.</strong> Dois decks com quase o mesmo nome, na mesma
+        booth, lendo formatos diferentes.</p>
+        <p><strong>Fuja da armadilha.</strong> Pare de tentar lembrar qual player lê o
+        quê. Mantenha o rekordbox em {REKORDBOX.dualFormatFloor} ou mais recente, e
+        converta cada drive uma vez: clique com o botão direito em
+        <strong>OneLibrary</strong> no dispositivo e escolha
+        <strong>Convert from Device Library</strong>, o passo que o guia OneLibrary
+        Compatible USB Device Export da AlphaTheta exige. Depois disso, todo export
+        carrega os dois formatos no mesmo drive, e a questão deixa de importar.</p>
+        <p class="acc-related">Relacionados: <a href="#which-player">Tabela completa de compatibilidade de players</a> <a href="#no-playlists">Resolver um drive sem playlists</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="rb-acc" id="how-exports-work">
+      <summary><h3 class="acc-h2">Como o export do rekordbox funciona de verdade</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Um CDJ lê um banco de dados de verdade,
+        com cues, grids e playlists, que o rekordbox só grava quando você usa o painel
+        de Export. Arrastar arquivos de áudio para o drive na mão não cria banco de
+        dados nenhum.</p>
+        <p><strong>Por que isso importa.</strong> Os CDJs ainda tocam arquivos de
+        áudio comuns de um drive FAT32 sem banco de dados nenhum, pela visão FOLDER, e
+        esse é o coração do nosso resgate de rota crítica. Mas Sync, Quantize, hot
+        cues, grids e playlists vêm todos do banco de dados, e a única forma de gravar
+        ele é o Export.</p>
+        <p><strong>Faça assim.</strong> Monte as suas playlists no rekordbox,
+        selecione o dispositivo na árvore da esquerda, e exporte (arraste as playlists
+        para cima do dispositivo, ou use o painel de Export). Ejete pelo rekordbox, e
+        não pelo sistema operacional, assim que terminar.</p>
+        <p><strong>Evite da próxima vez.</strong> Exporte de novo depois de cada
+        mudança na biblioteca. Um export antigo é um export corrompido esperando a
+        hora, porque tudo o que você mudou desde o último export existe só dentro do
+        rekordbox até você exportar outra vez.</p>
+        <p class="acc-related">Relacionados: <a href="#no-playlists">Playlists sumidas no player</a> <a href="/pt/fix/rekordbox-file-is-missing">Como um arquivo perdido encurta o seu export em silêncio</a> <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="usb" title="Preparação de USB e biblioteca" />
+
+    <details class="acc-sec" name="rb-acc" id="fat32">
+      <summary><h3 class="acc-h2">FAT32 é mesmo limitado a 32 GB?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Não, e esse mito custa dinheiro aos DJs. O
+        FAT32 suporta volumes de até <strong>2 TB</strong>. O teto de 32 GB em que
+        você esbarrou é um limite <em>da janela de formatação do próprio
+        Windows</em>, não do sistema de arquivos.</p>
+        <p><strong>Por que o mito existe.</strong> O Windows não deixa você formatar
+        em FAT32 um drive maior que 32 GB pela janela normal de formatação, então as
+        pessoas concluem que o teto é do sistema de arquivos. Não é.</p>
+        <p><strong>Resolva agora.</strong> No Windows dá para formatar um drive maior
+        em FAT32 com uma ferramenta gratuita como o <strong>fat32format</strong> ou a
+        versão gráfica dele, o <strong>guiformat</strong> (as duas da Ridgecrop
+        Consultants). No Mac, use o Utilitário de Disco: escolha
+        <span class="mono" translate="no">MS-DOS (FAT)</span> com esquema
+        <span class="mono" translate="no">Master Boot Record</span>, e se ele recusar
+        um drive muito grande, o guiformat em qualquer máquina Windows termina o
+        serviço.</p>
+        <p><strong>Evite da próxima vez.</strong> O limite do FAT32 que importa é de
+        <strong>4 GB por arquivo</strong>. Um MP3 de 320 kbps tem cerca de 9 MB, e até
+        um WAV longo sem compressão raramente passa de 1 GB, então numa biblioteca de
+        música isso nunca aparece. Existem outros tetos, o limite de volume de 2 TB
+        citado acima e as contagens de arquivos e pastas por modelo que a AlphaTheta
+        publica no artigo de suporte 4406512510105, mas um drive de gig não chega
+        perto deles.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/format-usb-for-cdj">Passo a passo completo de formatação</a> <a href="#mbr-gpt">MBR ou GPT</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="rb-acc" id="mbr-gpt">
+      <summary><h3 class="acc-h2">MBR ou GPT: o esquema de partição importa?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Use <strong>MBR</strong> (Master Boot
+        Record). A AlphaTheta documenta isso para modelos específicos: os artigos de
+        suporte dela afirmam que o CDJ-3000 (artigo 4406135001625) e o XDJ-AN (artigo
+        53214453591009) não suportam o GUID Partition Map. O manual do rekordbox trata
+        de sistemas de arquivos e não de esquemas de partição, então MBR é a resposta
+        documentada do fabricante onde ele nomeia uma, e é a nossa recomendação para o
+        resto da linha.</p>
+        <p><strong>Por que recomendamos.</strong> Um drive GPT é reincidente na
+        categoria "formatou certinho, o player recusou", e o MBR não te custa nada em
+        troca.</p>
+        <p><strong>Faça assim.</strong> No Mac: Utilitário de Disco &rarr; Apagar
+        &rarr; <span class="mono" translate="no">MS-DOS (FAT)</span> +
+        <span class="mono" translate="no">Master Boot Record</span>. No Windows, a
+        janela de formatação do botão direito reformata o volume sem mexer no esquema
+        de partição, então um drive de fábrica costuma manter o MBR com que saiu. O
+        esquema só muda se você reparticionar no Gerenciamento de Disco.</p>
+        <p><strong>Evite da próxima vez.</strong> Não deixe uma ferramenta de
+        formatação te empurrar para GPT só porque pareceu a opção moderna. Para um USB
+        de DJ, não é.</p>
+        <p class="acc-related">Relacionados: <a href="#fat32">FAT32 ou exFAT</a> <a href="/pt/fix/format-usb-for-cdj">Formatar um USB para CDJ</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="rb-acc" id="usb-quality">
+      <summary><h3 class="acc-h2">Por que alguns pen drives funcionam melhor que outros?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Pen drive barato, sem marca, é como
+        começa a maior parte das falhas "aleatórias" de USB nas gigs.</p>
+        <p><strong>Por que isso acontece.</strong> Um CDJ lê um drive de um jeito
+        muito mais pesado do que um notebook lê. Drives de baixo custo falham mais sob
+        esse padrão de leitura contínua do que os de qualidade, e um drive lutando
+        costuma dar um aviso antes: as tracks carregam normalmente, mas os waveforms
+        se arrastam ou a navegação engasga.</p>
+        <p><strong>Resolva agora.</strong> Se um drive já está dando esse aviso, não
+        confie nele para a próxima gig. Copie a sua música para fora e aposente
+        ele.</p>
+        <p><strong>Evite da próxima vez.</strong> Compre um drive de qualidade, de
+        corpo metálico, de 32 a 64 GB, de uma marca de que você já ouviu falar, e ande
+        com dois drives idênticos, com o mesmo export nos dois. Um segundo drive é o
+        único backup que funciona quando você já está de pé dentro da booth.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/gear">Drives aprovados</a> <a href="/pt/fix/dj-usb-backup-strategy">A estratégia de backup em USB do DJ</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade e notas de versão" />
+
+    <details class="acc-sec" name="rb-acc" id="which-player">
+      <summary><h3 class="acc-h2">Quais players usam OneLibrary, e quais leem exFAT?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p class="rb-tablenote">
+          FAT32 com MBR funciona em todo modelo desta tabela. A coluna que morde é a
+          do exFAT.
+        </p>
+        <div class="rb-tablewrap">
+          <table class="rb-table">
+            {/* A caption é o que um leitor de tela anuncia ao chegar na tabela, e é
+                a única coisa que nomeia estas quatro colunas para quem chega pelo
+                link direto (#which-player). sr-only, então a página visível não
+                muda: a introdução visível é o parágrafo .rb-tablenote acima. */}
+            <caption class="sr-only">Compatibilidade de players: formato de biblioteca, suporte a exFAT e observações, por modelo</caption>
+            <thead>
+              <tr><th scope="col">Player</th><th scope="col">Formato de biblioteca</th><th scope="col">Lê exFAT?</th><th scope="col">Observações</th></tr>
+            </thead>
+            <tbody>
+              {players.map(p => (
+                <tr>
+                  {/* Nomes de modelo e de formato de biblioteca são identificadores
+                      de produto: eles são iguais no deck em qualquer país, então
+                      precisam sobreviver à tradução automática. */}
+                  <th scope="row" translate="no">{p.m}</th>
+                  <td><span translate="no" class:list={['pill', p.lib === 'OneLibrary' ? 'pill-one' : 'pill-dev']}>{p.lib}</span></td>
+                  <td class:list={[p.exfat === 'No' ? 'no' : 'yes']}>{exfatPt(p.exfat)}</td>
+                  <td class="dim">{notePt(p)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="rb-caveat">
+          Deixamos de propósito o <strong>XDJ-1000MK2</strong> e o
+          <strong>XDJ-RX2</strong> fora desta tabela. Não existe artigo oficial da
+          AlphaTheta sobre sistema de arquivos para nenhum dos dois, e não vamos
+          chutar sobre um drive em que você vai confiar numa gig. Trate os dois como
+          só FAT32 e você fica bem. <strong>NTFS nunca é suportado</strong>, e essa
+          não é lenda: o manual do rekordbox da AlphaTheta lista NTFS como não
+          suportado tanto para cartões SD quanto para drives USB, então o rekordbox
+          nem grava nele.
+        </p>
+        <p class="rb-caveat">
+          Mais duas coisas direto desse manual, porque as duas pegam gente. Primeira,
+          <strong>exFAT é uma opção só para USB</strong>. O rekordbox exporta para um
+          drive USB em exFAT, mas não exporta para um <strong>cartão SD</strong> em
+          exFAT, seja qual for o player que você vai alimentar. Segunda, o manual
+          trata de sistemas de arquivos e não de <strong>esquemas de partição</strong>,
+          mas os artigos de suporte por modelo nomeiam um: a AlphaTheta afirma que o
+          CDJ-3000 e o XDJ-AN não suportam o GUID Partition Map. Veja
+          <a href="#mbr-gpt">MBR ou GPT</a> para entender por que recomendamos MBR em
+          toda a linha.
+        </p>
+        <p class="acc-related">Relacionados: <a href="#onelibrary">O que são OneLibrary e Device Library</a> <a href="#version-notes">Números de versão que valem conhecer</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="rb-acc" id="version-notes">
+      <summary><h3 class="acc-h2">Os números de versão do rekordbox que valem conhecer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Dois números importam mais do que qualquer
+        outro fato sobre o rekordbox: nunca use a <strong>{REKORDBOX.withdrawn}</strong>,
+        e chegue à <strong>{REKORDBOX.dualFormatFloor}</strong> ou mais recente.</p>
+        <p><strong>Por que isso importa.</strong> A {REKORDBOX.withdrawn} foi retirada
+        do ar pela AlphaTheta porque tracks exportadas por aquela versão podiam não
+        carregar no hardware da própria empresa. Isso foi corrigido na
+        {REKORDBOX.dualFormatFloor}. Para gravar Device Library e OneLibrary no mesmo
+        drive, a AlphaTheta indica a {REKORDBOX.withdrawn} ou mais recente como piso,
+        e como aquela versão foi retirada do ar, a {REKORDBOX.dualFormatFloor} é a
+        primeira que vale instalar. O formato duplo não é automático num drive que já
+        existe: o guia OneLibrary Compatible USB Device Export da AlphaTheta manda
+        clicar com o botão direito em <strong>OneLibrary</strong> no dispositivo, uma
+        vez, e escolher <strong>Convert from Device Library</strong>. O OneLibrary em
+        si foi introduzido na {REKORDBOX.deviceLibraryPlusIntro}.</p>
+        <p><strong>Faça assim.</strong> Confira a sua versão instalada (em Preferences
+        ou About, dentro do rekordbox) antes de um show grande, e se você estiver na
+        {REKORDBOX.withdrawn}, atualize antes de exportar qualquer coisa.</p>
+        <p><strong>Evite da próxima vez.</strong> Converter um formato de biblioteca é
+        via de mão única. Nas palavras da própria AlphaTheta: se você converter quando
+        o OneLibrary já existe no drive, ele é sobrescrito, e toda playlist ou
+        histórico de reprodução guardado só no OneLibrary se perde. Converta num drive
+        novo sempre que der, e nunca atualize o rekordbox nem firmware no dia da gig,
+        porque uma versão nova pode trazer um problema novo e a booth é onde você
+        encontra ele.</p>
+        <p style="margin-top:1rem">
+          <strong>Downloads do software.</strong> <a href="https://rekordbox.com/en/download/" target="_blank" rel="noopener">Página oficial de download do rekordbox →</a><br />
+          <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="#which-player">Tabela de compatibilidade por modelo</a> <a href="/pt/prepare">Por que dia de gig não se atualiza nada</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="star" title="Boas práticas" />
+
+    <details class="acc-sec" name="rb-acc" id="checklist">
+      <summary><h3 class="acc-h2">O setup que nunca te surpreende</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Cinco hábitos, feitos toda vez, transformam
+        quase toda falha desta página em não acontecimento.</p>
+        <ul class="checklist">
+          <li><strong>FAT32, MBR</strong>, num drive de 32 a 64 GB de uma marca de que você já ouviu falar.</li>
+          <li><strong>rekordbox {REKORDBOX.dualFormatFloor} ou mais recente</strong>, exportado, não arrastado.</li>
+          <li><strong>Dois drives idênticos</strong>, com o mesmo export nos dois, em bolsos diferentes.</li>
+          <li><strong>Ejete pelo rekordbox</strong>, toda santa vez.</li>
+          <li><strong>Teste num player</strong> antes de o drive importar de verdade.</li>
+        </ul>
+        <p class="acc-related">Relacionados: <a href="/pt/prepare">O sistema de prevenção completo</a> <a href="#backup">Faça backup da sua biblioteca</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="rb-acc" id="backup">
+      <summary><h3 class="acc-h2">Faça backup da sua biblioteca, não só do seu USB</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Faça backup da própria biblioteca do
+        rekordbox, todo mês, não só do USB para onde você exporta.</p>
+        <p><strong>Por que isso importa.</strong> O export no USB é descartável, você
+        reconstrói ele a partir da biblioteca em minutos. A biblioteca não é
+        descartável, ela guarda anos de cues, grids e playlists que um notebook morto
+        leva junto se não houver backup.</p>
+        <p><strong>Faça assim.</strong> No rekordbox: File &rarr; Library &rarr;
+        Backup Library, para outro drive ou para armazenamento na nuvem.</p>
+        <p><strong>Evite da próxima vez.</strong> Não trate o export do seu USB de gig
+        como a sua única cópia de nada. Ele não é backup, é cópia de trabalho.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/move-rekordbox-library-new-laptop">Levar a sua biblioteca para um notebook novo</a> <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas e truques" />
+
+    <details class="acc-sec" name="rb-acc" id="re-export-habit">
+      <summary><h3 class="acc-h2">Exporte de novo depois de cada mudança na biblioteca</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Um export antigo é um export corrompido
+        esperando a hora.</p>
+        <p><strong>Por que isso acontece.</strong> Toda edição de playlist, mudança de
+        cue ou track nova depois do seu último export existe só dentro do rekordbox
+        até você exportar outra vez. O CDJ nunca vê nada disso, e um export velho
+        também tem mais chance de ter passado por uma ejeção mal feita em algum ponto
+        da história dele.</p>
+        <p><strong>Faça assim.</strong> Exporte as playlists de hoje do zero, toda vez
+        que você for tocar, mesmo que você tenha exportado "há pouco".</p>
+        <p><strong>Evite da próxima vez.</strong> Exporte o set de hoje, não a sua
+        biblioteca inteira. Um export grande e pouco mexido é exatamente onde a
+        corrupção costuma aparecer primeiro.</p>
+        <p class="acc-related">Relacionados: <a href="#how-exports-work">Como o export funciona de verdade</a> <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <Disclaimer variant="full" />
+
+    <div class="panel cta-exit" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_rekordbox"><span aria-hidden="true">🚨</span> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_rekordbox" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: as páginas oficiais de produto e de suporte da AlphaTheta / Pioneer DJ,
+      as notas de versão do rekordbox (a retirada da {REKORDBOX.withdrawn}, a
+      {REKORDBOX.dualFormatFloor} e as seguintes) e a documentação oficial dos
+      códigos de erro do CDJ-3000 e do CDJ-3000X, tudo conferido em {UPDATED}. O
+      comportamento de firmware e de software muda sem aviso, então confira de novo
+      antes de um show grande.
+    </p>
+
+    <p class="rb-sources dim">Confira a versão você mesmo: {VENDOR_LINKS.map((v, i) => (<Fragment>{i > 0 ? ' · ' : ''}<a href={v.url} rel="noopener">{v.name}</a></Fragment>))}</p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning. Rationale in the English source file, which is the source of
+     truth for this CSS. The fixed 200x200 box plus max-width/max-height:100%
+     on the img letterboxes any aspect ratio without distortion. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-tablenote { font-size: 0.88rem; margin-bottom: 0.8rem; }
+  .rb-tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 1rem; }
+  .rb-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 520px; }
+  .rb-table th, .rb-table td { text-align: left; padding: 0.6rem 0.7rem; border-bottom: var(--stroke) solid var(--edge); vertical-align: top; }
+  .rb-table thead th { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
+  .rb-table tbody th { color: var(--text); font-weight: 700; white-space: nowrap; }
+  .rb-table .yes { color: var(--green); }
+  .rb-table .no { color: var(--red); font-weight: 700; }
+  .pill { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: var(--radius-pill); white-space: nowrap; }
+  .pill-one { background: rgba(217,164,65,0.14); color: var(--amber); border: var(--stroke) solid rgba(217,164,65,0.4); }
+  .pill-dev { background: rgba(154,151,143,0.1); color: var(--text-dim); border: var(--stroke) solid var(--edge); }
+  .rb-caveat { font-size: 0.88rem; border-left: 2px solid var(--edge); padding-left: 0.9rem; }
+  .rb-steps { margin: 0 0 1rem 1.1rem; color: var(--text-dim); line-height: 1.7; }
+  .rb-steps li { margin-bottom: 0.5rem; }
+  .rb-steps strong { color: var(--text); }
+  .rb-errors { margin-bottom: 1rem; }
+  .rb-errors dt { font-family: ui-monospace, Menlo, monospace; color: var(--red); font-weight: 700; margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  /* Anchor landing shouldn't hide the question under the top of the viewport. */
+  [id] { scroll-margin-top: 1.5rem; }
+</style>
+
+<script is:inline>
+  // Deep links must still work with the sections closed: a link to
+  // #which-player opens that section before scrolling to it. Same on hash
+  // changes within the page. Because every <details> shares name="rb-acc",
+  // opening one closes the rest.
+  (function () {
+    function openTarget() {
+      var id = location.hash.slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (!el) return;
+      var box = el.closest ? el.closest('details') : null;
+      if (el.tagName === 'DETAILS') box = el;
+      if (box && !box.open) box.open = true;
+      el.scrollIntoView();
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
+  })();
+</script>

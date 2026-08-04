@@ -1,0 +1,435 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { CHECKED, CDJ_3000, REKORDBOX } from '../../../../data/facts.js';
+
+// CDJ-3000, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors and CSS: src/pages/knowledge/pioneer-dj/cdj-3000.astro.
+// Only the human readable copy and the /pt hrefs differ. If the English page
+// changes, change this one in the same commit.
+
+// The verification date lives in facts.js as an English string. Rendering it
+// in Portuguese is a copy decision, so it happens here, not in the data.
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(CHECKED);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/cdj-3000#article',
+  headline: 'CDJ-3000: a referência operacional',
+  description: 'O que todo DJ precisa saber antes de encostar num CDJ-3000: a história do firmware 3.30 retirado do ar, soluções de emergência, as correções de estabilidade documentadas versão por versão e a compatibilidade com o rekordbox.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-27',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/cdj-3000#webpage' },
+  image: 'https://www.savemygig.com/images/cdj-3000-panel-full.webp',
+};
+---
+<Base
+  title="CDJ-3000: playlists sumidas, firmware 3.30 e compatibilidade | Save My Gig"
+  description="Manual de campo do CDJ-3000: o que fazer quando as playlists somem ou o player trava, a história do firmware 3.30 retirado do ar e as correções versão por versão."
+  path="/knowledge/pioneer-dj/cdj-3000"
+  crumbName="CDJ-3000"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>CDJ-3000</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">CDJ-3000</div>
+        <h1 class="rb-h1">CDJ-3000, <span class="accent">o manual de campo</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#cdj-3000-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do CDJ-3000"
+      >
+        <img
+          src="/images/cdj-3000-panel-thumb.webp"
+          alt="Painel de controle do media player Pioneer DJ CDJ-3000, visto de cima"
+          width="363"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="cdj-3000-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/cdj-3000-panel-full.webp"
+        alt="Painel de controle do media player Pioneer DJ CDJ-3000, visto de cima"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> O padrão dos clubes de ponta desde
+        2020. Apesar de ser mais novo que a geração NXS2, ele lê
+        <strong>Device Library</strong>, e não OneLibrary: o firmware
+        {CDJ_3000.onelibraryWithdrawn} acrescentou OneLibrary por pouco tempo em
+        2025 e foi oficialmente retirado do ar, então o player voltou para Device
+        Library. Ele lê <strong>exFAT a partir do firmware {CDJ_3000.exfatIntro}</strong>,
+        e FAT32 com esquema MBR sempre funciona. Exporte pelo rekordbox
+        {REKORDBOX.dualFormatFloor} ou mais recente e tanto este deck quanto a
+        geração OneLibrary leem o mesmo pen drive.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="cdj3000-acc" id="no-playlists">
+      <summary><h3 class="acc-h2">O USB é reconhecido, mas as playlists sumiram</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O drive quase certamente está com o
+        formato de banco de dados errado para este deck. O CDJ-3000 lê Device
+        Library, então um pen drive preparado só para um player OneLibrary
+        (CDJ-3000X, OPUS-QUAD, XDJ-AZ) não mostra playlist nenhuma aqui, e sem
+        código de erro.</p>
+        <p><strong>Por que isso acontece.</strong> A divisão de formatos não segue
+        a idade do equipamento: este deck e o CDJ-3000X ficam na mesma booth e
+        leem formatos diferentes. Existe também uma complicação histórica, veja
+        <a href="#firmware-330">a história do 3.30</a>: durante a vida curta
+        daquele firmware, exports de versões mais antigas do rekordbox podiam não
+        aparecer neste player.</p>
+        <p><strong>Resolva agora.</strong> Mude para a visão FOLDER e siga
+        tocando, os arquivos de áudio continuam no drive. Se houver um notebook,
+        exporte de novo pelo rekordbox {REKORDBOX.dualFormatFloor} ou mais
+        recente, que grava os dois formatos no mesmo drive.</p>
+        <p><strong>Evite da próxima vez.</strong> Padronize todo export no
+        rekordbox {REKORDBOX.dualFormatFloor} ou mais recente e a dúvida entre
+        Device Library e OneLibrary deixa de existir para você.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#onelibrary">OneLibrary e Device Library</a> <a href="#firmware-330">A história do 3.30</a> <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj3000-acc" id="frozen-or-silent">
+      <summary><h3 class="acc-h2">Player travado, mudo ou com a tela preta</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Neste player específico, isso não é
+        lenda de booth: a AlphaTheta documentou e corrigiu casos reais. O firmware
+        {CDJ_3000.stabilityFix} corrigiu ausência ocasional de áudio, apagões de
+        display e travamentos do sistema em algumas unidades, e o
+        {CDJ_3000.screenDeadFix} corrigiu um caso raro de tela morta ao ligar.</p>
+        <p><strong>Por que isso acontece.</strong> Um deck de casa que nunca foi
+        atualizado ainda pode estar rodando uma versão anterior a essas
+        correções.</p>
+        <p><strong>Resolva agora.</strong> O áudio e os controles físicos
+        funcionam de forma independente da tela, então se o display travou no meio
+        da track, siga mixando e passe a seleção de novas tracks para o outro
+        player. Reinicie a unidade afetada num momento seguro, nunca no meio de
+        uma track. Se uma unidade repetir esses sintomas, confira a versão de
+        firmware dela no menu de utilitários e avise a casa ou a locadora.</p>
+        <p><strong>Evite da próxima vez.</strong> Quando o equipamento é seu,
+        mantenha o firmware em {CDJ_3000.stabilityFix} ou mais recente,
+        atualizado longe do dia da gig.</p>
+        <p class="acc-related">Relacionados: <a href="#firmware-history">Correções de firmware que valem conhecer</a> <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj3000-acc" id="browse-blocked">
+      <summary><h3 class="acc-h2">O popup "Waiting" bloqueia a tela de navegação</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Um bug documentado, corrigido no
+        firmware {CDJ_3000.browseWaitingFix}: um popup Waiting podia impedir você
+        de chegar à tela BROWSE.</p>
+        <p><strong>Por que isso acontece.</strong> Unidades que ainda rodam
+        firmware anterior ao {CDJ_3000.browseWaitingFix} continuam fazendo
+        isso.</p>
+        <p><strong>Resolva agora.</strong> A track já carregada continua tocando.
+        Carregue as próximas tracks pelo outro player enquanto este está travado,
+        e reinicie a unidade afetada num momento seguro.</p>
+        <p><strong>Evite da próxima vez.</strong> Firmware
+        {CDJ_3000.browseWaitingFix} ou mais recente no equipamento que é seu.</p>
+        <p class="acc-related">Relacionados: <a href="#firmware-history">Correções de firmware que valem conhecer</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj3000-acc" id="link-issues">
+      <summary><h3 class="acc-h2">Pro DJ Link não conecta</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Cabos e configurações primeiro, como
+        em qualquer corrente de Link. Um caso documentado é específico deste deck:
+        o Pro DJ Link com o DJM-2000NXS estava quebrado e foi corrigido no
+        firmware {CDJ_3000.linkDjm2000nxsFix}.</p>
+        <p><strong>Por que isso acontece.</strong> O Link precisa de Ethernet
+        funcionando entre todas as unidades e, em booths de gerações misturadas, o
+        parceiro de link mais antigo pode ser o fator limitante.</p>
+        <p><strong>Resolva agora.</strong> Recoloque cada cabo Ethernet, confirme
+        que cada player enxerga os outros na lista de LINK do menu de utilitários,
+        e reinicie só a unidade que não entra. Se a booth junta CDJ-3000 com um
+        DJM-2000NXS e o Link não sobe, firmware {CDJ_3000.linkDjm2000nxsFix} ou
+        mais recente nos players é a cura documentada.</p>
+        <p><strong>Evite da próxima vez.</strong> Leve um cabo Ethernet reserva.
+        Desde o firmware {CDJ_3000.sixPlayersIntro}, até seis unidades dividem uma
+        corrente de Link, o que também são seis cabos, e cada um deles pode ser o
+        problema.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/djm-900nxs2">Referência do DJM-900NXS2</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="cdj3000-acc" id="firmware-330">
+      <summary><h3 class="acc-h2">O firmware 3.30 retirado do ar, o que aconteceu de verdade</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Em 2025, o firmware
+        {CDJ_3000.onelibraryWithdrawn} acrescentou suporte a OneLibrary no
+        CDJ-3000. Alguns DJs passaram a ver tracks ou playlists não aparecendo no
+        player quando o USB tinha sido exportado por versões mais antigas do
+        rekordbox. A AlphaTheta retirou o firmware do ar, e o CDJ-3000 voltou
+        oficialmente para Device Library.</p>
+        <p><strong>A parte que mais importa:</strong> nas palavras da própria
+        AlphaTheta, nada de música nem de dados foi apagado por causa disso. As
+        bibliotecas pareciam sumidas no player, mas nada foi destruído.</p>
+        <p><strong>Por que aconteceu.</strong> A transição de Device Library para
+        OneLibrary dependia da versão do rekordbox que tinha feito o export, e
+        exports mais antigos não carregavam o que o player atualizado
+        esperava.</p>
+        <p><strong>O que fazer.</strong> Se você encontrar um deck de casa que
+        recebeu o {CDJ_3000.onelibraryWithdrawn} antes da retirada, trate ele como
+        leitor de OneLibrary: um export do rekordbox {REKORDBOX.dualFormatFloor}
+        ou mais recente carrega os dois formatos e funciona dos dois jeitos. Esse
+        único hábito torna essa história inteira irrelevante para a sua gig.</p>
+        <p><strong>A lição que fica.</strong> É por isso que a regra do site é
+        nunca atualizar firmware de player nem rekordbox perto de uma gig. Os DJs
+        que se queimaram com o 3.30 se queimaram dentro da booth.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#version-notes">Versões do rekordbox que valem conhecer</a> <a href="/pt/prepare">Por que dia de gig não se atualiza nada</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj3000-acc" id="firmware-history">
+      <summary><h3 class="acc-h2">Correções de firmware que valem conhecer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Além da história do 3.30, quatro
+        marcos importam no mundo real. Corrigido no {CDJ_3000.stabilityFix}:
+        ausência ocasional de áudio, apagões de display e travamentos em algumas
+        unidades. Corrigido no {CDJ_3000.screenDeadFix}: um caso raro de tela
+        morta ao ligar. Corrigido no {CDJ_3000.browseWaitingFix}: o popup Waiting
+        que podia bloquear a navegação. Corrigido no
+        {CDJ_3000.emergencyLoopHotCueFix}: o Emergency Loop disparando errado
+        durante uma pausa de Hot Cue.</p>
+        <p><strong>Uma mudança de comportamento que vale conhecer, e não é
+        bug:</strong> introduzido no firmware {CDJ_3000.ecoStandbyIntro}, o
+        gerenciamento de energia segue o tempo de 20 minutos do Ecodesign da União
+        Europeia. Um deck que parece ter se desligado sozinho entre a passagem de
+        som e a abertura das portas provavelmente está fazendo exatamente o que
+        essa configuração manda. Confira o menu de utilitários antes de olhar o
+        cabo de força.</p>
+        <p><strong>Faça assim.</strong> No equipamento que é seu, fique em
+        {CDJ_3000.stabilityFix} ou mais recente e atualize entre uma gig e outra,
+        nunca antes de uma.</p>
+        <p style="margin-top:1rem">
+          <strong>Downloads de firmware.</strong> <a href="https://support.alphatheta.com/en-US/products/4416175863961" target="_blank" rel="noopener">Página oficial de suporte da AlphaTheta →</a><br />
+          <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="#firmware-330">A história do 3.30</a> <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo, por versão de firmware</a> <a href="/pt/fix/emergency-loop-mode">Emergency Loop, explicado</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="cdj3000-acc" id="touch-preview">
+      <summary><h3 class="acc-h2">Touch Preview</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Toque no waveform de uma track na tela
+        de navegação e ouça exatamente aquele trecho no fone, sem carregar a track
+        num deck.</p>
+        <p><strong>Por que importa.</strong> Escutar antes sem ocupar um player é
+        a diferença entre conferir uma ideia e comprometer um deck com ela no meio
+        do set.</p>
+        <p><strong>Quando profissionais usam.</strong> Para confirmar qual é o
+        remix certo, ou o trecho certo de uma track longa, antes de carregar,
+        principalmente em back to back, onde sobram poucos decks.</p>
+        <p><strong>Erros comuns.</strong> Esquecer a posição do knob de cue mix:
+        se você não escuta o preview, quase sempre o mix do fone está parado no
+        master.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/djm-900nxs2#headphones-not-working">Fone ou cue não funcionam</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj3000-acc" id="key-sync">
+      <summary><h3 class="acc-h2">Key Sync</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Desloca o tom da track que está
+        entrando para casar com a que está tocando, usando os dados de tom que o
+        rekordbox analisou.</p>
+        <p><strong>Por que importa.</strong> Choque harmônico é o erro de mixagem
+        que a pista escuta mesmo quando não sabe dar nome.</p>
+        <p><strong>Quando profissionais usam.</strong> Ao misturar material
+        melódico entre tonalidades vizinhas, onde um pequeno deslocamento
+        transforma uma mixagem feia em uma mixagem limpa.</p>
+        <p><strong>Erros comuns.</strong> Contar com ele em tracks que nunca foram
+        analisadas no rekordbox: sem dado de tom, não existe o que sincronizar. A
+        análise viaja junto num export feito direito, mais um motivo para o export
+        ganhar do arrastar e soltar.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#how-exports-work">Como o export funciona de verdade</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas profissionais" />
+
+    <details class="acc-sec" name="cdj3000-acc" id="venue-firmware">
+      <summary><h3 class="acc-h2">Trate o firmware de todo deck de casa como desconhecido</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O CDJ-3000 tem anos de histórico de
+        firmware, incluindo uma versão retirada do ar, e os decks das casas estão
+        em qualquer ponto dessa linha do tempo.</p>
+        <p><strong>Por que importa.</strong> Dois CDJ-3000 idênticos por fora
+        podem se comportar de formas diferentes: um em firmware antigo, ainda com
+        o bug do popup Waiting, e outro que rodou
+        {CDJ_3000.onelibraryWithdrawn} por um tempo e lê OneLibrary. Nada disso dá
+        para ver da porta da booth.</p>
+        <p><strong>Faça assim.</strong> Exporte com o rekordbox
+        {REKORDBOX.dualFormatFloor} ou mais recente, para que a questão da
+        biblioteca fique resolvida em qualquer firmware, e quando uma unidade se
+        comportar mal, confira a versão dela no menu de utilitários antes de
+        culpar o seu drive.</p>
+        <p><strong>Erros comuns.</strong> Achar que os "CDJ-3000 novinhos em
+        folha" do produtor significam firmware recente. Novo de fábrica não quer
+        dizer atualizado.</p>
+        <p class="acc-related">Relacionados: <a href="#firmware-history">Correções de firmware que valem conhecer</a> <a href="/pt/prepare">O sistema de prevenção</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção preventiva" />
+
+    <details class="acc-sec" name="cdj3000-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Manter uma unidade confiável</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A mesma disciplina de qualquer deck
+        profissional: ejeção segura, cuidado com os conectores e firmware
+        atualizado entre uma gig e outra, nunca antes de uma.</p>
+        <p><strong>Por que importa.</strong> O episódio do 3.30 é a prova de que a
+        hora da atualização importa, e as portas USB e Ethernet seguem sendo os
+        pontos de desgaste que provocam as falhas intermitentes mais difíceis de
+        diagnosticar.</p>
+        <p><strong>Faça assim.</strong> Ejete pelo rekordbox ou pelo botão de
+        ejetar do player, segure os cabos de Link pelo conector, mantenha as
+        entradas de ar livres no transporte, e confira a versão de firmware quando
+        uma unidade voltar da locação.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#no-playlists">Por que ejetar errado custa playlists</a> <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="cdj3000-acc" id="compatibility">
+      <summary><h3 class="acc-h2">rekordbox, formato de biblioteca e Pro DJ Link</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Device Library. FAT32 sempre, exFAT a
+        partir do firmware {CDJ_3000.exfatIntro}. Pro DJ Link entre gerações
+        AlphaTheta / Pioneer DJ (mantenha o firmware em dia: o bug de link com o
+        DJM-2000NXS descrito nesta página foi uma das raras exceções), até seis
+        players desde o firmware {CDJ_3000.sixPlayersIntro}.</p>
+        <p><strong>Por que importa.</strong> O formato de biblioteca decide se as
+        suas playlists aparecem. A compatibilidade de Link decide se os decks
+        compartilham tempo e dados de track. São perguntas independentes, e este
+        deck responde a elas de um jeito diferente do CDJ-3000X que está na booth
+        ao lado.</p>
+        <p><strong>Faça assim.</strong> Drives em FAT32 + MBR, exportados pelo
+        rekordbox {REKORDBOX.dualFormatFloor} ou mais recente, e as duas perguntas
+        ficam respondidas em qualquer lugar.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade por modelo</a> <a href="/pt/knowledge/pioneer-dj/cdj-3000x">CDJ-3000X</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Perguntas frequentes" />
+
+    <details class="acc-sec" name="cdj3000-acc" id="faq">
+      <summary><h3 class="acc-h2">Respostas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>Este player lê exFAT?</dt><dd>Lê, a partir do firmware {CDJ_3000.exfatIntro}. FAT32 funciona em qualquer firmware.</dd>
+          <dt>Ele suporta OneLibrary?</dt><dd>Não. O firmware {CDJ_3000.onelibraryWithdrawn} acrescentou por pouco tempo e foi retirado do ar, e o player lê Device Library. Uma unidade que ainda roda {CDJ_3000.onelibraryWithdrawn} lê OneLibrary, e é por isso que exportar nos dois formatos é o hábito seguro.</dd>
+          <dt>Dá para fazer link com um CDJ-2000NXS2 ou um CDJ-3000X?</dt><dd>Dá, o Pro DJ Link funciona entre gerações. As playlists aparecerem em cada deck depende dos formatos de biblioteca do seu USB, não do Link.</dd>
+          <dt>Quantos players cabem numa mesma corrente de Link?</dt><dd>Até seis, desde o firmware {CDJ_3000.sixPlayersIntro}.</dd>
+          <dt>O que significa E-8302 neste player?</dt><dd>O player não consegue ler os dados da track, quase sempre um export corrompido ou o sistema de arquivos errado. <a href="/pt/fix/cdj-error-e-8302">Solução completa</a>.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guias relacionados</h2>
+      <p class="dim" style="margin:0">
+        <a href="/pt/knowledge/pioneer-dj/rekordbox">Referência do rekordbox</a> ·
+        <a href="/pt/knowledge/pioneer-dj/cdj-3000x">CDJ-3000X</a> ·
+        <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a> ·
+        <a href="/pt/fix/cdj-error-e-8302">Erro E-8302 no CDJ</a> ·
+        <a href="/pt/fix/emergency-loop-mode">Modo Emergency Loop</a> ·
+        <a href="/pt/checklist">Checklist pré-gig</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_cdj3000"><span aria-hidden="true">🚨</span> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_cdj3000" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: o histórico oficial de mudanças de firmware do CDJ-3000 da
+      AlphaTheta e o comunicado oficial sobre o firmware
+      {CDJ_3000.onelibraryWithdrawn}, conferidos em {UPDATED}. Os passos gerais
+      de diagnóstico refletem a prática padrão. Firmware e comportamento mudam
+      sem aviso, confira de novo antes de um show grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning, not sized by a flex row. Rationale in the English source
+     file, which is the source of truth for this CSS. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>
