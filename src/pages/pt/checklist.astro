@@ -1,8 +1,23 @@
 ---
-import Base from '../layouts/Base.astro';
-import { groups } from '../data/checklist.js';
-import lockupPrint from '../components/brand-lockup-print.svg?raw';
-import printQr from '../components/print-qr.svg?raw';
+import Base from '../../layouts/Base.astro';
+import { groups } from '../../data/checklist.pt.js';
+import lockupPrint from '../../components/brand-lockup-print.svg?raw';
+import printQr from '../../components/print-qr.svg?raw';
+/*
+ * THE PRE-GIG CHECKLIST, BRAZILIAN PORTUGUESE (pt-BR).
+ *
+ * Source of truth for structure, classes, ids, data attributes, localStorage
+ * keys, CSS and behaviour: src/pages/checklist.astro. ONLY the human readable
+ * copy, the internal hrefs and the language of the printed sheet differ. If
+ * the English page changes, change this one in the same commit.
+ *
+ * The 48 item labels and the 7 group titles live in src/data/checklist.pt.js,
+ * whose keys, ids and levels are identical to the English catalogue on
+ * purpose: they are the localStorage identity of a ticked item.
+ *
+ * `path` stays the ENGLISH path. Base.astro derives the /pt URL, the
+ * canonical and the hreflang from it.
+ */
 
 /**
  * Interactive pre-gig checklist. Prevention side, outside the tunnel.
@@ -36,9 +51,10 @@ import printQr from '../components/print-qr.svg?raw';
 const total = groups.reduce((n, g) => n + g.items.length, 0);
 ---
 <Base
-  title="The Pre-Gig Checklist for DJs | Save My Gig"
-  description="A tickable pre-gig checklist for DJs: music, gear, personal essentials, logistics. Base, Advanced or Custom, saved on your device and printable."
+  title="Checklist Pré-Gig para DJ | Save My Gig"
+  description="Checklist pré-gig para marcar antes de sair de casa: música, equipamento, kit pessoal e logística. Base, Avançado ou Pessoal, salvo no seu aparelho e pronto para imprimir."
   path="/checklist"
+  lang="pt"
 >
   <main class="wrap" id="top">
 
@@ -47,8 +63,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          one out after "Prevention_Hub" was removed here for being the wrong
          label. Its own honest tag now; hidden on phones, where he does not
          want the extra line above the H1. -->
-    <div class="status-line sl-desktop">Pre-Gig_Checklist</div>
-    <h1 style="margin-bottom:1rem">LEAVE HOME <span class="accent">READY</span></h1>
+    <div class="status-line sl-desktop">Checklist_Pre_Gig</div>
+    <h1 style="margin-bottom:1rem">SAIA DE CASA <span class="accent">PRONTO</span></h1>
     <!-- Desktop breaks before the storage sentence (Antonio: statically
          cleaner); phones wrap naturally. Returning visitors on a phone have
          read this already, so it auto-hides for them and gives the space
@@ -67,7 +83,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         the rewrite split into two sentences to be technically precise about
         registration versus account. Nobody misreads it, and one flowing
         sentence beats two correct ones here. */}
-    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Tick it off before you walk out, so the gig never starts with something missing. <span class="intro-b">Your list saves on this device, and registration loads it on any other.</span></p>
+    <p class="dim page-intro" id="pageIntro" style="margin-bottom:1.6rem">Marque tudo antes de sair, para a gig nunca começar faltando alguma coisa. <span class="intro-b">Sua lista fica salva neste aparelho, e o cadastro carrega ela em qualquer outro.</span></p>
     <script is:inline>
       (function () {
         try {
@@ -112,10 +128,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             against the previous 37, so it is shorter and does more.
             His plan B / plan C framing is kept: it is his, and it is what
             made this notice read as advice instead of a disclaimer. */}
-        <strong class="bn-h">Strong advice.</strong>
-        Even the best tech can fail, ours included. Have a plan B and a plan C: download your list and print it. Paper still works when the phone is dead. See the <a href="/legal/disclaimer">disclaimer</a>.
+        <strong class="bn-h">Conselho sério.</strong>
+        Até a melhor tecnologia falha, a nossa inclusive. Tenha um plano B e um plano C: baixe a sua lista e imprima. Papel funciona mesmo com o celular sem bateria. Veja o <a href="/legal/disclaimer">aviso legal</a>.
       </p>
-      <button type="button" class="bn-close" id="bnClose" aria-label="Dismiss this notice">&times;</button>
+      <button type="button" class="bn-close" id="bnClose" aria-label="Dispensar este aviso">&times;</button>
     </div>
     <script is:inline>
       (function () {
@@ -146,12 +162,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            chip, moved here). Same recipe as everywhere else it's used:
            align-self: stretch so it always matches the row's own height,
            colored to var(--edge). -->
-      <div class="mode-switch" role="group" aria-label="Checklist depth">
+      <div class="mode-switch" role="group" aria-label="Profundidade do checklist">
         <button type="button" class="mode-btn is-on" data-mode-set="basic" aria-pressed="true">Base</button>
         <span class="mode-switch-div" aria-hidden="true"></span>
-        <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Advanced</button>
+        <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Avançado</button>
         <span class="mode-switch-div" aria-hidden="true"></span>
-        <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Custom</button>
+        <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Pessoal</button>
       </div>
       <div class="mode-row-right">
         <!-- Info toggle (Antonio, 2026-07-30 round 3): now shown on BOTH
@@ -163,7 +179,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              here is purely a discovery aid: on/amber just opens a static
              reminder that hovering any control for a second explains it, off
              again closes it. Desktop never gates real clicks behind this. -->
-        <button type="button" class="explain-btn" id="explainInfoBtn" aria-label="Show button instructions" aria-pressed="false">ⓘ</button>
+        <button type="button" class="explain-btn" id="explainInfoBtn" aria-label="Mostrar instruções dos botões" aria-pressed="false">ⓘ</button>
         <!-- Rectangle to match the toolbar buttons (Antonio: the pill "looked
              strange"). Round 4: the internal divider Antonio asked for turned
              out to belong on the mode-switch above, not here, removed from
@@ -194,14 +210,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            single action and the whole email form hides behind one toggle,
            so the box shows one thing at a time instead of everything at
            once. -->
-      <p class="unlock-title" id="unlockTitle">Unlock Advanced & Custom</p>
+      <p class="unlock-title" id="unlockTitle">Libere Avançado e Pessoal</p>
       <!-- Round 5, second pass (Antonio, live-testing right after the first
            round-5 push): "access is instant, no password... you don't need
            to say that", cut entirely. Element stays in the DOM (id kept)
            because openGate() still swaps its text for the PDF/email-list
            gate variants; hidden via CSS instead of removed from markup, so
            JS doesn't need a guard added everywhere it touches unlockCopy. -->
-      <p class="dim unlock-copy" id="unlockCopy" hidden>Access is instant, no password. The Email list button carries your list to any other device.</p>
+      <p class="dim unlock-copy" id="unlockCopy" hidden>Acesso na hora, sem senha. O botão de e-mail leva a sua lista para qualquer outro aparelho.</p>
 
       <!-- Google first now (Antonio, round 5): most DJs tap this and never
            see the fields below it. Antonio's OLD ruling required the artist
@@ -226,7 +242,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            Google configured there is no alternative to offer, so the form
            stays the default, visible-on-load path instead (progressive
            enhancement, works with JS off too). -->
-      <button type="button" class="unlock-email-toggle" id="unlockEmailToggle" hidden>No Google? No problem. Use your other email.</button>
+      <button type="button" class="unlock-email-toggle" id="unlockEmailToggle" hidden>Sem Google? Sem problema. Use outro e-mail.</button>
 
       <!-- One required field, two optional ones. Antonio wanted name, surname,
            artist name and Instagram, all required, so he can follow every DJ
@@ -237,7 +253,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            that makes people WANT to fill it. Optional fields that offer
            something convert; required fields that demand something do not. -->
       <form class="unlock-form" id="unlockForm" novalidate>
-        <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your best email" aria-describedby="unlockMsg" required />
+        <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="voce@email.com" aria-label="Seu melhor e-mail" aria-describedby="unlockMsg" required />
         <!-- REQUIRED since 2026-07-27 (Antonio: the personal touch is worth
              the field, and everyone has a first name, techs included). The
              homepage greets by this name where it fits. Trade-off noted at
@@ -245,14 +261,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              required on the email path specifically: unlike Google, this
              path never opens a session, so there is no later screen to
              collect it in. -->
-        <input type="text" name="artist" required autocomplete="nickname" placeholder="Artist name or first name" aria-label="Artist name or first name" aria-describedby="unlockMsg" maxlength="80" />
+        <input type="text" name="artist" required autocomplete="nickname" placeholder="Nome artístico ou primeiro nome" aria-label="Nome artístico ou primeiro nome" aria-describedby="unlockMsg" maxlength="80" />
         <!-- The follow promise lives INSIDE the field now (Antonio): one line
              less under the form, and the pitch sits exactly where the answer
              goes. Long placeholder ellipsizes on narrow phones; the handle
              hint is front-loaded so the cut only ever costs the tail. -->
         <!-- Reads in cause-and-effect order (Antonio): the handle, then why
              we want it, then that it is optional. -->
-        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Optional: @your.artist.instagram, we will happily follow your work" aria-label="Optional: your artist Instagram, we will happily follow your work" aria-describedby="unlockMsg" maxlength="80" />
+        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Opcional: @seu.instagram.artistico, vamos seguir seu trabalho" aria-label="Opcional: seu Instagram artístico, vamos seguir seu trabalho" aria-describedby="unlockMsg" maxlength="80" />
         <!-- Register + the anti-spam promise share a row on desktop (Antonio:
              everything moves up a little); they stack again on phones. -->
         <div class="unlock-actions">
@@ -261,12 +277,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                its original transparent-until-hover look now that
                .btn-quiet-danger got a light-red idle fill for the actual
                "Start Emergency Mode" buttons sitewide. -->
-          <button type="submit" class="btn btn-quiet-register">Register</button>
+          <button type="submit" class="btn btn-quiet-register">Cadastrar</button>
           <!-- Antonio's anti-spam promise, trimmed again round 5: the ad-copy
              framing ("site news, new tools, a product that helps your
              career") was pulling eyes away from Register. Still honest,
              still links Privacy, just one line now. -->
-          <p class="unlock-note">Occasional emails, unsubscribe anytime. <a href="/legal/privacy">Privacy</a></p>
+          <p class="unlock-note">E-mails de vez em quando, cancele quando quiser. <a href="/legal/privacy">Privacidade</a></p>
         </div>
       </form>
       <p class="unlock-msg" id="unlockMsg" role="status" aria-live="polite"></p>
@@ -274,11 +290,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
     <section class="readiness" id="readiness" aria-live="polite">
       <div class="readiness-top">
-        <span class="readiness-label">Readiness</span>
+        <span class="readiness-label">Prontidão</span>
         <span class="readiness-pct" id="pct">0%</span>
       </div>
       <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
-      <p class="readiness-sub" id="sub">0 ready</p>
+      <p class="readiness-sub" id="sub">0 prontos</p>
     </section>
 
     <!-- ACCOUNT / SYNC (2026-07-29 build, Antonio's rulings; chip relocated
@@ -293,7 +309,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <!-- Round 7 (Antonio): this is now the FIRST thing shown for
              Advanced/Custom too, not just Sync, so the wording has to work
              as a cold open, not just a returning-user reminder. -->
-        <p class="dim acct-copy">One account, no password, ever. Your list stays saved on your account and follows you to any device you sign in on.</p>
+        <p class="dim acct-copy">Uma conta, sem senha, nunca. Sua lista fica salva na sua conta e te acompanha em qualquer aparelho onde você entrar.</p>
         <!-- Google renders its own button in here when the client id is
              configured; until then the holder is empty and email carries
              the whole flow. -->
@@ -307,17 +323,17 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              Google actually renders (mirrors the gate's #unlockEmailToggle
              logic exactly); with no Google configured this never runs, so
              the form just stays visible, the only path there is. -->
-        <button type="button" class="unlock-email-toggle" id="acctEmailToggle" hidden>No Google? No problem. Use your other email.</button>
+        <button type="button" class="unlock-email-toggle" id="acctEmailToggle" hidden>Sem Google? Sem problema. Use outro e-mail.</button>
         <form class="acct-form" id="acctForm" novalidate>
-          <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your email" aria-describedby="acctMsg" />
-          <button type="submit" class="btn btn-neutral">Email me a sign-in link</button>
+          <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="voce@email.com" aria-label="Seu e-mail" aria-describedby="acctMsg" />
+          <button type="submit" class="btn btn-neutral">Me mande um link de acesso</button>
         </form>
         <p class="acct-msg" id="acctMsg" role="status" aria-live="polite"></p>
       </div>
       <div id="acctIn" hidden>
         <!-- The email lives here now that the chip up top just says Synced
              (Antonio: the chip is a state, not a place to read the address). -->
-        <p class="dim acct-copy">Synced with <span class="acct-who" id="acctEmail"></span></p>
+        <p class="dim acct-copy">Sincronizado com <span class="acct-who" id="acctEmail"></span></p>
         <!-- Round 10 (Antonio): the "Tap Sync to close this." line this
              replaced no longer earns its space -- clicking/tapping ANYWHERE
              outside this card now closes it too (see the document-level
@@ -329,10 +345,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              the account has an artist name; prefilled when this device
              already knows it; never blocks sync. -->
         <form class="acct-form acct-profile" id="acctProfile" hidden novalidate>
-          <p class="dim acct-copy" style="flex:1 1 100%;margin-bottom:0.1rem">So we know what to call you:</p>
-          <input type="text" name="artist" required autocomplete="nickname" placeholder="Artist name or first name" aria-label="Artist name or first name" aria-describedby="acctProfileMsg" maxlength="80" />
-          <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Optional: @your.artist.instagram, we will happily follow your work" aria-label="Optional: your artist Instagram, we will happily follow your work" aria-describedby="acctProfileMsg" maxlength="80" />
-          <button type="submit" class="btn btn-neutral">Save</button>
+          <p class="dim acct-copy" style="flex:1 1 100%;margin-bottom:0.1rem">Para a gente saber como te chamar:</p>
+          <input type="text" name="artist" required autocomplete="nickname" placeholder="Nome artístico ou primeiro nome" aria-label="Nome artístico ou primeiro nome" aria-describedby="acctProfileMsg" maxlength="80" />
+          <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Opcional: @seu.instagram.artistico, vamos seguir seu trabalho" aria-label="Opcional: seu Instagram artístico, vamos seguir seu trabalho" aria-describedby="acctProfileMsg" maxlength="80" />
+          <button type="submit" class="btn btn-neutral">Salvar</button>
           <p class="acct-msg" id="acctProfileMsg" role="status" aria-live="polite"></p>
         </form>
         <div class="acct-actions">
@@ -341,14 +357,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                account and Reset -- same stacked-cell trick, width can never
                change, innerHTML swaps stay banned. -->
           <button type="button" class="btn btn-neutral acct-signout" id="signOutBtn">
-            <span class="rs-idle">Sign out</span>
-            <span class="rs-arm" aria-hidden="true">Are you sure?</span>
+            <span class="rs-idle">Sair</span>
+            <span class="rs-arm" aria-hidden="true">Tem certeza?</span>
           </button>
           <!-- Same stacked-cell armed pattern as Reset list: width can
                never change, innerHTML swaps stay banned. -->
           <button type="button" class="btn btn-neutral acct-del" id="delAcctBtn">
-            <span class="rs-idle">Delete account</span>
-            <span class="rs-arm" aria-hidden="true">Click again</span>
+            <span class="rs-idle">Apagar conta</span>
+            <span class="rs-arm" aria-hidden="true">Clique de novo</span>
           </button>
         </div>
         <!-- Round 5, third pass (Antonio): this used to always show "Deletes
@@ -373,7 +389,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          destructive action here. -->
     <div class="list-switch" id="listSwitch" hidden>
       <button type="button" class="ls-head" id="lsHead" aria-expanded="false" aria-controls="lsBody">
-        <span class="ls-label">Lists</span>
+        <span class="ls-label">Listas</span>
         <span class="ls-active" id="lsActiveName"></span>
         <span class="ls-chev" aria-hidden="true"></span>
       </button>
@@ -391,9 +407,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              drag-handle SVG as the per-pill handle it now gates, reused
              rather than invented, per Antonio's explicit instruction. -->
         <div class="ls-toolbar" id="lsToolbar">
-          <button type="button" class="ls-tool-btn ls-new-btn" id="lsNewBtn" aria-label="New list">
+          <button type="button" class="ls-tool-btn ls-new-btn" id="lsNewBtn" aria-label="Nova lista">
             <span class="ls-btn-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 2v12M2 8h12"/></svg></span>
-            <span class="ls-btn-label">New</span>
+            <span class="ls-btn-label">Nova</span>
           </button>
           <!-- Round 11.5 follow-up (Antonio): labeled "Move" originally, but
                this toggle also reveals the rename pencil now, not just the
@@ -402,26 +418,26 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                a different thing (notes/sections/items), and reusing the
                word here would read as the same control. "Manage" covers
                rename+reorder without colliding with that button. -->
-          <button type="button" class="ls-tool-btn ls-move-btn" id="lsMoveBtn" aria-label="Manage your lists: rename or reorder">
+          <button type="button" class="ls-tool-btn ls-move-btn" id="lsMoveBtn" aria-label="Gerencie suas listas: renomear ou reordenar">
             <span class="ls-btn-ic" aria-hidden="true"><svg viewBox="0 0 22 14" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h18"/><path d="M6 3 2 7l4 4"/><path d="M16 3l4 4-4 4"/></svg></span>
-            <span class="ls-btn-label">Manage</span>
+            <span class="ls-btn-label">Gerenciar</span>
           </button>
           <!-- Dedicated delete mode for the lists region (Antonio's ruling,
                2026-07-29 polish): separate from the checklist's own Edit
                toggle, so deleting a whole list is never one accidental tap
                away from editing ticks. Now ALSO separate from Move (above),
                so it only ever does the one destructive thing. -->
-          <button type="button" class="ls-tool-btn ls-del-btn" id="lsDelBtn" aria-label="Delete a list">
+          <button type="button" class="ls-tool-btn ls-del-btn" id="lsDelBtn" aria-label="Apagar uma lista">
             <span class="ls-btn-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8h12"/></svg></span>
-            <span class="ls-btn-label">Delete</span>
+            <span class="ls-btn-label">Apagar</span>
           </button>
         </div>
         <form class="ls-new-form" id="lsNewForm" hidden>
           <!-- Round 11 (Antonio): "Wedding" swapped out -- this site is
                built for club DJs, and a wedding-DJ suggestion here reads
                off-focus even though wedding DJs are welcome too. -->
-          <input type="text" id="lsNewName" maxlength="40" placeholder="Festival, Club, Residency, Other..." aria-label="Name the new list" aria-describedby="lsMsg" />
-          <button type="submit" class="add-btn">Create</button>
+          <input type="text" id="lsNewName" maxlength="40" placeholder="Festival, Club, Residência, Outro..." aria-label="Dê um nome para a nova lista" aria-describedby="lsMsg" />
+          <button type="submit" class="add-btn">Criar</button>
         </form>
         <p class="acct-msg" id="lsMsg" role="status" aria-live="polite"></p>
       </div>
@@ -437,7 +453,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            list with you. NOT "Email PDF": that button emails the list as text
            with a restore link, no PDF attached, and a label must never promise
            an attachment that does not arrive. EMAIL LIST is what it does. -->
-      <button type="button" class="btn btn-neutral" id="editToggle"><span class="bl-full">Edit list</span><span class="bl-short">Edit</span></button>
+      <button type="button" class="btn btn-neutral" id="editToggle"><span class="bl-full">Editar lista</span><span class="bl-short">Editar</span></button>
       <!-- "Reset list", not "Clear list" (Antonio): the promise is that the
            list goes back to how it was before you touched anything, which in
            Custom means your edits too, not just the ticks. That makes it
@@ -448,34 +464,31 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            and reflow the toolbar (Antonio caught "Reset everything?"
            pushing Email list onto a second row). -->
       <button type="button" class="btn btn-neutral" id="resetBtn">
-        <span class="rs-idle"><span class="bl-full">Reset list</span><span class="bl-short">Reset</span></span>
-        <!-- "DO IT!" (Antonio, 2026-07-29, replacing his earlier "Click
-             again"): the armed press should feel like a command, not a
-             repetition. Two-tap safety unchanged; stacked-cell width trick
-             unchanged (idle state is the wider one, so nothing reflows).
-             MERGE NOTE (production merge): accounts-sync's own polish round
-             had independently set this to "Press again"/"Do it!" earlier the
-             same day -- main's later "DO IT!" ruling wins as the newer copy. -->
-        <span class="rs-arm" aria-hidden="true"><span class="bl-full">DO IT!</span><span class="bl-short">DO IT!</span></span>
+        <span class="rs-idle"><span class="bl-full">Restaurar lista</span><span class="bl-short">Restaurar</span></span>
+        <!-- The armed press should feel like a command, not a repetition
+             (Antonio, 2026-07-29). Two-tap safety unchanged; stacked-cell
+             width trick unchanged (the idle state is the wider one, so
+             nothing reflows). -->
+        <span class="rs-arm" aria-hidden="true"><span class="bl-full">MANDA VER</span><span class="bl-short">MANDA VER</span></span>
       </button>
       <!-- Full words on desktop, one word on a phone: four buttons at full
            length wrap the toolbar onto a second line on mobile (Antonio). -->
       <!-- "Download list", not "Download PDF" (Antonio): the file is a PDF but
            the thing you are downloading is your list, same object as the other
            three buttons. -->
-      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Download list</span><span class="bl-short">Download</span></button>
+      <button type="button" class="btn btn-neutral" id="pdfBtn" data-event="checklist_download" data-placement="checklist_actions"><span class="bl-full">Baixar lista</span><span class="bl-short">Baixar</span></button>
       <!-- Email is LAST and darker in every mode (Antonio): it is the one
            action that requires registration, because an email needs an
            address, and the shade quietly says this one is different. -->
-      <button type="button" class="btn btn-neutral btn-gated" id="backupBtn"><span class="bl-full">Email list</span><span class="bl-short">Email</span></button>
+      <button type="button" class="btn btn-neutral btn-gated" id="backupBtn"><span class="bl-full">Enviar por e-mail</span><span class="bl-short">E-mail</span></button>
       <!-- Round 9 (Antonio): the dismissible "Add notes, create sections..."
            tip used to live here as a standalone box with its own dismiss-X.
            It's redundant now that Edit list carries the identical copy as a
            press-and-hold/tap explainer (round 8), so it was removed rather
            than kept as a second, harder-to-dismiss copy of the same text. -->
       <form class="backup-form" id="backupForm" hidden>
-        <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" aria-describedby="backupMsg" />
-        <button type="submit" class="btn btn-neutral">Send it</button>
+        <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="voce@email.com" aria-label="Seu e-mail" aria-describedby="backupMsg" />
+        <button type="submit" class="btn btn-neutral">Enviar</button>
       </form>
       <p class="backup-msg" id="backupMsg" role="status" aria-live="polite"></p>
     </div>
@@ -519,7 +532,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             <!-- Custom + Edit: any category can go (Antonio). For built-in
                  groups this HIDES (Reset list brings them back); user
                  sections delete outright. -->
-            <button type="button" class="group-remove" data-group-hide={g.id} aria-label={`Remove section ${g.title}`}>&times;</button>
+            <button type="button" class="group-remove" data-group-hide={g.id} aria-label={`Remover seção ${g.title}`}>&times;</button>
           </h2>
           <!-- Collapsed-state notes preview (Antonio): the briefing must be
                scannable WITHOUT expanding every section. Filled by JS from
@@ -537,23 +550,23 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                     <span class="box" aria-hidden="true"></span>
                     <span class="task-label">{it.label}</span>
                   </label>
-                  <button type="button" class="task-remove" aria-label="Remove" data-remove={it.key}>&times;</button>
+                  <button type="button" class="task-remove" aria-label="Remover" data-remove={it.key}>&times;</button>
                 </li>
               ))}
             </ul>
             <ul class="custom-tasks" data-custom={g.id}></ul>
             <div class="add-own">
-              <input type="text" class="add-input" data-cat={g.id} placeholder="Add your own..." aria-label={`Add your own item to ${g.title}`} maxlength="80" />
-              <button type="button" class="add-btn" data-add={g.id}>Add</button>
+              <input type="text" class="add-input" data-cat={g.id} placeholder="Adicione o seu..." aria-label={`Adicionar um item seu em ${g.title}`} maxlength="80" />
+              <button type="button" class="add-btn" data-add={g.id}>Adicionar</button>
             </div>
             <!-- Category notes (Antonio's spec): one personal briefing area
                  per category, Custom mode only. Not a comments system: booth
                  config, contacts, set times, the gig-specific facts that are
                  not checklist items. Autosaves, prints, emails, restores. -->
             <div class="cat-notes">
-              <button type="button" class="notes-toggle" data-notes-btn={g.id}>+ Add notes</button>
-              <textarea class="notes-area" data-notes={g.id} rows="4" maxlength="2000" placeholder={`Notes for ${g.title}: setup, contacts, times, links, anything this gig needs.`} aria-label={`Your notes for ${g.title}`} hidden></textarea>
-              <span class="notes-hint" hidden>Click outside to save.</span>
+              <button type="button" class="notes-toggle" data-notes-btn={g.id}>+ Adicionar notas</button>
+              <textarea class="notes-area" data-notes={g.id} rows="4" maxlength="2000" placeholder={`Notas de ${g.title}: setup, contatos, horários, links, o que esta gig precisar.`} aria-label={`Suas notas de ${g.title}`} hidden></textarea>
+              <span class="notes-hint" hidden>Clique fora para salvar.</span>
             </div>
           </div>
         </section>
@@ -564,8 +577,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          sections"). New groups render above this row, built by JS with the
          same anatomy as the fixed ones. -->
     <div class="add-section" id="addSectionRow">
-      <input type="text" class="add-input" id="addSectionInput" placeholder="Name a new section..." aria-label="Name a new section" maxlength="40" />
-      <button type="button" class="add-btn" id="addSectionBtn">Add section</button>
+      <input type="text" class="add-input" id="addSectionInput" placeholder="Nomeie uma nova seção..." aria-label="Nomeie uma nova seção" maxlength="40" />
+      <button type="button" class="add-btn" id="addSectionBtn">Criar seção</button>
     </div>
 
     <!-- The bottom actions row is gone: its two buttons moved into the toolbar
@@ -580,8 +593,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          from a paragraph that no longer exists, the panel falls back to
          the standard .panel-to-panel gap, closer to Logistics as asked. -->
     <div class="panel cta-exit">
-      <h2 style="margin-bottom:0.9rem">Already at the gig and something failed?</h2>
-      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="checklist">Start Emergency Mode</a>
+      <h2 style="margin-bottom:0.9rem">Já está na gig e alguma coisa falhou?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="checklist">Iniciar Emergency Mode</a>
     </div>
 
     <!-- Icon-only circle, Antonio's EPK pattern: the site's boxes are square
@@ -589,7 +602,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          floating to-top), so this joins that family. Transparent background,
          arrow in white on hover. -->
     <div class="top-actions">
-      <button type="button" class="top-circle" id="topBtn" aria-label="Back to top">
+      <button type="button" class="top-circle" id="topBtn" aria-label="Voltar ao topo">
         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
       </button>
     </div>
@@ -1866,10 +1879,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     if (backupBusy) return; // double-tap sends double emails
     email = (email || '').trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-      if (backupMsg) { backupMsg.textContent = 'That email does not look right.'; backupMsg.className = 'backup-msg err'; }
+      if (backupMsg) { backupMsg.textContent = 'Esse e-mail não parece certo.'; backupMsg.className = 'backup-msg err'; }
       return;
     }
-    if (backupMsg) { backupMsg.textContent = 'Sending...'; backupMsg.className = 'backup-msg'; }
+    if (backupMsg) { backupMsg.textContent = 'Enviando...'; backupMsg.className = 'backup-msg'; }
     backupBusy = true;
     try {
       const res = await fetch('/api/backup', {
@@ -1891,7 +1904,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       // into the catch and tell a DJ on solid venue Wi-Fi "no connection,
       // find signal", which misdiagnoses the failure at them.
       if (!res.ok) {
-        if (backupMsg) { backupMsg.textContent = 'Could not send right now, the problem is on our side. Try again in a minute.'; backupMsg.className = 'backup-msg err'; }
+        if (backupMsg) { backupMsg.textContent = 'Não deu para enviar agora, o problema é do nosso lado. Tente de novo em um minuto.'; backupMsg.className = 'backup-msg err'; }
         backupBusy = false;
         return;
       }
@@ -1899,12 +1912,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       if (data && data.ok) {
         setEmail(email);
         if (backupForm) backupForm.hidden = true;
-        if (backupMsg) { backupMsg.textContent = 'Sent to ' + email + '. Check your inbox for the copy and a link to load it anywhere.'; backupMsg.className = 'backup-msg ok'; }
+        if (backupMsg) { backupMsg.textContent = 'Enviado para ' + email + '. Veja na caixa de entrada a cópia e o link que carrega ela em qualquer lugar.'; backupMsg.className = 'backup-msg ok'; }
       } else if (backupMsg) {
-        backupMsg.textContent = 'Could not send right now. Try again in a minute.'; backupMsg.className = 'backup-msg err';
+        backupMsg.textContent = 'Não deu para enviar agora. Tente de novo em um minuto.'; backupMsg.className = 'backup-msg err';
       }
     } catch (e) {
-      if (backupMsg) { backupMsg.textContent = 'No connection. Try again when you have signal.'; backupMsg.className = 'backup-msg err'; }
+      if (backupMsg) { backupMsg.textContent = 'Sem conexão. Tente de novo quando tiver sinal.'; backupMsg.className = 'backup-msg err'; }
     }
     backupBusy = false;
   }
@@ -1930,7 +1943,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
     if (pctEl) pctEl.textContent = pct + '%';
     if (fillEl) fillEl.style.width = pct + '%';
-    if (subEl) subEl.textContent = pct === 100 ? 'Ready. Go play.' : `${done} of ${totalV} ready`;
+    if (subEl) subEl.textContent = pct === 100 ? 'Pronto. Pode tocar.' : `${done} de ${totalV} prontos`;
     if (readinessEl) readinessEl.classList.toggle('is-ready', pct === 100 && totalV > 0);
 
     document.querySelectorAll<HTMLElement>('.task-group').forEach((group) => {
@@ -2020,7 +2033,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       // Delete (Edit mode only): takes the section and its items with it.
       const del = document.createElement('button');
       del.type = 'button'; del.className = 'group-remove';
-      del.setAttribute('aria-label', 'Delete section ' + sec.t); del.innerHTML = '&times;';
+      del.setAttribute('aria-label', 'Apagar seção ' + sec.t); del.innerHTML = '&times;';
       del.addEventListener('click', (e) => {
         e.stopPropagation();
         const c = loadCustom();
@@ -2035,10 +2048,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       const addRow = document.createElement('div'); addRow.className = 'add-own';
       const addInput = document.createElement('input');
       addInput.type = 'text'; addInput.className = 'add-input';
-      addInput.setAttribute('data-cat', sec.id); addInput.placeholder = 'Add your own...';
-      addInput.setAttribute('aria-label', 'Add your own item to ' + sec.t); addInput.maxLength = 80;
+      addInput.setAttribute('data-cat', sec.id); addInput.placeholder = 'Adicione o seu...';
+      addInput.setAttribute('aria-label', 'Adicionar um item seu em ' + sec.t); addInput.maxLength = 80;
       const addBtn = document.createElement('button');
-      addBtn.type = 'button'; addBtn.className = 'add-btn'; addBtn.setAttribute('data-add', sec.id); addBtn.textContent = 'Add';
+      addBtn.type = 'button'; addBtn.className = 'add-btn'; addBtn.setAttribute('data-add', sec.id); addBtn.textContent = 'Adicionar';
       const doAdd = () => { addCustom(sec.id, addInput.value); addInput.value = ''; addInput.focus(); };
       addBtn.addEventListener('click', doAdd);
       addInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doAdd(); } });
@@ -2046,13 +2059,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       // Category notes, same anatomy as the fixed groups.
       const notesWrap = document.createElement('div'); notesWrap.className = 'cat-notes';
       const notesBtn = document.createElement('button');
-      notesBtn.type = 'button'; notesBtn.className = 'notes-toggle'; notesBtn.textContent = '+ Add notes';
+      notesBtn.type = 'button'; notesBtn.className = 'notes-toggle'; notesBtn.textContent = '+ Adicionar notas';
       const notesArea = document.createElement('textarea');
       notesArea.className = 'notes-area'; notesArea.rows = 4; notesArea.maxLength = 2000; notesArea.hidden = true;
-      notesArea.placeholder = 'Notes for ' + sec.t + ': setup, contacts, times, links, anything this gig needs.';
-      notesArea.setAttribute('aria-label', 'Your notes for ' + sec.t);
+      notesArea.placeholder = 'Notas de ' + sec.t + ': setup, contatos, horários, links, o que esta gig precisar.';
+      notesArea.setAttribute('aria-label', 'Suas notas de ' + sec.t);
       const notesHint = document.createElement('span');
-      notesHint.className = 'notes-hint'; notesHint.hidden = true; notesHint.textContent = 'Click outside to save.';
+      notesHint.className = 'notes-hint'; notesHint.hidden = true; notesHint.textContent = 'Clique fora para salvar.';
       const notesPrev = document.createElement('div');
       notesPrev.className = 'notes-preview'; notesPrev.setAttribute('data-notes-prev', sec.id);
       notesWrap.appendChild(notesBtn); notesWrap.appendChild(notesArea); notesWrap.appendChild(notesHint);
@@ -2095,7 +2108,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         label.appendChild(input); label.appendChild(box); label.appendChild(span);
         const drag = makeDragHandle();
         const rm = document.createElement('button');
-        rm.type = 'button'; rm.className = 'task-remove'; rm.setAttribute('aria-label', 'Remove'); rm.innerHTML = '&times;';
+        rm.type = 'button'; rm.className = 'task-remove'; rm.setAttribute('aria-label', 'Remover'); rm.innerHTML = '&times;';
         rm.addEventListener('click', () => {
           const c = loadCustom(); c[cat] = (c[cat] || []).filter((x) => x.k !== it.k); saveCustom(c);
           const t = load(); delete t[it.k]; save(t); renderCustom(); render();
@@ -2113,7 +2126,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function makeDragHandle(): HTMLButtonElement {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'task-drag';
-    b.setAttribute('aria-label', 'Drag to reorder');
+    b.setAttribute('aria-label', 'Arraste para reordenar');
     // An SVG, not the "↕" character: iOS renders that codepoint as a blue
     // EMOJI, so the handles looked nothing like the desktop ones.
     // Third iteration, both bounds set by Antonio. 16x16 read as a smudge
@@ -2250,7 +2263,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function makeEditButton(): HTMLButtonElement {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'task-edit';
-    b.setAttribute('aria-label', 'Rename this item');
+    b.setAttribute('aria-label', 'Renomear este item');
     b.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
     b.addEventListener('click', () => {
       const li = b.closest('li.task') as HTMLElement | null;
@@ -2330,9 +2343,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // now, so the map only needs to answer "what does this mode do" for the
   // explainer popovers.
   const MODE_COPY_MAP: Record<string, { f: string }> = {
-    basic: { f: 'Must-brings. The essential checklist every DJ should have before leaving for a gig.' },
-    advanced: { f: 'The full kit. Everything in Base, plus backup gear and professional extras for any situation.' },
-    custom: { f: 'Your own. Start with Advanced and tailor the checklist to your setup, workflow, and preferences.' },
+    basic: { f: 'O essencial. O checklist que todo DJ deveria ter antes de sair para uma gig.' },
+    advanced: { f: 'O kit completo. Tudo do Base, mais equipamento reserva e os extras profissionais para qualquer situação.' },
+    custom: { f: 'A sua. Comece pelo Avançado e ajuste o checklist ao seu setup, ao seu fluxo e ao seu jeito.' },
   };
 
   // EXPLAINERS (Antonio's ruling, 2026-07-29; mode-toggle reworked round 2
@@ -2505,8 +2518,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       // "Edit list" depending on whether setEdit had run yet).
       // "Save list", matching the row: every action names the same object.
       editToggle.innerHTML = on
-        ? '<span class="bl-full">Save list</span><span class="bl-short">Save</span>'
-        : '<span class="bl-full">Edit list</span><span class="bl-short">Edit</span>';
+        ? '<span class="bl-full">Salvar lista</span><span class="bl-short">Salvar</span>'
+        : '<span class="bl-full">Editar lista</span><span class="bl-short">Editar</span>';
       editToggle.classList.toggle('editing', on);
     }
   }
@@ -2547,7 +2560,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // written and never read: no acknowledgment, and the param stuck around in
   // shared URLs. One green line, then gone.
   if (new URLSearchParams(location.search).get('confirmed') === '1') {
-    if (backupMsg) { backupMsg.textContent = 'Email confirmed. You are registered on this device.'; backupMsg.className = 'backup-msg ok'; }
+    if (backupMsg) { backupMsg.textContent = 'E-mail confirmado. Você está cadastrado neste aparelho.'; backupMsg.className = 'backup-msg ok'; }
     const sp = new URLSearchParams(location.search); sp.delete('confirmed');
     history.replaceState(null, '', location.pathname + (sp.toString() ? '?' + sp.toString() : '') + location.hash);
   }
@@ -2645,18 +2658,18 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 
   const unlockTitle = document.getElementById('unlockTitle');
   const unlockCopy = document.getElementById('unlockCopy');
-  const MODE_TITLE = 'Unlock Advanced & Custom';
+  const MODE_TITLE = 'Libere Avançado e Pessoal';
   const MODE_COPY = unlockCopy ? unlockCopy.textContent || '' : '';
-  const PDF_TITLE = 'Unlock the printable checklist';
-  const PDF_COPY = 'Your list, exactly as it stands, as a clean printable PDF. Print it, fold it, keep it in your USB case, or pin it up in the booth.';
+  const PDF_TITLE = 'Libere o checklist para imprimir';
+  const PDF_COPY = 'Sua lista, exatamente como está, em um PDF limpo para imprimir. Imprima, dobre, guarde no case dos drives ou pregue na booth.';
 
   // Opens the gate with copy that matches what the DJ actually reached for.
   function openGate() {
     const gateCopy = {
       pdf: { t: PDF_TITLE, c: PDF_COPY },
       email: {
-        t: 'Unlock: email your list',
-        c: 'We send your list, exactly as it stands, to your inbox, with a link that loads it back on any device.',
+        t: 'Libere: sua lista por e-mail',
+        c: 'A gente manda a sua lista, exatamente como está, para a sua caixa de entrada, com um link que carrega ela em qualquer aparelho.',
       },
       mode: { t: MODE_TITLE, c: MODE_COPY },
     }[pendingWant] || { t: MODE_TITLE, c: MODE_COPY };
@@ -2745,15 +2758,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     // fills its page instead of floating at the top of it.
     const density = total <= 22 ? 'roomy' : total <= 40 ? 'normal' : 'tight';
 
-    const modeLabel = mode === 'advanced' ? 'Advanced' : mode === 'custom' ? 'Custom' : 'Base';
+    const modeLabel = mode === 'advanced' ? 'Avançada' : mode === 'custom' ? 'Pessoal' : 'Base';
     const d = new Date();
-    const stamp = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    const stamp = d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
     const fileStamp = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const art = (id: string) => (document.getElementById(id) as HTMLTemplateElement | null)?.innerHTML || '';
 
     const w = window.open('', '_blank');
     if (!w) return false; // popup blocked; callers tell the user, not silence
-    w.document.write(`<!doctype html><html lang="en"><head><meta charset="utf-8" />
+    w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8" />
 <title>save-my-gig-checklist-${fileStamp}</title>
 <style>
   /* THE PRINTED SHEET, rebuilt 2026-08-04: better organized, better
@@ -2858,15 +2871,15 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 </style></head><body class="${density}">
 <div class="mast">
   <div class="mast-lock">${art('printLockup')}</div>
-  <div class="mast-meta"><b>${esc(modeLabel)} list</b>${esc(stamp)}</div>
+  <div class="mast-meta"><b>Lista ${esc(modeLabel)}</b>${esc(stamp)}</div>
 </div>
-<h1>Pre-gig checklist</h1>
-<p class="sub"><b>${done} of ${total} ready</b> when this was printed. Tick the rest before you walk out.</p>
+<h1>Checklist pré-gig</h1>
+<p class="sub"><b>${done} de ${total} prontos</b> quando isto foi impresso. Marque o resto antes de sair.</p>
 <div class="cols">${sections}</div>
 <div class="foot">
-  <div class="foot-l">Something failing at the booth? <b>savemygig.com/emergency</b></div>
+  <div class="foot-l">Algo falhando na booth? <b>savemygig.com/pt/emergency</b></div>
   <div class="foot-r">
-    <div class="qr-cap"><b>savemygig.com</b>Scan for your own checklist.<br />Free, no account.</div>
+    <div class="qr-cap"><b>savemygig.com</b>Escaneie para o seu checklist.<br />Grátis, sem cadastro.</div>
     ${art('printQr')}
   </div>
 </div>
@@ -2884,7 +2897,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     pdfBtn.addEventListener('click', () => {
       if (isUnlocked()) {
         if (!printCurrentList() && backupMsg) {
-          backupMsg.textContent = 'Your browser blocked the download window. Allow pop-ups for this site and tap again.';
+          backupMsg.textContent = 'Seu navegador bloqueou a janela do download. Libere pop-ups para este site e toque de novo.';
           backupMsg.className = 'backup-msg err';
         }
         return;
@@ -2924,7 +2937,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       const inp = unlockForm.querySelector('input[name="email"]') as HTMLInputElement;
       const email = (inp.value || '').trim();
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-        if (unlockMsg) { unlockMsg.textContent = 'That email does not look right. Check it and try again.'; unlockMsg.className = 'unlock-msg err'; }
+        if (unlockMsg) { unlockMsg.textContent = 'Esse e-mail não parece certo. Confira e tente de novo.'; unlockMsg.className = 'unlock-msg err'; }
         inp.focus();
         return;
       }
@@ -2934,7 +2947,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       // name is required because the homepage greets the DJ by it.
       const artistInp = unlockForm.querySelector('input[name="artist"]') as HTMLInputElement | null;
       if (artistInp && !artistInp.value.trim()) {
-        if (unlockMsg) { unlockMsg.textContent = 'Add your artist name or first name, so we know what to call you.'; unlockMsg.className = 'unlock-msg err'; }
+        if (unlockMsg) { unlockMsg.textContent = 'Coloque seu nome artístico ou primeiro nome, para a gente saber como te chamar.'; unlockMsg.className = 'unlock-msg err'; }
         artistInp.focus();
         return;
       }
@@ -2951,7 +2964,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         // just submitted a form). Dead air after handing over an email address
         // is the worst possible outcome, so say what happened and what to do.
         if (!printCurrentList() && backupMsg) {
-          backupMsg.textContent = 'You are registered. Your browser blocked the download window: tap Download list again and allow pop-ups.';
+          backupMsg.textContent = 'Você está cadastrado. Seu navegador bloqueou a janela do download: toque em Baixar lista de novo e libere pop-ups.';
           backupMsg.className = 'backup-msg ok';
         }
       }
@@ -3331,7 +3344,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function makePillDragHandle(pill: HTMLElement, name: string): HTMLButtonElement {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'ls-drag';
-    b.setAttribute('aria-label', 'Drag to reorder ' + name);
+    b.setAttribute('aria-label', 'Arraste para reordenar ' + name);
     b.innerHTML = '<svg viewBox="0 0 22 14" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h18"/><path d="M6 3 2 7l4 4"/><path d="M16 3l4 4-4 4"/></svg>';
     initPillDrag(b, pill);
     return b;
@@ -3465,7 +3478,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function makePillPencil(pill: HTMLElement, span: HTMLElement, id: string, name: string): HTMLButtonElement {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'ls-pencil';
-    b.setAttribute('aria-label', 'Rename ' + name);
+    b.setAttribute('aria-label', 'Renomear ' + name);
     b.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
     b.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -3498,7 +3511,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       // Round 11.5 follow-up: pills are covered controls too now, same as
       // every other button on the page -- so a DJ can see and read what
       // tapping a pill does before they've ever tapped one.
-      attachExplainer(pill, () => 'Tap to switch to this list. Ticks, notes and any edits are saved to each list separately.');
+      attachExplainer(pill, () => 'Toque para trocar para esta lista. Marcações, notas e edições ficam salvas em cada lista separadamente.');
       if (isInfoLit()) pill.classList.add('info-lit');
       // Round 11.5: rename lives on every pill, including the active one --
       // the DJ's current list is the one most likely to need a real name.
@@ -3516,7 +3529,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         x.type = 'button';
         x.className = 'ls-x';
         x.textContent = '×';
-        x.setAttribute('aria-label', 'Delete list ' + l.n);
+        x.setAttribute('aria-label', 'Apagar a lista ' + l.n);
         x.addEventListener('click', (e) => {
           e.stopPropagation();
           if (!x.classList.contains('armed')) {
@@ -3564,7 +3577,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     if (!t) return;
     const reg = loadReg();
     if (reg.lists.length >= MAX_LISTS) {
-      if (lsMsg) { lsMsg.textContent = 'Seven lists is the cap. Delete one you no longer play.'; lsMsg.className = 'acct-msg err'; }
+      if (lsMsg) { lsMsg.textContent = 'Sete listas é o limite. Apague uma que você não usa mais.'; lsMsg.className = 'acct-msg err'; }
       return;
     }
     const id = 'l-' + t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 24) + '-' + Math.random().toString(36).slice(2, 6);
@@ -3695,7 +3708,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
                 if (unlockEl) unlockEl.hidden = true;
                 if (pendingWant === 'pdf') {
                   if (!printCurrentList() && backupMsg) {
-                    backupMsg.textContent = 'You are registered. Your browser blocked the download window: tap Download list again and allow pop-ups.';
+                    backupMsg.textContent = 'Você está cadastrado. Seu navegador bloqueou a janela do download: toque em Baixar lista de novo e libere pop-ups.';
                     backupMsg.className = 'backup-msg ok';
                   }
                 } else if (pendingWant === 'email') {
@@ -3719,11 +3732,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
               }
             } else {
               const msgEl = fromGate ? unlockMsg : acctMsg;
-              if (msgEl) { msgEl.textContent = 'Google sign-in did not go through. Use your email instead.'; msgEl.className = (fromGate ? 'unlock-msg' : 'acct-msg') + ' err'; }
+              if (msgEl) { msgEl.textContent = 'O acesso pelo Google não foi. Use o seu e-mail.'; msgEl.className = (fromGate ? 'unlock-msg' : 'acct-msg') + ' err'; }
             }
           } catch (e) {
             const msgEl = fromGate ? unlockMsg : acctMsg;
-            if (msgEl) { msgEl.textContent = 'No connection right now. Your list is safe on this device.'; msgEl.className = (fromGate ? 'unlock-msg' : 'acct-msg') + ' err'; }
+            if (msgEl) { msgEl.textContent = 'Sem conexão agora. Sua lista está segura neste aparelho.'; msgEl.className = (fromGate ? 'unlock-msg' : 'acct-msg') + ' err'; }
           }
         },
       });
@@ -3829,12 +3842,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       const inp = acctForm.querySelector('input[name="email"]') as HTMLInputElement;
       const email = (inp.value || '').trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-        if (acctMsg) { acctMsg.textContent = 'That email does not look right. Check it and try again.'; acctMsg.className = 'acct-msg err'; }
+        if (acctMsg) { acctMsg.textContent = 'Esse e-mail não parece certo. Confira e tente de novo.'; acctMsg.className = 'acct-msg err'; }
         inp.focus();
         return;
       }
       busy = true;
-      if (acctMsg) { acctMsg.textContent = 'Sending your link...'; acctMsg.className = 'acct-msg'; }
+      if (acctMsg) { acctMsg.textContent = 'Enviando seu link...'; acctMsg.className = 'acct-msg'; }
       try {
         const res = await fetch('/api/auth/email', {
           method: 'POST',
@@ -3842,14 +3855,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           body: JSON.stringify({ email }),
         });
         if (res.status === 429) {
-          if (acctMsg) { acctMsg.textContent = 'A link is already on its way. Check your inbox, or wait a few minutes for a fresh one.'; acctMsg.className = 'acct-msg err'; }
+          if (acctMsg) { acctMsg.textContent = 'Já tem um link a caminho. Veja a caixa de entrada, ou espere alguns minutos por um novo.'; acctMsg.className = 'acct-msg err'; }
         } else if (res.ok) {
-          if (acctMsg) { acctMsg.textContent = 'Sent to ' + email + '. Open it on this device and tap the button: that signs you in here.'; acctMsg.className = 'acct-msg ok'; }
+          if (acctMsg) { acctMsg.textContent = 'Enviado para ' + email + '. Abra neste aparelho e toque no botão: isso conecta você aqui.'; acctMsg.className = 'acct-msg ok'; }
         } else {
-          if (acctMsg) { acctMsg.textContent = 'Could not send right now, the problem is on our side. Try again in a minute.'; acctMsg.className = 'acct-msg err'; }
+          if (acctMsg) { acctMsg.textContent = 'Não deu para enviar agora, o problema é do nosso lado. Tente de novo em um minuto.'; acctMsg.className = 'acct-msg err'; }
         }
       } catch (e) {
-        if (acctMsg) { acctMsg.textContent = 'No connection. Try again when you have signal.'; acctMsg.className = 'acct-msg err'; }
+        if (acctMsg) { acctMsg.textContent = 'Sem conexão. Tente de novo quando tiver sinal.'; acctMsg.className = 'acct-msg err'; }
       }
       busy = false;
     });
@@ -3869,7 +3882,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       const artist = (aInp.value || '').trim();
       const instagram = iInp ? (iInp.value || '').trim() : '';
       if (!artist) {
-        if (acctProfileMsg) { acctProfileMsg.textContent = 'Add your artist name or first name, so we know what to call you.'; acctProfileMsg.className = 'acct-msg err'; }
+        if (acctProfileMsg) { acctProfileMsg.textContent = 'Coloque seu nome artístico ou primeiro nome, para a gente saber como te chamar.'; acctProfileMsg.className = 'acct-msg err'; }
         aInp.focus();
         return;
       }
@@ -3886,7 +3899,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           try { localStorage.setItem('SMG_ARTIST', artist.split(/\s+/)[0]); } catch (e) { /* blocked */ }
           updateAcctUI();
           if (acctMsg2) {
-            acctMsg2.textContent = instagram ? 'Saved. We will happily follow your work.' : 'Saved.';
+            acctMsg2.textContent = instagram ? 'Salvo. Vamos seguir seu trabalho com prazer.' : 'Salvo.';
             acctMsg2.className = 'acct-msg ok';
             if (acctMsg2ClearTimer) clearTimeout(acctMsg2ClearTimer);
             acctMsg2ClearTimer = setTimeout(() => {
@@ -3897,10 +3910,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             (window as any).gtag('event', 'account_profile', { placement: 'checklist' });
           }
         } else if (acctProfileMsg) {
-          acctProfileMsg.textContent = 'Could not save right now, the problem is on our side. Try again in a minute.'; acctProfileMsg.className = 'acct-msg err';
+          acctProfileMsg.textContent = 'Não deu para salvar agora, o problema é do nosso lado. Tente de novo em um minuto.'; acctProfileMsg.className = 'acct-msg err';
         }
       } catch (e) {
-        if (acctProfileMsg) { acctProfileMsg.textContent = 'No connection. Try again when you have signal.'; acctProfileMsg.className = 'acct-msg err'; }
+        if (acctProfileMsg) { acctProfileMsg.textContent = 'Sem conexão. Tente de novo quando tiver sinal.'; acctProfileMsg.className = 'acct-msg err'; }
       }
       profileBusy = false;
     });
@@ -3948,7 +3961,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     // Round 7 (Antonio, exact copy supplied): shorter, drops the "this
     // session stays on the device" clause entirely and adds the "!".
     const delFine = document.getElementById('acctDelFine');
-    const delFineWarn = "This can't be undone! Your account and synced/saved lists will be deleted.";
+    const delFineWarn = 'Isso não tem volta. Sua conta e as listas salvas e sincronizadas serão apagadas.';
     const disarm = () => {
       armed = false;
       if (armTimer) clearTimeout(armTimer);
@@ -3964,7 +3977,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         return;
       }
       disarm();
-      if (acctMsg2) { acctMsg2.textContent = 'Deleting...'; acctMsg2.className = 'acct-msg'; }
+      if (acctMsg2) { acctMsg2.textContent = 'Apagando...'; acctMsg2.className = 'acct-msg'; }
       try {
         const res = await fetch('/api/account', { method: 'DELETE' });
         const d = await res.json();
@@ -3982,12 +3995,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           const reg = loadReg();
           if (reg.active !== 'main' && reg.lists.some((l) => l.id === 'main')) { switchList('main'); return; }
           updateAcctUI();
-          if (acctMsg) { acctMsg.textContent = 'Account deleted. Everything on our side is gone; the list on this device stays yours.'; acctMsg.className = 'acct-msg ok'; }
+          if (acctMsg) { acctMsg.textContent = 'Conta apagada. Tudo do nosso lado sumiu; a lista deste aparelho continua sua.'; acctMsg.className = 'acct-msg ok'; }
         } else if (acctMsg2) {
-          acctMsg2.textContent = 'Could not delete right now, the problem is on our side. Try again in a minute.'; acctMsg2.className = 'acct-msg err';
+          acctMsg2.textContent = 'Não deu para apagar agora, o problema é do nosso lado. Tente de novo em um minuto.'; acctMsg2.className = 'acct-msg err';
         }
       } catch (e) {
-        if (acctMsg2) { acctMsg2.textContent = 'No connection. Try again when you have signal.'; acctMsg2.className = 'acct-msg err'; }
+        if (acctMsg2) { acctMsg2.textContent = 'Sem conexão. Tente de novo quando tiver sinal.'; acctMsg2.className = 'acct-msg err'; }
       }
     });
   }
@@ -4032,14 +4045,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     if (!listSwitch || !lsDelBtn) return;
     listSwitch.classList.toggle('deleting', on);
     lsDelBtn.classList.toggle('active', on);
-    if (lsDelLabel) lsDelLabel.textContent = on ? 'Done' : 'Delete';
+    if (lsDelLabel) lsDelLabel.textContent = on ? 'Pronto' : 'Apagar';
     if (!on) document.querySelectorAll('.ls-x.armed').forEach((x) => x.classList.remove('armed'));
   }
   function setListMoveMode(on: boolean) {
     if (!listSwitch || !lsMoveBtn) return;
     listSwitch.classList.toggle('moving', on);
     lsMoveBtn.classList.toggle('active', on);
-    if (lsMoveLabel) lsMoveLabel.textContent = on ? 'Done' : 'Manage';
+    if (lsMoveLabel) lsMoveLabel.textContent = on ? 'Pronto' : 'Gerenciar';
   }
   if (lsDelBtn && listSwitch) lsDelBtn.addEventListener('click', () => {
     const on = !listSwitch.classList.contains('deleting');
@@ -4058,24 +4071,24 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // as its own dismissible hint, so a DJ who dismissed that hint forever
   // still has a way back to it; the mode buttons reuse MODE_COPY_MAP, the
   // one place that copy lives.
-  attachExplainer(resetBtn, () => 'Puts the list back to how it started. In Base and Advanced that clears every tick. In Custom it also undoes renames, reorders, and any items you added or removed.');
-  attachExplainer(pdfBtn, () => 'Saves your list exactly as it looks right now, current mode, order, names and ticks, as a printable PDF.');
-  attachExplainer(backupBtn, () => 'Emails your list to your inbox: the full list itself, plus a link that loads it back on any device. Needs a quick free registration first.');
-  attachExplainer(editToggle, () => 'Add notes, create sections, add items, rename, reorder or delete. Save your list when you’re done!');
+  attachExplainer(resetBtn, () => 'Devolve a lista ao estado inicial. No Base e no Avançado, limpa todas as marcações. No Pessoal, também desfaz renomeações, reordenações e os itens que você adicionou ou removeu.');
+  attachExplainer(pdfBtn, () => 'Salva a sua lista exatamente como ela está agora, com o modo, a ordem, os nomes e as marcações atuais, em PDF para imprimir.');
+  attachExplainer(backupBtn, () => 'Manda a sua lista para a sua caixa de entrada: a lista inteira, mais um link que carrega ela em qualquer aparelho. Precisa de um cadastro rápido e grátis antes.');
+  attachExplainer(editToggle, () => 'Adicione notas, crie seções, adicione itens, renomeie, reordene ou apague. Salve a sua lista quando terminar.');
   // Round 11.5 follow-up (Antonio): "the person will not understand that if
   // it clicks there, you have a new list below" -- the Lists accordion
   // trigger itself wasn't covered either, so its whole purpose (opens
   // create/rename/reorder/delete) was invisible under info mode too.
-  attachExplainer(document.getElementById('lsHead'), () => 'Opens your saved lists. From here you can create a new list, rename or reorder your lists, or delete one.');
-  attachExplainer(lsNewBtn, () => 'Creates a new list, so you can plan a different gig separately from this one. Type a name and save it, up to seven lists.');
-  attachExplainer(lsMoveBtn, () => 'Turns on rename and reorder for your saved lists. Tap the pencil on a list to rename it, or drag it by the arrow handle to reorder.');
-  attachExplainer(lsDelBtn, () => 'Turns on delete mode for your saved lists. Tap the × on a list once to arm it, tap again to delete it. Your active list can’t be deleted this way, switch to another list first.');
+  attachExplainer(document.getElementById('lsHead'), () => 'Abre as suas listas salvas. Daqui você cria uma lista nova, renomeia, reordena ou apaga uma delas.');
+  attachExplainer(lsNewBtn, () => 'Cria uma lista nova, para planejar outra gig separada desta. Digite um nome e salve, até sete listas.');
+  attachExplainer(lsMoveBtn, () => 'Liga renomear e reordenar nas suas listas salvas. Toque no lápis de uma lista para renomear, ou arraste pela alça de setas para reordenar.');
+  attachExplainer(lsDelBtn, () => 'Liga o modo apagar nas suas listas salvas. Toque no × de uma lista uma vez para armar, toque de novo para apagar. A lista ativa não pode ser apagada assim, troque para outra antes.');
   modeBtns.forEach((b) => attachExplainer(b, () => (MODE_COPY_MAP[b.dataset.modeSet || 'basic'] || MODE_COPY_MAP.basic).f));
   // Round 8 (Antonio): Sync used to be deliberately excluded ("tapping it
   // already opens a card that explains itself") -- he asked for it to be
   // covered too, same as everything else, since hovering it in place is
   // faster than opening the card just to remember what it does.
-  attachExplainer(acctLine, () => 'Sync lets you sign in once, no password, and keep your list saved to your account. It follows you to any device you sign in on.');
+  attachExplainer(acctLine, () => 'O Sync deixa você entrar uma vez, sem senha, e manter a sua lista salva na conta. Ela te acompanha em qualquer aparelho onde você entrar.');
 
   // The "ⓘ" toggle (round 3: shown on touch AND desktop now, doing two
   // different jobs). Touch: a plain on/off, never persisted. Turning it on
@@ -4104,14 +4117,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         desktopInfoOn = true;
         explainInfoBtn.classList.add('mode-active');
         explainInfoBtn.setAttribute('aria-pressed', 'true');
-        showExplain(explainInfoBtn, 'Leave your cursor over anything for a second to read its instructions.');
+        showExplain(explainInfoBtn, 'Deixe o cursor sobre qualquer coisa por um segundo para ler as instruções.');
         setAllExplainLit(true);
         return;
       }
       infoModeOn = !infoModeOn;
       explainInfoBtn.classList.toggle('mode-active', infoModeOn);
       explainInfoBtn.setAttribute('aria-pressed', String(infoModeOn));
-      if (infoModeOn) showExplain(explainInfoBtn, 'Tap any button to have its function explained. Tap ⓘ again to go back to normal.');
+      if (infoModeOn) showExplain(explainInfoBtn, 'Toque em qualquer botão para ver a função dele. Toque em ⓘ de novo para voltar ao normal.');
       else closeExplain();
       setAllExplainLit(infoModeOn);
     });
@@ -4132,12 +4145,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   {
     const sp = new URLSearchParams(location.search);
     if (sp.get('signedin') === '1') {
-      if (acctMsg) { acctMsg.textContent = 'Signed in. Your lists follow you now.'; acctMsg.className = 'acct-msg ok'; }
+      if (acctMsg) { acctMsg.textContent = 'Conectado. Suas listas te acompanham agora.'; acctMsg.className = 'acct-msg ok'; }
       sp.delete('signedin');
       history.replaceState(null, '', location.pathname + (sp.toString() ? '?' + sp.toString() : '') + location.hash);
     } else if (sp.get('signin')) {
       if (acctCard && acctLine) { acctCard.hidden = false; acctLine.setAttribute('aria-expanded', 'true'); }
-      if (acctMsg) { acctMsg.textContent = 'That sign-in link expired or was already used. Ask for a fresh one below.'; acctMsg.className = 'acct-msg err'; }
+      if (acctMsg) { acctMsg.textContent = 'Esse link de acesso expirou ou já foi usado. Peça um novo aqui embaixo.'; acctMsg.className = 'acct-msg err'; }
       sp.delete('signin');
       history.replaceState(null, '', location.pathname + (sp.toString() ? '?' + sp.toString() : '') + location.hash);
     }
