@@ -15,7 +15,7 @@
  *
  * Bump CACHE when the precache list changes; old caches are deleted on activate.
  */
-const CACHE = 'smg-v12';
+const CACHE = 'smg-v13';
 
 // The rescue path, offline. If a page is not here it still works online.
 const PRECACHE = [

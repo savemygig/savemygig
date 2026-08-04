@@ -694,11 +694,24 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
     max-width: var(--site-w); margin: 0 auto; padding: 0.8rem 1.25rem;
     display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: relative;
   }
-  /* gap tightened + seal enlarged 2026-07-29 (Antonio's mockup): the shield
-     reads bigger and the wordmark sits closer to it. */
-  .nav-brand { display: flex; align-items: center; gap: 0.45rem; text-decoration: none; line-height: 1; flex: 0 0 auto; }
+  /* SHIELD-TO-LOCKUP PROPORTIONS = ANTONIO'S CANVA MASTER (2026-08-04).
+     Measured from his reference PNG by ink pixels: shield ink height =
+     0.3881 x text-block ink width; gap shield-ink to text-ink = 0.0431 x
+     text width; shield vertically centred on the text block (128px above
+     vs 123px below in his file, centred within noise). The seal is sized
+     PER BREAKPOINT against the lockup width it sits next to (.smg-full in
+     Brand.astro): change one, re-derive the other. Supersedes the
+     2026-07-29 47x54 mockup sizing. Shield aspect stays its own 47:54. */
+  /* The shield SVG carries internal margins (its art sits inset in its
+     canvas: ink is ~0.822 of box height, ~0.846 of box width), so the box
+     sizes below are the ink targets DIVIDED by those ratios, and the flex
+     gap is the ink gap MINUS the asset's right-side internal margin.
+     Numbers verified by pixel measurement against the master. */
+  .nav-brand { display: flex; align-items: center; gap: 1.75px; text-decoration: none; line-height: 1; flex: 0 0 auto; }
   .nav-brand picture { flex: 0 0 auto; display: block; line-height: 0; }
-  .nb-seal { width: 47px; height: 54px; display: block; }
+  .nb-seal { width: 61.8px; height: 71px; display: block; }
+  @media (max-width: 900px) { .nb-seal { width: 72.5px; height: 83.3px; } .nav-brand { gap: 2.05px; } }
+  @media (max-width: 400px) { .nb-seal { width: 59px; height: 67.8px; } .nav-brand { gap: 1.66px; } }
   .nb-text { display: flex; flex-direction: column; gap: 3px; }
   /* LOCKUP WIDTH RULE (Antonio, 2026-08-03): "SAVE MY GIG" spans exactly the
      same width as "DJ RESCUE AND PREVENTION" underneath it, so the two lines
