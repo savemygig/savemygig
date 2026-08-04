@@ -1,0 +1,413 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { CHECKED, CDJ_2000NXS2, REKORDBOX } from '../../../../data/facts.js';
+
+// CDJ-2000NXS2, NEUTRAL LATIN AMERICAN SPANISH. Source of truth for structure,
+// components, classes, anchors and CSS:
+// src/pages/knowledge/pioneer-dj/cdj-2000nxs2.astro. Only the human readable
+// copy and the /es hrefs differ.
+
+const MESES = {
+  January: 'enero', February: 'febrero', March: 'marzo', April: 'abril',
+  May: 'mayo', June: 'junio', July: 'julio', August: 'agosto',
+  September: 'septiembre', October: 'octubre', November: 'noviembre', December: 'diciembre',
+};
+const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = esDate(CHECKED);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/cdj-2000nxs2#article',
+  headline: 'CDJ-2000NXS2: la referencia operativa',
+  description: 'Lo que todo DJ necesita saber antes de tocar un CDJ-2000NXS2: soluciones de emergencia, problemas de firmware conocidos, las funciones que importan en la booth y la compatibilidad con rekordbox y con otros reproductores.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-27',
+  dateModified: '2026-07-27',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/cdj-2000nxs2#webpage' },
+  image: 'https://www.savemygig.com/images/cdj-2000nxs2-panel-full.webp',
+};
+---
+<Base
+  title="CDJ-2000NXS2: soluciones y problemas conocidos | Save My Gig"
+  description="Manual de campo del CDJ-2000NXS2: qué hacer cuando no enciende, cuando LINK no conecta o cuando un USB no muestra playlists, más firmware y compatibilidad."
+  path="/knowledge/pioneer-dj/cdj-2000nxs2"
+  crumbName="CDJ-2000NXS2"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Ruta de navegación">
+      <a href="/es/knowledge">Base de conocimiento</a> <span aria-hidden="true">/</span>
+      <a href="/es/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>CDJ-2000NXS2</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">CDJ-2000NXS2</div>
+        <h1 class="rb-h1">CDJ-2000NXS2, <span class="accent">el manual de campo</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#cdj-2000nxs2-lightbox"
+        aria-label="Abrir una foto más grande del panel de control del CDJ-2000NXS2"
+      >
+        <img
+          src="/images/cdj-2000nxs2-panel-thumb.webp"
+          alt="Panel de control del reproductor Pioneer DJ CDJ-2000NXS2, visto desde arriba"
+          width="387"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="cdj-2000nxs2-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Cerrar"></a>
+      <a href="#" class="lightbox-close" aria-label="Cerrar">&times;</a>
+      <img
+        src="/images/cdj-2000nxs2-panel-full.webp"
+        alt="Panel de control del reproductor Pioneer DJ CDJ-2000NXS2, visto desde arriba"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> Salió en 2016, y sigue siendo el deck que
+        más probablemente encuentres en una booth de club real, incluso al lado de
+        equipo más nuevo. Lee <strong>solo Device Library</strong>, nunca OneLibrary,
+        y su puerto USB es <strong>solo FAT32</strong>, no lee exFAT. Formatea tu USB
+        en FAT32 con esquema de partición MBR y exporta normal, y este reproductor
+        nunca te sorprende. Lo que agarra desprevenida a la gente: un USB preparado
+        solo para un reproductor OneLibrary (CDJ-3000X, CDJ-1500X) puede no mostrar
+        ninguna playlist aquí aunque el USB funcione perfecto en otro lado.
+      </p>
+      <label for="sv-toggle" class="sv-more">Leer más…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Leer menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluciones de emergencia" />
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="usb-not-recognized">
+      <summary><h3 class="acc-h2">El USB no se reconoce, o se lee sin playlists</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Si el USB no se lee para nada, la causa
+        es casi siempre el sistema de archivos. Si se lee pero no muestra playlists,
+        es muy probable que el USB haya sido exportado para un reproductor
+        OneLibrary, y este deck no puede leer OneLibrary.</p>
+        <p><strong>Por qué pasa esto.</strong> Este reproductor lee solo FAT32, aquí
+        exFAT no está soportado, y lee solo el formato de base de datos
+        <strong>Device Library</strong>, nunca OneLibrary.</p>
+        <p><strong>Resuélvelo ahora.</strong> Confirma que el USB es FAT32 con
+        esquema de partición MBR. Si se lee pero no muestra playlists, vuelve a
+        exportar desde rekordbox {REKORDBOX.dualFormatFloor} o más reciente, que
+        escribe Device Library y OneLibrary en el mismo USB, así un solo export
+        funciona tanto en este deck como en los más nuevos. Si no tienes laptop,
+        cambia a la vista FOLDER, tu audio sigue en el USB.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Nunca formatees en exFAT los USB
+        de este reproductor, y mantén rekordbox en {REKORDBOX.dualFormatFloor} o más
+        reciente para que cada export incluya Device Library de forma
+        automática.</p>
+        <p class="acc-related">Relacionados: <a href="/es/fix/usb-not-recognized-cdj">Diagnóstico completo del USB</a> <a href="/es/knowledge/pioneer-dj/rekordbox#onelibrary">OneLibrary y Device Library</a> <a href="#compatibility">Compatibilidad</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="wont-boot">
+      <summary><h3 class="acc-h2">El reproductor no enciende, o la pantalla queda negra</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Antes de darlo por muerto, esto es casi
+        siempre corriente o un cable, no la unidad.</p>
+        <p><strong>Por qué pasa esto.</strong> Un cable IEC flojo, una toma muerta en
+        una extensión de la booth, o una pantalla que simplemente está dormida se ven
+        idénticos a "el reproductor está roto" en la oscuridad.</p>
+        <p><strong>Resuélvelo ahora.</strong> Revisa que el cable de corriente esté
+        bien puesto en los dos extremos y prueba otra toma. Confirma que la pantalla
+        no está solo atenuada, tócala. Si sigue sin mostrar nada, cambia el cable de
+        corriente si tienes uno de repuesto, y prueba la toma del otro reproductor
+        para aislar la instalación de la booth de la unidad.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Lleva un cable IEC de repuesto,
+        son baratos y este es uno de los llamados de "equipo muerto" más comunes en
+        un lugar.</p>
+        <p class="acc-related">Relacionados: <a href="/es/emergency">Abrir Emergency Mode</a> <a href="#link-not-working">LINK no conecta</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="link-not-working">
+      <summary><h3 class="acc-h2">Pro DJ Link no conecta entre reproductores</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Si los reproductores no se ven los
+        tracks o el BPM por LINK, casi siempre es el cable Ethernet o la
+        configuración de red, no una falla en ninguno de los dos decks.</p>
+        <p><strong>Por qué pasa esto.</strong> El Pro DJ Link necesita una conexión
+        Ethernet funcionando entre todas las unidades (directa, o a través del switch
+        integrado en un mixer DJM compatible), y todas las unidades en el mismo modo
+        de link.</p>
+        <p><strong>Resuélvelo ahora.</strong> Reconecta cada cable Ethernet en los
+        dos extremos. Confirma que no estás usando por error un cable USB en un
+        puerto LINK, se parecen en una booth oscura. Revisa que el menú de utilidades
+        de cada reproductor muestre a los otros en la lista de dispositivos LINK. Si
+        un reproductor sigue sin entrar, reinicia esa unidad sola en vez de toda la
+        cadena.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Lleva un cable Ethernet de
+        repuesto, y guarda los cables de LINK separados de los de corriente en tu
+        bolso para no agarrar el equivocado bajo presión.</p>
+        <p class="acc-related">Relacionados: <a href="#wont-boot">El reproductor no enciende</a> <a href="/es/knowledge/pioneer-dj/djm-900nxs2">Referencia del DJM-900NXS2</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="frozen-touchscreen">
+      <summary><h3 class="acc-h2">Pantalla táctil congelada o sin respuesta</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Una pantalla de 7 pulgadas congelada no
+        significa que el reproductor haya dejado de tocar, el audio y los controles
+        físicos (play, cue, jog) siguen funcionando de forma independiente de la
+        pantalla táctil.</p>
+        <p><strong>Por qué pasa esto.</strong> Como cualquier pantalla táctil
+        embebida, puede trabarse en su propio software de vez en cuando, sin relación
+        con el USB ni con el track cargado.</p>
+        <p><strong>Resuélvelo ahora.</strong> Sigue mezclando con los controles
+        físicos, el track ya cargado no está afectado. Si necesitas cargar un track
+        nuevo y la pantalla no responde, termina el track actual en este deck y pasa
+        las nuevas selecciones al otro reproductor mientras este se recupera o se
+        reinicia en un momento seguro (nunca a mitad de un track si puedes
+        evitarlo).</p>
+        <p><strong>Evítalo la próxima vez.</strong> Evita las actualizaciones de
+        firmware el día del gig, y si una pantalla ya se congeló antes en una unidad
+        específica, avísale al lugar o a la empresa de renta antes del próximo
+        booking.</p>
+        <p class="acc-related">Relacionados: <a href="/es/emergency">Abrir Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conocidos" />
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="firmware-history">
+      <summary><h3 class="acc-h2">Las correcciones de firmware que vale conocer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Tres actualizaciones de firmware
+        corrigieron problemas reales y documentados en este deck. Si una unidad que
+        estás usando nunca se actualizó, vale la pena revisarlas.</p>
+        <p><strong>Por qué importa.</strong> Corregido en el firmware
+        {CDJ_2000NXS2.controlModeDropoutFix}: cortes de audio durante la reproducción
+        en Control Mode. Corregido en el firmware {CDJ_2000NXS2.waveformColorFix}: la
+        selección de color del waveform, que había desaparecido por un tiempo, fue
+        restaurada. Corregido en el firmware {CDJ_2000NXS2.slipHotCueFix}: un
+        problema de arranque que afectaba el comportamiento de SLIP HOT CUE.
+        Introducido en el firmware {CDJ_2000NXS2.beatJumpIntro}: el Beat Jump en
+        saltos de 2, 4, 8 y 16 beats, no es una corrección, sino la actualización que
+        agregó la función que casi todos suponen que estuvo ahí siempre.</p>
+        <p><strong>Hazlo así.</strong> Revisa la versión de firmware en el menú de
+        utilidades antes de confiar en una unidad de renta o del lugar para cualquier
+        cosa relacionada con beat jump o control mode.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Actualiza lejos del día del gig,
+        nunca el día anterior. Una versión de firmware nueva puede traer un problema
+        nuevo, y la booth es donde te lo encuentras.</p>
+        <p style="margin-top:1rem">
+          <strong>Descargas de firmware.</strong> <a href="https://support.alphatheta.com/en-US/products/4416488054425" target="_blank" rel="noopener">Página oficial de soporte de AlphaTheta →</a><br />
+          <span class="dim" style="font-size:0.85rem">¿Link roto? <a href="/es/feedback">Avísanos</a> y lo corregimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="#beat-jump">Beat Jump, explicado</a> <a href="/es/knowledge/pioneer-dj/firmware">Cada modelo, por versión de firmware</a> <a href="/es/prepare">Por qué el día del gig no se actualiza nada</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Funciones explicadas" />
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="hot-cues">
+      <summary><h3 class="acc-h2">Hot Cues</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Dos bancos de cuatro Hot Cues
+        iluminados por color, ocho por track, que se definen desde rekordbox o en el
+        propio reproductor.</p>
+        <p><strong>Por qué importa.</strong> Un Hot Cue salta al instante a un punto
+        guardado dentro del track, la decisión de mezcla que tomas desde tu
+        biblioteca en casa en vez de andar cazando el drop en vivo.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> Preparados en rekordbox
+        antes del gig, usando los pads para agarrar una frase, un drop o una voz sobre
+        la marcha sin romper la mezcla.</p>
+        <p><strong>Errores comunes.</strong> Confiar por completo en la memoria en vez
+        de los Hot Cues para un set que nunca tocaste, y olvidar que los Hot Cues
+        viven en la base de datos de rekordbox, no en el archivo de audio, así que
+        expulsar mal puede costarte los que acabas de poner.
+        <a href="/es/knowledge/pioneer-dj/rekordbox#no-playlists">Mira por qué</a>.</p>
+        <p class="acc-related">Relacionados: <a href="#beat-jump">Beat Jump</a> <a href="/es/knowledge/pioneer-dj/rekordbox#how-exports-work">Cómo funciona el export</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="beat-jump">
+      <summary><h3 class="acc-h2">Beat Jump</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Salta la cabeza de reproducción un
+        número fijo de beats hacia adelante o hacia atrás (2, 4, 8 o 16), sin romper
+        el tempo ni el beatgrid. Introducido en el firmware
+        {CDJ_2000NXS2.beatJumpIntro}.</p>
+        <p><strong>Por qué importa.</strong> Te deja corregir el fraseo o saltarte
+        una sección al instante, en tiempo perfecto, en vez de empujar el jog y
+        esperar que salga.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> Para recortar una intro
+        sobre la marcha, o para saltarse un breakdown que no le sirve a la sala, sin
+        que el público escuche la costura.</p>
+        <p><strong>Errores comunes.</strong> Usar Beat Jump con Quantize apagado, lo
+        que puede saltar fuera del beatgrid en vez de sobre él, la mayoría de los
+        profesionales deja Quantize encendido justamente para que Beat Jump y los Hot
+        Cues caigan limpios.</p>
+        <p class="acc-related">Relacionados: <a href="#hot-cues">Hot Cues</a> <a href="#firmware-history">Historial de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Consejos profesionales" />
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="dual-format-drive"><summary><h3 class="acc-h2">Ten un USB que funcione en cualquier booth</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Como este deck no puede leer OneLibrary,
+        el hábito más seguro para girar es un solo estándar de export que incluya los
+        dos formatos, no dos USB distintos para dos booths distintas.</p>
+        <p><strong>Por qué importa.</strong> Un USB exportado desde rekordbox
+        {REKORDBOX.dualFormatFloor} o más reciente lleva Device Library y OneLibrary
+        juntos. Un solo USB funciona entonces caigas donde caigas, en un CDJ-2000NXS2
+        o en un CDJ-3000X, sin que tengas que saber de antemano qué booth te
+        toca.</p>
+        <p><strong>Hazlo así.</strong> Estandariza en {REKORDBOX.dualFormatFloor} o
+        más reciente para cada export, de forma permanente, no solo para los gigs
+        donde esperas equipo viejo.</p>
+        <p><strong>Errores comunes.</strong> Suponer que "lugar más nuevo" significa
+        "reproductor más nuevo". Muchos clubes de primer nivel siguen corriendo pares
+        de CDJ-2000NXS2 porque son probados, confiables y están en todas partes en el
+        mercado de segunda mano.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla de compatibilidad completa</a> <a href="/es/prepare">El sistema de prevención</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Mantenimiento preventivo" />
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="maintenance"><summary><h3 class="acc-h2">Mantener una unidad confiable a lo largo de años de bookings</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Los hábitos que protegen a cualquier
+        deck profesional son los mismos que protegen a este: expulsar de forma
+        segura, cablear con cuidado y tener disciplina con el momento de actualizar
+        el firmware.</p>
+        <p><strong>Por qué importa.</strong> Los puertos USB y Ethernet se desgastan
+        con el uso, y sacar un USB sin expulsarlo sigue siendo la forma más común de
+        que una unidad por lo demás sana empiece a tirar errores de base de
+        datos.</p>
+        <p><strong>Hazlo así.</strong> Expulsa siempre desde rekordbox, o usa el
+        botón de expulsar del propio reproductor, antes de sacar un USB. Agarra los
+        cables Ethernet por el conector, no por el cable, para no forzar el puerto.
+        Mantén la unidad cubierta y con las entradas de aire libres durante el
+        transporte y el guardado.</p>
+        <p><strong>Evítalo la próxima vez.</strong> No actualices firmware el día del
+        gig, y no dejes el firmware de una unidad de renta sin revisar durante años,
+        una actualización entre bookings es un trabajo de cinco minutos en casa, no
+        en el lugar.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/rekordbox#no-playlists">Por qué expulsar mal deja playlists ausentes</a> <a href="/es/prepare">El sistema de prevención completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidad" />
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="compatibility"><summary><h3 class="acc-h2">rekordbox, formato de biblioteca y Pro DJ Link</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Solo Device Library, solo FAT32, y el
+        Pro DJ Link funciona entre generaciones AlphaTheta / Pioneer DJ (los raros
+        bugs entre modelos están corregidos por firmware, mira la matriz de
+        firmware), el formato de biblioteca es una pregunta aparte de la
+        compatibilidad de Link.</p>
+        <p><strong>Por qué importa.</strong> El Pro DJ Link es un protocolo de red,
+        todos los reproductores y el switch del DJM-900NXS2 lo hablan sin importar
+        qué formato de biblioteca lee cada deck. El formato de biblioteca solo afecta
+        si las playlists de un USB dado aparecen en un reproductor dado.</p>
+        <p><strong>Hazlo así.</strong> Exporta desde rekordbox
+        {REKORDBOX.dualFormatFloor} o más reciente, formatea los USB en FAT32 con
+        MBR, y conéctalo con un DJM-900NXS2 o cualquier otro mixer con Pro DJ Link
+        sin pensarlo dos veces.</p>
+        <p><strong>Evítalo la próxima vez.</strong> No formatees un USB en exFAT para
+        este reproductor, no lo va a leer para nada.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla de compatibilidad por modelo</a> <a href="/es/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Preguntas frecuentes" />
+
+    <details class="acc-sec" name="cdj2knxs2-acc" id="faq"><summary><h3 class="acc-h2">Respuestas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>¿Este reproductor lee exFAT?</dt><dd>No. Solo FAT32.</dd>
+          <dt>¿Soporta OneLibrary?</dt><dd>No. Solo Device Library.</dd>
+          <dt>¿Puedo usar Device Library?</dt><dd>Sí, es el formato que lee de forma nativa.</dd>
+          <dt>¿Puedo hacer link con un CDJ-3000 o un CDJ-3000X?</dt><dd>Sí, por Pro DJ Link para tempo y control de reproducción. Que las playlists aparezcan en cada deck depende de qué formato de biblioteca lleva tu USB, no del Link. <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla completa</a>.</dd>
+          <dt>¿Lo puedo conectar a un DJM-900NXS2?</dt><dd>Sí, es la pareja de su época y la combinación de booth más común del mundo.</dd>
+          <dt>¿Puedo usar el Export Mode con este reproductor?</dt><dd>Sí, el Export estándar de rekordbox.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guías relacionadas</h2>
+      <p class="dim" style="margin:0">
+        <a href="/es/knowledge/pioneer-dj/rekordbox">Referencia de rekordbox</a> ·
+        <a href="/es/fix/format-usb-for-cdj">Preparación del USB</a> ·
+        <a href="/es/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
+        <a href="/es/fix/usb-not-recognized-cdj">Diagnóstico de detección de USB</a> ·
+        <a href="/es/checklist">Checklist pre-gig</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">¿Vas a tocar pronto y no funciona?</h2>
+      <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_cdj2knxs2"><span aria-hidden="true">🚨</span> Abrir Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_cdj2knxs2" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fuentes: las páginas oficiales de especificaciones de AlphaTheta / Pioneer DJ
+      y el documento de historial de cambios de firmware del CDJ-2000NXS2, revisados
+      el {UPDATED}. Los pasos generales de diagnóstico (corriente, cableado,
+      reinicios) reflejan la práctica estándar, no un defecto documentado
+      específico. El firmware y el comportamiento cambian sin aviso, vuelve a revisar
+      antes de un show grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning, not sized by a flex row. Rationale in the English source
+     file, which is the source of truth for this CSS. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

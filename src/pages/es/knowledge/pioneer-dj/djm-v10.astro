@@ -1,0 +1,381 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { CHECKED, DJM_V10 } from '../../../../data/facts.js';
+
+// DJM-V10, NEUTRAL LATIN AMERICAN SPANISH. Source of truth for structure,
+// components, classes, anchors and CSS:
+// src/pages/knowledge/pioneer-dj/djm-v10.astro. Only the human readable copy
+// and the /es hrefs differ.
+
+const MESES = {
+  January: 'enero', February: 'febrero', March: 'marzo', April: 'abril',
+  May: 'mayo', June: 'junio', July: 'julio', August: 'agosto',
+  September: 'septiembre', October: 'octubre', November: 'noviembre', December: 'diciembre',
+};
+const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = esDate(CHECKED);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/djm-v10#article',
+  headline: 'DJM-V10: la referencia operativa',
+  description: 'Lo que todo DJ necesita saber antes de trabajar un DJM-V10: seis canales, EQ de 4 bandas, compresor por canal, las correcciones de firmware documentadas y las trampas que agarran a los DJs que vienen de mesas de 3 bandas.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-27',
+  dateModified: '2026-07-27',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/djm-v10#webpage' },
+  image: 'https://www.savemygig.com/images/djm-v10-panel-full.webp',
+};
+---
+<Base
+  title="DJM-V10: 6 canales, EQ de 4 bandas y correcciones | Save My Gig"
+  description="Manual de campo del DJM-V10: chequeos de canal mudo en seis canales, correcciones de firmware documentadas y las trampas que agarran a los DJs que vienen de una mesa de 3 bandas."
+  path="/knowledge/pioneer-dj/djm-v10"
+  crumbName="DJM-V10"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Ruta de navegación">
+      <a href="/es/knowledge">Base de conocimiento</a> <span aria-hidden="true">/</span>
+      <a href="/es/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>DJM-V10</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">DJM-V10</div>
+        <h1 class="rb-h1">DJM-V10, <span class="accent">el manual de campo</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#djm-v10-lightbox"
+        aria-label="Abrir una foto más grande del panel de control del DJM-V10"
+      >
+        <img
+          src="/images/djm-v10-panel-thumb.webp"
+          alt="Panel de control del mixer de seis canales Pioneer DJ DJM-V10, visto desde arriba"
+          width="468"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="djm-v10-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Cerrar"></a>
+      <a href="#" class="lightbox-close" aria-label="Cerrar">&times;</a>
+      <img
+        src="/images/djm-v10-panel-full.webp"
+        alt="Panel de control del mixer de seis canales Pioneer DJ DJM-V10, visto desde arriba"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> No es un 900 más grande: es otra mesa.
+        <strong>{DJM_V10.channels} canales, EQ de {DJM_V10.eqBands} bandas y un
+        compresor en cada canal</strong>, salidas dobles de audífonos, EQ de booth, y
+        un send/return ampliado que combina FX externos e internos. La trampa para
+        los DJs que vienen de mesas de 3 bandas es la memoria muscular: el EQ que
+        buscas no está donde tus manos creen, y hay dos strips de canal más de los
+        que esperan tus ojos. Recorre la mesa antes de que abran puertas, no durante
+        tu primera mezcla.
+      </p>
+      <label for="sv-toggle" class="sv-more">Leer más…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Leer menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluciones de emergencia" />
+
+    <details class="acc-sec" name="djmv10-acc" id="no-signal">
+      <summary><h3 class="acc-h2">Un canal no tiene señal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> El mismo orden que en cualquier mesa,
+        fader, asignación, selector de entrada, con dos sospechosos propios del V10:
+        el ruteo de send/return y, en firmware muy viejo, un bug documentado donde el
+        audio a veces no entraba a un canal, corregido en el firmware
+        {DJM_V10.channelInputFix}.</p>
+        <p><strong>Por qué pasa esto.</strong> Seis canales significa seis selectores
+        de entrada que pueden estar cada uno en la fuente equivocada, y el
+        send/return puede desviar un canal por equipo externo que no está devolviendo
+        señal.</p>
+        <p><strong>Resuélvelo ahora.</strong> Fader arriba, selector de entrada
+        igualado, send/return desactivado para tu canal, y después pasa la fuente a
+        otro canal para aislar. Si un canal específico pierde audio de forma repetida
+        en una unidad vieja, revisa la versión de firmware: {DJM_V10.channelInputFix}
+        fue la cura documentada exactamente para eso.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Una pasada de ruteo por los seis
+        canales antes de que abran puertas toma noventa segundos y elimina todos
+        estos casos a mitad del set.</p>
+        <p class="acc-related">Relacionados: <a href="#four-band">La trampa del EQ de 4 bandas</a> <a href="/es/emergency">Abrir Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djmv10-acc" id="audio-cutout-link">
+      <summary><h3 class="acc-h2">El audio se corta con CDJ-3000 en Link</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Un problema documentado: posible corte
+        de audio cuando el V10 estaba conectado a CDJ-3000 por la red Pro DJ Link,
+        corregido en el firmware {DJM_V10.cdj3000LinkAudioFix}.</p>
+        <p><strong>Por qué pasa esto.</strong> V10 más CDJ-3000 es la combinación
+        estándar de esta mesa, que es exactamente por qué el bug importó lo suficiente
+        como para documentarlo y corregirlo.</p>
+        <p><strong>Resuélvelo ahora.</strong> Si el audio se cae mientras el Link
+        está arriba, el estabilizador inmediato es sacar el cable de Link del mixer,
+        los reproductores siguen tocando audio sin la red. Después lleva la mesa a
+        {DJM_V10.cdj3000LinkAudioFix} o más reciente cuando termine el gig.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Revisa la versión de firmware en
+        cualquier booth con V10 que corra CDJ-3000; esta corrección salió hace años,
+        pero las unidades de renta y de los lugares se pasan años sin
+        actualizarse.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/cdj-3000">Referencia del CDJ-3000</a> <a href="#known-issues">Correcciones documentadas por versión</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djmv10-acc" id="usb-not-recognized">
+      <summary><h3 class="acc-h2">Un USB que el mixer se niega a ver</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Las unidades compatibles con UASP, o
+        sea la mayoría de los USB de calidad, no se reconocían hasta el firmware
+        {DJM_V10.uaspFix}.</p>
+        <p><strong>Por qué pasa esto.</strong> El mismo bug documentado que en el
+        DJM-A9, corregido el mismo día, y las mesas de renta están atrasadas de
+        forma habitual.</p>
+        <p><strong>Resuélvelo ahora.</strong> Usa un USB más viejo o simple para el
+        trabajo del lado del mixer, y actualiza la mesa a {DJM_V10.uaspFix}+
+        después.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Un USB simple sin UASP en el
+        bolso para las tareas del mixer.</p>
+        <p class="acc-related">Relacionados: <a href="/es/gear">USB en los que confiamos</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conocidos" />
+
+    <details class="acc-sec" name="djmv10-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Correcciones documentadas, por versión de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Cuatro entradas reales del historial
+        oficial de cambios. Corregido en {DJM_V10.channelInputFix}: el audio que a
+        veces no entraba a un canal. Corregido en {DJM_V10.midiFix}: salida MIDI
+        incorrecta bajo cierta operación. Corregido en
+        {DJM_V10.cdj3000LinkAudioFix}: el posible corte de audio con CDJ-3000 por Pro
+        DJ Link. Corregido en {DJM_V10.uaspFix}: los USB UASP que no se
+        reconocían.</p>
+        <p><strong>Un cambio de comportamiento, no un bug:</strong> introducido en
+        {DJM_V10.ecoStandbyIntro}, la gestión de energía sigue el tiempo de 20
+        minutos del Ecodesign de la Unión Europea. Una mesa que se apagó sola durante
+        un cambio largo está siguiendo esa configuración.</p>
+        <p><strong>Hazlo así.</strong> En un V10 que controlas, quédate en
+        {DJM_V10.uaspFix} o más reciente, actualizado entre un gig y otro, nunca
+        antes de uno.</p>
+        <p style="margin-top:1rem">
+          <strong>Descargas de firmware.</strong> <a href="https://support.alphatheta.com/en-US/products/4416568754457" target="_blank" rel="noopener">Página oficial de soporte de AlphaTheta →</a><br />
+          <span class="dim" style="font-size:0.85rem">¿Link roto? <a href="/es/feedback">Avísanos</a> y lo corregimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/es/prepare">Por qué el día del gig no se actualiza nada</a> <a href="/es/knowledge/pioneer-dj/firmware">Cada modelo, por versión de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Funciones explicadas" />
+
+    <details class="acc-sec" name="djmv10-acc" id="four-band">
+      <summary><h3 class="acc-h2">El EQ de 4 bandas, y la trampa de la memoria muscular</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Cada canal tiene cuatro bandas de EQ en
+        vez de las tres que tus manos aprendieron en todos los demás DJM.</p>
+        <p><strong>Por qué importa.</strong> Las posiciones de los knobs se corren.
+        Un DJ que estira la mano hacia "el grave" sin mirar agarra una banda distinta
+        de la que quería, en vivo, en un sistema grande. Este es el error más común
+        del V10 y es puramente espacial.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> El grave partido (low y
+        low mid) es la razón por la que esta mesa existe para los estilos de mezcla
+        larga: puedes sostener dos líneas de bajo separadas de una forma que los EQ
+        de 3 bandas no permiten.</p>
+        <p><strong>Errores comunes.</strong> No recorrer el strip antes de que abran
+        puertas. Noventa segundos tocando cada knob de un canal recalibran tus manos
+        para el gig.</p>
+        <p class="acc-related">Relacionados: <a href="#compressor">El compresor de canal</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djmv10-acc" id="compressor">
+      <summary><h3 class="acc-h2">El compresor por canal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Un compresor de un solo knob en cada
+        canal que aprieta y levanta el volumen percibido de un track.</p>
+        <p><strong>Por qué importa.</strong> Los sets armados con material de épocas
+        y masters distintos llegan con volúmenes muy dispares; el compresor empareja
+        el set en el canal, antes de que empiece la pelea del EQ.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> Con suavidad, sobre
+        material delgado o viejo que desaparece al lado de los masters modernos.</p>
+        <p><strong>Errores comunes.</strong> Usarlo como botón de guerra de volumen.
+        Comprimir todo fuerte aplasta la dinámica que el sistema grande fue contratado
+        para reproducir, y las posiciones de compresor heredadas del DJ anterior
+        cuentan como estado de ruteo: revísalas en el relevo.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/djm-900nxs2#gain-staging">Primero el gain staging</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djmv10-acc" id="six-channels">
+      <summary><h3 class="acc-h2">Seis canales, en la práctica</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Cuatro reproductores más hardware, un
+        rig híbrido en vivo, o tres DJs compartiendo una mesa sin recablear, eso es
+        lo que compran los dos canales extra.</p>
+        <p><strong>Por qué importa.</strong> La booth con V10 suele ser una booth más
+        ocupada: más fuentes, más cables, más gente, y por eso la disciplina de ruteo
+        importa más aquí que en cualquier mesa de 4 canales.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> En sets híbridos
+        (reproductores más caja de ritmos más sinte) y en escenarios de festival con
+        cambios superpuestos.</p>
+        <p><strong>Errores comunes.</strong> Suponer la distribución de canales del
+        acto anterior. Seis canales significan seis posibilidades de que el selector
+        de entrada no esté donde esperas.</p>
+        <p class="acc-related">Relacionados: <a href="#no-signal">Un canal no tiene señal</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Consejos profesionales" />
+
+    <details class="acc-sec" name="djmv10-acc" id="walk-the-desk">
+      <summary><h3 class="acc-h2">Recorre la mesa antes de que abran puertas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Noventa segundos, un strip de canal, de
+        arriba abajo, antes de que se llene la sala: trim, cuatro bandas de EQ,
+        compresor, filter, fader, asignación, send/return.</p>
+        <p><strong>Por qué importa.</strong> Todas las historias de terror del V10
+        que nos cuentan empiezan con manos entrenadas en una mesa de 3 bandas
+        encontrándose con esta distribución por primera vez a mitad del set. La mesa
+        no es más difícil; es distinta, y lo distinto es lo que te mata a las 2 de la
+        mañana.</p>
+        <p><strong>Hazlo así.</strong> Haz del recorrido parte de tu ritual de prueba
+        de sonido, y repite el vistazo de relevo en cada cambio: en esta mesa, el
+        estado heredado incluye las posiciones del compresor y del send/return.</p>
+        <p class="acc-related">Relacionados: <a href="#four-band">La trampa de las 4 bandas</a> <a href="/es/checklist">El checklist pre-gig</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Mantenimiento preventivo" />
+
+    <details class="acc-sec" name="djmv10-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Mantener la mesa confiable</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Cuidado de los conectores, transporte
+        cubierto y firmware al día entre un gig y otro, el mismo trío que en
+        cualquier mesa, con más conectores que cuidar.</p>
+        <p><strong>Por qué importa.</strong> Seis canales de entradas más el
+        send/return significan aproximadamente el doble de conexiones de cable que
+        una mesa de la clase 900, y cada una es una futura falla intermitente si se
+        fuerza.</p>
+        <p><strong>Hazlo así.</strong> Desconecta agarrando el conector, inspecciona
+        antes de guardar, mantenla cubierta, y sostén el firmware en
+        {DJM_V10.uaspFix}+.</p>
+        <p class="acc-related">Relacionados: <a href="/es/prepare">El sistema de prevención completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidad" />
+
+    <details class="acc-sec" name="djmv10-acc" id="compatibility">
+      <summary><h3 class="acc-h2">Reproductores, software y Pro DJ Link</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Pro DJ Link entre generaciones de
+        reproductores, con la combinación con el CDJ-3000 como estándar, y la única
+        con un corte de audio documentado y corregido (firmware
+        {DJM_V10.cdj3000LinkAudioFix}). El formato de biblioteca de tu USB es una
+        pregunta del lado del reproductor y nunca toca al mixer.</p>
+        <p><strong>Hazlo así.</strong> En una booth con V10 más CDJ-3000, un vistazo
+        al firmware del mixer responde si el problema conocido de Link es siquiera
+        posible.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/cdj-3000">CDJ-3000</a> <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla de compatibilidad de reproductores</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Preguntas frecuentes" />
+
+    <details class="acc-sec" name="djmv10-acc" id="faq">
+      <summary><h3 class="acc-h2">Respuestas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>¿Qué es el DJM-V10-LF?</dt><dd>El mismo mixer en versión long fader: faders de canal extendidos y sin crossfader, hecho para los estilos de mezcla larga. Todo lo de esta página aplica a las dos versiones.</dd>
+          <dt>¿Es solo un DJM-900 de 6 canales?</dt><dd>No. El EQ de 4 bandas, el compresor por canal y el send/return ampliado lo vuelven otro instrumento; la distribución de los faders es donde termina el parecido.</dd>
+          <dt>¿El formato de biblioteca de mi USB lo afecta?</dt><dd>No, eso es solo del lado del reproductor.</dd>
+          <dt>¿Pueden dos DJs hacer cue a la vez?</dt><dd>Sí, salidas dobles de audífonos.</dd>
+          <dt>¿Puedo hacer link con CDJ-3000?</dt><dd>Sí, es la combinación estándar. Con firmware de mixer anterior a {DJM_V10.cdj3000LinkAudioFix}, existía un corte de audio documentado en esa conexión de Link, así que revisa la versión.</dd>
+          <dt>¿Por qué rechaza mi USB rápido?</dt><dd>El firmware anterior a {DJM_V10.uaspFix} no reconocía las unidades UASP. Actualiza la mesa, o usa un USB simple.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guías relacionadas</h2>
+      <p class="dim" style="margin:0">
+        <a href="/es/knowledge/pioneer-dj/djm-a9">DJM-A9</a> ·
+        <a href="/es/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
+        <a href="/es/knowledge/pioneer-dj/cdj-3000">CDJ-3000</a> ·
+        <a href="/es/knowledge/pioneer-dj/rekordbox">Referencia de rekordbox</a> ·
+        <a href="/es/checklist">Checklist pre-gig</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">¿Vas a tocar pronto y no funciona?</h2>
+      <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_djmv10"><span aria-hidden="true">🚨</span> Abrir Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_djmv10" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fuentes: el historial oficial de cambios de firmware del DJM-V10 de
+      AlphaTheta y las páginas de producto, revisados el {UPDATED}. Los pasos
+      generales de diagnóstico reflejan la práctica estándar de mezcla. El firmware
+      y el comportamiento cambian sin aviso, vuelve a revisar antes de un show
+      grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning, not sized by a flex row. Rationale in the English source
+     file, which is the source of truth for this CSS. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

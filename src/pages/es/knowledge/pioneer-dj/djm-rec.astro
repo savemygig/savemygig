@@ -1,0 +1,332 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import Disclaimer from '../../../../components/Disclaimer.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { DJM_REC, VENDOR_LINKS } from '../../../../data/facts.js';
+
+// DJM-REC, NEUTRAL LATIN AMERICAN SPANISH. Source of truth for structure,
+// components, classes, anchors, script and CSS:
+// src/pages/knowledge/pioneer-dj/djm-rec.astro. Only the human readable copy
+// and the /es hrefs differ.
+
+const F = DJM_REC;
+
+const MESES = {
+  January: 'enero', February: 'febrero', March: 'marzo', April: 'abril',
+  May: 'mayo', June: 'junio', July: 'julio', August: 'agosto',
+  September: 'septiembre', October: 'octubre', November: 'noviembre', December: 'diciembre',
+};
+const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = esDate(F.checked);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/djm-rec#article',
+  headline: 'DJM-REC: grabar y transmitir tu set en vivo a través de un mixer DJM',
+  description: 'Qué hace realmente DJM-REC, qué mixers DJM lo soportan de forma oficial, qué servicios de streaming funcionan con el título del track y los problemas conocidos que hay que revisar antes de apretar rec en un gig.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-28',
+  dateModified: '2026-07-28',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/djm-rec#webpage' },
+  image: 'https://www.savemygig.com/images/djm-rec-panel-full.webp',
+  about: [
+    { '@type': 'Thing', name: 'DJM-REC' },
+    { '@type': 'Thing', name: 'AlphaTheta DJM mixers' },
+    { '@type': 'Thing', name: 'DJ live streaming' },
+  ],
+};
+---
+<Base
+  title="DJM-REC: mixers, streaming y problemas conocidos | Save My Gig"
+  description="DJM-REC graba y transmite tu set con un solo cable USB hacia un mixer DJM. Qué mixers lo soportan, y qué revisar antes de apretar rec."
+  path="/knowledge/pioneer-dj/djm-rec"
+  crumbName="DJM-REC"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Ruta de navegación">
+      <a href="/es/knowledge">Base de conocimiento</a> <span aria-hidden="true">/</span>
+      <a href="/es/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>DJM-REC</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">DJM-REC</div>
+        <h1 class="rb-h1">DJM-REC, <span class="accent">todo queda grabado</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#djm-rec-lightbox"
+        aria-label="Abrir una captura de pantalla más grande de la app DJM-REC"
+      >
+        <img
+          src="/images/djm-rec-panel-thumb.webp"
+          alt="La app DJM-REC en un iPhone: la vista de transmisión en vivo y la pantalla de grabación con waveform y niveles"
+          width="496"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="djm-rec-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Cerrar"></a>
+      <a href="#" class="lightbox-close" aria-label="Cerrar">&times;</a>
+      <img
+        src="/images/djm-rec-panel-full.webp"
+        alt="La app DJM-REC en un iPhone: la vista de transmisión en vivo y la pantalla de grabación con waveform y niveles"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> DJM-REC es la app de AlphaTheta para
+        iPhone y iPad que graba y transmite tu set en vivo a través de <strong>un
+        solo cable USB hacia un mixer DJM compatible</strong>, y escribe una lista de
+        tracks con marcas de tiempo mientras tocas. Vive completamente fuera de tu
+        cadena de reproducción: una grabación fallida te cuesta un archivo, nunca un
+        set. Lo que sí sale mal en los gigs es el firmware del mixer del lugar y las
+        rarezas de cada plataforma, y las dos cosas están listadas abajo.
+      </p>
+      <label for="sv-toggle" class="sv-more">Leer más…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Leer menos</label>
+    </div>
+
+    <AccGroup icon="book" title="Entender DJM-REC" />
+
+    <details class="acc-sec" name="dr-acc" id="what-it-is">
+      <summary><h3 class="acc-h2">Qué es DJM-REC en realidad</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> La app de grabación y transmisión en
+        vivo de AlphaTheta para iPhone y iPad. Un solo cable USB entre el dispositivo
+        y un mixer DJM compatible lleva el audio digital, así que no hay interfaz de
+        audio, ni maraña de cables, ni adivinanzas de ganancia en la booth.</p>
+        <p><strong>Qué hace, según AlphaTheta.</strong> Grabación y transmisión en
+        vivo de alta calidad que minimiza el clipping y la distorsión, transmisiones
+        que pueden llevar el título del track y el nombre del artista, listas de
+        tracks automáticas con marcas de tiempo mientras tocas, y remasterización y
+        compartición simples de la mezcla terminada.</p>
+        <p><strong>Qué no es.</strong> No es un reproductor, no es una herramienta de
+        biblioteca y no es parte de la cadena de export de rekordbox. Nada de lo que
+        hace toca el USB desde el que tocas. Si la app se cae a mitad del set, tu set
+        no se cae.</p>
+        <p class="acc-related">Relacionados: <a href="#mixers">Qué mixers lo soportan</a> <a href="/es/knowledge/pioneer-dj/rekordbox">La guía de rekordbox</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidad" />
+
+    <details class="acc-sec" name="dr-acc" id="mixers">
+      <summary><h3 class="acc-h2">Qué mixers soportan DJM-REC de forma oficial</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> La lista oficial de compatibilidad de
+        AlphaTheta nombra {F.compatibleMixers.slice(0, -1).join(', ')} y {F.compatibleMixers.at(-1)}.
+        Si la booth tiene un DJM de esa lista con send/return digital, DJM-REC
+        funciona con un solo cable USB.</p>
+        <p><strong>La advertencia que importa.</strong> No todos los mixers de la
+        lista soportan todas las funciones. Los nombres de track y de artista en la
+        transmisión, y los metadatos de track guardados dentro de la grabación,
+        funcionan en un subconjunto de estos mixers, y AlphaTheta lo documenta modelo
+        por modelo. Algunos sistemas all in one también están soportados, pero
+        AlphaTheta no publica una lista única de ellos en las páginas que revisamos,
+        así que no vamos a inventar una. Revisa el
+        <a href={F.compatSource} rel="noopener">artículo oficial de compatibilidad</a>
+        para tu hardware exacto antes de depender de él.</p>
+        <p><strong>Evítalo la próxima vez.</strong> La compatibilidad es una pregunta
+        de casa, no de booth. Confirma tu mixer y tu conjunto de funciones antes del
+        gig, no mientras está tocando quien abre.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/djm-900nxs2">Referencia del DJM-900NXS2</a> <a href="/es/knowledge/pioneer-dj/djm-a9">Referencia del DJM-A9</a> <a href="/es/knowledge/pioneer-dj/djm-v10">Referencia del DJM-V10</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Transmisión en vivo" />
+
+    <details class="acc-sec" name="dr-acc" id="platforms">
+      <summary><h3 class="acc-h2">Qué servicios de streaming funcionan</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> {F.streamServices.join(', ')} están
+        soportados de forma directa, y una opción Custom acepta una URL y una clave
+        de stream manuales para cualquier otra cosa que hable protocolos de streaming
+        estándar.</p>
+        <p><strong>Una trampa de cuenta, documentada oficialmente.</strong> Las
+        cuentas de Restream creadas a través de la integración con Facebook no pueden
+        iniciar sesión en DJM-REC. Si tu acceso a Restream es "Continue with
+        Facebook", resuélvelo en casa.</p>
+        <p class="acc-related">Relacionados: <a href="#now-playing">Títulos de track en la transmisión</a> <a href="#known-issues">Problemas conocidos</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="dr-acc" id="now-playing">
+      <summary><h3 class="acc-h2">Títulos de track en la transmisión (Now Playing)</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> La pantalla Now Playing, el título del
+        track y el nombre del artista en la transmisión, funciona en
+        {F.nowPlayingServices.slice(0, -1).join(', ')} y {F.nowPlayingServices.at(-1)}.
+        No está disponible en Instagram ni en Snapchat.</p>
+        <p><strong>Por qué importa.</strong> Que Now Playing funcione depende de tres
+        cosas a la vez: la plataforma (arriba), el modelo de mixer (mira
+        <a href="#mixers">compatibilidad</a>), y un problema reconocido de forma
+        oficial donde los títulos a veces no se muestran para nada. Trátalo como un
+        extra para quien mira, nunca como la documentación de tu set.</p>
+        <p class="acc-related">Relacionados: <a href="#track-info">Falta la info del track</a> <a href={F.streamSource} rel="noopener">Artículo oficial de servicios de streaming</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conocidos" />
+
+    <details class="acc-sec" name="dr-acc" id="known-issues">
+      <summary><h3 class="acc-h2">La grabación se detiene a mitad del set en los mixers del lugar</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> En el DJM-900NXS2, el mixer estándar de
+        booth de la última década, las detenciones de grabación se corrigieron en el
+        firmware de mixer {F.nxs2RecHaltFixes[0]} y otra vez en
+        {F.nxs2RecHaltFixes[1]} para el audio de iOS y iPadOS. Una unidad de un lugar
+        con firmware viejo todavía puede cortarte la grabación en seco, y va a elegir
+        el mejor momento del set para hacerlo.</p>
+        <p><strong>Resuélvelo ahora.</strong> No hay nada que arreglar en la app.
+        Revisa la versión de firmware del mixer en UTILITY durante la prueba de
+        sonido; si es anterior a las correcciones, graba igual pero cuenta con que
+        habrá huecos, o graba un respaldo en un segundo dispositivo desde la REC
+        OUT.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Trata el equipo del lugar como
+        desactualizado hasta que se demuestre lo contrario. La misma regla que
+        protege tus exports de USB protege tus grabaciones.</p>
+        <p style="margin-top:1rem">
+          <strong>Descargas de firmware.</strong> <a href="https://support.alphatheta.com/en-US/products/4406500786329" target="_blank" rel="noopener">Página oficial de soporte de AlphaTheta →</a><br />
+          <span class="dim" style="font-size:0.85rem">¿Link roto? <a href="/es/feedback">Avísanos</a> y lo corregimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/djm-900nxs2">Referencia del DJM-900NXS2</a> <a href="#best-practice">Nunca estrenes la combinación en vivo</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="dr-acc" id="track-info">
+      <summary><h3 class="acc-h2">Falta la info del track en la transmisión o en el archivo</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Dos problemas reconocidos de forma
+        oficial: el título o el artista del track que está sonando a veces no se
+        muestra en la transmisión en vivo, y la información del track a veces no se
+        guarda dentro del archivo de la grabación.</p>
+        <p><strong>Qué hacer al respecto.</strong> Usa la lista de tracks automática
+        como primer borrador y verifícala contra tu set después del gig, mientras
+        todavía te acuerdas de las transiciones. Si la lista de tracks es obligatoria
+        por contrato, las mezclas de radio y algunos productores sí la exigen, lleva
+        también tu propio registro.</p>
+        <p class="acc-related">Relacionados: <a href="#now-playing">Soporte de Now Playing</a> <a href={F.source} rel="noopener">Página oficial de soporte de DJM-REC</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="dr-acc" id="all-in-one">
+      <summary><h3 class="acc-h2">Sistemas all in one: primero conecta, después graba</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Dos problemas reconocidos de forma
+        oficial con los sistemas all in one compatibles: un error puede impedir que
+        arranque la transmisión en vivo, y conectar un all in one mientras corre una
+        grabación puede detener esa grabación.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Orden de operaciones: conecta el
+        hardware, confirma que la app lo ve, y después inicia la grabación o la
+        transmisión. Nunca reconectes con la grabación corriendo.</p>
+        <p class="acc-related">Relacionados: <a href="#mixers">Compatibilidad</a> <a href={F.source} rel="noopener">Página oficial de soporte de DJM-REC</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="star" title="Buenas prácticas" />
+
+    <details class="acc-sec" name="dr-acc" id="best-practice">
+      <summary><h3 class="acc-h2">Nunca estrenes la combinación en vivo</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> La solución oficial más repetida en los
+        mixers de AlphaTheta es "actualiza el firmware", y las fallas de DJM-REC
+        estuvieron dos veces del lado receptor de eso solo en el DJM-900NXS2. La
+        regla que se desprende: nunca estrenes una combinación de sistema operativo,
+        app y firmware en un gig.</p>
+        <p><strong>Hazlo así.</strong> Actualiza la app, el sistema operativo del
+        celular y el firmware de tu propio mixer en casa, y después prueba la cadena
+        exacta que vas a usar: este celular, este cable, este mixer, esta plataforma.
+        En el lugar, revisa el firmware del mixer en la prueba de sonido y arranca la
+        transmisión antes de que abran puertas si puedes. Y la grabación es una
+        grabación, no un backup: nada de lo que hace DJM-REC reemplaza las reglas de
+        USB que logran que tu música suene en primer lugar.</p>
+        <p class="acc-related">Relacionados: <a href="/es/prepare">El sistema de prevención completo</a> <a href="/es/checklist">El checklist pre-gig</a></p>
+      </div>
+    </details>
+
+    <Disclaimer variant="full" />
+
+    <div class="panel cta-exit" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">¿Vas a tocar pronto y no funciona?</h2>
+      <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_djmrec"><span aria-hidden="true">🚨</span> Abrir Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_djmrec" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fuentes: las páginas oficiales de soporte de DJM-REC de AlphaTheta (resumen de
+      funciones, lista de compatibilidad de mixers, servicios de streaming
+      soportados, artículos de problemas conocidos) y el historial de cambios de
+      firmware del DJM-900NXS2, todo revisado el {UPDATED}. El comportamiento de la
+      app, del sistema operativo y del firmware cambia sin aviso, vuelve a revisar
+      antes de un show grande.
+    </p>
+
+    <p class="rb-sources dim">Compruébalo tú mismo en la fuente: {VENDOR_LINKS.map((v, i) => (<Fragment>{i > 0 ? ' · ' : ''}<a href={v.url} rel="noopener">{v.name}</a></Fragment>))}</p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning. Rationale in the English source file, which is the source of
+     truth for this CSS. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>
+
+<script is:inline>
+  // Deep links must work with the sections closed: opening the target
+  // section before scrolling. Same pattern as /knowledge/pioneer-dj/rekordbox.
+  (function () {
+    function openTarget() {
+      var id = location.hash.slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (!el) return;
+      var box = el.closest ? el.closest('details') : null;
+      if (el.tagName === 'DETAILS') box = el;
+      if (box && !box.open) box.open = true;
+      el.scrollIntoView();
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
+  })();
+</script>
