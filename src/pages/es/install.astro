@@ -1,0 +1,178 @@
+---
+import Base from '../../layouts/Base.astro';
+import AccGroup from '../../components/AccGroup.astro';
+
+// INSTALL GUIDE, SPANISH (neutral Latin American). Source of truth for
+// structure, the accordion model, the WebApplication node and the deep-link
+// script: src/pages/install.astro. Only the copy, the /es hrefs and the
+// language of the markup differ. The offline scope listed here mirrors
+// public/sw.js PRECACHE, exactly as the English page does: if that list
+// changes, change the "sin señal" accordion in every language.
+//
+// WebApplication, not MobileApplication and not a SoftwareApplication with a
+// download URL: this is a PWA, there is no store listing and no installer,
+// and the page says so in its own words. Every value below is stated visibly
+// on this page or is literally the manifest that ships. No aggregateRating
+// and no reviewCount: the site has never collected either.
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  '@id': 'https://www.savemygig.com/es/#app',
+  name: 'Save My Gig',
+  url: 'https://www.savemygig.com/es',
+  installUrl: 'https://www.savemygig.com/es/install',
+  description: 'DJ Booth Intelligence. Ayuda gratis y paso a paso cuando un USB o un reproductor falla antes del set, más el checklist pre-gig. Funciona sin conexión una vez instalado.',
+  applicationCategory: 'UtilitiesApplication',
+  applicationSubCategory: 'Solución de problemas para DJs',
+  operatingSystem: 'iOS, Android, Windows, macOS',
+  browserRequirements: 'Necesita un navegador actual: Safari, Chrome, Edge, Samsung Internet o Firefox.',
+  inLanguage: 'es',
+  isAccessibleForFree: true,
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+  },
+  featureList: [
+    'Rescate de emergencia paso a paso, una decisión por pantalla',
+    'Funciona sin señal una vez que el sitio se abrió en línea',
+    'Checklist pre-gig que queda guardado en el dispositivo',
+    'Tarjeta de emergencia para imprimir',
+    'Referencia de rekordbox y el diccionario del DJ',
+    'Búsqueda del sitio, sin conexión',
+  ],
+  screenshot: 'https://www.savemygig.com/images/og-share.jpg',
+  softwareHelp: { '@id': 'https://www.savemygig.com/es/install#webpage' },
+};
+---
+<Base
+  title="Instálalo como app y úsalo sin señal | Save My Gig"
+  description="Pon Save My Gig en tu celular o en tu computadora en un minuto. El flujo de rescate queda en tu dispositivo, así la solución está ahí aunque el booth no tenga señal."
+  path="/install"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(appSchema)} />
+  <main class="wrap">
+    <div class="status-line">Guia_De_Instalacion</div>
+
+    <h1 style="margin-bottom:1rem">LLÉVALO <span class="accent">CONTIGO</span></h1>
+    <!-- UNA línea suelta, todo lo demás colapsado. La explicación vive en
+         "Empieza aquí", el primer ítem del primer grupo. "Cómo funciona" va
+         ANTES de los pasos de instalación: primero entenderlo, después
+         instalarlo. -->
+    <p class="dim" style="margin-bottom:2rem">Save My Gig se instala como app, un <strong>PWA</strong>: un minuto, y el flujo de rescate pasa a vivir en tu dispositivo, aunque no tengas señal.</p>
+
+    <AccGroup icon="book" title="Cómo funciona" />
+
+    <details class="acc-sec" name="inst-acc" id="what-is-a-pwa">
+      <summary><h3 class="acc-h2">Empieza aquí: ¿qué es esto?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Una progressive web app, PWA: el sitio mismo, ascendido a app por tu propio navegador. No es una app nativa de tienda. Ninguna tienda la aprobó, ninguna actualización te persigue, ocupa casi nada de espacio, no hay nada que pagar, y no ve nada de tu dispositivo que el sitio no viera ya.</p>
+        <p><strong>Por qué importa aquí.</strong> La primera vez que abres Save My Gig, tu navegador descarga en silencio el kit de rescate completo, todas las pantallas de los flujos de emergencia, al almacenamiento del propio aparato. De ahí en adelante esas páginas cargan desde tu celular o tu computadora, no desde internet. Cuando estás en línea siempre recibes la versión viva; cuando no, responde el kit guardado. Ese cambio es automático, tú nunca eliges.</p>
+        <p>Un sótano de club, un festival con la red saturada, una rave en la montaña: los lugares donde se rompe el gig son los lugares donde los sitios se caen. Este está hecho para no caerse. Instalarlo en la pantalla de inicio o en el Dock le suma resistencia y velocidad: un ícono de verdad, que encuentras con la mano temblando, y un almacenamiento que el sistema trata como de app, no como sobra de sitio para limpiar.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="offline-scope">
+      <summary><h3 class="acc-h2">Qué funciona sin señal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Guardado en tu dispositivo, siempre disponible:</strong> la página de entrada de la emergencia y todos los pasos de los cuatro flujos de rescate (la ruta crítica para cuando tocas dentro de una hora, el protocolo de falta de sonido, el arreglo rápido, la recuperación completa), el checklist pre-gig, la tarjeta de emergencia de bolsillo, la referencia de rekordbox, el diccionario y la búsqueda misma. Es toda la superficie de "algo está fallando ahora" del sitio, a propósito.</p>
+        <p><strong>Sin conexión solo si ya los abriste antes:</strong> los artículos de solución, el FAQ, las páginas de equipo. Todo lo que abriste estando en línea sigue legible después sin señal.</p>
+        <p><strong>Nunca disponible sin conexión, por naturaleza:</strong> cualquier cosa que hable con nuestro servidor, como registrarte o mandarte el checklist por correo. Eso queda en cola hasta que vuelvas a tener cobertura. Tu checklist marcado es otra cosa: se guarda en el propio dispositivo, así que funciona sin señal todo el tiempo.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="conditions">
+      <summary><h3 class="acc-h2">Las condiciones</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p>Preferimos que sepas exactamente dónde están los límites, y no que los descubras dentro de un booth.</p>
+        <ol>
+          <li><strong>Ábrelo una vez con señal, antes.</strong> El kit de rescate se descarga en tu primera visita. Una primera visita con el modo avión encendido no tiene nada guardado todavía.</li>
+          <li><strong>Borrar los datos del navegador borra el kit.</strong> "Borrar historial y datos de sitios" elimina todo lo que guardó cualquier sitio, el nuestro incluido. Después de una limpieza, abre el sitio una vez en línea y el kit vuelve.</li>
+          <li><strong>En iPhone, el ícono en la pantalla de inicio es la protección.</strong> iOS puede borrar en silencio los datos guardados por sitios que no visitas hace tiempo. Una app en la pantalla de inicio queda fuera de esa limpieza, y esa es la razón práctica de que la instalación importe más en iPhone.</li>
+          <li><strong>Sin conexión ves la última copia guardada.</strong> Las soluciones y las páginas nuevas llegan cada vez que estás en línea; sin señal recibes el kit exactamente como quedó guardado la última vez, que en una emergencia es exactamente lo que necesitas.</li>
+        </ol>
+        <p>¿Quieres comprobarlo tú mismo? Abre el sitio, enciende el modo avión y abre el <a href="/es/emergency">Emergency Mode</a>. Carga. Esa prueba toma treinta segundos y es la promesa entera, demostrada.</p>
+      </div>
+    </details>
+
+    <AccGroup icon="zap" title="Instálalo en tu dispositivo" />
+
+    <details class="acc-sec" name="inst-acc" id="iphone">
+      <summary><h3 class="acc-h2">iPhone y iPad (Safari)</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ol>
+          <li>Abre <span class="mono" translate="no">savemygig.com</span> en Safari.</li>
+          <li>Toca <strong>Compartir</strong> (el cuadrado con la flecha hacia arriba, abajo en la pantalla).</li>
+          <li>Baja en la lista y toca <strong>Agregar a inicio</strong>.</li>
+          <li>Toca <strong>Agregar</strong>. El ícono de Save My Gig aparece junto a tus apps.</li>
+        </ol>
+        <p>De ahí en adelante, ábrelo desde el ícono como cualquier app. Corre a pantalla completa, y en iPhone este paso vale mucho más que la comodidad: iOS trata el almacenamiento de una app de la pantalla de inicio con mucho más respeto que el de una pestaña que abriste una vez, y eso es lo que mantiene el kit de rescate en tu celular a largo plazo.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="android">
+      <summary><h3 class="acc-h2">Android (Chrome)</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ol>
+          <li>Abre <span class="mono" translate="no">savemygig.com</span> en Chrome.</li>
+          <li>Toca el <strong>menú de tres puntos</strong> (arriba a la derecha).</li>
+          <li>Toca <strong>Agregar a pantalla principal</strong> (en algunos celulares dice <strong>Instalar app</strong>).</li>
+          <li>Confirma. El ícono llega a tu pantalla de inicio.</li>
+        </ol>
+        <p>Chrome también puede ofrecerte la instalación directo, con un aviso o con un ícono en la barra de direcciones; los dos caminos terminan en el mismo lugar. Samsung Internet y Firefox tienen la misma opción en sus propios menús.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="windows">
+      <summary><h3 class="acc-h2">Windows (Chrome o Edge)</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ol>
+          <li>Abre <span class="mono" translate="no">savemygig.com</span> en Chrome o en Edge.</li>
+          <li>Busca en el extremo derecho de la barra de direcciones el <strong>ícono de instalar</strong> (una pantallita con una flecha hacia abajo), o abre el menú del navegador y elige <strong>Instalar Save My Gig</strong> (en Edge: <strong>Aplicaciones, después Instalar este sitio como aplicación</strong>).</li>
+          <li>Confirma. Se abre en su propia ventana, y la puedes anclar a la barra de tareas o al menú Inicio como cualquier programa.</li>
+        </ol>
+        <p>Útil más allá de la emergencia: el checklist y la base de conocimiento en su propia ventana, mientras rekordbox se queda con toda tu atención.</p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="inst-acc" id="mac">
+      <summary><h3 class="acc-h2">Mac (Safari o Chrome)</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ol>
+          <li><strong>Safari:</strong> abre <span class="mono" translate="no">savemygig.com</span> y ve a <strong>Archivo, Agregar al Dock</strong>. Si ese ítem no está en tu menú, tu macOS es anterior a la función; usa el camino de Chrome.</li>
+          <li><strong>Chrome:</strong> haz clic en el <strong>ícono de instalar</strong>, en el extremo derecho de la barra de direcciones, o en el menú de tres puntos y después en <strong>Transmitir, guardar y compartir, Instalar página como aplicación</strong> (el texto cambia un poco según la versión).</li>
+        </ol>
+        <p>De cualquiera de las dos formas te queda una app de Save My Gig en el Dock que abre en su propia ventana.</p>
+      </div>
+    </details>
+
+    <div class="panel cta-exit" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem">¿Estás en problemas ahora?</h2>
+      <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="install"><span aria-hidden="true">🚨</span> Abrir Emergency Mode</a>
+    </div>
+  </main>
+</Base>
+
+<script is:inline>
+  // Everything starts COLLAPSED and the visitor picks their device. Deep
+  // links still open their section: #what-is-a-pwa from the intro, #iphone
+  // from anywhere.
+  (function () {
+    function openTarget() {
+      var id = location.hash.slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (!el) return;
+      var box = el.closest ? el.closest('details') : null;
+      if (el.tagName === 'DETAILS') box = el;
+      if (box && !box.open) box.open = true;
+      el.scrollIntoView();
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
+  })();
+</script>

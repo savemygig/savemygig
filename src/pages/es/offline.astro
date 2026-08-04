@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+// OFFLINE FALLBACK, SPANISH (neutral Latin American). Source of truth for
+// structure and classes: src/pages/offline.astro. Shown when a page is
+// requested that was never cached and there is no signal, so it deliberately
+// points at the parts that DO work offline.
+---
+<Base
+  title="Estás sin conexión | Save My Gig"
+  description="No hay conexión en este momento."
+  path="/offline"
+  lang="es"
+  noindex={true}
+>
+  <main class="wrap">
+    <div class="status-line">NO_SIGNAL</div>
+    <h1 style="margin-bottom:1rem">Sin conexión.<br /><span class="accent">El rescate sigue funcionando.</span></h1>
+    <p class="dim" style="margin-bottom:2rem">
+      Esta página no quedó guardada en tu dispositivo, pero el flujo de
+      emergencia y el checklist sí. Funcionan sin nada de señal.
+    </p>
+
+    <a href="/es/emergency" class="btn btn-solid"><span aria-hidden="true">🚨</span> Emergency Mode</a>
+    <a href="/es/checklist" class="btn btn-neutral">Checklist pre-gig</a>
+    <a href="/es" class="btn btn-neutral">Inicio</a>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.9rem">
+      Vuelve la conexión y vuelve todo lo demás.
+    </p>
+  </main>
+</Base>

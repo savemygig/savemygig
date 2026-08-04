@@ -46,7 +46,7 @@ export const UI = {
     footer: {
       shareLead: 'Every DJ knows a DJ who needs this:',
       copy: 'Copy to paste',
-      copied: 'Copied!',
+      copied: 'Copied',
       coffee: 'Buy us a coffee',
       colRescue: 'Rescue',
       colPrepare: 'Prepare',
@@ -113,7 +113,7 @@ export const UI = {
       // correct and dead.
       shareLead: 'Todo DJ conhece um DJ que precisa disso:',
       copy: 'Copiar link',
-      copied: 'Copiado!',
+      copied: 'Copiado',
       coffee: 'Pague um café pra gente',
       colRescue: 'Resgate',
       colPrepare: 'Preparação',
@@ -178,7 +178,9 @@ export const UI = {
     footer: {
       shareLead: 'Todo DJ conoce a un DJ que necesita esto:',
       copy: 'Copiar enlace',
-      copied: '¡Copiado!',
+      // No opening or closing exclamation: the brand retired its own, and
+      // this was the last one left anywhere on the Spanish site.
+      copied: 'Copiado',
       coffee: 'Invítanos un café',
       colRescue: 'Rescate',
       colPrepare: 'Preparación',

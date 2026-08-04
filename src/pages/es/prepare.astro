@@ -1,0 +1,261 @@
+---
+import Base from '../../layouts/Base.astro';
+import EmailCapture from '../../components/EmailCapture.astro';
+// Destinations come from the registry, never hardcoded, and get the /es
+// prefix here so a Spanish page never drops a reader into English.
+import { hrefFor } from '../../data/concepts.js';
+
+// PREVENTION HUB, SPANISH (neutral Latin American). Source of truth for
+// structure, classes, CSS, the two bands and the ItemList shape:
+// src/pages/prepare.astro. Only the human readable copy, the /es hrefs and
+// the language of the markup differ. Rule numbering, order and the
+// no-count-in-the-promise doctrine are inherited from the English page.
+
+const es = (p) => `/es${p}`;
+
+const MUSIC = [
+  {
+    n: '01',
+    title: 'Dos USB idénticos, en cada gig.',
+    body: 'El mismo export en los dos, hecho en la misma sesión y desde las mismas playlists. Uno viaja contigo, el otro en el bolsillo.',
+    why: 'Un USB es comodidad. Dos USB son un seguro.',
+  },
+  {
+    n: '02',
+    title: 'Formatea pensando en cualquier booth.',
+    body: `<a href="${es(hrefFor('fat32'))}">FAT32</a> con esquema de particiones <a href="${es(hrefFor('mbr'))}"><span class="mono" translate="no">MBR</span></a> lo lee cualquier reproductor Pioneer DJ y AlphaTheta de la era rekordbox, de los viejos a los nuevos. exFAT solo lo leen las unidades más recientes, y NTFS ninguna.`,
+    why: 'No estás formateando para tu reproductor. Estás formateando para un booth que nunca viste.',
+  },
+  {
+    n: '03',
+    title: 'Compra USB que se ganen su lugar.',
+    body: 'Casi todas estas historias empiezan con un USB sin marca. Anda con unidades que tengan reputación entre DJs que trabajan. <a href="/es/gear">Los USB que vale la pena cargar</a>.',
+    why: 'La parte más barata de tu setup carga lo único que el lugar no te puede reponer.',
+  },
+  {
+    n: '04',
+    title: 'Export nuevo, siempre.',
+    body: 'Después de cualquier cambio en la biblioteca, vuelve a exportar las playlists que vas a tocar, y hazlo siempre con el <strong>export</strong> de rekordbox. Nunca arrastres archivos de audio al USB a mano.',
+    why: 'Un export viejo es un export corrupto esperando su turno. Y una carpeta arrastrada no tiene base de datos.',
+  },
+  {
+    n: '05',
+    title: 'Expulsa como si importara.',
+    body: 'Expulsa desde rekordbox y espera a que la computadora libere la unidad. En un reproductor, presiona <span class="mono" translate="no">USB STOP</span> y espera a que la luz se calme antes de mover el USB.',
+    why: 'Interrumpir una escritura es la forma más rápida de corromper la base de datos que te llevó una hora armar.',
+  },
+  {
+    n: '06',
+    title: 'Hazle backup a la biblioteca, no solo al USB.',
+    body: 'En rekordbox: <span class="mono" translate="no">File &gt; Library &gt; Backup Library</span>, una vez al mes, en otra unidad o en la nube. Tus cues, beatgrids y playlists viven en la biblioteca, no en el USB.',
+    why: 'Un USB es una copia de trabajo. Si es tu única copia, no tienes backup.',
+  },
+];
+
+const GIG = [
+  {
+    n: '07',
+    title: 'El día del gig no se actualiza nada.',
+    body: 'Nada de actualizar rekordbox, ni el firmware de un reproductor, ni el sistema operativo el día que tocas ni en los días de alrededor. Actualiza la semana después de un gig, nunca la víspera.',
+    why: 'Una versión nueva puede traer un problema nuevo, y el booth es donde te lo encontrarías. Ya hubo firmware de reproductor retirado por su propio fabricante después de que las playlists dejaran de aparecer a los DJs.',
+  },
+  {
+    n: '08',
+    title: 'Pruébalo antes de salir.',
+    body: 'Carga un track del USB en un reproductor, si tienes uno. Si no, vuelve a abrir el export en rekordbox y confirma que el dispositivo y las playlists están de verdad ahí.',
+    why: 'Diez segundos en tu casa no cuestan nada. El mismo descubrimiento en el booth cuesta el set.',
+  },
+  {
+    n: '09',
+    title: 'Conoce el booth antes de llegar.',
+    body: 'Pregúntale al productor qué reproductores y qué mixer hay instalados, y si están en link. Después prepara todo para esa sala: el export que lee un CDJ-3000X no es el que lee un CDJ-2000NXS2. <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Qué reproductor lee qué</a>.',
+    why: 'La compatibilidad es una pregunta que respondes en tu casa, con tiempo, o en el booth, sin nada de tiempo.',
+  },
+  {
+    n: '10',
+    title: 'Aprende antes de necesitarlo.',
+    body: 'Lee una cosa mientras no hay nada roto: un código de error, una maña de compatibilidad, un movimiento de rescate. <a href="/es/knowledge">La base de conocimiento</a> y <a href="/es/faq">el FAQ</a> están hechos para la tarde tranquila, no solo para la emergencia.',
+    why: 'Nadie aprende bajo presión. Bajo presión uno recuerda. La familiaridad es lo que convierte un desastre en un contratiempo.',
+  },
+];
+
+// THE RULES, MADE MACHINE-READABLE. ItemList and not HowTo: these are
+// standing habits, not steps of one procedure with a start and an end. Every
+// name and description is the rule's visible title and visible body, from the
+// same arrays this page renders from, with the markup stripped and the
+// handful of entities decoded so the JSON string equals the string on screen.
+const plain = (s) => s
+  .replace(/<[^>]+>/g, '')
+  .replace(/&gt;/g, '>')
+  .replace(/&lt;/g, '<')
+  .replace(/&nbsp;/g, ' ')
+  .replace(/&amp;/g, '&')
+  .replace(/\s+/g, ' ')
+  .trim();
+const rulesSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': 'https://www.savemygig.com/es/prepare#rules',
+  name: 'Las reglas profesionales',
+  description: 'Los hábitos que frenan la falla de un gig antes de que llegue al booth, en el orden en que el gig ocurre de verdad: primero los que protegen tu música, después los que protegen tu gig.',
+  numberOfItems: MUSIC.length + GIG.length,
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  isPartOf: { '@id': 'https://www.savemygig.com/es/prepare#webpage' },
+  inLanguage: 'es',
+  itemListElement: [...MUSIC, ...GIG].map((r, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: plain(r.title),
+    description: plain(r.body),
+  })),
+};
+---
+<Base
+  title="Las reglas profesionales: no vuelvas a perder un gig | Save My Gig"
+  description="Los hábitos que sacan el desastre de escena: dos USB, exports limpios, expulsión correcta, nada de actualizar el día del gig y conocer el booth antes de llegar."
+  path="/prepare"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(rulesSchema)} />
+  <main class="wrap">
+    <div class="status-line">Prevencion_Hub</div>
+
+    <h1 style="margin-bottom:1rem">NUNCA <span class="accent">MÁS</span></h1>
+    <p class="dim pv-lead">
+      La mayoría de los desastres de DJ no son mala suerte. Son falta de
+      sistema. Un profesional no confía en su memoria ni en que el gig salga
+      bien, confía en la preparación. Estos son los hábitos que frenan el
+      problema antes de que llegue al booth.
+    </p>
+
+    <h2 class="pv-h">Las reglas <span class="accent">profesionales</span></h2>
+    <p class="dim pv-sub">Innegociables, en el orden en que el gig ocurre de verdad.</p>
+
+    <div class="pv-band">Tu música</div>
+    {MUSIC.map((r) => (
+      <details class="acc-sec pv-rule" name="pv-acc">
+        <summary>
+          <span class="pv-head">
+            <span class="pv-n" aria-hidden="true">{r.n}</span>
+            <h3 class="acc-h2 pv-title">{r.title}</h3>
+          </span>
+          <span class="acc-chev" aria-hidden="true"></span>
+        </summary>
+        <div class="acc-body pv-in">
+          <p class="pv-text" set:html={r.body} />
+          <p class="pv-why"><span>Por qué importa</span>{r.why}</p>
+        </div>
+      </details>
+    ))}
+
+    <div class="pv-band">Tu gig</div>
+    {GIG.map((r) => (
+      <details class="acc-sec pv-rule" name="pv-acc">
+        <summary>
+          <span class="pv-head">
+            <span class="pv-n" aria-hidden="true">{r.n}</span>
+            <h3 class="acc-h2 pv-title">{r.title}</h3>
+          </span>
+          <span class="acc-chev" aria-hidden="true"></span>
+        </summary>
+        <div class="acc-body pv-in">
+          <p class="pv-text" set:html={r.body} />
+          <p class="pv-why"><span>Por qué importa</span>{r.why}</p>
+        </div>
+      </details>
+    ))}
+
+    <p class="pv-close">
+      Un profesional no prepara solo el equipo. Prepara la cabeza.
+    </p>
+
+    <div class="panel panel-go">
+      <h2 style="margin-bottom:0.6rem">Antes de salir: el checklist</h2>
+      <p class="dim" style="margin-bottom:1rem">Aquí es donde las reglas se vuelven rutina. Marca la música, el equipo técnico y la logística que se te olvida al salir. Lleva la cuenta de qué tan listo estás y queda guardado en este dispositivo para la próxima.</p>
+      <a href="/es/checklist" class="btn btn-go" data-event="checklist_open" data-placement="prepare">Abrir el checklist</a>
+    </div>
+
+    <EmailCapture
+      source="prepare"
+      title="La Tarjeta de Emergencia"
+      blurb="Una página. Todo lo que hay que revisar antes de salir, y los primeros movimientos cuando un reproductor rechaza tu USB. Léela gratis cuando quieras, o recibe por correo la versión para imprimir y déjala en el celular."
+    />
+
+    <div class="grid grid-2 section">
+      <div class="card">
+        <h3>El equipo que no se muere</h3>
+        <p>Los USB que vale la pena cargar, y por qué los DJs confían en ellos.</p>
+        <a href="/es/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="prepare">Ver el kit</a>
+      </div>
+      <div class="card">
+        <h3>Domina tus herramientas</h3>
+        <p>rekordbox, los reproductores y los mixers a fondo. La regla 10 en la práctica.</p>
+        <a href="/es/knowledge" class="btn btn-neutral" data-event="step_completed" data-step="knowledge_click" data-placement="prepare">Base de conocimiento</a>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .pv-lead { max-width: 44rem; line-height: 1.65; margin-bottom: 2.6rem; font-size: 1.02rem; }
+  .pv-h {
+    font-size: clamp(1.5rem, 5vw, 2.05rem); text-transform: uppercase;
+    letter-spacing: -0.015em; border: none; margin-bottom: 0.35rem;
+  }
+  .pv-sub { font-size: 0.92rem; margin-bottom: 2rem; }
+
+  /* Band headers are the index for the two halves of the doctrine. */
+  .pv-band {
+    font-family: var(--font-body); font-weight: 700; font-size: 0.72rem;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-faint);
+    border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.6rem;
+    margin: 2.6rem 0 1.1rem;
+  }
+
+  /* ACCORDIONS, not open cards: number and title are the index, the reasoning
+     is one tap away. Shared .acc-sec vocabulary from global.css, so it behaves
+     exactly like the FAQ and the hardware pages. name="pv-acc" makes them
+     exclusive: click, read, click the next, the page never grows. */
+  .pv-rule { margin-bottom: 0.7rem; }
+  .pv-head { display: flex; align-items: baseline; gap: 0.9rem; min-width: 0; }
+  .pv-n {
+    flex: 0 0 auto;
+    font-family: var(--font-display); font-weight: 800; font-size: 1.3rem;
+    line-height: 1; color: var(--red); letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .pv-title {
+    font-family: var(--font-display); font-weight: 800;
+    line-height: 1.22; letter-spacing: -0.015em; text-transform: none;
+    color: var(--text);
+  }
+  /* The body lines up under the title, not under the number. */
+  .pv-in { padding-left: calc(1.25rem + 1.3rem + 0.9rem); }
+  .pv-text { color: var(--text-dim); font-size: 0.94rem; line-height: 1.62; margin: 0; }
+  .pv-text strong { color: var(--text); }
+  .pv-why {
+    margin: 0.85rem 0 0; padding-top: 0.7rem;
+    border-top: var(--stroke) solid var(--edge-soft);
+    color: var(--text-faint); font-size: 0.87rem; line-height: 1.55;
+  }
+  .pv-why span {
+    display: block; font-family: var(--font-body); font-weight: 700;
+    font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 0.22rem;
+  }
+
+  .pv-close {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(1.15rem, 4vw, 1.5rem); line-height: 1.3;
+    letter-spacing: -0.015em; color: var(--text);
+    max-width: 30rem; margin: 2.8rem 0 2.4rem;
+  }
+
+  /* At 360px the numeral cannot also cost an indent: the body goes full width
+     and the gap tightens so titles keep to two lines. */
+  @media (max-width: 430px) {
+    .pv-head { gap: 0.65rem; }
+    .pv-n { font-size: 1.15rem; }
+    .pv-in { padding-left: 1.25rem; }
+  }
+</style>

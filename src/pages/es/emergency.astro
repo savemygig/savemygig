@@ -1,0 +1,154 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// EMERGENCY LANDING, SPANISH (neutral Latin American). Source of truth for
+// structure, classes, CSS and the ItemList shape: src/pages/emergency.astro.
+// Only the human readable copy, the /es hrefs and the language of the markup
+// differ. The sealed rescue tunnel under /es/protocol/ stays deliberately
+// menu free.
+//
+// Door titles follow src/data/emergency-tree.es.js so the door and the screen
+// it opens say the same words. ONE EXCEPTION, and it is a measurement rather
+// than a preference: the tree node is titled "Reproductor congelado" and this
+// door says PLAYER TRABADO. The pad title box is 233px at a 360px viewport,
+// and "REPRODUCTOR CONGELADO" measures 265px, "REPRODUCTOR TRABADO" 237px.
+// Both wrap to a second line while the other four titles hold one, which
+// reads as a broken card rather than as a longer word. "PLAYER TRABADO" is
+// 167px, it is what a Latin American DJ says out loud, and it keeps this door
+// parallel with the Portuguese one. The prose on this page and the whole
+// tunnel keep "reproductor". Do not lengthen this label without re-measuring
+// at 360px.
+//
+// The ItemList is a straight transcription of the visible <nav> below: same
+// five titles, same five one line descriptions, same five hrefs, same order.
+// If you change a door, change it here in the same commit.
+const doors = [
+  { name: 'USB NO RECONOCIDO', description: 'El reproductor no ve el USB, para nada.', href: '/es/protocol/usb/start' },
+  { name: 'LA MÚSICA NO CARGA', description: 'El USB se lee, pero faltan las playlists o los tracks no suenan.', href: '/es/protocol/music/start' },
+  { name: 'NO HAY SONIDO', description: 'Un canal muerto, el MASTER en silencio o nada en los audífonos.', href: '/es/protocol/sound/start' },
+  { name: 'PLAYER TRABADO', description: 'Pantalla o controles trabados, en pleno set o en reposo.', href: '/es/protocol/frozen/start' },
+  { name: 'FALLÓ EL EXPORT DE rekordbox', description: 'El export no termina, o el USB no lo acepta.', href: '/es/protocol/export/start' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': 'https://www.savemygig.com/es/emergency#doors',
+  name: 'Síntomas de emergencia de DJ y sus rutas de rescate',
+  description: 'Los cinco síntomas que clasifica el Emergency Mode, cada uno con su propia ruta de rescate paso a paso, una decisión por pantalla.',
+  numberOfItems: doors.length,
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  isPartOf: { '@id': 'https://www.savemygig.com/es/emergency#webpage' },
+  inLanguage: 'es',
+  itemListElement: doors.map((d, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: d.name,
+    description: d.description,
+    url: `https://www.savemygig.com${d.href}`,
+  })),
+};
+---
+<Base
+  title="Emergencia de DJ: USB, sonido y reproductor trabado | Save My Gig"
+  description="USB no reconocido, playlists que no aparecen, sin sonido, reproductor trabado o export de rekordbox que falla: elige el síntoma y sigue el paso a paso. Gratis, sin cuenta."
+  path="/emergency"
+  lang="es"
+>
+  <meta slot="head" name="format-detection" content="telephone=no" />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap emerg">
+    <!-- UNA PREGUNTA, ARRIBA DEL PLIEGUE, DESPUÉS ACCIÓN. Quien está a dos
+         minutos del set no puede leer una página, pero sí puede contestar una
+         pregunta. La pregunta ES el título, las respuestas son lo primero en
+         pantalla, y todo el contexto va debajo de ellas. -->
+    <p class="status-line red">EMERGENCY_MODE</p>
+    <h1 class="emerg-h1">¿Qué está <span class="accent">fallando?</span></h1>
+
+    <section id="triage" class="emerg-triage">
+      <!-- LAS CINCO PUERTAS, la raíz del árbol de decisión. Síntoma primero,
+           siempre: el DJ sabe QUÉ está mal antes de saber cuánto tiempo le
+           queda, así que la pregunta del tiempo vive dentro de las ramas,
+           donde cambia la ruta, nunca aquí.
+           LOS CINCO PUNTOS SON ROJOS. No es decoración: en el idioma de
+           severidad un punto dice QUÉ TAN GRAVE es, y en esta pantalla no hay
+           opción leve. USB muerto, música muerta, sonido muerto, reproductor
+           muerto, export muerto. El ámbar y el verde empiezan DENTRO de las
+           ramas. -->
+      <nav class="pad-grid" aria-label="Elige qué está pasando" style="margin-bottom:1.5rem">
+        <a href="/es/protocol/usb/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="usb_not_recognized">
+          <div class="pad-header">
+            <div class="led led-r"></div>
+            <div class="pad-title">USB NO RECONOCIDO</div>
+          </div>
+          <div class="pad-desc">El reproductor no ve el USB, para nada.</div>
+        </a>
+
+        <a href="/es/protocol/music/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="music_wont_load">
+          <div class="pad-header">
+            <div class="led led-r"></div>
+            <div class="pad-title">LA MÚSICA NO CARGA</div>
+          </div>
+          <div class="pad-desc">El USB se lee, pero faltan las playlists o los tracks no suenan.</div>
+        </a>
+
+        <a href="/es/protocol/sound/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="no_sound">
+          <div class="pad-header">
+            <div class="led led-r"></div>
+            <div class="pad-title">NO HAY SONIDO</div>
+          </div>
+          <div class="pad-desc">Un canal muerto, el MASTER en silencio o nada en los audífonos.</div>
+        </a>
+
+        <a href="/es/protocol/frozen/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="frozen_player">
+          <div class="pad-header">
+            <div class="led led-r"></div>
+            <div class="pad-title">PLAYER TRABADO</div>
+          </div>
+          <div class="pad-desc">Pantalla o controles trabados, en pleno set o en reposo.</div>
+        </a>
+
+        <a href="/es/protocol/export/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="export_failed">
+          <div class="pad-header">
+            <div class="led led-r"></div>
+            <div class="pad-title">FALLÓ EL EXPORT DE rekordbox</div>
+          </div>
+          <div class="pad-desc">El export no termina, o el USB no lo acepta.</div>
+        </a>
+      </nav>
+    </section>
+
+    <!-- ORDEN: las puertas, este párrafo, después la salida a recuperación. El
+         párrafo es la entrada de búsqueda Y la frase que explica qué es esta
+         página, así que va entre los dos. -->
+    <p class="emerg-lead">
+      Ayuda para fallas de USB, problemas de export de rekordbox, Emergency Loop y unidades corruptas en Pioneer CDJ-3000, CDJ-2000 y XDJ.
+    </p>
+
+    <p class="emerg-next">
+      Cinco rutas hoy. Vienen más en camino, y llegan aquí primero.
+    </p>
+
+    <p class="dim" style="font-size:0.86rem;margin-top:2rem">
+      ¿El gig ya terminó y los archivos no aparecen? <a href="/es/recovery">La recuperación de datos tiene su propio camino</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  /* Size comes from the global h1 scale. */
+  .emerg-h1 { margin-bottom: 0.9rem; }
+  .emerg-lead { color: var(--text-dim); font-size: 1rem; line-height: 1.6; max-width: 40rem; margin-bottom: 2rem; }
+  .emerg-actions { max-width: 100%; margin: 0 0 2.6rem; }
+  .emerg-triage { margin-top: 1rem; }
+  .emerg-triage-h { font-size: clamp(1.5rem, 5vw, 2rem); text-transform: none; letter-spacing: -0.01em; margin-bottom: 0.4rem; border: none; }
+  .emerg-triage-sub { font-size: 0.95rem; margin-bottom: 1.4rem; }
+  /* Quieter than the lead above it: a note about the future, not something a
+     DJ in trouble has to read. */
+  .emerg-next { color: var(--text-faint); font-size: 0.86rem; margin-top: 1.4rem; }
+  .emerg-problems { margin-top: 1rem; }
+  .emerg-problems-h { font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.6rem; margin-bottom: 1rem; }
+  .problem-list a { color: var(--text); text-decoration: none; }
+  .problem-list a:hover { color: var(--red); }
+</style>

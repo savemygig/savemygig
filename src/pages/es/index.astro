@@ -1,0 +1,324 @@
+---
+import Base from '../../layouts/Base.astro';
+import PromoBanner from '../../components/PromoBanner.astro';
+import InstallApp from '../../components/InstallApp.astro';
+import Search from '../../components/Search.astro';
+
+// HOMEPAGE, SPANISH (neutral Latin American). Source of truth for structure,
+// classes, CSS and scripts: src/pages/index.astro. Only the human readable
+// copy and the internal hrefs differ. If the English page changes, change
+// this one in the same commit.
+//
+// Door titles and descriptions are RE-AUTHORED SHORT, not translated: Spanish
+// runs longer than English and all three doors have to stay above the fold on
+// a 360x740 Android. Measured at 360 and 390 before shipping.
+
+const SUBLINES = [
+  'Soluciones probadas en el DJ booth. Gratis.',
+  'Hecho por DJs que ya pasaron por esto. Gratis.',
+  'Sale del DJ booth, no del manual. Gratis.',
+  'Respuestas rápidas a problemas reales de booth.',
+  'Resuelto primero en el DJ booth. Gratis.',
+];
+---
+<Base
+  title="Save My Gig | Rescate para DJs: CDJ, USB y rekordbox"
+  description="DJ Booth Intelligence. Paso a paso cuando el CDJ, el XDJ o el USB fallan, más el checklist pre-gig y el conocimiento de booth detrás de todo. Gratis, sin cuenta."
+  ogTitle="Save My Gig | DJ Booth Intelligence"
+  ogDescription="Paso a paso cuando el CDJ, el XDJ o el USB fallan a mitad del set, un checklist pre-gig gratis y los hábitos que evitan que vuelva a pasar."
+  path="/"
+  lang="es"
+>
+
+  <main class="landing">
+    <!-- "DJ?" se vuelve el nombre artístico de quien ya se registró (primera
+         palabra), cambiado en el cliente para que los crawlers y quien llega
+         por primera vez siempre vean la línea de marca. -->
+    <h1 class="ask">¿QUÉ QUIERES HACER, <span class="accent" id="askWho">DJ?</span></h1>
+    <p class="sub" id="sub">
+      {SUBLINES.map((line, i) => (
+        <span class="sub-line" data-sub={i} hidden={i !== 0}>{line}</span>
+      ))}
+    </p>
+
+    <nav class="doors" aria-label="Elige tu camino">
+      <a class="door d-ready" href="/es/checklist" data-event="step_completed" data-placement="home_door_checklist">
+        <span class="door-led" aria-hidden="true"></span>
+        <span class="door-body">
+          <span class="door-title">CHECKLIST PRE-GIG</span>
+          <span class="door-desc"><span class="dd-full">¿Tocas hoy? Revisa todo antes de salir de casa.</span><span class="dd-short">¿Tocas hoy? Revisa antes de salir.</span></span>
+        </span>
+        <span class="door-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+
+      <a class="door d-emergency" href="/es/emergency" data-event="begin_checkout" data-placement="home_door_emergency">
+        <span class="door-led" aria-hidden="true"></span>
+        <span class="door-body">
+          <span class="door-title">RESOLVER AHORA</span>
+          <span class="door-desc"><span class="dd-full">USB, reproductor o mixer fallando. Vuelve a tocar.</span><span class="dd-short">¿USB, reproductor o mixer fallando?</span></span>
+        </span>
+        <span class="door-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+
+      <a class="door d-prevent" href="/es/prepare" data-event="step_completed" data-placement="home_door_prevention">
+        <span class="door-led" aria-hidden="true"></span>
+        <span class="door-body">
+          <span class="door-title">BLÍNDATE</span>
+          <span class="door-desc"><span class="dd-full">Las reglas obligatorias que acaban con el desastre.</span><span class="dd-short">Reglas obligatorias. Cero desastres.</span></span>
+        </span>
+        <span class="door-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </nav>
+
+    <!-- UNA LÍNEA, siempre: el script de abajo mide la línea y esconde links
+         desde el final hasta que quepa. El orden importa, los que más valen
+         van primero. -->
+    <p class="known dim" id="popularRow">
+      <span class="pf-label-full">Más buscados:</span><span class="pf-label-short">Populares:</span>
+      <span class="pf-item"><a href="/es/fix/usb-not-recognized-cdj">USB no reconocido</a></span><span class="pf-item"> · <a href="/es/fix/cdj-error-e-8302">E-8302</a></span><span class="pf-item"> · <a href="/es/fix/playlists-not-showing-cdj"><span class="pf-label-full">Playlists no aparecen</span><span class="pf-label-short">Sin playlists</span></a></span><span class="pf-item"> · <a href="/es/fix/rekordbox-export-failed">Export fallido</a></span><span class="pf-item"> · <a href="/es/fix/exfat-vs-fat32-cdj">exFAT o FAT32</a></span>
+    </p>
+
+    <div class="home-srch">
+      <Search placeholder="Busca lo que sea. Resuelve ahora, previene siempre." />
+    </div>
+
+    <PromoBanner exclude="/emergency" />
+
+    <InstallApp />
+  </main>
+</Base>
+
+<style>
+  .landing { max-width: var(--site-w); margin: 0 auto; padding: 2rem var(--site-pad) 1rem; }
+  /* THE ONE DELIBERATE EXCEPTION to the global h1 scale, and it stays.
+     The homepage heading is tuned per breakpoint against a hard requirement:
+     all three doors fully visible on load on every phone, which fold-check
+     enforces in the gate. */
+  .ask { font-size: clamp(2rem, 9vw, 3.2rem); margin-bottom: 0.6rem; }
+  /* min-height reserves space for the longest rotating subline so the doors
+     never jump. */
+  .sub { color: var(--text-dim); margin-bottom: 1.5rem; max-width: 42rem; text-wrap: balance; min-height: 1.7rem; }
+  .sub-line[hidden] { display: none; }
+
+  .doors { display: flex; flex-direction: column; gap: 1rem; }
+
+  /* All three doors are equal and neutral. Colour lives in the LED, and the
+     accent only comes up on hover/tap. */
+  .door {
+    display: flex; align-items: center; gap: 1.1rem;
+    background: var(--surf); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
+    padding: 1.4rem 1.5rem; text-decoration: none; color: var(--text);
+    transition: border-color var(--t-fast), background var(--t-fast), transform 0.08s ease;
+  }
+  .door:active { transform: scale(0.995); }
+
+  .door-led {
+    flex: 0 0 auto; width: 13px; height: 13px; border-radius: var(--radius-round);
+    background: var(--text-faint); transition: background var(--t-fast), box-shadow var(--t-fast);
+  }
+  .d-emergency .door-led { background: var(--red); }
+  .d-ready .door-led { background: var(--green); }
+  .d-prevent .door-led { background: var(--amber); }
+
+  /* One-time staggered outline glow, opacity only so it stays on the
+     compositor: no paint, no main-thread work. */
+  .door { position: relative; }
+  .door::after {
+    content: ''; position: absolute; inset: -1px; border-radius: var(--radius);
+    pointer-events: none; opacity: 0; will-change: opacity;
+    box-shadow: 0 0 22px 1px var(--glow); border: var(--stroke) solid var(--glow);
+    animation: doorGlow 1.2s ease-in-out both;
+  }
+  .d-emergency { --glow: rgba(255,77,46,0.7); }
+  .d-ready { --glow: rgba(58,216,132,0.65); }
+  .d-prevent { --glow: rgba(217,164,65,0.65); }
+  .d-ready::after { animation-delay: 0.42s; }
+  .d-emergency::after { animation-delay: 1.14s; }
+  .d-prevent::after { animation-delay: 1.86s; }
+  @keyframes doorGlow { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+
+  /* The checklist door keeps pulsing: it is the only door people open BEFORE
+     anything is wrong. Same keyframe shape inside a 5s cycle. */
+  .d-ready::after {
+    animation-name: doorGlowPulse;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+  }
+  @keyframes doorGlowPulse {
+    0%   { opacity: 0; }
+    12%  { opacity: 1; }
+    24%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .door::after { animation: none; }
+    .d-ready::after { opacity: 0.26; }
+    .d-ready { border-color: var(--green-border); }
+    .d-ready .door-led { box-shadow: 0 0 10px var(--green); }
+  }
+
+  .door-body { flex: 1; }
+  .door-title {
+    display: block; font-family: var(--font-display); font-weight: 800; font-size: 1.2rem;
+    text-transform: uppercase; letter-spacing: -0.01em; margin-bottom: 0.25rem; color: var(--text);
+  }
+  .door-desc { display: block; color: var(--text-dim); font-size: 0.92rem; line-height: 1.45; }
+  /* Two lengths, one message. Both stay in the HTML, so search engines and AI
+     crawlers still read the full text. */
+  .dd-short { display: none; }
+  .door-arrow { flex: 0 0 auto; font-size: 1.4rem; color: var(--text-faint); transition: color var(--t-fast); }
+
+  .d-emergency:hover, .d-emergency:active, .d-emergency:focus-visible { border-color: var(--red); }
+  .d-emergency:hover .door-led, .d-emergency:active .door-led { box-shadow: 0 0 12px rgba(255,77,46,0.7); }
+  .d-emergency:hover .door-arrow, .d-emergency:active .door-arrow { color: var(--red); }
+
+  .d-ready:hover, .d-ready:active, .d-ready:focus-visible { border-color: var(--green); }
+  .d-ready:hover .door-led, .d-ready:active .door-led { box-shadow: 0 0 12px rgba(58,216,132,0.7); }
+  .d-ready:hover .door-arrow, .d-ready:active .door-arrow { color: var(--green); }
+
+  .d-prevent:hover, .d-prevent:active, .d-prevent:focus-visible { border-color: var(--amber); }
+  .d-prevent:hover .door-led, .d-prevent:active .door-led { box-shadow: 0 0 12px rgba(217,164,65,0.7); }
+  .d-prevent:hover .door-arrow, .d-prevent:active .door-arrow { color: var(--amber); }
+
+  .known { margin-top: 1.2rem; font-size: 0.9rem; }
+
+  /* All three doors have to be readable on load, on every phone, without
+     scrolling. Vertical rhythm is tied to the viewport HEIGHT and the type to
+     the viewport WIDTH, with a static fallback before every svh line. */
+  @media (max-width: 640px) {
+    .landing { padding-top: 1.1rem; }
+    .landing { padding-top: clamp(0.6rem, 2svh, 1.5rem); }
+
+    .ask { font-size: clamp(1.7rem, 7.6vw, 2.4rem); margin-bottom: 0.4rem; line-height: 1.06; }
+
+    .sub { font-size: 0.94rem; line-height: 1.5; margin-bottom: 1.1rem; min-height: 2.9rem; }
+    .sub { margin-bottom: clamp(0.7rem, 2.2svh, 1.4rem); }
+
+    .doors { gap: 0.7rem; }
+    .doors { gap: clamp(0.5rem, 1.5svh, 1rem); }
+
+    .door { padding: 0.95rem 1.05rem; gap: 0.8rem; }
+    .door { padding-block: clamp(0.75rem, 2svh, 1.15rem); }
+
+    .door-title {
+      font-size: clamp(1.14rem, calc(7.2vw - 6.5px), 1.4rem);
+      margin-bottom: 0.2rem; letter-spacing: -0.015em;
+    }
+    .door-desc { font-size: clamp(0.79rem, calc(3.4vw + 0.3px), 1rem); line-height: 1.35; }
+    .dd-full { display: none; }
+    .dd-short { display: inline; }
+    .door-arrow { font-size: 1.2rem; }
+    .known { margin-top: 1.15rem; font-size: 0.85rem; }
+  }
+
+  @media (min-width: 401px) and (max-width: 640px) {
+    .sub { min-height: 1.6rem; }
+  }
+
+  /* Very short screens. Trade headline size for the third door: the choice
+     matters more than the typography. */
+  @media (max-width: 640px) and (max-height: 700px) {
+    .ask { font-size: clamp(1.5rem, 6.8vw, 1.95rem); }
+    .sub { font-size: 0.88rem; min-height: 2.5rem; }
+    .door-title { font-size: 1.2rem; }
+    .door-desc { font-size: 0.82rem; }
+    .door { padding-block: clamp(0.6rem, 1.6svh, 0.95rem); }
+  }
+
+  @media (max-width: 640px) and (max-height: 620px) {
+    .landing { padding-top: 0.4rem; }
+    .ask { font-size: clamp(1.38rem, 6.2vw, 1.7rem); margin-bottom: 0.28rem; }
+    .sub { font-size: 0.84rem; margin-bottom: 0.6rem; min-height: 2.2rem; line-height: 1.42; }
+    .doors { gap: 0.34rem; }
+    .door { padding-block: 0.56rem; }
+    .door-title { font-size: 1.1rem; }
+    .door-desc { font-size: 0.8rem; line-height: 1.33; }
+  }
+  .known a { color: var(--text-dim); }
+  .known a:hover { color: var(--red); }
+  .pf-label-short { display: none; }
+  @media (max-width: 640px) {
+    .pf-label-full { display: none; }
+    .pf-label-short { display: inline; }
+  }
+  /* Homepage flavour of the shared search component: transparent on the page
+     background and full landing width, unlike the 34rem default. */
+  .home-srch { margin-top: 0.9rem; }
+  .home-srch :global(.srch) { max-width: none; }
+  .home-srch :global(.srch-box) { background: transparent; position: relative; }
+  /* Fourth stop of the one-time load glow: the eye walks the three doors,
+     then lands here. */
+  .home-srch :global(.srch-box)::after {
+    content: ''; position: absolute; inset: -1px; border-radius: var(--radius);
+    pointer-events: none; opacity: 0; will-change: opacity;
+    box-shadow: 0 0 18px 1px rgba(243, 241, 236, 0.35);
+    border: var(--stroke) solid rgba(243, 241, 236, 0.55);
+    animation: doorGlow 1.2s ease-in-out both;
+    animation-delay: 2.58s;
+  }
+  @media (prefers-reduced-motion: reduce) { .home-srch :global(.srch-box)::after { animation: none; } }
+  @media (max-width: 640px) {
+    .home-srch { margin-top: 0.8rem; }
+    .home-srch :global(.srch-input) { font-size: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) { .door, .door-led, .door-arrow { transition: none; } }
+</style>
+
+<script is:inline>
+  (function () {
+    var lines = document.querySelectorAll('#sub .sub-line');
+    if (lines.length >= 2) {
+      var pick = Math.floor(Math.random() * lines.length);
+      for (var i = 0; i < lines.length; i++) lines[i].hidden = (i !== pick);
+    }
+    // Registered visitors with an artist name get greeted by it. textContent
+    // only (never HTML), first word. The fit check is the LAYOUT ITSELF: try
+    // the name, measure whether the H1 grew a line, revert if it did.
+    try {
+      var who = localStorage.getItem('SMG_ARTIST');
+      var el = document.getElementById('askWho');
+      var h1 = document.querySelector('.ask');
+      if (who && el && h1) {
+        who = who.split(/\s+/)[0];
+        if (who.length >= 2 && who.length <= 14) {
+          var before = h1.getBoundingClientRect().height;
+          el.textContent = who.toUpperCase() + '?';
+          if (h1.getBoundingClientRect().height > before + 1) el.textContent = 'DJ?';
+        }
+      }
+    } catch (e) { /* storage blocked, brand line stays */ }
+    // Tapping the search box hands off to the top overlay. NEVER on `focus`:
+    // tabbing through the field counts as a focus and the keyboard walked
+    // straight into the overlay. Deliberate activation only.
+    var homeIn = document.querySelector('.home-srch .srch-input');
+    var navBtn = document.getElementById('navSearchBtn');
+    if (homeIn && navBtn) {
+      homeIn.addEventListener('click', function () { navBtn.click(); });
+      homeIn.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          navBtn.click();
+        }
+      });
+    }
+
+    // Popular fixes: ONE line, never two. The layout measures itself and
+    // hides links from the end until the row is a single line.
+    var row = document.getElementById('popularRow');
+    if (row) {
+      var fitRow = function () {
+        var items = row.querySelectorAll('.pf-item');
+        for (var i = 0; i < items.length; i++) items[i].hidden = false;
+        var oneLine = parseFloat(getComputedStyle(row).lineHeight) * 1.5;
+        for (var j = items.length - 1; j > 0 && row.getBoundingClientRect().height > oneLine; j--) {
+          items[j].hidden = true;
+        }
+      };
+      fitRow();
+      var rT;
+      window.addEventListener('resize', function () { clearTimeout(rT); rT = setTimeout(fitRow, 150); });
+    }
+  })();
+</script>

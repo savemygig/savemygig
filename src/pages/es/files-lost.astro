@@ -1,0 +1,61 @@
+---
+import Base from '../../layouts/Base.astro';
+import EmailCapture from '../../components/EmailCapture.astro';
+// FILES LOST, SPANISH (neutral Latin American). Source of truth for structure,
+// panels and classes: src/pages/files-lost.astro. Only the copy and the /es
+// hrefs differ.
+---
+<Base
+  title="¿Perdiste los archivos? Esta es la ruta de recuperación | Save My Gig"
+  description="No se pudo rescatar tu USB en el lugar. Los archivos todavía pueden estar vivos: qué hacer ahora, y qué no hacer por ningún motivo."
+  path="/files-lost"
+  lang="es"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line red">Modo_Recuperacion</div>
+
+    <h1 style="margin-bottom:1rem">El gig fue duro.<br /><span class="accent">Los archivos todavía pueden estar vivos.</span></h1>
+    <p class="dim" style="margin-bottom:2rem">"No se puede leer" casi nunca quiere decir "se perdió". En nuestra experiencia, la mayoría de los USB que fallan sigue guardando los datos; lo que la unidad ya no puede es mostrarlos. Lo que hagas ahora decide si se pueden recuperar.</p>
+
+    <div class="panel panel-danger">
+      <h2 style="margin-bottom:0.75rem">Primero: deja de usar el USB</h2>
+      <ul class="checklist">
+        <li><strong>No lo formatees.</strong> Formatear puede destruir las posibilidades de recuperación.</li>
+        <li><strong>No lo sigas conectando</strong> a los reproductores: cada montaje puede empeorar la situación.</li>
+        <li>Déjalo aparte hasta que estés frente a una computadora con software de recuperación.</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.75rem">Paso 1 - Software de recuperación</h2>
+      <p class="dim">Si la computadora detecta el USB de alguna forma, aunque no muestre ningún archivo, el software casi siempre logra sacarle la música. Dos herramientas que sí usaríamos:</p>
+      <p class="dim" style="font-size:0.85rem">Las herramientas de la próxima página pueden dejarnos una comisión, sin costo extra para ti. Eso nunca cambia lo que recomendamos, y no hay links pagados dentro del Emergency Mode.</p>
+      <a href="/es/recovery" class="btn btn-go" data-event="affiliate_click" data-program="recovery_page" data-placement="files_lost">
+        <span aria-hidden="true">🛠</span> Ver las herramientas →
+      </a>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.75rem">Paso 2 - Si el USB murió físicamente</h2>
+      <p class="dim" style="margin-bottom:0">Sin luz, sin que lo detecte nada, o después de un golpe o de mojarse: el software no llega. Un laboratorio de recuperación sí, porque abre la unidad y lee la memoria directo. Es caro, así que es solo para archivos irremplazables. <a href="/es/recovery#lab">Cuándo conviene un laboratorio →</a></p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.75rem">Paso 3 - Que esta sea la última vez</h2>
+      <p class="dim">Los DJs a los que esto nunca les pasa no tienen suerte, tienen un sistema. Se arma en una tarde.</p>
+      <a href="/es/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="files_lost"><span aria-hidden="true">🛡</span> Armar el sistema de prevención
+      </a>
+    </div>
+
+    <EmailCapture
+      source="files-lost"
+      title="Que no te vuelva a pasar"
+      blurb="Te mandamos por correo la Tarjeta de Emergencia para imprimir y el checklist pre-gig. La próxima vez que un USB muera va a ser un contratiempo de cinco minutos, no un set perdido. Sin spam, te das de baja en un clic."
+    />
+
+    <p class="dim" style="margin-top:2rem">
+      <a href="/es/feedback">Cuéntanos qué pasó →</a>
+    </p>
+  </main>
+</Base>

@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+// ABOUT, SPANISH (neutral Latin American). Source of truth for structure,
+// panels and classes: src/pages/about.astro. Faceless by decision: no founder
+// names, no founder photo, first person plural only. Only the copy and the
+// /es hrefs differ from the English page.
+---
+<Base
+  title="Hecho por DJs que ya pasaron por esto | Save My Gig"
+  description="Casi cuatro décadas dentro de la música electrónica. Save My Gig es la primera plataforma de DJ Booth Intelligence: rescate, prevención y conocimiento de booth, gratis."
+  path="/about"
+  lang="es"
+>
+  <main class="wrap wrap-wide">
+    <div class="status-line">La_Historia</div>
+    <h1 style="margin-bottom:1.5rem">HEMOS VISTO A GRANDES DJs PERDER GIGS<br><span class="accent">QUE NO TENÍAN POR QUÉ PERDER.</span></h1>
+
+
+    <p>Casi cuatro décadas dentro de la música electrónica, de booths de barrio a la dirección de festivales internacionales, nos enseñaron una cosa por encima de todas: al gig no le importa tu preparación hasta el momento en que la pone a prueba. Y la prueba es casi siempre la misma. Un USB. Un reproductor que no lo lee. Un reloj que no se detiene.</p>
+
+    <p>Hemos estado al lado de DJs en los momentos más grandes de su carrera mientras la unidad les escupía <span class="mono" translate="no">E-8302</span>. Los que salieron adelante no tuvieron más suerte, se sabían la secuencia. Reconectar. Otro slot. Otro reproductor. La cuenta del formato. Modo supervivencia. Con calma, en orden, sin perder un segundo. Los que no se la sabían perdieron sets que habían preparado durante meses.</p>
+
+    <p>Save My Gig es esa secuencia, escrita. Completa. La ruta crítica para cuando tocas en una hora, la reparación bien hecha para cuando tienes tres, la reconstrucción a fondo para la mañana siguiente, y el sistema de prevención que vuelve todo eso innecesario.</p>
+
+    <p>Es gratis. No necesita cuenta. Y dentro del Emergency Mode nunca se te vende nada. Eso no es generosidad, es diseño: un DJ en pánico merece un camino claro, no un discurso de venta.</p>
+
+    {/* The concept is explained HERE: the homepage shows what the place does,
+        this page says what it IS. "No es una app vigilándote por encima del
+        hombro" guards the one real risk in the word intelligence, which is a
+        2026 reader hearing an AI promise. */}
+    <div class="panel">
+      <h2 style="margin-bottom:0.75rem">DJ Booth <span class="accent">Intelligence</span></h2>
+      <p class="dim" style="margin-bottom:0.8rem">La mayoría de los DJs llega a Save My Gig porque algo salió mal. Y se queda porque entiende que la preparación es parte de la performance. Alrededor del flujo de emergencia crecieron el checklist pre-gig, el equipo que se gana su lugar, un diccionario de los términos que se usan en el booth, la compatibilidad modelo por modelo, historiales de firmware que nadie más reúne en un solo lugar, y los hábitos de trabajo que convierten un desastre en un contratiempo. Un sistema, una filosofía: mejores decisiones antes, durante y después de cada performance.</p>
+      <p class="dim" style="margin-bottom:0">A esa filosofía la llamamos DJ Booth Intelligence: preparación, organización, conocimiento técnico y experiencia de campo en un solo lugar, para darle a cualquier DJ el tipo de conocimiento que normalmente solo llega después de años detrás del booth. No es una app vigilándote por encima del hombro: es lo que sabe el DJ más preparado de la sala, escrito, verificado y mantenido al día. Save My Gig es su casa.</p>
+    </div>
+
+    <!-- Independence is sold HERE, at full size: the homepage shows what the
+         place does, this page explains why it can be trusted. -->
+    <div class="panel">
+      <h2 style="margin-bottom:0.75rem">Independientes. Y así nos vamos a quedar.</h2>
+      <p class="dim" style="margin-bottom:0.8rem">Ningún fabricante paga por aparecer aquí y ninguna marca edita lo que recomendamos. Cuando Save My Gig dice FAT32, USB duplicados o un flujo de trabajo específico, es porque lo enseñaron booths de verdad, no un departamento de marketing. Las afirmaciones técnicas se contrastan con la documentación oficial, y cuando estamos dando un criterio en vez de citar un manual, lo decimos. Cuando la respuesta oficial no existe, decimos exactamente eso en lugar de inventar una.</p>
+      <p class="dim" style="margin-bottom:0">Lo que empezó como conocimiento que se pasaban DJs con experiencia se volvió un trabajo colectivo: DJs, técnicos y profesionales de la industria que verifican todo esto contra el equipo y las situaciones con las que trabajan.</p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.75rem">¿Por qué es gratis?</h2>
+      <p class="dim" style="margin-bottom:0">Porque la comunidad de DJs nos dio la carrera que tenemos, y porque la confianza es la única moneda que vale en una emergencia. Si Save My Gig ayuda a salvar tu gig, hay un <a href="https://buymeacoffee.com/savemygig" data-event="affiliate_click" data-program="bmc" data-placement="about">botón de café</a>, después de que estés a salvo, nunca antes. Algunos links de equipo pueden dejar una pequeña comisión; nunca influyen en una recomendación y nunca aparecen dentro del Emergency Mode.</p>
+    </div>
+
+    <div class="panel panel-go">
+      <h2 style="margin-bottom:0.75rem">Nuestra misión</h2>
+      <p class="dim" style="margin-bottom:0">Ningún DJ debería perder un gig por algo que se podía evitar. Mucho menos por un pedazo de plástico de quince euros.</p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem">¿Estás en problemas ahora?</h2>
+      <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="about"><span aria-hidden="true">🚨</span> Abrir Emergency Mode</a>
+    </div>
+
+    <p class="dim" style="font-size:0.9rem;margin-top:2rem">Dudas, correcciones, historias de guerra: <a href="mailto:info@savemygig.com">info@savemygig.com</a></p>
+  </main>
+</Base>

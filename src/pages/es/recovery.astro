@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+// DATA RECOVERY, SPANISH (neutral Latin American). Source of truth for
+// structure, panels, cards and classes: src/pages/recovery.astro. Only the
+// copy and the /es hrefs differ. The two tool links are external and stay
+// untouched.
+---
+<Base
+  title="Recuperar archivos de un USB muerto o corrupto | Save My Gig"
+  description="Tu USB murió con tu música adentro. Esta es la ruta de recuperación: qué software funciona de verdad, cuándo ya no alcanza y cuándo vale un laboratorio."
+  path="/recovery"
+  lang="es"
+>
+  <main class="wrap">
+    <div class="status-line red">Recuperacion_De_Datos</div>
+
+    <h1 style="margin-bottom:1rem">RECUPERA TUS <span class="accent">ARCHIVOS</span></h1>
+    <p class="dim" style="margin-bottom:1rem">En nuestra experiencia, el software recupera los archivos en la mayoría de los casos en que la unidad todavía enciende. Con una unidad físicamente muerta no puede hacer nada. Esta es la ruta, en orden.</p>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><span aria-hidden="true">⚠️</span> <strong>Antes que nada: deja de escribir en el USB.</strong> No lo formatees, no intentes "un export más". Cada escritura sobrescribe música que todavía se podía recuperar.</p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.5rem">Paso 1 - Software de recuperación</h2>
+      <p class="dim">Si tu computadora detecta la unidad, aunque muestre 0 archivos o te pida formatearla (y ahí <strong>dile que no</strong>), el software tiene una posibilidad real. Los dos escanean gratis primero, así ves qué se puede recuperar antes de pagar.</p>
+      <p class="dim" style="font-size:0.85rem">Estos links pueden dejarnos una comisión, sin costo extra para ti. Eso nunca cambia lo que recomendamos, y no hay links pagados dentro del Emergency Mode.</p>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3 style="font-size:1rem">Disk Drill</h3>
+          <p>La interfaz más limpia, muy bueno recuperando FAT32, en Mac y en Windows. El escaneo gratis te muestra todo antes.</p>
+          <a href="https://www.cleverfiles.com/disk-drill.html" target="_blank" rel="noopener sponsored" class="btn btn-go" data-event="affiliate_click" data-program="diskdrill" aria-label="Escanear gratis con Disk Drill" data-placement="recovery_1">Escanear gratis →</a>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem">EaseUS Data Recovery</h3>
+          <p>El veterano. Fuerte en particiones corruptas y en unidades que piden ser formateadas.</p>
+          <a href="https://www.easeus.com/datarecoverywizard/" target="_blank" rel="noopener sponsored" class="btn btn-go" data-event="affiliate_click" data-program="easeus" aria-label="Escanear gratis con EaseUS Data Recovery" data-placement="recovery_2">Escanear gratis →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="lab">
+      <h2 style="margin-bottom:0.5rem">Paso 2 - Cuando el software no alcanza</h2>
+      <p class="dim" style="margin-bottom:0">Unidad que no aparece en ningún lado, sin luz, daño físico, agua: eso es hardware. Un laboratorio de recuperación abre la unidad y lee los chips de memoria directo. Cuesta dinero de verdad, cotizado caso por caso, así que es para archivos irremplazables, tu propia música inédita, no tracks que puedes volver a descargar. Busca un laboratorio de recuperación de datos en tu ciudad y pide primero un diagnóstico gratis; un laboratorio serio cotiza antes de cobrar.</p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.5rem">Paso 3 - Nunca pagues dos veces por recuperar</h2>
+      <p class="dim">Recuperar es lo que haces una vez. Un sistema de backup es lo que haces en lugar de eso, y se arma en una tarde.</p>
+      <a href="/es/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="recovery"><span aria-hidden="true">🛡</span> Armar el sistema de prevención</a>
+    </div>
+  </main>
+</Base>

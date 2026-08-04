@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import EmailCapture from '../../components/EmailCapture.astro';
+// OUTCOME PAGE, SPANISH (neutral Latin American). Source of truth for
+// structure, panels, the no_sound query guard and the classes:
+// src/pages/saved.astro. Only the copy and the /es hrefs differ.
+---
+<Base
+  title="Volviste a tocar | Save My Gig"
+  description="Lo lograste. Tu set está a salvo. Ahora, cómo asegurarte de que esto no vuelva a pasar."
+  path="/saved"
+  lang="es"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line" >Listo_Para_Tocar</div>
+
+    <h1 class="accent" style="margin-bottom:1rem">VOLVISTE A TOCAR.</h1>
+    <p style="margin-bottom:0.5rem">La sala está sonando otra vez. <strong>El resto es tu set.</strong></p>
+    <p class="dim" style="margin-bottom:3rem">Después del gig: borra los archivos temporales de cualquier computadora que hayas usado.</p>
+
+    <section class="panel panel-go" style="margin-bottom:1.5rem">
+      <h2 style="margin-bottom:0.75rem">Que esta emergencia no se repita</h2>
+      <p class="dim">Esta terminó bien. La siguiente no está garantizada, salvo que tú la garantices. El sistema de prevención se arma en cerca de una hora.</p>
+      <a href="/es/prepare" class="btn btn-solid" data-event="step_completed" data-step="prepare_click" data-placement="saved_hero"><span aria-hidden="true">🛡</span> Armar el sistema de prevención
+      </a>
+    </section>
+
+    <!-- Hidden for the no-sound arrivals: their whole branch premise was that
+         nothing is broken on the drive (a crossfader assign, a cable, a cue
+         mix). Telling that DJ to retire a drive that never failed reads as a
+         site that was not listening, on the page where trust pays out. -->
+    <section class="panel" id="retirePanel" style="margin-bottom:1.5rem">
+      <h3 style="margin-bottom:0.75rem">Jubila el USB que te traicionó</h3>
+      <p class="dim">Un USB que falló una vez va a fallar de nuevo. Estos son los que no hacen eso:</p>
+      <a href="/es/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="saved"><span aria-hidden="true">🔌</span> Ver los USB aprobados
+      </a>
+    </section>
+    <script>
+      if (new URLSearchParams(location.search).get('path') === 'no_sound') {
+        const p = document.getElementById('retirePanel');
+        if (p) p.remove();
+      }
+    </script>
+
+    <div style="margin-bottom:1.5rem">
+      <EmailCapture
+        source="saved"
+        title="Guarda la Tarjeta de Emergencia"
+        blurb="La referencia rápida de una página para desastres con USB. Se lee gratis cuando quieras, y te mandamos por correo la versión para imprimir, para que la tengas en el celular en el próximo booth oscuro."
+      />
+    </div>
+
+    <p class="dim" style="margin-top:2rem">
+      ¿Esto salvó tu gig? <a href="https://buymeacoffee.com/savemygig" data-event="affiliate_click" data-program="bmc" data-placement="saved">Invítanos un café</a>
+      · o solo <a href="mailto:info@savemygig.com">cuéntanos que funcionó</a>
+    </p>
+  </main>
+</Base>
