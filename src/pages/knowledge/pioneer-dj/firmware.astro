@@ -60,7 +60,14 @@ const schema = {
   datePublished: '2026-08-01',
   dateModified: '2026-08-01',
   inLanguage: 'en',
-  mainEntityOfPage: 'https://www.savemygig.com/knowledge/pioneer-dj/firmware',
+  // ARTICLE IMAGE (2026-08-04). Google's Article guidance asks for an image,
+  // and without one an Article node is never a candidate for a rich result.
+  // This is the front-panel photograph the page itself displays, so the
+  // image in the markup is an image the reader can actually see.
+  // mainEntityOfPage is an @id reference rather than a bare URL string so it
+  // resolves to the WebPage node Base.astro emits, instead of being a URL
+  // that merely looks like one.
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/firmware#webpage' },
 };
 ---
 <Base
@@ -110,12 +117,14 @@ const schema = {
     {models.map(m => (
       <details class="acc-sec fw-model" name="fw-acc">
         <summary>
-          <h2 class="acc-h2 fw-model-h">{m.model}</h2>
+          {/* Model names and firmware version strings are read off the
+              unit itself, so they must never be auto-translated. */}
+          <h2 class="acc-h2 fw-model-h" translate="no">{m.model}</h2>
           {m.safeFloor && (
             <span class="fw-floor">
-              Clear at <strong>{m.safeFloor}</strong> or later
+              Clear at <strong translate="no">{m.safeFloor}</strong> or later
               {m.floorException && (
-                <Fragment>, except <strong class="fw-floor-except">{m.floorException}</strong> (withdrawn)</Fragment>
+                <Fragment>, except <strong class="fw-floor-except" translate="no">{m.floorException}</strong> (withdrawn)</Fragment>
               )}
             </span>
           )}
@@ -125,7 +134,7 @@ const schema = {
 
         {m.warning && (
           <div class="fw-warn">
-            <span class="fw-warn-v">{m.warning.version}</span>
+            <span class="fw-warn-v" translate="no">{m.warning.version}</span>
             <span>
               {m.warning.text}{' '}
               <a href={m.warning.sourceUrl} target="_blank" rel="noopener">Official notice</a>
@@ -137,6 +146,11 @@ const schema = {
           <p class="fw-none">{m.noneNote}</p>
         ) : (
           <table class="fw-table">
+            {/* Every model on this page renders one of these, so without a
+                caption a screen reader user meets a dozen identical unnamed
+                three-column tables. sr-only: the model name is already the
+                visible heading on the accordion this table sits inside. */}
+            <caption class="sr-only">Documented faults on the {m.model}, and the firmware version that fixed each one</caption>
             <thead>
               <tr>
                 <th scope="col">Fixed in</th>
@@ -147,7 +161,7 @@ const schema = {
             <tbody>
               {m.issues.map(i => (
                 <tr>
-                  <td class="fw-v"><span class="fw-vbadge">{i.fixedIn}</span></td>
+                  <td class="fw-v"><span class="fw-vbadge" translate="no">{i.fixedIn}</span></td>
                   <td class="fw-area">
                     {i.area}
                     {i.midSet && <span class="fw-live" title="Can interrupt a set in progress">mid-set</span>}
@@ -163,7 +177,12 @@ const schema = {
 
         <p class="fw-links">
           <a href={m.href}>{m.model} field manual</a>
-          <a href={m.source} target="_blank" rel="noopener">AlphaTheta change history</a>
+          {/* Six models render this row, so out of context the page offered six
+              links called "AlphaTheta change history" pointing at six different
+              PDFs. The visible text stays (it is read next to the model heading);
+              the accessible name names the model. */}
+          <a href={m.source} target="_blank" rel="noopener"
+             aria-label={`AlphaTheta change history for the ${m.model}`}>AlphaTheta change history</a>
         </p>
         </div>
       </details>

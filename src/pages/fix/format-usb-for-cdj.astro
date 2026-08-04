@@ -29,24 +29,63 @@ const schema = {
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   datePublished: '2026-07-20',
   dateModified: '2026-07-26',
+  inLanguage: 'en',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/fix/format-usb-for-cdj#webpage' },
+  image: 'https://www.savemygig.com/og/format-usb-for-cdj.png',
   supply: [{ '@type': 'HowToSupply', name: 'A 32-64 GB USB drive' }],
   tool: [{ '@type': 'HowToTool', name: 'macOS Disk Utility or Windows Format' }],
+  // THE STEPS ARE NOW THE PAGE'S OWN WORDS. Rewritten 2026-08-04.
+  //
+  // They used to be paraphrases: "On macOS use Disk Utility with Show All
+  // Devices enabled and select the device, not the volume" appears nowhere on
+  // this page. That is the same defect that got the FAQPage blocks deleted
+  // from the homepage and /emergency, and Google applies the same rule to
+  // HowTo: the steps must be the steps the reader can see. Each `text` below
+  // is the matching item in "The 60-second version", plus the warning panel
+  // above it, word for word, minus markup.
+  //
+  // Keep them in step. If you edit the visible <ol class="art-steps">, edit
+  // this array in the same commit.
   step: [
-    { '@type': 'HowToStep', name: 'Copy everything off the drive', text: 'Formatting erases the drive permanently. Copy the contents somewhere safe first.' },
-    { '@type': 'HowToStep', name: 'Format as FAT32 with an MBR scheme', text: 'On macOS use Disk Utility with Show All Devices enabled and select the device, not the volume, then Erase as MS-DOS (FAT) with a Master Boot Record scheme. On Windows right-click the drive and choose Format, then FAT32.' },
-    { '@type': 'HowToStep', name: 'Export from rekordbox', text: 'Use rekordbox 7.2.13 or later in EXPORT mode. Do not drag audio files onto the drive: that gives you no database, so no playlists, cues or grids.' },
-    { '@type': 'HowToStep', name: 'Verify on a player', text: 'Load a track from the drive on an actual player before the drive matters.' },
+    {
+      '@type': 'HowToStep',
+      name: 'Copy everything off it first',
+      text: 'Formatting erases the drive permanently. Copy everything off it first.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Mac',
+      text: 'Mac: Disk Utility → View → Show All Devices → select the drive, not the volume → Erase → MS-DOS (FAT) + Master Boot Record.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Windows',
+      text: 'Windows: right-click the drive in Explorer → Format → FAT32 → quick format is fine on a drive you trust. On a drive you suspect, untick quick and let the full format run: it works the whole drive, so it doubles as a stress test.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Put music on it with rekordbox',
+      text: 'Put music on it with rekordbox 7.2.13 or later in EXPORT mode. Do not drag files.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Test it on a player',
+      text: 'Load a track from it on a player before the drive matters.',
+    },
   ],
 };
 
 // The FAQPage block that used to sit here was removed on 2026-08-04: its
 // questions and answers were paraphrases that did not appear verbatim in the
 // visible page text, which is exactly what Google's structured data policy
-// forbids. The HowTo schema above describes content that is on the page.
+// forbids. The HowTo schema above had the SAME defect and was rewritten the
+// same day rather than deleted: the procedure genuinely is on the page and is
+// the most citable thing on it, it was only the WORDING that was invented.
+// It now quotes the page.
 ---
 <Base
-  title="How to Format a USB for Pioneer CDJ (FAT32 + MBR) | Save My Gig"
-  description="The exact settings so every Pioneer CDJ and XDJ reads your drive: FAT32 and MBR. Includes the two traps that get people, FAT32 missing on Windows and the hidden Scheme option on Mac."
+  title="Format a USB for Pioneer CDJ: FAT32 + MBR | Save My Gig"
+  description="FAT32 file system, MBR partition scheme: the settings every Pioneer CDJ and XDJ reads. Plus the two traps, Windows hiding FAT32 and Mac hiding Scheme."
   path="/fix/format-usb-for-cdj"
   ogImage="/og/format-usb-for-cdj.png"
 >
@@ -63,8 +102,8 @@ const schema = {
 
     <div class="panel panel-go">
       <p style="margin:0">
-        <strong>The answer:</strong> <span class="mono">FAT32</span> file system,
-        <span class="mono">MBR</span> partition scheme, on a 32&ndash;64&nbsp;GB drive.
+        <strong>The answer:</strong> <span class="mono" translate="no">FAT32</span> file system,
+        <span class="mono" translate="no">MBR</span> partition scheme, on a 32&ndash;64&nbsp;GB drive.
         Every rekordbox-era CDJ and XDJ reads FAT32, and MBR is the scheme we
         recommend (the why is below).
       </p>
@@ -76,8 +115,8 @@ const schema = {
 
     <h2 class="art-h2">The 60-second version</h2>
     <ol class="art-steps">
-      <li><strong>Mac:</strong> Disk Utility &rarr; View &rarr; <strong>Show All Devices</strong> &rarr; select the <strong>drive</strong>, not the volume &rarr; Erase &rarr; <span class="mono">MS-DOS (FAT)</span> + <span class="mono">Master Boot Record</span>.</li>
-      <li><strong>Windows:</strong> right-click the drive in Explorer &rarr; Format &rarr; <span class="mono">FAT32</span> &rarr; quick format is fine on a drive you trust. On a drive you suspect, untick quick and let the full format run: it works the whole drive, so it doubles as a stress test.</li>
+      <li><strong>Mac:</strong> Disk Utility &rarr; View &rarr; <strong>Show All Devices</strong> &rarr; select the <strong>drive</strong>, not the volume &rarr; Erase &rarr; <span class="mono" translate="no">MS-DOS (FAT)</span> + <span class="mono" translate="no">Master Boot Record</span>.</li>
+      <li><strong>Windows:</strong> right-click the drive in Explorer &rarr; Format &rarr; <span class="mono" translate="no">FAT32</span> &rarr; quick format is fine on a drive you trust. On a drive you suspect, untick quick and let the full format run: it works the whole drive, so it doubles as a stress test.</li>
       <li>Put music on it with <strong>rekordbox 7.2.13 or later in EXPORT mode</strong>. Do not drag files.</li>
       <li>Load a track from it on a player <strong>before the drive matters</strong>.</li>
     </ol>
@@ -96,8 +135,8 @@ const schema = {
         these suits you:
       </p>
       <ul class="checklist">
-        <li><strong>Use a free formatter.</strong> <span class="mono">guiformat</span> (or its command-line twin <span class="mono">fat32format</span>), both from Ridgecrop Consultants, will format a large drive to FAT32 in a few seconds. This is what most DJs end up using.</li>
-        <li><strong>Windows 11 command line.</strong> Microsoft lifted the built-in <span class="mono">format</span> command's FAT32 limit to 2&nbsp;TB (announced for Windows 11 in 2024), while the graphical dialog still caps at 32&nbsp;GB. Open a terminal as administrator and run <span class="mono">format X: /FS:FAT32 /Q</span>, replacing X with your drive letter. Check the letter twice; if your build refuses, guiformat above does the same job.</li>
+        <li><strong>Use a free formatter.</strong> <span class="mono" translate="no">guiformat</span> (or its command-line twin <span class="mono" translate="no">fat32format</span>), both from Ridgecrop Consultants, will format a large drive to FAT32 in a few seconds. This is what most DJs end up using.</li>
+        <li><strong>Windows 11 command line.</strong> Microsoft lifted the built-in <span class="mono" translate="no">format</span> command's FAT32 limit to 2&nbsp;TB (announced for Windows 11 in 2024), while the graphical dialog still caps at 32&nbsp;GB. Open a terminal as administrator and run <span class="mono" translate="no">format X: /FS:FAT32 /Q</span>, replacing X with your drive letter. Check the letter twice; if your build refuses, guiformat above does the same job.</li>
         <li><strong>Shrink it.</strong> Disk Management &rarr; shrink the volume to 32&nbsp;GB &rarr; format that partition FAT32. You lose the rest of the capacity, which for a gig drive rarely matters.</li>
       </ul>
       <p>
@@ -120,7 +159,7 @@ const schema = {
         <li>In Disk Utility, choose <strong>View &rarr; Show All Devices</strong>.</li>
         <li>The sidebar now shows the drive with the volume <strong>indented underneath it</strong>.</li>
         <li>Select the <strong>top-level entry</strong>, the one with the manufacturer name, not the indented one.</li>
-        <li>Click Erase. The <strong>Scheme</strong> dropdown now appears. Choose <span class="mono">Master Boot Record</span>.</li>
+        <li>Click Erase. The <strong>Scheme</strong> dropdown now appears. Choose <span class="mono" translate="no">Master Boot Record</span>.</li>
       </ul>
       <p>
         This matters more than it sounds. Erasing only the volume leaves the existing
@@ -147,7 +186,7 @@ const schema = {
       hint="Thirty seconds now beats finding out in the booth."
     >
       <ul class="checklist">
-        <li><strong>Check the format.</strong> Mac: select the drive in Disk Utility, it should read <span class="mono">MS-DOS (FAT32)</span> and <span class="mono">Master Boot Record</span>. Windows: right-click in Explorer &rarr; Properties &rarr; File system should say <span class="mono">FAT32</span>.</li>
+        <li><strong>Check the format.</strong> Mac: select the drive in Disk Utility, it should read <span class="mono" translate="no">MS-DOS (FAT32)</span> and <span class="mono" translate="no">Master Boot Record</span>. Windows: right-click in Explorer &rarr; Properties &rarr; File system should say <span class="mono" translate="no">FAT32</span>.</li>
         <li><strong>Export, then eject properly.</strong> Use rekordbox's own eject button. Pulling the drive mid-write is the most common way to corrupt the database you just built.</li>
         <li><strong>Load a track on a real player.</strong> Your own, or arrive early enough to test on the club's. A drive that has never been tested is not a backup, it is a hope.</li>
       </ul>

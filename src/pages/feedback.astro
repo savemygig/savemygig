@@ -21,8 +21,15 @@ import Base from '../layouts/Base.astro';
     </p>
 
     <form class="fbp-form" id="fbForm" novalidate>
-      <label class="fbp-label" for="fb-type">What is this?</label>
-      <div class="fbp-seg" role="tablist" aria-label="Feedback type">
+      {/* NOT a <label> and NOT role="tablist" (2026-08-04 accessibility pass).
+          It pointed `for` at an id that has never existed on this page, so the
+          browser exposed a label attached to nothing, and the three radios
+          sat inside a TABLIST, which told a screen reader they were tabs
+          switching panels rather than one answer to one question. It is a
+          radio group: `radiogroup` plus the visible text as its name. Same
+          element box, same class, so nothing moves. */}
+      <span class="fbp-label" id="fbTypeLabel">What is this?</span>
+      <div class="fbp-seg" role="radiogroup" aria-labelledby="fbTypeLabel">
         <input type="radio" name="type" id="t-sug" value="Suggestion" checked />
         <label for="t-sug">Suggestion</label>
         <input type="radio" name="type" id="t-bug" value="Bug" />
@@ -32,8 +39,14 @@ import Base from '../layouts/Base.astro';
       </div>
 
       <label class="fbp-label" for="fb-msg">Your message</label>
+      {/* aria-describedby ties the field to the live region the submit
+          handler writes "Add a message first." into. Without it the error is
+          announced once and is then unreachable: a screen reader user who
+          tabs back to the textarea hears the label and nothing about why the
+          form refused. */}
       <textarea id="fb-msg" name="message" class="fbp-input fbp-msg" rows="5"
-        placeholder="What is on your mind? The more specific, the better." required></textarea>
+        placeholder="What is on your mind? The more specific, the better."
+        aria-describedby="fbStatus" required></textarea>
 
       <label class="fbp-label" for="fb-ig">Your Artist Instagram <span class="fbp-hint">(so we can follow you back)</span></label>
       <input type="text" id="fb-ig" name="instagram" class="fbp-input" placeholder="@your.instagram" autocomplete="off" />

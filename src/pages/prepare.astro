@@ -67,7 +67,7 @@ const MUSIC = [
     // ("read only by newer units", "by none of them"), so a reader needs no
     // detour to act. Four links in two sentences would be its own problem;
     // the standing steer is that linking stays editorial, not automatic.
-    body: `<a href="${hrefFor('fat32')}">FAT32</a> with an <a href="${hrefFor('mbr')}"><span class="mono">MBR</span></a> partition scheme is read by every rekordbox-era Pioneer DJ and AlphaTheta player, old and new. exFAT is read only by newer units, and NTFS by none of them.`,
+    body: `<a href="${hrefFor('fat32')}">FAT32</a> with an <a href="${hrefFor('mbr')}"><span class="mono" translate="no">MBR</span></a> partition scheme is read by every rekordbox-era Pioneer DJ and AlphaTheta player, old and new. exFAT is read only by newer units, and NTFS by none of them.`,
     why: 'You are not formatting for your player. You are formatting for a booth you have never seen.',
   },
   {
@@ -85,13 +85,13 @@ const MUSIC = [
   {
     n: '05',
     title: 'Eject like it matters.',
-    body: 'Eject from rekordbox and wait for the computer to release the drive. On a player, press <span class="mono">USB STOP</span> and let the light settle before the drive moves.',
+    body: 'Eject from rekordbox and wait for the computer to release the drive. On a player, press <span class="mono" translate="no">USB STOP</span> and let the light settle before the drive moves.',
     why: 'Interrupting a write is the fastest way to corrupt the database you just spent an hour building.',
   },
   {
     n: '06',
     title: 'Back up the library, not just the drive.',
-    body: 'In rekordbox: <span class="mono">File &gt; Library &gt; Backup Library</span>, monthly, onto a different drive or the cloud. Your cues, grids and playlists live in the library, not on the stick.',
+    body: 'In rekordbox: <span class="mono" translate="no">File &gt; Library &gt; Backup Library</span>, monthly, onto a different drive or the cloud. Your cues, grids and playlists live in the library, not on the stick.',
     why: 'A USB is a working copy. If it is your only copy, you do not have a backup.',
   },
 ];
@@ -122,12 +122,55 @@ const GIG = [
     why: 'Nobody learns under pressure. They remember. Familiarity is what turns a disaster into an inconvenience.',
   },
 ];
+
+// THE RULES, MADE MACHINE-READABLE (2026-08-04). This page is the site's
+// answer to "how do I stop this happening again", and none of it was in any
+// markup, so an answer engine asked that question had nothing here to cite.
+//
+// ItemList and not HowTo: these are standing habits, not steps of a single
+// procedure with a start and an end, and marking a permanent rule up as a
+// step would misrepresent what the page says. The order is the page's own
+// (the order the gig actually happens), so the list declares itself ordered.
+//
+// Every name and description is the rule's visible title and its visible
+// body, from the same arrays the page renders from. `body` is written with
+// inline links and printed with set:html, so tags are stripped here to leave
+// exactly the words on screen, nothing added and nothing invented.
+// Strips the markup AND decodes the handful of entities the bodies use, so
+// the string in the JSON equals the string on screen. Without the decode the
+// markup would ship a literal "File &gt; Library" that no page contains.
+const plain = (s) => s
+  .replace(/<[^>]+>/g, '')
+  .replace(/&gt;/g, '>')
+  .replace(/&lt;/g, '<')
+  .replace(/&nbsp;/g, ' ')
+  .replace(/&amp;/g, '&')
+  .replace(/\s+/g, ' ')
+  .trim();
+const rulesSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': 'https://www.savemygig.com/prepare#rules',
+  name: 'The professional rules',
+  description: 'The habits that stop DJ gig failures before they reach the booth, in the order the gig actually happens: the ones that protect your music, then the ones that protect your gig.',
+  numberOfItems: MUSIC.length + GIG.length,
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  isPartOf: { '@id': 'https://www.savemygig.com/prepare#webpage' },
+  inLanguage: 'en',
+  itemListElement: [...MUSIC, ...GIG].map((r, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: plain(r.title),
+    description: plain(r.body),
+  })),
+};
 ---
 <Base
   title="The Professional Rules: Prevent DJ Gig Failures | Save My Gig"
-  description="The habits that make gig failure a non-event: redundant drives, clean exports, proper ejects, no updates on gig day, booth research, and knowing your gear before you need to."
+  description="The habits that make gig failure a non-event: two drives, clean exports, proper ejects, no updates on gig day, and knowing the booth before you go."
   path="/prepare"
 >
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(rulesSchema)} />
   <main class="wrap">
     <div class="status-line">Prevention_Hub</div>
 
@@ -181,7 +224,7 @@ const GIG = [
     </p>
 
     <div class="panel panel-go">
-      <h3 style="margin-bottom:0.6rem">Before you leave: the checklist</h3>
+      <h2 style="margin-bottom:0.6rem">Before you leave: the checklist</h2>
       <p class="dim" style="margin-bottom:1rem">This is where the rules become a routine. Tick off the music, the technical gear and the logistics you forget on the way out. It tracks your readiness and saves on this device for next time.</p>
       <a href="/checklist" class="btn btn-go" data-event="checklist_open" data-placement="prepare">Open the pre-gig checklist</a>
     </div>

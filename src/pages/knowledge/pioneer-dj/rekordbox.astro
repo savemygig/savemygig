@@ -38,7 +38,15 @@ const schema = {
   datePublished: '2026-07-26',
   dateModified: '2026-07-27',
   inLanguage: 'en',
-  mainEntityOfPage: 'https://www.savemygig.com/knowledge/pioneer-dj/rekordbox',
+  // ARTICLE IMAGE (2026-08-04). Google's Article guidance asks for an image,
+  // and without one an Article node is never a candidate for a rich result.
+  // This is the front-panel photograph the page itself displays, so the
+  // image in the markup is an image the reader can actually see.
+  // mainEntityOfPage is an @id reference rather than a bare URL string so it
+  // resolves to the WebPage node Base.astro emits, instead of being a URL
+  // that merely looks like one.
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/rekordbox#webpage' },
+  image: 'https://www.savemygig.com/images/rekordbox-panel-full.webp',
   about: [
     { '@type': 'Thing', name: 'rekordbox' },
     { '@type': 'Thing', name: 'Pioneer CDJ' },
@@ -52,8 +60,8 @@ const schema = {
 // forbids. The TechArticle schema above describes content that is on the page.
 ---
 <Base
-  title="rekordbox USB Guide: OneLibrary vs Device Library | Save My Gig"
-  description="USB mounts on the CDJ but shows no playlists? That is Device Library vs OneLibrary. The explanation, the compatibility table, and the export settings that work."
+  title="rekordbox USB: OneLibrary vs Device Library | Save My Gig"
+  description="USB mounts on the CDJ but shows no playlists? That is Device Library vs OneLibrary. The explanation, the compatibility table, the export settings."
   path="/knowledge/pioneer-dj/rekordbox"
   crumbName="rekordbox"
 >
@@ -113,7 +121,7 @@ const schema = {
     <AccGroup icon="zap" title="Emergency fixes" />
 
     <details class="acc-sec" name="rb-acc" id="no-playlists">
-      <summary><h2 class="acc-h2">USB mounts on the CDJ but shows no playlists</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">USB mounts on the CDJ but shows no playlists</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> In a mixed-generation booth, this is
         usually not a broken drive. It is the wrong <strong>database format</strong>, and it is the
@@ -151,17 +159,22 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="rb-acc" id="errors">
-      <summary><h2 class="acc-h2">What do the CDJ error codes mean?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">What do the CDJ error codes mean?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Two error codes cover almost every rekordbox-related
-        stop on a CDJ-3000 or CDJ-3000X. <span class="mono">E-8302</span> means the
-        player cannot read the track data at all; <span class="mono">E-8304</span> and
-        <span class="mono">E-8305</span> mean the file format itself is unsupported.</p>
+        stop on a CDJ-3000 or CDJ-3000X. <span class="mono" translate="no">E-8302</span> means the
+        player cannot read the track data at all; <span class="mono" translate="no">E-8304</span> and
+        <span class="mono" translate="no">E-8305</span> mean the file format itself is unsupported.</p>
         <p class="rb-caveat">These are the official definitions for the CDJ-3000 and CDJ-3000X. Older CDJs (CDJ-350 and CDJ-850 era) can map some codes differently.</p>
+        {/* translate="no" on the codes themselves (2026-08-04). These are
+            strings printed on the player's own display; a browser that
+            auto-translates the page must not turn E-8302 into anything
+            else, or the reader can no longer match the page to the screen
+            in front of them. */}
         <dl class="rb-errors">
-          <dt>E-8302</dt>
+          <dt translate="no">E-8302</dt>
           <dd><strong>CANNOT PLAY TRACK.</strong> Officially: the track data on the storage device cannot be read correctly. Usually a corrupt export or a file system the player does not accept. <a href="/fix/cdj-error-e-8302">Full fix &rarr;</a></dd>
-          <dt>E-8304 / E-8305</dt>
+          <dt translate="no">E-8304 / E-8305</dt>
           <dd><strong>UNSUPPORTED FILE FORMAT.</strong> Officially: music files that cannot be played by the unit have been loaded. Re-encode the offending tracks, or re-export from rekordbox.</dd>
         </dl>
         <p><strong>Avoid it next time.</strong> Export FAT32 + MBR, keep rekordbox at
@@ -178,7 +191,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="rb-acc" id="export-failed">
-      <summary><h2 class="acc-h2">rekordbox export failed, or the player shows nothing</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">rekordbox export failed, or the player shows nothing</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> A failed or corrupt export is a database
         problem, not a music problem. Your tracks are almost always fine, the index
@@ -188,7 +201,7 @@ const schema = {
         corrupt, classic after pulling the drive without ejecting it properly.</p>
         <p><strong>Fix it now.</strong></p>
         <ul class="checklist">
-          <li>Close rekordbox, unplug and replug the USB, reopen rekordbox in <span class="mono">EXPORT</span> mode.</li>
+          <li>Close rekordbox, unplug and replug the USB, reopen rekordbox in <span class="mono" translate="no">EXPORT</span> mode.</li>
           <li>Check free space. An export onto a nearly-full drive corrupts silently.</li>
           <li>If the device shows in rekordbox: delete tonight's playlists from the device, re-sync them fresh, and eject with the eject button.</li>
           <li>If the device errors or will not sync: copy any music you need off the drive, format it FAT32 + MBR, and export again to the clean drive.</li>
@@ -201,21 +214,21 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="rb-acc" id="not-detected">
-      <summary><h2 class="acc-h2">rekordbox is not detecting my USB at all</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">rekordbox is not detecting my USB at all</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> If the drive is missing from the Devices
         list, the cause is almost always one of three things, in this order: you are
         not in Export mode, the operating system itself cannot see the drive, or the
         drive is formatted in a way rekordbox cannot write to.</p>
         <p><strong>Why this happens.</strong> The device tree only appears in
-        <span class="mono">EXPORT</span> mode, not Performance or Lighting. USB hubs
+        <span class="mono" translate="no">EXPORT</span> mode, not Performance or Lighting. USB hubs
         and dongles are the single most common reason a drive mounts on the OS but
         never reaches rekordbox. And rekordbox writes to FAT32, exFAT (USB drives
         only) and, on a Mac, HFS+, never NTFS or APFS: a drive on those may mount
         on the computer but refuse the export.</p>
         <p><strong>Fix it now.</strong></p>
         <ul class="checklist">
-          <li>Confirm you are in <span class="mono">EXPORT</span> mode, top left of rekordbox.</li>
+          <li>Confirm you are in <span class="mono" translate="no">EXPORT</span> mode, top left of rekordbox.</li>
           <li>Check the computer sees the drive first, in Finder or File Explorer. If it is not there either, this is a drive or connection problem, not rekordbox.</li>
           <li>Plug in direct, no hub, straight into the computer.</li>
           <li>Restart rekordbox with the drive already inserted. Some versions only scan removable drives at launch.</li>
@@ -230,7 +243,7 @@ const schema = {
     <AccGroup icon="book" title="Understanding rekordbox" />
 
     <details class="acc-sec" name="rb-acc" id="onelibrary">
-      <summary><h2 class="acc-h2">What are OneLibrary and Device Library?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">What are OneLibrary and Device Library?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Both are the index rekordbox writes to your
         drive so a player can show your playlists, cues, grids and artwork without a
@@ -255,7 +268,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="rb-acc" id="how-exports-work">
-      <summary><h2 class="acc-h2">How rekordbox exports actually work</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">How rekordbox exports actually work</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> A CDJ reads a real database, cues, grids,
         playlists, that rekordbox writes only when you use the Export panel. Dragging
@@ -278,7 +291,7 @@ const schema = {
     <AccGroup icon="usb" title="USB & library preparation" />
 
     <details class="acc-sec" name="rb-acc" id="fat32">
-      <summary><h2 class="acc-h2">Is FAT32 really limited to 32GB?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Is FAT32 really limited to 32GB?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> No, and this myth costs DJs money. FAT32
         supports volumes up to <strong>2TB</strong>. The 32GB ceiling you have run into
@@ -289,8 +302,8 @@ const schema = {
         <p><strong>Fix it now.</strong> On Windows you can format a larger drive to
         FAT32 with a free tool such as <strong>fat32format</strong> or its graphical
         version <strong>guiformat</strong> (both from Ridgecrop Consultants). On a Mac,
-        use Disk Utility: choose <span class="mono">MS-DOS (FAT)</span>
-        with a <span class="mono">Master Boot Record</span> scheme, and if it
+        use Disk Utility: choose <span class="mono" translate="no">MS-DOS (FAT)</span>
+        with a <span class="mono" translate="no">Master Boot Record</span> scheme, and if it
         refuses a very large drive, guiformat on any Windows machine finishes the job.</p>
         <p><strong>Avoid it next time.</strong> The FAT32 limit that matters is
         <strong>4GB per file</strong>. A 320kbps MP3 is around 9MB and even a long
@@ -303,7 +316,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="rb-acc" id="mbr-gpt">
-      <summary><h2 class="acc-h2">MBR or GPT: does the partition scheme matter?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">MBR or GPT: does the partition scheme matter?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Use <strong>MBR</strong> (Master Boot Record).
         AlphaTheta documents this for specific models: their support articles state that
@@ -315,7 +328,7 @@ const schema = {
         the "formatted fine, player refuses it" category, and MBR costs you nothing
         in return.</p>
         <p><strong>Do this.</strong> On Mac: Disk Utility &rarr; Erase &rarr;
-        <span class="mono">MS-DOS (FAT)</span> + <span class="mono">Master Boot Record</span>.
+        <span class="mono" translate="no">MS-DOS (FAT)</span> + <span class="mono" translate="no">Master Boot Record</span>.
         On Windows, the right-click Format dialog reformats the volume without touching
         the partition scheme, so a factory drive usually keeps the MBR it shipped with;
         the scheme only changes if you repartition in Disk Management.</p>
@@ -326,7 +339,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="rb-acc" id="usb-quality">
-      <summary><h2 class="acc-h2">Why do some USB drives work better than others?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Why do some USB drives work better than others?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Cheap, no-name sticks are how most
         "random" USB failures at gigs actually start.</p>
@@ -347,7 +360,7 @@ const schema = {
     <AccGroup icon="sync" title="Compatibility & version notes" />
 
     <details class="acc-sec" name="rb-acc" id="which-player">
-      <summary><h2 class="acc-h2">Which players use OneLibrary, and which read exFAT?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Which players use OneLibrary, and which read exFAT?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p class="rb-tablenote">
           FAT32 with MBR works on every model in this table. exFAT is the column
@@ -355,14 +368,23 @@ const schema = {
         </p>
         <div class="rb-tablewrap">
           <table class="rb-table">
+            {/* A caption is what a screen reader announces on landing in the
+                table, and it is the only thing that names these four columns
+                for someone arriving on the deep link (#which-player). sr-only,
+                so the visible page is unchanged: the visible introduction is
+                the .rb-tablenote paragraph above. */}
+            <caption class="sr-only">Player compatibility: library format, exFAT support and notes, by model</caption>
             <thead>
               <tr><th scope="col">Player</th><th scope="col">Library format</th><th scope="col">Reads exFAT?</th><th scope="col">Notes</th></tr>
             </thead>
             <tbody>
               {players.map(p => (
                 <tr>
-                  <th scope="row">{p.m}</th>
-                  <td><span class:list={['pill', p.lib === 'OneLibrary' ? 'pill-one' : 'pill-dev']}>{p.lib}</span></td>
+                  {/* Model names and library-format names are product
+                      identifiers: they read the same on the deck in every
+                      country, so they must survive auto-translation. */}
+                  <th scope="row" translate="no">{p.m}</th>
+                  <td><span translate="no" class:list={['pill', p.lib === 'OneLibrary' ? 'pill-one' : 'pill-dev']}>{p.lib}</span></td>
                   <td class:list={[p.exfat === 'No' ? 'no' : 'yes']}>{p.exfat}</td>
                   <td class="dim">{p.note}</td>
                 </tr>
@@ -394,7 +416,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="rb-acc" id="version-notes">
-      <summary><h2 class="acc-h2">The rekordbox version numbers worth knowing</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">The rekordbox version numbers worth knowing</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Two numbers matter more than any other
         rekordbox fact: never use <strong>{REKORDBOX.withdrawn}</strong>, and get to
@@ -429,7 +451,7 @@ const schema = {
     <AccGroup icon="star" title="Best practices" />
 
     <details class="acc-sec" name="rb-acc" id="checklist">
-      <summary><h2 class="acc-h2">The setup that never surprises you</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">The setup that never surprises you</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Five habits, done every time, make almost
         every failure on this page a non-event.</p>
@@ -445,7 +467,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="rb-acc" id="backup">
-      <summary><h2 class="acc-h2">Back up your library, not just your USB</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Back up your library, not just your USB</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Back up the rekordbox library itself,
         monthly, not just the USB you export to.</p>
@@ -464,7 +486,7 @@ const schema = {
     <AccGroup icon="bulb" title="Tips & tricks" />
 
     <details class="acc-sec" name="rb-acc" id="re-export-habit">
-      <summary><h2 class="acc-h2">Re-export after every library change</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Re-export after every library change</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> An old export is a corrupt export waiting
         to happen.</p>

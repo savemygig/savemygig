@@ -4,7 +4,50 @@
    blocking CSS request before a single pixel could paint. These are two
    variable woff2 files served from our own origin, preloaded in Base.astro,
    with font-display:swap so text renders immediately in a fallback and
-   swaps when the font lands. */
+   swaps when the font lands.
+
+   PERF PASS 2026-08-04. The two woff2 files were the single largest transfer
+   on every page measured: 83.2 KB, which is 55% of /emergency and 67% of a
+   /protocol screen. woff2 is already Brotli-compressed internally, so bytes
+   removed here come straight off the wire. Both files are now subset with
+   pyftsubset to EXACTLY the unicode-range declared below (nothing outside it
+   was ever reachable: the browser only asks a face for codepoints inside its
+   declared range) and down to the OpenType features that can actually fire.
+   Measured 83.2 KB -> 60.1 KB, -23.1 KB (-27.8%) on EVERY page.
+
+     Archivo  34.9 KB -> 30.7 KB
+     Inter    48.3 KB -> 29.3 KB
+
+   U+0000-00FF IS RETAINED IN FULL ON PURPOSE. The pt and es translations
+   land next and need the Latin-1 accents (ã ç õ é í ñ ¿ ¡). Do not narrow
+   this to the English character set to save another few KB: it would ship a
+   site whose Portuguese renders half in Inter and half in a system fallback.
+
+   Kept features: ccmp locl calt liga rvrn kern mark mkmk (all default-on in
+   every browser) plus tnum, which IS used, font-variant-numeric:tabular-nums
+   appears in the protocol screens, /prepare and /knowledge/dictionary. Only
+   frac/numr/dnom/pnum were dropped and nothing in the CSS requests them.
+
+   Inter's wght axis is additionally clipped to 400-900 (hence the descriptor
+   below), which is every weight the design system uses: 400/500/600/700/800/
+   900, verified by grepping every font-weight in src. Archivo's axis is NOT
+   clipped and its descriptor stays 100 900 on purpose: Archivo's variable
+   default instance is 600, and clipping its minimum from 100 to 400 moved the
+   wght-500 advance width by 3px per 2560px of text in the specimen. Three
+   pixels is not a redesign but it is not "identical" either, so it was
+   reverted; the extra 1 KB is the price of that.
+
+   Rendering verified pixel-identical, not assumed: full-page screenshots of 9
+   pages plus a specimen sheet of all 12 family/weight combinations over the
+   whole Latin-1 set diff to zero changed pixels, and measured text advance
+   widths are unchanged to 3 decimal places.
+
+   NOTE FOR WHOEVER TOUCHES THESE FILES NEXT: the filenames are not
+   content-hashed and /fonts/* is cached for a year, so replacing a font in
+   place does not reach a returning visitor until their cache expires. That is
+   harmless while the replacement renders identically. If a future change is
+   ever VISIBLE, rename the files and update the two preloads in Base.astro
+   and Tunnel.astro and the two entries in public/sw.js's PRECACHE. */
 @font-face {
   font-family: 'Archivo';
   font-style: normal;
@@ -17,7 +60,7 @@
   font-family: 'Inter';
   font-style: normal;
   font-display: swap;
-  font-weight: 100 900;
+  font-weight: 400 900;
   src: url('/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }

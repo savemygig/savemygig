@@ -141,7 +141,7 @@ const { placeholder = 'Search: USB not detected, FAT32, E-8302...' } = Astro.pro
 
     function render(q) {
       var terms = q.toLowerCase().split(/\s+/).filter(Boolean);
-      if (!terms.length || !docs) { out.hidden = true; input.setAttribute('aria-expanded', 'false'); return; }
+      if (!terms.length || !docs) { out.hidden = true; input.removeAttribute('aria-activedescendant'); input.setAttribute('aria-expanded', 'false'); return; }
       var hits = docs.map(function (d) { return { d: d, s: score(d, terms) }; })
                      .filter(function (x) { return x.s > 0; })
                      .sort(function (a, b) { return b.s - a.s; })
@@ -151,12 +151,20 @@ const { placeholder = 'Search: USB not detected, FAT32, E-8302...' } = Astro.pro
         out.innerHTML = '<p class="srch-none">Nothing matched “' + esc(q) +
           '”. Try the <a href="/faq">FAQ</a>, or <a href="/emergency">start emergency mode</a>.</p>';
       } else {
-        out.innerHTML = hits.map(function (x) {
-          return '<a class="srch-hit" role="option" href="' + x.d.u + '">' +
+        // Each option gets an id so aria-activedescendant can point at it.
+        // Without that, arrow-key navigation moved a visual highlight only:
+        // focus never leaves the input, so a screen reader announced nothing
+        // as the user walked the list and Enter fired a result they had never
+        // been told about. ids are derived from this instance's results id, so
+        // the homepage box and the header overlay cannot collide.
+        out.innerHTML = hits.map(function (x, i) {
+          return '<a class="srch-hit" role="option" aria-selected="false" id="' +
+            out.id + '-opt-' + i + '" href="' + x.d.u + '">' +
             '<span class="srch-hit-t">' + mark(x.d.t, terms) + '</span>' +
             '<span class="srch-hit-d">' + mark(snippet(x.d, terms), terms) + '</span></a>';
         }).join('');
       }
+      input.removeAttribute('aria-activedescendant');
       out.hidden = false;
       input.setAttribute('aria-expanded', 'true');
     }
@@ -165,28 +173,34 @@ const { placeholder = 'Search: USB not detected, FAT32, E-8302...' } = Astro.pro
     input.addEventListener('input', function () {
       var q = input.value.trim();
       clear.hidden = !q;
-      if (!q) { out.hidden = true; input.setAttribute('aria-expanded', 'false'); return; }
+      if (!q) { out.hidden = true; input.removeAttribute('aria-activedescendant'); input.setAttribute('aria-expanded', 'false'); return; }
       load().then(function () { render(q); });
     });
     clear.addEventListener('click', function () {
       input.value = ''; clear.hidden = true; out.hidden = true; input.focus();
+      input.removeAttribute('aria-activedescendant');
       input.setAttribute('aria-expanded', 'false');
     });
     input.addEventListener('keydown', function (e) {
       var items = out.querySelectorAll('.srch-hit');
-      if (e.key === 'Escape') { out.hidden = true; input.setAttribute('aria-expanded', 'false'); return; }
+      if (e.key === 'Escape') { out.hidden = true; input.removeAttribute('aria-activedescendant'); input.setAttribute('aria-expanded', 'false'); return; }
       if (!items.length) return;
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
         cur = e.key === 'ArrowDown' ? Math.min(cur + 1, items.length - 1) : Math.max(cur - 1, 0);
-        for (var i = 0; i < items.length; i++) items[i].classList.toggle('on', i === cur);
+        for (var i = 0; i < items.length; i++) {
+          var on = i === cur;
+          items[i].classList.toggle('on', on);
+          items[i].setAttribute('aria-selected', on ? 'true' : 'false');
+        }
+        input.setAttribute('aria-activedescendant', items[cur].id);
         items[cur].scrollIntoView({ block: 'nearest' });
       } else if (e.key === 'Enter' && cur >= 0) {
         e.preventDefault(); window.location.href = items[cur].getAttribute('href');
       }
     });
     document.addEventListener('click', function (e) {
-      if (!wrap.contains(e.target)) { out.hidden = true; input.setAttribute('aria-expanded', 'false'); }
+      if (!wrap.contains(e.target)) { out.hidden = true; input.removeAttribute('aria-activedescendant'); input.setAttribute('aria-expanded', 'false'); }
     });
 
     // FOCUS TRAP (2026-08-04). When this instance is the one inside the

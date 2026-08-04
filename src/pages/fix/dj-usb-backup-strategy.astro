@@ -13,17 +13,47 @@ const schema = {
   datePublished: '2026-07-24',
   dateModified: '2026-07-27',
   inLanguage: 'en',
-  mainEntityOfPage: 'https://www.savemygig.com/fix/dj-usb-backup-strategy',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/fix/dj-usb-backup-strategy#webpage' },
+  image: 'https://www.savemygig.com/og/dj-usb-backup-strategy.png',
+  // THE STEPS ARE NOW THE PAGE'S OWN WORDS. Rewritten 2026-08-04.
+  //
+  // The three steps here used to be a summary nobody could find on the page:
+  // "Two quality 32-64GB drives, same brand and model, formatted FAT32 + MBR"
+  // is not a sentence this article contains. Google's structured data policy
+  // requires HowTo steps to be visible on the page, the same rule that got
+  // the site's mismatched FAQPage blocks deleted. These four are the four
+  // items under "The setup (one evening)", word for word, minus markup.
+  //
+  // Only the SETUP list is marked up. "The habit (per gig)" below it is a
+  // recurring routine, not steps of this procedure, so it stays out rather
+  // than being folded in to make the list look longer.
   step: [
-    { '@type': 'HowToStep', name: 'Buy two identical drives', text: 'Two quality 32-64GB drives, same brand and model, formatted FAT32 + MBR.' },
-    { '@type': 'HowToStep', name: 'Export to both, every time', text: 'After every library change, run the same rekordbox export to drive A and drive B.' },
-    { '@type': 'HowToStep', name: 'Separate them physically', text: 'One drive in the bag, one on your keys or in your pocket. Never together.' },
+    {
+      '@type': 'HowToStep',
+      name: 'Buy two identical drives',
+      text: 'Buy two identical drives, same brand, same model, same size. Identical drives behave identically on players.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Format both',
+      text: 'Format both: FAT32 + MBR.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Export to both, back to back',
+      text: 'Export to both, back to back, in rekordbox EXPORT mode. Same playlists, same order. Eject each with the rekordbox button.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Label them',
+      text: 'Label them. A and B, tape or marker. In a dark booth you want zero thinking.',
+    },
   ],
 };
 ---
 <Base
-  title="The DJ USB Backup Strategy: Two Drives, Zero Panic | Save My Gig"
-  description="The exact backup system professional DJs use: two identical drives, mirrored exports, physical separation. One evening to set up, a career without USB panic."
+  title="The DJ USB Backup Strategy: Two Drives | Save My Gig"
+  description="Two identical drives, the same export on both, kept apart: the backup that works while you are standing in the booth. One evening to set up."
   path="/fix/dj-usb-backup-strategy"
   ogImage="/og/dj-usb-backup-strategy.png"
 >
@@ -50,7 +80,7 @@ const schema = {
       <div class="acc-body">
     <ul class="checklist">
       <li><strong>Buy two identical drives</strong>, same brand, same model, same size. Identical drives behave identically on players. <a href="/gear">The models we trust →</a></li>
-      <li><strong>Format both:</strong> <span class="mono">FAT32</span> + <span class="mono">MBR</span>. <a href="/fix/format-usb-for-cdj">Step-by-step →</a></li>
+      <li><strong>Format both:</strong> <span class="mono" translate="no">FAT32</span> + <span class="mono" translate="no">MBR</span>. <a href="/fix/format-usb-for-cdj">Step-by-step →</a></li>
       <li><strong>Export to both, back to back,</strong> in rekordbox EXPORT mode. Same playlists, same order. Eject each with the rekordbox button.</li>
       <li><strong>Label them.</strong> A and B, tape or marker. In a dark booth you want zero thinking.</li>
     </ul>

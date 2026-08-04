@@ -29,7 +29,15 @@ const schema = {
   datePublished: '2026-08-02',
   dateModified: '2026-08-02',
   inLanguage: 'en',
-  mainEntityOfPage: 'https://www.savemygig.com/fix/rekordbox-file-is-missing',
+  // ARTICLE IMAGE (2026-08-04). Google's Article guidance asks for an image,
+  // and without one an Article node is never a candidate for a rich result.
+  // This is the article's own share card, generated from its own title by
+  // scripts/gen-og.mjs, so it represents this article and nothing else.
+  // mainEntityOfPage is an @id reference rather than a bare URL string so it
+  // resolves to the WebPage node Base.astro emits, instead of being a URL
+  // that merely looks like one.
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/fix/rekordbox-file-is-missing#webpage' },
+  image: 'https://www.savemygig.com/og/rekordbox-file-is-missing.png',
 };
 
 // The FAQPage block that used to sit here was removed on 2026-08-04: its four
@@ -38,8 +46,8 @@ const schema = {
 // forbids. The TechArticle schema above describes content that is on the page.
 ---
 <Base
-  title="rekordbox 'File is Missing': How to Relocate Your Tracks | Save My Gig"
-  description="The [!] in rekordbox means the file moved, not that your music is gone. Why it happens, how Auto Relocate and Relocate work, and why a missing track never reaches your USB."
+  title="rekordbox 'File is Missing': How to Relocate | Save My Gig"
+  description="The [!] in rekordbox means the file moved, not that your music is gone. Why it happens, how Auto Relocate and Relocate work, and what reaches your USB."
   path="/fix/rekordbox-file-is-missing"
   ogImage="/og/rekordbox-file-is-missing.png"
 >
@@ -49,7 +57,7 @@ const schema = {
     <h1 style="margin-bottom:1.5rem"><span class="danger">FILE IS MISSING</span>:<br />YOUR MUSIC IS STILL THERE</h1>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><strong>Short version:</strong> The <span class="mono">[!]</span> means rekordbox lost the <strong>path</strong> to the file, not the file. Your audio is where it always was. rekordbox stores where each track lives, and when that location changes the pointer breaks. The part that costs gigs is not the warning on screen: <strong>a missing file cannot be exported</strong>, so the track never reaches your USB and you find out in the booth.</p>
+      <p style="margin:0"><strong>Short version:</strong> The <span class="mono" translate="no">[!]</span> means rekordbox lost the <strong>path</strong> to the file, not the file. Your audio is where it always was. rekordbox stores where each track lives, and when that location changes the pointer breaks. The part that costs gigs is not the warning on screen: <strong>a missing file cannot be exported</strong>, so the track never reaches your USB and you find out in the booth.</p>
     </div>
 
     <details class="acc-sec" name="fix-acc">
@@ -57,7 +65,7 @@ const schema = {
       <div class="acc-body">
         <p>rekordbox does not keep your music inside itself. It keeps a <strong>reference</strong> to each file: where the audio lives, plus everything you built on top of it, the cues, the grid, the waveform, the playlist membership.</p>
         <ul class="checklist">
-          <li>The track stays in your collection, marked <span class="mono">[!]</span> in the status column.</li>
+          <li>The track stays in your collection, marked <span class="mono" translate="no">[!]</span> in the status column.</li>
           <li>Your cues, grids and playlists are intact. They belong to the database, not the file.</li>
           <li>The audio file has not been deleted by rekordbox. Something moved it, renamed its folder, or changed how the drive it sits on is addressed.</li>
           <li>Until the reference is repaired, that track will not play and will not export.</li>
@@ -80,9 +88,9 @@ const schema = {
     <details class="acc-sec" name="fix-acc">
       <summary><h2 class="acc-h2">Fix it now: Auto Relocate and Relocate</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p>Two ways in, both from rekordbox itself. Either open <span class="mono">File</span> &rarr; <span class="mono">Display All Missing Files</span> to get the Missing File Manager, or right-click any track marked <span class="mono">[!]</span>.</p>
+        <p>Two ways in, both from rekordbox itself. Either open <span class="mono" translate="no">File</span> &rarr; <span class="mono" translate="no">Display All Missing Files</span> to get the Missing File Manager, or right-click any track marked <span class="mono" translate="no">[!]</span>.</p>
         <ul class="checklist">
-          <li><strong>Auto Relocate</strong> searches the folders you have listed under <span class="mono">Preferences</span> &rarr; <span class="mono">Advanced</span> &rarr; <span class="mono">Database</span> &rarr; <span class="mono">Auto Relocate Search Folders</span>. Point that at wherever your music actually lives and it does the work for a whole batch.</li>
+          <li><strong>Auto Relocate</strong> searches the folders you have listed under <span class="mono" translate="no">Preferences</span> &rarr; <span class="mono" translate="no">Advanced</span> &rarr; <span class="mono" translate="no">Database</span> &rarr; <span class="mono" translate="no">Auto Relocate Search Folders</span>. Point that at wherever your music actually lives and it does the work for a whole batch.</li>
           <li><strong>Relocate</strong> is the manual version: you show rekordbox where the file is, one at a time. This is the one for a track that moved somewhere unusual.</li>
           <li><strong>If the tracks came from an external drive</strong>, the other route is to give that drive the same letter it had when you imported. AlphaTheta's own recommendation, and it repairs everything from that drive at once.</li>
           <li>Work through the Missing File Manager until it is empty, not just until tonight's playlist looks clean.</li>
@@ -95,7 +103,7 @@ const schema = {
       <div class="acc-body">
         <p>A missing file is blocked from <strong>export</strong>, not only from playback. That changes what this is.</p>
         <ul class="checklist">
-          <li>You prepare at home, export tonight's playlist, and the tracks carrying <span class="mono">[!]</span> are not written to the drive.</li>
+          <li>You prepare at home, export tonight's playlist, and the tracks carrying <span class="mono" translate="no">[!]</span> are not written to the drive.</li>
           <li>The playlist arrives on the player looking normal. It is just shorter than the one you built.</li>
           <li>You discover which tracks at the moment you reach for one.</li>
           <li>So the check is before the export, not after: clear the Missing File Manager first, then export.</li>

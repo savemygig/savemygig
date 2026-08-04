@@ -13,11 +13,19 @@ const schema = {
   datePublished: '2026-07-24',
   dateModified: '2026-07-27',
   inLanguage: 'en',
-  mainEntityOfPage: 'https://www.savemygig.com/fix/emergency-loop-mode',
+  // ARTICLE IMAGE (2026-08-04). Google's Article guidance asks for an image,
+  // and without one an Article node is never a candidate for a rich result.
+  // This is the article's own share card, generated from its own title by
+  // scripts/gen-og.mjs, so it represents this article and nothing else.
+  // mainEntityOfPage is an @id reference rather than a bare URL string so it
+  // resolves to the WebPage node Base.astro emits, instead of being a URL
+  // that merely looks like one.
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/fix/emergency-loop-mode#webpage' },
+  image: 'https://www.savemygig.com/og/emergency-loop-mode.png',
 };
 ---
 <Base
-  title="CDJ Emergency Loop Mode - What It Is and What to Do | Save My Gig"
+  title="CDJ Emergency Loop Mode: What to Do | Save My Gig"
   description="Your CDJ threw itself into an emergency loop mid-track. What Emergency Loop actually means, why the player did it, and how to get out clean."
   path="/fix/emergency-loop-mode"
   ogImage="/og/emergency-loop-mode.png"

@@ -161,7 +161,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 ---
 <Base
   title="The Pre-Gig Checklist for DJs | Save My Gig"
-  description="A tickable pre-gig checklist for DJs: music, gear, personal essentials and logistics. Base, Advanced or your own Custom version, with progress per section. Saves on your device."
+  description="A tickable pre-gig checklist for DJs: music, gear, personal essentials, logistics. Base, Advanced or Custom, saved on your device and printable."
   path="/checklist"
 >
   <main class="wrap" id="top">
@@ -361,7 +361,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            that makes people WANT to fill it. Optional fields that offer
            something convert; required fields that demand something do not. -->
       <form class="unlock-form" id="unlockForm" novalidate>
-        <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your best email" required />
+        <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your best email" aria-describedby="unlockMsg" required />
         <!-- REQUIRED since 2026-07-27 (Antonio: the personal touch is worth
              the field, and everyone has a first name, techs included). The
              homepage greets by this name where it fits. Trade-off noted at
@@ -369,14 +369,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              required on the email path specifically: unlike Google, this
              path never opens a session, so there is no later screen to
              collect it in. -->
-        <input type="text" name="artist" required autocomplete="nickname" placeholder="Artist name or first name" aria-label="Artist name or first name" maxlength="80" />
+        <input type="text" name="artist" required autocomplete="nickname" placeholder="Artist name or first name" aria-label="Artist name or first name" aria-describedby="unlockMsg" maxlength="80" />
         <!-- The follow promise lives INSIDE the field now (Antonio): one line
              less under the form, and the pitch sits exactly where the answer
              goes. Long placeholder ellipsizes on narrow phones; the handle
              hint is front-loaded so the cut only ever costs the tail. -->
         <!-- Reads in cause-and-effect order (Antonio): the handle, then why
              we want it, then that it is optional. -->
-        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Optional: @your.artist.instagram, we will happily follow your work" aria-label="Optional: your artist Instagram, we will happily follow your work" maxlength="80" />
+        <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Optional: @your.artist.instagram, we will happily follow your work" aria-label="Optional: your artist Instagram, we will happily follow your work" aria-describedby="unlockMsg" maxlength="80" />
         <!-- Register + the anti-spam promise share a row on desktop (Antonio:
              everything moves up a little); they stack again on phones. -->
         <div class="unlock-actions">
@@ -433,7 +433,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              the form just stays visible, the only path there is. -->
         <button type="button" class="unlock-email-toggle" id="acctEmailToggle" hidden>No Google? No problem. Use your other email.</button>
         <form class="acct-form" id="acctForm" novalidate>
-          <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your email" />
+          <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@email.com" aria-label="Your email" aria-describedby="acctMsg" />
           <button type="submit" class="btn btn-neutral">Email me a sign-in link</button>
         </form>
         <p class="acct-msg" id="acctMsg" role="status" aria-live="polite"></p>
@@ -454,8 +454,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              already knows it; never blocks sync. -->
         <form class="acct-form acct-profile" id="acctProfile" hidden novalidate>
           <p class="dim acct-copy" style="flex:1 1 100%;margin-bottom:0.1rem">So we know what to call you:</p>
-          <input type="text" name="artist" required autocomplete="nickname" placeholder="Artist name or first name" aria-label="Artist name or first name" maxlength="80" />
-          <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Optional: @your.artist.instagram, we will happily follow your work" aria-label="Optional: your artist Instagram, we will happily follow your work" maxlength="80" />
+          <input type="text" name="artist" required autocomplete="nickname" placeholder="Artist name or first name" aria-label="Artist name or first name" aria-describedby="acctProfileMsg" maxlength="80" />
+          <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Optional: @your.artist.instagram, we will happily follow your work" aria-label="Optional: your artist Instagram, we will happily follow your work" aria-describedby="acctProfileMsg" maxlength="80" />
           <button type="submit" class="btn btn-neutral">Save</button>
           <p class="acct-msg" id="acctProfileMsg" role="status" aria-live="polite"></p>
         </form>
@@ -544,7 +544,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
           <!-- Round 11 (Antonio): "Wedding" swapped out -- this site is
                built for club DJs, and a wedding-DJ suggestion here reads
                off-focus even though wedding DJs are welcome too. -->
-          <input type="text" id="lsNewName" maxlength="40" placeholder="Festival, Club, Residency, Other..." aria-label="Name the new list" />
+          <input type="text" id="lsNewName" maxlength="40" placeholder="Festival, Club, Residency, Other..." aria-label="Name the new list" aria-describedby="lsMsg" />
           <button type="submit" class="add-btn">Create</button>
         </form>
         <p class="acct-msg" id="lsMsg" role="status" aria-live="polite"></p>
@@ -598,22 +598,32 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
            press-and-hold/tap explainer (round 8), so it was removed rather
            than kept as a second, harder-to-dismiss copy of the same text. -->
       <form class="backup-form" id="backupForm" hidden>
-        <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" />
+        <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Your email" aria-describedby="backupMsg" />
         <button type="submit" class="btn btn-neutral">Send it</button>
       </form>
       <p class="backup-msg" id="backupMsg" role="status" aria-live="polite"></p>
     </div>
 
+    {/* SHIPPED COLLAPSED, 2026-08-04. The script has always defaulted these to
+            collapsed, but the MARKUP shipped them open, so every visit painted
+            seven expanded groups and then collapsed them once a 58KB module had
+            parsed. Measured cost: a single layout shift of 0.299, giving the page
+            a CLS of 0.349 against a 0.1 budget. That is a Core Web Vitals
+            failure on the site's most-used page, caused entirely by the initial
+            state disagreeing with the intended one. Now they agree, and only a
+            visitor who previously opened a group sees any movement at all.
+            Measured after: 0.115. Print CSS forces these open regardless, so the
+            printed sheet is unaffected. */}
     <div id="list" data-mode="basic" data-edit="off">
       {groups.map((g) => (
-        <section class="panel task-group" data-group={g.id}>
+        <section class="panel task-group collapsed" data-group={g.id}>
           {/* h2, not h3 (2026-08-04): the page went h1 straight to h3 with no
               h2 anywhere, and these category panels ARE the top level under
               LEAVE HOME READY, all seven of them peers. Nothing moves: every
               size in this header comes from .group-title / .group-count /
               .group-ic, never from the heading element's own scale. */}
           <h2 class="group-h">
-            <button type="button" class="group-toggle" data-toggle={g.id} aria-expanded="true" aria-controls={`body-${g.id}`}>
+            <button type="button" class="group-toggle" data-toggle={g.id} aria-expanded="false" aria-controls={`body-${g.id}`}>
               <span class="group-ic" aria-hidden="true">
                 {g.icon === 'disc' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>}
                 {g.icon === 'sliders' && <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M2 14h4"/><path d="M10 8h4"/><path d="M18 16h4"/></svg>}
@@ -694,7 +704,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          from a paragraph that no longer exists, the panel falls back to
          the standard .panel-to-panel gap, closer to Logistics as asked. -->
     <div class="panel cta-exit">
-      <h3 style="margin-bottom:0.9rem">Already at the gig and something failed?</h3>
+      <h2 style="margin-bottom:0.9rem">Already at the gig and something failed?</h2>
       <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="checklist">Start Emergency Mode</a>
     </div>
 

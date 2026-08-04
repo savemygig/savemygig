@@ -21,11 +21,19 @@ const schema = {
   datePublished: '2026-07-27',
   dateModified: '2026-07-27',
   inLanguage: 'en',
-  mainEntityOfPage: 'https://www.savemygig.com/knowledge/pioneer-dj/djm-a9',
+  // ARTICLE IMAGE (2026-08-04). Google's Article guidance asks for an image,
+  // and without one an Article node is never a candidate for a rich result.
+  // This is the front-panel photograph the page itself displays, so the
+  // image in the markup is an image the reader can actually see.
+  // mainEntityOfPage is an @id reference rather than a bare URL string so it
+  // resolves to the WebPage node Base.astro emits, instead of being a URL
+  // that merely looks like one.
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/djm-a9#webpage' },
+  image: 'https://www.savemygig.com/images/djm-a9-panel-full.webp',
 };
 ---
 <Base
-  title="DJM-A9 Guide: Fixes, Known Issues & Compatibility | Save My Gig"
+  title="DJM-A9: Fixes, Known Issues, Compatibility | Save My Gig"
   description="The DJM-A9 field manual: documented firmware fixes, emergency checks for silent channels, and the built-in Bluetooth as a last-resort audio source."
   path="/knowledge/pioneer-dj/djm-a9"
   crumbName="DJM-A9"
@@ -89,7 +97,7 @@ const schema = {
     <AccGroup icon="zap" title="Emergency fixes" />
 
     <details class="acc-sec" name="djma9-acc" id="no-signal">
-      <summary><h2 class="acc-h2">A channel has no signal</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">A channel has no signal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Channel fader, crossfader assign, input
         selector, in that order, before suspecting the desk.</p>
@@ -111,7 +119,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="djma9-acc" id="mixer-freeze">
-      <summary><h2 class="acc-h2">Mixer frozen mid-set</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Mixer frozen mid-set</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> On this desk that is not folklore: a
         rare freeze under heavy Pro DJ Link network load was documented and fixed
@@ -131,7 +139,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="djma9-acc" id="usb-not-recognized">
-      <summary><h2 class="acc-h2">A USB drive the mixer refuses to see</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">A USB drive the mixer refuses to see</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> If a modern, fast USB stick is invisible
         to the mixer while older sticks work, that was a documented bug:
@@ -150,7 +158,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="djma9-acc" id="dvs-input">
-      <summary><h2 class="acc-h2">DVS input dead after swapping laptops</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">DVS input dead after swapping laptops</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> A documented early bug: switching a
         PC/Mac between the USB ports could break the DVS phono input on USB-B.
@@ -170,7 +178,7 @@ const schema = {
     <AccGroup icon="warn" title="Known issues" />
 
     <details class="acc-sec" name="djma9-acc" id="known-issues">
-      <summary><h2 class="acc-h2">Documented fixes, by firmware version</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Documented fixes, by firmware version</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Four entries in the official change
         history matter in the real world. Fixed in {DJM_A9.linkFreezeFix}: the
@@ -196,7 +204,7 @@ const schema = {
     <AccGroup icon="sliders" title="Features explained" />
 
     <details class="acc-sec" name="djma9-acc" id="bluetooth">
-      <summary><h2 class="acc-h2">The Bluetooth input</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">The Bluetooth input</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> The desk accepts wireless audio from a
         phone or laptop as an input source, no cable, no adapter.</p>
@@ -216,7 +224,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="djma9-acc" id="dual-headphones">
-      <summary><h2 class="acc-h2">Two independent headphone outputs</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Two independent headphone outputs</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Two headphone sections with separate
         level and mix controls, so two DJs cue independently at the same time.</p>
@@ -234,7 +242,7 @@ const schema = {
     </details>
 
     <details class="acc-sec" name="djma9-acc" id="beat-fx">
-      <summary><h2 class="acc-h2">Beat FX, including the three newer ones</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Beat FX, including the three newer ones</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> {DJM_A9.beatFxCount} Beat FX types,
         including Mobius, Triplet Filter and Triplet Roll, which did not exist on
@@ -254,7 +262,7 @@ const schema = {
     <AccGroup icon="bulb" title="Professional tips" />
 
     <details class="acc-sec" name="djma9-acc" id="handover">
-      <summary><h2 class="acc-h2">The A9 handover routine</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">The A9 handover routine</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> The desk is built for clean handovers,
         two computer ports, two headphone sections, but only if both DJs claim
@@ -275,7 +283,7 @@ const schema = {
     <AccGroup icon="shield" title="Preventive maintenance" />
 
     <details class="acc-sec" name="djma9-acc" id="maintenance">
-      <summary><h2 class="acc-h2">Keeping the desk reliable</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Keeping the desk reliable</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Connector care over everything, and
         firmware current between bookings.</p>
@@ -292,7 +300,7 @@ const schema = {
     <AccGroup icon="sync" title="Compatibility" />
 
     <details class="acc-sec" name="djma9-acc" id="compatibility">
-      <summary><h2 class="acc-h2">Players, software and Pro DJ Link</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Players, software and Pro DJ Link</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Pro DJ Link across player generations,
         one USB-A port plus two USB-B/USB-C computer ports, Bluetooth
@@ -311,7 +319,7 @@ const schema = {
     <AccGroup icon="book" title="Frequently asked questions" />
 
     <details class="acc-sec" name="djma9-acc" id="faq">
-      <summary><h2 class="acc-h2">Quick answers</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Quick answers</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <dl class="rb-errors">
           <dt>Does the library format (Device Library or OneLibrary) affect this mixer?</dt><dd>No, only players read the USB library. The mixer receives audio and Link data.</dd>

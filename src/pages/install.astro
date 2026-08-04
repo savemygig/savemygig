@@ -12,12 +12,72 @@ import AccGroup from '../components/AccGroup.astro';
 //
 // This page is itself in the service worker precache, so the guide about
 // offline is available offline.
+
+// THE INSTALLABLE APP, DECLARED (2026-08-04). The site has shipped a real
+// manifest and a real service worker since launch and nothing in any markup
+// said so, so "is there a Save My Gig app" had no machine-readable answer.
+//
+// WebApplication, not MobileApplication and not SoftwareApplication with a
+// download URL: this is a PWA, there is no store listing and no installer,
+// and the page says so in its own words ("Not a native app from a store").
+// Claiming an app-store product would be a false claim about a product,
+// which is the one thing this markup must never do.
+//
+// It lives HERE and not site-wide on purpose. This page is the one that
+// documents the app: what it is, what works offline, and the install steps
+// per platform. On any other page the node would be describing something the
+// reader cannot see.
+//
+// Every value below is stated visibly on this page or is literally the
+// manifest that ships:
+//   price 0        the page says "nothing to pay"; there is no paid tier
+//   operatingSystem  the four platforms the install sections cover
+//   browserRequirements  the page names Safari, Chrome, Edge, Samsung
+//                    Internet and Firefox as the routes that work
+//   featureList    the offline scope accordion, which mirrors sw.js PRECACHE
+// No aggregateRating and no reviewCount: the site has never collected either,
+// and inventing them is the classic way a structured-data manual action
+// arrives.
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  '@id': 'https://www.savemygig.com/#app',
+  name: 'Save My Gig',
+  url: 'https://www.savemygig.com/',
+  installUrl: 'https://www.savemygig.com/install',
+  description: 'DJ Booth Intelligence. Free step-by-step help when a USB or player fails before a set, plus the pre-gig checklist. Works offline once installed.',
+  applicationCategory: 'UtilitiesApplication',
+  applicationSubCategory: 'DJ troubleshooting',
+  operatingSystem: 'iOS, Android, Windows, macOS',
+  browserRequirements: 'Requires a modern browser: Safari, Chrome, Edge, Samsung Internet or Firefox.',
+  inLanguage: 'en',
+  isAccessibleForFree: true,
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+  },
+  featureList: [
+    'Step-by-step emergency rescue, one decision per screen',
+    'Works with no signal once the site has been opened online',
+    'Pre-gig checklist that saves on the device',
+    'Printable emergency card',
+    'rekordbox reference and the DJ dictionary',
+    'Site search, offline',
+  ],
+  screenshot: 'https://www.savemygig.com/images/og-share.jpg',
+  softwareHelp: { '@id': 'https://www.savemygig.com/install#webpage' },
+};
 ---
 <Base
-  title="Install Save My Gig as an App | Works With No Signal"
-  description="Add Save My Gig to your phone or computer in under a minute. The whole rescue flow stays on your device, so the fix is there even when the booth has no signal."
+  title="Install as an App, Works With No Signal | Save My Gig"
+  description="Add Save My Gig to your phone or computer in a minute. The rescue flow stays on your device, so the fix is there when the booth has no signal."
   path="/install"
 >
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(appSchema)} />
   <main class="wrap">
     <div class="status-line">Install_Guide</div>
 
@@ -32,7 +92,7 @@ import AccGroup from '../components/AccGroup.astro';
     <AccGroup icon="book" title="How it works" />
 
     <details class="acc-sec" name="inst-acc" id="what-is-a-pwa">
-      <summary><h2 class="acc-h2">Start here: what is this?</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Start here: what is this?</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> A progressive web app, PWA: the website itself, promoted to app status by your own browser. Not a native app from a store. No app store approved it, no update nags you, it takes almost no space, nothing to pay, and it cannot see anything on your device that the website could not already see.</p>
         <p><strong>Why it matters here.</strong> The first time you open Save My Gig, your browser quietly downloads the complete rescue kit, every screen of the emergency flows, into the device's own storage. From then on, those pages load from your phone or laptop, not from the internet. When you are online you always get the live version; when you are not, the saved kit answers instead. That switch is automatic, you never choose.</p>
@@ -41,7 +101,7 @@ import AccGroup from '../components/AccGroup.astro';
     </details>
 
     <details class="acc-sec" name="inst-acc" id="offline-scope">
-      <summary><h2 class="acc-h2">What works with no signal</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">What works with no signal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Saved on your device, always available:</strong> the emergency start page and every step of all four rescue flows (the critical path for when you play within the hour, the no-sound protocol, the quick fix, the full recovery), the pre-gig checklist, the pocket emergency card, the rekordbox reference, the dictionary, and search itself. That is the entire "something is wrong right now" surface of the site, deliberately.</p>
         <p><strong>Available offline only if you visited them before:</strong> the fix articles, the FAQ, the hardware pages. Anything you have opened while online stays readable without signal afterwards.</p>
@@ -50,7 +110,7 @@ import AccGroup from '../components/AccGroup.astro';
     </details>
 
     <details class="acc-sec" name="inst-acc" id="conditions">
-      <summary><h2 class="acc-h2">The conditions</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">The conditions</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p>We would rather you know exactly where the edges are than discover them in a booth.</p>
         <ol>
@@ -66,10 +126,10 @@ import AccGroup from '../components/AccGroup.astro';
     <AccGroup icon="zap" title="Install it on your device" />
 
     <details class="acc-sec" name="inst-acc" id="iphone">
-      <summary><h2 class="acc-h2">iPhone and iPad (Safari)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">iPhone and iPad (Safari)</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <ol>
-          <li>Open <span class="mono">savemygig.com</span> in Safari.</li>
+          <li>Open <span class="mono" translate="no">savemygig.com</span> in Safari.</li>
           <li>Tap <strong>Share</strong> (the square with the arrow pointing up, bottom of the screen).</li>
           <li>Scroll the list and tap <strong>Add to Home Screen</strong>.</li>
           <li>Tap <strong>Add</strong>. The Save My Gig icon appears with your apps.</li>
@@ -79,10 +139,10 @@ import AccGroup from '../components/AccGroup.astro';
     </details>
 
     <details class="acc-sec" name="inst-acc" id="android">
-      <summary><h2 class="acc-h2">Android (Chrome)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Android (Chrome)</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <ol>
-          <li>Open <span class="mono">savemygig.com</span> in Chrome.</li>
+          <li>Open <span class="mono" translate="no">savemygig.com</span> in Chrome.</li>
           <li>Tap the <strong>three-dot menu</strong> (top right).</li>
           <li>Tap <strong>Add to Home screen</strong> (on some phones it says <strong>Install app</strong>).</li>
           <li>Confirm. The icon lands on your home screen.</li>
@@ -92,10 +152,10 @@ import AccGroup from '../components/AccGroup.astro';
     </details>
 
     <details class="acc-sec" name="inst-acc" id="windows">
-      <summary><h2 class="acc-h2">Windows (Chrome or Edge)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Windows (Chrome or Edge)</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <ol>
-          <li>Open <span class="mono">savemygig.com</span> in Chrome or Edge.</li>
+          <li>Open <span class="mono" translate="no">savemygig.com</span> in Chrome or Edge.</li>
           <li>Look at the right end of the address bar for the <strong>install icon</strong> (a small screen with a down arrow), or open the browser menu and choose <strong>Install Save My Gig</strong> (in Edge: <strong>Apps, then Install this site as an app</strong>).</li>
           <li>Confirm. It opens in its own window, and you can pin it to the taskbar or Start like any program.</li>
         </ol>
@@ -104,10 +164,10 @@ import AccGroup from '../components/AccGroup.astro';
     </details>
 
     <details class="acc-sec" name="inst-acc" id="mac">
-      <summary><h2 class="acc-h2">Mac (Safari or Chrome)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Mac (Safari or Chrome)</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <ol>
-          <li><strong>Safari:</strong> open <span class="mono">savemygig.com</span>, then <strong>File, Add to Dock</strong>. If that menu item is missing, your macOS predates the feature; use the Chrome route instead.</li>
+          <li><strong>Safari:</strong> open <span class="mono" translate="no">savemygig.com</span>, then <strong>File, Add to Dock</strong>. If that menu item is missing, your macOS predates the feature; use the Chrome route instead.</li>
           <li><strong>Chrome:</strong> click the <strong>install icon</strong> at the right end of the address bar, or the three-dot menu, then <strong>Cast, Save and Share, Install page as app</strong> (wording varies slightly by version).</li>
         </ol>
         <p>Either way you get a Save My Gig app in your Dock that opens in its own window.</p>
@@ -115,7 +175,7 @@ import AccGroup from '../components/AccGroup.astro';
     </details>
 
     <div class="panel cta-exit" style="margin-top:2rem">
-      <h3 style="margin-bottom:0.75rem">In trouble right now?</h3>
+      <h2 style="margin-bottom:0.75rem">In trouble right now?</h2>
       <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="install"><span aria-hidden="true">🚨</span> Start Emergency Mode</a>
     </div>
   </main>

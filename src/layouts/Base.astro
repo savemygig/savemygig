@@ -61,12 +61,84 @@ const canonical = `${SITE}${localizedPath(path === '/' ? '/' : path, lang)}`;
 // mark as his social posts instead of a mismatched portrait photo.
 const ogImageUrl = `${SITE}${ogImage ?? '/images/og-share.jpg'}`;
 
+// BreadcrumbList (2026-08-01). This is the markup Google reads to print
+// "savemygig.com › Knowledge base › Pioneer DJ / AlphaTheta" under a result
+// instead of a raw URL. The site had visible breadcrumbs on the knowledge
+// pages but none of it was machine-readable, so search engines never showed
+// the trail. Built from the canonical path so every page gets one for free.
+//
+// Only REAL hub pages are listed here. A segment with no page behind it (the
+// /fix articles have no /fix index, for instance) is skipped rather than
+// linked, because a breadcrumb pointing at a 404 is worse than no breadcrumb.
+//
+// LOCALIZED (2026-08-04). These labels used to be English string literals, so
+// a Spanish page would have shipped a breadcrumb reading "Home > Knowledge
+// base". They now come from the same UI catalogue the visible nav and footer
+// use, which is the only way the printed trail and the marked-up trail can
+// stay the same words in three languages. "Pioneer DJ / AlphaTheta" stays
+// literal: it is two company names, and a company name is not translated.
+//
+// It is computed BEFORE the entity graph because the WebPage node below
+// references it by @id.
+const CRUMB_HUBS: Record<string, string> = {
+  '/knowledge': S.footer.knowledgeBase,
+  '/knowledge/pioneer-dj': 'Pioneer DJ / AlphaTheta',
+  '/legal': S.footer.legal,
+};
+
+const crumbItems: { name: string; item?: string }[] = [{ name: S.home, item: `${SITE}${localizedPath('/', lang)}` }];
+{
+  const segs = path.split('/').filter(Boolean);
+  let acc = '';
+  for (const seg of segs) {
+    acc += `/${seg}`;
+    if (acc === path) break; // the leaf is handled separately below
+    if (CRUMB_HUBS[acc]) crumbItems.push({ name: CRUMB_HUBS[acc], item: `${SITE}${localizedPath(acc, lang)}` });
+  }
+  // The current page. Google allows omitting it, so a page that did not pass
+  // crumbName just ends its trail at the last hub instead of guessing a name.
+  const leaf = crumbName ?? (path !== '/' ? CRUMB_HUBS[path] : undefined);
+  if (leaf) crumbItems.push({ name: leaf, item: canonical });
+}
+
+const breadcrumbSchema = crumbItems.length > 1 ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  '@id': `${canonical}#breadcrumb`,
+  itemListElement: crumbItems.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.name,
+    ...(c.item ? { item: c.item } : {}),
+  })),
+} : null;
+
 // Site-wide entity graph. Search engines and AI answer engines both weight
 // "who is this and why should I trust them", and until now none of it was
 // machine-readable even though the logo, the four social profiles and the
 // author name were all already on the page. The @id values let the per-page
 // TechArticle/HowTo blocks reference one shared Organization and Person
 // instead of each declaring an anonymous stub.
+//
+// THE CONTRACT WITH TRANSLATED PAGES (2026-08-04). Everything this layout
+// emits is already language-aware: inLanguage comes from the registry tag,
+// the breadcrumb labels come from the UI catalogue, and every URL in the
+// graph goes through localizedPath, so a page rendered with lang="pt" emits
+// a pt-BR graph on /pt/ URLs without knowing anything about itself.
+//
+// A PAGE-LEVEL block is the page file's own responsibility, because page
+// prose lives in per-language page files by design (see src/i18n/ui.js). So
+// when src/pages/pt/faq.astro is written, its JSON-LD must carry the
+// TRANSLATED strings, inLanguage 'pt-BR', and @id values on the /pt/ URL:
+// https://www.savemygig.com/pt/faq#webpage, not the English one. Copying the
+// English block into a translated page would point two languages at one node
+// and hand an answer engine Portuguese prose labelled English.
+//
+// The Organization's own name, slogan and description stay in English on
+// every language. That is correct, not an oversight: there is ONE
+// organisation with ONE @id across the whole site, schema.org has no way to
+// give it three descriptions that Google reads, and "Save My Gig" and
+// "DJ Booth Intelligence" are brand strings that are not translated anyway.
 const entityGraph = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -118,52 +190,43 @@ const entityGraph = {
       name: 'Save My Gig',
       description: 'DJ Booth Intelligence.',
       publisher: { '@id': `${SITE}/#org` },
-      inLanguage: 'en',
+      // LANGUAGE-AWARE (2026-08-04). Was hardcoded 'en', which would have
+      // told Google that the Spanish and Portuguese builds were English the
+      // moment they went live. L.tag is the registry's BCP 47 tag, so this
+      // emits en / pt-BR / es without the page knowing anything.
+      //
+      // NO potentialAction/SearchAction here, deliberately: the site search
+      // is a client-side overlay with no query URL (no /search?q=), so a
+      // SearchAction would advertise an endpoint that does not exist.
+      // Add it the day a real ?q= results page ships, not before.
+      inLanguage: L.tag,
+    },
+    // THE PAGE ITSELF (2026-08-04). Until now the graph described the
+    // publisher and the site but never the document, so BreadcrumbList and
+    // the per-page TechArticle/HowTo blocks were floating with nothing to
+    // attach to and an answer engine had no single node saying "this URL is
+    // about X, in language Y, and it is free to read". One WebPage node per
+    // page fixes all three. Every value here is already in the <head> above
+    // as <title>, <meta description>, <link canonical> and <html lang>, so
+    // nothing is asserted that the page does not already assert.
+    {
+      '@type': 'WebPage',
+      '@id': `${canonical}#webpage`,
+      url: canonical,
+      name: title,
+      description: description,
+      isPartOf: { '@id': `${SITE}/#website` },
+      about: { '@id': `${SITE}/#org` },
+      publisher: { '@id': `${SITE}/#org` },
+      inLanguage: L.tag,
+      // True and load-bearing for answer engines: no paywall, no account,
+      // no metered access anywhere on this site. It tells a crawler the
+      // text it can see is the whole text a human sees.
+      isAccessibleForFree: true,
+      ...(breadcrumbSchema ? { breadcrumb: { '@id': `${canonical}#breadcrumb` } } : {}),
     },
   ],
 };
-
-// BreadcrumbList (2026-08-01). This is the markup Google reads to print
-// "savemygig.com › Knowledge base › Pioneer DJ / AlphaTheta" under a result
-// instead of a raw URL. The site had visible breadcrumbs on the knowledge
-// pages but none of it was machine-readable, so search engines never showed
-// the trail. Built from the canonical path so every page gets one for free.
-//
-// Only REAL hub pages are listed here. A segment with no page behind it (the
-// /fix articles have no /fix index, for instance) is skipped rather than
-// linked, because a breadcrumb pointing at a 404 is worse than no breadcrumb.
-const CRUMB_HUBS: Record<string, string> = {
-  '/knowledge': 'Knowledge base',
-  '/knowledge/pioneer-dj': 'Pioneer DJ / AlphaTheta',
-  '/legal': 'Legal',
-};
-
-const crumbItems: { name: string; item?: string }[] = [{ name: 'Home', item: `${SITE}/` }];
-{
-  const segs = path.split('/').filter(Boolean);
-  let acc = '';
-  for (const seg of segs) {
-    acc += `/${seg}`;
-    if (acc === path) break; // the leaf is handled separately below
-    if (CRUMB_HUBS[acc]) crumbItems.push({ name: CRUMB_HUBS[acc], item: `${SITE}${acc}` });
-  }
-  // The current page. Google allows omitting it, so a page that did not pass
-  // crumbName just ends its trail at the last hub instead of guessing a name.
-  const leaf = crumbName ?? (path !== '/' ? CRUMB_HUBS[path] : undefined);
-  if (leaf) crumbItems.push({ name: leaf, item: canonical });
-}
-
-const breadcrumbSchema = crumbItems.length > 1 ? {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  '@id': `${canonical}#breadcrumb`,
-  itemListElement: crumbItems.map((c, i) => ({
-    '@type': 'ListItem',
-    position: i + 1,
-    name: c.name,
-    ...(c.item ? { item: c.item } : {}),
-  })),
-} : null;
 ---
 <!doctype html>
 <html lang={L.tag} dir={L.dir}>
@@ -200,14 +263,26 @@ const breadcrumbSchema = crumbItems.length > 1 ? {
   <meta property="og:site_name" content="Save My Gig" />
   <meta property="og:image" content={ogImageUrl} />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  {/* Points at the shield the page already loads. favicon.svg was a
+      byte-identical copy, so browsers fetched the same 9.9KB twice under
+      two URLs. Verified with cmp. */}
+  <link rel="icon" type="image/svg+xml" href="/images/logo-shield.svg" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Save My Gig" />
-  <link rel="preload" href="/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+  {/* FONT PRELOADS DELETED 2026-08-04, on measurement, not taste. Both faces
+      are font-display:swap, so they never blocked paint; the preloads simply
+      pulled 60KB to the front of the queue ahead of the document itself.
+      Removing them, median of 7 throttled runs: FCP home 568 to 280ms,
+      /emergency 532 to 272, /checklist 504 to 288, /faq 512 to 264, the
+      CDJ-3000 page 568 to 264. LCP fell 128 to 168ms on every text-LCP page
+      and blocking time roughly halved. The cost is a slightly larger font
+      swap, which lifts homepage CLS from 0.007 to 0.023, still five times
+      inside the 0.1 budget. Moving them below the stylesheet does nothing
+      (the preload scanner finds them regardless) and fetchpriority="low"
+      does nothing either. Both were measured before deleting. */}
   <script type="application/ld+json" set:html={JSON.stringify(entityGraph)} />
   {breadcrumbSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />}
   <Analytics />

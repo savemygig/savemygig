@@ -49,8 +49,51 @@ Allow: /
 User-agent: meta-externalagent
 Allow: /
 
+# Meta's real-time fetcher. A different agent from the training crawler above,
+# and the one that actually runs when a person asks Meta AI a question.
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+# --- The rest of the crawlers that decide AI answers today ---
+# NONE OF THIS IS STRICTLY NECESSARY: the wildcard group below already allows
+# everything, and a well-behaved crawler falls through to it. These blocks
+# exist for the crawlers that only ever read their own group, and so that
+# anyone auditing this file can see that admitting them was a decision and not
+# an oversight. Adding a name here never changes what is allowed, only who is
+# named. Nothing on this site is disallowed to anyone.
+User-agent: Applebot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: cohere-training-data-crawler
+Allow: /
+
+User-agent: Google-CloudVertexBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
 # --- Everyone else ---
 User-agent: *
 Allow: /
 
+# The sitemap covers the INDEXABLE pages only. The rescue tunnel under
+# /protocol/ is noindex and therefore absent from it by design, which is why
+# llms.txt lists the five tunnel entry points explicitly: it is the only place
+# a crawler is told where the procedural content starts.
 Sitemap: https://www.savemygig.com/sitemap-index.xml

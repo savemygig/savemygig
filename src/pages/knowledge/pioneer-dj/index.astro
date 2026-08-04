@@ -65,12 +65,61 @@ const categories = [
   { label: 'Controllers', items: controllers, note: 'Rare in clubs, but the standard for home preparation and mobile gigs.' },
 ];
 
+// COLLECTIONPAGE, REPAIRED 2026-08-04. Same three defects as /knowledge: no
+// @id (an anonymous second page entity beside the WebPage node Base.astro
+// emits for this URL), `about` pointing at the Organization rather than at
+// the equipment, and no mainEntity, so a crawler could not tell what this
+// page collects without parsing the HTML.
+//
+// The ItemList carries ONLY the models with a live reference page. Every
+// other model on this page is visibly labelled "Coming soon", and a
+// machine-readable list has no way to carry that label: an entry here would
+// read as a page that exists. The firmware matrix is appended because it is
+// the one cross-model reference this hub owns and it is linked at the top of
+// the page.
+const listed = [
+  ...players, ...mixers, ...allInOne, ...turntables, ...effectors, ...controllers,
+].filter((x) => x.href);
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj#webpage',
+  url: 'https://www.savemygig.com/knowledge/pioneer-dj',
   name: 'Pioneer DJ / AlphaTheta equipment reference',
   isPartOf: { '@id': 'https://www.savemygig.com/#website' },
-  about: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  inLanguage: 'en',
+  // Both names on purpose. The company is AlphaTheta and the brand on the
+  // gear is Pioneer DJ; DJs search for both, and an answer engine that only
+  // learns one of them cannot connect a question about "AlphaTheta firmware"
+  // to a page about a CDJ.
+  about: [
+    { '@type': 'Thing', name: 'Pioneer DJ' },
+    { '@type': 'Thing', name: 'AlphaTheta' },
+    { '@type': 'Thing', name: 'CDJ and DJM equipment' },
+  ],
+  mainEntity: {
+    '@type': 'ItemList',
+    '@id': 'https://www.savemygig.com/knowledge/pioneer-dj#list',
+    name: 'Pioneer DJ and AlphaTheta model references',
+    numberOfItems: listed.length + 1,
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    itemListElement: [
+      ...listed.map((x, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: x.name,
+        url: `https://www.savemygig.com${x.href}`,
+      })),
+      {
+        '@type': 'ListItem',
+        position: listed.length + 1,
+        name: "What's broken on that deck, by firmware version",
+        url: 'https://www.savemygig.com/knowledge/pioneer-dj/firmware',
+      },
+    ],
+  },
 };
 ---
 <Base

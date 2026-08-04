@@ -5,13 +5,60 @@ import Base from '../layouts/Base.astro';
 // lines up on the same content width as every other page. The step-by-step
 // panic flow (/protocol/*) stays deliberately menu-free.
 
+// THE FIVE DOORS, MADE MACHINE-READABLE (2026-08-04).
+//
+// This is the highest-value structured data on the site and it was missing.
+// The rescue tunnel under /protocol/ is the site's best procedural content
+// and it is noindex by design, so nothing in any index pointed at it. An
+// answer engine that landed here could read the five doors as anchor text and
+// nothing more: it had no way to state that "USB NOT RECOGNIZED" is the entry
+// to a step-by-step route, or where that route starts.
+//
+// This ItemList is a straight transcription of the visible <nav> below: the
+// same five titles, the same five one-line descriptions, the same five hrefs,
+// in the same order. Nothing is added and nothing is reworded. If you change
+// a door, change it here in the same commit.
+//
+// ItemList, not HowTo: these are five alternative entry points to five
+// different procedures, not five steps of one, and marking them up as steps
+// would tell a reader to do all five in order, which is the opposite of what
+// this screen is for.
+const doors = [
+  { name: 'USB NOT RECOGNIZED', description: 'The player does not see the drive at all.', href: '/protocol/usb/start' },
+  { name: "MUSIC WON'T LOAD", description: 'Drive mounts, but playlists are missing or tracks refuse to play.', href: '/protocol/music/start' },
+  { name: 'THERE IS NO SOUND', description: 'A dead channel, silent master, or nothing in your headphones.', href: '/protocol/sound/start' },
+  { name: 'FROZEN PLAYER', description: 'Screen or controls locked, mid-set or idle.', href: '/protocol/frozen/start' },
+  { name: 'REKORDBOX EXPORT FAILED', description: 'The export will not finish, or the USB will not take it.', href: '/protocol/export/start' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': 'https://www.savemygig.com/emergency#doors',
+  name: 'DJ emergency symptoms and their rescue routes',
+  description: 'The five symptoms Emergency Mode triages, each opening its own step-by-step rescue route, one decision per screen.',
+  numberOfItems: doors.length,
+  // Ordered on the page, and the order is deliberate (most common failure
+  // first), so say so rather than leaving a consumer to guess.
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  isPartOf: { '@id': 'https://www.savemygig.com/emergency#webpage' },
+  inLanguage: 'en',
+  itemListElement: doors.map((d, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: d.name,
+    description: d.description,
+    url: `https://www.savemygig.com${d.href}`,
+  })),
+};
 ---
 <Base
-  title="DJ Emergency Mode: USB, Playlists, Sound, Frozen Player | Save My Gig"
-  description="Five symptoms, one step-by-step route each: USB not detected, playlists missing, no sound, a frozen player, a failed rekordbox export. Free, no account, built for working DJs mid-gig."
+  title="DJ Emergency Mode: USB, Sound, Frozen Player | Save My Gig"
+  description="USB not detected, playlists missing, no sound, a frozen player, a failed rekordbox export: pick the symptom, get a step-by-step route. Free, no account."
   path="/emergency"
 >
   <meta slot="head" name="format-detection" content="telephone=no" />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
 
   <main class="wrap emerg">
     <!-- ONE QUESTION, ABOVE THE FOLD, THEN ACTION.

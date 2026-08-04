@@ -1,3 +1,30 @@
+# Cloudflare Pages response headers.
+#
+# HOW PAGES ACTUALLY APPLIES THIS FILE, measured 2026-08-04 with
+# `wrangler pages dev` rather than assumed, because getting it wrong is
+# invisible until a deploy is slow:
+#
+#   1. Every rule whose pattern matches is applied. They do NOT override each
+#      other, they CONCATENATE. A `/*` block carrying
+#      `Cache-Control: public, max-age=0, must-revalidate` together with the
+#      `/_astro/*` block below produced this on a hashed asset:
+#
+#        Cache-Control: public, max-age=0, must-revalidate, public,
+#                       max-age=31536000, immutable
+#
+#      Two max-age directives in one header, and caches take the first. That
+#      would have silently turned a year of caching on every build asset into
+#      zero. So: NEVER put Cache-Control in the `/*` block. Cache lifetimes
+#      are set per path, below, and only per path.
+#
+#   2. Anything with NO Cache-Control rule is served by Pages as
+#      `public, max-age=0, must-revalidate` with a strong ETag. That is
+#      already the right answer for HTML, so HTML deliberately has no rule
+#      here: every navigation revalidates and gets a 304 when nothing changed.
+#      The same default is right for /search-index.json (see below).
+#
+# ---------------------------------------------------------------------------
+
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -5,22 +32,44 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
 
-# Content-hashed build assets never change: cache them for a year.
+# Content-hashed build assets. The filename changes whenever the bytes do, so
+# a year plus `immutable` is not a risk: `immutable` additionally stops the
+# browser revalidating on a manual reload, which is the whole point.
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Self-hosted fonts are versioned by filename and are render-critical.
+# Self-hosted fonts: render-critical and effectively permanent, so a year.
+# NOT `immutable`, unlike /_astro/*, and the difference is deliberate. These
+# filenames carry no content hash, so replacing a font in place (as the
+# 2026-08-04 subsetting pass did) leaves returning visitors on the old bytes.
+# Without `immutable` a reload at least revalidates and can pick the new file
+# up; with it, the browser will not even ask for a year. If a font change is
+# ever VISIBLE rather than byte-only, rename the file: the preloads in
+# Base.astro and Tunnel.astro and the entries in sw.js have to move with it.
 /fonts/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=31536000
 
+# Content images. Also unhashed, hence 30 days rather than a year: long enough
+# that a returning DJ never refetches the CDJ panel photos, short enough that
+# a corrected photo reaches everyone within a month.
 /images/*
   Cache-Control: public, max-age=2592000
 
+# Social share cards. Only ever fetched by crawlers and chat clients, never on
+# a page load, so this costs nothing on any Core Web Vital either way.
 /og/*
   Cache-Control: public, max-age=2592000
 
+# The printable rescue card and any other download. A week, because these are
+# the artefacts most likely to be corrected after launch.
 /downloads/*
   Cache-Control: public, max-age=604800
+
+# Install-time icons. Added 2026-08-04: these had no rule at all, so every
+# manifest install and every icon refresh was revalidating 112 KB of PNG that
+# has not changed since launch.
+/icons/*
+  Cache-Control: public, max-age=2592000
 
 # The last few uncovered static files. Lighthouse flagged these as having no
 # cache lifetime, which is small (about 5 KiB) but free to fix.
@@ -30,6 +79,8 @@
 /apple-touch-icon.png
   Cache-Control: public, max-age=2592000
 
+# A day. Long enough to be free on repeat visits, short enough that a change
+# to the app name, the shortcuts or the icon set reaches installed PWAs fast.
 /manifest.webmanifest
   Cache-Control: public, max-age=86400
 
@@ -39,3 +90,15 @@
 # at 24h anyway, but state the intent so nobody "optimises" this later.
 /sw.js
   Cache-Control: public, max-age=0, must-revalidate
+
+# NO RULE FOR /search-index.json, ON PURPOSE. It is 127 KB and regenerates on
+# every deploy. Pages' default (max-age=0, must-revalidate + ETag) means a
+# repeat visitor sends one conditional request and gets a 304 with no body
+# unless the index really changed. Giving it a max-age would put a stale index
+# in the HTTP cache underneath the service worker's network-first strategy and
+# reintroduce exactly the bug that strategy exists to fix: pages published
+# after a visitor's first load never appearing in THEIR search.
+#
+# NO RULE FOR HTML, /robots.txt, /llms.txt or the sitemaps, same reason: the
+# Pages default already revalidates every time and answers 304 when nothing
+# changed, which is what a site that edits its copy wants.

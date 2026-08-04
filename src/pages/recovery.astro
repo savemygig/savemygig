@@ -14,7 +14,7 @@ import Base from '../layouts/Base.astro';
     <p class="dim" style="margin-bottom:1rem">In our experience, software recovers files in most cases where the drive still powers on. It can't help a physically dead drive. Here's the route, in order.</p>
 
     <div class="panel panel-danger">
-      <p style="margin:0">⚠️ <strong>Before anything: stop writing to the drive.</strong> Don't format it, don't "try one more export". Every write overwrites recoverable music.</p>
+      <p style="margin:0"><span aria-hidden="true">⚠️</span> <strong>Before anything: stop writing to the drive.</strong> Don't format it, don't "try one more export". Every write overwrites recoverable music.</p>
     </div>
 
     <div class="panel">
@@ -25,23 +25,23 @@ import Base from '../layouts/Base.astro';
         <div class="card">
           <h3 style="font-size:1rem">Disk Drill</h3>
           <p>Cleanest interface, great at FAT32 recovery, Mac and Windows. Free scan shows everything first.</p>
-          <a href="https://www.cleverfiles.com/disk-drill.html" target="_blank" rel="noopener sponsored" class="btn btn-go" data-event="affiliate_click" data-program="diskdrill" data-placement="recovery_1">Scan for free →</a>
+          <a href="https://www.cleverfiles.com/disk-drill.html" target="_blank" rel="noopener sponsored" class="btn btn-go" data-event="affiliate_click" data-program="diskdrill" aria-label="Scan for free with Disk Drill" data-placement="recovery_1">Scan for free →</a>
         </div>
         <div class="card">
           <h3 style="font-size:1rem">EaseUS Data Recovery</h3>
           <p>The veteran. Strong on corrupt partitions and drives that ask to be formatted.</p>
-          <a href="https://www.easeus.com/datarecoverywizard/" target="_blank" rel="noopener sponsored" class="btn btn-go" data-event="affiliate_click" data-program="easeus" data-placement="recovery_2">Scan for free →</a>
+          <a href="https://www.easeus.com/datarecoverywizard/" target="_blank" rel="noopener sponsored" class="btn btn-go" data-event="affiliate_click" data-program="easeus" aria-label="Scan for free with EaseUS Data Recovery" data-placement="recovery_2">Scan for free →</a>
         </div>
       </div>
     </div>
 
     <div class="panel" id="lab">
-      <h3 style="margin-bottom:0.5rem">Step 2 - When software can't do it</h3>
+      <h2 style="margin-bottom:0.5rem">Step 2 - When software can't do it</h2>
       <p class="dim" style="margin-bottom:0">Drive not detected anywhere, no light, physical damage, water: that's hardware. A recovery lab opens the drive and reads the memory chips directly. It costs real money, quoted per job, so it's for irreplaceable files, your own unreleased music, not tracks you can re-download. Search for a data recovery lab in your city and ask for a free diagnosis first; serious labs quote before they charge.</p>
     </div>
 
     <div class="panel">
-      <h3 style="margin-bottom:0.5rem">Step 3 - Never pay for recovery twice</h3>
+      <h2 style="margin-bottom:0.5rem">Step 3 - Never pay for recovery twice</h2>
       <p class="dim">Recovery is what you do once. A backup system is what you do instead, it takes one evening to set up.</p>
       <a href="/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="recovery"><span aria-hidden="true">🛡</span> Set up the prevention system</a>
     </div>

@@ -88,17 +88,57 @@ const hardware = [
   },
 ];
 
+// COLLECTIONPAGE, REPAIRED 2026-08-04.
+//
+// Three defects fixed together. It had no @id, so it was an anonymous node
+// nothing in the graph could point at, sitting alongside the WebPage node
+// Base.astro emits for the same URL: two page entities on one page. It now
+// shares that node's @id (#webpage), so a consumer flattens them into one
+// page that is BOTH a WebPage and a CollectionPage, which is what it is.
+// `about` pointed at the Organization, saying this page is about the company;
+// it is about DJ software and hardware, and naming those is what lets an
+// answer engine match it to a question.
+//
+// And a collection with no mainEntity told a crawler nothing about what it
+// collects. The ItemList below carries only the entries that HAVE a page.
+// The "Coming soon" brands stay out on purpose: on screen they sit under a
+// visible label a human reads, and in a machine-readable list, with no label
+// to carry, they would read as a promise of content that does not exist.
+const collected = [...software, ...equipment, ...hardware].filter((x) => x.href);
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
+  '@id': 'https://www.savemygig.com/knowledge#webpage',
+  url: 'https://www.savemygig.com/knowledge',
   name: 'DJ software, equipment and hardware knowledge base',
   isPartOf: { '@id': 'https://www.savemygig.com/#website' },
-  about: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  inLanguage: 'en',
+  about: [
+    { '@type': 'Thing', name: 'rekordbox' },
+    { '@type': 'Thing', name: 'Pioneer DJ and AlphaTheta DJ equipment' },
+    { '@type': 'Thing', name: 'DJ USB drives and storage' },
+  ],
+  mainEntity: {
+    '@type': 'ItemList',
+    '@id': 'https://www.savemygig.com/knowledge#list',
+    name: 'Reference pages in the Save My Gig knowledge base',
+    numberOfItems: collected.length,
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    itemListElement: collected.map((x, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: x.name,
+      description: x.blurb,
+      url: `https://www.savemygig.com${x.href}`,
+    })),
+  },
 };
 ---
 <Base
-  title="Master Your Tools - DJ Software, Equipment & Hardware Reference | Save My Gig"
-  description="Deep reference for the tools that run your set: rekordbox export and library formats, DJM-REC, Pioneer DJ and AlphaTheta players and mixers, and the drives behind them."
+  title="DJ Software, Equipment and Hardware Reference | Save My Gig"
+  description="Reference for the tools that run your set: rekordbox export and library formats, DJM-REC, Pioneer DJ and AlphaTheta players and mixers, and the drives."
   path="/knowledge"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />

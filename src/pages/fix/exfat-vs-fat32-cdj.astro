@@ -13,11 +13,19 @@ const schema = {
   datePublished: '2026-07-24',
   dateModified: '2026-07-27',
   inLanguage: 'en',
-  mainEntityOfPage: 'https://www.savemygig.com/fix/exfat-vs-fat32-cdj',
+  // ARTICLE IMAGE (2026-08-04). Google's Article guidance asks for an image,
+  // and without one an Article node is never a candidate for a rich result.
+  // This is the article's own share card, generated from its own title by
+  // scripts/gen-og.mjs, so it represents this article and nothing else.
+  // mainEntityOfPage is an @id reference rather than a bare URL string so it
+  // resolves to the WebPage node Base.astro emits, instead of being a URL
+  // that merely looks like one.
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/fix/exfat-vs-fat32-cdj#webpage' },
+  image: 'https://www.savemygig.com/og/exfat-vs-fat32-cdj.png',
 };
 ---
 <Base
-  title="exFAT vs FAT32 for CDJ USB Drives - The Real Answer | Save My Gig"
+  title="exFAT vs FAT32 for CDJ USB Drives | Save My Gig"
   description="Which format works on CDJ-2000, CDJ-3000 and XDJ players? The compatibility table, the 4GB myth, and the one setup that works everywhere."
   path="/fix/exfat-vs-fat32-cdj"
   ogImage="/og/exfat-vs-fat32-cdj.png"
@@ -35,15 +43,15 @@ const schema = {
       <summary><h2 class="acc-h2">Compatibility in detail</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <ul class="checklist">
-      <li><span class="mono">FAT32 + MBR</span>, works on CDJ-850, 900, 2000, 2000NXS/NXS2, 3000, every XDJ. The universal key.</li>
+      <li><span class="mono" translate="no">FAT32 + MBR</span>, works on CDJ-850, 900, 2000, 2000NXS/NXS2, 3000, every XDJ. The universal key.</li>
       <!-- Scope corrected against AlphaTheta's official exFAT FAQ: it names
            CDJ-3000, XDJ-RX3 and XDJ-XZ (firmware thresholds in facts.js), and
            the CDJ-3000X and XDJ-AZ product FAQs add both to the list. The old
            line said "CDJ-3000 and recent XDJ firmware", which was both too
            narrow and too vague, and omitted the NXS2. -->
-      <li><span class="mono">exFAT</span>, supported on CDJ-3000, CDJ-3000X, CDJ-1500X, XDJ-RX3, XDJ-XZ and XDJ-AZ (firmware matters, see the <a href="/knowledge/pioneer-dj/rekordbox#which-player">player table</a>); <strong>refused by every CDJ-2000, including the NXS2</strong>, still common in clubs worldwide. One trap almost nobody mentions: rekordbox writes exFAT to <strong>USB drives only</strong>. It will not export to an exFAT <strong>SD card</strong> at all, whatever the player supports.</li>
-      <li><span class="mono">NTFS / APFS</span>, never. AlphaTheta's own rekordbox manual lists NTFS as unsupported on both SD cards and USB drives, so rekordbox will not export to it in the first place.</li>
-      <li><span class="mono">Partition scheme</span>, choose <span class="mono">MBR</span>. AlphaTheta documents this for specific models: their support articles state that the CDJ-3000 (article 4406135001625) and the XDJ-AN (article 53214453591009) do not support the GUID Partition Map. For the rest of the range the manual is silent on schemes, so MBR is the manufacturer's documented answer where they name one and our recommendation everywhere else. A drive left on GPT, which is what you get if you erase the volume instead of the device on a Mac, is a recurring cause of "it formatted fine but the player refuses it". MBR costs you nothing.</li>
+      <li><span class="mono" translate="no">exFAT</span>, supported on CDJ-3000, CDJ-3000X, CDJ-1500X, XDJ-RX3, XDJ-XZ and XDJ-AZ (firmware matters, see the <a href="/knowledge/pioneer-dj/rekordbox#which-player">player table</a>); <strong>refused by every CDJ-2000, including the NXS2</strong>, still common in clubs worldwide. One trap almost nobody mentions: rekordbox writes exFAT to <strong>USB drives only</strong>. It will not export to an exFAT <strong>SD card</strong> at all, whatever the player supports.</li>
+      <li><span class="mono" translate="no">NTFS / APFS</span>, never. AlphaTheta's own rekordbox manual lists NTFS as unsupported on both SD cards and USB drives, so rekordbox will not export to it in the first place.</li>
+      <li><span class="mono" translate="no">Partition scheme</span>, choose <span class="mono" translate="no">MBR</span>. AlphaTheta documents this for specific models: their support articles state that the CDJ-3000 (article 4406135001625) and the XDJ-AN (article 53214453591009) do not support the GUID Partition Map. For the rest of the range the manual is silent on schemes, so MBR is the manufacturer's documented answer where they name one and our recommendation everywhere else. A drive left on GPT, which is what you get if you erase the volume instead of the device on a Mac, is a recurring cause of "it formatted fine but the player refuses it". MBR costs you nothing.</li>
     </ul>
 
     
@@ -64,7 +72,7 @@ const schema = {
       <div class="acc-body">
     <ul class="checklist">
       <li>Most drives above 32GB ship <strong>exFAT from the factory</strong>, so a brand-new "professional" 64GB stick fails on a CDJ-2000 out of the box.</li>
-      <li>Windows won't offer FAT32 for large drives in the Format dialog; on Mac, choose <span class="mono">MS-DOS (FAT)</span> in Disk Utility with <span class="mono">Master Boot Record</span> - <a href="/fix/format-usb-for-cdj">full walkthrough here</a>.</li>
+      <li>Windows won't offer FAT32 for large drives in the Format dialog; on Mac, choose <span class="mono" translate="no">MS-DOS (FAT)</span> in Disk Utility with <span class="mono" translate="no">Master Boot Record</span> - <a href="/fix/format-usb-for-cdj">full walkthrough here</a>.</li>
     </ul>
 
     

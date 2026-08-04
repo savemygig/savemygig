@@ -13,16 +13,46 @@ const schema = {
   datePublished: '2026-07-24',
   dateModified: '2026-07-27',
   inLanguage: 'en',
-  mainEntityOfPage: 'https://www.savemygig.com/fix/move-rekordbox-library-new-laptop',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/fix/move-rekordbox-library-new-laptop#webpage' },
+  image: 'https://www.savemygig.com/og/move-rekordbox-library-new-laptop.png',
+  // THE STEPS ARE NOW THE PAGE'S OWN WORDS. Rewritten 2026-08-04.
+  //
+  // The old three steps were compressed paraphrases and dropped the one
+  // detail that actually stops a migration dead, logging into the same
+  // Pioneer account on the new machine. Google requires HowTo steps to be
+  // visible on the page; these four are the four items under "The right way",
+  // word for word, minus markup. A DJ reading the AI answer now gets the
+  // account step, which the old markup silently deleted.
+  //
+  // No totalTime: the page says "30-60 min, mostly waiting", which is a
+  // range, and ISO 8601 durations cannot express a range. Better absent than
+  // a made-up single number.
   step: [
-    { '@type': 'HowToStep', name: 'Backup on the old machine', text: 'In rekordbox: File → Library → Backup Library, including music files, to an external drive.' },
-    { '@type': 'HowToStep', name: 'Restore on the new machine', text: 'Install rekordbox, then File → Library → Restore Library from that backup.' },
-    { '@type': 'HowToStep', name: 'Verify before the next gig', text: 'Check cues, grids and playlists, then re-export your gig USBs fresh from the new machine.' },
+    {
+      '@type': 'HowToStep',
+      name: 'Old laptop: back up the library',
+      text: 'Old laptop: in rekordbox, File → Library → Backup Library → choose "include music files" → target an external drive with enough space.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'New laptop: restore the library',
+      text: 'New laptop: install rekordbox, log into the same Pioneer account, then File → Library → Restore Library from the external drive.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Verify',
+      text: 'Verify: open your key playlists, load a few tracks, cues and grids should be exactly where you left them.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Re-export your gig USBs',
+      text: 'Re-export your gig USBs fresh from the new machine, both drives, and test one on a player before the next gig.',
+    },
   ],
 };
 ---
 <Base
-  title="Move rekordbox to a New Laptop (Keep Cues & Playlists) | Save My Gig"
+  title="Move rekordbox to a New Laptop, Cues Intact | Save My Gig"
   description="The safe way to migrate a rekordbox library to a new computer, cues, grids, playlists intact. And the wrong way that quietly destroys years of prep."
   path="/fix/move-rekordbox-library-new-laptop"
   ogImage="/og/move-rekordbox-library-new-laptop.png"
@@ -40,8 +70,8 @@ const schema = {
       <summary><h2 class="acc-h2">The right way (30-60 min, mostly waiting)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <ul class="checklist">
-      <li><strong>Old laptop:</strong> in rekordbox, <span class="mono">File → Library → Backup Library</span> → choose "include music files" → target an external drive with enough space.</li>
-      <li><strong>New laptop:</strong> install rekordbox, log into the same Pioneer account, then <span class="mono">File → Library → Restore Library</span> from the external drive.</li>
+      <li><strong>Old laptop:</strong> in rekordbox, <span class="mono" translate="no">File → Library → Backup Library</span> → choose "include music files" → target an external drive with enough space.</li>
+      <li><strong>New laptop:</strong> install rekordbox, log into the same Pioneer account, then <span class="mono" translate="no">File → Library → Restore Library</span> from the external drive.</li>
       <li><strong>Verify:</strong> open your key playlists, load a few tracks, cues and grids should be exactly where you left them.</li>
       <li><strong>Re-export your gig USBs</strong> fresh from the new machine, both drives, and test one on a player before the next gig.</li>
     </ul>

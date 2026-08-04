@@ -8,6 +8,11 @@ const UPDATED = '28 July 2026';
   title="Disclaimer | Save My Gig"
   description="Save My Gig gives free general guidance on DJ storage and player problems. It is provided as is, without warranty, and you follow it at your own risk."
   path="/legal/disclaimer"
+  {/* Completes the breadcrumb trail (2026-08-04). Without it the marked-up
+      trail stopped at "Legal", leaving the only indexable page under /legal
+      off its own breadcrumb. "Disclaimer" is the visible h1 below, so the
+      printed trail and the marked-up one say the same word. */}
+  crumbName="Disclaimer"
 >
   <main class="wrap">
     <div class="status-line">LEGAL</div>

@@ -37,11 +37,18 @@ const id = `cap-${source}`;
       inputmode="email"
       placeholder="you@email.com"
       aria-label="Your email address"
+      aria-describedby={`${id}-msg`}
     />
     <button type="submit" class="btn btn-solid" style="margin:0">Register and send it</button>
   </form>
 
-  <p class="cap-msg dim" role="status" aria-live="polite"></p>
+  {/* The live region is now also the field's DESCRIPTION (2026-08-04). It is
+      where every error this form produces lands ("That does not look like an
+      email", "No connection"), and a message that is only ever announced
+      once is unrecoverable: tab back to the input and there was nothing to
+      re-read. The id is per-instance because /prepare, /saved and the fix
+      articles can render several captures on one page. */}
+  <p class="cap-msg dim" id={`${id}-msg`} role="status" aria-live="polite"></p>
 
   <p class="cap-legal">
     Registering is free and counts everywhere on Save My Gig. We send a

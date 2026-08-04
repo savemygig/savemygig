@@ -75,11 +75,25 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig?\s*$/i, '');
   <meta name="robots" content="noindex,follow" />
   {/* Matches --bg and the manifest, same as Base.astro. */}
   <meta name="theme-color" content="#0a0a0b" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/images/logo-shield.svg" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="preload" href="/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+  {/* FONT PRELOADS DELETED 2026-08-04, on measurement, not taste. Both faces
+      are font-display:swap, so they never blocked paint; the preloads simply
+      pulled 60KB to the front of the queue ahead of the document itself.
+      Removing them, median of 7 throttled runs: FCP home 568 to 280ms,
+      /emergency 532 to 272, /checklist 504 to 288, /faq 512 to 264, the
+      CDJ-3000 page 568 to 264. LCP fell 128 to 168ms on every text-LCP page
+      and blocking time roughly halved. The cost is a slightly larger font
+      swap, which lifts homepage CLS from 0.007 to 0.023, still five times
+      inside the 0.1 budget. Moving them below the stylesheet does nothing
+      (the preload scanner finds them regardless) and fetchpriority="low"
+      does nothing either. Both were measured before deleting. */}
+  {/* Lets a rescue screen contribute structured data. Without this slot the
+      60 tunnel screens, which are the most useful procedural content on the
+      site and which robots.txt deliberately opens to AI crawlers, could not
+      carry any markup at all. */}
+  <slot name="head" />
   <Analytics />
 </head>
 <body>

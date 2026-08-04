@@ -110,16 +110,47 @@ const faqs = [
   },
 ];
 
+// VERIFIED HONEST 2026-08-04. Every question name and every acceptedAnswer
+// string below is rendered verbatim into the visible page from this same
+// array, and every `id` becomes a real element id, so all 16 anchors resolve.
+// That is the whole test Google applies to FAQPage, and this block passes it
+// mechanically rather than by anyone remembering to keep two lists in step.
+// If you ever hand-write a Question here that the loop does not print, you
+// have recreated the violation that got the homepage and /emergency blocks
+// deleted. Do not.
+//
+// The @id is #webpage, NOT #faq: Base.astro emits a WebPage node on the same
+// URL, and FAQPage is a subtype of WebPage. Sharing the @id merges them into
+// ONE node instead of leaving two page entities on one page. The url, name,
+// isPartOf and inLanguage are repeated here so the block also stands up
+// alone, for consumers that read a script tag without flattening the graph.
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  '@id': 'https://www.savemygig.com/faq#faq',
-  about: { '@id': 'https://www.savemygig.com/#org' },
+  '@id': 'https://www.savemygig.com/faq#webpage',
+  url: 'https://www.savemygig.com/faq',
+  name: 'DJ USB and CDJ FAQ',
+  // `about` used to point at the Organization, which said this page is about
+  // the company. It is not: it is about USB drives, rekordbox and CDJs, and
+  // naming those entities is what lets an answer engine match the page to a
+  // question rather than to a brand.
+  about: [
+    { '@type': 'Thing', name: 'Pioneer DJ CDJ' },
+    { '@type': 'Thing', name: 'rekordbox' },
+    { '@type': 'Thing', name: 'DJ USB drive troubleshooting' },
+  ],
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  inLanguage: 'en',
   mainEntity: faqs.map(f => ({
     '@type': 'Question',
     name: f.q,
     url: `https://www.savemygig.com/faq#${f.id}`,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: f.a,
+      url: `https://www.savemygig.com/faq#${f.id}`,
+    },
   })),
 };
 ---
