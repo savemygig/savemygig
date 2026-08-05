@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import PostInstall from '../components/PostInstall.astro';
 import PromoBanner from '../components/PromoBanner.astro';
 import InstallApp from '../components/InstallApp.astro';
 import Search from '../components/Search.astro';
@@ -154,6 +155,15 @@ const SUBLINES = [
          dismissible for good via the X. It reveals below the fold, so the
          doors and their gate stay untouched. -->
     <InstallApp />
+
+    {/* THE POST-INSTALL REGISTRATION ASK. Renders nothing visible in a browser
+        tab: it appears only for a reader who is running the INSTALLED app and
+        is not registered yet. It shares this slot with InstallApp above rather
+        than competing for it, because the two are mutually exclusive by
+        construction (that banner hides when standalone, this one only shows
+        when standalone). See src/components/PostInstall.astro for why the ask
+        comes AFTER the install and never in front of it. */}
+    <PostInstall path="/" />
   </main>
 </Base>
 

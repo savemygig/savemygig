@@ -1,0 +1,176 @@
+---
+/**
+ * THE POST-INSTALL REGISTRATION ASK.
+ *
+ * WHY IT EXISTS HERE AND NOT IN FRONT OF THE INSTALL. Antonio's first proposal
+ * was to require registration IN ORDER to install as a PWA. It was rejected on
+ * two grounds, and both are written down because the idea is a natural one and
+ * will come back:
+ *
+ *   1. IT IS NOT TECHNICALLY POSSIBLE. Installing is a BROWSER function, not a
+ *      site function: Chrome's own menu offers it, and on iOS it is Safari's
+ *      Share then Add to Home Screen. A website cannot stand in front of
+ *      either. Worse, the offline precache already runs on a first visit with
+ *      no account at all (proven with the origin process killed, in
+ *      scripts/test-offline-langs.mjs), so gating OUR button would have hidden
+ *      the recommendation without gating a single byte of the benefit.
+ *   2. IT WAS THE WRONG MOMENT. The install recommendation lands on /saved,
+ *      thirty seconds after a rescue worked, on a site whose homepage promises
+ *      "Free, no account". A form on that screen turns a rescue into a
+ *      transaction at the exact moment trust is highest, which is the most
+ *      expensive possible moment to spend it.
+ *
+ * So the order is: install with zero friction, then ask an already-committed
+ * user, INSIDE the installed app, where the ask is attractive rather than a
+ * toll. Somebody reading this from a home screen icon has already decided.
+ *
+ * IT IS THE PAYOFF, NOT A REQUEST. The heading states what they have just
+ * gained ("The rescue is on your phone"), and the body names two things they
+ * get, both of which exist and are already built: registration syncs the
+ * checklist across devices, and it emails the printable Emergency Card.
+ *
+ * WHEN IT SHOWS, all four conditions, in this order:
+ *   - the page is being viewed as an INSTALLED APP (display-mode: standalone,
+ *     or navigator.standalone on iOS). In a normal tab this renders nothing
+ *     visible, ever.
+ *   - the visitor is NOT already registered. SMG_UNLOCKED and SMG_EMAIL are the
+ *     site's existing registration keys, written by EmailCapture and by the
+ *     checklist gate and read by both, so this needs no new state to know.
+ *   - it has not been dismissed. Its own key, once ever, across both surfaces.
+ *   - the page is allowed to carry it (below).
+ *
+ * WHERE: the language home page and /checklist. NOT /saved, which is where the
+ * INSTALL recommendation lives: two asks on one screen is nagging, and the one
+ * that belongs on /saved is the one that does not want anything. Not
+ * /emergency and nothing under /protocol, via the same insideEmergencyMode()
+ * guard, because nothing is ever sold inside Emergency Mode.
+ *
+ * IT CAN NEVER COLLIDE WITH InstallNudge, and that is structural rather than
+ * careful: the nudge returns early WHEN standalone, this returns early UNLESS
+ * standalone. On /checklist, where both are rendered into the page, exactly one
+ * of them can ever be visible. The gate test asserts it.
+ *
+ * NO SECOND FORM. It renders EmailCapture, the site's one registration form and
+ * its one endpoint, with this component's own heading and body. EmailCapture
+ * already handles the whole path: validation, the /api/subscribe call, writing
+ * the registration keys, the "already registered" one-tap variant, and the live
+ * region for errors. A second form would have been a second thing to keep
+ * working, and the reason that form exists in its current shape is that it was
+ * silently broken for a while (see its own header).
+ *
+ * SHIPS HIDDEN AND IS REVEALED BY SCRIPT, the pattern TranslationNotice
+ * established: an installed-app check cannot run at build time, so rendering it
+ * visible and hiding it in a browser tab would move the page after paint on
+ * every normal visit. Hidden first, revealed only for the small set of readers
+ * it is for.
+ */
+import EmailCapture from './EmailCapture.astro';
+import { t } from '../i18n/ui';
+import { DEFAULT_LANG, insideEmergencyMode } from '../i18n/registry';
+
+interface Props {
+  lang?: string;
+  /** English canonical path of the host page. */
+  path: string;
+}
+const { lang = DEFAULT_LANG, path } = Astro.props;
+
+const S = t(lang).postInstall;
+const B = t(lang).installBanner;
+
+// The guard lives in the component. A call site cannot opt into Emergency Mode,
+// and cannot put this on /saved, where the install recommendation already is.
+const show = !insideEmergencyMode(path) && path !== '/saved';
+---
+{show && (
+  <div class="pi" id="piWrap" hidden>
+    <EmailCapture source="post_install" lang={lang} title={S.head} blurb={S.body} />
+    <button type="button" class="pi-close" id="piClose" aria-label={B.dismiss}>&times;</button>
+  </div>
+)}
+
+{show && (
+  <script is:inline>
+    (function () {
+      var wrap = document.getElementById('piWrap');
+      if (!wrap) return;
+
+      // 1. INSTALLED APP ONLY. This is the whole premise: the reader got here
+      //    from an icon on their home screen, so they have already committed
+      //    and the ask is a payoff rather than a toll. In a browser tab this
+      //    element stays hidden forever and costs one function call.
+      var standalone = (window.matchMedia &&
+                        window.matchMedia('(display-mode: standalone)').matches) ||
+                       window.navigator.standalone === true;
+      if (!standalone) return;
+
+      // 2. NOT ALREADY REGISTERED. The site's existing keys, written by
+      //    EmailCapture and by the checklist gate. Either one saying they are
+      //    in is enough to stay quiet: asking a registered reader to register
+      //    is the single most obvious way to look like nobody is home.
+      //    This is also what makes a successful submit permanent, with no extra
+      //    state: EmailCapture writes both keys, so the next page load fails
+      //    this check and the ask never returns.
+      try {
+        if (localStorage.getItem('SMG_UNLOCKED') === '1' ||
+            localStorage.getItem('SMG_EMAIL')) return;
+      } catch (e) { /* private mode: show it, it is harmless */ }
+
+      // 3. ITS OWN DISMISSAL KEY, deliberately not the install pitch's. Two
+      //    different asks at two different moments: silencing "keep this on
+      //    your phone" must not silence "now sync it", and vice versa. Global
+      //    across this component's placements, so one X is enough.
+      var KEY = 'SMG_POSTINSTALL_OFF';
+      try { if (localStorage.getItem(KEY) === '1') return; } catch (e) { /* show */ }
+
+      wrap.hidden = false;
+
+      var close = document.getElementById('piClose');
+      if (close) close.addEventListener('click', function () {
+        wrap.hidden = true;
+        try { localStorage.setItem(KEY, '1'); } catch (e) { /* this session only */ }
+      });
+
+      // A SUBMIT IS NOT HIDDEN IMMEDIATELY, ON PURPOSE. EmailCapture answers in
+      // place ("check your inbox and tap the confirm link"), and removing the
+      // panel would take that message with it. Instead the registration keys it
+      // writes are what stop this ever coming back, checked at the top on the
+      // next load. Nothing to do here but let it happen.
+      //
+      // The one thing worth doing is recording the outcome for the funnel,
+      // since a registration that came from inside the installed app is a
+      // different event from one on a fix article.
+      var form = wrap.querySelector('.cap-form');
+      if (form) form.addEventListener('submit', function () {
+        setTimeout(function () {
+          var ok = false;
+          try { ok = localStorage.getItem('SMG_UNLOCKED') === '1'; } catch (e) {}
+          if (ok && typeof window.gtag === 'function') {
+            window.gtag('event', 'post_install_register', { placement: 'post_install' });
+          }
+        }, 0);
+      });
+    })();
+  </script>
+)}
+
+<style is:global>
+  /* The panel itself is EmailCapture's. This adds the corner dismiss and the
+     outer spacing, nothing else, so the ask looks like every other registration
+     panel on the site rather than like a new kind of thing. */
+  .pi { position: relative; margin: 2rem 0 0; }
+  .pi[hidden] { display: none; }
+  /* Same geometry as the install card's X and InstallApp's, for the same
+     reason recorded there: a corner never moves, whatever wraps underneath. */
+  .pi-close {
+    position: absolute; top: 0.3rem; right: 0.3rem;
+    width: 34px; height: 34px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; border: none; color: var(--text-faint);
+    font-size: 20px; line-height: 1; cursor: pointer;
+  }
+  .pi-close:hover { color: var(--text); }
+  /* Room for the X so it never sits on top of the heading. */
+  .pi .capture { padding-right: 2.6rem; }
+  @media print { .pi { display: none !important; } }
+</style>

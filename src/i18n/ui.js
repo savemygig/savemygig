@@ -123,6 +123,33 @@ export const UI = {
       ios: 'Tap the Share icon, then Add to Home Screen.',
       done: 'Installed. The rescue is on your phone now.',
     },
+    // THE ASK THAT COMES AFTER THE INSTALL, not before it.
+    //
+    // Antonio first proposed requiring registration IN ORDER to install as a
+    // PWA. Rejected, and the reasoning is worth keeping because it will be
+    // proposed again:
+    //   1. TECHNICALLY IMPOSSIBLE. Install is a BROWSER function: Chrome's own
+    //      menu, Safari's Share then Add to Home Screen. A site cannot gate it.
+    //      And the offline precache already runs on a first visit with no
+    //      account, so gating our own button would have hidden the
+    //      recommendation without gating one byte of the benefit.
+    //   2. WRONG PLACE. The recommendation lands on /saved, thirty seconds
+    //      after a rescue worked, on a site whose homepage says "Free, no
+    //      account". A form there converts a rescue into a transaction at the
+    //      exact moment trust is highest, which is the most expensive possible
+    //      moment to spend it.
+    // So: install with zero friction, and THEN ask an already-committed user,
+    // inside the installed app, where the ask is genuinely attractive rather
+    // than a toll. Rendered by src/components/PostInstall.astro.
+    //
+    // It is framed as the payoff and not as a request: the heading states what
+    // they have just gained, and the body names two things they get, both of
+    // which are real and already built (the checklist syncs on registration,
+    // the printable card is emailed).
+    postInstall: {
+      head: 'The rescue is on your phone',
+      body: 'Register to sync your checklist across every device and get the printable Emergency Card.',
+    },
     footer: {
       shareLead: 'Every DJ knows a DJ who needs this:',
       // WHAT ACTUALLY GETS SHARED. Until 2026-08-05 the WhatsApp, Telegram and
@@ -309,6 +336,13 @@ export const UI = {
       ios: 'Toque em Compartilhar e depois em Adicionar à Tela de Início.',
       done: 'Instalado. O resgate está no seu celular agora.',
     },
+    // O pedido vem DEPOIS da instalação, nunca antes. "Emergency Card" é nome
+    // de produto e não se traduz. Ver o comentário na versão em inglês para o
+    // porquê de não existir cadastro obrigatório para instalar.
+    postInstall: {
+      head: 'O resgate está no seu celular',
+      body: 'Cadastre-se para sincronizar o seu checklist em todos os aparelhos e receber o Emergency Card para imprimir.',
+    },
     footer: {
       // "Todo DJ conhece um DJ que precisa disso" keeps the English line's
       // shape and its wink. A literal "Cada DJ sabe de um DJ..." would be
@@ -471,6 +505,13 @@ export const UI = {
       body: 'Instálalo como app y todas las pantallas de rescate se quedan en tu dispositivo, listas sin señal, sin datos y sin buscar nada.',
       ios: 'Toca Compartir y luego Agregar a inicio.',
       done: 'Instalado. El rescate ya está en tu celular.',
+    },
+    // El pedido va DESPUÉS de instalar, nunca antes. "Emergency Card" es
+    // nombre de producto y no se traduce. Ver el comentario en la versión en
+    // inglés para por qué no hay registro obligatorio para instalar.
+    postInstall: {
+      head: 'El rescate ya está en tu celular',
+      body: 'Regístrate para sincronizar tu checklist en todos tus dispositivos y recibir la Emergency Card para imprimir.',
     },
     footer: {
       shareLead: 'Todo DJ conoce a un DJ que necesita esto:',

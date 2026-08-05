@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PostInstall from '../../components/PostInstall.astro';
 import InstallNudge from '../../components/InstallNudge.astro';
 import { groups } from '../../data/checklist.es.js';
 import lockupPrint from '../../components/brand-lockup-print.svg?raw';
@@ -612,6 +613,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         the reader came here to tick boxes: no accent rail, no icon disc, no
         filled button. Same words, less voice. */}
     <InstallNudge lang="es" path="/checklist" tone="quiet" placement="checklist_foot" />
+
+    {/* The post-install registration ask, sharing the foot with the install
+        card above it. Exactly one of the two can ever be visible: the card
+        hides when the app is installed, this only shows when it is. */}
+    <PostInstall lang="es" path="/checklist" />
 
     <!-- Icon-only circle, Antonio's EPK pattern: the site's boxes are square
          but its icon-only buttons are already circles (footer socials, the

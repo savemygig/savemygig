@@ -24,8 +24,10 @@
  *   3. Already installed (display-mode: standalone, emulated) -> stays hidden.
  *   4. Already installed on iOS (navigator.standalone, emulated) -> stays
  *      hidden. Different signal, same rule.
- *   5. Dismissal persists ACROSS PAGES and across a reload, and silences the
- *      homepage banner too, because they share one key.
+ *   5. Dismissal persists ACROSS PAGES and across a reload, across this card's
+ *      own three placements, and does NOT reach InstallApp's homepage banner in
+ *      either direction: they have separate keys on purpose, because intent on
+ *      the homepage is not intent on /saved.
  *   6. iOS shows the Share gesture and NO Install button.
  *   7. Chromium: a beforeinstallprompt event is captured, the button appears,
  *      clicking it calls prompt() on the stashed event, and an `accepted`
@@ -34,6 +36,23 @@
  *      both this card and InstallApp's homepage banner. (The small "Install it
  *      so the checklist survives a closed tab" text link on /checklist is a
  *      context link, not a pitch, and is not counted.)
+ *
+ * AND THEN THE POST-INSTALL REGISTRATION ASK (section 9), which is the other
+ * half of the same decision: install with zero friction, ask afterwards. It has
+ * more ways to be wrong than the card does, because it is the only thing on the
+ * site that renders for one narrow audience (a reader inside the installed app
+ * who has not registered) and must be invisible to everyone else:
+ *   9a. Visible in emulated standalone on /, /pt, /es and /checklist, with the
+ *       right heading per language.
+ *   9b. NOT on /saved (the install card owns that screen; two asks is nagging),
+ *       and not on /emergency or a tunnel screen.
+ *   9c. NOT in a normal browser tab, on any of its own pages.
+ *   9d. NOT when the registration keys are already present, by either key.
+ *   9e. Gone for good after a successful submit, with /api/subscribe stubbed.
+ *   9f. Never on screen at the same time as the install card. This one is
+ *       structural rather than careful (the card returns early WHEN standalone,
+ *       the ask returns early UNLESS standalone) and /checklist renders both
+ *       into the page, so it is worth proving rather than asserting in prose.
  *
  * Run: node scripts/test-install-nudge.mjs dist
  */
@@ -95,6 +114,11 @@ const state = (page) => page.evaluate(() => {
     shareGlyphs: el ? el.querySelectorAll('.ing-share svg').length : 0,
     // Both install pitches on the site, counted the same way.
     pitches: [q('#ingWrap'), q('#installWrap')].filter(vis).length,
+    // The post-install registration ask.
+    piPresent: !!q('#piWrap'),
+    piVisible: vis(q('#piWrap')),
+    piHead: (q('#piWrap h3') || {}).textContent || '',
+    capMsg: (q('#piWrap .cap-msg') || {}).textContent || '',
   };
 });
 
@@ -232,8 +256,11 @@ for (const [label, opts] of [
 }
 
 // ---------------------------------------------------------------------------
-// 5. ONE DISMISSAL, EVERYWHERE, ONCE EVER: across pages, across a reload, and
-//    across to the homepage banner, which shares the key.
+// 5. ONE DISMISSAL ACROSS THIS CARD'S OWN THREE PLACEMENTS, and across a
+//    reload, but deliberately NOT across to InstallApp's homepage banner. The
+//    card has its own key since 2026-08-05 (Antonio's ruling): a DJ who waved a
+//    homepage banner away months ago should still get one chance on the screen
+//    where the rescue just worked, because intent there is not the same intent.
 // ---------------------------------------------------------------------------
 {
   const { ctx, page } = await tab();
@@ -251,13 +278,20 @@ for (const [label, opts] of [
   await page.goto(base + '/card', { waitUntil: 'load' });
   ok('dismiss: also silent on /card', (await state(page)).visible === false);
 
-  // Same key as InstallApp, so the homepage banner is silent too. Widened first,
-  // because that banner is hidden below 640px by its own design and a phone
-  // viewport would pass this for the wrong reason.
+  // DIFFERENT KEY, so the homepage banner is NOT collateral damage. Widened
+  // first, because that banner is hidden below 640px by its own design and a
+  // phone viewport would pass this for the wrong reason.
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto(base + '/', { waitUntil: 'load' });
   const home = await state(page);
-  ok('dismiss: the homepage banner is silent too', home.pitches === 0);
+  ok('dismiss: the homepage banner is NOT silenced by it', home.pitches === 1, `saw ${home.pitches}`);
+
+  // And the reverse: InstallApp's own X must not silence this card.
+  await page.click('#installClose');
+  await page.evaluate(() => { try { localStorage.removeItem('SMG_NUDGE_DISMISSED'); } catch (e) {} });
+  await page.goto(base + '/saved', { waitUntil: 'load' });
+  ok('dismiss: the homepage banner\'s X does not silence /saved',
+    (await state(page)).visible === true);
   await ctx.close();
 }
 
@@ -342,6 +376,168 @@ for (const w of [390, 1280]) {
     const expected = url === '/' || url === '/pt' || url === '/es' ? (w >= 641 ? 1 : 0) : 1;
     ok(`@${w} ${url}: exactly ${expected} install pitch`, n === expected, `saw ${n}`);
   }
+  await ctx.close();
+}
+
+// ---------------------------------------------------------------------------
+// 9. THE POST-INSTALL REGISTRATION ASK.
+// ---------------------------------------------------------------------------
+
+/** A tab that believes it is the installed app. matchMedia is patched rather
+ *  than using Playwright's emulateMedia, which has no display-mode support. */
+async function appTab({ ios = false, registered = null, width = 390, height = 844 } = {}) {
+  const ctx = await browser.newContext({
+    viewport: { width, height },
+    ...(ios ? { userAgent: IOS_UA } : {}),
+  });
+  await noServiceWorker(ctx);
+  if (ios) {
+    await ctx.addInitScript(() => {
+      Object.defineProperty(window.navigator, 'standalone', { value: true, configurable: true });
+    });
+  } else {
+    await ctx.addInitScript(() => {
+      const real = window.matchMedia.bind(window);
+      window.matchMedia = (q) =>
+        (String(q).indexOf('display-mode: standalone') > -1
+          ? { matches: true, media: q, addListener() {}, removeListener() {},
+              addEventListener() {}, removeEventListener() {} }
+          : real(q));
+    });
+  }
+  const page = await ctx.newPage();
+  if (registered) {
+    // Seeded by visiting a page and writing once, not with addInitScript, which
+    // re-runs on every navigation and would keep putting state back.
+    await page.goto(base + '/offline', { waitUntil: 'domcontentloaded' });
+    await page.evaluate((r) => {
+      try {
+        if (r.unlocked) localStorage.setItem('SMG_UNLOCKED', '1');
+        if (r.email) localStorage.setItem('SMG_EMAIL', r.email);
+      } catch (e) {}
+    }, registered);
+  }
+  return { ctx, page };
+}
+
+// 9a. Visible in the installed app, on its four pages, in the page's language.
+{
+  const CASES = [
+    ['/', 'The rescue is on your phone'],
+    ['/checklist', 'The rescue is on your phone'],
+    ['/pt', 'O resgate está no seu celular'],
+    ['/pt/checklist', 'O resgate está no seu celular'],
+    ['/es', 'El rescate ya está en tu celular'],
+    ['/es/checklist', 'El rescate ya está en tu celular'],
+  ];
+  const { ctx, page } = await appTab();
+  for (const [url, head] of CASES) {
+    await page.goto(base + url, { waitUntil: 'load' });
+    const s = await state(page);
+    ok(`app ${url}: the post-install ask is visible`, s.piVisible === true);
+    ok(`app ${url}: heading is in the page language`, s.piHead.trim() === head, s.piHead.trim().slice(0, 40));
+    // 9f, on every page that renders both.
+    ok(`app ${url}: the install card is NOT also on screen`, s.visible === false && s.pitches === 0);
+  }
+  await ctx.close();
+}
+
+// 9a again on iOS, where the standalone signal is navigator.standalone instead.
+{
+  const { ctx, page } = await appTab({ ios: true });
+  await page.goto(base + '/', { waitUntil: 'load' });
+  ok('app (iOS navigator.standalone): the ask is visible', (await state(page)).piVisible === true);
+  await ctx.close();
+}
+
+// 9b. Not on /saved, and not inside Emergency Mode. Absent from the HTML, not
+//     merely hidden: the guard is in the component.
+{
+  const { ctx, page } = await appTab();
+  for (const url of ['/saved', '/pt/saved', '/es/saved']) {
+    await page.goto(base + url, { waitUntil: 'load' });
+    const s = await state(page);
+    ok(`app ${url}: no registration ask (the install card owns this screen)`, s.piPresent === false);
+    ok(`app ${url}: and the install card is silent too, because it is installed`, s.visible === false);
+  }
+  for (const url of ['/emergency', '/pt/emergency', '/protocol/usb/moves', '/es/protocol/usb/start']) {
+    await page.goto(base + url, { waitUntil: 'domcontentloaded' });
+    ok(`app ${url}: nothing is ever sold inside Emergency Mode`, (await state(page)).piPresent === false);
+  }
+  await ctx.close();
+}
+
+// 9c. A normal browser tab never sees it, on any of its own pages.
+{
+  const { ctx, page } = await tab();
+  for (const url of ['/', '/checklist', '/pt', '/pt/checklist', '/es', '/es/checklist']) {
+    await page.goto(base + url, { waitUntil: 'load' });
+    const s = await state(page);
+    ok(`browser tab ${url}: the ask stays hidden`, s.piPresent === true && s.piVisible === false);
+  }
+  await ctx.close();
+}
+
+// 9d. Already registered, by either key on its own.
+for (const [label, seed] of [
+  ['SMG_UNLOCKED', { unlocked: true }],
+  ['SMG_EMAIL', { email: 'dj@example.com' }],
+  ['both', { unlocked: true, email: 'dj@example.com' }],
+]) {
+  const { ctx, page } = await appTab({ registered: seed });
+  await page.goto(base + '/', { waitUntil: 'load' });
+  ok(`app, already registered via ${label}: the ask stays hidden`,
+    (await state(page)).piVisible === false);
+  await ctx.close();
+}
+
+// 9e. A successful submit, with the endpoint stubbed, and it never comes back.
+{
+  const { ctx, page } = await appTab();
+  await page.route('**/api/subscribe', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) }));
+  await page.goto(base + '/', { waitUntil: 'load' });
+  ok('app submit: the ask is visible first', (await state(page)).piVisible === true);
+
+  await page.fill('#piWrap input[name="email"]', 'dj@example.com');
+  await page.click('#piWrap .cap-form button[type="submit"]');
+  await page.waitForFunction(() => {
+    const m = document.querySelector('#piWrap .cap-msg');
+    return m && m.classList.contains('ok');
+  }, null, { timeout: 8000 }).catch(() => {});
+  const after = await state(page);
+  ok('app submit: it answers in place instead of vanishing mid-message',
+    after.piVisible === true && after.capMsg.trim().length > 0, after.capMsg.trim().slice(0, 46));
+  const keys = await page.evaluate(() => {
+    try { return { u: localStorage.getItem('SMG_UNLOCKED'), e: localStorage.getItem('SMG_EMAIL') }; }
+    catch (err) { return {}; }
+  });
+  ok('app submit: the device is registered', keys.u === '1' && keys.e === 'dj@example.com',
+    JSON.stringify(keys));
+
+  await page.reload({ waitUntil: 'load' });
+  ok('app submit: gone after a reload', (await state(page)).piVisible === false);
+  await page.goto(base + '/checklist', { waitUntil: 'load' });
+  ok('app submit: gone on /checklist too', (await state(page)).piVisible === false);
+  await ctx.close();
+}
+
+// 9e, the dismissal path: its own key, once ever, across both its pages.
+{
+  const { ctx, page } = await appTab();
+  await page.goto(base + '/checklist', { waitUntil: 'load' });
+  ok('app dismiss: visible first', (await state(page)).piVisible === true);
+  await page.click('#piClose');
+  ok('app dismiss: hidden immediately', (await state(page)).piVisible === false);
+  await page.reload({ waitUntil: 'load' });
+  ok('app dismiss: still hidden after a reload', (await state(page)).piVisible === false);
+  await page.goto(base + '/', { waitUntil: 'load' });
+  ok('app dismiss: silent on the home page too', (await state(page)).piVisible === false);
+  // And it must not have silenced the install card, which is a different ask.
+  const nudgeKey = await page.evaluate(() => {
+    try { return localStorage.getItem('SMG_NUDGE_DISMISSED'); } catch (e) { return 'err'; }
+  });
+  ok('app dismiss: it did not write the install card\'s key', nudgeKey === null, String(nudgeKey));
   await ctx.close();
 }
 
