@@ -94,6 +94,18 @@
                            .notes-area, .add-own, .acct-form
        --surf-2  #1c1a17   outside .unlock-form input, which sits on the
                            account card
+
+     ONE FIELD IS DELIBERATELY EXCLUDED, AND IT IS NOT AN OVERSIGHT: the search
+     box. Antonio put .srch-box back to --edge on 2026-08-05 after seeing this
+     live ("I don't like line line line on the search box. I prefer the previous
+     version, that gray darker like it was before. Go back how it was."). It is
+     the one field that stacks straight onto another bordered element, its own
+     .srch-results dropdown, so lightening it made a column of three bright
+     hairlines. His call, and it stands. Read the comment on .srch-box in
+     src/components/Search.astro before touching it. The --surf line above still
+     names .srch-box because that is where the measurement was taken; the value
+     is simply no longer applied there.
+
      Ratios for this value: 3.66:1 on --bg, 3.40:1 on --surf, 3.21:1 on
      --surf-2. It is the DARKEST of the candidates that clears 3:1 on all
      three. #6b6459 was the first choice and it fails, but only on --surf-2,

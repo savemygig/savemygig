@@ -73,8 +73,21 @@ const noneBits = {
 
 <style is:global>
   .srch { position: relative; width: 100%; max-width: 34rem; }
+  /* --edge, NOT --edge-strong (Antonio, 2026-08-05, seeing it live: "I don't
+     like line line line on the search box. I prefer the previous version, that
+     gray darker like it was before. Go back how it was.").
+     The contrast pass that lightened every field edge on the site was right
+     about the fields a DJ has to FIND in a dark booth, and wrong here. This box
+     is not one of those: it sits under a magnifier icon, it is the widest
+     element in the overlay, and it stacks directly above .srch-results, which
+     draws its own hairline. Three lightened lines in a column, which is what he
+     saw. The fainter edge also puts the box back in step with its own dropdown.
+     The accessibility case is not lost, it moves: focus still paints this
+     border --red via :focus-within below, and the fields where finding the edge
+     genuinely matters (.fbp-input, .cap-form input, and the checklist's own
+     inputs) all keep --edge-strong. Do not "fix" this one back. */
   .srch-box { display: flex; align-items: center; gap: 0.6rem;
-    background: var(--surf); border: var(--stroke) solid var(--edge-strong); border-radius: var(--radius);
+    background: var(--surf); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
     padding: 0 0.85rem; transition: border-color var(--t-fast); }
   .srch-box:focus-within { border-color: var(--red); }
   .srch-icon { flex: 0 0 auto; color: var(--text-faint); }
