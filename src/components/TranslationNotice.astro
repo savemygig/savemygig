@@ -59,9 +59,9 @@
  *    shift we just spent a pass removing. Hidden first, shown only if the
  *    visitor has not dismissed it, so a returning reader never sees a flash.
  *
- * The report link is a mailto, deliberately: /feedback does not exist in
- * Portuguese or Spanish yet, and sending someone who just read a sentence in
- * their own language to an English form would undo the point of the notice.
+ * The report link goes to the language's own /feedback page. It was a mailto
+ * while /pt/feedback and /es/feedback did not exist; they do now, and a form
+ * in the reader's language beats an email composer.
  */
 import { DEFAULT_LANG } from '../i18n/registry';
 
@@ -77,21 +77,21 @@ const SILENT = ['/emergency', '/protocol', '/saved', '/files-lost', '/card-ready
 const inEmergency = SILENT.some((p) => path === p || path.startsWith(p + '/'));
 const show = lang !== DEFAULT_LANG && !inEmergency;
 
+// Antonio, 2026-08-05: reworded from an apology ("ainda não está perfeita")
+// to continuous improvement ("em constante evolução"). The CTA is the closing
+// sentence of the lead, rendered in brand red, and now that /pt/feedback and
+// /es/feedback exist it links there instead of the old mailto.
 const COPY = {
   pt: {
-    lead: 'O Save My Gig nasceu em inglês. Esta versão foi feita com carinho, mas ainda não está perfeita. Se alguma palavra soar estranha, conta pra gente.',
-    joke: '',
-    ask: '',
-    cta: 'Falar com a gente',
-    subject: 'Versão em português: uma sugestão',
+    lead: 'O Save My Gig nasceu em inglês e a versão em português está em constante evolução. Encontrou alguma tradução estranha?',
+    cta: 'Conte pra gente.',
+    href: '/pt/feedback',
     close: 'Fechar aviso',
   },
   es: {
-    lead: 'Save My Gig nació en inglés. Esta versión fue hecha con cariño, pero todavía no está perfecta. Si alguna palabra suena rara, cuéntanos.',
-    joke: '',
-    ask: '',
-    cta: 'Escríbenos',
-    subject: 'Versión en español: una sugerencia',
+    lead: 'Save My Gig nació en inglés y la versión en español está en constante evolución. ¿Encontraste alguna traducción extraña?',
+    cta: 'Cuéntanos.',
+    href: '/es/feedback',
     close: 'Cerrar aviso',
   },
 };
@@ -102,7 +102,7 @@ const c = COPY[lang];
     <div class="tx-body">
       <p class="tx-lead">{c.lead} <a
         class="tx-cta"
-        href={`mailto:info@savemygig.com?subject=${encodeURIComponent(c.subject)}`}
+        href={c.href}
         data-event="translation_report"
         data-lang={lang}
       >{c.cta}</a></p>
