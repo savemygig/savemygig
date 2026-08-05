@@ -1,0 +1,215 @@
+---
+import Base from '../../../../layouts/Base.astro';
+
+// HUB PIONEER DJ / ALPHATHETA, NEUTRAL LATIN AMERICAN SPANISH. Source of truth
+// for the catalogue, the categories, the CollectionPage contract, the script
+// and the CSS: src/pages/knowledge/pioneer-dj/index.astro. Only the human
+// readable copy and the /es hrefs differ. If the English page changes, change
+// this one in the same commit.
+const players = [
+  { name: 'CDJ-3000X', href: '/es/knowledge/pioneer-dj/cdj-3000x' },
+  { name: 'CDJ-3000', href: '/es/knowledge/pioneer-dj/cdj-3000' },
+  { name: 'CDJ-2000NXS2', href: '/es/knowledge/pioneer-dj/cdj-2000nxs2' },
+  { name: 'CDJ-2000NXS', href: null },
+  { name: 'CDJ-1500X', href: null },
+  { name: 'XDJ-1000MK2', href: null },
+  { name: 'XDJ-700', href: null },
+];
+const mixers = [
+  { name: 'DJM-V10 / V10-LF', href: '/es/knowledge/pioneer-dj/djm-v10' },
+  { name: 'DJM-V5', href: null },
+  { name: 'DJM-A9', href: '/es/knowledge/pioneer-dj/djm-a9' },
+  { name: 'DJM-900NXS2', href: '/es/knowledge/pioneer-dj/djm-900nxs2' },
+  { name: 'DJM-900NXS', href: null },
+  { name: 'euphonia', href: null },
+];
+const allInOne = [
+  { name: 'OPUS-QUAD', href: null },
+  { name: 'XDJ-AZ', href: null },
+  { name: 'XDJ-XZ', href: null },
+  { name: 'XDJ-RX3', href: null },
+];
+const turntables = [
+  { name: 'PLX-1000', href: null },
+];
+const effectors = [
+  { name: 'RMX-1000', href: null },
+  { name: 'RMX-IGNITE', href: null },
+];
+const controllers = [
+  { name: 'DDJ-FLX10', href: null },
+  { name: 'DDJ-1000', href: null },
+  { name: 'DDJ-REV7', href: null },
+  { name: 'DDJ-FLX4', href: null },
+];
+
+const categories = [
+  { label: 'Reproductores', items: players },
+  { label: 'Mixers', items: mixers },
+  { label: 'Sistemas all-in-one', items: allInOne },
+  { label: 'Tornamesas', items: turntables, note: 'La tornamesa profesional que los lugares de verdad instalan. La cobertura de vinilo crece aquí a medida que se lo gane.' },
+  { label: 'Efectos', items: effectors },
+  { label: 'Controladoras', items: controllers, note: 'Raras en club, pero el estándar para preparar en casa y para gigs móviles.' },
+];
+
+// The ItemList carries ONLY the models with a live reference page, exactly
+// like the English file. Everything else is visibly labelled "Muy pronto" and
+// a machine-readable list has no way to carry that label.
+const listed = [
+  ...players, ...mixers, ...allInOne, ...turntables, ...effectors, ...controllers,
+].filter((x) => x.href);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj#webpage',
+  url: 'https://www.savemygig.com/es/knowledge/pioneer-dj',
+  name: 'Referencia de equipos Pioneer DJ / AlphaTheta',
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  inLanguage: 'es',
+  // Both names on purpose: the company is AlphaTheta and the brand on the gear
+  // is Pioneer DJ. DJs search for both.
+  about: [
+    { '@type': 'Thing', name: 'Pioneer DJ' },
+    { '@type': 'Thing', name: 'AlphaTheta' },
+    { '@type': 'Thing', name: 'Equipos CDJ y DJM' },
+  ],
+  mainEntity: {
+    '@type': 'ItemList',
+    '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj#list',
+    name: 'Referencias de modelos Pioneer DJ y AlphaTheta',
+    numberOfItems: listed.length + 1,
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    itemListElement: [
+      ...listed.map((x, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: x.name,
+        url: `https://www.savemygig.com${x.href}`,
+      })),
+      {
+        '@type': 'ListItem',
+        position: listed.length + 1,
+        name: 'Qué está roto en ese reproductor, por versión de firmware',
+        url: 'https://www.savemygig.com/es/knowledge/pioneer-dj/firmware',
+      },
+    ],
+  },
+};
+---
+<Base
+  title="CDJ, XDJ y DJM: referencia Pioneer DJ / AlphaTheta | Save My Gig"
+  description="CDJ, XDJ y mixers DJM: el manual de campo del equipo que de verdad te encuentras en el booth, no un manual de producto reescrito."
+  path="/knowledge/pioneer-dj"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap">
+    <nav class="crumb" aria-label="Ruta de navegación">
+      <a href="/es/knowledge">Base de conocimiento</a> <span aria-hidden="true">/</span> <span>Pioneer DJ / AlphaTheta</span>
+    </nav>
+
+    <div class="status-line">PIONEER_DJ</div>
+    <h1 style="margin-bottom:0.8rem">Pioneer DJ / <span class="accent">AlphaTheta</span></h1>
+    <p class="dim kb-lead">
+      No es un manual de producto reescrito. Esta es la referencia operativa:
+      qué sale mal, cómo resolverlo rápido, cómo corre este equipo un DJ con
+      experiencia, y cómo impedir que la misma falla te pase en el próximo gig.
+    </p>
+
+    <!-- Cross-model entry point: "what is broken on this deck" is a question
+         that comes before "which model am I looking at". -->
+    <a class="pdj-matrix" href="/es/knowledge/pioneer-dj/firmware">
+      <span class="pdj-matrix-k">En todos los modelos</span>
+      <span class="pdj-matrix-t">Qué está roto en ese reproductor, por versión de firmware &rarr;</span>
+      <span class="pdj-matrix-b">Lee la versión en el propio aparato y mira qué fallas documentadas siguen vivas en él.</span>
+    </a>
+
+    <!-- Collapsible categories: on a phone the six category headers ARE the
+         index. On desktop the inline script below opens everything before
+         paint. Native details/summary, no framework. -->
+    {categories.map(cat => (
+      <details class="kb-cat">
+        <summary>
+          <h2 class="kb-h">{cat.label}</h2>
+          <span class="kb-chev" aria-hidden="true"></span>
+        </summary>
+        {cat.note && <p class="dim" style="margin-bottom:0.9rem;font-size:0.85rem">{cat.note}</p>}
+        <div class="kb-grid">
+          {cat.items.map(m => (
+            m.href ? (
+              <a class="kb-card kb-live" href={m.href}>
+                <span class="kb-name">{m.name}</span>
+                <span class="kb-go">Abrir la guía &rarr;</span>
+              </a>
+            ) : (
+              <div class="kb-card kb-soon">
+                <span class="kb-name">{m.name}</span>
+                <span class="kb-tag">Muy pronto</span>
+              </div>
+            )
+          ))}
+        </div>
+      </details>
+    ))}
+    <script is:inline>
+      // Desktop has room: open every category before first interaction.
+      // Phones keep them collapsed so the category list is the index.
+      (function () {
+        if (window.matchMedia('(min-width: 641px)').matches) {
+          var cats = document.querySelectorAll('.kb-cat');
+          for (var i = 0; i < cats.length; i++) cats[i].open = true;
+        }
+      })();
+    </script>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">¿Qué herramienta falta en esta lista?</h2>
+      <p class="dim" style="margin-bottom:1rem">Construimos lo que los DJ piden de verdad. Dinos qué usas y sube en la fila.</p>
+      <a href="/es/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Cuéntanos qué usas</a>
+    </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">
+      ¿Buscas dudas de biblioteca y de export? <a href="/es/knowledge/pioneer-dj/rekordbox">La referencia de rekordbox</a> cubre eso.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .kb-lead { max-width: 42rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  /* Firmware matrix promo. Green (the site's "you are fine / go" tone) rather
+     than red: this is a prevention tool, not an alarm. */
+  .pdj-matrix {
+    display: block; text-decoration: none;
+    background: var(--green-dim); border: var(--stroke) solid var(--green-border);
+    border-radius: var(--radius); padding: 1.1rem 1.25rem; margin-bottom: 1.8rem;
+  }
+  .pdj-matrix-k {
+    display: block; font-family: var(--font-display); font-size: 0.68rem;
+    font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-faint); margin-bottom: 0.35rem;
+  }
+  .pdj-matrix-t {
+    display: block; color: var(--text); font-weight: 700;
+    font-size: 1.02rem; line-height: 1.3; margin-bottom: 0.3rem;
+  }
+  .pdj-matrix-b { display: block; color: var(--text-dim); font-size: 0.88rem; line-height: 1.55; }
+  .pdj-matrix:hover .pdj-matrix-t { color: var(--red); }
+  .kb-h {
+    font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
+    margin: 0; flex: 1;
+  }
+  /* The card, the grid, the accordion chevron and the focus ring all come from
+     global.css. Only the group-heading rule is local, because only this page
+     draws one. */
+  .kb-cat { margin-top: 1.6rem; }
+  .kb-cat > summary {
+    display: flex; align-items: center; gap: 0.8rem;
+    border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+    cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
+  }
+</style>

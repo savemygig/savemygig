@@ -1,0 +1,82 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// WAVEFORMS NAO CARREGAM NO CDJ, BRAZILIAN PORTUGUESE. Source of truth for
+// structure, components, classes and CSS:
+// src/pages/fix/waveforms-not-loading-cdj.astro. Only the human readable copy
+// and the /pt hrefs differ.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/fix/waveforms-not-loading-cdj#article',
+  headline: 'Waveforms não carregam no CDJ: o que isso significa',
+  description: 'As tracks tocam mas os waveforms ficam em branco ou demoram uma eternidade no CDJ. Análise faltando, drive lento ou banco de dados sofrendo: a ordem de resolver.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/waveforms-not-loading-cdj#webpage' },
+  image: 'https://www.savemygig.com/og/waveforms-not-loading-cdj.png',
+};
+---
+<Base
+  title="Waveform não carrega no CDJ? Causas e soluções | Save My Gig"
+  description="As tracks tocam mas os waveforms ficam em branco ou demoram uma eternidade no CDJ. Análise faltando, drive lento ou banco de dados sofrendo: a ordem de resolver."
+  path="/fix/waveforms-not-loading-cdj"
+  ogImage="/og/waveforms-not-loading-cdj.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Waveforms_Em_Branco</div>
+    <h1 style="margin-bottom:1.5rem">WAVEFORM <span class="danger">NÃO CARREGA</span>?<br>Leia isto primeiro</h1>
+
+    <div class="panel panel-go">
+      <p style="margin:0"><strong>Resposta curta:</strong> waveform em branco quase nunca derruba um set. O áudio toca normalmente, o que está faltando é conforto, não música. A ordem de resolver está abaixo.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">As três causas</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>As tracks nunca foram analisadas.</strong> Arquivo arrastado na mão (ou importado e exportado rápido demais) não carrega dado de waveform. O player mostra uma onda se construindo devagar, ou nada.</li>
+      <li><strong>O drive está lento ou morrendo.</strong> O dado de waveform é lido do pen drive; um drive sofrendo mostra as tracks na hora e os waveforms se arrastam. Trate isso como aviso antecipado.</li>
+      <li><strong>Descompasso de banco de dados.</strong> Firmware antigo de player com versões novas do rekordbox às vezes pula o dado detalhado de waveform. O áudio continua tocando.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Na booth</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>Siga tocando. A onda se desenha em tempo real conforme o player lê a track, e você mixa de ouvido como os veteranos faziam.</li>
+      <li>Se os waveforms se arrastam E a navegação trava junto: o drive está sofrendo. Não confie nele na próxima gig. <a href="/pt/fix/usb-not-recognized-cdj">É assim que esses drives terminam</a>.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Depois, em casa</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>No rekordbox: selecione sua biblioteca, clique com o botão direito e escolha <strong>Analyze</strong>. Deixe terminar por completo.</li>
+      <li>Exporte de novo as playlists de hoje no modo <span class="mono" translate="no">EXPORT</span>; a análise viaja junto com o export.</li>
+      <li>Atualize o firmware do player e o rekordbox para as versões que o seu equipamento suporta.</li>
+      <li>Formate por completo (não a rápida) o drive suspeito; se ele se arrastar, aposente. <a href="/pt/gear">Drives que não fazem isso &rarr;</a></li>
+    </ul>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="waveforms" lang="pt" />
+  </main>
+</Base>

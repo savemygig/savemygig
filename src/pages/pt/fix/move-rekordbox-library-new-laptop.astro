@@ -1,0 +1,108 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// LEVAR O REKORDBOX PARA OUTRO NOTEBOOK, BRAZILIAN PORTUGUESE. Source of
+// truth for structure, components, classes and CSS:
+// src/pages/fix/move-rekordbox-library-new-laptop.astro. Only the human
+// readable copy and the /pt hrefs differ.
+//
+// OS PASSOS DO HowTo SAO AS PALAVRAS VISIVEIS DA PAGINA. Cada `text` abaixo e
+// o item correspondente da lista "O jeito certo", palavra por palavra, sem a
+// marcacao, e cada `name` e um trecho literal desse mesmo texto. Se voce
+// editar a lista visivel, edite este array no mesmo commit.
+//
+// Sem totalTime: a pagina diz "30 a 60 min, quase tudo espera", que e uma
+// faixa, e duracao ISO 8601 nao expressa faixa.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  '@id': 'https://www.savemygig.com/pt/fix/move-rekordbox-library-new-laptop#howto',
+  name: 'Levar a sua biblioteca do rekordbox para outro notebook sem perder os cues',
+  description: 'O jeito seguro de migrar uma biblioteca do rekordbox para outro computador com cues, grids e playlists intactos. E o jeito errado, que destrói anos de preparação em silêncio.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/move-rekordbox-library-new-laptop#webpage' },
+  image: 'https://www.savemygig.com/og/move-rekordbox-library-new-laptop.png',
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: 'Notebook antigo',
+      text: 'Notebook antigo: no rekordbox, File → Library → Backup Library → marque "include music files" → aponte para um drive externo com espaço suficiente.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Notebook novo',
+      text: 'Notebook novo: instale o rekordbox, entre na mesma conta Pioneer DJ, depois File → Library → Restore Library a partir do drive externo.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Confira',
+      text: 'Confira: abra as suas playlists principais, carregue algumas tracks, e os cues e grids têm que estar exatamente onde você deixou.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Exporte de novo os seus pen drives de gig',
+      text: 'Exporte de novo os seus pen drives de gig a partir da máquina nova, os dois drives, e teste um num player antes da próxima gig.',
+    },
+  ],
+};
+---
+<Base
+  title="Levar o rekordbox para outro notebook sem perder cues | Save My Gig"
+  description="O jeito seguro de migrar uma biblioteca do rekordbox para outro computador com cues, grids e playlists intactos. E o jeito errado, que destrói anos de preparação em silêncio."
+  path="/fix/move-rekordbox-library-new-laptop"
+  ogImage="/og/move-rekordbox-library-new-laptop.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line">Migracao_Da_Biblioteca</div>
+    <h1 style="margin-bottom:1.5rem">NOTEBOOK NOVO,<br>A MESMA <span class="accent">BIBLIOTECA</span></h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>O erro que destrói anos de trabalho:</strong> copiar a sua pasta de música para o notebook novo e importar tudo de novo. A música sobrevive, e morre todo cue, loop, ajuste de beatgrid e playlist. Use o Library Backup embutido no rekordbox.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">O jeito certo (30 a 60 min, quase tudo espera)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Notebook antigo:</strong> no rekordbox, <span class="mono" translate="no">File &rarr; Library &rarr; Backup Library</span> &rarr; marque "include music files" &rarr; aponte para um drive externo com espaço suficiente.</li>
+      <li><strong>Notebook novo:</strong> instale o rekordbox, entre na mesma conta Pioneer DJ, depois <span class="mono" translate="no">File &rarr; Library &rarr; Restore Library</span> a partir do drive externo.</li>
+      <li><strong>Confira:</strong> abra as suas playlists principais, carregue algumas tracks, e os cues e grids têm que estar exatamente onde você deixou.</li>
+      <li><strong>Exporte de novo os seus pen drives de gig</strong> a partir da máquina nova, os dois drives, e teste um num player antes da próxima gig.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">A alternativa na nuvem</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p>O Cloud Library Sync do rekordbox (com plano de assinatura) consegue migrar cues e playlists pela nuvem da Pioneer DJ, o que é prático para quem trabalha com dois computadores o tempo todo. Para uma mudança única, o backup local é mais rápido, é grátis e não depende da sua velocidade de upload.</p>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Já que você está nessa</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>Esse arquivo de backup também é o seu <strong>seguro contra desastre</strong>. Faça um por mês e mantenha ele longe da bag da gig.</li>
+      <li>O notebook antigo vai continuar vivo? Deixe UMA máquina ser dona dos drives de gig daqui para a frente, porque dois computadores escrevendo corrompem banco de dados de dispositivo. <a href="/pt/fix/playlists-not-showing-cdj">É assim que isso termina &rarr;</a></li>
+    </ul>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="library_migration" lang="pt" />
+  </main>
+</Base>

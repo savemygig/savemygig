@@ -1,0 +1,83 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// PLAYLISTS NAO APARECEM NO CDJ, BRAZILIAN PORTUGUESE. Source of truth for
+// structure, components, classes and CSS:
+// src/pages/fix/playlists-not-showing-cdj.astro. Only the human readable copy
+// and the /pt hrefs differ.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/fix/playlists-not-showing-cdj#article',
+  headline: 'Playlists não aparecem no CDJ: causas e soluções',
+  description: 'O pen drive monta, as tracks tocam, mas as playlists sumiram no CDJ. O banco de dados não chegou. A solução de 5 minutos e a definitiva.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/playlists-not-showing-cdj#webpage' },
+  image: 'https://www.savemygig.com/og/playlists-not-showing-cdj.png',
+};
+---
+<Base
+  title="Playlists não aparecem no CDJ ou XDJ? O motivo | Save My Gig"
+  description="O pen drive monta, as tracks tocam, mas as playlists sumiram no CDJ. O banco de dados não chegou. A solução de 5 minutos e a definitiva."
+  path="/fix/playlists-not-showing-cdj"
+  ogImage="/og/playlists-not-showing-cdj.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Playlists_Sumiram</div>
+    <h1 style="margin-bottom:1.5rem">PLAYLISTS SUMIRAM<br>NO <span class="danger">CDJ</span>?</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Resposta curta:</strong> se as tracks tocam mas as playlists sumiram, a sua música chegou e o banco de dados do rekordbox não. Ou o export pulou ele, ou a ejeção corrompeu ele, ou o drive foi enchido arrastando arquivos em vez de exportando pelo rekordbox.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Por que acontece</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Os arquivos foram arrastados para o pen drive no Finder ou no Explorador de Arquivos</strong>, e isso copia música, não o banco de dados. Playlist só existe depois de uma sincronização no modo EXPORT do rekordbox.</li>
+      <li><strong>O export foi interrompido ou a ejeção foi mal feita</strong>, porque o banco de dados é gravado perto do fim da sincronização; arranque antes e as tracks sobrevivem, as playlists não.</li>
+      <li><strong>Exports misturados de dois computadores</strong>, porque o rekordbox de um segundo computador consegue sobrescrever o banco de dados do dispositivo com a visão dele, que está vazia.</li>
+      <li><strong>Firmware muito antigo do player</strong> encontrando uma versão nova de banco de dados do rekordbox.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Na booth (5 minutos)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>Sem notebook? Use <span class="mono" translate="no">SOURCE &rarr; USB &rarr; FOLDER</span>, a sua música continua tocável por pasta, a gig de hoje está salva.</li>
+      <li>Com um notebook: abra o rekordbox no modo <span class="mono" translate="no">EXPORT</span>, conecte o pen drive, arraste as playlists de hoje para o dispositivo, espere a sincronização terminar por completo, ejete pelo botão de ejetar do rekordbox.</li>
+      <li>Coloque de volta no player e confira a aba de navegação <span class="mono" translate="no">PLAYLIST</span>, não a FOLDER.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">A solução definitiva</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>Uma regra: <strong>música só entra em drive de gig por export do rekordbox.</strong> Nunca pelo Finder, nunca pelo Explorador de Arquivos.</li>
+      <li>Um computador é dono do drive. Se você precisa usar dois, que só um deles escreva.</li>
+      <li>Depois de toda mudança na biblioteca: exporte de novo, ejete direito, confirme que as playlists carregam antes de sair de casa.</li>
+    </ul>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="playlists_missing" lang="pt" />
+  </main>
+</Base>

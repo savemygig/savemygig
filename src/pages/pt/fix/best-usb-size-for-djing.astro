@@ -1,0 +1,81 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// TAMANHO DE PEN DRIVE PARA DJ, BRAZILIAN PORTUGUESE. Source of truth for
+// structure, components, classes and CSS: src/pages/fix/best-usb-size-for-djing.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/fix/best-usb-size-for-djing#article',
+  headline: 'Qual o tamanho de pen drive que um DJ precisa de verdade',
+  description: 'Quantas tracks cabem num pen drive de DJ, por que drive maior não é mais seguro no CDJ, e o tamanho que profissional carrega.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/best-usb-size-for-djing#webpage' },
+  image: 'https://www.savemygig.com/og/best-usb-size-for-djing.png',
+};
+---
+<Base
+  title="Qual pen drive para DJ: 32GB, 64GB ou 128GB | Save My Gig"
+  description="Quantas tracks cabem num pen drive de DJ, por que drive maior não é mais seguro no CDJ, e o tamanho que profissional carrega."
+  path="/fix/best-usb-size-for-djing"
+  ogImage="/og/best-usb-size-for-djing.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line">Tamanho_Do_Drive</div>
+    <h1 style="margin-bottom:1.5rem">DE QUANTOS GB PRECISA UM<br><span class="accent">PEN DRIVE</span> DE DJ?</h1>
+
+    <div class="panel panel-go">
+      <p style="margin:0"><strong>Resposta curta: de 32 a 64GB, marca de qualidade, e compre dois.</strong> Isso é alguns milhares de tracks, mais música do que você tocaria numa semana de sets, com montagem rápida e FAT32 sem briga.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">A conta das tracks</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>MP3 320kbps:</strong> cerca de 9MB por track, então um drive de 32GB segura umas 3.500 tracks; um de 64GB, umas 7.000.</li>
+      <li><strong>Lossless (AIFF/WAV):</strong> de 40 a 60MB por track, então 32GB dá umas 600 tracks e 64GB umas 1.200, ainda mais de 20 horas de música.</li>
+      <li>Um set de 4 horas é de 60 a 80 tracks. Até o 32GB em lossless carrega oito sets inteiros de opções.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Por que drive gigante é pior na booth</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Tempo de montagem:</strong> o player indexa o banco de dados quando você pluga, e um drive de 256GB lotado pode te deixar olhando para uma tela de carregamento no meio da troca.</li>
+      <li><strong>Navegação:</strong> 20.000 tracks na tela de um CDJ não é biblioteca, é palheiro. Curadoria ganha de capacidade.</li>
+      <li><strong>Alcance da falha:</strong> quando o drive que tem tudo morre, tudo morre junto. Dois drives médios ganham de um gigante. <a href="/pt/fix/dj-usb-backup-strategy">A estratégia de dois drives &rarr;</a></li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">O que comprar de verdade</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>32 ou 64GB de uma marca grande, de preferência com corpo de metal (bebida na booth acontece), USB-A: funciona em todo player. Porta USB-C para armazenamento só aparece no CDJ-3000X e no CDJ-1500X.</li>
+      <li>Formate em <span class="mono" translate="no">FAT32 + MBR</span> não importa como ele veio de fábrica. <a href="/pt/fix/exfat-vs-fat32-cdj">O motivo está aqui</a>.</li>
+      <li>Dois iguais. Sempre dois. <a href="/pt/gear">Os modelos exatos em que confiamos &rarr;</a></li>
+    </ul>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="usb_size" lang="pt" />
+  </main>
+</Base>

@@ -1,0 +1,230 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+import Detail from '../../../components/Detail.astro';
+
+// FORMATAR PEN DRIVE PARA CDJ, BRAZILIAN PORTUGUESE. Source of truth for
+// structure, components, classes and CSS: src/pages/fix/format-usb-for-cdj.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+import { CHECKED } from '../../../data/facts.js';
+
+// CHECKED e uma string em ingles no facts.js. Renderizar em portugues e uma
+// decisao de copy, entao acontece aqui, nao no arquivo de dados. Mesmo helper
+// que src/pages/pt/knowledge/pioneer-dj/cdj-3000.astro usa.
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(CHECKED);
+
+// OS PASSOS DO HowTo SAO AS PALAVRAS VISIVEIS DA PAGINA. O passo 1 e o painel
+// de aviso; os passos 2 a 5 sao os quatro itens de "A versao de 60 segundos",
+// palavra por palavra, sem a marcacao. Cada `name` e um trecho literal do
+// proprio `text`. Se voce editar o <ol class="art-steps">, edite este array no
+// mesmo commit.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  '@id': 'https://www.savemygig.com/pt/fix/format-usb-for-cdj#howto',
+  name: 'Como formatar um pen drive para CDJ Pioneer (FAT32 + MBR)',
+  description: 'Formate um pen drive para que todo CDJ e XDJ Pioneer leia: sistema de arquivos FAT32, esquema de partição MBR, no macOS e no Windows, inclusive em drives acima de 32GB.',
+  totalTime: 'PT10M',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-20',
+  dateModified: '2026-07-26',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/format-usb-for-cdj#webpage' },
+  image: 'https://www.savemygig.com/og/format-usb-for-cdj.png',
+  supply: [{ '@type': 'HowToSupply', name: 'Um pen drive de 32 a 64 GB' }],
+  tool: [{ '@type': 'HowToTool', name: 'Utilitário de Disco do macOS ou o Formatar do Windows' }],
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: 'Copie tudo para fora antes',
+      text: 'Formatar apaga o drive para sempre. Copie tudo para fora antes.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Mac',
+      text: 'Mac: Utilitário de Disco → Visualizar → Mostrar Todos os Dispositivos → selecione o drive, não o volume → Apagar → MS-DOS (FAT) + Master Boot Record.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Windows',
+      text: 'Windows: clique com o botão direito no drive dentro do Explorador de Arquivos → Formatar → FAT32 → a formatação rápida serve num drive em que você confia. Num drive suspeito, desmarque a rápida e deixe a formatação completa rodar: ela trabalha o drive inteiro, então serve também como teste de estresse.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Ponha música nele com o rekordbox',
+      text: 'Ponha música nele com o rekordbox 7.2.13 ou mais recente, no modo EXPORT. Não arraste arquivos.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Carregue uma track dele num player',
+      text: 'Carregue uma track dele num player antes de precisar dele de verdade.',
+    },
+  ],
+};
+---
+<Base
+  title="Como formatar pen drive para CDJ: FAT32 + MBR | Save My Gig"
+  description="Sistema de arquivos FAT32, esquema de partição MBR: a configuração que todo CDJ e XDJ Pioneer lê. Mais as duas armadilhas, o Windows escondendo o FAT32 e o Mac escondendo o Esquema."
+  path="/fix/format-usb-for-cdj"
+  ogImage="/og/format-usb-for-cdj.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt">Início</a> <span aria-hidden="true">/</span> <a href="/pt/faq">Soluções</a> <span aria-hidden="true">/</span> <span>Formatar um pen drive</span>
+    </nav>
+
+    <div class="status-line">Guia_De_Formatacao</div>
+    <h1 class="art-h1">Formatar um pen drive para <span class="accent">CDJ</span></h1>
+    <p class="dim art-updated">Revisado: {UPDATED} · cerca de 10 minutos</p>
+
+    <div class="panel panel-go">
+      <p style="margin:0">
+        <strong>A resposta:</strong> sistema de arquivos <span class="mono" translate="no">FAT32</span>,
+        esquema de partição <span class="mono" translate="no">MBR</span>, num drive de 32 a 64&nbsp;GB.
+        Todo CDJ e XDJ da era rekordbox lê FAT32, e MBR é o esquema que
+        recomendamos (o porquê está abaixo).
+      </p>
+    </div>
+
+    <div class="panel panel-warn" style="margin-top:0.8rem">
+      <p style="margin:0">Formatar <strong>apaga o drive para sempre</strong>. Copie tudo para fora antes.</p>
+    </div>
+
+    <h2 class="art-h2">A versão de 60 segundos</h2>
+    <ol class="art-steps">
+      <li><strong>Mac:</strong> Utilitário de Disco &rarr; Visualizar &rarr; <strong>Mostrar Todos os Dispositivos</strong> &rarr; selecione o <strong>drive</strong>, não o volume &rarr; Apagar &rarr; <span class="mono" translate="no">MS-DOS (FAT)</span> + <span class="mono" translate="no">Master Boot Record</span>.</li>
+      <li><strong>Windows:</strong> clique com o botão direito no drive dentro do Explorador de Arquivos &rarr; Formatar &rarr; <span class="mono" translate="no">FAT32</span> &rarr; a formatação rápida serve num drive em que você confia. Num drive suspeito, desmarque a rápida e deixe a formatação completa rodar: ela trabalha o drive inteiro, então serve também como teste de estresse.</li>
+      <li>Ponha música nele com o <strong>rekordbox 7.2.13 ou mais recente, no modo EXPORT</strong>. Não arraste arquivos.</li>
+      <li>Carregue uma track dele num player <strong>antes de precisar dele de verdade</strong>.</li>
+    </ol>
+
+    <h2 class="art-h2">Se alguma coisa der errado</h2>
+    <p class="dim art-lead">Abra só a que descreve você.</p>
+
+    <Detail
+      q="O FAT32 não aparece na lista no Windows"
+      hint="Quase sempre é um drive acima de 32GB. Três saídas."
+    >
+      <p>
+        Isso é um limite da <strong>janela de formatação do Windows</strong>, não do FAT32.
+        O FAT32 em si suporta volumes de até <strong>2&nbsp;TB</strong>. A Microsoft simplesmente
+        parou de oferecer ele acima de 32&nbsp;GB na ferramenta gráfica. Escolha a que
+        servir para você:
+      </p>
+      <ul class="checklist">
+        <li><strong>Use um formatador gratuito.</strong> O <span class="mono" translate="no">guiformat</span> (ou o gêmeo de linha de comando, <span class="mono" translate="no">fat32format</span>), os dois da Ridgecrop Consultants, formatam um drive grande em FAT32 em poucos segundos. É o que a maioria dos DJs acaba usando.</li>
+        <li><strong>Linha de comando do Windows 11.</strong> A Microsoft levou o limite de FAT32 do comando <span class="mono" translate="no">format</span> embutido para 2&nbsp;TB (anunciado para o Windows 11 em 2024), enquanto a janela gráfica continua parando em 32&nbsp;GB. Abra um terminal como administrador e rode <span class="mono" translate="no">format X: /FS:FAT32 /Q</span>, trocando o X pela letra da sua unidade. Confira a letra duas vezes; se a sua versão recusar, o guiformat acima faz o mesmo trabalho.</li>
+        <li><strong>Diminua o drive.</strong> Gerenciamento de Disco &rarr; reduza o volume para 32&nbsp;GB &rarr; formate essa partição em FAT32. Você perde o resto da capacidade, o que num drive de gig quase nunca faz falta.</li>
+      </ul>
+      <p>
+        A alternativa tentadora é o exFAT, porque o Windows oferece ele ali mesmo na
+        lista. Não pegue, a não ser que você tenha certeza de que todo player em que
+        vai encostar lê exFAT.
+        <a href="/pt/fix/exfat-vs-fat32-cdj">Quais players leem &rarr;</a>
+      </p>
+    </Detail>
+
+    <Detail
+      q="Não existe opção de Esquema no Utilitário de Disco do Mac"
+      hint="Você selecionou o volume em vez do drive."
+    >
+      <p>
+        O Utilitário de Disco esconde o esquema de partição a menos que você esteja
+        olhando para o <strong>dispositivo físico</strong>. Por padrão ele só te mostra o
+        volume que está em cima dele.
+      </p>
+      <ul class="checklist">
+        <li>No Utilitário de Disco, escolha <strong>Visualizar &rarr; Mostrar Todos os Dispositivos</strong>.</li>
+        <li>A barra lateral agora mostra o drive com o volume <strong>recuado embaixo dele</strong>.</li>
+        <li>Selecione a <strong>entrada de cima</strong>, a que tem o nome do fabricante, não a recuada.</li>
+        <li>Clique em Apagar. O menu <strong>Esquema</strong> aparece agora. Escolha <span class="mono" translate="no">Master Boot Record</span>.</li>
+      </ul>
+      <p>
+        Isso importa mais do que parece. Apagar só o volume deixa o mapa de partição
+        existente no lugar, e em qualquer drive moderno esse mapa é <strong>GPT</strong>. A
+        formatação avisa que deu certo, o drive monta perfeitamente no seu Mac, e o CDJ
+        recusa. Essa é a história número um do "mas formatou certinho".
+      </p>
+    </Detail>
+
+    <Detail
+      q="Formatou certinho e o CDJ continua não lendo"
+      hint="Quatro causas, na ordem que vale conferir."
+    >
+      <ul class="checklist">
+        <li><strong>O esquema é GPT, não MBR.</strong> O suspeito de sempre, e invisível a partir do computador. Apague de novo selecionando o dispositivo em vez do volume (veja acima). No Windows confira em Gerenciamento de Disco &rarr; botão direito no disco &rarr; Propriedades &rarr; Volumes. A AlphaTheta documenta isso para modelos específicos: os artigos de suporte dela afirmam que o CDJ-3000 (artigo 4406135001625) e o XDJ-AN (artigo 53214453591009) não suportam o GUID Partition Map. Para o resto da linha nenhum esquema é publicado, então MBR é a resposta documentada do fabricante onde ele nomeia uma, e a nossa recomendação em todo o resto. Não custa nada e elimina uma variável.</li>
+        <li><strong>Está em exFAT, não em FAT32.</strong> Drives acima de 32&nbsp;GB saem em exFAT de fábrica, então um pen drive "profissional" de 64&nbsp;GB novinho falha num CDJ mais antigo direto da embalagem. Se você está usando um <strong>cartão SD</strong> em vez de um pen drive, exFAT nem é opção: o rekordbox não exporta para cartão SD em exFAT.</li>
+        <li><strong>A música foi arrastada, não exportada.</strong> O player pode não mostrar nada na visão de playlist. Teste o botão de navegação <strong>FOLDER</strong>: se as tracks estiverem lá, foi isso que aconteceu.</li>
+        <li><strong>O próprio drive está falhando.</strong> Se ele formata mas dá erro no meio de uma cópia, pare de confiar nele. <a href="/pt/fix/dj-usb-backup-strategy">Dois drives idênticos, sempre &rarr;</a></li>
+      </ul>
+    </Detail>
+
+    <Detail
+      q="Como eu sei que deu certo mesmo?"
+      hint="Trinta segundos agora ganham de descobrir na booth."
+    >
+      <ul class="checklist">
+        <li><strong>Confira o formato.</strong> Mac: selecione o drive no Utilitário de Disco, e ele tem que dizer <span class="mono" translate="no">MS-DOS (FAT32)</span> e <span class="mono" translate="no">Master Boot Record</span>. Windows: botão direito no Explorador de Arquivos &rarr; Propriedades &rarr; Sistema de arquivos tem que dizer <span class="mono" translate="no">FAT32</span>.</li>
+        <li><strong>Exporte e depois ejete direito.</strong> Use o botão de ejetar do próprio rekordbox. Arrancar o drive no meio da gravação é o jeito mais comum de corromper o banco de dados que você acabou de construir.</li>
+        <li><strong>Carregue uma track num player de verdade.</strong> O seu, ou chegue cedo o bastante para testar no do clube. Um drive que nunca foi testado não é backup, é esperança.</li>
+      </ul>
+    </Detail>
+
+    <Detail
+      q="Que tamanho de drive eu compro?"
+      hint="De 32 a 64 GB. Maior é pior aqui."
+    >
+      <p>
+        De 32 a 64&nbsp;GB é o ponto certo: grande o bastante para uma biblioteca de
+        trabalho inteira, pequeno o bastante para formatar em FAT32 sem briga. Drives
+        maiores demoram mais para formatar, mais para o player escanear, e não te dão
+        nada numa gig.
+      </p>
+      <p>
+        O limite de FAT32 que vale conhecer é de <strong>4&nbsp;GB por arquivo</strong>, não por
+        drive. Um MP3 de 320kbps tem cerca de 9&nbsp;MB, e até um WAV longo sem compressão
+        raramente passa de 1&nbsp;GB, então numa biblioteca de música isso nunca aparece.
+        FAT32 tem outros tetos, um limite de 2&nbsp;TB por volume e as contagens de
+        arquivos e pastas por modelo que a AlphaTheta publica no artigo de suporte
+        4406512510105, mas nenhum deles alcança um drive de gig de 32 a 64&nbsp;GB.
+        <a href="/pt/fix/best-usb-size-for-djing">Mais sobre tamanho &rarr;</a> ·
+        <a href="/pt/gear">Drives que se comportam &rarr;</a>
+      </p>
+    </Detail>
+
+    <h2 class="art-h2">A regra que vale guardar</h2>
+    <p class="art-close">
+      <strong>Formate para o player mais antigo que você pode encontrar, não para o mais
+      moderno que você tem.</strong> O palco principal do festival tem CDJ-3000. O porão do
+      after tem um CDJ-2000 com queimadura de cigarro. FAT32 mais MBR toca nos dois.
+    </p>
+
+    <ArticleCTA article="format_guide" lang="pt" />
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .art-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .art-updated { font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .art-h2 { font-size: clamp(1.3rem, 4.5vw, 1.7rem); margin: 2.4rem 0 0.9rem; text-transform: none; letter-spacing: -0.015em; }
+  .art-lead { font-size: 0.9rem; margin-bottom: 1rem; }
+  .art-steps { margin: 0 0 1rem 1.15rem; color: var(--text-dim); line-height: 1.75; }
+  .art-steps li { margin-bottom: 0.55rem; }
+  .art-steps strong { color: var(--text); }
+  .art-close { color: var(--text-dim); line-height: 1.7; }
+  .art-close strong { color: var(--text); }
+</style>

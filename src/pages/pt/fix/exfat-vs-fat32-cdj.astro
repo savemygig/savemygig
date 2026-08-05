@@ -1,0 +1,89 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// exFAT OU FAT32 NO CDJ, BRAZILIAN PORTUGUESE. Source of truth for structure,
+// components, classes and CSS: src/pages/fix/exfat-vs-fat32-cdj.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/fix/exfat-vs-fat32-cdj#article',
+  headline: 'exFAT ou FAT32 no CDJ: qual formato funciona de verdade',
+  description: 'Qual formato funciona em CDJ-2000, CDJ-3000 e players XDJ? A tabela de compatibilidade, o mito dos 4GB e a configuração que funciona em todo lugar.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/exfat-vs-fat32-cdj#webpage' },
+  image: 'https://www.savemygig.com/og/exfat-vs-fat32-cdj.png',
+};
+---
+<Base
+  title="exFAT ou FAT32 para pen drive de CDJ | Save My Gig"
+  description="Qual formato funciona em CDJ-2000, CDJ-3000 e players XDJ? A tabela de compatibilidade, o mito dos 4GB e a configuração que funciona em todo lugar."
+  path="/fix/exfat-vs-fat32-cdj"
+  ogImage="/og/exfat-vs-fat32-cdj.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line">Questao_De_Formato</div>
+    <h1 style="margin-bottom:1.5rem">exFAT ou <span class="accent">FAT32</span>:<br>QUAL DELES PARA CDJ?</h1>
+
+    <div class="panel panel-go">
+      <p style="margin:0"><strong>A resposta que nunca falha:</strong> FAT32 com mapa de partição MBR toca em todo player compatível com rekordbox já fabricado. exFAT só funciona em hardware mais recente. Se você toca em booth que não é sua, FAT32 é a escolha profissional.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Compatibilidade em detalhe</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><span class="mono" translate="no">FAT32 + MBR</span>, funciona em CDJ-850, 900, 2000, 2000NXS/NXS2, 3000 e em todo XDJ. A chave universal.</li>
+      <!-- Escopo corrigido contra o FAQ oficial de exFAT da AlphaTheta: ele
+           nomeia CDJ-3000, XDJ-RX3 e XDJ-XZ (limiares de firmware em facts.js),
+           e os FAQs de produto do CDJ-3000X e do XDJ-AZ acrescentam os dois. -->
+      <li><span class="mono" translate="no">exFAT</span>, suportado em CDJ-3000, CDJ-3000X, CDJ-1500X, XDJ-RX3, XDJ-XZ e XDJ-AZ (o firmware importa, veja a <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">tabela de players</a>); <strong>recusado por todo CDJ-2000, incluindo o NXS2</strong>, ainda comum em clubes do mundo inteiro. Uma armadilha que quase ninguém comenta: o rekordbox grava exFAT <strong>só em drives USB</strong>. Ele não exporta para <strong>cartão SD</strong> em exFAT de jeito nenhum, não importa o que o player suporte.</li>
+      <li><span class="mono" translate="no">NTFS / APFS</span>, nunca. O próprio manual do rekordbox da AlphaTheta lista NTFS como não suportado tanto em cartão SD quanto em drive USB, então o rekordbox nem exporta para ele.</li>
+      <li><span class="mono" translate="no">Esquema de partição</span>, escolha <span class="mono" translate="no">MBR</span>. A AlphaTheta documenta isso para modelos específicos: os artigos de suporte dela afirmam que o CDJ-3000 (artigo 4406135001625) e o XDJ-AN (artigo 53214453591009) não suportam o GUID Partition Map. Para o resto da linha o manual não fala de esquema, então MBR é a resposta documentada do fabricante onde ele nomeia uma, e a nossa recomendação em todo o resto. Drive deixado em GPT, que é o que você ganha ao apagar o volume em vez do dispositivo no Mac, é causa recorrente do clássico "formatou certinho e o player recusa". MBR não te custa nada.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">"Mas o FAT32 tem limite de 4GB"</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p>Por arquivo, não por drive, e esse é o único limite que importa. Nenhuma track de DJ chega perto de 4GB; até um WAV de 30 minutos fica abaixo de 1GB. Os únicos DJs que precisam de exFAT são os que carregam gravações de várias horas sem compressão no drive de gig, o que já é outro erro. FAT32 tem outros tetos, um limite de 2TB por volume e as contagens de arquivos e pastas por modelo que a AlphaTheta publica no artigo de suporte 4406512510105, mas num drive de música de 32 a 64GB nenhum deles aparece.</p>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">A armadilha: como os drives saem de fábrica</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>A maioria dos drives acima de 32GB sai <strong>em exFAT de fábrica</strong>, então um pen drive "profissional" de 64GB novinho falha num CDJ-2000 direto da embalagem.</li>
+      <li>O Windows não oferece FAT32 para drives grandes na janela de formatação; no Mac, escolha <span class="mono" translate="no">MS-DOS (FAT)</span> no Utilitário de Disco com <span class="mono" translate="no">Master Boot Record</span>. <a href="/pt/fix/format-usb-for-cdj">Passo a passo completo aqui</a>.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">A regra para guardar</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p><strong>Formate para o player mais antigo que você pode encontrar, não para o mais moderno que você tem.</strong> O palco principal do festival tem CDJ-3000; o porão do after tem um CDJ-2000 com queimadura de cigarro. FAT32 toca nos dois.</p>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="exfat_vs_fat32" lang="pt" />
+  </main>
+</Base>

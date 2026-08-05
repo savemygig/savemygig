@@ -1,0 +1,80 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// REKORDBOX NAO RECONHECE O PEN DRIVE, BRAZILIAN PORTUGUESE. Source of truth
+// for structure, components, classes and CSS:
+// src/pages/fix/rekordbox-not-detecting-usb.astro. Only the human readable
+// copy and the /pt hrefs differ.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/fix/rekordbox-not-detecting-usb#article',
+  headline: 'O rekordbox não reconhece o pen drive: por que o dispositivo não aparece e como resolver',
+  description: 'O pen drive sumiu da lista de dispositivos no modo EXPORT do rekordbox? As causas reais e as soluções, em ordem, para você exportar antes da gig e não durante.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/rekordbox-not-detecting-usb#webpage' },
+  image: 'https://www.savemygig.com/og/rekordbox-not-detecting-usb.png',
+};
+---
+<Base
+  title="rekordbox não reconhece o pen drive? Resolva | Save My Gig"
+  description="O pen drive sumiu da lista de dispositivos no modo EXPORT do rekordbox? Quase sempre é o sistema de arquivos ou o mapa de partição. As causas reais e as soluções, em ordem."
+  path="/fix/rekordbox-not-detecting-usb"
+  ogImage="/og/rekordbox-not-detecting-usb.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Drive_Nao_Aparece</div>
+    <h1 style="margin-bottom:1.5rem">O REKORDBOX NÃO VÊ SEU <span class="danger">PEN DRIVE</span>?<br />RESOLVA ANTES DA GIG</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Resposta curta:</strong> se o drive sumiu da lista de dispositivos, a causa é quase sempre uma de três: você não está no modo Export, o próprio sistema operacional não enxerga o drive, ou o drive está formatado de um jeito em que o rekordbox não consegue escrever. Confira nessa ordem.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">As checagens de 60 segundos</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Confirme que você está no modo Export.</strong> A árvore de dispositivos com o seu pen drive só aparece no Export. No canto superior esquerdo do rekordbox, saia do Performance ou do Lighting e vá para <span class="mono" translate="no">EXPORT</span>.</li>
+      <li><strong>Veja primeiro se o computador enxerga o drive.</strong> Abra o Finder (Mac) ou o Explorador de Arquivos (Windows). Se o pen drive também não estiver lá, isso não é problema de rekordbox, é problema de drive ou de conexão. Recoloque, teste outra porta, tire o hub do caminho.</li>
+      <li><strong>Plugue direto, sem hub.</strong> Hub USB e adaptador são o motivo mais comum de um drive montar no sistema e nunca chegar no rekordbox. Direto no computador.</li>
+      <li><strong>Reinicie o rekordbox com o drive já plugado.</strong> Algumas versões só varrem drives removíveis na abertura. Plugue primeiro, abra o programa depois.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Continua sumido? As causas reais</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Permissões do macOS.</strong> As versões mais novas do macOS bloqueiam o acesso de aplicativos a drives removíveis até você liberar. Ajustes do Sistema, Privacidade e Segurança, Arquivos e Pastas (ou Volumes Removíveis), ligue o rekordbox e reabra o programa. Essa pega muita gente depois de atualizar o sistema.</li>
+      <li><strong>Formato errado.</strong> Os exports vão para <span class="mono" translate="no">FAT32</span>, <span class="mono" translate="no">exFAT</span> (só drives USB) e, no macOS, <span class="mono" translate="no">HFS+</span>, nunca NTFS nem APFS. Um drive formatado em NTFS (comum no Windows) ou APFS (Mac) até monta no computador, mas não aceita um export. A resposta segura para todo CDJ é <span class="mono" translate="no">FAT32</span> mais <span class="mono" translate="no">MBR</span>. <a href="/pt/fix/format-usb-for-cdj">Passo a passo de formatação aqui</a>.</li>
+      <li><strong>Proteção contra gravação.</strong> Alguns drives têm uma chave física de trava, e outros chegam somente leitura. Se o sistema mostra o drive mas nada pode ser copiado para ele, a causa é essa.</li>
+      <li><strong>Um drive falhando.</strong> Se ele monta, some e volta, ou dá erro de leitura no Finder ou no Explorador de Arquivos, o hardware está indo embora. Copie sua música para fora agora e aposente o drive. <a href="/pt/fix/dj-usb-backup-strategy">Por que dois drives idênticos</a>.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Se a gig é daqui a pouco</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p>Se você tem as tracks no computador, a rota segura mais rápida é formatar um drive que funciona em <span class="mono" translate="no">FAT32</span> mais <span class="mono" translate="no">MBR</span>, exportar do zero pelo rekordbox e ejetar direito pelo botão de ejetar do rekordbox. Se o drive que falhou guarda a única cópia de alguma coisa, não formate, trate como resgate. O fluxo de emergência abaixo conduz tudo isso passo a passo, incluindo o que fazer quando não sobrou tempo.</p>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="rekordbox_not_detecting_usb" lang="pt" />
+  </main>
+</Base>

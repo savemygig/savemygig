@@ -1,0 +1,117 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// ESTRATEGIA DE BACKUP EM PEN DRIVE, BRAZILIAN PORTUGUESE. Source of truth
+// for structure, components, classes and CSS:
+// src/pages/fix/dj-usb-backup-strategy.astro. Only the human readable copy
+// and the /pt hrefs differ.
+//
+// OS PASSOS DO HowTo SAO AS PALAVRAS VISIVEIS DA PAGINA. Cada `text` abaixo e
+// o item correspondente da lista "A montagem (uma noite)", palavra por
+// palavra, sem a marcacao, e cada `name` e um trecho literal desse mesmo
+// texto. Se voce editar a lista visivel, edite este array no mesmo commit.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  '@id': 'https://www.savemygig.com/pt/fix/dj-usb-backup-strategy#howto',
+  name: 'A estratégia de backup em pen drive: dois drives, zero pânico',
+  description: 'O sistema de backup exato que DJ profissional usa: dois drives idênticos, exports espelhados, separação física. Uma noite para montar, uma carreira sem pânico de pen drive.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/dj-usb-backup-strategy#webpage' },
+  image: 'https://www.savemygig.com/og/dj-usb-backup-strategy.png',
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: 'Compre dois drives idênticos',
+      text: 'Compre dois drives idênticos, mesma marca, mesmo modelo, mesmo tamanho. Drives idênticos se comportam de forma idêntica nos players.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Formate os dois',
+      text: 'Formate os dois: FAT32 + MBR.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Exporte para os dois, um depois do outro',
+      text: 'Exporte para os dois, um depois do outro, no modo EXPORT do rekordbox. Mesmas playlists, mesma ordem. Ejete cada um pelo botão de ejetar do rekordbox.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Marque os dois',
+      text: 'Marque os dois. A e B, fita ou caneta. Numa booth escura você não quer ter que pensar.',
+    },
+  ],
+};
+---
+<Base
+  title="Backup de pen drive para DJ: dois drives | Save My Gig"
+  description="Dois drives idênticos, o mesmo export nos dois, guardados separados: o backup que funciona com você já de pé na booth. Uma noite para montar."
+  path="/fix/dj-usb-backup-strategy"
+  ogImage="/og/dj-usb-backup-strategy.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line">Estrategia_De_Backup</div>
+    <h1 style="margin-bottom:1.5rem">DOIS DRIVES,<br><span class="accent">ZERO PÂNICO</span></h1>
+
+    <div class="panel panel-go">
+      <p style="margin:0"><strong>O sistema inteiro numa frase:</strong> dois pen drives idênticos, o mesmo export nos dois, em dois bolsos diferentes. Todo o resto deste site existe para quem ainda não faz isso.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Por que redundância ganha de resgate</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p>Toda técnica de resgate, a nossa incluída, é uma aposta feita sob pressão. Um segundo drive espelhado não é aposta: é uma troca de quinze segundos com a sala dançando. Os profissionais de quem você nunca ouve história de pânico não têm sorte. Eles carregam o segundo drive, chato e sem graça.</p>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">A montagem (uma noite)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Compre dois drives idênticos</strong>, mesma marca, mesmo modelo, mesmo tamanho. Drives idênticos se comportam de forma idêntica nos players. <a href="/pt/gear">Os modelos em que confiamos &rarr;</a></li>
+      <li><strong>Formate os dois:</strong> <span class="mono" translate="no">FAT32</span> + <span class="mono" translate="no">MBR</span>. <a href="/pt/fix/format-usb-for-cdj">Passo a passo &rarr;</a></li>
+      <li><strong>Exporte para os dois, um depois do outro,</strong> no modo EXPORT do rekordbox. Mesmas playlists, mesma ordem. Ejete cada um pelo botão de ejetar do rekordbox.</li>
+      <li><strong>Marque os dois.</strong> A e B, fita ou caneta. Numa booth escura você não quer ter que pensar.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">O hábito (a cada gig)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>Mexeu na biblioteca esta semana? Exporte de novo para os <strong>dois</strong> drives. Backup desatualizado é armadilha.</li>
+      <li>Drive A na bag da gig. Drive B no chaveiro ou na jaqueta. <strong>Nunca no mesmo bolso, nunca na mesma bag.</strong></li>
+      <li>Na booth: toque do A. Se o A der problema no meio do set, ejete, coloque o B, siga mixando. Esse é o plano de emergência inteiro.</li>
+      <li>Uma vez por mês: faça backup da própria biblioteca do rekordbox (File &rarr; Library &rarr; Backup Library) num terceiro lugar, nuvem ou drive de casa.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">O que um segundo drive elimina de verdade</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p>Dois drives não são duas chances independentes. Você exporta para os dois do mesmo notebook, um depois do outro, da mesma biblioteca, então as causas que chegam pelo export chegam nos dois: um export ruim, uma versão do rekordbox retirada do ar, dois drives do mesmo lote de fábrica. Dizer que as probabilidades se multiplicam até virar zero seria mentira.</p>
+    <p>O que o segundo drive elimina mesmo é a falha que de fato acaba com gig: um drive físico morrendo, ou caindo, sumindo ou corrompendo, numa booth, com a sala esperando. Essa falha é comum, é a que você não resolve no local, e a resposta para ela é uma troca de quinze segundos. Isso não se compra num drive perfeito por preço nenhum; você consegue isso pelo custo de um segundo drive barato.</p>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="backup_strategy" lang="pt" />
+  </main>
+</Base>

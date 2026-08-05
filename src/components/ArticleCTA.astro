@@ -5,21 +5,30 @@
 // search traffic lands and they captured nothing. Sits below both CTAs so it
 // never competes with the rescue.
 import EmailCapture from './EmailCapture.astro';
-interface Props { article: string }
-const { article } = Astro.props;
+import { t } from '../i18n/ui';
+import { localizedPath, DEFAULT_LANG } from '../i18n/registry';
+// LANGUAGE AWARE 2026-08-05. This block closes all 13 /fix articles, which are
+// where cold search traffic lands. It shipped ENGLISH, with unprefixed English
+// hrefs, at the bottom of every translated article: the single largest English
+// leak on the translated site. `lang` defaults to English so no English page
+// changes by a byte.
+interface Props { article: string; lang?: string }
+const { article, lang = DEFAULT_LANG } = Astro.props;
+const S = t(lang).cta;
+const lp = (x) => localizedPath(x, lang);
 ---
 <div class="panel cta-exit" style="margin-top:3rem">
-  <h2 style="margin-bottom:0.75rem">Playing soon and still stuck?</h2>
-  <p class="dim">The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.</p>
-  <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement={`article_${article}`}><span aria-hidden="true">🚨</span> Start Emergency Mode
+  <h2 style="margin-bottom:0.75rem">{S.stuckH}</h2>
+  <p class="dim">{S.stuckP}</p>
+  <a href={lp("/emergency")} class="btn btn-quiet-danger" data-event="begin_checkout" data-placement={`article_${article}`}><span aria-hidden="true">🚨</span> {S.stuckBtn}
   </a>
 </div>
 <div class="panel" style="margin-top:1rem">
-  <p class="dim" style="margin-bottom:0.75rem"><strong>Never want to read this page again?</strong> Set up the prevention system once and this page becomes irrelevant.</p>
-  <a href="/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement={`article_${article}`}><span aria-hidden="true">🛡</span> See the prevention checklist
+  <p class="dim" style="margin-bottom:0.75rem"><strong>{S.preventP}</strong> {S.preventP2}</p>
+  <a href={lp("/prepare")} class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement={`article_${article}`}><span aria-hidden="true">🛡</span> {S.preventBtn}
   </a>
 </div>
 <div style="margin-top:1rem">
-  <EmailCapture source={`article_${article}`} />
+  <EmailCapture source={`article_${article}`} lang={lang} />
 </div>
-<a href="/emergency" class="sticky-cta" data-event="begin_checkout" data-placement={`article_${article}_sticky`}><span aria-hidden="true">🚨</span> PLAYING SOON? START EMERGENCY MODE</a>
+<a href={lp("/emergency")} class="sticky-cta" data-event="begin_checkout" data-placement={`article_${article}_sticky`}><span aria-hidden="true">🚨</span> {S.sticky}</a>

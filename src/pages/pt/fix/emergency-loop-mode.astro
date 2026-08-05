@@ -1,0 +1,87 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// EMERGENCY LOOP NO CDJ, BRAZILIAN PORTUGUESE. Source of truth for structure,
+// components, classes and CSS: src/pages/fix/emergency-loop-mode.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/fix/emergency-loop-mode#article',
+  headline: 'Emergency Loop no CDJ: o que é e o que fazer',
+  description: 'O seu CDJ entrou sozinho num loop de emergência no meio da track. O que o Emergency Loop significa, por que o player fez isso e como sair limpo.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/emergency-loop-mode#webpage' },
+  image: 'https://www.savemygig.com/og/emergency-loop-mode.png',
+};
+---
+<Base
+  title="Emergency Loop no CDJ: por que acontece e como sair | Save My Gig"
+  description="O seu CDJ entrou sozinho num loop de emergência no meio da track. O que o Emergency Loop significa, por que o player fez isso e como sair limpo."
+  path="/fix/emergency-loop-mode"
+  ogImage="/og/emergency-loop-mode.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Emergency_Loop</div>
+    <h1 style="margin-bottom:1.5rem">CDJ EM <span class="danger">EMERGENCY LOOP</span>:<br />POR QUE ACONTECE, COMO SAIR</h1>
+
+    <div class="panel panel-danger">
+      <!-- Gatilho oficial pelo manual do CDJ-3000X (DRI1956B): "The unit
+           automatically plays a Beat Loop if it can't start playing the next
+           track when the end of the current track is reached." A leitura de
+           saude do drive abaixo e a nossa interpretacao de booth para o caso
+           de falha de leitura. -->
+      <p style="margin:0"><strong>Resposta curta:</strong> o player chegou ao fim do áudio que conseguia tocar e repetiu os últimos beats em vez de ficar mudo. Se você simplesmente deixou a track acabar sem nada carregado, esse é o comportamento de projeto. Se ele disparou com a sua próxima track já pronta, ou no meio da track, o player não conseguiu ler adiante, quase sempre porque o drive está sofrendo.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Por que acontece</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>O pen drive está lento, falhando, ou foi desconectado no meio da leitura, e o player ficou sem áudio no buffer.</li>
+      <li>Um arquivo corrompido: os dados da track acabam antes da track.</li>
+      <li>Raramente: um drive sobrecarregado, cheio de WAVs enormes, na porta USB de um player mais antigo.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">No momento</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Não arranque o pen drive.</strong> O loop é o que está mantendo som na sala.</li>
+      <li>Carregue a próxima track no <strong>outro player</strong> (da fonte dele, se possível) e mixe para fora do loop.</li>
+      <li>Assim que estiver seguro no outro deck: ejete direito e fique de olho naquele drive, um Emergency Loop inexplicado é aviso, dois é drive morrendo.</li>
+      <li>Se a mesma track sempre dispara o loop, o arquivo está corrompido: baixe de novo ou exporte aquela track outra vez.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Depois da gig</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>Teste o drive num computador e copie tudo para fora enquanto ele ainda lê.</li>
+      <li>Formate por completo (FAT32 + MBR) e exporte de novo, ou aposente o drive se a formatação sofrer. <a href="/pt/gear">Substitutos confiáveis &rarr;</a></li>
+      <li>Emergency Loop é sintoma. A doença é ter um único ponto de falha. <a href="/pt/prepare">Conserte o sistema &rarr;</a></li>
+    </ul>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="emergency_loop" lang="pt" />
+  </main>
+</Base>

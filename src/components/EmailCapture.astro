@@ -5,17 +5,20 @@
  * upgrade offer ("keep it forever"), never a gate. Do not put this in
  * front of the card or inside the rescue tunnel.
  */
+import { t } from '../i18n/ui';
+import { localizedPath, DEFAULT_LANG } from '../i18n/registry';
 interface Props {
   /** where this form lives, for analytics: saved | prepare | card */
   source: string;
   title?: string;
   blurb?: string;
+  lang?: string;
 }
-const {
-  source,
-  title = 'Keep the Emergency Card',
-  blurb = 'We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.',
-} = Astro.props;
+const { source, lang = DEFAULT_LANG } = Astro.props;
+const C = t(lang).capture;
+// Defaults come from the catalogue rather than being English literals, so a
+// caller that passes no title gets the reader's language, not ours.
+const { title = C.title, blurb = C.blurb } = Astro.props;
 const id = `cap-${source}`;
 ---
 <!-- One registration, sitewide (Antonio). This form used to be its own little
@@ -35,8 +38,8 @@ const id = `cap-${source}`;
       required
       autocomplete="email"
       inputmode="email"
-      placeholder="you@email.com"
-      aria-label="Your email address"
+      placeholder={C.placeholder}
+      aria-label={C.emailLabel}
       aria-describedby={`${id}-msg`}
     />
     <button type="submit" class="btn btn-solid" style="margin:0">Register and send it</button>
@@ -53,7 +56,7 @@ const id = `cap-${source}`;
   <p class="cap-legal">
     Registering is free and counts everywhere on Save My Gig. We send a
     confirmation email first. Your address is stored with Brevo, our email
-    provider. Unsubscribe any time. <a href="/legal/privacy">Privacy</a>
+    provider. Unsubscribe any time. <a href={localizedPath("/legal/privacy", lang)}>Privacy</a>
   </p>
 </section>
 

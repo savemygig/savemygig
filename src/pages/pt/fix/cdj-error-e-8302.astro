@@ -1,0 +1,91 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// ERRO E-8302 NO CDJ, BRAZILIAN PORTUGUESE. Source of truth for structure,
+// components, classes and CSS: src/pages/fix/cdj-error-e-8302.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/fix/cdj-error-e-8302#article',
+  headline: 'Erro E-8302 no CDJ: o que significa e como resolver',
+  description: 'O erro E-8302 num CDJ Pioneer significa que o player não consegue ler os dados do seu pen drive, quase sempre um banco de dados do rekordbox corrompido. A solução imediata e a definitiva.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/cdj-error-e-8302#webpage' },
+  image: 'https://www.savemygig.com/og/cdj-error-e-8302.png',
+};
+---
+<Base
+  title="Erro E-8302 no CDJ: o que significa e a solução | Save My Gig"
+  description="E-8302 num CDJ Pioneer significa que o player não consegue ler os dados do pen drive, quase sempre banco de dados do rekordbox corrompido. A solução imediata e a definitiva."
+  path="/fix/cdj-error-e-8302"
+  ogImage="/og/cdj-error-e-8302.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <!-- A definicao de E-8302 ("CANNOT PLAY TRACK", os dados da track nao podem
+       ser lidos) e da propria AlphaTheta, nos artigos oficiais de codigos de
+       erro do CDJ-3000 e do CDJ-3000X: support.alphatheta.com/en-US/articles/
+       4406135959961 e /48523815124249. Verificado em 2026-07-26. -->
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Erro_E-8302</div>
+    <h1 style="margin-bottom:1.5rem">ERRO <span class="danger">E-8302</span> NO CDJ:<br />O QUE É, COMO RESOLVER</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Resposta curta:</strong> no CDJ-3000 e no CDJ-3000X, E-8302 aparece como <strong>CANNOT PLAY TRACK</strong>: o player não consegue ler os dados da track no seu pen drive. Esses são os dois players que a AlphaTheta documenta para o código, e DJs relatam o mesmo erro em CDJ-2000 mais antigos, onde significa a mesma coisa. Quase sempre é um banco de dados do rekordbox corrompido ou um sistema de arquivos errado, os dois resolvíveis, muitas vezes antes do seu set.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">O que causa</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Um export do rekordbox corrompido</strong>, quase sempre por arrancar o pen drive sem ejetar, ou por uma sincronização interrompida.</li>
+      <li><strong>Sistema de arquivos errado.</strong> NTFS nunca é suportado, nem pelo player nem pelo próprio rekordbox. Drive deixado num mapa de partição GPT é o outro culpado frequente. <span class="mono" translate="no">FAT32</span> com esquema <span class="mono" translate="no">MBR</span> é a combinação que funciona em qualquer booth (firmware mais recente de CDJ-3000 também lê exFAT, mas FAT32 nunca te surpreende).</li>
+      <li><strong>Um drive falhando</strong>, com setores ruins bem onde mora o banco de dados.</li>
+      <li><strong>Firmware antigo do player</strong> encontrando um formato de export novo do rekordbox.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">A solução imediata (na booth)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p class="assumed">
+      Recolocar o drive e testar o outro slot e o outro player já estão feitos.
+      Ejete pelo <span class="mono" translate="no">USB STOP</span>, nunca arrancando.
+    </p>
+    <ul class="checklist">
+      <li>Se outro player ler, toque daquele deck pelo Pro DJ Link.</li>
+      <li>Com um notebook: abra o pen drive no rekordbox. Se ele ler o drive, faça um export novo da playlist de hoje. Se não ler, copie seus arquivos de música para fora, formate em FAT32/MBR e exporte de novo as tracks de hoje.</li>
+      <li>Sem notebook e sem nenhum player que leia: o banco de dados acabou para hoje, vá para o fluxo de emergência abaixo e siga a rota de contorno.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">A solução definitiva (em casa)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>Formate o drive por completo (não a rápida) em <span class="mono" translate="no">FAT32</span> + <span class="mono" translate="no">MBR</span>. Se a formatação completa falhar ou se arrastar, aposente o drive.</li>
+      <li>Exporte sua biblioteca de novo, do zero, pelo rekordbox no modo EXPORT. Nunca copie um banco de dados antigo de volta para um drive limpo.</li>
+      <li>Atualize o firmware do player e o rekordbox.</li>
+      <li>Ande com dois drives idênticos e exports idênticos. E-8302 num drive é um contratempo; no seu único drive é um desastre.</li>
+    </ul>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="e8302" lang="pt" />
+  </main>
+</Base>

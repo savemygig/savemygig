@@ -1,0 +1,121 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// "FILE IS MISSING" NO REKORDBOX, BRAZILIAN PORTUGUESE. Source of truth for
+// structure, components, classes and CSS:
+// src/pages/fix/rekordbox-file-is-missing.astro. Only the human readable copy
+// and the /pt hrefs differ.
+//
+// DISCIPLINA DE FATO. Tudo que e operacional aqui vem de dois artigos de
+// suporte da AlphaTheta, os dois linkados no pe da pagina: 8974886246425 (a
+// causa da letra de unidade e a causa do iTunes) e 8113238460441 (Auto
+// Relocate e Relocate, os caminhos de menu, o marcador [!] e a afirmacao de
+// que um arquivo faltando fica bloqueado para REPRODUCAO E EXPORT).
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/fix/rekordbox-file-is-missing#article',
+  headline: 'rekordbox "File is Missing": o que significa e como relocalizar',
+  description: 'O [!] no rekordbox quer dizer que o arquivo mudou de lugar, não que a sua música sumiu. Por que acontece, como funcionam o Auto Relocate e o Relocate, e por que um arquivo faltando nunca chega no seu pen drive.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-02',
+  dateModified: '2026-08-02',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/rekordbox-file-is-missing#webpage' },
+  image: 'https://www.savemygig.com/og/rekordbox-file-is-missing.png',
+};
+---
+<Base
+  title="rekordbox 'File is Missing': como relocalizar | Save My Gig"
+  description="O [!] no rekordbox quer dizer que o arquivo mudou de lugar, não que a sua música sumiu. Por que acontece, como funcionam o Auto Relocate e o Relocate, e o que chega no seu pen drive."
+  path="/fix/rekordbox-file-is-missing"
+  ogImage="/og/rekordbox-file-is-missing.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">File_Is_Missing</div>
+    <h1 style="margin-bottom:1.5rem"><span class="danger">FILE IS MISSING</span>:<br />SUA MÚSICA CONTINUA LÁ</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Resposta curta:</strong> o <span class="mono" translate="no">[!]</span> quer dizer que o rekordbox perdeu o <strong>caminho</strong> até o arquivo, não o arquivo. O seu áudio está onde sempre esteve. O rekordbox guarda onde cada track mora, e quando esse lugar muda o ponteiro quebra. O que custa gig não é o aviso na tela: <strong>um arquivo faltando não pode ser exportado</strong>, então a track nunca chega no seu pen drive e você descobre na booth.</p>
+    </div>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">O que o [!] significa de verdade</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p>O rekordbox não guarda a sua música dentro dele. Ele guarda uma <strong>referência</strong> a cada arquivo: onde o áudio mora, mais tudo o que você construiu em cima dele, os cues, o beatgrid, o waveform, a participação nas playlists.</p>
+        <ul class="checklist">
+          <li>A track continua na sua coleção, marcada com <span class="mono" translate="no">[!]</span> na coluna de status.</li>
+          <li>Os seus cues, grids e playlists estão intactos. Eles pertencem ao banco de dados, não ao arquivo.</li>
+          <li>O arquivo de áudio não foi apagado pelo rekordbox. Alguma coisa moveu ele, renomeou a pasta dele, ou mudou o endereço do drive em que ele está.</li>
+          <li>Enquanto a referência não for consertada, aquela track não toca e não é exportada.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Por que acontece</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ul class="checklist">
+          <li><strong>O drive montou diferente.</strong> Essa é a causa que a AlphaTheta documenta para tracks importadas de dispositivos externos: o rekordbox pode não achar a track se a letra da unidade for diferente da que ela tinha na importação. Mesmo drive, mesmo arquivo, endereço diferente.</li>
+          <li><strong>Você importou direto de um pen drive.</strong> Adicionar tracks à sua coleção direto de um drive que depois vai com você para a gig é a versão comum do item acima. No momento em que aquele drive está ausente ou monta em outro endereço, toda track importada dele fica faltando.</li>
+          <li><strong>O iTunes moveu o arquivo.</strong> A AlphaTheta chama atenção para essa em particular: com a opção <em>Keep iTunes Media folder organized</em> ligada, editar a informação de uma track faz o iTunes mudar o arquivo de lugar por baixo de você. A recomendação deles é desligar essa opção antes de importar para o rekordbox.</li>
+          <li><strong>Você reorganizou suas pastas de música</strong> fora do rekordbox, ou renomeou uma pasta acima delas.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Resolva agora: Auto Relocate e Relocate</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p>Dois caminhos, os dois dentro do próprio rekordbox. Ou abra <span class="mono" translate="no">File</span> &rarr; <span class="mono" translate="no">Display All Missing Files</span> para chegar no Missing File Manager, ou clique com o botão direito em qualquer track marcada com <span class="mono" translate="no">[!]</span>.</p>
+        <ul class="checklist">
+          <li><strong>Auto Relocate</strong> procura nas pastas que você listou em <span class="mono" translate="no">Preferences</span> &rarr; <span class="mono" translate="no">Advanced</span> &rarr; <span class="mono" translate="no">Database</span> &rarr; <span class="mono" translate="no">Auto Relocate Search Folders</span>. Aponte isso para onde a sua música mora de verdade e ele resolve um lote inteiro sozinho.</li>
+          <li><strong>Relocate</strong> é a versão manual: você mostra ao rekordbox onde o arquivo está, um de cada vez. Esse é o caminho para uma track que foi parar num lugar incomum.</li>
+          <li><strong>Se as tracks vieram de um drive externo</strong>, a outra rota é devolver àquele drive a mesma letra de unidade que ele tinha na importação. É a recomendação da própria AlphaTheta, e conserta tudo daquele drive de uma vez.</li>
+          <li>Trabalhe no Missing File Manager até ele ficar vazio, não só até a playlist de hoje parecer limpa.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Por que isso é um problema de booth</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p>Um arquivo faltando fica bloqueado para <strong>export</strong>, não só para reprodução. Isso muda o que essa história é.</p>
+        <ul class="checklist">
+          <li>Você prepara em casa, exporta a playlist de hoje, e as tracks marcadas com <span class="mono" translate="no">[!]</span> não são gravadas no drive.</li>
+          <li>A playlist chega no player com cara de normal. Ela só está mais curta do que a que você montou.</li>
+          <li>Você descobre quais tracks no momento em que vai pegar uma delas.</li>
+          <li>Ou seja, a checagem é antes do export, não depois: limpe o Missing File Manager primeiro, depois exporte.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Evite da próxima vez</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <ul class="checklist">
+          <li><strong>Importe de um lugar só e deixe tudo lá.</strong> Uma pasta de música única, num drive interno ou dedicado, com o rekordbox apontado para ela. Nunca construa uma coleção com tracks que moram no pen drive que você leva para as gigs.</li>
+          <li><strong>Configure o Auto Relocate Search Folders uma vez</strong>, para a sua pasta de música de verdade. Isso transforma uma quebra futura em um clique, em vez de uma caçada.</li>
+          <li><strong>Mova arquivos com o rekordbox aberto e ciente</strong>, ou aceite que vai ter que relocalizar tudo depois.</li>
+          <li><strong>Desligue o <em>Keep iTunes Media folder organized</em></strong> antes de importar qualquer coisa de uma biblioteca do iTunes.</li>
+          <li><strong>Abra o Display All Missing Files como parte da preparação</strong>, do mesmo jeito que você confere o drive. Leva segundos e é a diferença entre descobrir em casa e descobrir na gig.</li>
+        </ul>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/rekordbox-export-failed">Quando o próprio export falha</a> <a href="/pt/fix/playlists-not-showing-cdj">Playlists não aparecem no CDJ</a> <a href="/pt/knowledge/pioneer-dj/rekordbox">A referência completa de rekordbox</a></p>
+      </div>
+    </details>
+
+    <p class="dim" style="font-size:0.85rem;margin-top:1.6rem">
+      Fontes, as duas da própria AlphaTheta:
+      <a href="https://support.alphatheta.com/en-US/articles/8974886246425" target="_blank" rel="noopener">por que arquivos importados de um dispositivo USB aparecem como File is Missing</a>
+      e
+      <a href="https://support.alphatheta.com/en-US/articles/8113238460441" target="_blank" rel="noopener">como usar o Auto Relocate e o Relocate</a>.
+    </p>
+
+    <ArticleCTA article="file_is_missing" lang="pt" />
+  </main>
+</Base>

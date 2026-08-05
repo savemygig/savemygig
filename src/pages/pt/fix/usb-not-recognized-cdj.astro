@@ -1,0 +1,81 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// CDJ NAO LE O PEN DRIVE, BRAZILIAN PORTUGUESE. Source of truth for
+// structure, components, classes and CSS: src/pages/fix/usb-not-recognized-cdj.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/fix/usb-not-recognized-cdj#article',
+  headline: 'O CDJ ou XDJ não lê o pen drive: guia completo de emergência',
+  description: 'O seu CDJ ou XDJ Pioneer não reconhece o pen drive. As checagens mais rápidas primeiro, as causas reais e a solução, você tocando em 45 minutos ou amanhã.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/fix/usb-not-recognized-cdj#webpage' },
+  image: 'https://www.savemygig.com/og/usb-not-recognized-cdj.png',
+};
+---
+<Base
+  title="CDJ não lê o pen drive? Guia de emergência | Save My Gig"
+  description="O seu CDJ ou XDJ não reconhece o pen drive. As checagens mais rápidas primeiro, as causas reais e a solução, você tocando em 45 minutos ou amanhã."
+  path="/fix/usb-not-recognized-cdj"
+  ogImage="/og/usb-not-recognized-cdj.png"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">USB_Nao_Reconhecido</div>
+    <h1 style="margin-bottom:1.5rem">O CDJ NÃO LÊ SEU <span class="danger">PEN DRIVE</span>?<br />FAÇA NESTA ORDEM</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Resposta curta:</strong> a maioria dos pen drives "mortos" na booth é problema de contato, de slot ou de formato, não de arquivo perdido.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">As checagens de 60 segundos</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p class="assumed">
+      Recolocar o drive, limpar o conector, testar o outro slot e o outro
+      player já estão feitos. Estão listados por completude, não como conselho.
+    </p>
+    <ul class="checklist">
+      <li>Dê 30 segundos ou mais, biblioteca grande monta devagar, principalmente em CDJ-2000 mais antigos.</li>
+      <li>Se ninguém estiver tocando nele: desligue e ligue o player e tente de novo.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Continua nada? As causas reais</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Formato errado:</strong> NTFS nunca funciona; exFAT só em firmware mais recente; mapa de partição GPT confunde a maioria dos players. A resposta universal é <span class="mono" translate="no">FAT32</span> + <span class="mono" translate="no">MBR</span>.</li>
+      <li><strong>Banco de dados corrompido:</strong> o player enxerga o drive mas mostra erro ou biblioteca vazia, veja <a href="/pt/fix/cdj-error-e-8302">E-8302</a>.</li>
+      <li><strong>Hardware morrendo:</strong> o drive também não monta em computador nenhum. Pare de plugar, você está dificultando o resgate.</li>
+      <li><strong>Drives famintos por energia:</strong> alguns SSDs e drives em formato de hub puxam mais energia do que a porta do CDJ entrega. Pen drive comum, de qualidade, é mais seguro.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Se você toca daqui a pouco</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p>Com um notebook por perto, quase sempre dá para salvar a gig: copie as tracks essenciais para o computador, formate o drive em FAT32/MBR, copie as tracks de volta e toque pela visão FOLDER. Você perde cues e Sync, mas fica com a gig. O fluxo de emergência abaixo conduz isso passo a passo, incluindo a rota sem notebook.</p>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="usb_not_recognized" lang="pt" />
+  </main>
+</Base>
