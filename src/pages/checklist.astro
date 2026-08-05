@@ -1578,9 +1578,14 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      restored, and the item text gains width because content now sits at
      1.25rem instead of 0.75 + 1.2 = 1.95rem. */
   @media (max-width: 640px) {
+    /* NO FULL BLEED (Antonio, 2026-08-05, from a live phone screenshot):
+       the category cards must not be wider than the readiness bar above
+       them. The negative --site-pad margins that pushed the card edges to
+       the viewport edge are gone; the card now sits inside the same
+       gutters as every other panel on the page. The toggle keeps its
+       --site-pad inset, so the title lands at the same inner line as the
+       readiness text. */
     .task-group.panel {
-      margin-left: calc(-1 * var(--site-pad));
-      margin-right: calc(-1 * var(--site-pad));
       padding-left: 0;
       padding-right: 0;
     }
