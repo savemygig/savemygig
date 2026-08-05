@@ -90,7 +90,7 @@ const id = `cap-${source}`;
   }
 </style>
 
-<script is:inline define:vars={{ SEND_TO: C.sendTo }}>
+<script is:inline define:vars={{ SEND_TO: C.sendTo, MSG: t(lang).capmsg }}>
   // Already registered on this device: no form, one tap, their address shown.
   document.querySelectorAll('.capture').forEach((wrap) => {
     let unlocked = false; let stored = '';
@@ -106,7 +106,7 @@ const id = `cap-${source}`;
         const btn = form.querySelector('button') as HTMLButtonElement | null;
         if (input) { input.value = stored; input.hidden = true; }
         if (btn) btn.textContent = SEND_TO + stored;
-        if (blurb) blurb.textContent = 'You are registered. One tap and it is in your inbox.';
+        if (blurb) blurb.textContent = MSG.registered;
       }
     }
   });
@@ -124,7 +124,7 @@ const id = `cap-${source}`;
 
       msg.className = 'cap-msg dim';
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-        msg.textContent = 'That email does not look right. Check it and try again.';
+        msg.textContent = MSG.bad;
         msg.className = 'cap-msg err';
         input.focus();
         return;
@@ -132,7 +132,7 @@ const id = `cap-${source}`;
 
       btn.disabled = true;
       const original = btn.textContent;
-      btn.textContent = 'Sending...';
+      btn.textContent = MSG.sending;
       msg.textContent = '';
 
       // Registration counts everywhere, and it counts even if the API coughs:
@@ -152,18 +152,18 @@ const id = `cap-${source}`;
         });
         const data = await res.json();
         if (data.ok) {
-          msg.textContent = 'Almost there. Check your inbox and tap the confirm link to get the card.';
+          msg.textContent = MSG.almost;
           msg.className = 'cap-msg ok';
           el.reset();
           if (typeof (window as any).gtag === 'function') {
             (window as any).gtag('event', 'email_capture', { placement: source });
           }
         } else {
-          msg.textContent = 'Something went wrong on our side. Try again in a minute.';
+          msg.textContent = MSG.server;
           msg.className = 'cap-msg err';
         }
       } catch (err) {
-        msg.textContent = 'No connection. Try again when you have signal.';
+        msg.textContent = MSG.offline;
         msg.className = 'cap-msg err';
       } finally {
         btn.disabled = false;

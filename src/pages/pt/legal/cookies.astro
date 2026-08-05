@@ -1,0 +1,113 @@
+---
+import Base from '../../../layouts/Base.astro';
+
+// POLITICA DE COOKIES, BRAZILIAN PORTUGUESE. Source of truth for structure,
+// panels, classes and every factual claim: src/pages/legal/cookies.astro.
+// TRADUCAO DE CORTESIA: os nomes dos cookies, os prazos, as entidades
+// nomeadas (Google Analytics 4, Google LLC, Brevo) e o link para a politica
+// do Google sao os mesmos do ingles. A versao em ingles e a que governa e
+// esta pagina abre dizendo isso.
+
+const UPDATED = '2 de agosto de 2026';
+---
+<Base
+  title="Política de Cookies | Save My Gig"
+  description="O único cookie opcional de analytics que o Save My Gig usa, o cookie de login, o que fica no seu navegador em vez de cookies, e como recusar ou apagar tudo isso."
+  path="/legal/cookies"
+  lang="pt"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line">LEGAL</div>
+    <h1 style="margin-bottom:0.6rem">Política de Cookies</h1>
+    <p class="dim" style="margin-bottom:1.2rem">Última atualização: {UPDATED} · Parte da <a href="/pt/legal">prateleira jurídica</a></p>
+
+    {/* AVISO DE PRECEDENCIA. Este link aponta de proposito para a pagina em
+        ingles: e o unico lugar do site traduzido onde isso e correto. */}
+    <p class="dim" style="margin-bottom:2rem">
+      Esta é uma tradução de cortesia, feita para você entender o conteúdo.
+      A versão em inglês é a que vale e prevalece em caso de divergência:
+      <a href="/legal/cookies">leia a Cookie Policy em inglês</a>.
+    </p>
+
+    <p class="dim" style="margin-bottom:2rem">
+      Versão curta: este site não grava nenhum cookie até você aceitar o
+      analytics no banner ou entrar numa conta. Entrar na conta grava um cookie
+      estritamente necessário, que mantém você logado, e mais nada. O analytics
+      é opcional e vem desligado. Se você recusar, o site funciona exatamente
+      igual.
+    </p>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.6rem">A única categoria de cookies que usamos</h2>
+      <p class="dim">
+        <strong>Analytics (opcional, desligado por padrão).</strong> Se você
+        aceitar no banner, a gente carrega o Google Analytics 4 (Google LLC),
+        que grava cookies começando com <span class="mono" translate="no">_ga</span>.
+        Usamos ele para ver quais páginas ajudam os DJs de verdade e onde as
+        pessoas travam, nada além disso. Se você recusar, o Google Analytics
+        nunca é carregado e esses cookies nunca são gravados. O Google descreve
+        o próprio processamento na política de privacidade dele em
+        <a href="https://policies.google.com/privacy" rel="noopener">policies.google.com/privacy</a>.
+      </p>
+      <p class="dim" style="margin-bottom:0">
+        A gente não grava <strong>nenhum cookie de publicidade</strong> e não faz
+        <strong>nenhum rastreamento entre sites</strong>, com ou sem consentimento.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.6rem">O cookie de login (estritamente necessário)</h2>
+      <p class="dim" style="margin-bottom:0">
+        Se você se cadastrar ou entrar na conta, a gente grava um cookie chamado
+        <span class="mono" translate="no">smg_s</span>. É ele que mantém este
+        dispositivo logado. Ele guarda um token de sessão assinado, não um ID de
+        rastreamento, dura 90 dias e nunca é usado para analytics nem para
+        publicidade. Sair da conta ou excluir a conta remove ele. Se você nunca
+        entrar numa conta, esse cookie nunca é gravado.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.6rem">O que fica no seu navegador em vez de cookies</h2>
+      <p class="dim">
+        O site guarda alguns dados no armazenamento local do seu navegador. O
+        armazenamento local não é cookie e nunca viaja sozinho junto com as suas
+        requisições. Ele fica no seu dispositivo, a menos que você peça para a
+        gente mover: o botão de mandar a lista por e-mail envia a sua lista para
+        a sua caixa de entrada através da Brevo, e a sincronização da conta
+        guarda uma cópia nos nossos servidores para os seus outros dispositivos
+        conseguirem carregar. Os dois estão descritos na
+        <a href="/pt/legal/privacy">Política de Privacidade</a>. Ele guarda a sua
+        própria escolha de cookies (para o banner não perguntar a cada visita),
+        o seu checklist (itens, edições, marcações, notas), o seu cadastro neste
+        dispositivo, incluindo o endereço de e-mail e o nome com que você se
+        cadastrou, e algumas preferências pequenas, como avisos que você já
+        dispensou.
+      </p>
+      <p class="dim" style="margin-bottom:0">
+        O site também pode instalar um pequeno cache offline (um service worker)
+        para as páginas de resgate continuarem funcionando numa booth de porão
+        sem sinal. Esse cache contém as nossas páginas, nada sobre você.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.6rem">Mudar de ideia</h2>
+      <p class="dim" style="margin-bottom:0">
+        Limpe os cookies deste site no seu navegador e o banner pergunta de novo
+        na sua próxima visita. Cuidado com a opção nuclear: limpar todos os
+        dados do site também apaga o seu checklist deste dispositivo, então
+        baixe ou mande a sua lista por e-mail antes. Você também pode bloquear
+        os cookies deste site por completo nas configurações do seu navegador; o
+        fluxo de resgate não precisa deles.
+      </p>
+    </div>
+
+    <p class="dim" style="font-size:0.85rem;margin-top:2rem">
+      Esta política faz parte da <a href="/pt/legal">prateleira jurídica</a>, ao
+      lado da <a href="/pt/legal/privacy">Política de Privacidade</a>. Dúvidas:
+      <a href="mailto:info@savemygig.com">info@savemygig.com</a>.
+    </p>
+  </main>
+</Base>

@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// CARD PRONTO, BRAZILIAN PORTUGUESE. Source of truth for structure, botões,
+// classes e data-* : src/pages/card-ready.astro. Página de chegada depois da
+// confirmação do e-mail (double opt-in da Brevo). O href do PDF é o arquivo
+// que existe, e ele não muda com o idioma.
+---
+<Base
+  title="O seu Emergency Card está pronto | Save My Gig"
+  description="Confirmado. Baixe o Emergency Card do DJ, pronto para imprimir."
+  path="/card-ready"
+  lang="pt"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line" >Confirmado</div>
+
+    <h1 style="margin-bottom:1rem">VOCÊ ESTÁ <span class="accent">DENTRO</span>.<br />AQUI ESTÁ O SEU CARD.</h1>
+
+    <p class="dim" style="margin-bottom:2.5rem">
+      Baixe ele e coloque num lugar onde você vai achar de verdade às 3 da manhã: nos arquivos do
+      seu celular, num print na galeria, ou impresso e dobrado dentro do case dos pen drives.
+    </p>
+
+    <div style="margin-bottom:2rem">
+      <a
+        href="/downloads/save-my-gig-emergency-card.pdf"
+        class="btn btn-solid"
+        download
+        data-event="card_download"
+        data-placement="card_ready"
+      >
+        Baixar o Emergency Card (PDF)
+      </a>
+      <a href="/pt/card" class="btn btn-neutral" data-event="step_completed" data-step="view_card_web">
+        Ou leia ele no site
+      </a>
+      <a href="/pt/checklist">Pegue também o checklist pré-gig de uma página</a>
+    </div>
+
+    <section class="panel" style="margin-bottom:1.25rem">
+      <h3 style="margin-bottom:0.75rem">Já que você está aqui</h3>
+      <p class="dim" style="margin-bottom:1rem">
+        O card é a emergência. O sistema é o que impede a emergência de acontecer.
+        Leva uma noite para montar e é de graça.
+      </p>
+      <a href="/pt/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="card_ready">
+        Ver o sistema de prevenção
+      </a>
+    </section>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.9rem">
+      A gente só manda e-mail quando alguma coisa salva uma gig. Cancele quando quiser,
+      um clique, sem ressentimento.
+    </p>
+  </main>
+</Base>

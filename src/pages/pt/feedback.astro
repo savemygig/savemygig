@@ -1,0 +1,191 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// FEEDBACK, BRAZILIAN PORTUGUESE. Source of truth for structure, form,
+// classes, CSS and script: src/pages/feedback.astro. Os `value` dos radios
+// continuam em ingles de proposito: eles viajam no POST para /api/feedback e
+// chegam na nossa caixa de entrada, entao sao dado, nao copy. Só os `label`
+// visiveis, os placeholders e as mensagens de status mudam.
+---
+<Base
+  title="Enviar feedback | Save My Gig"
+  description="Teve uma ideia ou achou um bug no Save My Gig? Conte pra gente. Sugestão, bug, qualquer coisa. Deixe o seu Instagram e a gente segue você de volta."
+  path="/feedback"
+  lang="pt"
+  noindex={true}
+>
+  <main class="wrap fb-page">
+    <p class="status-line">FEEDBACK</p>
+    <h1 class="fb-h1">Teve uma ideia?<br /><span class="accent">Achou um bug?</span></h1>
+    <p class="fb-lead">
+      Sugestão, bug, qualquer coisa. Este é um projeto feito por DJs, e ele melhora toda vez que
+      alguém conta o que está faltando. Deixe o seu Instagram e a gente segue você de volta.
+    </p>
+
+    <form class="fbp-form" id="fbForm" novalidate>
+      {/* NOT a <label> and NOT role="tablist" (2026-08-04 accessibility pass).
+          It is a radio group: `radiogroup` plus the visible text as its name.
+          Same element box, same class, so nothing moves. */}
+      <span class="fbp-label" id="fbTypeLabel">O que é isso?</span>
+      <div class="fbp-seg" role="radiogroup" aria-labelledby="fbTypeLabel">
+        <input type="radio" name="type" id="t-sug" value="Suggestion" checked />
+        <label for="t-sug">Sugestão</label>
+        <input type="radio" name="type" id="t-bug" value="Bug" />
+        <label for="t-bug">Bug</label>
+        <input type="radio" name="type" id="t-oth" value="Other" />
+        <label for="t-oth">Outro</label>
+      </div>
+
+      <label class="fbp-label" for="fb-msg">A sua mensagem</label>
+      {/* aria-describedby liga o campo à live region onde o handler escreve
+          "Escreva uma mensagem primeiro." Sem isso, o erro é anunciado uma
+          vez e depois fica inalcançável. */}
+      <textarea id="fb-msg" name="message" class="fbp-input fbp-msg" rows="5"
+        placeholder="O que está passando pela sua cabeça? Quanto mais específico, melhor."
+        aria-describedby="fbStatus" required></textarea>
+
+      <label class="fbp-label" for="fb-ig">O seu Instagram artístico <span class="fbp-hint">(para a gente seguir você de volta)</span></label>
+      <input type="text" id="fb-ig" name="instagram" class="fbp-input" placeholder="@seu.instagram" autocomplete="off" />
+
+      <div class="fbp-row">
+        <div class="fbp-col">
+          <label class="fbp-label" for="fb-name">Nome <span class="fbp-hint">(opcional)</span></label>
+          <input type="text" id="fb-name" name="name" class="fbp-input" placeholder="Como a gente te chama?" autocomplete="name" />
+        </div>
+        <div class="fbp-col">
+          <label class="fbp-label" for="fb-email">E-mail <span class="fbp-hint">(opcional, se quiser resposta)</span></label>
+          <input type="email" id="fb-email" name="email" class="fbp-input" placeholder="voce@email.com" autocomplete="email" />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-solid fbp-send">Enviar</button>
+      <p class="fbp-status" id="fbStatus" role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="fbp-done" id="fbDone" hidden>
+      <div class="fbp-done-mark" aria-hidden="true">✓</div>
+      <h2 class="fbp-done-h">Recebemos. Obrigado.</h2>
+      <p class="fbp-done-p">A gente lê todas, uma por uma. Se você deixou o seu Instagram, espere um follow.</p>
+      <div class="fbp-done-btns">
+        <a href="/pt" class="btn btn-ghost">Voltar para o início</a>
+        <button type="button" class="btn btn-ghost" id="fbAnother">Enviar outra</button>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style is:global>
+  .fb-page { max-width: var(--site-w); }
+  .fb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.9rem; }
+  .fb-lead { color: var(--text-dim); font-size: 1rem; line-height: 1.6; max-width: 40rem; margin-bottom: 2.2rem; }
+
+  .fbp-form { display: flex; flex-direction: column; }
+  .fbp-label {
+    font-family: var(--font-body); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--text); margin: 1.3rem 0 0.5rem;
+  }
+  .fbp-label:first-child { margin-top: 0; }
+  .fbp-hint { color: var(--text-faint); font-weight: 500; text-transform: none; letter-spacing: 0; font-size: 0.78rem; }
+
+  /* Segmented type control, big and tappable. */
+  .fbp-seg { display: flex; gap: 0; border: var(--stroke) solid var(--edge); border-radius: var(--radius); overflow: hidden; width: fit-content; max-width: 100%; }
+  .fbp-seg input { position: absolute; opacity: 0; pointer-events: none; }
+  .fbp-seg label {
+    font-family: var(--font-display); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.02em;
+    text-transform: uppercase; color: var(--text-dim); background: var(--surf);
+    padding: 0.7rem 1.3rem; cursor: pointer; border-right: var(--stroke) solid var(--edge);
+    transition: background var(--t-fast), color var(--t-fast);
+  }
+  .fbp-seg label:last-of-type { border-right: none; }
+  .fbp-seg input:checked + label { background: var(--red); color: #0a0a0b; }
+  .fbp-seg input:focus-visible + label { outline: 2px solid var(--red); outline-offset: 2px; }
+
+  .fbp-input {
+    width: 100%; padding: 0.85rem 1rem; font-family: inherit; font-size: 16px; color: var(--text);
+    background: var(--bg); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
+  }
+  .fbp-input::placeholder { color: var(--text-faint); }
+  .fbp-input:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; border-color: var(--red); }
+  .fbp-msg { resize: vertical; min-height: 7rem; line-height: 1.55; }
+
+  .fbp-row { display: flex; gap: 1rem; }
+  .fbp-col { flex: 1; display: flex; flex-direction: column; }
+
+  .fbp-send { width: 100%; margin-top: 1.8rem; }
+  .fbp-status { margin: 0.9rem 0 0; font-size: 0.9rem; color: var(--text-dim); min-height: 1.2rem; }
+  .fbp-status:empty { display: none; }
+  .fbp-status.ok { color: var(--green); }
+  .fbp-status.err { color: var(--red); }
+
+  .fbp-done { padding: 2rem 0; }
+  .fbp-done-mark {
+    width: 56px; height: 56px; margin: 0 0 1.1rem; border-radius: var(--radius-round);
+    background: var(--green-dim); border: var(--stroke) solid var(--green-border); color: var(--green);
+    display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 700;
+  }
+  .fbp-done-h { font-size: clamp(1.6rem, 6vw, 2.2rem); margin-bottom: 0.6rem; }
+  .fbp-done-p { color: var(--text-dim); max-width: 28rem; margin: 0 0 1.6rem; }
+  .fbp-done-btns { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+
+  @media (max-width: 520px) {
+    .fbp-row { flex-direction: column; gap: 0; }
+    .fbp-seg { width: 100%; }
+    .fbp-seg label { flex: 1; text-align: center; padding: 0.7rem 0.4rem; }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('fbForm');
+  const statusEl = document.getElementById('fbStatus');
+  const done = document.getElementById('fbDone');
+  const another = document.getElementById('fbAnother');
+
+  if (form) {
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const fd = new FormData(form);
+      const message = (fd.get('message') || '').toString().trim();
+      if (!message) {
+        if (statusEl) { statusEl.textContent = 'Escreva uma mensagem primeiro.'; statusEl.className = 'fbp-status err'; }
+        return;
+      }
+      const btn = form.querySelector('button[type="submit"]');
+      if (btn) { btn.setAttribute('disabled', 'true'); btn.textContent = 'Enviando...'; }
+      if (statusEl) { statusEl.textContent = ''; statusEl.className = 'fbp-status'; }
+      try {
+        const res = await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            type: fd.get('type') || 'Other', message,
+            name: fd.get('name'), email: fd.get('email'),
+            instagram: fd.get('instagram'), page: 'feedback',
+          }),
+        });
+        const data = await res.json();
+        if (data && data.ok) {
+          form.hidden = true;
+          if (done) done.hidden = false;
+          done && done.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          if (statusEl) { statusEl.textContent = 'Não deu para enviar agora. Tente de novo em um minuto.'; statusEl.className = 'fbp-status err'; }
+          if (btn) { btn.removeAttribute('disabled'); btn.textContent = 'Enviar'; }
+        }
+      } catch (e) {
+        if (statusEl) { statusEl.textContent = 'Sem conexão. Tente de novo mais tarde.'; statusEl.className = 'fbp-status err'; }
+        if (btn) { btn.removeAttribute('disabled'); btn.textContent = 'Enviar'; }
+      }
+    });
+  }
+  if (another) {
+    another.addEventListener('click', () => {
+      form.reset();
+      if (done) done.hidden = true;
+      if (form) form.hidden = false;
+      const btn = form.querySelector('button[type="submit"]');
+      if (btn) { btn.removeAttribute('disabled'); btn.textContent = 'Enviar'; }
+      if (statusEl) { statusEl.textContent = ''; statusEl.className = 'fbp-status'; }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+</script>

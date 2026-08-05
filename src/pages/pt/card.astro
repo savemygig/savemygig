@@ -1,0 +1,100 @@
+---
+import Base from '../../layouts/Base.astro';
+import EmailCapture from '../../components/EmailCapture.astro';
+import { RUNLIST } from '../../data/runlist.js';
+
+// EMERGENCY CARD, BRAZILIAN PORTUGUESE. Source of truth for structure,
+// panels, classes e CSS: src/pages/card.astro.
+//
+// O bloco da booth continua saindo de src/data/runlist.js, a MESMA fonte que
+// a tela de emergência usa, para a ordem e o número de moves nunca divergirem
+// entre as duas superfícies. Não existe runlist.pt.js ainda, então a tradução
+// dos quatro moves mora aqui, indexada pelo verbo. No dia em que um
+// runlist.pt.js existir, este mapa sai e o import passa a ser ele.
+//
+// FOLDER e LINK são rótulos impressos no equipamento (modo de navegação
+// FOLDER, PRO DJ LINK) e ficam em inglês. REINICIAR e PEDIR não são rótulos,
+// são as palavras que o DJ tem que lembrar sozinho.
+const MOVES_PT = {
+  FOLDER: { verb: 'FOLDER', action: 'O banco de dados morreu. A música não.' },
+  LINK: { verb: 'LINK', action: 'Toque pelo drive do outro player.' },
+  RESTART: { verb: 'REINICIAR', action: 'Desligue e ligue o player morto.' },
+  BORROW: { verb: 'PEDIR', action: 'Pegue um drive emprestado do DJ do seu lado.' },
+};
+---
+<Base
+  title="Emergency Card do DJ: tire um print disto | Save My Gig"
+  description="A referência de emergência de uma página só, para quando o pen drive morre no meio da gig. Tire um print, imprima, deixe na bag. Grátis."
+  path="/card"
+  lang="pt"
+>
+  <main class="wrap">
+    <div class="status-line">Emergency_Card</div>
+    <h1 style="margin-bottom:0.5rem">O EMERGENCY <span class="accent">CARD</span></h1>
+    <p class="dim" style="margin-bottom:1.5rem"><span aria-hidden="true">📱</span> Tire um print desta página agora, ela funciona sem sinal, em qualquer booth, a qualquer hora.</p>
+
+    <div class="panel" style="border-color:rgba(0,255,102,0.3)">
+      <h2 style="margin-bottom:0.4rem">PEN DRIVE MORREU NA BOOTH</h2>
+      <p class="dim" style="font-size:0.85rem;margin-bottom:0.9rem">
+        Partimos do princípio de que você já recolocou ele e já tentou o outro
+        player. Estes são os quatro que um bom DJ ainda esquece sob pressão.
+      </p>
+      <ol class="card-moves">
+        {RUNLIST.map((s) => (
+          <li><strong>{(MOVES_PT[s.verb] ?? s).verb}</strong> <span>{(MOVES_PT[s.verb] ?? s).action}</span></li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="panel" style="border-color:rgba(255,176,32,0.3)">
+      <h2 style="margin-bottom:0.75rem">OS AJUSTES SAGRADOS</h2>
+      <ul class="checklist">
+        <li>Formato: <span class="mono" translate="no">FAT32</span> · Esquema: <span class="mono" translate="no">MBR</span> · Tamanho: 32 a 64 GB</li>
+        <li>Mac: Utilitário de Disco → Mostrar Todos os Dispositivos → selecione o DRIVE → MS-DOS (FAT) + Master Boot Record</li>
+        <li>Música nos drives de gig SÓ pelo modo EXPORT do rekordbox</li>
+        <li>Ejete pelo rekordbox E pelo player (<span translate="no">USB STOP</span>). Toda vez.</li>
+      </ul>
+    </div>
+
+    <div class="panel panel-danger">
+      <h2 style="margin-bottom:0.75rem">NUNCA (sob pressão)</h2>
+      <ul class="checklist">
+        <li>Nunca formate um drive que ainda tem arquivos não resgatados.</li>
+        <li>Nunca diga SIM quando um computador se oferecer para formatar o seu drive de gig.</li>
+        <li>Nunca fique replugando um drive que está falhando, cada montagem pode dificultar a recuperação.</li>
+        <li>Nunca saia de casa com um drive só. <strong>Dois drives idênticos, dois bolsos.</strong></li>
+      </ul>
+    </div>
+
+    <div style="text-align:left;margin:2rem 0 1rem">
+      <EmailCapture source="card" lang="pt" title="Quer isto em PDF para imprimir?"
+        blurb="Esta página é grátis para sempre, tire um print dela agora mesmo. Se você preferir a versão para imprimir guardada no seu e-mail, a gente manda." />
+    </div>
+    <p class="dim" style="font-size:0.85rem">savemygig.com/pt/emergency, o resgate guiado completo, grátis · Imprima esta página: ela gasta pouca tinta.</p>
+  </main>
+</Base>
+
+<style>
+  /* Compact on screen, still legible in a screenshot on a phone at arm's
+     length, and it prints. The verb leads so the eye finds the step it is on
+     without reading the sentence. */
+  .card-moves { list-style: none; counter-reset: cm; margin: 0; padding: 0; }
+  .card-moves li {
+    counter-increment: cm;
+    position: relative;
+    padding: 0.42rem 0 0.42rem 1.75rem;
+    line-height: 1.4;
+  }
+  .card-moves li::before {
+    content: counter(cm);
+    position: absolute; left: 0; top: 0.42rem;
+    width: 1.25rem; text-align: center;
+    font-family: var(--font-display); font-weight: 800;
+    color: var(--text-faint);
+  }
+  .card-moves strong {
+    font-family: var(--font-display); font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.01em;
+  }
+  .card-moves span { color: var(--text-dim); }
+</style>

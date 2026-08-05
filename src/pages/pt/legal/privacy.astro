@@ -1,0 +1,148 @@
+---
+import Base from '../../../layouts/Base.astro';
+
+// POLITICA DE PRIVACIDADE, BRAZILIAN PORTUGUESE. Source of truth for
+// structure, panels, classes and every legal fact: src/pages/legal/privacy.astro.
+// TRADUCAO DE CORTESIA: nenhum fato juridico foi adaptado, nenhuma entidade
+// nomeada foi trocada (Brevo, Sendinblue SAS, Cloudflare, Google Analytics 4,
+// LGPD), nenhuma referencia legal foi acrescentada nem removida. A versao em
+// ingles e a que governa e esta pagina abre dizendo isso.
+
+const UPDATED = '2 de agosto de 2026';
+---
+<Base
+  title="Política de Privacidade | Save My Gig"
+  description="O que o Save My Gig coleta (bem pouco), por quê, quem processa e quais são os seus direitos."
+  path="/legal/privacy"
+  lang="pt"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line">LEGAL</div>
+    <h1 style="margin-bottom:0.6rem">PRIVACIDADE, <span class="accent">SEM RODEIO</span></h1>
+    <p class="dim" style="margin-bottom:1.2rem">Última atualização: {UPDATED} · Parte da <a href="/pt/legal">prateleira jurídica</a></p>
+
+    {/* AVISO DE PRECEDENCIA. Este link aponta de proposito para a pagina em
+        ingles: e o unico lugar do site traduzido onde isso e correto. */}
+    <p class="dim" style="margin-bottom:2rem">
+      Esta é uma tradução de cortesia, feita para você entender o conteúdo.
+      A versão em inglês é a que vale e prevalece em caso de divergência:
+      <a href="/legal/privacy">leia a Privacy Policy em inglês</a>.
+    </p>
+
+    <p class="dim" style="margin-bottom:2rem">
+      Versão curta: o fluxo de resgate não precisa de nada seu. Sem conta, sem login, sem arquivo enviado.
+      Alguns recursos gratuitos (os checklists Advanced e Custom, a lista para imprimir, mandar uma cópia
+      para o seu e-mail) pedem que você se cadastre com um endereço de e-mail e um nome, mais um @ do
+      Instagram opcional que você pode deixar em branco. Isso é quase todo o dado pessoal que a gente
+      guarda; uma conta opcional acrescenta uma coisa, uma cópia sincronizada dos seus checklists, e o
+      botão de excluir dela apaga tudo.
+    </p>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.6rem">Cookies e analytics</h2>
+      <p class="dim">
+        Usamos o Google Analytics 4 para ver quais páginas ajudam de verdade e onde as pessoas travam.
+        Ele grava cookies, então a gente <strong>só carrega ele depois que você aceita</strong> no banner.
+        Se você recusar, nenhum cookie de analytics é gravado, e o site funciona exatamente igual.
+        O detalhe completo está na <a href="/pt/legal/cookies">Política de Cookies</a>.
+      </p>
+      <p class="dim" style="margin-bottom:0">
+        Para mudar de ideia depois, limpe os dados deste site no seu navegador e o banner pergunta de novo.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.6rem">Se você se cadastrar</h2>
+      <p class="dim">
+        O cadastro coleta o seu <strong>endereço de e-mail</strong>, um <strong>nome artístico ou primeiro
+        nome</strong> para o site saber como chamar você e, só se você quiser compartilhar, um
+        <strong>@ do Instagram artístico</strong>. O e-mail é usado para liberar os recursos que pedem
+        cadastro, para mandar o que você pediu (o seu checklist, o Emergency Card) e para o aviso ocasional
+        que pode salvar uma gig ou ajudar a sua carreira. Usamos double opt-in na lista de e-mail: você
+        recebe um e-mail de confirmação primeiro, e nada entra na lista até você clicar nele. Quando você
+        envia o formulário, a gente guarda os seus dados na Brevo na hora, marcados como não confirmados e
+        fora de toda lista de e-mail, então nenhuma campanha consegue alcançar eles.
+        Se você nunca clicar no link, você nunca entra na lista; para apagar um registro não confirmado,
+        escreva para <a href="mailto:info@savemygig.com">info@savemygig.com</a>.
+      </p>
+      <p class="dim">
+        Se você compartilhar o seu @ do Instagram, a gente usa ele exatamente para o que o formulário diz:
+        acompanhar o seu trabalho pela conta do Save My Gig. A gente também recebe um e-mail interno de
+        notificação a cada cadastro para conseguir fazer isso. O campo do Instagram é sempre opcional, e
+        deixar ele em branco não muda nada.
+      </p>
+      <p class="dim" style="margin-bottom:0">
+        Esses dados são processados pela <strong>Brevo</strong> (Sendinblue SAS, França), atuando como
+        nosso processador de dados. A gente não vende, não aluga e não compartilha eles com mais ninguém.
+        Todo e-mail tem cancelamento em um clique, e cancelar remove você. O seu checklist em si (itens,
+        edições, marcações) fica guardado no seu próprio navegador, no seu próprio dispositivo, não nos
+        nossos servidores, a menos que você crie uma conta (próxima seção).
+      </p>
+    </div>
+
+    <!-- Accounts section v1 (2026-07-29 build), flagged for Antonio's
+         review like terms and cookies were. -->
+    <div class="panel">
+      <h2 style="margin-bottom:0.6rem">Se você criar uma conta</h2>
+      <p class="dim">
+        A conta é opcional e acrescenta uma coisa: os seus checklists acompanham você entre dispositivos.
+        O login é o seu <strong>endereço de e-mail</strong>, comprovado pelo login do Google ou por um
+        link que a gente manda por e-mail. Não existem <strong>senhas</strong>, então não existe senha sua
+        para alguém roubar. Se você usar o Google, a gente recebe do Google o seu endereço de e-mail e mais
+        nada; a gente nunca vê a sua senha do Google nem os seus dados no Google.
+      </p>
+      <p class="dim">
+        Com uma conta, uma cópia dos seus checklists (os itens, as suas edições, as suas marcações, as suas
+        notas) fica guardada nos nossos servidores, hospedados pela <strong>Cloudflare</strong>, para os
+        seus outros dispositivos conseguirem carregar. De um jeito ou de outro, a lista de cada dispositivo
+        continua guardada nesse dispositivo.
+      </p>
+      <p class="dim" style="margin-bottom:0">
+        <strong>Excluir a sua conta</strong> é um botão na página do checklist. Ele remove a sua conta,
+        todo checklist sincronizado e o seu endereço de e-mail dos nossos registros, na hora, incluindo o
+        contato da lista de e-mail. O que fica é a cópia da sua lista no seu próprio navegador, porque
+        essa pertence ao seu dispositivo, não à gente.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.6rem">Se você mandar feedback</h2>
+      <p class="dim" style="margin-bottom:0">
+        O formulário de feedback manda para a gente o que você escreve, mais o seu nome, e-mail e Instagram
+        se você quiser deixar. Chega como um e-mail na nossa caixa de entrada, entregue pela Brevo, e a
+        gente usa para ler, responder se você pediu resposta e seguir você de volta se deixou o seu @.
+        Quer apagar uma mensagem sua? Escreva para
+        <a href="mailto:info@savemygig.com">info@savemygig.com</a> e ela some.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.6rem">Os seus direitos</h2>
+      <p class="dim" style="margin-bottom:0">
+        Se você está na UE ou no Reino Unido, pode pedir uma cópia do que a gente guarda sobre você, pedir
+        correção ou pedir exclusão. Escreva para
+        <a href="mailto:info@savemygig.com">info@savemygig.com</a> e a gente resolve.
+        A nossa base legal para a lista de e-mail e para os campos opcionais é o seu consentimento, que
+        você pode retirar quando quiser; excluir os seus dados remove dos nossos registros o seu endereço,
+        o seu nome artístico e o seu @ do Instagram. Isso vale no mundo inteiro, inclusive sob a LGPD do
+        Brasil: mesmo endereço, mesmo resultado.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.6rem">O que a gente nunca faz</h2>
+      <p class="dim" style="margin-bottom:0">
+        Não vendemos dados. Não fazemos rastreamento além do analytics
+        descrito acima. A gente nunca vê a sua música, os seus arquivos nem os seus drives.
+      </p>
+    </div>
+
+    <p class="dim" style="font-size:0.85rem;margin-top:2rem">
+      Operado a partir do Brasil · Contato:
+      <a href="mailto:info@savemygig.com">info@savemygig.com</a> ·
+      Alguns links de saída nas páginas de equipamento e de recuperação podem virar links de afiliado;
+      eles nunca mudam o que você paga e nunca aparecem dentro do fluxo de resgate.
+    </p>
+  </main>
+</Base>

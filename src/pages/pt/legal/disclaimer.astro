@@ -1,0 +1,152 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Disclaimer from '../../../components/Disclaimer.astro';
+
+// AVISO LEGAL, BRAZILIAN PORTUGUESE. Source of truth for structure, sections,
+// classes and CSS: src/pages/legal/disclaimer.astro. TRADUCAO DE CORTESIA:
+// nenhum fato juridico foi adaptado ao Brasil, nenhuma entidade nomeada foi
+// trocada, nenhuma referencia legal foi acrescentada. A versao em ingles e a
+// que governa e esta pagina abre dizendo isso.
+
+const UPDATED = '28 de julho de 2026';
+---
+<Base
+  title="Aviso Legal | Save My Gig"
+  description="O Save My Gig oferece orientação geral e gratuita sobre problemas de armazenamento e players de DJ. É fornecido no estado em que se encontra, sem garantia, e você segue por sua conta e risco."
+  path="/legal/disclaimer"
+  lang="pt"
+  crumbName="Aviso Legal"
+>
+  <main class="wrap">
+    <div class="status-line">LEGAL</div>
+    <h1 style="margin-bottom:0.6rem">Aviso Legal</h1>
+    <p class="dim" style="margin-bottom:1.2rem">Última atualização: {UPDATED} · Parte da <a href="/pt/legal">prateleira jurídica</a></p>
+
+    {/* AVISO DE PRECEDENCIA. Este link aponta de proposito para a pagina em
+        ingles: e o unico lugar do site traduzido onde isso e correto. */}
+    <p class="dim" style="margin-bottom:2rem">
+      Esta é uma tradução de cortesia, feita para você entender o conteúdo.
+      A versão em inglês é a que vale e prevalece em caso de divergência:
+      <a href="/legal/disclaimer">leia o Disclaimer em inglês</a>.
+    </p>
+
+    <Disclaimer variant="full" lang="pt" />
+
+    <h2 class="dsc-sec">O que este site é</h2>
+    <p>
+      O Save My Gig é um recurso gratuito escrito por DJs que trabalham. Ele
+      oferece orientação geral sobre problemas comuns com dispositivos de
+      armazenamento de DJ, media players e softwares de biblioteca. É publicado
+      de boa-fé e apenas para informação geral.
+    </p>
+
+    <h2 class="dsc-sec">Sem garantia</h2>
+    <p>
+      Todo o conteúdo é fornecido <strong>"no estado em que se encontra"</strong>
+      ("as is"), sem garantia de nenhum tipo, expressa ou implícita. Não
+      garantimos que a informação seja exata, completa, atual ou adequada ao seu
+      hardware, à sua versão de firmware, ao seu software ou à sua situação em
+      particular. Fabricantes mudam o comportamento de firmware e de software
+      sem aviso, e um passo que funcionou ontem pode não funcionar hoje.
+    </p>
+
+    <h2 class="dsc-sec">Risco de perda de dados</h2>
+    <p>
+      Alguns procedimentos descritos neste site, incluindo formatar, apagar,
+      reparticionar, reexportar e sobrescrever dispositivos de armazenamento,
+      <strong>destroem dados de forma permanente</strong>. Dados destruídos
+      dessa forma normalmente não são recuperáveis sem assistência
+      profissional, e às vezes não são recuperáveis de jeito nenhum. Você é o
+      único responsável por fazer backup dos seus arquivos antes de começar e
+      por confirmar que está operando no dispositivo correto.
+    </p>
+
+    <h2 class="dsc-sec">Backups do checklist e disponibilidade do serviço</h2>
+    <p>
+      O checklist pré-gig, o login da conta e a sincronização entre dispositivos
+      dependem dos nossos servidores e de infraestrutura de terceiros, que podem
+      cair e caem sem aviso, como qualquer outro serviço da internet. Não
+      garantimos disponibilidade e não garantimos que o seu checklist, as suas
+      listas salvas ou os dados da sua conta estarão sempre disponíveis
+      exatamente quando você precisar deles.
+    </p>
+    <p>
+      <strong>Baixe a sua lista, mantenha uma cópia impressa e faça backup dela
+      antes de sair para uma gig.</strong> Essa responsabilidade é sua, não
+      nossa. Se o nosso serviço estiver indisponível, ou se a sua lista não
+      tiver sido salva por qualquer outro motivo, e você não tiver guardado a
+      sua própria cópia, não somos responsáveis por nenhuma informação perdida,
+      atraso no seu set ou qualquer outra consequência disso.
+    </p>
+    <p>
+      Manutenções planejadas e mudanças técnicas grandes no site são em geral
+      agendadas de segunda a terça, o trecho mais calmo da semana de DJ no mundo
+      inteiro, para reduzir a interrupção. Isso é uma prática operacional, não
+      uma garantia: quedas não planejadas continuam podendo acontecer a qualquer
+      momento, em qualquer dia, e é exatamente por isso que manter o seu próprio
+      backup importa de todo jeito.
+    </p>
+
+    <h2 class="dsc-sec">Limitação de responsabilidade</h2>
+    <p>
+      Na máxima extensão permitida por lei, o Save My Gig, seus fundadores e
+      seus colaboradores não aceitam <strong>nenhuma responsabilidade</strong>
+      por qualquer perda ou dano de qualquer natureza decorrente ou relacionado
+      ao uso deste site ou à confiança no seu conteúdo. Isso inclui, sem
+      limitação: perda ou corrupção de dados, bibliotecas de música, playlists,
+      cue points ou metadados; danos a dispositivos de armazenamento, players,
+      computadores ou outros equipamentos; apresentações perdidas, interrompidas
+      ou canceladas; e qualquer perda direta, indireta, incidental, consequente
+      ou econômica, inclusive perda de renda ou de reputação.
+    </p>
+    <p>
+      Nada neste aviso legal exclui ou limita responsabilidade nos casos em que
+      isso seria ilícito.
+    </p>
+
+    <h2 class="dsc-sec">Não é recuperação profissional de dados</h2>
+    <p>
+      Este site não substitui a recuperação profissional de dados. Se os
+      arquivos do seu drive são insubstituíveis, pare de usar o drive
+      imediatamente e consulte um serviço qualificado de recuperação de dados.
+      Continuar usando, remontando ou formatando um drive que está falhando pode
+      reduzir ou eliminar a chance de recuperação.
+    </p>
+
+    <h2 class="dsc-sec">Terceiros, hardware e links</h2>
+    <p>
+      Referências a fabricantes, produtos, softwares e serviços são apenas para
+      identificação e orientação. Não somos afiliados, endossados nem agimos em
+      nome da AlphaTheta, da Pioneer DJ ou de qualquer outro fabricante ou
+      fornecedor de software citado neste site. Todas as marcas pertencem aos
+      seus respectivos donos.
+    </p>
+    <p>
+      Alguns links para produtos ou serviços podem ser links de afiliado, o que
+      significa que podemos receber uma comissão sem nenhum custo adicional para
+      você. Isso nunca muda o que recomendamos, e não existem links de afiliado
+      nem patrocinados dentro do fluxo de resgate de emergência.
+    </p>
+
+    <h2 class="dsc-sec">A sua responsabilidade</h2>
+    <p>
+      Ao usar este site você confirma que entende os riscos descritos acima, que
+      está agindo por julgamento próprio e que aceita responsabilidade total
+      pelo resultado. Se você não está confortável com isso, não siga os passos
+      e procure ajuda profissional.
+    </p>
+
+    <h2 class="dsc-sec">Contato</h2>
+    <p>
+      Dúvidas sobre este aviso legal:
+      <a href="mailto:info@savemygig.com">info@savemygig.com</a>, ou use o
+      <a href="/pt/feedback">formulário de feedback</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .dsc-sec { font-size: 1.1rem; margin: 2rem 0 0.7rem; text-transform: none; letter-spacing: -0.01em; }
+  main p { color: var(--text-dim); }
+  main p strong { color: var(--text); }
+</style>

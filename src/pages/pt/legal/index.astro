@@ -1,0 +1,77 @@
+---
+import Base from '../../../layouts/Base.astro';
+
+// PRATELEIRA JURIDICA, BRAZILIAN PORTUGUESE. Source of truth for structure,
+// cards, classes and CSS: src/pages/legal/index.astro. Traducao de cortesia:
+// a versao em ingles continua sendo a que vale, e cada pagina desta pasta
+// abre com o aviso de precedencia apontando para o documento em ingles.
+const docs = [
+  {
+    name: 'Política de Privacidade',
+    href: '/pt/legal/privacy',
+    blurb: 'O que coletamos (bem pouco), por quê, quem processa e quais são os seus direitos.',
+  },
+  {
+    name: 'Aviso Legal',
+    href: '/pt/legal/disclaimer',
+    blurb: 'O que este site é, o risco real de perda de dados e os limites da nossa responsabilidade.',
+  },
+  {
+    name: 'Termos de Uso',
+    href: '/pt/legal/terms',
+    blurb: 'As regras para usar o site, as ferramentas gratuitas e os recursos que pedem cadastro.',
+  },
+  {
+    name: 'Política de Cookies',
+    href: '/pt/legal/cookies',
+    blurb: 'O único cookie opcional de analytics que usamos, e como recusar ou apagar ele.',
+  },
+];
+---
+<Base
+  title="Jurídico | Save My Gig"
+  description="Todos os documentos jurídicos do Save My Gig num lugar só: Política de Privacidade, Aviso Legal, Termos de Uso e Política de Cookies, escritos em linguagem clara."
+  path="/legal"
+  lang="pt"
+>
+  <main class="wrap">
+    <div class="status-line">LEGAL</div>
+    <h1 style="margin-bottom:0.8rem">A prateleira <span class="accent">jurídica</span></h1>
+
+    {/* AVISO DE PRECEDENCIA. Este link aponta de proposito para a pagina em
+        ingles: e o unico lugar do site traduzido onde isso e correto. */}
+    <p class="dim lg-lead" style="margin-bottom:1.2rem">
+      Esta é uma tradução de cortesia, feita para você entender o conteúdo.
+      A versão em inglês é a que vale e prevalece em caso de divergência:
+      <a href="/legal">leia a versão em inglês</a>.
+    </p>
+
+    <p class="dim lg-lead">
+      Tudo o que é formal mora aqui, escrito em linguagem clara. Abra o
+      documento que você precisa.
+    </p>
+
+    <div class="lg-grid">
+      {docs.map(d => (
+        <a class="lg-card" href={d.href}>
+          <span class="lg-name">{d.name}</span>
+          <span class="lg-blurb">{d.blurb}</span>
+          <span class="lg-go">Ler &rarr;</span>
+        </a>
+      ))}
+    </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">
+      Dúvidas sobre qualquer um deles:
+      <a href="mailto:info@savemygig.com">info@savemygig.com</a> ou o
+      <a href="/pt/feedback">formulário de feedback</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .lg-lead { max-width: 42rem; margin-bottom: 2rem; line-height: 1.6; }
+  /* Design language sprint, 2026-08-03: card, grid, title, blurb and go-link
+     were a copy of /knowledge's and now come from the shared card in
+     global.css. A legal page and a knowledge page are the same product. */
+</style>

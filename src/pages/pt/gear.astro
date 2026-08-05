@@ -1,0 +1,80 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// EQUIPAMENTO, BRAZILIAN PORTUGUESE. Source of truth for structure, painéis,
+// cards, classes e data-*: src/pages/gear.astro.
+//
+// TODO HREF É INTOCÁVEL. Os links de saída desta página são de afiliado e
+// carregam parâmetros de rastreio: eles são copiados byte a byte do arquivo
+// em inglês. Nada de regionalizar para amazon.com.br, nada de trocar loja,
+// nada de mexer numa query string. Os nomes dos produtos também não se
+// traduzem; só a descrição e o raciocínio.
+//
+// A moeda é dita em voz alta: as lojas para as quais estes links levam
+// mostram preço em dólar, e "$89" lido como reais é um erro caro.
+---
+<Base
+  title="Kit de emergência do DJ: pen drives que não morrem | Save My Gig"
+  description="Os pen drives que valem a confiança da sua gig, selecionados a partir de fóruns de DJ, relatos de usuários e bancos de dados de hardware. Quatro por categoria, sem encheção."
+  path="/gear"
+  lang="pt"
+>
+  <main class="wrap">
+    <div class="status-line">Approved_Gear</div>
+
+    <h1 style="margin-bottom:1rem">O KIT DE <span class="accent">EMERGÊNCIA</span></h1>
+    {/* HONESTY CORRECTION (Antonio, 2026-08-03): a base da lista é PESQUISA,
+        não experiência pessoal, e é isso que o texto diz. Silêncio deliberado
+        sobre afiliação no parágrafo de abertura: os links já carregam
+        rel="sponsored" e o evento affiliate_click, e a divulgação fica no
+        painel logo abaixo. */}
+    <p class="dim" style="margin-bottom:1rem">A gente não carregou todos os drives desta página, e não vai fingir que carregou. Esta lista curta é pesquisa: fóruns de DJ, comunidades, relatos de usuários e bancos de dados de hardware, filtrados até quatro por categoria, porque um paredão de links significa que ninguém escolheu nada. Um drive daqui é certificado pela AlphaTheta. Os outros três são aqueles aos quais os DJs que trabalham sempre voltam.</p>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.5rem">Pen drives principais</h2>
+      <p class="dim">De 32 a 64 GB é o ponto certo: grande o bastante para uma biblioteca de trabalho inteira, pequeno o bastante para o FAT32 formatar sem briga.</p>
+      <p class="dim" style="font-size:0.85rem">Alguns links desta página podem nos render uma comissão sem nenhum custo adicional para você. Isso nunca muda o que a gente recomenda, e não existem links pagos dentro do Emergency Mode.</p>
+      <p class="dim" style="font-size:0.85rem">Os links levam para lojas internacionais e os preços aparecem em <strong>dólar (USD)</strong>, não em reais. Frete e impostos de importação entram por cima.</p>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3 style="font-size:1rem">SanDisk Extreme Pro USB 3.2</h3>
+          <p>Corpo de metal, rápido, aguenta anos de maus-tratos de booth. A resposta padrão.</p>
+          <a href="https://www.amazon.com/s?k=SanDisk+Extreme+Pro+USB+3.2+Flash+Drive" target="_blank" rel="noopener sponsored" class="btn btn-neutral" data-event="affiliate_click" data-program="amazon" aria-label="Ver o preço em dólar do SanDisk Extreme Pro USB 3.2" data-placement="gear_main_1">Ver preço em USD →</a>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem">SanDisk DJ Flash Drive</h3>
+          <p>O drive oficial da parceria AlphaTheta com a SanDisk. Maior do que um set precisa (512GB ou 1TB), mas já sai pronto em FAT32 e serve como arquivo da sua biblioteca, não só como pen drive de export.</p>
+          <a href="https://pioneerdjstore.com/products/sandisk-dj-flash-drive" target="_blank" rel="noopener" class="btn btn-neutral" data-event="affiliate_click" data-program="pioneerdjstore" aria-label="Ver o preço em dólar do SanDisk DJ Flash Drive" data-placement="gear_main_3">Ver preço em USD →</a>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem">Samsung BAR Plus</h3>
+          <p>Corpo único de metal maciço, sem tampinha para perder, confiável no silêncio.</p>
+          <a href="https://www.amazon.com/s?k=Samsung+BAR+Plus+USB+Flash+Drive" target="_blank" rel="noopener sponsored" class="btn btn-neutral" data-event="affiliate_click" data-program="amazon" aria-label="Ver o preço em dólar do Samsung BAR Plus" data-placement="gear_main_2">Ver preço em USD →</a>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem">Kingston DataTraveler 32GB USB3</h3>
+          <p>A escolha de orçamento curto que os DJs ainda defendem. Confiável depois de formatado em FAT32. A formatação rápida serve num drive em que você confia; num drive suspeito, deixe a formatação completa rodar, porque ela também funciona como teste de estresse.</p>
+          <a href="https://www.amazon.com/s?k=Kingston+DataTraveler+32GB+USB+3.0" target="_blank" rel="noopener sponsored" class="btn btn-neutral" data-event="affiliate_click" data-program="amazon" aria-label="Ver o preço em dólar do Kingston DataTraveler 32GB USB3" data-placement="gear_main_4">Ver preço em USD →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.5rem">O backup que mora no seu bolso</h2>
+      <p class="dim" style="margin-bottom:0">Compre dois do drive principal que você escolher. Drives idênticos, exports idênticos. O truque é esse inteiro, redundância ganha de recuperação toda vez.</p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.5rem">Vale acrescentar</h2>
+      <ul class="checklist">
+        <li>Um case rígido pequeno ou uma cápsula de chaveiro, drives amassados e molhados são o serviço clássico de laboratório.</li>
+        <li>Um adaptador USB-C ↔ USB-A, o notebook da booth nunca tem a porta que você precisa.</li>
+      </ul>
+    </div>
+
+    <p class="dim" style="margin-top:2rem">
+      O drive já falhou? <a href="/pt/recovery">Rota de recuperação →</a> ·
+      Sistema completo de prevenção: <a href="/pt/prepare">Nunca mais →</a>
+    </p>
+  </main>
+</Base>
