@@ -100,6 +100,29 @@ export const UI = {
       install: 'Install',
       dismiss: 'Dismiss',
     },
+    // THE INSTALL RECOMMENDATION (Antonio, 2026-08-05: "How about we recommend
+    // them to install the site as an app? This way they will have it offline.
+    // If you install as an app, you guarantee it.").
+    // Rendered by src/components/InstallNudge.astro on /saved, /card and
+    // /checklist. The reasoning and the placement argument are in that file.
+    //
+    // WHAT MAY AND MAY NOT BE PROMISED. "stays on your device" is the ceiling.
+    // Not "forever", not "guaranteed", in any language: iOS can still evict
+    // stored data under real storage pressure, and a home screen icon buys
+    // durability, not immortality. `install` and `dismiss` are deliberately NOT
+    // repeated here, they come from installBanner above, which is the same
+    // vocabulary the homepage banner uses; two words for one button is how a
+    // product starts sounding like two products.
+    installNudge: {
+      head: 'Keep the rescue on your phone',
+      body: 'Install it as an app and every rescue screen stays on your device, ready with no signal, no data and no searching.',
+      // iOS has no install API, so the only honest thing to render is the
+      // gesture. The label names match the ones on /install exactly, because a
+      // reader who follows one and then the other must not meet two wordings
+      // for the same menu item.
+      ios: 'Tap the Share icon, then Add to Home Screen.',
+      done: 'Installed. The rescue is on your phone now.',
+    },
     footer: {
       shareLead: 'Every DJ knows a DJ who needs this:',
       // WHAT ACTUALLY GETS SHARED. Until 2026-08-05 the WhatsApp, Telegram and
@@ -276,6 +299,16 @@ export const UI = {
       install: 'Instalar',
       dismiss: 'Fechar',
     },
+    // Nada de "para sempre" nem "garantido": o iOS ainda pode limpar dados
+    // guardados se o aparelho ficar sem espaço. O ícone na tela de início dá
+    // durabilidade, não eternidade. Os nomes dos itens do menu do iPhone são
+    // exatamente os mesmos usados em /pt/install.
+    installNudge: {
+      head: 'Deixe o resgate no seu celular',
+      body: 'Instale como app e todas as telas de resgate ficam salvas no seu aparelho, prontas sem sinal, sem dados e sem procurar nada.',
+      ios: 'Toque em Compartilhar e depois em Adicionar à Tela de Início.',
+      done: 'Instalado. O resgate está no seu celular agora.',
+    },
     footer: {
       // "Todo DJ conhece um DJ que precisa disso" keeps the English line's
       // shape and its wink. A literal "Cada DJ sabe de um DJ..." would be
@@ -428,6 +461,16 @@ export const UI = {
       more: 'Más',
       install: 'Instalar',
       dismiss: 'Cerrar',
+    },
+    // Nada de "para siempre" ni "garantizado": iOS todavía puede borrar datos
+    // guardados si al dispositivo le falta espacio. El ícono en la pantalla de
+    // inicio da durabilidad, no eternidad. Los nombres de los ítems del menú
+    // del iPhone son los mismos que usa /es/install.
+    installNudge: {
+      head: 'Llévate el rescate en el celular',
+      body: 'Instálalo como app y todas las pantallas de rescate se quedan en tu dispositivo, listas sin señal, sin datos y sin buscar nada.',
+      ios: 'Toca Compartir y luego Agregar a inicio.',
+      done: 'Instalado. El rescate ya está en tu celular.',
     },
     footer: {
       shareLead: 'Todo DJ conoce a un DJ que necesita esto:',

@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import InstallNudge from '../../components/InstallNudge.astro';
 import EmailCapture from '../../components/EmailCapture.astro';
 // OUTCOME PAGE, BRAZILIAN PORTUGUESE. Source of truth for structure, panels,
 // the no_sound query guard and the classes: src/pages/saved.astro. Only the
@@ -18,6 +19,16 @@ import EmailCapture from '../../components/EmailCapture.astro';
     <h1 class="accent" style="margin-bottom:1rem">VOCÊ VOLTOU A TOCAR.</h1>
     <p style="margin-bottom:0.5rem">A pista voltou a tocar. <strong>O resto é o seu set.</strong></p>
     <p class="dim" style="margin-bottom:3rem">Depois da gig: apague os arquivos temporários de qualquer computador que você usou.</p>
+
+    {/* THE INSTALL RECOMMENDATION, IN THE BEST SLOT ON THE SITE.
+        This is the screen a DJ reaches when the rescue WORKED, so it is the one
+        moment the product has already earned the ask. It sits directly after
+        the payoff and BEFORE the prevention panel on purpose: "keep this on
+        your phone" is a thirty second ask and "spend an hour building a
+        prevention system" is not, and the smaller ask earns the earlier slot.
+        See src/components/InstallNudge.astro for why an install, specifically,
+        is what makes the offline promise durable on iOS. */}
+    <InstallNudge lang="pt" path="/saved" placement="saved_primary" />
 
     <section class="panel panel-go" style="margin-bottom:1.5rem">
       <h2 style="margin-bottom:0.75rem">Nunca mais passe por essa emergência</h2>

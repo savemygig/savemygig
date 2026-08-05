@@ -112,7 +112,34 @@ export const anyTranslationLive = () => liveLangs().some((l) => l.code !== DEFAU
  * Paths are ENGLISH canonical paths, matched exactly or as a prefix. Extend the
  * list here rather than adding conditions at any call site.
  */
-export const NOTICE_SILENT = ['/emergency', '/protocol', '/saved', '/files-lost', '/card-ready'];
+
+/**
+ * EMERGENCY MODE ITSELF: the triage screen and every screen in the sealed
+ * rescue tunnel. This is the narrower of the two lists and it is the one the
+ * doctrine is strictest about: NOTHING competes with the decision on screen,
+ * and nothing is ever SOLD here, not a product, not a mailing list, not an
+ * install. A DJ two minutes from a set is doing one thing.
+ *
+ * Split out of NOTICE_SILENT on 2026-08-05 for the install recommendation
+ * (src/components/InstallNudge.astro), which needs exactly this boundary and
+ * NOT the wider one: /saved is silent for the notice strips because it is an
+ * outcome page in the flow, but it is the single highest-intent screen on the
+ * site for an install pitch, because the product has just proved itself on it.
+ * Two readers, two questions, ONE list underneath, so a new tunnel path is
+ * added once and both are correct.
+ */
+export const EMERGENCY_MODE = ['/emergency', '/protocol'];
+
+/** True on the triage screen or anywhere in the rescue tunnel. Nothing may be
+ *  sold, offered or advertised on a page where this is true. */
+export const insideEmergencyMode = (path) =>
+  EMERGENCY_MODE.some((p) => path === p || path.startsWith(p + '/'));
+
+/**
+ * Where the top-of-page NOTICE STRIPS stay silent: Emergency Mode, plus the
+ * outcome and hand-off pages that read as part of it.
+ */
+export const NOTICE_SILENT = [...EMERGENCY_MODE, '/saved', '/files-lost', '/card-ready'];
 
 /** True on the pages listed above, where no notice strip may render. */
 export const noticeSilent = (path) =>

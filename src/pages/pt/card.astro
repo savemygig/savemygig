@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import InstallNudge from '../../components/InstallNudge.astro';
 import EmailCapture from '../../components/EmailCapture.astro';
 import { RUNLIST } from '../../data/runlist.pt.js';
 import { hrefFor } from '../../data/concepts.js';
@@ -69,6 +70,13 @@ const lp = (p) => localizedPath(p, 'pt');
         <li>Nunca saia de casa com um drive só. <strong>Dois drives idênticos, dois bolsos.</strong></li>
       </ul>
     </div>
+
+    {/* Install recommendation, AFTER the card itself. A reader here is
+        already solving this problem by hand, with a screenshot, so the offer
+        lands. It goes below the three panels rather than above them because
+        this page's own rule (see the header) is that the card is read under
+        pressure and a card full of exits is a card nobody finishes. */}
+    <InstallNudge lang="pt" path="/card" placement="card" />
 
     <div style="text-align:left;margin:2rem 0 1rem">
       <EmailCapture source="card" lang="pt" title="Quer isto em PDF para imprimir?"

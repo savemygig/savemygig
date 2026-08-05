@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import InstallNudge from '../../components/InstallNudge.astro';
 import { groups } from '../../data/checklist.pt.js';
 import lockupPrint from '../../components/brand-lockup-print.svg?raw';
 import printQr from '../../components/print-qr.svg?raw';
@@ -606,6 +607,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
         <a href="/pt/card">Imprima o Emergency Card de uma página</a>
       </p>
     </div>
+    {/* Install recommendation, QUIET, at the foot. Preparing for a gig is the
+        calm moment to set this up, which is why the page qualifies at all, but
+        the reader came here to tick boxes: no accent rail, no icon disc, no
+        filled button. Same words, less voice. */}
+    <InstallNudge lang="pt" path="/checklist" tone="quiet" placement="checklist_foot" />
 
     <!-- Icon-only circle, Antonio's EPK pattern: the site's boxes are square
          but its icon-only buttons are already circles (footer socials, the

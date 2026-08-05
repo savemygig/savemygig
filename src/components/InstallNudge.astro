@@ -1,0 +1,314 @@
+---
+/**
+ * THE INSTALL RECOMMENDATION.
+ *
+ * Antonio, 2026-08-05: "How about we recommend them to install the site as an
+ * app? This way they will have it offline. If you install as an app, you
+ * guarantee it."
+ *
+ * WHY IT MATTERS, and this is the whole argument, so it stays in the file.
+ *
+ * The offline promise itself is not in doubt. scripts/test-offline-langs.mjs
+ * proves it in the gate by KILLING THE ORIGIN PROCESS rather than flagging the
+ * page offline, and every rescue screen still renders and is still styled, in
+ * all three languages. That test is the reason this component is a
+ * recommendation and not a hope.
+ *
+ * But two limits on that promise are inherent and no amount of service worker
+ * work removes them:
+ *
+ *   1. THE VISITOR HAS TO STAY LONG ENOUGH. The precache runs after the first
+ *      page finishes loading. Somebody who opens the site, reads one paragraph
+ *      and closes the tab may leave with part of the rescue kit.
+ *   2. iOS EVICTS BROWSER STORAGE. Safari clears a website's stored data after
+ *      roughly a week of no interaction with that site. Our audience is
+ *      precisely the worst case for that rule: a DJ whose last visit was weeks
+ *      ago, in a basement booth, with no signal, at the moment it matters most.
+ *      A home screen app is exempt from that housekeeping. That is the
+ *      difference between the promise holding and not holding, and it is why
+ *      this is worth a card on three pages rather than a line on one.
+ *
+ * WHERE IT GOES, and why here rather than everywhere:
+ *
+ *   /saved      PRIMARY. The screen a DJ reaches when the rescue WORKED. There
+ *               is no higher-intent moment on the site: the product has just
+ *               proved itself, thirty seconds ago, on their own gig. It sits
+ *               directly after the payoff and BEFORE the prevention panel,
+ *               because "keep this" is a smaller ask than "spend an hour", and
+ *               the smaller ask earns the better slot.
+ *   /card       SECONDARY. Somebody who wants the Emergency Card on their phone
+ *               is already trying to solve exactly this problem, by hand.
+ *   /checklist  SECONDARY and QUIET, at the foot. They are preparing for a gig,
+ *               which is the calm moment to set this up, but they came here to
+ *               tick boxes and the card must not interrupt that.
+ *
+ * NEVER on /emergency and never under /protocol. Enforced in this component via
+ * insideEmergencyMode() from the registry, not left to whoever adds a page: the
+ * Emergency Engine's founding rule is that nothing competes with the decision
+ * on screen, and the doctrine is that nothing is ever sold inside Emergency
+ * Mode. The homepage is also excluded, for a different reason: InstallApp.astro
+ * already owns that pitch there, and two install cards on one page is worse
+ * than none.
+ *
+ * WHY A SECOND COMPONENT AND NOT AN EXTENSION OF InstallApp.astro. Considered
+ * first, and rejected on evidence. InstallApp is a homepage banner with three
+ * decisions baked in that are RIGHT for the homepage and wrong here: it is
+ * hidden below 640px on purpose (the phone gets the rotating promo slide
+ * instead), it has no iOS branch (it shows a link, never the gesture), and it
+ * has no confirmation state. Extending it would have meant unpicking the
+ * mobile-hiding decision, which changes the homepage. The two share what
+ * actually matters instead: the SAME localStorage dismissal key, so one X
+ * anywhere silences the pitch everywhere, and the same installBanner strings
+ * for the button and the dismiss label, so it is one product speaking. They
+ * render on disjoint pages, so they can never both be on screen.
+ *
+ * THE THREE PLATFORM BRANCHES, decided by capability rather than by guessing:
+ *
+ *   Chromium  beforeinstallprompt is captured and deferred, and the button
+ *             calls prompt() for a real one-tap install. On `accepted` the card
+ *             is replaced by the confirmation line, in the page's language.
+ *   iOS       There is no install API, at all. So the card shows the GESTURE,
+ *             with the Share glyph drawn inline, and NO button, because a
+ *             button that cannot install is worse than no button. Detected by
+ *             platform, not by the absent event, so the instruction is on
+ *             screen immediately rather than after a timeout.
+ *   Anything  Neither of the above: the /install link is the route, which is
+ *   else      where every manual path per platform already lives.
+ *
+ * IT SHIPS HIDDEN AND IS REVEALED BY SCRIPT, the pattern TranslationNotice
+ * established: rendering it visible and then hiding it for an installed visitor
+ * would move the page after paint. Hidden first, revealed only once the checks
+ * have passed, so nothing ever flashes and nothing shifts.
+ */
+import { t } from '../i18n/ui';
+import { localizedPath, DEFAULT_LANG, insideEmergencyMode } from '../i18n/registry';
+
+interface Props {
+  lang?: string;
+  /** English canonical path of the host page. Used only for the guard. */
+  path: string;
+  /** `quiet` drops the accent rail and the icon: same words, less voice, for
+   *  the foot of /checklist where the reader is mid-task. */
+  tone?: 'default' | 'quiet';
+  /** Analytics placement, so three call sites are tellable apart. */
+  placement?: string;
+}
+const { lang = DEFAULT_LANG, path, tone = 'default', placement = 'unknown' } = Astro.props;
+
+const S = t(lang).installNudge;
+// Button and dismiss wording come from the homepage banner's catalogue on
+// purpose. See the note in the header about one product, one vocabulary.
+const B = t(lang).installBanner;
+
+// The guard, in the component. A call site cannot opt into Emergency Mode.
+const show = !insideEmergencyMode(path) && path !== '/';
+---
+{show && (
+  <div class:list={['ing', { 'ing-quiet': tone === 'quiet' }]} id="ingWrap" data-placement={placement} hidden>
+    <div class="ing-main">
+      {tone !== 'quiet' && (
+        <span class="ing-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 12 5 5 5-5"/><path d="M5 21h14"/></svg>
+        </span>
+      )}
+      <div class="ing-txt">
+        <strong class="ing-h">{S.head}</strong>
+        <p class="ing-body">{S.body}</p>
+        {/* THE iOS BRANCH. Hidden until the script confirms iOS, because a
+            Chromium user must never be told to tap a Share icon that is not
+            there. The glyph is the site's own stroke vocabulary at 24x24,
+            stroke-width 2, round caps, drawn to match how /install describes
+            it in words: "the square with the arrow pointing up". Deliberately
+            not an emoji: the site removed those from every other surface. */}
+        <p class="ing-ios" id="ingIos" hidden>
+          <span class="ing-share" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="m8 7 4-4 4 4"/><path d="M6 12H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg>
+          </span>
+          <span>{S.ios}</span>
+        </p>
+        <p class="ing-more">
+          <a href={localizedPath('/install', lang)} data-event="step_completed" data-step="install_more" data-placement={placement}>{B.more} &rarr;</a>
+        </p>
+      </div>
+      {/* The one-tap button, revealed only where the browser has actually
+          offered us a prompt to fire. */}
+      <button type="button" class="ing-btn" id="ingBtn" hidden>{B.install}</button>
+      <button type="button" class="ing-close" id="ingClose" aria-label={B.dismiss}>&times;</button>
+    </div>
+    {/* The accepted-install confirmation, in place of the card rather than
+        after it, so the page does not grow at the moment of success. */}
+    <p class="ing-done" id="ingDone" hidden>{S.done}</p>
+  </div>
+)}
+
+{show && (
+  <script is:inline>
+    (function () {
+      var wrap = document.getElementById('ingWrap');
+      if (!wrap) return;
+
+      // ALREADY AN APP: there is nothing to recommend, and saying so anyway is
+      // how a product looks like it is not paying attention. navigator.standalone
+      // is the iOS-only signal; display-mode covers Chromium and installed
+      // Safari on macOS.
+      var standalone = (window.matchMedia &&
+                        window.matchMedia('(display-mode: standalone)').matches) ||
+                       window.navigator.standalone === true;
+      if (standalone) return;
+
+      // ONE DISMISSAL, EVERYWHERE, ONCE EVER. The same key InstallApp.astro
+      // writes on the homepage, so an X on /checklist also silences /saved and
+      // the homepage banner. Deliberately not per page: three cards asking the
+      // same question three times is nagging.
+      var KEY = 'SMG_INSTALL_DISMISSED';
+      try { if (localStorage.getItem(KEY) === '1') return; } catch (e) { /* show it */ }
+
+      var btn = document.getElementById('ingBtn');
+      var done = document.getElementById('ingDone');
+      var main = wrap.querySelector('.ing-main');
+      var deferred = null;
+
+      // iOS, by platform. Safari on iOS never fires beforeinstallprompt, so
+      // waiting for the event to not happen would leave the card silent about
+      // the one thing an iPhone reader needs. iPadOS 13+ reports "MacIntel"
+      // with a touch screen, which is the second test.
+      var ua = navigator.userAgent || '';
+      var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isIOS) {
+        var ios = document.getElementById('ingIos');
+        if (ios) ios.hidden = false;
+      }
+
+      wrap.hidden = false;
+
+      var close = document.getElementById('ingClose');
+      if (close) close.addEventListener('click', function () {
+        wrap.hidden = true;
+        try { localStorage.setItem(KEY, '1'); } catch (e) { /* this session only */ }
+      });
+
+      window.addEventListener('beforeinstallprompt', function (e) {
+        // Without preventDefault Chromium may show its own mini-infobar, which
+        // would be the second install pitch on the page.
+        e.preventDefault();
+        deferred = e;
+        if (btn) btn.hidden = false;
+      });
+
+      if (btn) btn.addEventListener('click', function () {
+        if (!deferred) return;
+        deferred.prompt();
+        // userChoice is a promise on the real event. Guarded so a synthetic
+        // event in a test, or an older implementation, cannot throw here.
+        var choice = deferred.userChoice;
+        if (choice && typeof choice.then === 'function') {
+          choice.then(function (c) {
+            if (typeof window.gtag === 'function') {
+              window.gtag('event', 'pwa_install_prompt', {
+                outcome: c.outcome,
+                placement: wrap.getAttribute('data-placement') || '',
+              });
+            }
+            if (c.outcome === 'accepted') showDone();
+            deferred = null;
+          });
+        }
+      });
+
+      // Quietly, and in place: the card becomes one line of confirmation.
+      // Nothing reloads, nothing is announced loudly, the page does not grow.
+      function showDone() {
+        if (main) main.hidden = true;
+        if (done) done.hidden = false;
+      }
+
+      // Fires for an install completed by any route, including the iOS gesture
+      // and Chromium's own menu, so the confirmation is not tied to our button.
+      window.addEventListener('appinstalled', function () {
+        showDone();
+        if (typeof window.gtag === 'function') window.gtag('event', 'pwa_installed');
+      });
+    })();
+  </script>
+)}
+
+<style is:global>
+  /* Built from the same tokens as .inst (InstallApp) so the two read as one
+     idea in two places: shared surface, shared hairline, shared green accent,
+     shared 44px targets. It is a CARD rather than a one-line banner because it
+     has to carry a second line on iOS, and because on /saved it is answering a
+     question the reader has just earned the right to ask. */
+  .ing { margin: 0 0 1.5rem; }
+  .ing[hidden] { display: none; }
+  .ing-main {
+    position: relative;
+    display: flex; align-items: flex-start; gap: 0.85rem;
+    background: var(--surf-2); border: var(--stroke) solid var(--edge);
+    border-left: 3px solid var(--green); border-radius: var(--radius);
+    padding: 0.9rem 2.6rem 0.9rem 1.1rem;
+  }
+  .ing-main[hidden] { display: none; }
+  .ing-icon {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: var(--radius-round); color: var(--green);
+    background: rgba(58,216,132,0.1); border: var(--stroke) solid rgba(58,216,132,0.4);
+  }
+  .ing-txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .ing-h { font-family: var(--font-display); font-weight: 800; font-size: 0.98rem; color: var(--text); }
+  .ing-body { margin: 0; font-size: 0.83rem; color: var(--text-dim); line-height: 1.45; }
+  /* The gesture line earns a rule and a tint: it is an instruction, not prose,
+     and on an iPhone it is the only actionable thing in the card. */
+  .ing-ios {
+    display: flex; align-items: center; gap: 0.4rem;
+    margin: 0.45rem 0 0; font-size: 0.83rem; line-height: 1.4; color: var(--text);
+  }
+  .ing-ios[hidden] { display: none; }
+  .ing-share { flex: 0 0 auto; display: inline-flex; color: var(--green); }
+  .ing-more { margin: 0.4rem 0 0; font-size: 0.82rem; }
+  .ing-more a { color: var(--green); text-decoration: none; white-space: nowrap; }
+  .ing-more a:hover { text-decoration: underline; }
+  .ing-btn {
+    flex: 0 0 auto; min-height: 44px; padding: 0.6rem 1.2rem; cursor: pointer;
+    font-family: var(--font-display); font-weight: 800; font-size: 0.85rem;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    background: var(--green); color: #0a0a0b; border: var(--stroke) solid var(--green);
+    border-radius: var(--radius);
+  }
+  .ing-btn:hover { filter: brightness(1.08); }
+  .ing-btn[hidden] { display: none; }
+  /* Corner X, absolutely positioned, for the reason InstallApp records from an
+     Android screenshot: in the flex row it wrapped under a full-width button
+     and doubled the card's height. A corner never moves, whatever wraps. */
+  .ing-close {
+    position: absolute; top: 0.3rem; right: 0.3rem;
+    width: 34px; height: 34px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; border: none; color: var(--text-faint);
+    font-size: 20px; line-height: 1; cursor: pointer;
+  }
+  .ing-close:hover { color: var(--text); }
+  .ing-done {
+    margin: 0; padding: 0.8rem 1.1rem; font-size: 0.88rem; color: var(--text);
+    background: var(--surf-2); border: var(--stroke) solid var(--edge);
+    border-left: 3px solid var(--green); border-radius: var(--radius);
+  }
+  .ing-done[hidden] { display: none; }
+
+  /* QUIET, for the foot of /checklist: no rail, no icon disc, no filled
+     button. Same words, less voice, because the reader is mid-task. */
+  .ing-quiet .ing-main {
+    background: transparent; border-left-width: var(--stroke);
+    border-left-color: var(--edge);
+  }
+  .ing-quiet .ing-btn {
+    background: transparent; color: var(--green);
+  }
+
+  @media (max-width: 520px) {
+    .ing-main { flex-wrap: wrap; }
+    .ing-btn { width: 100%; }
+  }
+  /* It is an offer, not content. Nobody needs it on paper. */
+  @media print { .ing, .ing-done { display: none !important; } }
+</style>
