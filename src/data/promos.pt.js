@@ -42,7 +42,7 @@ export const PROMOS = [
   { href: '/fix/move-rekordbox-library-new-laptop', tone: 'green', icon: 'disc',
     q: 'Levando o rekordbox para um notebook novo?', qs: 'rekordbox em notebook novo?', cta: 'Leve cada cue e playlist junto' },
   { href: '/gear', tone: 'amber', icon: 'usb',
-    q: 'Não sabe em qual pen drive confiar?', qs: 'Em qual pen drive confiar?', cta: 'Os que aguentam o booth' },
+    q: 'Não sabe em qual pen drive confiar?', qs: 'Em qual pen drive confiar?', cta: 'Os que aguentam a booth' },
   { href: '/prepare', tone: 'amber', icon: 'check',
     q: 'Cansado de ver isso acontecer?', qs: 'Cansado de passar por isso?', cta: 'Monte um setup que não falha' },
   { href: '/knowledge/pioneer-dj', tone: 'amber', icon: 'disc',

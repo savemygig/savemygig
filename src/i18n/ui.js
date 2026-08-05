@@ -349,7 +349,7 @@ export const UI = {
       b3s: 'Confirme que você está apagando o drive certo.',
       b3: 'Formatar o dispositivo errado, um backup externo, um segundo USB, o disco do sistema, é o erro mais caro de todo esse processo.',
       b4s: 'Isto é orientação geral, não é garantia.',
-      b4: 'Cada drive, player, versão de firmware e biblioteca é diferente. A gente não consegue ver o seu setup e não pode prometer que algum passo vai funcionar para voce.',
+      b4: 'Cada drive, player, versão de firmware e biblioteca é diferente. A gente não consegue ver o seu setup e não pode prometer que algum passo vai funcionar para você.',
       b5s: 'Você age por sua conta e risco.',
       b5: 'O Save My Gig não se responsabiliza por perda de dados, dano em equipamento, sets perdidos ou qualquer outro prejuízo decorrente do uso deste site. Se a música for insubstituível, pare e procure um profissional de recuperação de dados.',
       foot: 'Termos completos:',

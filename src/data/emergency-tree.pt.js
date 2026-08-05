@@ -270,7 +270,7 @@ export const TREE = {
     ],
     "draft": true,
     "label": "Passo 1 de 2",
-    "heading": "Trabalhe a booth",
+    "heading": "Vire-se com o que tem na booth",
     "question": "Você consegue carregar e tocar uma track em algum player agora?",
     "step": "no_laptop_1",
     "options": [
@@ -807,7 +807,7 @@ export const TREE = {
         "html": "Não há nada quebrado no seu drive. Algo não está passando o sinal."
       }
     ],
-    "heading": "Sua música está bem. Isto é roteamento.",
+    "heading": "Não é a sua música. É o caminho do sinal.",
     "question": "Onde está faltando som?",
     "step": "ns_entry",
     // SEVERITY, NOT SYMMETRY (Antonio, 2026-08-03). These four were all grey,
@@ -875,7 +875,7 @@ export const TREE = {
     "step": "ns_thin",
     "options": [
       {
-        "label": "SIM, SOA CERTO",
+        "label": "SIM, O SOM VOLTOU",
         "to": "/saved?path=no_sound&branch=thin",
         "event": "outcome_reached",
         "data": {
@@ -1214,7 +1214,7 @@ export const TREE = {
     "step": "ns_wrong",
     "options": [
       {
-        "label": "SIM, SOA CERTO",
+        "label": "SIM, O SOM VOLTOU",
         "to": "/saved?path=no_sound&branch=quality",
         "event": "outcome_reached",
         "data": {
@@ -1288,7 +1288,7 @@ export const TREE = {
     "step": "ns_fallback",
     "options": [
       {
-        "label": "SIM, ESTOU COBERTO",
+        "label": "SIM, ESTOU RESOLVIDO",
         "to": "/saved?path=no_sound&branch=survival",
         "event": "outcome_reached",
         "data": {
@@ -1570,7 +1570,7 @@ export const TREE = {
     "blocks": [
       {
         "t": "dim",
-        "html": "A cópia de segurança do passo de backup é o que torna isto sobrevivível."
+        "html": "A cópia de segurança do passo de backup é o que faz isso ter volta."
       },
       {
         "t": "alert",
@@ -1940,7 +1940,7 @@ export const TREE = {
     "step": "frozen_live",
     "options": [
       {
-        "label": "SIM, ESTOU COBERTO",
+        "label": "SIM, ESTOU RESOLVIDO",
         "to": "frozen/restart",
         "desc": "Agora o player travado pode ser reiniciado com segurança."
       },
