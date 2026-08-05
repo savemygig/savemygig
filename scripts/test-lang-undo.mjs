@@ -74,6 +74,30 @@ const ok = (name, cond, detail = '') => {
   if (!cond) fails.push(name);
 };
 
+/* NO SERVICE WORKER IN THIS TEST, and it is not laziness.
+ * Every context here walks several pages, and the worker precaches 65 routes
+ * plus assets on install, in ONE language per script URL: walking /, /pt and
+ * /es installs three workers and fires roughly two hundred background fetches
+ * through the little static server above, all competing for Chromium's six
+ * connections per host. That made the `load` event on the heaviest page
+ * (/es/checklist) exceed 30 seconds under gate load, which is a flake with
+ * nothing to do with what is being tested.
+ * Nothing asserted below depends on the worker: the install card reads
+ * display-mode, navigator.standalone, the user agent, localStorage and
+ * beforeinstallprompt, none of which the worker touches. The worker's own
+ * behaviour is covered by test-offline.mjs, test-offline-langs.mjs (which kills
+ * the origin) and test-sw-revalidate.mjs.
+ */
+async function noServiceWorker(ctx) {
+  await ctx.addInitScript(() => {
+    try {
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register = () => Promise.resolve({ scope: '/' });
+      }
+    } catch (e) { /* nothing to stub, nothing to do */ }
+  });
+}
+
 /** A fresh tab whose storage already holds `pref`, which is what a returning
  *  visitor's browser looks like.
  *
@@ -86,6 +110,7 @@ const ok = (name, cond, detail = '') => {
  *  anything. */
 async function tab({ pref = null, locale = 'en-US' } = {}) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, locale });
+  await noServiceWorker(ctx);
   const page = await ctx.newPage();
   if (pref) {
     await page.goto(base + '/offline', { waitUntil: 'domcontentloaded' });
@@ -119,7 +144,7 @@ for (const [code, prefix, phrase] of [
   ['pt', '/pt', 'Você está vendo o site em português'],
 ]) {
   const { ctx, page } = await tab({ pref: code });
-  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  await page.goto(base + '/', { waitUntil: 'load' });
   const s = await undoState(page);
   ok(`SMG_LANG=${code}: / redirects to ${prefix}`, s.pathname === prefix, s.pathname);
   ok(`SMG_LANG=${code}: the undo line is visible`, s.visible);
@@ -139,7 +164,7 @@ for (const [code, prefix, phrase] of [
 // ---------------------------------------------------------------------------
 {
   const { ctx, page } = await tab({ locale: 'es-419' });
-  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  await page.goto(base + '/', { waitUntil: 'load' });
   const s = await undoState(page);
   ok('no preference, browser says es-419: / redirects to /es', s.pathname === '/es', s.pathname);
   ok('no preference, browser says es-419: the undo line is visible', s.visible);
@@ -153,7 +178,7 @@ for (const [code, prefix, phrase] of [
 // ---------------------------------------------------------------------------
 {
   const { ctx, page } = await tab({ pref: 'es' });
-  await page.goto(base + '/es/checklist', { waitUntil: 'networkidle' });
+  await page.goto(base + '/es/checklist', { waitUntil: 'load' });
   const s = await undoState(page);
   ok('/es/checklist direct: stays put', s.pathname === '/es/checklist', s.pathname);
   ok('/es/checklist direct: no undo line at all', s.present === false && s.visible === false);
@@ -166,16 +191,16 @@ for (const [code, prefix, phrase] of [
 // ---------------------------------------------------------------------------
 {
   const { ctx, page } = await tab({ pref: 'es' });
-  await page.goto(base + '/es', { waitUntil: 'networkidle' });
+  await page.goto(base + '/es', { waitUntil: 'load' });
   let s = await undoState(page);
   ok('/es typed directly: the line stays hidden', s.present === true && s.visible === false);
 
   // Now do it the other way: get redirected (line shows), leave, come back.
-  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  await page.goto(base + '/', { waitUntil: 'load' });
   s = await undoState(page);
   ok('redirected once: the line shows', s.visible === true, s.pathname);
-  await page.goto(base + '/es/checklist', { waitUntil: 'networkidle' });
-  await page.goto(base + '/es', { waitUntil: 'networkidle' });
+  await page.goto(base + '/es/checklist', { waitUntil: 'load' });
+  await page.goto(base + '/es', { waitUntil: 'load' });
   s = await undoState(page);
   ok('returning to /es in the same session: the line is gone', s.visible === false);
   await ctx.close();
@@ -189,7 +214,7 @@ for (const [code, prefix, phrase] of [
 // ---------------------------------------------------------------------------
 {
   const { ctx, page } = await tab();                     // en-US, no preference
-  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  await page.goto(base + '/', { waitUntil: 'load' });
   ok('picker: no redirect for an English browser', (await undoState(page)).pathname === '/');
   // At 390px the picker lives inside the nav drawer, so it has to be opened
   // first. This is the real path a phone takes to it.
@@ -204,7 +229,7 @@ for (const [code, prefix, phrase] of [
     page.waitForURL((u) => new URL(u).pathname === '/es', { timeout: 8000 }).catch(() => {}),
     page.click('.lang-opt[data-lang="es"]'),
   ]);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('load');
   const s = await undoState(page);
   const pref = await page.evaluate(() => { try { return localStorage.getItem('SMG_LANG'); } catch (e) { return null; } });
   ok('picker: lands on /es', s.pathname === '/es', s.pathname);
@@ -219,14 +244,14 @@ for (const [code, prefix, phrase] of [
 // ---------------------------------------------------------------------------
 {
   const { ctx, page } = await tab({ pref: 'es' });
-  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  await page.goto(base + '/', { waitUntil: 'load' });
   ok('undo: line visible before the tap', (await undoState(page)).visible === true);
 
   await Promise.all([
     page.waitForURL((u) => new URL(u).pathname === '/', { timeout: 8000 }).catch(() => {}),
     page.click('#langUndoGo'),
   ]);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('load');
   const after = await page.evaluate(() => ({
     pathname: location.pathname,
     pref: (() => { try { return localStorage.getItem('SMG_LANG'); } catch (e) { return null; } })(),
@@ -237,7 +262,7 @@ for (const [code, prefix, phrase] of [
   ok("undo: SMG_LANG is now 'en'", after.pref === 'en', String(after.pref));
 
   // The assertion that matters: it does not have to be done again.
-  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  await page.goto(base + '/', { waitUntil: 'load' });
   const second = await page.evaluate(() => ({ pathname: location.pathname }));
   ok('undo: a second visit to / no longer redirects', second.pathname === '/', second.pathname);
   await ctx.close();
@@ -251,12 +276,12 @@ for (const [code, prefix, phrase] of [
   // preference below still produces a SECOND automatic redirect (this time via
   // navigator.languages) and the dismissal is genuinely tested against one.
   const { ctx, page } = await tab({ pref: 'pt', locale: 'pt-BR' });
-  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  await page.goto(base + '/', { waitUntil: 'load' });
   ok('dismiss: line visible first', (await undoState(page)).visible === true);
   await page.click('#langUndoClose');
   ok('dismiss: hidden immediately', (await undoState(page)).visible === false);
   await page.evaluate(() => { try { localStorage.removeItem('SMG_LANG'); } catch (e) {} });
-  await page.goto(base + '/', { waitUntil: 'networkidle' });
+  await page.goto(base + '/', { waitUntil: 'load' });
   const s = await undoState(page);
   ok('dismiss: still hidden later in the session', s.visible === false, s.pathname);
   await ctx.close();
