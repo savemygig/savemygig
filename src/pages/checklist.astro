@@ -79,6 +79,19 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       })();
     </script>
 
+    {/* TWO CONTEXT LINKS, 2026-08-05. This page had no path back to the
+        doctrine it is the routine FOR, and none forward to the install that
+        keeps the routine alive after a closed tab. Both are one tap from the
+        top of the page now.
+        IT IS ITS OWN ROW, NOT AN EDIT TO THE INTRO ABOVE. That paragraph is
+        PROTECTED copy (see the note above it), and threading two links through
+        it is exactly the "improvement" that note forbids. A separate row also
+        leaves the returning-visitor auto-hide on its own element, untouched. */}
+    <p class="dim" style="font-size:0.86rem;margin-bottom:1.6rem">
+      <a href="/prepare">The rules behind this list</a> ·
+      <a href="/install">Install it so the checklist survives a closed tab</a>
+    </p>
+
     <!-- Round 11.5 (Antonio, "very very very important"): a standing
          reminder that this runs on servers, and servers can and do go down
          -- his own example the same day, an hour of Claude itself being
@@ -582,6 +595,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     <div class="panel cta-exit">
       <h2 style="margin-bottom:0.9rem">Already at the gig and something failed?</h2>
       <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="checklist">Start Emergency Mode</a>
+      {/* The card beside the button, not instead of it. Emergency Mode needs
+          the tab open; the card is the version that survives a phone with no
+          signal, which is the case this page exists to prevent. */}
+      <p class="dim" style="font-size:0.86rem;margin:0.9rem 0 0">
+        <a href="/card">Print the one-page Emergency Card</a>
+      </p>
     </div>
 
     <!-- Icon-only circle, Antonio's EPK pattern: the site's boxes are square

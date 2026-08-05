@@ -145,6 +145,14 @@ const schema = {
            in the built page and a grep of dist stays honest. */}
     </section>
 
+    {/* THE CARD, DIRECTLY UNDER THE DOORS (2026-08-05). It earns this slot
+        because it is the only answer on the page to the failure case the doors
+        cannot survive: a booth with no signal and a tab that has been closed.
+        One line, no panel, no button. */}
+    <p class="dim" style="font-size:0.86rem;margin-top:1.4rem">
+      No signal where you play? <a href="/card">Keep the Emergency Card on your phone</a>.
+    </p>
+
     <!-- ORDER, REVISED (Antonio, 2026-08-03): doors -> this paragraph ->
          the problems list -> "files already lost" LAST. It used to sit under
          the list, which left the closed accordion floating directly under
@@ -168,6 +176,29 @@ const schema = {
          other inbound pages in dist, so nothing was orphaned.
          Content, both defects and where it could go instead are preserved in
          `parked-emergency-problems-list-2026-08-03.md`. -->
+
+    {/* READ THE FULL FIX INSTEAD (2026-08-05). Not a second set of doors. The
+        doors are for a DJ two minutes from a set; this row is for the one
+        reading on a quiet afternoon, and it is the only path from this page
+        into the indexable /fix library, which until now nothing here linked.
+        THE LABELS NAME THE ARTICLES, NOT THE DOORS. Four doors do have a
+        matching article, but THERE IS NO SOUND has none, and pointing that
+        door at the nearest article would be a false promise on the page where
+        a false promise costs a set. So each label describes its own
+        destination and claims nothing about the door above it.
+        THE LINKS KEEP THE SITE'S DEFAULT RED. That is the whole lesson of the
+        removal note above: the old list overrode the colour to var(--text) and
+        left hover as the only affordance, so on a phone it read as plain text.
+        Do not restyle this row. */}
+    <p class="emerg-next">
+      Read the full fix instead:
+      <a href="/fix/usb-not-recognized-cdj">USB not recognized</a> ·
+      <a href="/fix/playlists-not-showing-cdj">playlists not showing</a> ·
+      <a href="/fix/rekordbox-export-failed">rekordbox export failed</a> ·
+      <a href="/fix/emergency-loop-mode">Emergency Loop mode</a> ·
+      <a href="/fix/cdj-error-e-8302">error E-8302</a>
+    </p>
+
     <p class="emerg-next">
       Five routes today. More are being built, and they land here first.
     </p>

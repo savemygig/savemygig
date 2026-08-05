@@ -12,8 +12,15 @@ import { localizedPath, DEFAULT_LANG } from '../i18n/registry';
 // hrefs, at the bottom of every translated article: the single largest English
 // leak on the translated site. `lang` defaults to English so no English page
 // changes by a byte.
-interface Props { article: string; lang?: string }
-const { article, lang = DEFAULT_LANG } = Astro.props;
+// `card` (2026-08-05) prints a SECONDARY link to /card under the Emergency
+// Mode button. OPT-IN, not on by default: /card was orphaned and needed
+// inbound links, but putting the same link at the foot of all 13 articles
+// would be a sitewide footer link pretending to be editorial, which is the
+// pattern that earns a link no weight and reads as filler. It is passed by the
+// two articles about a drive dying AT THE BOOTH, where a page that survives a
+// closed tab and no signal is genuinely the next thing the reader needs.
+interface Props { article: string; lang?: string; card?: boolean }
+const { article, lang = DEFAULT_LANG, card = false } = Astro.props;
 const S = t(lang).cta;
 const lp = (x) => localizedPath(x, lang);
 ---
@@ -22,6 +29,11 @@ const lp = (x) => localizedPath(x, lang);
   <p class="dim">{S.stuckP}</p>
   <a href={lp("/emergency")} class="btn btn-quiet-danger" data-event="begin_checkout" data-placement={`article_${article}`}><span aria-hidden="true">🚨</span> {S.stuckBtn}
   </a>
+  {card && (
+    <p class="dim" style="font-size:0.86rem;margin:0.9rem 0 0">
+      <a href={lp("/card")} data-placement={`article_${article}_card`}>{S.cardLink}</a>
+    </p>
+  )}
 </div>
 <div class="panel" style="margin-top:1rem">
   <p class="dim" style="margin-bottom:0.75rem"><strong>{S.preventP}</strong> {S.preventP2}</p>

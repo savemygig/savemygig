@@ -93,6 +93,16 @@ const faqs = [
     a: 'Use o Backup Library do próprio rekordbox com "include music files" marcado e restaure esse backup na máquina nova. Copiar só os arquivos de áudio perde todo cue, beatgrid e playlist, que é o erro que quase todo mundo comete uma vez.',
     fix: { href: '/pt/fix/move-rekordbox-library-new-laptop', label: 'Solução completa: levar o rekordbox para outro notebook' },
   },
+  // ADICIONADA EM 2026-08-05. Espelha src/pages/faq.astro: o FAQ não citava
+  // /recovery uma única vez. Fica aqui, no fim das perguntas técnicas e antes
+  // das perguntas sobre o site, porque é onde o "e se estiver quebrado de
+  // verdade?" do leitor cai. O link sai pelo `fix`, como em todas as outras.
+  {
+    id: 'drive-dead',
+    q: 'Meu pen drive morreu. Ainda dá para recuperar a música?',
+    a: 'Na maioria das vezes dá, e o que decide é o que você faz agora. Pare de gravar no drive: cada gravação nova pode sobrescrever a música que você está tentando salvar. Se o computador ainda enxerga ele, mesmo mostrando zero arquivo ou oferecendo formatar (diga não), o software de recuperação tem chance real, e os dois que indicamos escaneiam de graça, então você vê o que dá para recuperar antes de pagar. Drive que não é detectado em lugar nenhum, sem luz ou com dano físico, é serviço de hardware, de laboratório.',
+    fix: { href: '/pt/recovery', label: 'Rota completa: tirar os arquivos de um drive morto' },
+  },
   {
     id: 'works-offline',
     q: 'O Save My Gig funciona sem internet?',
@@ -178,6 +188,10 @@ const schema = {
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">A pergunta é urgente porque você toca daqui a pouco?</h2>
       <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="faq"><span aria-hidden="true">🚨</span> Abrir o Emergency Mode</a>
     </div>
+
+    <p class="dim" style="font-size:0.86rem;margin-top:1.4rem">
+      Sem urgência? <a href="/pt/knowledge">A base de conhecimento completa</a> vai mais fundo do que qualquer resposta desta página.
+    </p>
   </main>
 </Base>
 

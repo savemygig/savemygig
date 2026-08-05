@@ -90,6 +90,20 @@ const faqs = [
     a: 'Use rekordbox\'s own Backup Library with "include music files" checked, then restore that backup on the new machine. Copying only the audio files loses every cue, grid and playlist, which is the mistake almost everyone makes once.',
     fix: { href: '/fix/move-rekordbox-library-new-laptop', label: 'Full fix: move rekordbox to a new laptop' },
   },
+  // ADDED 2026-08-05. /recovery is one of the two most valuable pages on the
+  // site for someone who has already lost something, and the FAQ, the page
+  // that answers every other question a DJ arrives with, did not mention it
+  // once. It sits here, at the end of the technical questions and before the
+  // questions about the site itself, because that is where the reader's own
+  // "and if it is actually broken?" lands. The answer's `fix` link is how
+  // every other entry links out, and the loop below puts it in the FAQPage
+  // JSON-LD along with the rest, so nothing has to be kept in step by hand.
+  {
+    id: 'drive-dead',
+    q: 'My drive is dead. Can I get the music back?',
+    a: 'Often, yes, and what decides it is what you do next. Stop writing to the drive: every new write can overwrite the music you are trying to save. If a computer still detects it at all, even showing zero files or offering to format it (say no), recovery software has a real chance, and the two we point at both scan free so you see what is recoverable before paying. A drive that is detected nowhere, with no light or physical damage, is a hardware job for a recovery lab.',
+    fix: { href: '/recovery', label: 'Full route: get files off a dead drive' },
+  },
   {
     id: 'works-offline',
     q: 'Does Save My Gig work without internet?',
@@ -188,6 +202,13 @@ const schema = {
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Question is urgent because you play soon?</h2>
       <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="faq"><span aria-hidden="true">🚨</span> Start Emergency Mode</a>
     </div>
+
+    {/* The other exit, for the reader who is not in trouble. Short answers are
+        this page's job; the reader who wants the long version had nowhere to
+        go from here until now. */}
+    <p class="dim" style="font-size:0.86rem;margin-top:1.4rem">
+      Not urgent? <a href="/knowledge">The full knowledge base</a> goes deeper than any answer on this page.
+    </p>
   </main>
 </Base>
 

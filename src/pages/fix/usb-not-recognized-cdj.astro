@@ -61,7 +61,7 @@ const schema = {
     <ul class="checklist">
       <li><strong>Wrong format:</strong> NTFS never works; exFAT only on newer firmware; GPT partition maps confuse most players. The universal answer is <span class="mono" translate="no">FAT32</span> + <span class="mono" translate="no">MBR</span>.</li>
       <li><strong>Corrupt database:</strong> player sees the drive but shows an error or empty library → see <a href="/fix/cdj-error-e-8302">E-8302</a>.</li>
-      <li><strong>Dying hardware:</strong> the drive doesn't mount on a computer either. Stop plugging it in, you're making recovery harder.</li>
+      <li><strong>Dying hardware:</strong> the drive doesn't mount on a computer either. Stop plugging it in, you're making recovery harder. There is a separate route for <a href="/recovery">when the drive really is dead</a>.</li>
       <li><strong>Power-hungry drives:</strong> some SSDs and hub-style drives draw more power than a CDJ port gives. Plain quality flash drives are safer.</li>
     </ul>
 
@@ -78,6 +78,6 @@ const schema = {
 
 
 
-    <ArticleCTA article="usb_not_recognized" />
+    <ArticleCTA article="usb_not_recognized" card />
   </main>
 </Base>

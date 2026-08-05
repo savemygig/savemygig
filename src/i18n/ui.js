@@ -89,6 +89,11 @@ export const UI = {
       stuckH: 'Playing soon and still stuck?',
       stuckP: 'The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.',
       stuckBtn: 'Start Emergency Mode',
+      // The secondary exit from the "playing soon" panel, printed only by the
+      // articles that pass card to ArticleCTA. Emergency Mode needs a browser
+      // and an open tab; a screenshot needs neither, which is the case the two
+      // booth-failure articles actually have to cover.
+      cardLink: 'Screenshot the Emergency Card',
       preventP: 'Never want to read this page again?',
       preventP2: 'Set up the prevention system once and this page becomes irrelevant.',
       preventBtn: 'See the prevention checklist',
@@ -224,6 +229,8 @@ export const UI = {
       stuckH: 'Vai tocar logo e ainda está travado?',
       stuckP: 'O fluxo de emergência pergunta quanto tempo você tem e te leva pelo caminho mais rápido, uma decisão por vez. Grátis, sem cadastro.',
       stuckBtn: 'Abrir o Emergency Mode',
+      // "Emergency Card" é nome de produto, não se traduz.
+      cardLink: 'Tire um print do Emergency Card',
       preventP: 'Não quer ler esta página nunca mais?',
       preventP2: 'Monte o sistema de prevenção uma vez e esta página perde a razão de existir.',
       preventBtn: 'Ver o checklist de prevenção',
@@ -350,6 +357,8 @@ export const UI = {
       stuckH: '¿Tocas pronto y sigues atascado?',
       stuckP: 'El flujo de emergencia te pregunta cuánto tiempo tienes y te lleva por la ruta más rápida, una decisión a la vez. Gratis, sin cuenta.',
       stuckBtn: 'Abrir Emergency Mode',
+      // "Emergency Card" es nombre de producto, no se traduce.
+      cardLink: 'Toma una captura de la Emergency Card',
       preventP: '¿No quieres volver a leer esta página?',
       preventP2: 'Arma el sistema de prevención una vez y esta página deja de hacer falta.',
       preventBtn: 'Ver el checklist de prevención',

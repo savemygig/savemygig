@@ -6,8 +6,17 @@ import Base from '../layouts/Base.astro';
 // sold via pioneerdjstore.com/products/sandisk-dj-flash-drive -- source:
 // alphatheta.com + pioneerdj.com news) and the Kingston DataTraveler, the
 // budget name that keeps coming up on Pioneer's own community forum
-// alongside SanDisk Extreme Pro. Not an affiliate link (no Pioneer/SanDisk
-// program), so it stays plain rel="noopener", no "sponsored".
+// alongside SanDisk Extreme Pro.
+//
+// rel="noopener sponsored" ON THE PIONEER DJ STORE LINK TOO (2026-08-05).
+// It used to be plain rel="noopener" on the reasoning that there is no
+// Pioneer/SanDisk affiliate programme to disclose. It now matches its three
+// Amazon siblings, for two reasons. First, it is a COMMERCIAL outbound link
+// from a page whose own copy says some links here may earn a commission, and
+// rel="sponsored" is the tag Google asks for on commercial links whether or
+// not money has changed hands yet; the honest signal is the same either way.
+// Second, the day a programme does exist, nobody has to remember this one
+// link was the exception. All four now say the same thing.
 ---
 <Base
   title="The DJ Emergency Kit: USB Drives That Don't Die | Save My Gig"
@@ -44,7 +53,7 @@ import Base from '../layouts/Base.astro';
         <div class="card">
           <h3 style="font-size:1rem">SanDisk DJ Flash Drive</h3>
           <p>The official AlphaTheta x SanDisk drive. Bigger than one set needs (512GB or 1TB) but ships FAT32-ready and doubles as your archive, not just your export stick.</p>
-          <a href="https://pioneerdjstore.com/products/sandisk-dj-flash-drive" target="_blank" rel="noopener" class="btn btn-neutral" data-event="affiliate_click" data-program="pioneerdjstore" aria-label="Check price for the SanDisk DJ Flash Drive" data-placement="gear_main_3">Check price →</a>
+          <a href="https://pioneerdjstore.com/products/sandisk-dj-flash-drive" target="_blank" rel="noopener sponsored" class="btn btn-neutral" data-event="affiliate_click" data-program="pioneerdjstore" aria-label="Check price for the SanDisk DJ Flash Drive" data-placement="gear_main_3">Check price →</a>
         </div>
         <div class="card">
           <h3 style="font-size:1rem">Samsung BAR Plus</h3>
@@ -58,6 +67,13 @@ import Base from '../layouts/Base.astro';
         </div>
       </div>
     </div>
+
+    {/* The one thing in the kit that costs nothing (2026-08-05). It goes here,
+        directly after the shortlist, because that is the moment a reader is
+        thinking about what goes in the bag. */}
+    <p class="dim" style="font-size:0.86rem;margin-bottom:1.4rem">
+      <a href="/card">What to keep in the bag beside the drives</a>
+    </p>
 
     <div class="panel">
       <h2 style="margin-bottom:0.5rem">The backup that lives in your pocket</h2>

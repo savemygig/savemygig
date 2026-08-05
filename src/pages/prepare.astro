@@ -48,7 +48,11 @@ const MUSIC = [
   {
     n: '01',
     title: 'Two identical drives, every gig.',
-    body: 'The same export on both, made in the same session from the same playlists. One in the bag, one in your pocket.',
+    // The card belongs in the gig-bag rule and nowhere else on this page: it
+    // is the third thing that goes in the bag, after the two drives. `plain()`
+    // strips the tag for the ItemList, so the schema still reads as the words
+    // on screen.
+    body: 'The same export on both, made in the same session from the same playlists. One in the bag, one in your pocket, and <a href="/card">the printable Emergency Card</a> beside them.',
     why: 'One drive is convenience. Two drives are insurance.',
   },
   {

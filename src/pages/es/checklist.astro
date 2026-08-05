@@ -95,6 +95,13 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       })();
     </script>
 
+    {/* DOS LINKS DE CONTEXTO, 2026-08-05. Espeja src/pages/checklist.astro:
+        fila propia, nunca dentro del parrafo de arriba, que es copy PROTEGIDA. */}
+    <p class="dim" style="font-size:0.86rem;margin-bottom:1.6rem">
+      <a href="/es/prepare">Las reglas que hay detrás de esta lista</a> ·
+      <a href="/es/install">Instálalo para que el checklist sobreviva a una pestaña cerrada</a>
+    </p>
+
     <!-- Round 11.5 (Antonio, "very very very important"): a standing
          reminder that this runs on servers, and servers can and do go down
          -- his own example the same day, an hour of Claude itself being
@@ -595,6 +602,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     <div class="panel cta-exit">
       <h2 style="margin-bottom:0.9rem">¿Ya estás en el gig y algo falló?</h2>
       <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="checklist">Iniciar Emergency Mode</a>
+      <p class="dim" style="font-size:0.86rem;margin:0.9rem 0 0">
+        <a href="/es/card">Imprime la Emergency Card de una página</a>
+      </p>
     </div>
 
     <!-- Icon-only circle, Antonio's EPK pattern: the site's boxes are square

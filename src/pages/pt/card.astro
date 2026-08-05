@@ -2,6 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import EmailCapture from '../../components/EmailCapture.astro';
 import { RUNLIST } from '../../data/runlist.pt.js';
+import { hrefFor } from '../../data/concepts.js';
+import { localizedPath } from '../../i18n/registry';
+const lp = (p) => localizedPath(p, 'pt');
 
 // EMERGENCY CARD, BRAZILIAN PORTUGUESE. Source of truth for structure,
 // panels, classes e CSS: src/pages/card.astro.
@@ -15,6 +18,13 @@ import { RUNLIST } from '../../data/runlist.pt.js';
 // FOLDER e LINK são rótulos impressos no equipamento (modo de navegação
 // FOLDER, PRO DJ LINK) e ficam em inglês. REINICIAR e PEDIR não são rótulos,
 // são as palavras que o DJ tem que lembrar sozinho.
+//
+// OS TRÊS LINKS DOS AJUSTES SAGRADOS (2026-08-05). FAT32, MBR e rekordbox
+// apareciam linkados nesta página, mas nenhum deles estava escrito aqui: eram
+// do autolinker, que não reconhecia /pt/card como a mesma página excluída que
+// /card, e por isso apontavam para o inglês. O autolinker foi corrigido no
+// mesmo trabalho, então os três passaram a ser escritos à mão, com o prefixo
+// /pt, nos três idiomas. Nada mais no card é linkado: ele é lido sob pressão.
 ---
 <Base
   title="Emergency Card do DJ: tire um print disto | Save My Gig"
@@ -43,9 +53,9 @@ import { RUNLIST } from '../../data/runlist.pt.js';
     <div class="panel" style="border-color:rgba(255,176,32,0.3)">
       <h2 style="margin-bottom:0.75rem">OS AJUSTES SAGRADOS</h2>
       <ul class="checklist">
-        <li>Formato: <span class="mono" translate="no">FAT32</span> · Esquema: <span class="mono" translate="no">MBR</span> · Tamanho: 32 a 64 GB</li>
+        <li>Formato: <span class="mono" translate="no"><a href={lp(hrefFor('fat32'))}>FAT32</a></span> · Esquema: <span class="mono" translate="no"><a href={lp(hrefFor('mbr'))}>MBR</a></span> · Tamanho: 32 a 64 GB</li>
         <li>Mac: Utilitário de Disco → Mostrar Todos os Dispositivos → selecione o DRIVE → MS-DOS (FAT) + Master Boot Record</li>
-        <li>Música nos drives de gig SÓ pelo modo EXPORT do rekordbox</li>
+        <li>Música nos drives de gig SÓ pelo modo EXPORT do <a href={lp(hrefFor('rekordbox'))}>rekordbox</a></li>
         <li>Ejete pelo rekordbox E pelo player (<span translate="no">USB STOP</span>). Toda vez.</li>
       </ul>
     </div>

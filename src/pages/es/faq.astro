@@ -93,6 +93,16 @@ const faqs = [
     a: 'Usa el propio Backup Library de rekordbox con "include music files" marcado y restaura ese backup en la máquina nueva. Copiar solo los archivos de audio pierde todos los cues, beatgrids y playlists, que es el error que casi todos cometen una vez.',
     fix: { href: '/es/fix/move-rekordbox-library-new-laptop', label: 'Solución completa: pasar rekordbox a otra computadora' },
   },
+  // AGREGADA EL 2026-08-05. Espeja src/pages/faq.astro: el FAQ no mencionaba
+  // /recovery ni una vez. Va aqui, al final de las preguntas tecnicas y antes
+  // de las preguntas sobre el sitio, porque ahi cae el "y si de verdad esta
+  // roto?" del lector. El link sale por el `fix`, como en todas las demas.
+  {
+    id: 'drive-dead',
+    q: '¿Se murió mi USB, puedo recuperar la música?',
+    a: 'Casi siempre sí, y lo que decide es lo que hagas ahora. Deja de escribir en la unidad: cada escritura nueva puede sobrescribir la música que estás tratando de salvar. Si una computadora todavía la detecta, aunque muestre cero archivos o te ofrezca formatearla (di que no), el software de recuperación tiene una chance real, y los dos que recomendamos escanean gratis, así que ves qué se puede recuperar antes de pagar. Una unidad que no aparece en ningún lado, sin luz o con daño físico, es trabajo de hardware, de laboratorio.',
+    fix: { href: '/es/recovery', label: 'Ruta completa: sacar los archivos de una unidad muerta' },
+  },
   {
     id: 'works-offline',
     q: '¿Save My Gig funciona sin internet?',
@@ -178,6 +188,10 @@ const schema = {
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">¿Tu pregunta es urgente porque tocas en un rato?</h2>
       <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="faq"><span aria-hidden="true">🚨</span> Abrir Emergency Mode</a>
     </div>
+
+    <p class="dim" style="font-size:0.86rem;margin-top:1.4rem">
+      ¿No es urgente? <a href="/es/knowledge">La base de conocimiento completa</a> va más a fondo que cualquier respuesta de esta página.
+    </p>
   </main>
 </Base>
 

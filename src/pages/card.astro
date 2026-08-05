@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import EmailCapture from '../components/EmailCapture.astro';
 import { RUNLIST } from '../data/runlist.js';
+import { hrefFor } from '../data/concepts.js';
 // THE EMERGENCY CARD, the printable/screenshot-able one-pager promised on /saved and /prepare.
 //
 // The booth block is rendered from src/data/runlist.js, the same source the
@@ -10,6 +11,17 @@ import { RUNLIST } from '../data/runlist.js';
 // a DJ who screenshots this card and then opens the site mid-gig would see two
 // versions of the same advice and trust neither. One list, one order, one set
 // of words, everywhere.
+//
+// THREE LINKS IN THE SACRED SETTINGS (2026-08-05). /card is excluded from the
+// autolinker on purpose (it is a card, not an article), so it never got the
+// FAT32, MBR and rekordbox links the rest of the site carries. The Portuguese
+// and Spanish cards had them anyway, because the autolinker's exclusion test
+// did not recognise /pt/card and /es/card as the same page. That bug is fixed
+// in the same commit series, which would have silently REMOVED three links
+// from two languages, so the three are now hand-written into all three cards.
+// Destinations come from the registry, so a moved page follows automatically.
+// Nothing else on the card is linked: it is read under pressure, and a card
+// full of exits is a card nobody finishes.
 ---
 <Base
   title="The DJ Emergency Card - Screenshot This | Save My Gig"
@@ -37,9 +49,9 @@ import { RUNLIST } from '../data/runlist.js';
     <div class="panel" style="border-color:rgba(255,176,32,0.3)">
       <h2 style="margin-bottom:0.75rem">THE SACRED SETTINGS</h2>
       <ul class="checklist">
-        <li>Format: <span class="mono" translate="no">FAT32</span> · Scheme: <span class="mono" translate="no">MBR</span> · Size: 32-64 GB</li>
+        <li>Format: <span class="mono" translate="no"><a href={hrefFor('fat32')}>FAT32</a></span> · Scheme: <span class="mono" translate="no"><a href={hrefFor('mbr')}>MBR</a></span> · Size: 32-64 GB</li>
         <li>Mac: Disk Utility → Show All Devices → select the DRIVE → MS-DOS (FAT) + Master Boot Record</li>
-        <li>Music onto gig drives ONLY via rekordbox EXPORT mode</li>
+        <li>Music onto gig drives ONLY via <a href={hrefFor('rekordbox')}>rekordbox</a> EXPORT mode</li>
         <li>Eject from rekordbox AND the player (<span translate="no">USB STOP</span>). Every time.</li>
       </ul>
     </div>

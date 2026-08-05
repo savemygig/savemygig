@@ -105,11 +105,34 @@ const schema = {
       </nav>
     </section>
 
+    {/* O CARD, LOGO ABAIXO DAS PORTAS (2026-08-05). Espelha
+        src/pages/emergency.astro: uma linha, sem painel, sem botão. */}
+    <p class="dim" style="font-size:0.86rem;margin-top:1.4rem">
+      Sem sinal onde você toca? <a href="/pt/card">Deixe o Emergency Card no seu celular</a>.
+    </p>
+
     <!-- ORDEM: portas, este parágrafo, depois a saída para recuperação. O
          parágrafo é a entrada de busca E a frase que explica o que é esta
          página, então fica entre os dois. -->
     <p class="emerg-lead">
       Socorro para falhas de pen drive, problemas de export do rekordbox, Emergency Loop e drives corrompidos em Pioneer CDJ-3000, CDJ-2000 e XDJ.
+    </p>
+
+    {/* LEIA O ARTIGO COMPLETO (2026-08-05). Não é um segundo conjunto de
+        portas: as portas são para quem está a dois minutos do set, esta linha é
+        para quem lê numa tarde tranquila, e é o único caminho desta página para
+        os artigos indexáveis em /pt/fix.
+        OS RÓTULOS NOMEIAM OS ARTIGOS, NÃO AS PORTAS. NÃO SAI SOM não tem artigo,
+        e mandar aquela porta para o artigo mais próximo seria uma promessa
+        falsa. Os links ficam no vermelho padrão do site: veja o comentário na
+        versão em inglês, é a lição da lista que saiu daqui em 2026-08-03. */}
+    <p class="emerg-next">
+      Prefere ler a solução completa?
+      <a href="/pt/fix/usb-not-recognized-cdj">USB não reconhecido</a> ·
+      <a href="/pt/fix/playlists-not-showing-cdj">playlists não aparecem</a> ·
+      <a href="/pt/fix/rekordbox-export-failed">export do rekordbox falhou</a> ·
+      <a href="/pt/fix/emergency-loop-mode">Emergency Loop</a> ·
+      <a href="/pt/fix/cdj-error-e-8302">erro E-8302</a>
     </p>
 
     <p class="emerg-next">
