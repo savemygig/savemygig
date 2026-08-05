@@ -17,21 +17,28 @@
  * looking perfect and doing nothing (Antonio caught it on /faq). Ids are
  * per-instance now and the script wires every instance it finds.
  */
+import { t } from '../i18n/ui';
+
 const uid = 'srch-' + Math.random().toString(36).slice(2, 8);
-const { placeholder = 'Search: USB not detected, FAT32, E-8302...' } = Astro.props;
+// lang localizes every string this component owns. A page may still pass its
+// own placeholder (the homepage and /faq boxes do); the default comes from
+// the ui.js catalogue so the header overlay is never English on /pt or /es.
+const { lang = 'en', placeholder } = Astro.props;
+const S = t(lang);
+const ph = placeholder ?? S.search.placeholder;
 ---
 <div class="srch" data-search>
-  <label class="sr-only" for={uid}>Search Save My Gig</label>
+  <label class="sr-only" for={uid}>{S.aria.search}</label>
   <div class="srch-box">
     <svg class="srch-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <input
       id={uid} type="search" class="srch-input" autocomplete="off"
-      placeholder={placeholder}
+      placeholder={ph}
       aria-controls={uid + '-results'} aria-expanded="false" role="combobox" aria-autocomplete="list"
     />
-    <button type="button" class="srch-clear" aria-label="Clear search" hidden>&times;</button>
+    <button type="button" class="srch-clear" aria-label={S.search.clear} hidden>&times;</button>
   </div>
-  <div class="srch-results" id={uid + '-results'} role="listbox" aria-label="Search results" hidden></div>
+  <div class="srch-results" id={uid + '-results'} role="listbox" aria-label={S.search.results} hidden></div>
 </div>
 
 <style is:global>

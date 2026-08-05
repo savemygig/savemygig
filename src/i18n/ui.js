@@ -43,6 +43,17 @@ export const UI = {
       x: 'Save My Gig on X',
       youtube: 'Save My Gig on YouTube',
     },
+    // The header search overlay. Until 2026-08-05 these lived hardcoded in
+    // Search.astro and Base.astro, so every PT and ES page shipped an
+    // English search box while the inline boxes (home, /faq) were localized
+    // by hand. Error codes and file systems stay verbatim, they are what
+    // DJs actually type.
+    search: {
+      placeholder: 'Search: USB not detected, FAT32, E-8302...',
+      clear: 'Clear search',
+      results: 'Search results',
+      close: 'Close search',
+    },
     footer: {
       shareLead: 'Every DJ knows a DJ who needs this:',
       copy: 'Copy to paste',
@@ -147,8 +158,12 @@ export const UI = {
       checklist: 'Checklist',
       emergency: 'Emergência',
       prepare: 'Prevenção',
-      recovery: 'Recuperação',
-      knowledge: 'Conhecimento',
+      // Antonio, 2026-08-05: the noun forms (Recuperação, Conhecimento)
+      // widened the nav and pushed the language picker and search icon out
+      // of alignment. Verbs are shorter and read naturally in a nav. Top
+      // navigation only, page titles and content keep the full nouns.
+      recovery: 'Recuperar',
+      knowledge: 'Aprender',
       gear: 'Equipamento',
       about: 'Sobre nós',
     },
@@ -162,6 +177,12 @@ export const UI = {
       tiktok: 'Save My Gig no TikTok',
       x: 'Save My Gig no X',
       youtube: 'Save My Gig no YouTube',
+    },
+    search: {
+      placeholder: 'Busque: USB não reconhecido, FAT32, E-8302...',
+      clear: 'Limpar busca',
+      results: 'Resultados da busca',
+      close: 'Fechar busca',
     },
     footer: {
       // "Todo DJ conhece um DJ que precisa disso" keeps the English line's
@@ -269,8 +290,9 @@ export const UI = {
       checklist: 'Checklist',
       emergency: 'Emergencia',
       prepare: 'Prevención',
-      recovery: 'Recuperación',
-      knowledge: 'Conocimiento',
+      // Antonio, 2026-08-05: same nav-width fix as pt. Top navigation only.
+      recovery: 'Recuperar',
+      knowledge: 'Aprender',
       gear: 'Equipo',
       about: 'Nosotros',
     },
@@ -284,6 +306,12 @@ export const UI = {
       tiktok: 'Save My Gig en TikTok',
       x: 'Save My Gig en X',
       youtube: 'Save My Gig en YouTube',
+    },
+    search: {
+      placeholder: 'Busca: USB no reconocido, FAT32, E-8302...',
+      clear: 'Borrar búsqueda',
+      results: 'Resultados de búsqueda',
+      close: 'Cerrar búsqueda',
     },
     footer: {
       shareLead: 'Todo DJ conoce a un DJ que necesita esto:',

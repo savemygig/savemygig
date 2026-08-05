@@ -42,9 +42,14 @@ const ok = (name, cond, detail = '') => {
   if (!cond) fails.push(name);
 };
 
+// All three homes. Portuguese and Spanish run 15 to 25 percent longer than
+// English, and until 2026-08-05 this test only opened '/', which meant the
+// translated slides shipped length-unproven. Same lesson as the viewport
+// bug: a test that does not open the page it is guarding proves nothing.
+for (const home of ['/', '/pt', '/es'])
 for (const width of [360, 390, 430]) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
-  await page.goto(base + '/', { waitUntil: 'load' });
+  await page.goto(base + home, { waitUntil: 'load' });
   const bad = await page.evaluate(() => {
     const out = [];
     document.querySelectorAll('.promo-slot .promo').forEach((p) => {
@@ -60,7 +65,7 @@ for (const width of [360, 390, 430]) {
     });
     return out;
   });
-  ok(`promos fit one+one lines @${width}`, bad.length === 0, bad.join(' | ') || 'all fit');
+  ok(`promos fit one+one lines ${home} @${width}`, bad.length === 0, bad.join(' | ') || 'all fit');
   await page.close();
 }
 
