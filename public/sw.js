@@ -106,7 +106,11 @@ const LANG_PREFIX = (function () {
 // below only deletes caches for THIS language, so switching back does not
 // force a re-download of the language you just left.
 // Bump the version part when the precache list changes.
-const CACHE = 'smg-v16' + (LANG_PREFIX ? '-' + LANG_PREFIX.slice(1) : '');
+// v17 (H8, 2026-08-05): the brand lockup left the HTML and became
+// /images/brand-lockup.svg, so it has to be precached or every offline page
+// renders a broken-image icon where the header logo goes. Bumping the version
+// is what makes an already-installed device pick the new file up at all.
+const CACHE = 'smg-v17' + (LANG_PREFIX ? '-' + LANG_PREFIX.slice(1) : '');
 
 // The search index this language needs. One flat search-index.json used to
 // hold all three languages, which meant every install downloaded 412 KB to
@@ -212,6 +216,13 @@ const EXTRA = [
   // never runtime-cached. 9.9 KB and 9.3 KB, on 107 and 47 pages.
   '/images/logo-shield.svg',
   '/images/seal-footer.svg',
+  // The wordmark + tagline lockup. Added 2026-08-05 with H8, which took it out
+  // of the HTML: 15.6 KB inlined 455 times became one 15.6 KB file, so the
+  // precache gets SMALLER by this line existing, not bigger. It is fetched
+  // during the first page load, before this worker controls the page, exactly
+  // like the shield above it, so it would never be runtime-cached and every
+  // offline page would show a broken image where the header brand goes.
+  '/images/brand-lockup.svg',
 ];
 
 // The build's own stylesheets and scripts, as referenced by the pages just
@@ -253,6 +264,7 @@ async function precache() {
     const res = await fetch(url, { credentials: 'same-origin' });
     if (res && res.ok) await cache.put(url, res.clone());
   });
+
 }
 
 self.addEventListener('install', (e) => {

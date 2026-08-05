@@ -8,10 +8,26 @@
  * of alignment work the last device pixel still wobbled between his screen
  * and the build's. Outlines rasterise identically everywhere.
  *
+ * IT IS NOW AN <img>, NOT AN INLINE <svg> (H8, 2026-08-05).
+ * The lockup is 15.6 KB of path data and it appeared on every page twice
+ * (header + footer) and on every tunnel screen once: 455 copies, and 29% of
+ * all the HTML this site ships. Every one of those bytes was uncacheable,
+ * because it lived inside the HTML document, so a DJ browsing ten pages
+ * downloaded the same logo ten times, and the offline precache paid for it
+ * on all 53 precached routes.
+ * As an external file it is fetched once, cached by the browser and by the
+ * service worker, and shared by every page and every language.
+ * WHAT MADE THIS SAFE: the lockup is a static, self-contained asset with its
+ * own baked colours. It has no CSS dependency, inherits nothing, is never
+ * recoloured per page and is never partially styled, so nothing was lost by
+ * putting it behind an <img> boundary. If a future version of the lockup
+ * needs to inherit currentColor or animate, this has to go back to inline.
+ *
  * SOURCE OF TRUTH SINCE 2026-08-03 (his ruling: "I want it just like
- * this"): brand-lockup.svg is EXTRACTED FROM ANTONIO'S CANVA MASTER, the
- * design that also feeds his print/social art, not generated from the web
- * fonts any more (scripts/gen-lockup.py is retired, kept for its history).
+ * this"): public/images/brand-lockup.svg is EXTRACTED FROM ANTONIO'S CANVA
+ * MASTER, the design that also feeds his print/social art, not generated
+ * from the web fonts any more (scripts/gen-lockup.py is retired, kept for
+ * its history, and it wrote the file at its old path under src/components).
  * The extraction (recorded here because the Canva file will change again):
  *   - his export ships the shield as an embedded BITMAP; we take only the
  *     three vector text groups and keep the site's own vector shield
@@ -24,7 +40,9 @@
  *     alignment rule he checks by eye.
  *   - the viewBox is trimmed to the ink bbox, so CSS widths size the ink.
  * TO UPDATE: get his new Canva SVG export (zip it, .svg uploads are
- * rejected by the chat), re-run the extraction, commit. Do NOT hand-edit.
+ * rejected by the chat), re-run the extraction, commit to
+ * public/images/brand-lockup.svg, and bump the sw.js CACHE version so
+ * installed devices stop serving the old one. Do NOT hand-edit.
  *
  * The widths below carry over from the approved sizes; the new lockup's
  * aspect (0.2044) is within 1% of the old (0.2059), so nothing moved.
@@ -34,22 +52,59 @@
  *   footer  sized to the SOCIAL ROW (his rectangle rule: wordmark, tagline
  *           and social row are ONE width; change the social buttons and the
  *           footer sizes here must be re-derived)
- * Accessibility: the SVG carries role="img" and an aria-label with the full
- * brand line, so assistive tech reads words, not paths.
+ *
+ * ACCESSIBILITY. alt is EMPTY, on purpose, in both variants. Every place
+ * this component is used it sits inside a link that already carries
+ * aria-label={S.aria.brandHome} (Base.astro's .nav-brand and .foot-lockup,
+ * Tunnel.astro's .brand), next to a shield <img> that is also alt="". Real
+ * alt text here would make those links announce the brand twice. The old
+ * inline SVG's own role="img" + aria-label is still in the file and is now
+ * correctly ignored, because an <img> does not expose its content's ARIA.
+ * If the lockup is ever used OUTSIDE a labelled link, that use needs real
+ * alt and this component needs an `alt` prop, not a hardcoded string.
  */
-import lockup from './brand-lockup.svg?raw';
 
 interface Props {
   variant?: 'full' | 'footer';
 }
 const { variant = 'full' } = Astro.props;
 const cls = variant === 'footer' ? 'smg-foot' : 'smg-full';
+
+// EXPLICIT DIMENSIONS = NO LAYOUT SHIFT. An inline <svg> carries its aspect
+// in the document already; an <img> does not until it loads, and the lockup
+// is the widest thing in the nav, so an unsized box would jolt the whole bar
+// on first paint. These are the rendered pixel sizes at each variant's
+// DEFAULT breakpoint: the stylesheet width below x the lockup's own aspect
+// (129.74 / 634.85 = 0.204363). The narrower breakpoints only shrink the
+// box; the RATIO is what prevents the shift, and .smg-brand pins that ratio
+// in CSS as well, so the box is exact at every width, loaded or not.
+const DIMS = {
+  full: { w: 150, h: 31 },    // 9.4009rem  = 150.41 x 30.74 px
+  footer: { w: 173, h: 35 },  // 10.8161rem = 173.06 x 35.37 px
+};
+const d = variant === 'footer' ? DIMS.footer : DIMS.full;
 ---
-<span class:list={['smg-brand', cls]} set:html={lockup} />
+<img
+  class:list={['smg-brand', cls]}
+  src="/images/brand-lockup.svg"
+  width={d.w}
+  height={d.h}
+  alt=""
+  decoding="async"
+/>
 
 <style is:global>
-  .smg-brand { display: block; line-height: 0; }
-  .smg-brand svg { display: block; width: 100%; height: auto; }
+  /* The width rules are UNCHANGED from the inline-SVG version, deliberately:
+     H8 changed how the lockup is DELIVERED and nothing about how it looks.
+     `aspect-ratio` is the one addition. It is the asset's viewBox restated in
+     CSS, so the box is the exact height the inline <svg> computed, even before
+     the file has arrived. `.smg-brand svg { width: 100% }` is gone with the
+     inline SVG it existed for. */
+  .smg-brand {
+    display: block;
+    height: auto;
+    aspect-ratio: 634.85 / 129.74;
+  }
 
   /* width = 6.7390 x the wordmark font-size each variant used as live text,
      so nothing moved visually in the conversion. */
