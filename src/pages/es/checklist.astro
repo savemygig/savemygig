@@ -573,7 +573,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             <div class="cat-notes">
               <button type="button" class="notes-toggle" data-notes-btn={g.id}>+ Agregar notas</button>
               <textarea class="notes-area" data-notes={g.id} rows="4" maxlength="2000" placeholder={`Notas de ${g.title}: setup, contactos, horarios, links, lo que este gig necesite.`} aria-label={`Tus notas de ${g.title}`} hidden></textarea>
-              <span class="notes-hint" hidden>Haz clic afuera para guardar.</span>
+              <span class="notes-hint" hidden>Toca fuera del campo para guardar.</span>
             </div>
           </div>
         </section>
@@ -2084,7 +2084,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       notesArea.placeholder = 'Notas de ' + sec.t + ': setup, contactos, horarios, links, lo que este gig necesite.';
       notesArea.setAttribute('aria-label', 'Tus notas de ' + sec.t);
       const notesHint = document.createElement('span');
-      notesHint.className = 'notes-hint'; notesHint.hidden = true; notesHint.textContent = 'Haz clic afuera para guardar.';
+      notesHint.className = 'notes-hint'; notesHint.hidden = true; notesHint.textContent = 'Toca fuera del campo para guardar.';
       const notesPrev = document.createElement('div');
       notesPrev.className = 'notes-preview'; notesPrev.setAttribute('data-notes-prev', sec.id);
       notesWrap.appendChild(notesBtn); notesWrap.appendChild(notesArea); notesWrap.appendChild(notesHint);

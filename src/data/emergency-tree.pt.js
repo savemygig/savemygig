@@ -253,7 +253,7 @@ export const TREE = {
     "blocks": [
       {
         "t": "assumed",
-        "html": "Reencaixar, o outro slot, o outro player e o seu reserva já contam como feitos. Estes aqui são os que ficam de fora."
+        "html": "Reencaixar, o outro slot, o outro player e o seu drive reserva já contam como feitos. Estes aqui embaixo são os que todo mundo esquece."
       },
       {
         "t": "check",
@@ -1616,6 +1616,7 @@ export const TREE = {
         "items": [
           "Confirme que está no disco certo: veja o nome e o tamanho antes de tocar em qualquer coisa.",
           "Formate o <em>dispositivo</em>, não o volume. No Mac: Utilitário de Disco, Visualizar, Mostrar Todos os Dispositivos.",
+          "Drive maior que 32GB no Windows? A janela padrão não oferece FAT32. Use a ferramenta gratuita <strong>guiformat</strong> e volte para cá.",
           "Formato: <span class=\"mono\">FAT32</span> · Esquema: <span class=\"mono\">MBR</span> · Formatação rápida OK."
         ]
       }
@@ -1633,7 +1634,7 @@ export const TREE = {
       {
         "label": "NÃO, A FORMATAÇÃO FALHA",
         "to": "export/fresh",
-        "desc": "Drive que não formata acabou. Outro drive."
+        "desc": "Se a janela não ofereceu FAT32 num drive grande, use o guiformat primeiro. Se a formatação em si falha, o drive acabou e a gente monta em outro."
       }
     ]
   },

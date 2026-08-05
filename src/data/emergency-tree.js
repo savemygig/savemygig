@@ -1618,6 +1618,7 @@ export const TREE = {
         "items": [
           "Confirm you are on the right disk: check the name and the size before you touch anything.",
           "Format the <em>device</em>, not the volume. On Mac: Disk Utility, View, Show All Devices.",
+          "Drive bigger than 32GB on Windows? The built-in dialog will not offer FAT32. Use the free <strong>guiformat</strong> tool, then come back.",
           "Format: <span class=\"mono\">FAT32</span> · Scheme: <span class=\"mono\">MBR</span> · Quick format OK."
         ]
       }
@@ -1635,7 +1636,7 @@ export const TREE = {
       {
         "label": "NO, FORMAT FAILS",
         "to": "export/fresh",
-        "desc": "A drive that won't format is done. Different drive."
+        "desc": "If the dialog refused FAT32 on a big drive, use guiformat first. If the format itself fails, the drive is done and we build on another."
       }
     ]
   },

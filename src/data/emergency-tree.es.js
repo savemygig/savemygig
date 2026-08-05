@@ -1455,7 +1455,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "Todo lo que sigue puede terminar en un formateo. <strong>Primero copia tu música afuera.</strong>"
+        "html": "Todo lo que sigue puede terminar en un formateo. <strong>Primero copia tu música del USB a la computadora.</strong>"
       },
       {
         "t": "check",
@@ -1609,6 +1609,7 @@ export const TREE = {
         "items": [
           "Confirma que estás en el disco correcto: revisa el nombre y el tamaño antes de tocar nada.",
           "Formatea el <em>dispositivo</em>, no el volumen. En Mac: Utilidad de Discos, Visualización, Mostrar todos los dispositivos.",
+          "¿El USB es de más de 32GB y estás en Windows? El cuadro de diálogo del sistema no ofrece FAT32. Usa la herramienta gratuita <strong>guiformat</strong> y vuelve aquí.",
           "Formato: <span class=\"mono\">FAT32</span> · Esquema: <span class=\"mono\">MBR</span> · Formato rápido OK."
         ]
       }
@@ -1626,7 +1627,7 @@ export const TREE = {
       {
         "label": "NO, EL FORMATEO FALLA",
         "to": "export/fresh",
-        "desc": "Un USB que no se deja formatear está acabado. Otro USB."
+        "desc": "Si el cuadro de diálogo no ofreció FAT32 en un USB grande, usa guiformat primero. Si el formateo en sí falla, el USB está acabado y armamos en otro."
       }
     ]
   },
@@ -1899,7 +1900,7 @@ export const TREE = {
         "tone": "amber"
       },
       {
-        "label": "ESTÁ LIBRE, FUERA DE LA MEZCLA",
+        "label": "NO ESTÁ SONANDO, FUERA DE LA MEZCLA",
         "to": "frozen/restart",
         "desc": "Entonces se puede reiniciar sin riesgo.",
         // Green. Its own description says "without risk", which is the

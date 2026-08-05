@@ -46,7 +46,7 @@
 export const RUNLIST_HEAD =
   'Tienes más tiempo del que parece. Si había un track sonando cuando murió el ' +
   'USB, sigue sonando, y una librería grande puede tardar treinta segundos en ' +
-  'aparecer. No arranques nada.';
+  'aparecer. No desconectes nada de golpe.';
 
 /* The line that says "we know who you are". */
 export const RUNLIST_ASSUMED =
