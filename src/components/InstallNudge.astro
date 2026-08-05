@@ -156,11 +156,20 @@ const show = !insideEmergencyMode(path) && path !== '/';
                        window.navigator.standalone === true;
       if (standalone) return;
 
-      // ONE DISMISSAL, EVERYWHERE, ONCE EVER. The same key InstallApp.astro
-      // writes on the homepage, so an X on /checklist also silences /saved and
-      // the homepage banner. Deliberately not per page: three cards asking the
-      // same question three times is nagging.
-      var KEY = 'SMG_INSTALL_DISMISSED';
+      // ITS OWN DISMISSAL KEY, not InstallApp's (Antonio's ruling on the open
+      // question from the first version, 2026-08-05).
+      // That first version shared SMG_INSTALL_DISMISSED with the homepage
+      // banner, which meant a DJ who waved a homepage banner away months ago
+      // would NEVER see this card, including on /saved. Wrong trade: intent on
+      // the homepage is not intent on /saved. On the homepage the reader is
+      // browsing and a banner is an interruption; on /saved the rescue just
+      // worked on their own gig thirty seconds ago, and that screen has earned
+      // its one chance to ask, whatever they clicked on another page in another
+      // mood.
+      // Still GLOBAL across this component's own three placements, so one X on
+      // /checklist also silences /saved and /card: the same card asking the same
+      // question three times is nagging.
+      var KEY = 'SMG_NUDGE_DISMISSED';
       try { if (localStorage.getItem(KEY) === '1') return; } catch (e) { /* show it */ }
 
       var btn = document.getElementById('ingBtn');
