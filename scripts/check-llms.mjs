@@ -32,9 +32,36 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { LANGS } from '../src/i18n/registry.js';
 
 const DIST = process.argv[2] || 'dist';
 const SITE = 'https://www.savemygig.com';
+
+/**
+ * A TRANSLATED PAGE IS COVERED BY ITS ENGLISH COUNTERPART. Added the day
+ * Portuguese and Spanish went live.
+ *
+ * The alternative was listing all 94 translated URLs, and that is the wrong
+ * answer for what this file is. llms.txt is not a sitemap. It is a short
+ * briefing that says which page answers which question, and its whole value
+ * is being readable in one pass. Tripling it with the same answers in three
+ * languages would bury the answers under the URLs.
+ *
+ * The rule this check really enforces is "is this ANSWER described", not "is
+ * this URL listed". A translated page is the same answer at a predictable
+ * address, and llms.txt now states that mapping explicitly near the top, so
+ * an assistant can construct the Portuguese or Spanish URL for any answer it
+ * has already found. So: strip the language prefix and ask whether the
+ * English original is covered.
+ */
+const stripLang = (p) => {
+  for (const l of LANGS) {
+    if (!l.prefix) continue;
+    if (p === l.prefix) return '/';
+    if (p.startsWith(l.prefix + '/')) return p.slice(l.prefix.length);
+  }
+  return p;
+};
 
 // Indexable pages that llms.txt deliberately does not link, with the reason.
 // An AI assistant has no use for these, and listing them would dilute the file.
@@ -73,6 +100,8 @@ if (fs.existsSync(sitemapPath)) {
   for (const m of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
     const p = m[1].replace(SITE, '') || '/';
     if (linked.has(p) || COVERED_ELSEWHERE[p]) continue;
+    const en = stripLang(p);
+    if (en !== p && (linked.has(en) || COVERED_ELSEWHERE[en])) continue;
     problems.push(`indexable page missing from llms.txt: ${p}`);
   }
 } else {

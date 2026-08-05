@@ -52,7 +52,7 @@ export const LANGS = [
     ogLocale: 'pt_BR',
     name: 'Português',
     prefix: '/pt',
-    live: false,
+    live: true,
     dir: 'ltr',
   },
   {
@@ -65,7 +65,7 @@ export const LANGS = [
     ogLocale: 'es_ES',
     name: 'Español',
     prefix: '/es',
-    live: false,
+    live: true,
     dir: 'ltr',
   },
 ];
