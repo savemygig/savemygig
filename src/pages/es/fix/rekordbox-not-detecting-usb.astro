@@ -2,7 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import ArticleCTA from '../../../components/ArticleCTA.astro';
 
-// REKORDBOX NO RECONOCE EL USB, ESPANOL NEUTRO (LATAM). Fuente de estructura,
+// rekordbox NO RECONOCE EL USB, ESPANOL NEUTRO (LATAM). Fuente de estructura,
 // componentes, clases, data-* y CSS:
 // src/pages/fix/rekordbox-not-detecting-usb.astro. Solo cambian el texto
 // legible y los hrefs, que apuntan a /es.
@@ -33,7 +33,7 @@ const schema = {
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
   <main class="wrap wrap-wide">
     <div class="status-line red">Dispositivo_No_Aparece</div>
-    <h1 style="margin-bottom:1.5rem">¿REKORDBOX NO VE TU <span class="danger">USB</span>?<br />ARRÉGLALO ANTES DEL GIG</h1>
+    <h1 style="margin-bottom:1.5rem">¿rekordbox NO VE TU <span class="danger">USB</span>?<br />ARRÉGLALO ANTES DEL GIG</h1>
 
     <div class="panel panel-danger">
       <p style="margin:0"><strong>Versión corta:</strong> si la unidad no está en la lista de dispositivos, la causa es casi siempre una de tres: no estás en modo Export, el propio sistema operativo no ve la unidad, o la unidad está formateada de una forma en la que rekordbox no puede escribir. Revísalas en ese orden.</p>

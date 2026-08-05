@@ -428,7 +428,7 @@ export const TREE = {
       },
       {
         "t": "note",
-        "html": "This computer has Rekordbox with <strong>your</strong> library on it? Take the <a href=\"/protocol/export/backup\">export rescue</a> instead: a fresh export keeps your cues and playlists, a raw file copy does not."
+        "html": "This computer has rekordbox with <strong>your</strong> library on it? Take the <a href=\"/protocol/export/backup\">export rescue</a> instead: a fresh export keeps your cues and playlists, a raw file copy does not."
       }
     ],
     "label": "The fast route first",
@@ -743,7 +743,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "These tracks were <strong>not exported via Rekordbox</strong>, so some features may be limited (Quantize, Sync, Hot Cues). This is normal. <strong>You can still play your set.</strong>"
+        "html": "These tracks were <strong>not exported via rekordbox</strong>, so some features may be limited (Quantize, Sync, Hot Cues). This is normal. <strong>You can still play your set.</strong>"
       }
     ],
     "label": "Step 5 of 5",
@@ -1332,15 +1332,15 @@ export const TREE = {
     ],
     "draft": true,
     "heading": "EXPORT <span class=\"accent\">RESCUE</span>",
-    "question": "Do you have access to a computer with Rekordbox on it?",
+    "question": "Do you have access to a computer with rekordbox on it?",
     "step": "qf_computer",
     "options": [
       // Three options now, so every one carries an explicit tone: past two
       // the renderer falls back to neutral and the colour would say nothing.
       {
-        "label": "YES, WITH REKORDBOX",
+        "label": "YES, WITH rekordbox",
         "to": "export/usb-check",
-        // Green: a computer with Rekordbox means you have the time and the
+        // Green: a computer with rekordbox means you have the time and the
         // tools to fix this properly.
         "tone": "green"
       },
@@ -1368,14 +1368,14 @@ export const TREE = {
     "blocks": [
       {
         "t": "dim",
-        "html": "A proper fix needs Rekordbox. You have time to find one:"
+        "html": "A proper fix needs rekordbox. You have time to find one:"
       },
       {
         "t": "check",
         "items": [
           "Your own laptop at home or in the car?",
-          "Another DJ on the lineup with Rekordbox installed.",
-          "The venue or promoter's office computer (Rekordbox is a free download)."
+          "Another DJ on the lineup with rekordbox installed.",
+          "The venue or promoter's office computer (rekordbox is a free download)."
         ]
       }
     ],
@@ -1471,7 +1471,7 @@ export const TREE = {
         "items": [
           "Copy the whole drive to the computer. At minimum the <strong>Contents</strong> folder, which saves your audio but not your playlists, cues or grids: you would be digging through artist and album folders to find a track.",
           "If some files fail, copy what you can and note which ones. Skipped files are gone for good if this drive gets formatted later, so if any of them matter, take the fresh-drive route instead and keep this one intact.",
-          "While it copies: open Rekordbox, top-left mode selector to <span class=\"mono\">EXPORT</span>. If your USB shows under <strong>Devices</strong>, the next screen refreshes it; if it never shows, say so on the next screen and we rebuild clean."
+          "While it copies: open rekordbox, top-left mode selector to <span class=\"mono\">EXPORT</span>. If your USB shows under <strong>Devices</strong>, the next screen refreshes it; if it never shows, say so on the next screen and we rebuild clean."
         ]
       }
     ],
@@ -1510,10 +1510,10 @@ export const TREE = {
       {
         "t": "check",
         "items": [
-          "In Rekordbox, on the <strong>device</strong>: delete tonight's playlists.",
+          "In rekordbox, on the <strong>device</strong>: delete tonight's playlists.",
           "Drag tonight's playlists from your collection onto the device again (fresh sync).",
           "Wait for the sync to finish completely.",
-          "Eject with the <strong>eject button in Rekordbox</strong>, never pull the drive."
+          "Eject with the <strong>eject button in rekordbox</strong>, never pull the drive."
         ]
       }
     ],
@@ -1545,7 +1545,7 @@ export const TREE = {
     ],
     "draft": true,
     "label": "Step 3b",
-    "heading": "What is Rekordbox complaining about?",
+    "heading": "What is rekordbox complaining about?",
     "question": "What do the errors look like?",
     "step": "qf_errors",
     "options": [
@@ -1648,16 +1648,16 @@ export const TREE = {
       {
         "t": "check",
         "items": [
-          "Rekordbox in <span class=\"mono\">EXPORT</span> mode, USB connected.",
+          "rekordbox in <span class=\"mono\">EXPORT</span> mode, USB connected.",
           "Drag <strong>tonight's playlists only</strong> onto the device. Small export = fast and reliable.",
-          "No Rekordbox library on this computer? Import the music folder you backed up first, then export it.",
-          "Wait for the full sync, then eject with the Rekordbox eject button."
+          "No rekordbox library on this computer? Import the music folder you backed up first, then export it.",
+          "Wait for the full sync, then eject with the rekordbox eject button."
         ]
       }
     ],
     "draft": true,
     "label": "Step 5",
-    "heading": "Export tonight's music with Rekordbox",
+    "heading": "Export tonight's music with rekordbox",
     "question": "Export finished without errors?",
     "step": "qf_export",
     "options": [
@@ -1691,7 +1691,7 @@ export const TREE = {
         "t": "check",
         "items": [
           "Once you know the drive is empty or expendable, format it: <span class=\"mono\">FAT32</span> + <span class=\"mono\">MBR</span>.",
-          "Export tonight's playlists from Rekordbox, or copy the music files you backed up.",
+          "Export tonight's playlists from rekordbox, or copy the music files you backed up.",
           "Verify: eject, replug, everything loads."
         ]
       }
@@ -1727,7 +1727,7 @@ export const TREE = {
         "t": "check",
         "items": [
           "Unplug the USB, wait 5 seconds, plug it back in.",
-          "Open it in Rekordbox: device loads, playlists intact.",
+          "Open it in rekordbox: device loads, playlists intact.",
           "If you can reach a player before your set: test it there too (<span class=\"mono\">SOURCE → USB</span>)."
         ]
       }

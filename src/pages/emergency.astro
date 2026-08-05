@@ -28,7 +28,7 @@ const doors = [
   { name: "MUSIC WON'T LOAD", description: 'Drive mounts, but playlists are missing or tracks refuse to play.', href: '/protocol/music/start' },
   { name: 'THERE IS NO SOUND', description: 'A dead channel, silent master, or nothing in your headphones.', href: '/protocol/sound/start' },
   { name: 'FROZEN PLAYER', description: 'Screen or controls locked, mid-set or idle.', href: '/protocol/frozen/start' },
-  { name: 'REKORDBOX EXPORT FAILED', description: 'The export will not finish, or the USB will not take it.', href: '/protocol/export/start' },
+  { name: 'rekordbox EXPORT FAILED', description: 'The export will not finish, or the USB will not take it.', href: '/protocol/export/start' },
 ];
 
 const schema = {
@@ -126,7 +126,7 @@ const schema = {
         <a href="/protocol/export/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="export_failed">
           <div class="pad-header">
             <div class="led led-r"></div>
-            <div class="pad-title">REKORDBOX EXPORT FAILED</div>
+            <div class="pad-title">rekordbox EXPORT FAILED</div>
           </div>
           <div class="pad-desc">The export will not finish, or the USB will not take it.</div>
         </a>
@@ -161,7 +161,7 @@ const schema = {
          it, so it belongs between the two. Supersedes the 2026-07-30 order,
          which had the testing notice in this slot; that notice is gone. -->
     <p class="emerg-lead">
-      Emergency guidance for USB failures, Rekordbox export issues, emergency loop mode and corrupted drives on Pioneer CDJ-3000, CDJ-2000 and XDJ units.
+      Emergency guidance for USB failures, rekordbox export issues, emergency loop mode and corrupted drives on Pioneer CDJ-3000, CDJ-2000 and XDJ units.
     </p>
 
     <!-- THE COMMON PROBLEMS LIST WAS REMOVED HERE 2026-08-03 (Antonio: "if

@@ -2,7 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import ArticleCTA from '../../../components/ArticleCTA.astro';
 
-// REKORDBOX NAO RECONHECE O PEN DRIVE, BRAZILIAN PORTUGUESE. Source of truth
+// rekordbox NAO RECONHECE O PEN DRIVE, BRAZILIAN PORTUGUESE. Source of truth
 // for structure, components, classes and CSS:
 // src/pages/fix/rekordbox-not-detecting-usb.astro. Only the human readable
 // copy and the /pt hrefs differ.
@@ -33,7 +33,7 @@ const schema = {
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
   <main class="wrap wrap-wide">
     <div class="status-line red">Drive_Nao_Aparece</div>
-    <h1 style="margin-bottom:1.5rem">O REKORDBOX NÃO VÊ SEU <span class="danger">PEN DRIVE</span>?<br />RESOLVA ANTES DA GIG</h1>
+    <h1 style="margin-bottom:1.5rem">O rekordbox NÃO VÊ SEU <span class="danger">PEN DRIVE</span>?<br />RESOLVA ANTES DA GIG</h1>
 
     <div class="panel panel-danger">
       <p style="margin:0"><strong>Resposta curta:</strong> se o drive sumiu da lista de dispositivos, a causa é quase sempre uma de três: você não está no modo Export, o próprio sistema operacional não enxerga o drive, ou o drive está formatado de um jeito em que o rekordbox não consegue escrever. Confira nessa ordem.</p>

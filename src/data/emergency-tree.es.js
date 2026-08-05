@@ -1329,7 +1329,7 @@ export const TREE = {
       // Three options now, so every one carries an explicit tone: past two
       // the renderer falls back to neutral and the colour would say nothing.
       {
-        "label": "SÍ, CON REKORDBOX",
+        "label": "SÍ, CON rekordbox",
         "to": "export/usb-check",
         // Green: a computer with rekordbox means you have the time and the
         // tools to fix this properly.

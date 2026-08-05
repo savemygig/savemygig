@@ -2,7 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import ArticleCTA from '../../../components/ArticleCTA.astro';
 
-// FALLO EL EXPORT DE REKORDBOX, ESPANOL NEUTRO (LATAM). Fuente de estructura,
+// FALLO EL EXPORT DE rekordbox, ESPANOL NEUTRO (LATAM). Fuente de estructura,
 // componentes, clases, data-* y CSS: src/pages/fix/rekordbox-export-failed.astro.
 // Solo cambian el texto legible y los hrefs, que apuntan a /es.
 
@@ -32,7 +32,7 @@ const schema = {
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
   <main class="wrap wrap-wide">
     <div class="status-line red">Export_Fallido</div>
-    <h1 style="margin-bottom:1.5rem">¿<span class="danger">FALLÓ</span> EL EXPORT DE REKORDBOX?<br />ASÍ SE RECUPERA</h1>
+    <h1 style="margin-bottom:1.5rem">¿<span class="danger">FALLÓ</span> EL EXPORT DE rekordbox?<br />ASÍ SE RECUPERA</h1>
 
     <div class="panel panel-danger">
       <p style="margin:0"><strong>Versión corta:</strong> un export fallido o corrupto es un problema de base de datos, no de música. Tus tracks casi siempre están bien; lo que está roto es el índice que lee el CDJ. Un export nuevo y limpio resuelve la mayoría de los casos.</p>
