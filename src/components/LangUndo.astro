@@ -1,0 +1,160 @@
+---
+/**
+ * THE LANGUAGE UNDO. One line, one tap, back to English.
+ *
+ * WHY IT EXISTS. Antonio clicked a link to the plain domain from WhatsApp and
+ * landed on the SPANISH site, with no explanation and no obvious way back.
+ * Nothing was broken: the edge serves English HTML on both hosts, and the
+ * client-side detection in Base.astro did exactly what it was specified to do
+ * on 2026-08-03, because either SMG_LANG was already 'es' in that browser or
+ * navigator.languages listed Spanish first.
+ *
+ * The bug was in the design, not the code. Rule 4 of the detection spec says
+ * "IT NEVER INTERRUPTS", and that was right about modals and wrong about
+ * silence: moving somebody to another language with no acknowledgement at all
+ * is how a shared link reads as broken. The person who suffers most is the one
+ * the redirect was supposed to help least, someone whose browser guesses wrong,
+ * and until now they had no way to say so short of finding the picker in the
+ * menu.
+ *
+ * So: an acknowledgement, not a dialog. One dismissible line, in the language
+ * of the page they landed on, saying what happened and offering the way back.
+ * It does not block anything, it does not ask a question that has to be
+ * answered before reading, and it can be ignored completely.
+ *
+ * EVERY DOCTRINE RULE IS INTACT, and that is the point of the design:
+ *   - The URL still decides what is on screen. This line navigates only when
+ *     tapped.
+ *   - Deep links are still never redirected, and never see this line.
+ *   - Arriving still only SEEDS an empty preference. Tapping the link, which is
+ *     a deliberate pick, overwrites it, exactly as the picker does.
+ *
+ * WHEN IT SHOWS: only on the pageview that an automatic root redirect landed
+ * on. Never on a deep link, never on a page the visitor navigated to
+ * themselves, never after they have used the picker. The marker that carries
+ * "you were redirected" across the location.replace is a sessionStorage flag
+ * set by the detection script, consumed on the next load.
+ *
+ * WHY sessionStorage AND NOT ?from=auto. A query parameter would have created
+ * a second crawlable URL for the two most important pages on the translated
+ * sites, which is a canonical and hreflang problem, an extra row in the search
+ * index, and a second page in analytics, all to carry one bit for one pageview.
+ * The flag creates no URL variant at all, so canonicals, hreflang, the sitemap
+ * and the analytics pageview are byte for byte what they were.
+ *
+ * IT SHIPS HIDDEN AND IS REVEALED BY SCRIPT, like TranslationNotice, so a
+ * visitor who was not redirected never sees it flash and the page never moves
+ * after paint.
+ *
+ * IT BORROWS TranslationNotice's STRIP rather than drawing a second one. Same
+ * .tx-notice box, same .tx-lead type, same .tx-close target. The site already
+ * paid the "six accordions doing one job" bill once; this is the same strip
+ * with different words, so it is the same strip in the CSS too.
+ */
+import { DEFAULT_LANG, noticeSilent } from '../i18n/registry';
+
+interface Props {
+  lang: string;
+  /** English canonical path. The root redirect can only ever land on the
+   *  prefixed HOMEPAGE, so that is the only page that renders this. */
+  path: string;
+}
+const { lang, path } = Astro.props;
+
+const COPY = {
+  pt: {
+    lead: 'Você está vendo o site em português. Prefere inglês?',
+    cta: 'Ver em inglês',
+    close: 'Fechar aviso',
+  },
+  es: {
+    lead: 'Estás viendo el sitio en español. ¿Prefieres inglés?',
+    cta: 'Ver en inglés',
+    close: 'Cerrar aviso',
+  },
+};
+
+const c = COPY[lang];
+// path === '/' is the whole gate: the root redirect targets PREFIX[want], which
+// is the prefixed homepage and nothing else, so no other page can ever be a
+// redirect's landing page. noticeSilent is redundant today (the homepage is not
+// on that list and never will be) and is checked anyway, so this strip can
+// never be the one that appears in a rescue tunnel.
+const show = lang !== DEFAULT_LANG && path === '/' && !noticeSilent(path) && Boolean(c);
+---
+{show && (
+  <div class="tx-notice lu-notice" id="langUndo" hidden>
+    <div class="tx-body">
+      <p class="tx-lead">{c.lead} <a
+        class="tx-cta"
+        href="/"
+        id="langUndoGo"
+        data-event="lang_undo_to_english"
+        data-lang={lang}
+      >{c.cta}</a></p>
+    </div>
+    <button type="button" class="tx-close" id="langUndoClose" aria-label={c.close}>
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+)}
+
+{show && (
+  <script is:inline>
+    (function () {
+      var el = document.getElementById('langUndo');
+      if (!el) return;
+
+      // window.__smgAutoLang is set by the detection script in <head>, and ONLY
+      // when it has just consumed the marker its own redirect left behind. If
+      // it is absent this pageview was not an automatic redirect, so there is
+      // nothing to undo and nothing to say.
+      if (!window.__smgAutoLang) return;
+
+      // Dismissed earlier in this session: stay quiet. A notice that comes back
+      // is an interruption, not a courtesy.
+      var SKIP = 'SMG_LANG_UNDO_OFF';
+      try { if (sessionStorage.getItem(SKIP) === '1') return; } catch (e) { /* private mode */ }
+
+      el.hidden = false;
+
+      // THE TRANSLATION NOTICE STANDS DOWN ON THIS PAGEVIEW, and it does it
+      // ITSELF, in TranslationNotice.astro, by reading the same
+      // window.__smgAutoLang flag. It has to be that way round: its script sits
+      // after this one in the document, so anything this one hid, that one would
+      // reveal again one line later.
+      // WHY IT STANDS DOWN AT ALL, measured at 390x844: two stacked strips put
+      // the third homepage door's bottom edge at 764px, past the ~736px a real
+      // first load has once the URL bar is expanded. A door a DJ cannot see is a
+      // door they do not know exists. With only this line the same door sits at
+      // 645px, which is 43px HIGHER than the translation notice alone managed,
+      // so the redirect pageview is now the least crowded of the three. Nothing
+      // is lost: that notice is only marked seen when DISMISSED, so it appears
+      // in full on the next page this visitor opens.
+
+      // Going to English is a CHOICE, not an arrival, so unlike the detection
+      // script this writes the preference. Without it the plain domain would
+      // guess Spanish again on the next visit and the undo would have undone
+      // nothing. Written before the anchor navigates; the anchor then does the
+      // navigating, so this still works with no JS beyond this line.
+      var go = document.getElementById('langUndoGo');
+      if (go) go.addEventListener('click', function () {
+        try { localStorage.setItem('SMG_LANG', 'en'); } catch (e) { /* private mode */ }
+      });
+
+      var close = document.getElementById('langUndoClose');
+      if (close) close.addEventListener('click', function () {
+        el.hidden = true;
+        try { sessionStorage.setItem(SKIP, '1'); } catch (e) { /* nothing to do */ }
+      });
+    })();
+  </script>
+)}
+
+<style is:global>
+  /* Everything visual comes from .tx-notice in TranslationNotice.astro. The
+     only thing this strip does differently is sit tighter to what follows it,
+     because when it shows it is the FIRST thing on the page and the h1 is
+     right underneath. */
+  .lu-notice { margin-bottom: 0.85rem; }
+</style>

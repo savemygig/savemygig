@@ -63,7 +63,7 @@
  * while /pt/feedback and /es/feedback did not exist; they do now, and a form
  * in the reader's language beats an email composer.
  */
-import { DEFAULT_LANG } from '../i18n/registry';
+import { DEFAULT_LANG, noticeSilent } from '../i18n/registry';
 
 interface Props {
   lang: string;
@@ -72,10 +72,11 @@ interface Props {
 }
 const { lang, path } = Astro.props;
 
-// Rule 1, in code. Extend this list rather than adding conditions at call sites.
-const SILENT = ['/emergency', '/protocol', '/saved', '/files-lost', '/card-ready'];
-const inEmergency = SILENT.some((p) => path === p || path.startsWith(p + '/'));
-const show = lang !== DEFAULT_LANG && !inEmergency;
+// Rule 1, in code. The list itself moved to src/i18n/registry.js as
+// NOTICE_SILENT on 2026-08-05: LangUndo needs the same answer, and so does the
+// wrapper in Base.astro, and three copies of one list is three chances to
+// drift. Extend it THERE rather than adding conditions at call sites.
+const show = lang !== DEFAULT_LANG && !noticeSilent(path);
 
 // Antonio, 2026-08-05: reworded from an apology ("ainda não está perfeita")
 // to continuous improvement ("em constante evolução"). The CTA is the closing
@@ -118,6 +119,22 @@ const c = COPY[lang];
     (function () {
       var el = document.getElementById('txNotice');
       if (!el) return;
+
+      // RULE 5, ADDED 2026-08-05: THE LANGUAGE UNDO OUTRANKS THIS.
+      // window.__smgAutoLang is set by the detection script in Base.astro, and
+      // only on the pageview an automatic root redirect just landed on. On that
+      // one pageview LangUndo.astro shows a line telling the visitor they were
+      // moved and offering the way back, and two grey strips stacked above the
+      // h1 is one too many: measured at 390x844, the pair puts the third
+      // homepage door's bottom edge at 764px, past the ~736px a real first load
+      // has once the URL bar is expanded. A door a DJ cannot see is a door they
+      // do not know exists, and that outranks a note about translation quality.
+      // Nothing is lost by yielding: this notice is only ever marked seen when
+      // it is DISMISSED, so it appears in full on the next page they open.
+      // Checked here rather than by LangUndo reaching in and hiding #txNotice,
+      // because this script runs last and would simply undo that.
+      if (window.__smgAutoLang) return;
+
       var KEY = 'SMG_TX_NOTICE_' + lang;
       var seen = false;
       try { seen = localStorage.getItem(KEY) === '1'; } catch (e) { /* private mode */ }

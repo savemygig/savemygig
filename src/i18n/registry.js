@@ -82,6 +82,47 @@ export const liveLangs = () => LANGS.filter((l) => l.live);
 export const anyTranslationLive = () => liveLangs().some((l) => l.code !== DEFAULT_LANG);
 
 /**
+ * WHERE THE TOP-OF-PAGE NOTICE STRIP MUST STAY SILENT.
+ *
+ * The Emergency Engine's founding rule: nothing competes with the decision on
+ * screen. A DJ two minutes from a set does not need a note about translation
+ * quality or about which language they landed in.
+ *
+ * This list used to live inside TranslationNotice.astro. It moved here on
+ * 2026-08-05 because there are now TWO strips in that slot (TranslationNotice
+ * and LangUndo) plus the wrapper in Base.astro, which has to know whether
+ * either of them will render.
+ *
+ * AND THAT SEARCH TURNED UP A LATENT BUG WORTH RECORDING. The wrapper was being
+ * collapsed with `.tx-wrap:empty`, and :empty counts whitespace TEXT NODES.
+ * Astro leaves a newline where a top-level `{cond && ...}` expression renders
+ * nothing, so `<div class="tx-wrap">` has never actually been empty, not even
+ * with one child: the built English homepage contained
+ * `<div class="tx-wrap">\n\n</div>`. The selector therefore never matched, and
+ * every English page plus every pt/es rescue-tunnel page has been carrying a
+ * dead 24px --page-top box under the nav. Measured at 390x844 after removing
+ * it: the last homepage door came up 21px on the tightest phone in the gate
+ * (iPhone SE slack +120px to +141px) and the fifth /emergency door came up 24px
+ * in all three languages (tightest case +41px to +65px).
+ * anyNotice() asks the question directly instead, so the wrapper is simply not
+ * emitted when neither strip can draw. `.tx-wrap:empty` stays in the CSS as a
+ * harmless backstop.
+ * One list, three readers, no drift.
+ *
+ * Paths are ENGLISH canonical paths, matched exactly or as a prefix. Extend the
+ * list here rather than adding conditions at any call site.
+ */
+export const NOTICE_SILENT = ['/emergency', '/protocol', '/saved', '/files-lost', '/card-ready'];
+
+/** True on the pages listed above, where no notice strip may render. */
+export const noticeSilent = (path) =>
+  NOTICE_SILENT.some((p) => path === p || path.startsWith(p + '/'));
+
+/** True when the notice slot has anything at all to draw, so Base.astro can
+ *  leave the wrapper out entirely rather than trusting :empty. */
+export const anyNotice = (lang, path) => lang !== DEFAULT_LANG && !noticeSilent(path);
+
+/**
  * Canonical path for a page in a given language.
  * `path` is always the ENGLISH path, e.g. "/checklist". English keeps it
  * unprefixed; the others get their prefix. The root is special-cased so we

@@ -5,9 +5,10 @@ import Consent from '../components/Consent.astro';
 import LangPicker from '../components/LangPicker.astro';
 import Search from '../components/Search.astro';
 import { VERSION_LABEL, IS_BETA } from '../lib/version';
-import { LANGS, byCode, liveLangs, localizedPath, DEFAULT_LANG, anyTranslationLive } from '../i18n/registry';
+import { LANGS, byCode, liveLangs, localizedPath, DEFAULT_LANG, anyTranslationLive, anyNotice } from '../i18n/registry';
 import { t } from '../i18n/ui';
 import TranslationNotice from '../components/TranslationNotice.astro';
+import LangUndo from '../components/LangUndo.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -288,6 +289,39 @@ const entityGraph = {
          silently changes which language the content is in, and the picker
          is the override. A DJ thirty minutes from a set meets no dialog.
 
+      RULE 4, AMENDED 2026-08-05. Antonio clicked a link to the plain domain
+      from WhatsApp and landed on the SPANISH site with no explanation and no
+      obvious way back. Everything above worked as specified; the specification
+      was wrong. "Never interrupt" was right about modals and wrong about
+      silence, because moving somebody to another language without saying so is
+      exactly how a shared link reads as broken, and the person it hurts is the
+      one whose browser guessed wrong, who had no way to say so short of
+      hunting the picker out of the menu.
+      So the redirect now leaves a mark, and the page it lands on shows ONE
+      dismissible line offering the way back (src/components/LangUndo.astro).
+      Not a dialog, not a question that blocks reading: an acknowledgement.
+      Nothing else changed. The URL still decides what is on screen, deep links
+      are still never redirected and never see the line, and arriving still only
+      SEEDS an empty preference. Tapping the line's link is a deliberate pick,
+      so THAT overwrites, the same way the picker does.
+
+      THE MARK IS A sessionStorage FLAG, NOT ?from=auto. A query parameter would
+      create a second crawlable URL for the two most important pages on the
+      translated sites: a canonical and hreflang problem, an extra row in the
+      search index and a second page in analytics, all to carry one bit for one
+      pageview. This carries the bit with no URL variant at all.
+
+      A NOTE ON HOSTS, because it will come up again and it is NOT fixable here:
+      www.savemygig.com and savemygig.com are SEPARATE localStorage origins. A
+      preference picked on one does not exist on the other, so a visitor who
+      chose English on www can still be guessed at on the bare host, and the
+      undo line above is what saves them when that happens. Making the two
+      hosts one storage origin needs a host-level redirect in Cloudflare, which
+      is Antonio's to set. Do not try to paper over it in script: reading the
+      other host's storage is not possible, and syncing it through a URL
+      parameter would reintroduce exactly the crawlable variants the paragraph
+      above exists to avoid.
+
       It runs before <title> deliberately: at the root, the redirect should
       happen before the browser starts fetching anything else. */}
   {anyTranslationLive() && (
@@ -305,6 +339,22 @@ const entityGraph = {
         var KEY = 'SMG_LANG';
         function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
         function set(v) { try { localStorage.setItem(KEY, v); } catch (e) { /* private mode */ } }
+
+        // THE "YOU WERE MOVED" MARK. sessionStorage, so it dies with the tab
+        // and creates no URL anything can crawl, cache or count. It is written
+        // immediately before the redirect and READ ONCE on the other side.
+        var AUTO = 'SMG_AUTO_LANG';
+        function markAuto(v) { try { sessionStorage.setItem(AUTO, v); } catch (e) { /* private mode: no line, which is the old behaviour */ } }
+        // Consuming, not peeking. Removing it on read is what guarantees the
+        // line appears on the redirect's own landing pageview and never again,
+        // including if the visitor comes back to this page later in the session.
+        function takeAuto() {
+          try {
+            var v = sessionStorage.getItem(AUTO);
+            if (v !== null) sessionStorage.removeItem(AUTO);
+            return v;
+          } catch (e) { return null; }
+        }
 
         // ARRIVING IS NOT CHOOSING. Antonio's rule, 2026-08-05: the language
         // the site remembers is the last one the visitor PICKED, and it
@@ -324,6 +374,16 @@ const entityGraph = {
         // what makes a deliberate change stick. This branch NEVER navigates,
         // which is what keeps deep links untouched.
         if (PAGE_LANG !== DEF) {
+          // Consume the mark on EVERY translated page, not just the homepage.
+          // The redirect can only land on a prefixed homepage, so anywhere else
+          // finding a mark means it was left over, and a leftover that survives
+          // is a line that appears on a pageview nobody was redirected to.
+          var auto = takeAuto();
+          // The flag has to name THIS language and this has to be the page the
+          // redirect targets, or it is not the landing pageview and there is
+          // nothing to acknowledge. LangUndo.astro reads this global; it is the
+          // only thing that ever reveals the line.
+          if (auto === PAGE_LANG && IS_ROOT) window.__smgAutoLang = PAGE_LANG;
           if (LIVE.indexOf(PAGE_LANG) > -1 && !get()) set(PAGE_LANG);
           return;
         }
@@ -347,7 +407,12 @@ const entityGraph = {
         // Detection does NOT write SMG_LANG. Landing on the prefixed page
         // does, one line above, on the next load. A guess is not a choice
         // until the visitor has been shown its result.
-        if (to) location.replace(to + location.search + location.hash);
+        if (to) {
+          // The one place the mark is ever written, so the undo line cannot
+          // appear on anything except this redirect's own destination.
+          markAuto(want);
+          location.replace(to + location.search + location.hash);
+        }
       })();
     </script>
   )}
@@ -490,7 +555,30 @@ const entityGraph = {
     {/* Sits ABOVE the page's own <main class="wrap">, so it needs the site
         container itself or it would run edge to edge. Bottom padding only:
         the page below brings its own --page-top. */}
-    <div class="tx-wrap"><TranslationNotice lang={lang} path={path} /></div>
+    {/* ORDER MATTERS. The undo line goes ABOVE the translation notice: it is
+        about the page the visitor is looking at rather than about how it was
+        written, and it is the one they may need to act on. In practice only one
+        of the two is ever visible, because LangUndo hides the notice on the
+        pageview it reveals itself (measured; see the comment in LangUndo). The
+        order is still correct here so that if that priority is ever relaxed,
+        nothing has to be rearranged.
+
+        THE WRAPPER IS CONDITIONAL, and that is not tidiness. It relied on
+        `.tx-wrap:empty` to collapse itself where no strip renders, and :empty
+        counts whitespace TEXT NODES: Astro leaves a newline where a top-level
+        `{cond && ...}` renders nothing, so this div has never once been empty.
+        The selector never matched, and every English page plus every pt/es
+        rescue-tunnel page has been carrying a dead 24px box under the nav.
+        Removing it brings the last homepage door up 21px on the tightest phone
+        in the gate and the fifth /emergency door up 24px in all three
+        languages. Full measurements in the anyNotice() comment in
+        src/i18n/registry.js. `.tx-wrap:empty` stays in the CSS as a backstop. */}
+    {anyNotice(lang, path) && (
+      <div class="tx-wrap">
+        <LangUndo lang={lang} path={path} />
+        <TranslationNotice lang={lang} path={path} />
+      </div>
+    )}
     <slot />
   </div>
   <footer class="site-footer">
