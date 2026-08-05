@@ -122,7 +122,7 @@ export const TREE = {
       },
       {
         "t": "note",
-        "html": "¿Funciona en el otro reproductor pero no en este? Es la división de formatos de librería, no un USB dañado. <a href=\"/es/knowledge/pioneer-dj/rekordbox#onelibrary\">Qué significa</a>, después del gig."
+        "html": "¿Funciona en el otro reproductor pero no en este? Es la división de formatos de biblioteca, no un USB dañado. <a href=\"/es/knowledge/pioneer-dj/rekordbox#onelibrary\">Qué significa</a>, después del gig."
       }
     ],
     "label": "Prueba esto primero, 15 segundos",
@@ -246,13 +246,13 @@ export const TREE = {
     "blocks": [
       {
         "t": "assumed",
-        "html": "Damos por hecho que ya lo reconectaste y que ya probaste la otra ranura, el otro reproductor y tu propio repuesto. Lo de abajo es lo que sí se salta."
+        "html": "Damos por hecho que ya lo reconectaste y que ya probaste la otra ranura, el otro reproductor y tu propio repuesto. Lo de abajo es justo lo que todos se saltan."
       },
       {
         "t": "check",
         "items": [
           "<strong>PRO DJ LINK.</strong> Si el booth está enlazado, busca y carga desde un USB que esté en otro reproductor. Tu USB muerto deja de importar.",
-          "<strong>Dale treinta segundos.</strong> Una librería grande monta lento y mientras tanto parece muerta. A la mayoría de los USB los sacan antes de que terminen.",
+          "<strong>Dale treinta segundos.</strong> Una biblioteca grande monta lento y mientras tanto parece muerta. A la mayoría de los USB los sacan antes de que terminen.",
           "<strong>Vista FOLDER</strong>, si todavía no la probaste. Cuando el USB aparece pero tus playlists no, murió la base de datos, no el audio. Busca por carpeta y reproduce."
         ]
       },
@@ -419,7 +419,7 @@ export const TREE = {
       },
       {
         "t": "note",
-        "html": "¿Esta computadora tiene rekordbox con <strong>tu</strong> librería? Mejor toma el <a href=\"/es/protocol/export/backup\">rescate de export</a>: un export nuevo conserva tus cues y playlists, una copia cruda de archivos no."
+        "html": "¿Esta computadora tiene rekordbox con <strong>tu</strong> biblioteca? Mejor toma el <a href=\"/es/protocol/export/backup\">rescate de export</a>: un export nuevo conserva tus cues y playlists, una copia cruda de archivos no."
       }
     ],
     "label": "Primero la ruta rápida",
@@ -455,7 +455,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "<strong>Esto borra todo lo que haya en el SEGUNDO USB. Si te lo prestaron, detente y confirma con su dueño primero.</strong> La librería de otra persona no es descartable, y puede que no sepa que estás por formatearla."
+        "html": "<strong>Esto borra todo lo que haya en el SEGUNDO USB. Si te lo prestaron, detente y confirma con su dueño primero.</strong> La biblioteca de otra persona no es descartable, y puede que no sepa que estás por formatearla."
       },
       {
         "t": "check",
@@ -528,7 +528,7 @@ export const TREE = {
     "step": "second_usb_copy",
     "options": [
       {
-        "label": "SÍ, A CARGARLO EN EL REPRODUCTOR",
+        "label": "SÍ, CARGARLO EN EL REPRODUCTOR",
         "to": "rebuild/load"
       },
       {
@@ -1543,12 +1543,12 @@ export const TREE = {
       {
         "label": "ARCHIVOS QUE NO APARECEN",
         "to": "export/export",
-        "desc": "Es del lado de la librería, no del USB. Importa la carpeta que respaldaste y exporta de nuevo. No hace falta formatear.",
+        "desc": "Es del lado de la biblioteca, no del USB. Importa la carpeta que respaldaste y exporta de nuevo. No hace falta formatear.",
         // Symptom split: both answers just name the problem.
         "tone": "amber"
       },
       {
-        "label": "ERRORES DE DISPOSITIVO O ESCRITURA",
+        "label": "ERRORES DEL DISPOSITIVO",
         "to": "export/erase",
         "desc": "De dispositivo, de escritura o desconocidos: el sospechoso es el USB y lo reconstruimos desde cero.",
         // Same split, other family.
@@ -1641,7 +1641,7 @@ export const TREE = {
         "items": [
           "rekordbox en modo <span class=\"mono\">EXPORT</span>, USB conectado.",
           "Arrastra <strong>solo las playlists de hoy</strong> al dispositivo. Export pequeño = rápido y confiable.",
-          "¿No hay librería de rekordbox en esta computadora? Primero importa la carpeta de música que respaldaste, y después expórtala.",
+          "¿No hay biblioteca de rekordbox en esta computadora? Primero importa la carpeta de música que respaldaste, y después expórtala.",
           "Espera a que el sync termine y expulsa con el botón de expulsar de rekordbox."
         ]
       }
@@ -1676,7 +1676,7 @@ export const TREE = {
       {
         "t": "alert",
         "emoji": "⚠️",
-        "html": "<strong>Si este USB te lo prestaron, detente y confirma con su dueño.</strong> El siguiente paso lo borra por completo. La librería de otra persona no es descartable, y puede que no sepa que estás por formatearla."
+        "html": "<strong>Si este USB te lo prestaron, detente y confirma con su dueño.</strong> El siguiente paso lo borra por completo. La biblioteca de otra persona no es descartable, y puede que no sepa que estás por formatearla."
       },
       {
         "t": "check",
@@ -1883,7 +1883,7 @@ export const TREE = {
     "blocks": [
       {
         "t": "dim",
-        "html": "Si había un track sonando cuando se trabó, lo normal es que siga sonando. No se toca nada hasta que la sala esté cubierta."
+        "html": "Si había un track sonando cuando se congeló, lo normal es que siga sonando. No se toca nada hasta que la sala esté cubierta."
       }
     ],
     "question": "¿El reproductor congelado está al aire en la mezcla ahora mismo?",
@@ -1962,7 +1962,7 @@ export const TREE = {
           "Presiona <strong>USB STOP</strong> si responde, y espera a que la luz deje de parpadear.",
           "Apaga. Espera veinte segundos.",
           "Enciende y deja que arranque por completo antes de tocar nada.",
-          "Vuelve a insertar el USB y dale treinta segundos. Las librerías grandes montan lento. Si el reproductor se congeló mientras buscabas, prueba el USB en otro deck primero: una base de datos corrupta lo puede congelar de nuevo."
+          "Vuelve a insertar el USB y dale treinta segundos. Las bibliotecas grandes montan lento. Si el reproductor se congeló mientras buscabas, prueba el USB en otro deck primero: una base de datos corrupta lo puede congelar de nuevo."
         ]
       }
     ],
@@ -1979,7 +1979,7 @@ export const TREE = {
         }
       },
       {
-        "label": "NO, SIGUE TRABADO O NO LEE",
+        "label": "NO, SIGUE CONGELADO O NO LEE",
         "to": "frozen/link"
       }
     ]

@@ -28,7 +28,7 @@ export const PROMOS = [
   { href: '/fix/emergency-loop-mode', tone: 'red', icon: 'alert',
     q: '¿El player repite los últimos segundos del track?', qs: '¿Player en loop de 2 segundos?', cta: 'Eso es Emergency Loop. Haz esto' },
   { href: '/fix/waveforms-not-loading-cdj', tone: 'red', icon: 'disc',
-    q: '¿Los tracks suenan pero los waveforms no cargan?', qs: '¿Waveforms no cargan?', cta: 'Esto es lo que falta' },
+    q: '¿Los tracks suenan pero las waveforms no cargan?', qs: '¿Waveforms no cargan?', cta: 'Esto es lo que falta' },
   { href: '/recovery', tone: 'amber', icon: 'rescue',
     q: '¿El drive murió con tu música adentro?', qs: '¿Drive muerto con tu música?', cta: 'Mira qué se puede recuperar' },
   { href: '/checklist', tone: 'green', icon: 'check',

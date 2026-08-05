@@ -10,14 +10,21 @@ import Base from '../../layouts/Base.astro';
 // Door titles follow src/data/emergency-tree.es.js so the door and the screen
 // it opens say the same words. ONE EXCEPTION, and it is a measurement rather
 // than a preference: the tree node is titled "Reproductor congelado" and this
-// door says PLAYER TRABADO. The pad title box is 233px at a 360px viewport,
+// door says DECK CONGELADO. The pad title box is 233px at a 360px viewport,
 // and "REPRODUCTOR CONGELADO" measures 265px, "REPRODUCTOR TRABADO" 237px.
 // Both wrap to a second line while the other four titles hold one, which
-// reads as a broken card rather than as a longer word. "PLAYER TRABADO" is
-// 167px, it is what a Latin American DJ says out loud, and it keeps this door
-// parallel with the Portuguese one. The prose on this page and the whole
-// tunnel keep "reproductor". Do not lengthen this label without re-measuring
-// at 360px.
+// reads as a broken card rather than as a longer word.
+//
+// THE WORD, CORRECTED 2026-08-05. This door used to say PLAYER TRABADO while
+// the screen behind it, its <title>, its heading and every option on it said
+// CONGELADO. A DJ tapped one word and landed on another, which on a triage
+// screen is the one thing that must never happen: the door IS the promise that
+// you picked the right route. So the short label stays short, and now it says
+// the same word as the screen. DECK CONGELADO measures 172px, inside the 233px
+// box, still one line, and "deck" is what a Latin American DJ calls the unit
+// out loud. The tunnel's own prose keeps "reproductor", which is correct there
+// because it has the room for it. Do not lengthen this label without
+// re-measuring at 360px.
 //
 // The ItemList is a straight transcription of the visible <nav> below: same
 // five titles, same five one line descriptions, same five hrefs, same order.
@@ -26,7 +33,7 @@ const doors = [
   { name: 'USB NO RECONOCIDO', description: 'El reproductor no ve el USB, para nada.', href: '/es/protocol/usb/start' },
   { name: 'LA MÚSICA NO CARGA', description: 'El USB se lee, pero faltan las playlists o los tracks no suenan.', href: '/es/protocol/music/start' },
   { name: 'NO HAY SONIDO', description: 'Un canal muerto, el MASTER en silencio o nada en los audífonos.', href: '/es/protocol/sound/start' },
-  { name: 'PLAYER TRABADO', description: 'Pantalla o controles trabados, en pleno set o en reposo.', href: '/es/protocol/frozen/start' },
+  { name: 'DECK CONGELADO', description: 'Pantalla o controles congelados, en pleno set o en reposo.', href: '/es/protocol/frozen/start' },
   { name: 'FALLÓ EL EXPORT DE rekordbox', description: 'El export no termina, o el USB no lo acepta.', href: '/es/protocol/export/start' },
 ];
 
@@ -50,8 +57,8 @@ const schema = {
 };
 ---
 <Base
-  title="Emergencia de DJ: USB, sonido y reproductor trabado | Save My Gig"
-  description="USB no reconocido, playlists que no aparecen, sin sonido, reproductor trabado o export de rekordbox que falla: elige el síntoma y sigue el paso a paso. Gratis, sin cuenta."
+  title="Emergencia de DJ: USB, sonido y deck congelado | Save My Gig"
+  description="USB no reconocido, playlists que no aparecen, sin sonido, un deck congelado o un export de rekordbox que falla: elige el síntoma y sigue el paso a paso. Gratis, sin cuenta."
   path="/emergency"
   lang="es"
 >
@@ -104,9 +111,9 @@ const schema = {
         <a href="/es/protocol/frozen/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="frozen_player">
           <div class="pad-header">
             <div class="led led-r"></div>
-            <div class="pad-title">PLAYER TRABADO</div>
+            <div class="pad-title">DECK CONGELADO</div>
           </div>
-          <div class="pad-desc">Pantalla o controles trabados, en pleno set o en reposo.</div>
+          <div class="pad-desc">Pantalla o controles congelados, en pleno set o en reposo.</div>
         </a>
 
         <a href="/es/protocol/export/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="export_failed">

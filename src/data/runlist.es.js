@@ -26,7 +26,7 @@
  *
  * TRANSLATION RULES THAT ARE LOAD BEARING HERE:
  *  - Glossary follows src/data/emergency-tree.es.js exactly: reproductor, USB,
- *    base de datos, librería, track, deck, set, gig, booth, sala. `tú`, never
+ *    base de datos, biblioteca, track, deck, set, gig, booth, sala. `tú`, never
  *    `vos`, never `usted`, never `vosotros`. `computadora`, never `ordenador`.
  *    `pen drive` is Brazilian usage and never appears in Spanish.
  *  - Hardware labels and product names stay English: SOURCE, USB, USB STOP,
@@ -45,7 +45,7 @@
    only way it does that. */
 export const RUNLIST_HEAD =
   'Tienes más tiempo del que parece. Si había un track sonando cuando murió el ' +
-  'USB, sigue sonando, y una librería grande puede tardar treinta segundos en ' +
+  'USB, sigue sonando, y una biblioteca grande puede tardar treinta segundos en ' +
   'aparecer. No desconectes nada de golpe.';
 
 /* The line that says "we know who you are". */
