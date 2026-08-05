@@ -706,7 +706,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     .meter { height: 5px; }
   }
 
-  .task-group { padding: 0; overflow: hidden; }
+  /* NO padding override, deliberately (2026-08-05). Mirror of the English
+     checklist: padding: 0 never applied on the live site until the Aug 4
+     perf pass flipped the CSS order, thinning every collapsed card by 40px.
+     .panel's var(--sp-5) is the approved geometry. See the English file. */
+  .task-group { overflow: hidden; }
   /* Round 11.5 follow-up (Antonio, live review): global.css's shared .panel
      class sets margin-bottom: 1.25rem, which every .task-group inherits (it
      also carries .panel) -- that's what set the box-to-box gap between
