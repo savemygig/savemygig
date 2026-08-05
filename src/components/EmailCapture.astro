@@ -90,6 +90,14 @@ const id = `cap-${source}`;
   }
 </style>
 
+{/* PLAIN JS ONLY IN HERE. is:inline means Astro ships this block byte for
+    byte, with no TypeScript pass over it. It carried ten `as HTMLElement`
+    casts until 2026-08-05, so every browser threw a SyntaxError on parse,
+    the submit handler never bound, and the form fell back to its native GET:
+    the reader's address went into the URL, no request ever reached
+    /api/subscribe, and nobody was subscribed. Caught in the Aug 5 audit.
+    scripts/check-inline-scripts.mjs now parses every shipped inline script
+    so this class of bug cannot reach production again. */}
 <script is:inline define:vars={{ SEND_TO: C.sendTo, MSG: t(lang).capmsg }}>
   // Already registered on this device: no form, one tap, their address shown.
   document.querySelectorAll('.capture').forEach((wrap) => {
@@ -99,11 +107,11 @@ const id = `cap-${source}`;
       stored = localStorage.getItem('SMG_EMAIL') || '';
     } catch (e) {}
     if (unlocked && stored) {
-      const form = wrap.querySelector('.cap-form') as HTMLFormElement | null;
-      const blurb = wrap.querySelector('.cap-blurb') as HTMLElement | null;
+      const form = wrap.querySelector('.cap-form');
+      const blurb = wrap.querySelector('.cap-blurb');
       if (form) {
-        const input = form.querySelector('input[name="email"]') as HTMLInputElement | null;
-        const btn = form.querySelector('button') as HTMLButtonElement | null;
+        const input = form.querySelector('input[name="email"]');
+        const btn = form.querySelector('button');
         if (input) { input.value = stored; input.hidden = true; }
         if (btn) btn.textContent = SEND_TO + stored;
         if (blurb) blurb.textContent = MSG.registered;
@@ -114,11 +122,11 @@ const id = `cap-${source}`;
   document.querySelectorAll('.cap-form').forEach((form) => {
     form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
-      const el = form as HTMLFormElement;
-      const wrap = el.closest('.capture') as HTMLElement;
-      const msg = wrap.querySelector('.cap-msg') as HTMLElement;
-      const btn = el.querySelector('button') as HTMLButtonElement;
-      const input = el.querySelector('input[name="email"]') as HTMLInputElement;
+      const el = form;
+      const wrap = el.closest('.capture');
+      const msg = wrap.querySelector('.cap-msg');
+      const btn = el.querySelector('button');
+      const input = el.querySelector('input[name="email"]');
       const source = wrap.dataset.capture || 'unknown';
       const email = (input.value || '').trim();
 
@@ -155,8 +163,8 @@ const id = `cap-${source}`;
           msg.textContent = MSG.almost;
           msg.className = 'cap-msg ok';
           el.reset();
-          if (typeof (window as any).gtag === 'function') {
-            (window as any).gtag('event', 'email_capture', { placement: source });
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'email_capture', { placement: source });
           }
         } else {
           msg.textContent = MSG.server;
