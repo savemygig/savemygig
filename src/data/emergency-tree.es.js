@@ -122,7 +122,7 @@ export const TREE = {
       },
       {
         "t": "note",
-        "html": "¿Funciona en el otro reproductor pero no en este? Es la división de formatos de librería, no un USB dañado. <a href=\"/knowledge/pioneer-dj/rekordbox#onelibrary\">Qué significa</a>, después del gig."
+        "html": "¿Funciona en el otro reproductor pero no en este? Es la división de formatos de librería, no un USB dañado. <a href=\"/es/knowledge/pioneer-dj/rekordbox#onelibrary\">Qué significa</a>, después del gig."
       }
     ],
     "label": "Prueba esto primero, 15 segundos",
@@ -419,7 +419,7 @@ export const TREE = {
       },
       {
         "t": "note",
-        "html": "¿Esta computadora tiene rekordbox con <strong>tu</strong> librería? Mejor toma el <a href=\"/protocol/export/backup\">rescate de export</a>: un export nuevo conserva tus cues y playlists, una copia cruda de archivos no."
+        "html": "¿Esta computadora tiene rekordbox con <strong>tu</strong> librería? Mejor toma el <a href=\"/es/protocol/export/backup\">rescate de export</a>: un export nuevo conserva tus cues y playlists, una copia cruda de archivos no."
       }
     ],
     "label": "Primero la ruta rápida",

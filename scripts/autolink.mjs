@@ -62,17 +62,53 @@
  * between tags. It never parses or rewrites tags, never touches attributes,
  * and cannot nest an <a> inside an <a>, which is the failure that would
  * silently break navigation.
+ *
+ * 10. LANGUAGE AWARE (2026-08-05, and it is a BUG FIX, not a feature).
+ *     Every destination in the registry is an ENGLISH path, and until today
+ *     this script injected them verbatim into the Portuguese and Spanish
+ *     pages: about 415 links that took a Brazilian reader out of /pt and into
+ *     English mid-sentence, the largest remaining English leak on the
+ *     translated site. Every injected destination is now prefixed with the
+ *     language of the page it lands on, derived from the OUTPUT PATH
+ *     (dist/pt/... -> /pt), and prefixed only after checking the prefixed
+ *     file really exists in dist. Where it does not, the English destination
+ *     stands: a working link to the wrong language beats a 404 in the right
+ *     one, and this way a page that has not been translated yet degrades
+ *     instead of breaking.
+ *
+ *     The exclusion test in rule 2/3 STRIPS THE LANGUAGE PREFIX FIRST, which
+ *     is the other half of the same bug. /protocol was excluded but
+ *     /pt/protocol was not, so the translated rescue tunnel was getting the
+ *     46 links the English tunnel is deliberately denied, and /pt/card and
+ *     /es/card carried three links the English card did not. The tunnel must
+ *     be link-free in every language: a DJ two minutes from a set does not
+ *     become a browser because the page is in Portuguese.
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { CONCEPTS, DICTIONARY } from '../src/data/concepts.js';
+import { LANGS } from '../src/i18n/registry.js';
 
 const DIST = process.argv[2] || 'dist';
 
 // Rules 2 and 3. Utility and machine-facing pages are excluded too: they are
 // not read as prose and a link in them is noise.
+// These are ENGLISH paths. Rule 10: a page URL has its language prefix
+// stripped before it is tested against them, so one entry covers all three
+// languages and a new language is covered the day it ships.
 const EXCLUDED_PREFIXES = ['/protocol', '/legal', '/404', '/offline', '/card', '/card-ready'];
+
+// Rule 10. From the registry, so the day a fourth language lands it is
+// covered without touching this file.
+const LANG_PREFIXES = LANGS.map((l) => l.prefix).filter(Boolean);
+/** The language prefix of a site path, or '' for English. */
+const prefixOf = (url) => LANG_PREFIXES.find((p) => url === p || url.startsWith(p + '/')) || '';
+/** A site path with its language prefix removed, i.e. the English path. */
+const stripLang = (url) => {
+  const p = prefixOf(url);
+  return p ? (url.slice(p.length) || '/') : url;
+};
 
 // Rule 6.
 const SKIP_TAGS = new Set(['a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code', 'pre', 'button', 'summary', 'svg', 'script', 'style', 'textarea', 'select', 'option', 'title']);
@@ -99,6 +135,43 @@ function walk(dir, out = []) {
 const urlOf = (file) =>
   '/' + path.relative(DIST, file).replace(/index\.html$/, '').replace(/\.html$/, '').replace(/\/$/, '');
 
+// Rule 10. Does the built site actually have this page? build.format is
+// 'file', so a page is foo.html, but index.html is checked too so the helper
+// keeps working if that ever changes. Cached: this is asked once per
+// (destination, language) pair, thousands of times over a full run.
+const distHasCache = new Map();
+const distHas = (p) => {
+  const clean = p.replace(/\/$/, '');
+  if (distHasCache.has(clean)) return distHasCache.get(clean);
+  const yes = fs.existsSync(path.join(DIST, `${clean}.html`)) ||
+              fs.existsSync(path.join(DIST, clean, 'index.html'));
+  distHasCache.set(clean, yes);
+  return yes;
+};
+
+// Counted at INJECTION time, not here: localizeDest is asked about every term
+// in the vocabulary on every page, so counting it would report thousands of
+// "prefixed destinations" for a few hundred actual links.
+let localizedLinks = 0;
+let englishFallbackLinks = 0;
+const missingTranslations = new Set();
+
+/**
+ * Rule 10. An English registry destination, moved into `prefix`'s language,
+ * but ONLY when that page exists. Fragments survive the move: the dictionary
+ * anchors (#fat32, #mbr) are the same ids in all three languages because the
+ * dictionary is generated from one term list.
+ */
+const localizeDest = (dest, prefix) => {
+  if (!prefix) return dest;
+  const [p, frag] = dest.split('#');
+  if (!distHas(prefix + p)) {
+    missingTranslations.add(prefix + p);
+    return dest;
+  }
+  return prefix + p + (frag ? `#${frag}` : '');
+};
+
 let totalLinks = 0;
 let pagesTouched = 0;
 const perTerm = new Map();
@@ -106,7 +179,11 @@ const files = walk(DIST);
 
 for (const file of files) {
   const url = urlOf(file) || '/';
-  if (EXCLUDED_PREFIXES.some((p) => url === p || url.startsWith(p + '/'))) continue;
+  // Rule 10: the language prefix comes off BEFORE the exclusion test, so
+  // /pt/protocol/usb/start is excluded exactly like /protocol/usb/start.
+  const lang = prefixOf(url);
+  const enUrl = stripLang(url);
+  if (EXCLUDED_PREFIXES.some((p) => enUrl === p || enUrl.startsWith(p + '/'))) continue;
 
   const html = fs.readFileSync(file, 'utf8');
 
@@ -123,13 +200,19 @@ for (const file of files) {
   const body = html.slice(mainOpenEnd + 1, mainEnd);
   const tail = html.slice(mainEnd);
 
-  // Rules 4 and 5, decided per page before any rewriting.
-  const available = VOCAB.filter((v) => {
-    const destPath = v.dest.split('#')[0];
-    if (url === destPath) return false;                    // rule 4
-    if (html.includes(`href="${v.dest}"`)) return false;   // rule 5
-    return true;
-  });
+  // Rules 4, 5 and 10, decided per page before any rewriting. Rule 10 runs
+  // FIRST: rules 4 and 5 both compare a destination against this page's own
+  // URL and its own existing hrefs, and on a /pt page both of those are
+  // prefixed. Testing the English destination against them would let the
+  // Portuguese rekordbox page link the word "rekordbox" to itself.
+  const available = VOCAB
+    .map((v) => (lang ? { ...v, dest: localizeDest(v.dest, lang) } : v))
+    .filter((v) => {
+      const destPath = v.dest.split('#')[0];
+      if (url === destPath) return false;                    // rule 4
+      if (html.includes(`href="${v.dest}"`)) return false;   // rule 5
+      return true;
+    });
   if (!available.length) continue;
 
   const done = new Set();                                   // rule 1, per destination
@@ -218,6 +301,8 @@ for (const file of files) {
           done.add(h.dest);
           added++;
           perTerm.set(h.key, (perTerm.get(h.key) || 0) + 1);
+          // Rule 10 accounting, on the links that actually shipped.
+          if (lang) (prefixOf(h.dest) ? localizedLinks++ : englishFallbackLinks++);
         }
       }
       out.push(text);
@@ -282,8 +367,10 @@ for (const file of walk(DIST)) {
   const url = urlOf(file) || '/';
   const html = fs.readFileSync(file, 'utf8');
 
-  // Rule 2 and 3 held.
-  if (EXCLUDED_PREFIXES.some((p) => url === p || url.startsWith(p + '/'))) continue;
+  // Rules 2, 3 and 10 held. Same prefix-stripped test as the writer above:
+  // if the two ever disagree, the checker skips pages the writer edited.
+  const enUrl = stripLang(url);
+  if (EXCLUDED_PREFIXES.some((p) => enUrl === p || enUrl.startsWith(p + '/'))) continue;
 
   // No nested anchors. This is the one failure that would break navigation
   // invisibly, so it is checked on the real output rather than trusted.
@@ -308,12 +395,33 @@ for (const file of walk(DIST)) {
     if (depth > 1) { problems.push(`${url}: nested <a>`); break; }
     if (depth < 0) { problems.push(`${url}: unbalanced </a>`); break; }
   }
+
+  // Rule 10 held. On a translated page, no anchor may point at an English
+  // registry destination that HAS a translated page. This is checked on the
+  // real output because the whole class of bug being fixed here was invisible
+  // in the source: nothing in any .astro file said "/knowledge/dictionary",
+  // this script put it there.
+  if (prefixOf(url)) {
+    const pre = prefixOf(url);
+    for (const v of VOCAB) {
+      const [p] = v.dest.split('#');
+      if (!distHas(pre + p)) continue;                        // no translation, English is correct
+      if (body.includes(`href="${v.dest}"`)) {
+        problems.push(`${url}: links English ${v.dest} but ${pre}${p} exists`);
+        break;
+      }
+    }
+  }
 }
 
 const top = [...perTerm.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
 console.log(`Autolink: ${totalLinks} links added across ${pagesTouched} pages`);
 console.log(`  top terms: ${top.map(([k, n]) => `${k} ${n}`).join(', ')}`);
-console.log(`  excluded: ${EXCLUDED_PREFIXES.join(' ')}`);
+console.log(`  excluded: ${EXCLUDED_PREFIXES.join(' ')} (in every language)`);
+console.log(`  language: ${localizedLinks} links prefixed, ${englishFallbackLinks} left English (no translated page)`);
+if (missingTranslations.size) {
+  console.log(`  no translated page for: ${[...missingTranslations].sort().slice(0, 6).join(' ')}${missingTranslations.size > 6 ? ` (+${missingTranslations.size - 6})` : ''}`);
+}
 
 if (problems.length) {
   console.error('\nAutolink FAIL');

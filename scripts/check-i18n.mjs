@@ -33,6 +33,24 @@
  *     is the specific practice that damages indexing, and it is banned by
  *     the detection spec.
  *
+ *  6. NO TRANSLATED PAGE LEAKS INTO ENGLISH. Every internal link inside
+ *     <main> on a /pt/ or /es/ page must carry that page's prefix, whenever
+ *     the prefixed page actually exists in dist.
+ *
+ *     ADDED 2026-08-05, after finding 411 of them. They came from
+ *     scripts/autolink.mjs, which injected the concept registry's English
+ *     destinations into all three languages, so a Brazilian reader tapping
+ *     "FAT32" mid-sentence landed on an English page and had to find their
+ *     way back. NONE of it was visible in the source: no .astro file
+ *     contained the string, the build step put it there. That is exactly the
+ *     class of regression a source review cannot catch and a check on the
+ *     built output can, which is why this lives here and not in a lint.
+ *
+ *     The "whenever the prefixed page exists" clause is doing real work: an
+ *     English-only page (there are none today, but there will be) must stay
+ *     linkable from a translated page. A working link into the wrong
+ *     language beats a 404 in the right one.
+ *
  * Run: node scripts/check-i18n.mjs dist
  */
 import fs from 'node:fs';
@@ -166,6 +184,71 @@ if (fs.existsSync(redirects)) {
   }
 }
 
+// ---- 6. no translated page leaks into English --------------------------
+//
+// THE ALLOWLIST. Every entry is a link that is unprefixed ON PURPOSE, and
+// every one needs a reason a reader would accept, not a reason that makes the
+// check pass. Adding an entry here is a decision; adding one to silence a
+// failure is how a guard becomes decoration.
+const LINK_ALLOW = [
+  {
+    on: /^\/(pt|es)\/legal(\/|$)/,
+    href: /^\/legal(\/|$)/,
+    why: 'the legal precedence links. Each translated legal page says, in its own language, that the English text is the version that prevails and links it. Prefixing these would point "read the English version" at the page the reader is already on. Marked in the source as the one place on the translated site where an English link is correct.',
+  },
+  {
+    on: /^\/(pt|es)\//,
+    href: /^\/downloads\//,
+    why: 'the printable PDF. One English-language artwork file, not a page: there is no translated equivalent to point at.',
+  },
+];
+
+const langPrefixes = LANGS.map((l) => l.prefix).filter(Boolean);
+/** dist has a page at this site path? build.format is 'file'. */
+const hasPage = (u) => {
+  const clean = u.replace(/[?#].*$/, '').replace(/\/$/, '');
+  if (clean === '') return fs.existsSync(path.join(DIST, 'index.html'));
+  return fs.existsSync(path.join(DIST, `${clean}.html`)) ||
+         fs.existsSync(path.join(DIST, clean, 'index.html'));
+};
+
+let leakChecked = 0;
+for (const f of files) {
+  const u = toUrlPath(f);
+  const prefix = langPrefixes.find((p) => u === p || u.startsWith(p + '/'));
+  if (!prefix) continue;
+
+  const html = fs.readFileSync(f, 'utf8');
+  // <main> only, and with script, style and comments stripped. Everything
+  // outside <main> comes from Base.astro, which routes every link through
+  // localizedPath already; the search overlay BUILDS hrefs in a JS string, and
+  // a source comment can quote markup. All three would be false failures.
+  const mainStart = html.indexOf('<main');
+  const mainEnd = html.lastIndexOf('</main>');
+  if (mainStart === -1 || mainEnd <= mainStart) continue;
+  const body = html.slice(mainStart, mainEnd)
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<!--[\s\S]*?-->/g, '');
+  leakChecked++;
+
+  const seen = new Set();
+  for (const m of body.matchAll(/href="(\/[^"]*)"/g)) {
+    const href = m[1];
+    if (seen.has(href)) continue;
+    seen.add(href);
+    // Already in this language, or in another live language on purpose (the
+    // language picker is chrome, but a body link to a sibling language would
+    // be deliberate too).
+    if (langPrefixes.some((p) => href === p || href.startsWith(p + '/'))) continue;
+    const allowed = LINK_ALLOW.find((a) => a.on.test(u + '/') && a.href.test(href));
+    if (allowed) continue;
+    const target = prefix + href;
+    if (!hasPage(target)) continue;   // no translated page: English stands
+    fail.push(`${path.relative(DIST, f)}: <main> links English "${href}" but "${target}" exists. Prefix it, or allowlist it in LINK_ALLOW with a reason.`);
+  }
+}
+
 if (fail.length) {
   console.error('i18n SEO guard FAIL:');
   fail.slice(0, 25).forEach((m) => console.error('  ' + m));
@@ -176,5 +259,6 @@ const liveList = LANGS.filter((l) => l.live).map((l) => l.tag).join(', ');
 const heldList = LANGS.filter((l) => !l.live).map((l) => l.tag).join(', ') || 'none';
 console.log(
   `i18n SEO guard PASS (${files.length} pages; live: ${liveList}; held back: ${heldList}; ` +
-  `${checkedAlt} pages with hreflang; ${englishNow.length} English URLs intact)`
+  `${checkedAlt} pages with hreflang; ${englishNow.length} English URLs intact; ` +
+  `${leakChecked} translated pages with no English link leak in <main>)`
 );

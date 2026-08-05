@@ -16,7 +16,22 @@
  * whole rescue tunnel on first visit. Wording must stay honest about the
  * condition ("once you've opened it") because a first-ever visit with no
  * signal has nothing cached. Full scope and conditions live on /install.
+ *
+ * THE /install LINK IS LANGUAGE AWARE (2026-08-05). It was hardcoded and this
+ * banner renders on all three homepages, so a Spanish reader was sent to the
+ * English install guide from the Spanish home page.
+ *
+ * ONLY THE LINK. The copy in this banner is STILL ENGLISH on the Portuguese
+ * and Spanish homepages, and that is a known gap, not a decision: it is a
+ * content change and it needs Antonio's words in each language, the way
+ * PromoBanner and the header search got theirs on 2026-08-05. Translating it
+ * is the next job on this component; the link is fixed here because it was
+ * failing the i18n link guard, which is a mechanical defect with one right
+ * answer.
  */
+import { localizedPath, DEFAULT_LANG } from '../i18n/registry';
+interface Props { lang?: string }
+const { lang = DEFAULT_LANG } = Astro.props;
 ---
 <div class="inst" id="installWrap" hidden>
   <div class="inst-body">
@@ -29,7 +44,7 @@
            them. This banner renders on desktop only (mobile uses the
            rotating banner slide), so one title serves. -->
       <strong class="inst-h" id="installH">Keep this on your computer and your phone</strong>
-      <span class="inst-sub">Once you've opened it, the rescue flow stays on this device, even with no signal. <a class="inst-more" href="/install" data-event="step_completed" data-placement="home_install_more">More &rarr;</a></span>
+      <span class="inst-sub">Once you've opened it, the rescue flow stays on this device, even with no signal. <a class="inst-more" href={localizedPath('/install', lang)} data-event="step_completed" data-placement="home_install_more">More &rarr;</a></span>
     </span>
     <button type="button" class="inst-btn" id="installBtn" hidden>Install</button>
     <button type="button" class="inst-close" id="installClose" aria-label="Dismiss">&times;</button>

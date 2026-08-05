@@ -129,7 +129,7 @@ export const TREE = {
       },
       {
         "t": "note",
-        "html": "Funciona no outro player mas não neste? É a divisão de formato de biblioteca, não um drive quebrado. <a href=\"/knowledge/pioneer-dj/rekordbox#onelibrary\">O que isso significa</a>, depois da gig."
+        "html": "Funciona no outro player mas não neste? É a divisão de formato de biblioteca, não um drive quebrado. <a href=\"/pt/knowledge/pioneer-dj/rekordbox#onelibrary\">O que isso significa</a>, depois da gig."
       }
     ],
     "label": "Tente isto primeiro, 15 segundos",
@@ -426,7 +426,7 @@ export const TREE = {
       },
       {
         "t": "note",
-        "html": "Este computador tem rekordbox com a <strong>sua</strong> biblioteca? Vá pelo <a href=\"/protocol/export/backup\">resgate do export</a>: um export novo preserva seus cues e playlists, uma cópia crua de arquivos não."
+        "html": "Este computador tem rekordbox com a <strong>sua</strong> biblioteca? Vá pelo <a href=\"/pt/protocol/export/backup\">resgate do export</a>: um export novo preserva seus cues e playlists, uma cópia crua de arquivos não."
       }
     ],
     "label": "A rota rápida primeiro",
