@@ -141,7 +141,22 @@ export const UI = {
     },
     cta: {
       stuckH: 'Playing soon and still stuck?',
-      stuckP: 'The step-by-step emergency flow asks how long you have and walks you through the fastest route, one decision at a time. Free, no account.',
+      // WORDED TO STAY TRUE THROUGH THE NEXT FEATURE (2026-08-05).
+      // This line prints on 39 pages, so it is the site's most-repeated
+      // promise about the emergency flow, and it used to say the flow "asks
+      // how long you have". It does not: the five doors on /emergency ask
+      // what FAILED, and the time question only appears inside some branches
+      // where it changes the route. So the claim was false everywhere it
+      // printed.
+      // Deleting the promise was the other option and it was rejected:
+      // time-based triage is on the roadmap. Instead this states only what is
+      // verifiable today (it starts from the symptom, one decision per
+      // screen) in wording that is STILL accurate the day the flow does start
+      // asking about time, because "starts from what actually failed" stays
+      // the entry point regardless of what the flow asks second. Do not
+      // re-add a specific question to this sentence; name the starting point,
+      // not the interrogation.
+      stuckP: 'The step-by-step emergency flow starts from what actually failed and walks you to the fastest route, one decision per screen. Free, no account.',
       stuckBtn: 'Start Emergency Mode',
       // The secondary exit from the "playing soon" panel, printed only by the
       // articles that pass card to ArticleCTA. Emergency Mode needs a browser
@@ -300,7 +315,10 @@ export const UI = {
     },
     cta: {
       stuckH: 'Vai tocar logo e ainda está travado?',
-      stuckP: 'O fluxo de emergência pergunta quanto tempo você tem e te leva pelo caminho mais rápido, uma decisão por vez. Grátis, sem cadastro.',
+      // Escrito para continuar verdadeiro depois da próxima feature: fala de
+      // onde o fluxo COMEÇA (o que falhou), não de qual pergunta ele faz. Ver
+      // o comentário na versão em inglês.
+      stuckP: 'O fluxo de emergência passo a passo começa pelo que realmente falhou e te leva até o caminho mais rápido, uma decisão por tela. Grátis, sem cadastro.',
       stuckBtn: 'Abrir o Emergency Mode',
       // "Emergency Card" é nome de produto, não se traduz.
       cardLink: 'Tire um print do Emergency Card',
@@ -447,7 +465,10 @@ export const UI = {
     },
     cta: {
       stuckH: '¿Tocas pronto y sigues atascado?',
-      stuckP: 'El flujo de emergencia te pregunta cuánto tiempo tienes y te lleva por la ruta más rápida, una decisión a la vez. Gratis, sin cuenta.',
+      // Escrito para seguir siendo verdad después de la próxima feature: dice
+      // de dónde ARRANCA el flujo (lo que falló), no qué pregunta hace. Ver el
+      // comentario en la versión en inglés.
+      stuckP: 'El flujo de emergencia paso a paso arranca por lo que falló de verdad y te lleva hasta la ruta más rápida, una decisión por pantalla. Gratis, sin cuenta.',
       stuckBtn: 'Abrir Emergency Mode',
       // "Emergency Card" es nombre de producto, no se traduce.
       cardLink: 'Toma una captura de la Emergency Card',
