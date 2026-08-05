@@ -5,7 +5,7 @@ import Consent from '../components/Consent.astro';
 import LangPicker from '../components/LangPicker.astro';
 import Search from '../components/Search.astro';
 import { VERSION_LABEL, IS_BETA } from '../lib/version';
-import { byCode, liveLangs, localizedPath, DEFAULT_LANG, anyTranslationLive } from '../i18n/registry';
+import { LANGS, byCode, liveLangs, localizedPath, DEFAULT_LANG, anyTranslationLive } from '../i18n/registry';
 import { t } from '../i18n/ui';
 import TranslationNotice from '../components/TranslationNotice.astro';
 import '../styles/global.css';
@@ -233,7 +233,72 @@ const entityGraph = {
 <html lang={L.tag} dir={L.dir}>
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  {/* LANGUAGE DETECTION. Built exactly to the spec approved on 2026-08-03,
+      and it emits NOTHING AT ALL until a translation is actually live, so
+      today this is zero bytes on every page. Four rules, each of which is
+      the reason a normal i18n redirect damages a site and this one does not:
+
+      1. BROWSER LANGUAGE, NEVER COUNTRY OR IP. IP-based routing is what
+         actually breaks indexing. Googlebot crawls from the US reporting
+         en-US, so it stays on English and is never sent anywhere.
+      2. CLIENT SIDE ONLY. The Cloudflare edge never routes by language, so
+         one URL always returns one page to everybody, crawler or not.
+      3. THE BARE ROOT AND NOTHING ELSE. Somebody who clicked a search
+         result for a specific page gets exactly that page in exactly that
+         language. A deep link is never redirected, ever.
+      4. IT NEVER INTERRUPTS. No modal, no "we noticed you speak...". It
+         silently changes which language the content is in, and the picker
+         is the override. A DJ thirty minutes from a set meets no dialog.
+
+      It runs before <title> deliberately: at the root, the redirect should
+      happen before the browser starts fetching anything else. */}
+  {anyTranslationLive() && (
+    <script
+      is:inline
+      define:vars={{
+        LIVE: liveLangs().map((l) => l.code),
+        PREFIX: Object.fromEntries(LANGS.map((l) => [l.code, l.prefix])),
+        PAGE_LANG: lang,
+        DEF: DEFAULT_LANG,
+        IS_ROOT: path === '/',
+      }}
+    >
+      (function () {
+        var KEY = 'SMG_LANG';
+        function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+        function set(v) { try { localStorage.setItem(KEY, v); } catch (e) { /* private mode */ } }
+
+        // A language in the URL is an explicit choice, made by the visitor or
+        // by Google serving them the right hreflang. Record it and stop: this
+        // branch NEVER navigates, which is what keeps deep links untouched.
+        if (PAGE_LANG !== DEF) {
+          if (LIVE.indexOf(PAGE_LANG) > -1) set(PAGE_LANG);
+          return;
+        }
+        if (!IS_ROOT) return;
+
+        // Only here, on the plain domain, may anything move.
+        var want = get();
+        if (!want || LIVE.indexOf(want) < 0) {
+          want = null;
+          var navs = navigator.languages || [navigator.language || ''];
+          for (var i = 0; i < navs.length && !want; i++) {
+            // "pt-BR" and "pt-PT" both mean the Portuguese site. Matching on
+            // the base subtag is the whole reason a Portuguese phone set to
+            // any region lands correctly.
+            var base = String(navs[i]).toLowerCase().split('-')[0];
+            if (LIVE.indexOf(base) > -1) want = base;
+          }
+        }
+        if (!want || want === DEF) return;
+        var to = PREFIX[want];
+        // Detection does NOT write SMG_LANG. Landing on the prefixed page
+        // does, one line above, on the next load. A guess is not a choice
+        // until the visitor has been shown its result.
+        if (to) location.replace(to + location.search + location.hash);
+      })();
+    </script>
+  )}
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
@@ -334,7 +399,7 @@ const entityGraph = {
              time it sat last was not the position, it was separation, so the
              row now closes the destinations with a gap and its own rule
              instead of pretending to be an eighth destination. -->
-        <LangPicker />
+        <LangPicker lang={lang} path={path} />
       </nav>
     </div>
   </header>
@@ -620,11 +685,17 @@ const entityGraph = {
       history.replaceState(null, '', location.pathname + location.search);
     })();
   </script>
-  <script is:inline>
+  <script is:inline define:vars={{ swLang: lang === DEFAULT_LANG ? '' : lang }}>
     // Register the service worker so the rescue flow works with no signal.
+    // The language rides on the URL: the worker precaches ONE language, the
+    // one you installed from, and a different script URL is a different
+    // worker, so switching language installs the right offline copy instead
+    // of leaving a Brazilian with an English rescue path in a basement.
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').catch(function () {});
+        navigator.serviceWorker
+          .register('/sw.js' + (swLang ? '?lang=' + swLang : ''))
+          .catch(function () {});
       });
     }
   </script>

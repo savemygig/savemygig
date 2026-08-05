@@ -1,33 +1,24 @@
 ---
 import Base from '../../layouts/Base.astro';
 import EmailCapture from '../../components/EmailCapture.astro';
-import { RUNLIST } from '../../data/runlist.js';
+import { RUNLIST } from '../../data/runlist.es.js';
 
 // EMERGENCY CARD, ESPANOL NEUTRO (LATAM). Fuente de estructura, paneles,
 // clases y CSS: src/pages/card.astro.
 //
-// El bloque del booth sigue saliendo de src/data/runlist.js, la MISMA fuente
-// que usa la pantalla de emergencia, para que el orden y la cantidad de moves
-// nunca se separen entre las dos superficies. Todavia no existe runlist.es.js,
-// asi que la traduccion de los cuatro moves vive aqui, indexada por el verbo.
-//
-// LAS CUATRO LINEAS SON COPIA LITERAL de las que ya imprime
-// src/pages/es/protocol/[...slug].astro, palabra por palabra. Si esta card y
+// El bloque del booth sale de src/data/runlist.es.js, la MISMA fuente que usa
+// la pantalla de emergencia (src/pages/es/protocol/[...slug].astro), para que
+// el orden, los verbos y las frases nunca se separen entre las dos
+// superficies. El mapa local que vivia aqui se borro el dia que existio
+// runlist.es.js: una sola fuente de verdad por idioma. Si esta card y
 // /es/protocol/usb/moves dijeran cosas distintas, el DJ nunca las memoriza,
 // que es exactamente lo que el archivo en ingles llama el peor resultado
-// posible. EL DIA QUE EXISTA src/data/runlist.es.js, BORRA ESTE MAPA, importa
-// esas cuatro entradas aqui y en el renderer del tunel.
+// posible.
 //
 // FOLDER y LINK son rotulos impresos en el equipo (modo de navegacion FOLDER,
 // PRO DJ LINK) y se quedan en ingles, igual que en emergency-tree.es.js.
 // REINICIA y PIDE no son rotulos: son las palabras que el DJ tiene que
 // recordar solo.
-const MOVES_ES = {
-  FOLDER: { verb: 'FOLDER', action: 'La base de datos murió. La música no.' },
-  LINK: { verb: 'LINK', action: 'Toca desde el USB del otro reproductor.' },
-  RESTART: { verb: 'REINICIA', action: 'Apaga y enciende el reproductor muerto.' },
-  BORROW: { verb: 'PIDE', action: 'Pídele el USB al DJ que va antes o después de ti.' },
-};
 ---
 <Base
   title="La Emergency Card del DJ: toma una captura | Save My Gig"
@@ -48,7 +39,7 @@ const MOVES_ES = {
       </p>
       <ol class="card-moves">
         {RUNLIST.map((s) => (
-          <li><strong>{(MOVES_ES[s.verb] ?? s).verb}</strong> <span>{(MOVES_ES[s.verb] ?? s).action}</span></li>
+          <li><strong>{s.verb}</strong> <span>{s.action}</span></li>
         ))}
       </ol>
     </div>

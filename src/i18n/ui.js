@@ -120,6 +120,16 @@ export const UI = {
       server: 'Something went wrong on our side. Try again in a minute.',
       offline: 'No connection. Try again when you have signal.',
     },
+    tunnel: {
+      back: 'Back one step',
+      // Swapped in by script when there is no history to go back to, so a
+      // deep link or a new tab gets a working button instead of a dead one.
+      backToTriage: 'Back to triage',
+      restart: 'Start over',
+      exitLabel: 'Leave or restart',
+      why: 'Why, and how',
+      rules: 'The prevention rules',
+    },
     lang: { label: 'Language' },
   },
 
@@ -235,6 +245,14 @@ export const UI = {
       server: 'Deu problema aqui do nosso lado. Tenta de novo em um minuto.',
       offline: 'Sem conexão. Tenta de novo quando tiver sinal.',
     },
+    tunnel: {
+      back: 'Voltar um passo',
+      backToTriage: 'Voltar para a triagem',
+      restart: 'Começar de novo',
+      exitLabel: 'Sair ou recomeçar',
+      why: 'Por que, e como',
+      rules: 'As regras de prevenção',
+    },
     lang: { label: 'Idioma' },
   },
 
@@ -345,6 +363,14 @@ export const UI = {
       almost: 'Casi listo. Abre tu correo y toca el enlace de confirmación para recibir la card.',
       server: 'Algo falló de nuestro lado. Intenta de nuevo en un minuto.',
       offline: 'Sin conexión. Intenta de nuevo cuando tengas señal.',
+    },
+    tunnel: {
+      back: 'Volver un paso',
+      backToTriage: 'Volver al triaje',
+      restart: 'Empezar de nuevo',
+      exitLabel: 'Salir o empezar de nuevo',
+      why: 'Por qué, y cómo',
+      rules: 'Las reglas de prevención',
     },
     lang: { label: 'Idioma' },
   },

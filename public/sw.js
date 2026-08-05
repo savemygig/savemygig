@@ -63,7 +63,8 @@
  * cached whatever came back, so one transient 502 from the edge would pin an
  * error page onto a rescue URL until the next deploy.
  */
-const CACHE = 'smg-v15';
+// CACHE is defined below, after LANG_PREFIX, because its name carries the
+// install language. See the LANG_PREFIX note.
 
 // How long to wait for the network on an HTML request before serving the
 // cached copy. Being fully OFFLINE is not the common failure in a basement:
@@ -74,7 +75,40 @@ const CACHE = 'smg-v15';
 const HTML_NET_TIMEOUT = 4000;
 
 // The rescue path, offline. If a page is not here it still works online.
-const ROUTES = [
+// THE INSTALL LANGUAGE, added 2026-08-05. The question was whether three
+// languages make the site heavier, and the honest answer was "not for a
+// visitor, EXCEPT here". This worker precached 73 ENGLISH routes and nothing
+// else, so a Brazilian who installed the app from the Portuguese site and then
+// lost signal in a basement booth would have got the rescue flow back IN
+// ENGLISH. That defeats the entire point of the offline promise.
+//
+// The naive fix, precaching all three languages, is the one change that WOULD
+// make it heavier: every install downloading three copies of pages the reader
+// will never open. So the worker caches exactly one language, the one the
+// visitor installed from, and the route list below is reused with that
+// language's prefix rather than duplicated. Same weight as before, right
+// language offline.
+//
+// The prefix arrives as ?lang= on the registration URL, which is also what
+// makes the worker re-install when a visitor switches language: a different
+// script URL is a different worker.
+const LANG_PREFIX = (function () {
+  try {
+    var q = new URL(self.location.href).searchParams.get('lang') || '';
+    return /^(pt|es)$/.test(q) ? '/' + q : '';
+  } catch (e) { return ''; }
+})();
+
+// ONE CACHE PER LANGUAGE. Without the suffix, a visitor who switched from
+// English to Portuguese would install a second worker that then found "/"
+// already sitting in the shared store, cached in English, and would serve
+// that. The suffix makes the two stores unrelated, and the activate handler
+// below only deletes caches for THIS language, so switching back does not
+// force a re-download of the language you just left.
+// Bump the version part when the precache list changes.
+const CACHE = 'smg-v15' + (LANG_PREFIX ? '-' + LANG_PREFIX.slice(1) : '');
+
+const ROUTES_EN = [
   '/',
   '/emergency',
   '/checklist',
@@ -132,13 +166,15 @@ const ROUTES = [
   '/protocol/usb/restart',
   '/protocol/usb/start',
   '/protocol/sound/thin',
-  '/protocol/full-recovery',
-  '/protocol/full-recovery/value',
-  '/protocol/full-recovery/health',
-  '/protocol/full-recovery/rescue',
-  '/protocol/full-recovery/rebuild',
-  '/protocol/full-recovery/retire',
-  '/protocol/full-recovery/verify',
+  // /protocol/full-recovery and its six screens were HERE and were removed on
+  // 2026-08-05. That flow still carries its own "DRAFT, review pending"
+  // banner, it is noindex, it is not in the sitemap, and after checking all
+  // 307 built pages NOTHING links to it: it is an island awaiting review.
+  // Every visitor was nevertheless downloading all seven screens on
+  // install, and in Portuguese and Spanish they do not exist at all, so the
+  // install fired seven requests that could only 404. PUT THEM BACK the day
+  // the flow is approved and linked; until then this is dead weight on a
+  // first visit. The pages themselves are unaffected and still work online.
   '/legal/disclaimer',
   '/install',
   '/knowledge',
@@ -148,6 +184,12 @@ const ROUTES = [
   '/files-lost',
   '/offline',
 ];
+
+// English paths with the install language's prefix. "/" becomes "/pt" rather
+// than "/pt/", matching how the site is actually served.
+const ROUTES = LANG_PREFIX
+  ? ROUTES_EN.map(function (r) { return r === '/' ? LANG_PREFIX : LANG_PREFIX + r; })
+  : ROUTES_EN;
 
 // Non-HTML things the rescue path needs offline. The two woff2 files are the
 // site's whole typography; /search-index.json is what makes offline search
@@ -212,10 +254,25 @@ self.addEventListener('install', (e) => {
   e.waitUntil(precache().then(() => self.skipWaiting(), () => self.skipWaiting()));
 });
 
+// The cache version, without the language part. Cleanup is keyed on this and
+// NOT on the full name: a visitor who switches language installs a second
+// worker, and if that worker deleted every cache but its own it would throw
+// away the language they just came from, so switching back would re-download
+// the whole rescue path on whatever signal they have. Same version, different
+// language, is left alone; only an OLD version is deleted, in every language.
+// That still bounds the storage at one rescue path per language ever visited,
+// and a single version bump clears all of them.
+const CACHE_VERSION = CACHE.replace(/-(?:pt|es)$/, '');
+const OURS = /^smg-v\d+(?:-(?:pt|es))?$/;
+
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(
+        keys
+          .filter((k) => OURS.test(k) && k.replace(/-(?:pt|es)$/, '') !== CACHE_VERSION)
+          .map((k) => caches.delete(k))
+      ))
       .then(() => self.clients.claim())
   );
 });

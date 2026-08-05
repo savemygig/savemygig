@@ -5,7 +5,8 @@
 import Analytics from '../components/Analytics.astro';
 import Brand from '../components/Brand.astro';
 import Disclaimer from '../components/Disclaimer.astro';
-import { byCode, DEFAULT_LANG } from '../i18n/registry.js';
+import { byCode, localizedPath, DEFAULT_LANG } from '../i18n/registry.js';
+import { t } from '../i18n/ui.js';
 import '../styles/global.css';
 
 interface Props {
@@ -56,6 +57,13 @@ const { title, heading, risk = false, description, lang = DEFAULT_LANG } = Astro
 // BCP 47 tag, not the bare code: pt is served to Brazil and the registry
 // resolves it to pt-BR.
 const htmlLang = byCode(lang).tag;
+// THE TUNNEL'S OWN FURNITURE, localized 2026-08-05. The rescue screens were
+// fully translated while the two controls a DJ actually presses, Back and
+// Start over, plus the skip link and the exit href, stayed English. A
+// Portuguese rescue that answers in English at the one moment the reader is
+// panicking is worse than an English rescue, because it breaks trust exactly
+// where the product is supposed to earn it.
+const S = t(lang);
 
 // SELF-REFERENCING CANONICAL, added 2026-08-04 by the i18n SEO guard, which
 // found all 60 tunnel screens shipping with no canonical at all. These pages
@@ -112,7 +120,7 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig?\s*$/i, '');
   <Analytics />
 </head>
 <body>
-  <a href="#main" class="skip-link">Skip to content</a>
+  <a href="#main" class="skip-link">{S.skip}</a>
   <header class="top-bar">
     <div class="top-bar-inner">
       {/* SAME LOCKUP AS THE SITE HEADER (Antonio, 2026-08-03). Same shield at
@@ -147,32 +155,38 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig?\s*$/i, '');
     <!-- flow_back / flow_restart events: Antonio's flow-outcome logging ask
          (2026-08-03). GA4 attaches page_location, so the abandoned screen is
          recorded with each event. Consent-gated like all analytics. -->
-    <nav class="tunnel-exit" aria-label="Leave or restart">
-      <button type="button" class="tx-btn" id="txBack" data-event="flow_back">&larr; Back one step</button>
-      <a class="tx-btn" href="/emergency" data-event="flow_restart">Start over</a>
+    <nav class="tunnel-exit" aria-label={S.tunnel.exitLabel}>
+      <button type="button" class="tx-btn" id="txBack" data-event="flow_back">&larr; {S.tunnel.back}</button>
+      <a class="tx-btn" href={localizedPath("/emergency", lang)} data-event="flow_restart">{S.tunnel.restart}</a>
     </nav>
 
-    <Disclaimer variant={risk ? 'compact' : 'quiet'} />
+    <Disclaimer variant={risk ? 'compact' : 'quiet'} lang={lang} />
   </main>
-  <script is:inline>
+  <script is:inline define:vars={{ triageText: S.tunnel.backToTriage, triageHref: localizedPath('/emergency', lang) }}>
     (function () {
       var b = document.getElementById('txBack');
       if (!b) return;
       // If there is no history to go back to (deep link, new tab), send them
-      // to triage instead of leaving a dead button.
+      // to triage instead of leaving a dead button. Both the label and the
+      // destination come from the page's own language: a Brazilian who opens
+      // a step from a search result must not be thrown into English triage.
       if (window.history.length <= 1) {
-        b.textContent = '← Back to triage';
-        b.addEventListener('click', function () { window.location.href = '/emergency'; });
+        b.textContent = '← ' + triageText;
+        b.addEventListener('click', function () { window.location.href = triageHref; });
       } else {
         b.addEventListener('click', function () { window.history.back(); });
       }
     })();
   </script>
-  <script is:inline>
+  <script is:inline define:vars={{ swLang: lang === DEFAULT_LANG ? '' : lang }}>
     // Register the service worker so the rescue flow works with no signal.
+    // The language rides on the URL so the worker precaches the language the
+    // visitor actually installed from. See public/sw.js.
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').catch(function () {});
+        navigator.serviceWorker
+          .register('/sw.js' + (swLang ? '?lang=' + swLang : ''))
+          .catch(function () {});
       });
     }
   </script>

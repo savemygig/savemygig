@@ -35,19 +35,57 @@
  * NOT IN THE TUNNEL. The rescue top bar carries the brand and nothing else by
  * design. Nothing may compete with the decision on screen.
  *
- * WHEN PT AND ES ACTUALLY SHIP: replace the two notices with real hrefs, add
- * hreflang alternates in Base.astro, and persist the choice. Until then this
- * stores nothing, because there is nothing yet to remember.
+ * WIRED TO THE REGISTRY, 2026-08-05. The list is no longer written here: it
+ * is src/i18n/registry.js, the one switch, so a language becomes real in the
+ * picker at the same moment it becomes real in the sitemap and the hreflang
+ * set. Three behaviours follow from a language's `live` flag and nothing
+ * else, which is the point of having the flag:
+ *
+ *   live      -> a REAL LINK to this page in that language, and the choice is
+ *                remembered in SMG_LANG so the next bare visit lands there.
+ *   not live  -> the notice in that language, exactly as before. NO href is
+ *                emitted, deliberately: an unpublished language is noindex
+ *                and out of the sitemap, and an anchor to it in the header of
+ *                107 English pages is precisely how a crawler would discover
+ *                what we just took care to hide.
+ *
+ * THE REVIEW DOOR. Antonio has to read 94 translated pages before he gives
+ * the green light, and reading them page by page in a URL bar is not review,
+ * it is data entry. Visiting any page with ?preview=1 sets SMG_PREVIEW and
+ * turns the held-back languages into working links for that browser only, so
+ * he can walk the whole site in Portuguese in context. ?preview=0 clears it.
+ * Nothing about the served HTML changes, so a crawler can never take this
+ * door: it does not run scripts on our behalf and there is no href to follow.
+ *
+ * WHAT IT STORES. SMG_LANG, a bare language code, only ever one that is live.
+ * It is a functional preference and not tracking, so it sits outside the
+ * consent gate, and per the standing rule its privacy line shipped before
+ * this code did.
  */
+import { LANGS, DEFAULT_LANG, byCode, localizedPath } from '../i18n/registry';
+import { t } from '../i18n/ui';
+
+interface Props {
+  /** Language of the page this picker sits on. */
+  lang?: string;
+  /** ENGLISH path of the page, so every option lands on the SAME page. */
+  path?: string;
+}
+const { lang = DEFAULT_LANG, path = '/' } = Astro.props;
+const S = t(lang);
+const here = byCode(lang);
 
 // ACCENTS ARE NOT OPTIONAL. A first draft shipped "Espanol" and "Portugues"
 // bare and it looked exactly like what it was. The no dashes rule in this
 // codebase is about em and en dashes and has never touched diacritics.
-const LANGS = [
-  { code: 'en', label: 'EN', name: 'English', live: true },
-  { code: 'es', label: 'ES', name: 'Español', live: false },
-  { code: 'pt', label: 'PT', name: 'Português', live: false },
-];
+// The names now come from the registry, where they are already written
+// correctly, so there is one place to get this wrong instead of two.
+const opts = LANGS.map((l) => ({
+  ...l,
+  label: l.code.toUpperCase(),
+  href: localizedPath(path, l.code),
+  current: l.code === lang,
+}));
 
 // Written to a speaker's standard. Both notices deliberately sidestep the
 // pt-PT against pt-BR split and the regional Spanish splits: "está en camino"
@@ -57,47 +95,65 @@ const NOTICES = {
     title: 'Español muy pronto',
     body: 'Save My Gig todavía está solo en inglés. La versión en español está en camino.',
     back: 'Volver',
+    soon: 'Muy pronto',
   },
   pt: {
     title: 'Português em breve',
     body: 'O Save My Gig ainda está só em inglês. A versão em português está a caminho.',
     back: 'Voltar',
+    soon: 'Em breve',
   },
 };
+const held = opts.filter((l) => !l.live && NOTICES[l.code]);
 ---
 <details class="lang" id="langWrap">
-  <summary class="lang-sum" aria-label="Language, English selected">
+  <summary class="lang-sum" aria-label={`${S.lang.label}: ${here.name}`}>
     {/* Desktop: this IS the square. Mobile: it is the value at the end of the
         row, so the collapsed row still answers "what language am I in". */}
-    <span class="lang-label">Language</span>
-    <span class="lang-now">EN</span>
+    <span class="lang-label">{S.lang.label}</span>
+    <span class="lang-now">{here.code.toUpperCase()}</span>
     <span class="lang-chev" aria-hidden="true"></span>
   </summary>
 
   <div class="lang-pop">
     <div class="lang-list" id="langList">
-      {LANGS.map((l) => (
-        <button
-          type="button"
-          class:list={['lang-opt', { 'lang-opt-on': l.live }]}
-          data-lang={l.code}
-          lang={l.code}
-          aria-current={l.live ? 'true' : undefined}
-        >
-          <span class="lang-code">{l.label}</span>
-          <span class="lang-name">{l.name}</span>
-          {!l.live && <span class="lang-soon" lang="en">Soon</span>}
-        </button>
+      {opts.map((l) => (
+        l.live ? (
+          <a
+            class:list={['lang-opt', { 'lang-opt-on': l.current }]}
+            href={l.href}
+            data-lang={l.code}
+            data-live="1"
+            hreflang={l.tag}
+            lang={l.code}
+            aria-current={l.current ? 'true' : undefined}
+          >
+            <span class="lang-code">{l.label}</span>
+            <span class="lang-name">{l.name}</span>
+          </a>
+        ) : (
+          <button
+            type="button"
+            class="lang-opt"
+            data-lang={l.code}
+            data-href={l.href}
+            lang={l.code}
+          >
+            <span class="lang-code">{l.label}</span>
+            <span class="lang-name">{l.name}</span>
+            <span class="lang-soon">{NOTICES[l.code].soon}</span>
+          </button>
+        )
       ))}
     </div>
 
-    {(['es', 'pt'] as const).map((code) => (
-      <div class="lang-note" id={`langNote-${code}`} lang={code} hidden>
-        <p class="lang-note-t">{NOTICES[code].title}</p>
-        <p class="lang-note-b">{NOTICES[code].body}</p>
+    {held.map((l) => (
+      <div class="lang-note" id={`langNote-${l.code}`} lang={l.code} hidden>
+        <p class="lang-note-t">{NOTICES[l.code].title}</p>
+        <p class="lang-note-b">{NOTICES[l.code].body}</p>
         {/* The way back is in the same language as the notice. Dropping into
             English for the one word they click would undo the point. */}
-        <button type="button" class="lang-note-x" data-back>{NOTICES[code].back}</button>
+        <button type="button" class="lang-note-x" data-back>{NOTICES[l.code].back}</button>
       </div>
     ))}
   </div>
@@ -146,6 +202,10 @@ const NOTICES = {
     background: transparent; border: 0; border-radius: var(--radius);
     text-align: left; cursor: pointer;
     transition: background var(--t-fast), color var(--t-fast);
+    /* A published language is an <a> and a held-back one is a <button>. They
+       have to be the same row to the eye, so the anchor gives up the two
+       things a browser insists on adding to it. */
+    text-decoration: none; box-sizing: border-box;
   }
   .lang-opt:hover { background: var(--surf-2); }
   .lang-opt:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
@@ -238,7 +298,7 @@ const NOTICES = {
   }
 </style>
 
-<script is:inline>
+<script is:inline define:vars={{ CURRENT: lang }}>
   (function () {
     var wrap = document.getElementById('langWrap');
     var list = document.getElementById('langList');
@@ -264,12 +324,46 @@ const NOTICES = {
     // Always reopen on the list, never on whichever notice was left showing.
     wrap.addEventListener('toggle', function () { if (!wrap.open) showList(); });
 
+    // THE REVIEW DOOR. ?preview=1 turns the held-back languages into working
+    // links in this browser only. It is read on every page so Antonio can
+    // switch it on once and then browse normally.
+    try {
+      var q = new URLSearchParams(location.search).get('preview');
+      if (q === '1') localStorage.setItem('SMG_PREVIEW', '1');
+      else if (q === '0') localStorage.removeItem('SMG_PREVIEW');
+    } catch (e) { /* private mode: no preview, which is the safe default */ }
+    function preview() {
+      try { return localStorage.getItem('SMG_PREVIEW') === '1'; } catch (e) { return false; }
+    }
+
+    // Remember the choice, but ONLY a published language. Storing a held-back
+    // one would send a reviewer's next bare visit into a language the public
+    // cannot see, and the detection script would then have to defend against
+    // a value it should never have been given.
+    function remember(code, isLive) {
+      if (!isLive) return;
+      try { localStorage.setItem('SMG_LANG', code); } catch (e) { /* nothing to do */ }
+    }
+
     wrap.addEventListener('click', function (e) {
       var opt = e.target.closest ? e.target.closest('.lang-opt') : null;
       if (opt) {
         var code = opt.getAttribute('data-lang');
-        // English is what you are already reading, so choosing it closes.
-        if (code === 'en') { wrap.open = false; if (sum) sum.focus(); return; }
+        var isLive = opt.getAttribute('data-live') === '1';
+        // The language you are already reading: nothing to do but close.
+        if (code === CURRENT) {
+          e.preventDefault();
+          wrap.open = false;
+          if (sum) sum.focus();
+          return;
+        }
+        if (isLive) { remember(code, true); return; } // let the anchor navigate
+        // Held back. A reviewer goes through; everyone else gets the notice
+        // in their own language.
+        if (preview()) {
+          var href = opt.getAttribute('data-href');
+          if (href) { location.href = href; return; }
+        }
         showNote(code);
         return;
       }

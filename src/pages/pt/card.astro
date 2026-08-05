@@ -1,26 +1,20 @@
 ---
 import Base from '../../layouts/Base.astro';
 import EmailCapture from '../../components/EmailCapture.astro';
-import { RUNLIST } from '../../data/runlist.js';
+import { RUNLIST } from '../../data/runlist.pt.js';
 
 // EMERGENCY CARD, BRAZILIAN PORTUGUESE. Source of truth for structure,
 // panels, classes e CSS: src/pages/card.astro.
 //
-// O bloco da booth continua saindo de src/data/runlist.js, a MESMA fonte que
-// a tela de emergência usa, para a ordem e o número de moves nunca divergirem
-// entre as duas superfícies. Não existe runlist.pt.js ainda, então a tradução
-// dos quatro moves mora aqui, indexada pelo verbo. No dia em que um
-// runlist.pt.js existir, este mapa sai e o import passa a ser ele.
+// O bloco da booth sai de src/data/runlist.pt.js, a MESMA fonte que a tela de
+// emergência usa (src/pages/pt/protocol/[...slug].astro), para que a ordem, os
+// verbos e as frases nunca divirjam entre as duas superfícies. O mapa local que
+// ficava aqui saiu no dia em que o runlist.pt.js passou a existir: uma fonte de
+// verdade por idioma.
 //
 // FOLDER e LINK são rótulos impressos no equipamento (modo de navegação
 // FOLDER, PRO DJ LINK) e ficam em inglês. REINICIAR e PEDIR não são rótulos,
 // são as palavras que o DJ tem que lembrar sozinho.
-const MOVES_PT = {
-  FOLDER: { verb: 'FOLDER', action: 'O banco de dados morreu. A música não.' },
-  LINK: { verb: 'LINK', action: 'Toque pelo drive do outro player.' },
-  RESTART: { verb: 'REINICIAR', action: 'Desligue e ligue o player morto.' },
-  BORROW: { verb: 'PEDIR', action: 'Pegue um drive emprestado do DJ do seu lado.' },
-};
 ---
 <Base
   title="Emergency Card do DJ: tire um print disto | Save My Gig"
@@ -41,7 +35,7 @@ const MOVES_PT = {
       </p>
       <ol class="card-moves">
         {RUNLIST.map((s) => (
-          <li><strong>{(MOVES_PT[s.verb] ?? s).verb}</strong> <span>{(MOVES_PT[s.verb] ?? s).action}</span></li>
+          <li><strong>{s.verb}</strong> <span>{s.action}</span></li>
         ))}
       </ol>
     </div>
