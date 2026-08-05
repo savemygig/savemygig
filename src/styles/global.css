@@ -888,12 +888,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, .pad:focus-visible, 
 }
 
 /* ---------- Sticky mobile emergency CTA on articles ----------
-   While the cookie banner is up it must NOT be covered: the sticky CTA used
-   to sit on top of both consent buttons on every /fix page at mobile width,
-   so consent could neither be given nor refused. Consent.astro sets
-   .ck-open on <html> while the banner is visible. */
+   While the cookie banner is up the two must NOT overlap: the sticky CTA used
+   to sit on top of both consent buttons on every /fix page at mobile width, so
+   consent could neither be given nor refused.
+
+   THE FIRST FIX WAS WORSE THAN THE BUG (corrected 2026-08-05). It was
+   `html.ck-open .sticky-cta { display: none !important }`, which resolved the
+   overlap by removing the CTA: on a FIRST visit to any /fix article on a phone,
+   which is the single most common way a DJ in trouble arrives here, the one red
+   button leading into the rescue flow was absent until they had answered a
+   question about analytics cookies. The banner won a fight it should not have
+   been in.
+
+   They stack now. Consent.astro publishes the banner's measured height as
+   --ck-h, and the CTA steps up by exactly that plus a 10px gap, so both are
+   fully visible with the CTA above the banner. --ck-h is removed the moment a
+   choice is made, and the fallback in var() means the rule is inert when no
+   banner is open. */
 .sticky-cta { display: none; }
-html.ck-open .sticky-cta { display: none !important; }
 @media (max-width: 720px) {
   .sticky-cta {
     display: block; position: fixed; left: 12px; right: 12px;
@@ -903,6 +915,18 @@ html.ck-open .sticky-cta { display: none !important; }
     font-family: var(--font-display); font-weight: 800; font-size: 15px;
     text-transform: uppercase; letter-spacing: 0.02em; text-decoration: none;
   }
+  html.ck-open .sticky-cta {
+    bottom: calc(var(--ck-h, 0px) + 22px + env(safe-area-inset-bottom));
+  }
+  /* And the back-to-top circle steps above BOTH, same reason as below. */
+  html.ck-open body:has(.sticky-cta) .to-top {
+    bottom: calc(var(--ck-h, 0px) + 112px + env(safe-area-inset-bottom));
+  }
+  /* Anything the reader tabs to must not land under the fixed CTA. The
+     banner's own contribution is set inline by Consent.astro's reserveSpace()
+     (it is measured, this one is not), and the inline style wins, which is
+     correct: when both layers are up the banner is the taller of the two. */
+  html:has(.sticky-cta) { scroll-padding-bottom: 96px; }
 }
 
 /* ---------- Back to top (Base pages only, never the tunnel) ---------- */

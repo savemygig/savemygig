@@ -394,7 +394,23 @@ const entityGraph = {
   <slot name="head" />
 </head>
 <body>
-  <a href="#main" class="skip-link">Skip to content</a>
+  <a href="#main" class="skip-link">{S.skip}</a>
+  {/* CONSENT SITS HERE, NOT AT THE END OF THE BODY (2026-08-05).
+      It is role="dialog" and it is the first thing a visitor is asked, so a
+      keyboard or screen-reader user should meet it where they meet it
+      visually: first. Rendered last, it was reachable only after tabbing
+      through the entire header, the whole page and the whole footer.
+
+      AND IT IS NOT ON /emergency AT ALL. That page is the triage screen: a DJ
+      opens it because something is broken right now, and the five doors are
+      the only thing on it. A cookie banner is a fixed layer over the bottom
+      door and a decision about analytics standing between a DJ and the
+      decision they actually came to make. The rescue tunnel has never carried
+      it (Tunnel.astro does not include the component); the triage screen is
+      the same situation one tap earlier. The choice is still asked everywhere
+      else, and it is still asked before anything is measured: Analytics only
+      ever runs through __smgLoadAnalytics, which only a stored yes calls. */}
+  {path !== '/emergency' && <Consent lang={lang} />}
   <header class="site-nav-wrap">
     <div class="site-nav">
       <a href={lp("/")} class="nav-brand" aria-label={S.aria.brandHome}>
@@ -613,7 +629,6 @@ const entityGraph = {
       </div>
     </div>
   </footer>
-  <Consent lang={lang} />
   <script>
     const t = document.getElementById('navToggle');
     const l = document.getElementById('navLinks');

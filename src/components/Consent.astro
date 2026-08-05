@@ -3,9 +3,13 @@
  * Cookie consent, GDPR/ePrivacy.
  *
  * Analytics cookies are only set AFTER the visitor accepts. Declining works
- * and is remembered. Deliberately small and anchored to the bottom so it
- * never covers the emergency CTA, and it is hidden inside the rescue tunnel
- * (the Tunnel layout does not include this component).
+ * and is remembered. Deliberately small and anchored to the bottom, and it is
+ * hidden inside the rescue tunnel (the Tunnel layout does not include this
+ * component) AND on /emergency, the triage screen (Base.astro skips it when
+ * path === '/emergency', which is the English path for all three languages).
+ * The choice is still asked everywhere else, and nothing is measured until it
+ * is given: Analytics.astro only ever calls __smgLoadAnalytics, which a
+ * stored yes is the only thing that reaches.
  *
  * LANGUAGE AWARE 2026-08-04. This shipped in English on the Portuguese
  * homepage, which made it the FIRST thing a Brazilian DJ read on a page that
@@ -20,9 +24,15 @@ interface Props { lang?: string; }
 const { lang = DEFAULT_LANG } = Astro.props;
 const S = t(lang).consent;
 ---
-<div id="ck" class="ck" role="dialog" aria-label={S.aria} hidden>
+<!-- tabindex="-1" + aria-labelledby (2026-08-05): the box is focused the
+     moment it is revealed, so a screen reader announces the dialog and its
+     heading instead of leaving the reader somewhere else on the page with an
+     unannounced fixed layer over the bottom of it. aria-labelledby points at
+     the visible heading rather than repeating it in an aria-label, so the two
+     can never drift apart. -->
+<div id="ck" class="ck" role="dialog" tabindex="-1" aria-labelledby="ck-h" aria-label={S.aria} hidden>
   <p class="ck-t">
-    <strong class="ck-h">{S.head}</strong>
+    <strong class="ck-h" id="ck-h">{S.head}</strong>
     {S.body}
     <a href={localizedPath('/legal/cookies', lang)}>{S.policy}</a>
   </p>
@@ -130,9 +140,16 @@ const S = t(lang).consent;
     var box = document.getElementById('ck');
     if (!box) return;
     box.hidden = false;
-    // Suppress the sticky article CTA while the banner is up, it used to
-    // cover both consent buttons on /fix pages at mobile width.
+    // STACK, DO NOT SUPPRESS (2026-08-05). .ck-open used to carry
+    // `.sticky-cta { display: none }`, which fixed the overlap by DELETING the
+    // emergency CTA: on a first visit to any /fix article on a phone, the one
+    // red button that leads a stuck DJ into the rescue flow was simply not
+    // there until they had answered a cookie question. The CTA now rides on
+    // top of the banner instead, via --ck-h below.
     document.documentElement.classList.add('ck-open');
+    // Announce it. Without this the reader is left wherever they were, with a
+    // fixed dialog over the foot of the page that nothing told them about.
+    try { box.focus({ preventScroll: true }); } catch (e) { box.focus(); }
 
     // The banner is position:fixed, so it SAT ON TOP of real content: on the
     // first visit it covered the FROZEN PLAYER door on /emergency and the
@@ -142,8 +159,15 @@ const S = t(lang).consent;
     // viewport or the text wrap. Re-measured on resize and orientation change.
     function reserveSpace() {
       if (box.hidden) return;
-      var h = box.getBoundingClientRect().height;
-      document.body.style.paddingBottom = Math.ceil(h + 24) + 'px';
+      var h = Math.ceil(box.getBoundingClientRect().height);
+      document.body.style.paddingBottom = (h + 24) + 'px';
+      // Published so the sticky emergency CTA can sit ON TOP of the banner
+      // rather than being hidden by it. Read by .sticky-cta in global.css.
+      document.documentElement.style.setProperty('--ck-h', h + 'px');
+      // Padding at the foot of the SCROLL box, not just the body: without it
+      // an element the reader tabs to near the bottom is scrolled to exactly
+      // the edge of the viewport, which is underneath this fixed banner.
+      document.documentElement.style.scrollPaddingBottom = (h + 24) + 'px';
     }
     reserveSpace();
     // One more pass after fonts settle, since wrapping changes the height.
@@ -157,9 +181,17 @@ const S = t(lang).consent;
       box.style.display = 'none'; // belt and braces, in case CSS wins
       document.documentElement.classList.remove('ck-open');
       document.body.style.paddingBottom = '';
+      document.documentElement.style.removeProperty('--ck-h');
+      document.documentElement.style.scrollPaddingBottom = '';
       window.removeEventListener('resize', reserveSpace);
       window.removeEventListener('orientationchange', reserveSpace);
       if (v === 'yes') loadAnalytics();
+      // Focus was inside a dialog that no longer exists. Left alone it falls
+      // back to <body>, so the next Tab starts the page over from nothing.
+      // The skip link is the top of the document's own tab order, which is
+      // where somebody who has just dismissed a banner wants to be.
+      var skip = document.querySelector('.skip-link');
+      if (skip) { try { skip.focus({ preventScroll: true }); } catch (e) { skip.focus(); } }
     }
     document.getElementById('ck-yes').addEventListener('click', function () { choose('yes'); });
     document.getElementById('ck-no').addEventListener('click', function () { choose('no'); });
