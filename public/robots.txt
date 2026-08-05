@@ -7,88 +7,26 @@
 # blocked never fetches the page and therefore never sees the noindex, which is
 # how blocked URLs end up indexed as bare links. The meta tag is the stronger,
 # more precise instruction and it is already in place.
+#
+# Note on the absent per-agent groups. There used to be 22 of them here, one
+# per named search, AI-citation and AI-training crawler, and every one of them
+# said nothing but "Allow: /". They came out on 2026-08-05 for two reasons:
+#
+#   1. THEY GRANTED NOTHING. The wildcard group below already allows every
+#      crawler every path, so a named group that repeats it adds no permission.
+#      It only adds a name.
+#   2. THEY CREATED REAL AMBIGUITY. Cloudflare AI Crawl Control serves a
+#      managed robots.txt that PREPENDS its own per-agent groups, and those can
+#      carry Disallow lines. A crawler obeys the single most specific group
+#      that matches its own name, so any agent named in both places had two
+#      competing groups and the outcome depended on which one won. That is a
+#      silent, untestable failure mode on the file that decides who reads the
+#      site at all.
+#
+# So the AI access policy is decided in ONE place, the Cloudflare dashboard,
+# where it can be changed without a deploy. This file states the site's own
+# position and nothing else. Nothing here is disallowed to anyone.
 
-# --- AI citation crawlers: allowed everywhere, including the rescue tunnel ---
-# These decide whether we get cited in AI answers. The tunnel is our most
-# useful procedural content, so we want it readable even though it is noindex.
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: Claude-SearchBot
-Allow: /
-
-User-agent: Claude-User
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Perplexity-User
-Allow: /
-
-# --- AI training crawlers: allowed. This is a free public-good site and we
-# --- want the rescue steps to spread as widely as possible. ---
-User-agent: GPTBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: Applebot-Extended
-Allow: /
-
-User-agent: CCBot
-Allow: /
-
-User-agent: meta-externalagent
-Allow: /
-
-# Meta's real-time fetcher. A different agent from the training crawler above,
-# and the one that actually runs when a person asks Meta AI a question.
-User-agent: Meta-ExternalFetcher
-Allow: /
-
-# --- The rest of the crawlers that decide AI answers today ---
-# NONE OF THIS IS STRICTLY NECESSARY: the wildcard group below already allows
-# everything, and a well-behaved crawler falls through to it. These blocks
-# exist for the crawlers that only ever read their own group, and so that
-# anyone auditing this file can see that admitting them was a decision and not
-# an oversight. Adding a name here never changes what is allowed, only who is
-# named. Nothing on this site is disallowed to anyone.
-User-agent: Applebot
-Allow: /
-
-User-agent: Amazonbot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: DuckAssistBot
-Allow: /
-
-User-agent: MistralAI-User
-Allow: /
-
-User-agent: cohere-ai
-Allow: /
-
-User-agent: cohere-training-data-crawler
-Allow: /
-
-User-agent: Google-CloudVertexBot
-Allow: /
-
-User-agent: Bytespider
-Allow: /
-
-# --- Everyone else ---
 User-agent: *
 Allow: /
 
