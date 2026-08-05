@@ -131,7 +131,13 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig?\s*$/i, '');
           rendering it at half size only made the site look assembled from
           parts. If you change .nav-brand in Base.astro, change .top-bar .brand
           in global.css with it: one lockup, two surfaces. */}
-      <a href="/" class="brand" aria-label="Save My Gig, home">
+      {/* LOCALE AWARE 2026-08-05. The one link on a tunnel screen went to the
+          ENGLISH homepage from a Portuguese or Spanish rescue screen, which
+          is the one place on the site where losing your language mid-crisis
+          costs the most. The aria-label was English on all 55 screens too.
+          Only the destination and the label: no exit confirmation, nothing
+          added to the bar. Nothing new may compete with the decision here. */}
+      <a href={localizedPath('/', lang)} class="brand" aria-label={S.aria.brandHome}>
         <img src="/images/logo-shield.svg" alt="" width="47" height="54" class="tb-seal" decoding="async" />
         <Brand />
       </a>

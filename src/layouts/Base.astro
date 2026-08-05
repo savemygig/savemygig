@@ -56,6 +56,19 @@ const lp = (p) => localizedPath(p, lang);
     together, which is the only safe order. */
 const alternates = anyTranslationLive() ? liveLangs() : [];
 const SITE = 'https://www.savemygig.com';
+// THE FOOTER SHARE PAYLOAD, localized 2026-08-05. All four buttons carried one
+// hardcoded English sentence and the bare English homepage, under a heading
+// (footer.shareLead) that has been translated for weeks. So a Brazilian DJ read
+// "Todo DJ conhece um DJ que precisa disso:", pressed WhatsApp, and sent an
+// English message pointing at the English site. Sharing is the cheapest growth
+// this project has and it was pointing every non-English reader at a page they
+// would not have shared themselves.
+// No trailing slash on the English root: localizedPath('/') returns '/', and
+// the shared link should read savemygig.com, not savemygig.com/. /pt and /es
+// have no trailing slash either, which is how the site is actually served.
+const shareUrl = `${SITE}${localizedPath('/', lang)}`.replace(/\/$/, '');
+const shareText = S.footer.shareText;
+const enc = (x) => encodeURIComponent(x);
 const canonical = `${SITE}${localizedPath(path === '/' ? '/' : path, lang)}`;
 // Default share image (2026-07-30): landscape 1200x630, cropped from
 // Antonio's shield-logo social art so a shared link matches the same brand
@@ -422,10 +435,18 @@ const entityGraph = {
       <button class="nav-search-btn" id="navSearchBtn" aria-label={S.aria.search} aria-expanded="false" aria-controls="searchOverlay">
         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </button>
-      <button class="nav-toggle" id="navToggle" aria-label={S.aria.openMenu} aria-expanded="false" aria-controls="navLinks">
+      {/* THE OPEN/CLOSE PAIR RIDES ON THE ELEMENT, not through define:vars.
+          define:vars implies is:inline, and the script below this footer is a
+          BUNDLED script written in TypeScript: forcing it inline would ship
+          those casts raw to the browser, which is exactly the bug that killed
+          the email capture form (see EmailCapture.astro). Data attributes get
+          the same two strings to the same handler with none of that. */}
+      <button class="nav-toggle" id="navToggle" aria-label={S.aria.openMenu}
+        data-label-open={S.aria.openMenu} data-label-close={S.aria.closeMenu}
+        aria-expanded="false" aria-controls="navLinks">
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
       </button>
-      <nav class="nav-links" id="navLinks" aria-label="Site">
+      <nav class="nav-links" id="navLinks" aria-label={S.aria.site}>
         <a href={lp("/")} class="nav-home">{S.home}</a>
         <!-- Order mirrors the three homepage doors: Checklist, Emergency,
              Prevention. Recovery and Knowledge follow. The nav and the doors
@@ -486,11 +507,11 @@ const entityGraph = {
           <p class="foot-share-h">{S.footer.shareLead}</p>
         </div>
         <div class="foot-share-btns">
-          <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp" href="https://wa.me/?text=Save%20My%20Gig%2C%20DJ%20Booth%20Intelligence%2C%20for%20when%20your%20USB%20dies%20before%20a%20set.%20https%3A%2F%2Fwww.savemygig.com">
+          <a class="share-btn" target="_blank" rel="noopener" aria-label={S.aria.shareWhatsapp} href={`https://wa.me/?text=${enc(shareText + ' ' + shareUrl)}`}>
             <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.1 14.9l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 0 1 12 4zm4.3 9.8c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1l-.7 1c-.2.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.5-1.1v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3c-.3.3-1 1-1 2.3s1 2.7 1.1 2.9 2 3.1 4.9 4.3c1.8.7 2.5.8 3.4.6.5 0 1.4-.5 1.6-1.1.2-.5.2-1 .1-1.1z"/></svg>
             <span>WhatsApp</span>
           </a>
-          <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on Telegram" href="https://t.me/share/url?url=https%3A%2F%2Fwww.savemygig.com&text=Save%20My%20Gig%2C%20DJ%20Booth%20Intelligence">
+          <a class="share-btn" target="_blank" rel="noopener" aria-label={S.aria.shareTelegram} href={`https://t.me/share/url?url=${enc(shareUrl)}&text=${enc(shareText)}`}>
             <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 2.9 11.6c-1.1.4-1 1.5-.1 1.8l4.7 1.5 1.8 5.7c.2.5.4.7.9.7.4 0 .7-.2 1-.5l2.3-2.3 4.9 3.6c.9.5 1.6.2 1.8-.8l3.3-15.4c.3-1.2-.4-1.8-1.6-1.3zM8.7 14.2l9-5.6c.4-.3.8-.1.5.2l-7.3 6.6-.3 3z"/></svg>
             <span>Telegram</span>
           </a>
@@ -498,7 +519,7 @@ const entityGraph = {
                (Antonio). On a phone the labels on X and Copy disappear and
                those two go back to icon pills, which is what keeps the row on
                one line. -->
-          <a class="share-btn" target="_blank" rel="noopener" aria-label="Share on X" href="https://x.com/intent/post?text=Save%20My%20Gig%2C%20DJ%20Booth%20Intelligence&url=https%3A%2F%2Fwww.savemygig.com">
+          <a class="share-btn" target="_blank" rel="noopener" aria-label={S.aria.shareX} href={`https://x.com/intent/post?text=${enc(shareText)}&url=${enc(shareUrl)}`}>
             <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7 8 8.3 11H17l-5-6.6L6.3 21H3l7.6-8.7L2.5 2H10l4.5 6L18.9 2zm-1.1 17h1.7L7.3 3.8H5.5L17.8 19z"/></svg>
             <span class="sb-opt">X</span>
           </a>
@@ -507,7 +528,7 @@ const entityGraph = {
                "Copied!" feedback swaps in via a class on the button, never
                via .textContent on the whole element, so the SVG icon is
                never destroyed and needs no restore step. -->
-          <button type="button" class="share-btn" id="shareCopy" aria-label="Copy link">
+          <button type="button" class="share-btn" id="shareCopy" aria-label={S.aria.copyLink} data-share-url={shareUrl}>
             <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
             <span class="sb-opt">{S.footer.copy}</span>
             <span class="sb-copied">{S.footer.copied}</span>
@@ -545,20 +566,20 @@ const entityGraph = {
               stale again. Vector, so it is sharp at 104px and at 16px.
               A lettered seal for print or merch is a design job, not this. */}
           <img class="foot-seal" src="/images/seal-footer.svg" alt="" width="104" height="104" loading="lazy" aria-hidden="true" />
-          <a href={lp("/")} class="foot-lockup" aria-label="Save My Gig, DJ Booth Intelligence">
+          <a href={lp("/")} class="foot-lockup" aria-label={S.aria.brandHome}>
             <Brand variant="footer" />
           </a>
           <div class="foot-social">
-            <a class="soc-btn" href="https://www.instagram.com/savemygig/" target="_blank" rel="noopener" aria-label="Save My Gig on Instagram">
+            <a class="soc-btn" href="https://www.instagram.com/savemygig/" target="_blank" rel="noopener" aria-label={S.aria.instagram}>
               <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12 2c2.7 0 3 0 4.1.1 1 .1 1.7.2 2.3.5.6.2 1.1.5 1.6 1 .5.5.8 1 1 1.6.3.6.4 1.3.5 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 1-.2 1.7-.5 2.3-.2.6-.5 1.1-1 1.6-.5.5-1 .8-1.6 1-.6.3-1.3.4-2.3.5-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1-.1-1.7-.2-2.3-.5-.6-.2-1.1-.5-1.6-1-.5-.5-.8-1-1-1.6-.3-.6-.4-1.3-.5-2.3C2 15 2 14.7 2 12s0-3 .1-4.1c.1-1 .2-1.7.5-2.3.2-.6.5-1.1 1-1.6.5-.5 1-.8 1.6-1 .6-.3 1.3-.4 2.3-.5C9 2 9.3 2 12 2zm0 1.8c-2.7 0-3 0-4 .1-.8 0-1.2.2-1.5.3-.4.1-.7.3-1 .6-.3.3-.5.6-.6 1-.1.3-.3.7-.3 1.5-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .8.2 1.2.3 1.5.1.4.3.7.6 1 .3.3.6.5 1 .6.3.1.7.3 1.5.3 1 .1 1.3.1 4 .1s3 0 4-.1c.8 0 1.2-.2 1.5-.3.4-.1.7-.3 1-.6.3-.3.5-.6.6-1 .1-.3.3-.7.3-1.5.1-1 .1-1.3.1-4s0-3-.1-4c0-.8-.2-1.2-.3-1.5-.1-.4-.3-.7-.6-1-.3-.3-.6-.5-1-.6-.3-.1-.7-.3-1.5-.3-1-.1-1.3-.1-4-.1zm0 3.1a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2zm0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6zm5.3-3.1a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>
             </a>
-            <a class="soc-btn" href="https://www.tiktok.com/@savemygig" target="_blank" rel="noopener" aria-label="Save My Gig on TikTok">
+            <a class="soc-btn" href="https://www.tiktok.com/@savemygig" target="_blank" rel="noopener" aria-label={S.aria.tiktok}>
               <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M16.6 5.8a4.3 4.3 0 0 1-1-2.8h-3v11.6a2.4 2.4 0 1 1-1.7-2.3V9.2a5.4 5.4 0 1 0 4.7 5.3V9a7.2 7.2 0 0 0 4 1.3V7.3a4.3 4.3 0 0 1-2-1.5z"/></svg>
             </a>
-            <a class="soc-btn" href="https://x.com/savemygig" target="_blank" rel="noopener" aria-label="Save My Gig on X">
+            <a class="soc-btn" href="https://x.com/savemygig" target="_blank" rel="noopener" aria-label={S.aria.x}>
               <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7 8 8.3 11H17l-5-6.6L6.3 21H3l7.6-8.7L2.5 2H10l4.5 6L18.9 2zm-1.1 17h1.7L7.3 3.8H5.5L17.8 19z"/></svg>
             </a>
-            <a class="soc-btn" href="https://www.youtube.com/@savemygig" target="_blank" rel="noopener" aria-label="Save My Gig on YouTube">
+            <a class="soc-btn" href="https://www.youtube.com/@savemygig" target="_blank" rel="noopener" aria-label={S.aria.youtube}>
               <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 4.9 12 4.9 12 4.9s-7 0-8.9.5A3 3 0 0 0 1 7.5 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.5zM9.8 15.3V8.7l5.7 3.3-5.7 3.3z"/></svg>
             </a>
           </div>
@@ -571,7 +592,7 @@ const entityGraph = {
           </a>
         </div>
 
-        <nav class="foot-col" aria-label="Rescue">
+        <nav class="foot-col" aria-label={S.footer.colRescue}>
           <span class="foot-col-h">{S.footer.colRescue}</span>
           <!-- Order per Antonio: install leads (the installed app IS rescue,
                it guides with no internet), then the crisis doors. "As an
@@ -581,7 +602,7 @@ const entityGraph = {
           <a href={lp("/recovery")}>{S.footer.dataRecovery}</a>
           <a href={lp("/faq")}>{S.footer.faq}</a>
         </nav>
-        <nav class="foot-col" aria-label="Prepare">
+        <nav class="foot-col" aria-label={S.footer.colPrepare}>
           <span class="foot-col-h">{S.footer.colPrepare}</span>
           <!-- Checklist first (Antonio): it is the daily tool, same logic as
                the nav. Gear swapped for Dictionary in the footer (Antonio,
@@ -592,7 +613,7 @@ const entityGraph = {
           <a href={lp("/knowledge/dictionary")}>{S.footer.dictionary}</a>
           <a href={lp("/knowledge")}>{S.footer.knowledgeBase}</a>
         </nav>
-        <nav class="foot-col" aria-label="More">
+        <nav class="foot-col" aria-label={S.footer.colMore}>
           <span class="foot-col-h">{S.footer.colMore}</span>
           <a href={lp("/about")}>{S.footer.about}</a>
           <a href={lp("/partners")}>{S.footer.partners}</a>
@@ -613,11 +634,11 @@ const entityGraph = {
              actual registration exists; never "upgrade" the ™. -->
         <!-- On narrow phones the dot-joined line wrapped raggedly (Antonio,
              S10e). The separator becomes a deliberate line break there. -->
-        <span class="foot-copy">© 2026 Save My Gig&trade;<span class="fc-sep"> · </span><span class="fc-rest">Built by DJs who've been there.</span></span>
+        <span class="foot-copy">© 2026 Save My Gig&trade;<span class="fc-sep"> · </span><span class="fc-rest">{S.footer.builtBy}</span></span>
         <!-- Alive-signal, per Antonio's homepage review: says the project is
              maintained without printing a date that would itself go stale.
              Same font size as the line above (Antonio). -->
-        <span class="foot-live">Updated continuously with new gear and solutions.</span>
+        <span class="foot-live">{S.footer.updated}</span>
         <!-- Antonio (2026-07-30): visible build marker while the site is
              still being refined, so testers have a fixed reference point
              ("this happened on build 4") and visitors see it's actively
@@ -637,8 +658,11 @@ const entityGraph = {
         const open = l.classList.toggle('open');
         t.setAttribute('aria-expanded', open ? 'true' : 'false');
         // The glyph becomes an X in CSS; the label has to say the same thing
-        // to anyone using a screen reader.
-        t.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        // to anyone using a screen reader, IN THE READER'S LANGUAGE. Both
+        // strings ride on the button as data attributes (see the note on the
+        // element): this script is bundled and typed, so it cannot take
+        // define:vars without shipping TypeScript to the browser.
+        t.setAttribute('aria-label', (open ? t.dataset.labelClose : t.dataset.labelOpen) || '');
       });
     }
     const sBtn = document.getElementById('navSearchBtn');
@@ -683,7 +707,7 @@ const entityGraph = {
       let copyTimer;
       copyBtn.addEventListener('click', async () => {
         try {
-          await navigator.clipboard.writeText('https://www.savemygig.com');
+          await navigator.clipboard.writeText(copyBtn.dataset.shareUrl || 'https://www.savemygig.com');
           clearTimeout(copyTimer);
           copyBtn.classList.add('copied');
           copyTimer = setTimeout(() => copyBtn.classList.remove('copied'), 1500);
@@ -696,7 +720,7 @@ const entityGraph = {
        any long page, a round button fades in at the bottom-right once you are
        a screen and a half down, and one tap returns you to the top. Base
        pages only; the emergency tunnel stays free of extra chrome. -->
-  <button type="button" class="to-top" id="toTop" aria-label="Back to top" hidden>
+  <button type="button" class="to-top" id="toTop" aria-label={S.aria.toTop} hidden>
     <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
   </button>
   <script is:inline>

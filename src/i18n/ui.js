@@ -43,12 +43,23 @@ export const UI = {
       brandHome: 'Save My Gig, DJ Booth Intelligence, home',
       search: 'Search Save My Gig',
       openMenu: 'Open menu',
+      // The pair the nav toggle swaps between. The glyph becomes an X in CSS
+      // and the label has to say the same thing to a screen reader; it was
+      // hardcoded English inside the toggle script until 2026-08-05.
+      closeMenu: 'Close menu',
       site: 'Site',
       toTop: 'Back to top',
       instagram: 'Save My Gig on Instagram',
       tiktok: 'Save My Gig on TikTok',
       x: 'Save My Gig on X',
       youtube: 'Save My Gig on YouTube',
+      // The four footer share controls. English labels on a Portuguese page
+      // are invisible to a sighted reader and the only thing a screen-reader
+      // user gets.
+      shareWhatsapp: 'Share on WhatsApp',
+      shareTelegram: 'Share on Telegram',
+      shareX: 'Share on X',
+      copyLink: 'Copy link',
     },
     // The header search overlay. Until 2026-08-05 these lived hardcoded in
     // Search.astro and Base.astro, so every PT and ES page shipped an
@@ -77,8 +88,28 @@ export const UI = {
       // the sentence. The reader should meet one name for the rescue flow.
       noneStart: 'start emergency mode',
     },
+    // The desktop install banner on the homepage. It was hardcoded English
+    // in InstallApp.astro until 2026-08-05, which put four English strings at
+    // the top of the Portuguese and Spanish homepages. "Once you've opened
+    // it" is load bearing and survives translation: a first-ever visit with
+    // no signal has nothing cached, so the promise has to keep its condition.
+    installBanner: {
+      head: 'Keep this on your computer and your phone',
+      body: 'Once you\'ve opened it, the rescue flow stays on this device, even with no signal.',
+      more: 'More',
+      install: 'Install',
+      dismiss: 'Dismiss',
+    },
     footer: {
       shareLead: 'Every DJ knows a DJ who needs this:',
+      // WHAT ACTUALLY GETS SHARED. Until 2026-08-05 the WhatsApp, Telegram and
+      // X links carried one hardcoded English sentence and the bare English
+      // homepage, so a Brazilian pressing the button under a Portuguese
+      // heading sent an English message pointing at the English site. It opens
+      // with the same words as shareLead above on purpose: the reader has just
+      // read that line, and the message they send should sound like they wrote
+      // it. The URL is the reader's own language homepage, built in the layout.
+      shareText: 'Every DJ knows a DJ who needs this: Save My Gig, DJ Booth Intelligence, for when your USB dies before a set.',
       copy: 'Copy to paste',
       copied: 'Copied',
       coffee: 'Buy us a coffee',
@@ -200,12 +231,17 @@ export const UI = {
       brandHome: 'Save My Gig, DJ Booth Intelligence, início',
       search: 'Buscar no Save My Gig',
       openMenu: 'Abrir menu',
+      closeMenu: 'Fechar menu',
       site: 'Site',
       toTop: 'Voltar ao topo',
       instagram: 'Save My Gig no Instagram',
       tiktok: 'Save My Gig no TikTok',
       x: 'Save My Gig no X',
       youtube: 'Save My Gig no YouTube',
+      shareWhatsapp: 'Compartilhar no WhatsApp',
+      shareTelegram: 'Compartilhar no Telegram',
+      shareX: 'Compartilhar no X',
+      copyLink: 'Copiar link',
     },
     search: {
       placeholder: 'Busque: USB não reconhecido, FAT32, E-8302...',
@@ -218,11 +254,19 @@ export const UI = {
       noneOr: 'ou',
       noneStart: 'abra o Modo emergência',
     },
+    installBanner: {
+      head: 'Deixe isto no seu computador e no seu celular',
+      body: 'Depois que você abre uma vez, o fluxo de resgate fica salvo neste aparelho, mesmo sem sinal.',
+      more: 'Saiba mais',
+      install: 'Instalar',
+      dismiss: 'Fechar',
+    },
     footer: {
       // "Todo DJ conhece um DJ que precisa disso" keeps the English line's
       // shape and its wink. A literal "Cada DJ sabe de um DJ..." would be
       // correct and dead.
       shareLead: 'Todo DJ conhece um DJ que precisa disso:',
+      shareText: 'Todo DJ conhece um DJ que precisa disso: Save My Gig, DJ Booth Intelligence, para quando o pen drive morre antes do set.',
       copy: 'Copiar link',
       copied: 'Copiado',
       coffee: 'Pague um café pra gente',
@@ -337,12 +381,17 @@ export const UI = {
       brandHome: 'Save My Gig, DJ Booth Intelligence, inicio',
       search: 'Buscar en Save My Gig',
       openMenu: 'Abrir menú',
+      closeMenu: 'Cerrar menú',
       site: 'Sitio',
       toTop: 'Volver arriba',
       instagram: 'Save My Gig en Instagram',
       tiktok: 'Save My Gig en TikTok',
       x: 'Save My Gig en X',
       youtube: 'Save My Gig en YouTube',
+      shareWhatsapp: 'Compartir en WhatsApp',
+      shareTelegram: 'Compartir en Telegram',
+      shareX: 'Compartir en X',
+      copyLink: 'Copiar enlace',
     },
     search: {
       placeholder: 'Busca: USB no reconocido, FAT32, E-8302...',
@@ -355,8 +404,16 @@ export const UI = {
       noneOr: 'o',
       noneStart: 'abre el Modo emergencia',
     },
+    installBanner: {
+      head: 'Llévalo en tu computadora y en tu celular',
+      body: 'Una vez que lo abriste, el flujo de rescate se queda en este dispositivo, aunque no tengas señal.',
+      more: 'Más',
+      install: 'Instalar',
+      dismiss: 'Cerrar',
+    },
     footer: {
       shareLead: 'Todo DJ conoce a un DJ que necesita esto:',
+      shareText: 'Todo DJ conoce a un DJ que necesita esto: Save My Gig, DJ Booth Intelligence, para cuando el USB muere antes del set.',
       copy: 'Copiar enlace',
       // No opening or closing exclamation: the brand retired its own, and
       // this was the last one left anywhere on the Spanish site.
