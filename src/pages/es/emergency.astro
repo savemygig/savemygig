@@ -175,4 +175,32 @@ const schema = {
   .emerg-problems-h { font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.6rem; margin-bottom: 1rem; }
   .problem-list a { color: var(--text); text-decoration: none; }
   .problem-list a:hover { color: var(--red); }
+
+  /* ---------- THE FIFTH DOOR, ABOVE THE FOLD ON A PHONE ----------
+     2026-08-05. All five doors are the whole page, and the fifth one
+     (rekordbox export failed) ended BELOW the fold on a 390x844 iPhone: 17px
+     over in English, 50px in Spanish and 71px in Portuguese, because the
+     translated h1 wraps to two lines and more of the door descriptions run to
+     two. A door you have to scroll to find is a door a DJ in trouble does not
+     know exists, and this page has exactly one job.
+
+     Recovered WITHOUT touching type size. .pad-title stays at 17px and
+     .pad-desc stays at 14px, in every language, on every width. What gives
+     instead is the air: the gap between doors, the padding inside them, the
+     space under the headline and the dead 1rem above the grid. The homepage
+     already sets this precedent, tightening .door padding-block on short
+     screens rather than shrinking the door titles.
+
+     Mobile only (<= 640px) and this page only, so desktop and every other
+     page are byte for byte what they were. */
+  @media (max-width: 640px) {
+    .emerg-h1 { margin-bottom: 0.5rem; }
+    /* The grid is the first thing under the headline, so this 1rem was simply
+       added to the headline's own margin. */
+    .emerg-triage { margin-top: 0; }
+    .emerg .pad-grid { gap: 8px; }
+    .emerg .pad { padding-top: 14px; padding-bottom: 14px; }
+    .emerg .pad-header { margin-bottom: 5px; }
+    .emerg .pad-desc { line-height: 1.4; }
+  }
 </style>
