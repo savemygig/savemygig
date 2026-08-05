@@ -1,0 +1,80 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// EQUIPO, ESPANOL NEUTRO (LATAM). Fuente de estructura, paneles, cards, clases
+// y data-*: src/pages/gear.astro.
+//
+// TODO HREF ES INTOCABLE. Los links de salida de esta pagina son de afiliado y
+// llevan parametros de rastreo: se copian byte a byte del archivo en ingles.
+// Nada de regionalizar a amazon.com.mx, amazon.com.br ni ninguna otra tienda,
+// nada de tocar una query string. Los nombres de los productos tampoco se
+// traducen; solo la descripcion y el razonamiento.
+//
+// LA MONEDA SE DICE EN VOZ ALTA: las tiendas a las que llevan estos links
+// muestran el precio en dolares, y "$89" leido como pesos es un error caro.
+---
+<Base
+  title="Kit de emergencia del DJ: los USB que no mueren | Save My Gig"
+  description="Los USB en los que vale la pena confiar tu gig, seleccionados a partir de foros de DJ, reportes de usuarios y bases de datos de hardware. Cuatro por categoría, sin relleno."
+  path="/gear"
+  lang="es"
+>
+  <main class="wrap">
+    <div class="status-line">Approved_Gear</div>
+
+    <h1 style="margin-bottom:1rem">EL KIT DE <span class="accent">EMERGENCIA</span></h1>
+    {/* HONESTY CORRECTION (Antonio, 2026-08-03): la base de la lista es
+        INVESTIGACION, no experiencia personal, y eso es lo que dice el texto.
+        Silencio deliberado sobre afiliacion en el parrafo de apertura: los
+        links ya llevan rel="sponsored" y el evento affiliate_click, y la
+        divulgacion va en el panel de abajo. */}
+    <p class="dim" style="margin-bottom:1rem">No hemos cargado todos los USB de esta página, y no vamos a fingir lo contrario. Esta lista corta es investigación: foros de DJ, comunidades, reportes de usuarios y bases de datos de hardware, filtrados hasta cuatro por categoría, porque un muro de links significa que nadie eligió nada. Una de estas unidades está certificada por AlphaTheta. Las otras tres son a las que los DJs que trabajan siempre vuelven.</p>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.5rem">Los USB principales</h2>
+      <p class="dim">De 32 a 64 GB es el punto justo: suficiente para una biblioteca de trabajo completa, y chico para que FAT32 formatee sin drama.</p>
+      <p class="dim" style="font-size:0.85rem">Algunos links de esta página pueden dejarnos una comisión, sin costo extra para ti. Eso nunca cambia lo que recomendamos, y no hay links pagados dentro del Emergency Mode.</p>
+      <p class="dim" style="font-size:0.85rem">Los links llevan a tiendas internacionales y los precios aparecen en <strong>dólares estadounidenses (USD)</strong>, no en tu moneda local. El envío y los impuestos de importación entran aparte.</p>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3 style="font-size:1rem">SanDisk Extreme Pro USB 3.2</h3>
+          <p>Cuerpo de metal, rápida, aguanta años de maltrato de booth. La respuesta por defecto.</p>
+          <a href="https://www.amazon.com/s?k=SanDisk+Extreme+Pro+USB+3.2+Flash+Drive" target="_blank" rel="noopener sponsored" class="btn btn-neutral" data-event="affiliate_click" data-program="amazon" aria-label="Ver el precio en dólares de la SanDisk Extreme Pro USB 3.2" data-placement="gear_main_1">Ver precio en USD →</a>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem">SanDisk DJ Flash Drive</h3>
+          <p>La unidad oficial de la alianza AlphaTheta con SanDisk. Más grande de lo que un set necesita (512GB o 1TB), pero sale de fábrica lista en FAT32 y sirve como archivo de tu biblioteca, no solo como USB de export.</p>
+          <a href="https://pioneerdjstore.com/products/sandisk-dj-flash-drive" target="_blank" rel="noopener" class="btn btn-neutral" data-event="affiliate_click" data-program="pioneerdjstore" aria-label="Ver el precio en dólares de la SanDisk DJ Flash Drive" data-placement="gear_main_3">Ver precio en USD →</a>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem">Samsung BAR Plus</h3>
+          <p>Cuerpo único de metal macizo, sin tapa que perder, confiable en silencio.</p>
+          <a href="https://www.amazon.com/s?k=Samsung+BAR+Plus+USB+Flash+Drive" target="_blank" rel="noopener sponsored" class="btn btn-neutral" data-event="affiliate_click" data-program="amazon" aria-label="Ver el precio en dólares de la Samsung BAR Plus" data-placement="gear_main_2">Ver precio en USD →</a>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem">Kingston DataTraveler 32GB USB3</h3>
+          <p>La opción de presupuesto corto que los DJs todavía defienden. Confiable una vez formateada en FAT32. El formateo rápido está bien en una unidad en la que confías; en una sospechosa, deja correr el formateo completo, porque también funciona como prueba de estrés.</p>
+          <a href="https://www.amazon.com/s?k=Kingston+DataTraveler+32GB+USB+3.0" target="_blank" rel="noopener sponsored" class="btn btn-neutral" data-event="affiliate_click" data-program="amazon" aria-label="Ver el precio en dólares de la Kingston DataTraveler 32GB USB3" data-placement="gear_main_4">Ver precio en USD →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.5rem">El backup que vive en tu bolsillo</h2>
+      <p class="dim" style="margin-bottom:0">Compra dos de la unidad principal que elijas. Unidades idénticas, exports idénticos. El truco entero es ese, la redundancia le gana a la recuperación siempre.</p>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin-bottom:0.5rem">Vale la pena sumar</h2>
+      <ul class="checklist">
+        <li>Un case rígido chico o una cápsula de llavero, las unidades aplastadas y mojadas son el trabajo clásico de laboratorio.</li>
+        <li>Un adaptador USB-C ↔ USB-A, la laptop del booth nunca tiene el puerto que necesitas.</li>
+      </ul>
+    </div>
+
+    <p class="dim" style="margin-top:2rem">
+      ¿La unidad ya falló? <a href="/es/recovery">Ruta de recuperación →</a> ·
+      Sistema completo de prevención: <a href="/es/prepare">Nunca más →</a>
+    </p>
+  </main>
+</Base>

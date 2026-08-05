@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// CARD LISTA, ESPANOL NEUTRO (LATAM). Fuente de estructura, botones, clases y
+// data-*: src/pages/card-ready.astro. Pagina de llegada despues de confirmar
+// el correo (doble opt-in de Brevo). El href del PDF es el archivo que existe,
+// y no cambia con el idioma.
+---
+<Base
+  title="Tu Emergency Card está lista | Save My Gig"
+  description="Confirmado. Descarga la Emergency Card del DJ, lista para imprimir."
+  path="/card-ready"
+  lang="es"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line" >Confirmado</div>
+
+    <h1 style="margin-bottom:1rem">YA ESTÁS <span class="accent">DENTRO</span>.<br />AQUÍ ESTÁ TU CARD.</h1>
+
+    <p class="dim" style="margin-bottom:2.5rem">
+      Descárgala y ponla en un lugar donde de verdad la vayas a encontrar a las 3 de la mañana: en los
+      archivos de tu celular, en una captura en tu galería, o impresa y doblada dentro del case de los USB.
+    </p>
+
+    <div style="margin-bottom:2rem">
+      <a
+        href="/downloads/save-my-gig-emergency-card.pdf"
+        class="btn btn-solid"
+        download
+        data-event="card_download"
+        data-placement="card_ready"
+      >
+        Descargar la Emergency Card (PDF)
+      </a>
+      <a href="/es/card" class="btn btn-neutral" data-event="step_completed" data-step="view_card_web">
+        O léela en el sitio
+      </a>
+      <a href="/es/checklist">Llévate también el checklist pre-gig de una página</a>
+    </div>
+
+    <section class="panel" style="margin-bottom:1.25rem">
+      <h3 style="margin-bottom:0.75rem">Ya que estás aquí</h3>
+      <p class="dim" style="margin-bottom:1rem">
+        La card es la emergencia. El sistema es lo que evita que la emergencia ocurra.
+        Toma una noche armarlo y es gratis.
+      </p>
+      <a href="/es/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="card_ready">
+        Ver el sistema de prevención
+      </a>
+    </section>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.9rem">
+      Solo te escribimos cuando algo salva un gig. Date de baja cuando quieras,
+      un clic, sin resentimientos.
+    </p>
+  </main>
+</Base>

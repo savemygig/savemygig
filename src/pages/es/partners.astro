@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+
+// SOCIOS, ESPANOL NEUTRO (LATAM). Fuente de estructura, grid, plantilla de
+// card, clases y CSS: src/pages/partners.astro. La lista sale vacia de los dos
+// lados: el arreglo de socios es el mismo contrato que el archivo en ingles, y
+// un socio futuro entra como un objeto aqui y otro alla.
+const partners = [];
+---
+<Base
+  title="Socios | Save My Gig"
+  description="Empresas, servicios, productos y recursos confiables del ecosistema DJ: equipo, software, educación, música, accesorios y servicios profesionales."
+  path="/partners"
+  lang="es"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line">PARTNERS</div>
+    <h1 style="margin-bottom:0.8rem">Socios <span class="accent">confiables</span></h1>
+    <p class="dim pt-lead">
+      Save My Gig recomienda empresas, servicios, productos y recursos
+      confiables que ayudan a los DJs a tocar en su mejor nivel. Del equipo y el
+      software a la educación, la música, los accesorios y los servicios
+      profesionales, cada socio de esta página está elegido porque aporta valor
+      real a los DJs y a la comunidad de la música electrónica.
+    </p>
+    <p class="dim pt-lead">
+      Toda recomendación se gana su lugar igual que todo lo demás en este sitio:
+      tiene que ser útil, confiable y relevante.
+      Nada de esto aparece nunca dentro del flujo de rescate de emergencia.
+    </p>
+
+    {partners.length > 0 ? (
+      <div class="pt-grid">
+        {partners.map(p => (
+          <div class="pt-card">
+            <img class="pt-logo" src={p.logo} alt={`Logo de ${p.name}`} loading="lazy" />
+            <span class="pt-name">{p.name}</span>
+            <span class="pt-blurb">{p.blurb}</span>
+            <a class="btn btn-neutral pt-cta" href={p.href} rel="noopener sponsored">{p.cta}</a>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="panel pt-empty">
+        <p style="margin:0">Un socio tiene que ser algo que pondríamos frente a un DJ
+        profesional sin pensarlo dos veces: equipo, software, educación o un servicio
+        que aguanta uso profesional, de una empresa que responde por él.
+        La lista es corta por decisión, y se queda vacía hasta que algo pase
+        esa vara.</p>
+      </div>
+    )}
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">
+      ¿Representas a una empresa que merece estar aquí? Escribe a
+      <a href="mailto:info@savemygig.com">info@savemygig.com</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .pt-lead { max-width: 42rem; margin-bottom: 2rem; line-height: 1.6; }
+  /* Design language sprint, 2026-08-03: card, grid, title and blurb now come
+     from the shared card in global.css. Note the hover went with them: a
+     partner card is not a link, so it no longer animates on hover the way the
+     four link cards elsewhere do. Movement should mean "this goes somewhere". */
+  .pt-logo { width: 48px; height: 48px; object-fit: contain; margin-bottom: 0.3rem; }
+  .pt-blurb { flex: 1; }
+  .pt-cta { width: auto; align-self: flex-start; padding: 0.55rem 1.3rem; margin-top: 0.4rem; }
+  .pt-empty { text-align: center; color: var(--text-dim); padding: var(--sp-7) var(--sp-5); }
+</style>

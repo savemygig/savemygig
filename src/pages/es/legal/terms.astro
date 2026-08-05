@@ -1,0 +1,128 @@
+---
+import Base from '../../../layouts/Base.astro';
+
+// TERMINOS DE USO, ESPANOL NEUTRO (LATAM). Fuente de estructura, secciones,
+// clases y de TODO hecho juridico: src/pages/legal/terms.astro. TRADUCCION DE
+// CORTESIA: la ley aplicable, la jurisdiccion, la titularidad y las entidades
+// nombradas son las mismas del ingles, palabra por palabra. Ninguna ley
+// latinoamericana fue sustituida ni agregada. La version en ingles es la que
+// gobierna y esta pagina abre diciendolo.
+
+const UPDATED = '28 de julio de 2026';
+---
+<Base
+  title="Términos de Uso | Save My Gig"
+  description="Las reglas para usar Save My Gig: un recurso gratuito para DJs que trabajan, entregado en el estado en que se encuentra, con condiciones claras y sin sorpresas."
+  path="/legal/terms"
+  lang="es"
+  noindex
+>
+  <main class="wrap">
+    <div class="status-line">LEGAL</div>
+    <h1 style="margin-bottom:0.6rem">Términos de Uso</h1>
+    <p class="dim" style="margin-bottom:1.2rem">Última actualización: {UPDATED} · Parte del <a href="/es/legal">estante legal</a></p>
+
+    {/* AVISO DE PRECEDENCIA. Este link apunta a proposito a la pagina en
+        ingles: es el unico lugar del sitio traducido donde eso es correcto. */}
+    <p class="dim" style="margin-bottom:2rem">
+      Esta es una traducción de cortesía, hecha para que entiendas el contenido.
+      La versión en inglés es la que vale y prevalece en caso de discrepancia:
+      <a href="/legal/terms">lee los Terms of Use en inglés</a>.
+    </p>
+
+    <h2 class="trm-sec">El acuerdo</h2>
+    <p>
+      Save My Gig (savemygig.com) es operado desde Brasil por sus fundadores.
+      Al usar el sitio aceptas estos términos. Si no estás de acuerdo con
+      ellos, no uses el sitio.
+    </p>
+
+    <h2 class="trm-sec">Qué es el servicio</h2>
+    <p>
+      Save My Gig es un recurso gratuito para DJs que trabajan: guías, páginas
+      de referencia, un flujo de rescate de emergencia, un checklist pre-gig y
+      herramientas relacionadas. Todo eso es información general, no es
+      asesoría profesional para tu situación específica. El
+      <a href="/es/legal/disclaimer">Aviso Legal</a> cubre lo que eso significa
+      en la práctica, incluido el riesgo de pérdida de datos, y forma parte de
+      estos términos.
+    </p>
+
+    <h2 class="trm-sec">Registro</h2>
+    <p>
+      Algunas funciones gratuitas te piden registrarte con una dirección de
+      correo. Aceptas dar una dirección real que sea tuya. El registro es
+      gratis, no necesita contraseña, y todo correo que mandamos tiene baja en
+      un clic. Cómo tratamos tus datos está descrito en la
+      <a href="/es/legal/privacy">Política de Privacidad</a>. Podemos retirar
+      las funciones con registro a una dirección que abuse de ellas.
+    </p>
+
+    <h2 class="trm-sec">Uso aceptable</h2>
+    <p>
+      Usa el sitio como DJ, no como blanco. Aceptas no interrumpir ni
+      sobrecargar el servicio, no intentar acceder a sistemas o datos que no
+      son tuyos, no raspar ni copiar el contenido en masa para republicarlo, y
+      no usar los formularios para mandar spam ni contenido ilícito.
+    </p>
+
+    <h2 class="trm-sec">Nuestro contenido</h2>
+    <p>
+      El contenido de este sitio (texto, estructura, checklists, diseño) es
+      © 2026 Save My Gig™, salvo indicación en contrario. Puedes usarlo
+      libremente de forma personal, imprimirlo y compartir links hacia él.
+      Republicarlo completo, o presentarlo como propio, no está permitido sin
+      autorización por escrito. Los nombres y marcas de terceros (AlphaTheta,
+      Pioneer DJ, rekordbox y otros) pertenecen a sus respectivos dueños; no
+      estamos afiliados a ellos.
+    </p>
+
+    <h2 class="trm-sec">Links y links de afiliado</h2>
+    <p>
+      El sitio tiene links hacia sitios y productos de terceros que no
+      controlamos y por los que no somos responsables. Algunos links de
+      producto pueden ser links de afiliado, lo que significa que podemos ganar
+      una comisión sin costo adicional para ti. Esto nunca cambia lo que
+      recomendamos, y no hay links de afiliado ni patrocinados dentro del flujo
+      de rescate de emergencia.
+    </p>
+
+    <h2 class="trm-sec">Sin garantía, responsabilidad limitada</h2>
+    <p>
+      El servicio se entrega de forma gratuita y <strong>"en el estado en que
+      se encuentra"</strong> ("as is"), sin garantía de ningún tipo. En la
+      máxima medida permitida por la ley, nuestra responsabilidad por cualquier
+      pérdida derivada de tu uso del sitio queda excluida. El texto completo de
+      esa exclusión está en el <a href="/es/legal/disclaimer">Aviso Legal</a>.
+      Nada en estos términos limita la responsabilidad en los casos en que
+      hacerlo sería ilícito.
+    </p>
+
+    <h2 class="trm-sec">Cambios</h2>
+    <p>
+      Podemos actualizar el sitio, las herramientas y estos términos en
+      cualquier momento. La fecha al inicio de esta página te dice cuándo
+      cambiaron los términos por última vez. Seguir usando el sitio después de
+      un cambio significa que aceptas los términos actualizados.
+    </p>
+
+    <h2 class="trm-sec">Ley aplicable</h2>
+    <p>
+      Estos términos se rigen por las leyes de Brasil. Si un tribunal considera
+      que una parte de estos términos no es exigible, el resto sigue en vigor.
+    </p>
+
+    <h2 class="trm-sec">Contacto</h2>
+    <p>
+      Dudas sobre estos términos:
+      <a href="mailto:info@savemygig.com">info@savemygig.com</a>, o usa el
+      <a href="/es/feedback">formulario de feedback</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .trm-sec { font-size: 1.1rem; margin: 2rem 0 0.7rem; text-transform: none; letter-spacing: -0.01em; }
+  main p { color: var(--text-dim); }
+  main p strong { color: var(--text); }
+</style>
