@@ -83,14 +83,27 @@
      information. Added 2026-08-05, because every text input on the site drew
      itself in --edge, so at booth brightness the fields were effectively
      invisible until you tapped one.
-     MEASURED: 2.11:1 on --bg, 1.96:1 on --surf. That is a 59% improvement on
-     what was there and it is NOT yet the 3:1 WCAG 2.1 SC 1.4.11 asks of a
-     control's boundary. The approved value for this pass is this hex; a true
-     3:1 needs about #655e54 (3.09:1 on --bg, 2.88:1 on --surf, so even that
-     misses on the .srch-box surface), which is a visibly lighter edge and a
-     brand decision for Antonio rather than an accessibility detail we can
-     settle here. Flagged in the Aug 5 audit notes. */
-  --edge-strong: #4a463f;
+
+     WHY THIS EXACT HEX. A border has TWO neighbours, the fill inside it and
+     the surface outside it, and WCAG 2.1 SC 1.4.11 wants 3:1 against both.
+     The ten text fields on this site were measured in a browser rather than
+     assumed, and between them they touch THREE colours, not two:
+       --bg      #0a0a0b   .fbp-input, .backup-form, .add-section, and every
+                           field interior
+       --surf    #151413   inside .srch-box, and outside .cap-form input,
+                           .notes-area, .add-own, .acct-form
+       --surf-2  #1c1a17   outside .unlock-form input, which sits on the
+                           account card
+     Ratios for this value: 3.66:1 on --bg, 3.40:1 on --surf, 3.21:1 on
+     --surf-2. It is the DARKEST of the candidates that clears 3:1 on all
+     three. #6b6459 was the first choice and it fails, but only on --surf-2,
+     and only by 0.03 (2.97:1): six values of red apart from this one and not
+     tellable by eye, so there was no aesthetic reason to ship the one that
+     misses. #655e54 fails on two of the three.
+
+     It stays a 1px --stroke hairline, so it reads as a console field edge and
+     not a frame. Do not raise the weight to compensate for anything. */
+  --edge-strong: #71695e;
   --edge-soft: #201e1b;
   --red: #ff4d2e;          /* accent + stop/danger */
   --red-dim: rgba(255, 77, 46, 0.12);
