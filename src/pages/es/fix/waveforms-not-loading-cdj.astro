@@ -39,7 +39,11 @@ const schema = {
       <p style="margin:0"><strong>Versión corta:</strong> una waveform en blanco casi nunca detiene un set. El audio suena bien; lo que te falta es comodidad, no música. Abajo está el orden de arreglo.</p>
     </div>
 
-        <details class="acc-sec" name="fix-acc">
+        {/* PRIMERA SECCIÓN ABIERTA AL LLEGAR (H5, 2026-08-05). El h1 promete el
+            orden de las cosas y la página respondía con filas todas cerradas:
+            ni una instrucción en pantalla. `open` en el elemento, nunca por
+            JavaScript. Ver el comentario en la versión en inglés. */}
+        <details class="acc-sec" name="fix-acc" open>
       <summary><h2 class="acc-h2">Las tres causas</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <ul class="checklist">

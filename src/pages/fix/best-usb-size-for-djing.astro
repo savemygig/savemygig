@@ -40,7 +40,15 @@ const schema = {
       <p style="margin:0"><strong>Short answer: 32-64GB, quality brand, and buy two.</strong> That's several thousand tracks, more music than you could play in a week of sets, with fast mounting and full FAT32 comfort.</p>
     </div>
 
-        <details class="acc-sec" name="fix-acc">
+        {/* FIRST SECTION OPEN ON ARRIVAL (H5, 2026-08-05). The h1 above says
+            "DO THIS, IN THIS ORDER" and this page used to answer it with three
+            closed rows: zero instructions on screen for someone who is already
+            panicking. The first row is the fastest checks, which is what
+            everyone needs first, so it is server-rendered open. The rest stay
+            closed, and the exclusive `name` still means opening another closes
+            this one. `open` on the element, never JavaScript: it has to be in
+            the initial HTML and it has to survive JS being off. */}
+        <details class="acc-sec" name="fix-acc" open>
       <summary><h2 class="acc-h2">The track math</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <ul class="checklist">

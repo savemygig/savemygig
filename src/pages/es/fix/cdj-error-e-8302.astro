@@ -43,7 +43,11 @@ const schema = {
       <p style="margin:0"><strong>Versión corta:</strong> E-8302 aparece como <strong>CANNOT PLAY TRACK</strong> en el CDJ-3000 y el CDJ-3000X: el reproductor no puede leer los datos del track en tu USB. Esos son los dos reproductores para los que AlphaTheta documenta el código, y los DJ lo reportan también en CDJ-2000 más viejos, donde significa lo mismo. Casi siempre es una base de datos de rekordbox corrupta o un sistema de archivos equivocado, y las dos cosas se arreglan, muchas veces antes de tu set.</p>
     </div>
 
-        <details class="acc-sec" name="fix-acc">
+        {/* PRIMERA SECCIÓN ABIERTA AL LLEGAR (H5, 2026-08-05). El h1 promete el
+            orden de las cosas y la página respondía con filas todas cerradas:
+            ni una instrucción en pantalla. `open` en el elemento, nunca por
+            JavaScript. Ver el comentario en la versión en inglés. */}
+        <details class="acc-sec" name="fix-acc" open>
       <summary><h2 class="acc-h2">Qué lo causa</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <ul class="checklist">

@@ -66,7 +66,11 @@ const schema = {
       <p style="margin:0"><strong>El sistema entero en una frase:</strong> dos memorias USB idénticas, el mismo export en las dos, en dos bolsillos distintos. Todo lo demás en este sitio existe para quien todavía no hace esto. Y <a href="/es/recovery">si ya se te murió una unidad</a>, empieza por ahí y vuelve a esta página después.</p>
     </div>
 
-        <details class="acc-sec" name="fix-acc">
+        {/* PRIMERA SECCIÓN ABIERTA AL LLEGAR (H5, 2026-08-05). El h1 promete el
+            orden de las cosas y la página respondía con filas todas cerradas:
+            ni una instrucción en pantalla. `open` en el elemento, nunca por
+            JavaScript. Ver el comentario en la versión en inglés. */}
+        <details class="acc-sec" name="fix-acc" open>
       <summary><h2 class="acc-h2">Por qué la redundancia le gana a la recuperación</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <p>Toda técnica de recuperación, la nuestra incluida, es una apuesta hecha bajo presión. Una segunda unidad espejo no es una apuesta: es un cambio de quince segundos con la pista todavía bailando. Los profesionales de los que nunca escuchas historias de pánico no tienen suerte. Cargan la segunda unidad, la aburrida.</p>

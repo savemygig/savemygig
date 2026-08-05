@@ -67,7 +67,15 @@ const schema = {
       <p style="margin:0"><strong>The whole system in one sentence:</strong> two identical USB drives, the same export on both, kept in two different pockets. Everything else on this site exists for people who don't do this yet. And <a href="/recovery">if a drive already died on you</a>, start there and come back to this page after.</p>
     </div>
 
-        <details class="acc-sec" name="fix-acc">
+        {/* FIRST SECTION OPEN ON ARRIVAL (H5, 2026-08-05). The h1 above says
+            "DO THIS, IN THIS ORDER" and this page used to answer it with three
+            closed rows: zero instructions on screen for someone who is already
+            panicking. The first row is the fastest checks, which is what
+            everyone needs first, so it is server-rendered open. The rest stay
+            closed, and the exclusive `name` still means opening another closes
+            this one. `open` on the element, never JavaScript: it has to be in
+            the initial HTML and it has to survive JS being off. */}
+        <details class="acc-sec" name="fix-acc" open>
       <summary><h2 class="acc-h2">Why redundancy beats recovery</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <p>Every recovery technique, ours included, is a gamble played under pressure. A mirrored second drive is not a gamble: it's a fifteen-second swap while the room keeps dancing. The pros you never hear panic stories about aren't lucky. They carry the boring second drive.</p>

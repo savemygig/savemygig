@@ -38,7 +38,11 @@ const schema = {
       <p style="margin:0"><strong>Versión corta:</strong> la mayoría de los USB "muertos" en el booth son un problema de contacto, de ranura o de formato, no de archivos perdidos.</p>
     </div>
 
-        <details class="acc-sec" name="fix-acc">
+        {/* PRIMERA SECCIÓN ABIERTA AL LLEGAR (H5, 2026-08-05). El h1 promete el
+            orden de las cosas y la página respondía con filas todas cerradas:
+            ni una instrucción en pantalla. `open` en el elemento, nunca por
+            JavaScript. Ver el comentario en la versión en inglés. */}
+        <details class="acc-sec" name="fix-acc" open>
       <summary><h2 class="acc-h2">Las revisiones de 60 segundos</h2><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
     <p class="assumed">
