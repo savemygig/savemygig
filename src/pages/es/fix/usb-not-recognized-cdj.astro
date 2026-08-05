@@ -1,0 +1,82 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// EL CDJ NO RECONOCE EL USB, ESPANOL NEUTRO (LATAM). Fuente de estructura,
+// componentes, clases, data-* y CSS: src/pages/fix/usb-not-recognized-cdj.astro.
+// Solo cambian el texto legible y los hrefs, que apuntan a /es.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/es/fix/usb-not-recognized-cdj#article',
+  headline: 'El CDJ o XDJ no lee el USB: guía completa de emergencia',
+  description: 'Tu CDJ o XDJ Pioneer no reconoce el USB. Las revisiones más rápidas primero, las causas reales y el arreglo, ya sea que toques en 45 minutos o mañana.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/fix/usb-not-recognized-cdj#webpage' },
+  image: 'https://www.savemygig.com/og/usb-not-recognized-cdj.png',
+};
+---
+<Base
+  title="¿El CDJ no lee el USB? Guía de emergencia | Save My Gig"
+  description="Tu CDJ o XDJ Pioneer no reconoce el USB. Las revisiones más rápidas primero, las causas reales y el arreglo, ya sea que toques en 45 minutos o mañana."
+  path="/fix/usb-not-recognized-cdj"
+  ogImage="/og/usb-not-recognized-cdj.png"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">USB_No_Reconocido</div>
+    <h1 style="margin-bottom:1.5rem">¿EL CDJ NO LEE TU <span class="danger">USB</span>?<br />HAZ ESTO, EN ESTE ORDEN</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Versión corta:</strong> la mayoría de los USB "muertos" en el booth son un problema de contacto, de ranura o de formato, no de archivos perdidos.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Las revisiones de 60 segundos</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p class="assumed">
+      Damos por hecho que ya volviste a insertar la unidad, limpiaste el conector
+      y probaste la otra ranura y el otro reproductor. Van listados por ser
+      completos, no como consejo.
+    </p>
+    <ul class="checklist">
+      <li>Dale 30 segundos o más, porque las bibliotecas grandes montan despacio, sobre todo en los CDJ-2000 más viejos.</li>
+      <li>Si nadie está tocando con él: apaga y prende el reproductor, y prueba de nuevo.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">¿Sigue sin pasar nada? Las causas reales</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Formato equivocado:</strong> NTFS no funciona nunca; exFAT solo en firmware más reciente; los mapas de partición GPT confunden a casi todos los reproductores. La respuesta universal es <span class="mono" translate="no">FAT32</span> + <span class="mono" translate="no">MBR</span>.</li>
+      <li><strong>Base de datos corrupta:</strong> el reproductor ve la unidad pero muestra un error o una biblioteca vacía → mira <a href="/es/fix/cdj-error-e-8302">E-8302</a>.</li>
+      <li><strong>Hardware muriéndose:</strong> la unidad tampoco monta en una computadora. Deja de conectarla, porque estás dificultando la recuperación.</li>
+      <li><strong>Unidades hambrientas de energía:</strong> algunos SSD y algunas unidades con forma de hub piden más corriente de la que entrega un puerto de CDJ. Una memoria USB común, de calidad, es más segura.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Si tocas pronto</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p>Con una computadora en el lugar casi siempre se salva el gig: copia tus tracks esenciales a la computadora, formatea la unidad en FAT32/MBR, copia los tracks de vuelta y tócalos desde la vista de carpetas. Pierdes los cues y el sync, te quedas con el gig. El flujo de emergencia de abajo te lleva paso a paso, incluida la ruta sin computadora.</p>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="usb_not_recognized" lang="es" />
+  </main>
+</Base>

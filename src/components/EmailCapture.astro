@@ -42,7 +42,7 @@ const id = `cap-${source}`;
       aria-label={C.emailLabel}
       aria-describedby={`${id}-msg`}
     />
-    <button type="submit" class="btn btn-solid" style="margin:0">Register and send it</button>
+    <button type="submit" class="btn btn-solid" style="margin:0">{C.submit}</button>
   </form>
 
   {/* The live region is now also the field's DESCRIPTION (2026-08-04). It is
@@ -54,9 +54,7 @@ const id = `cap-${source}`;
   <p class="cap-msg dim" id={`${id}-msg`} role="status" aria-live="polite"></p>
 
   <p class="cap-legal">
-    Registering is free and counts everywhere on Save My Gig. We send a
-    confirmation email first. Your address is stored with Brevo, our email
-    provider. Unsubscribe any time. <a href={localizedPath("/legal/privacy", lang)}>Privacy</a>
+    {C.legal} <a href={localizedPath("/legal/privacy", lang)}>{C.privacy}</a>
   </p>
 </section>
 
@@ -92,7 +90,7 @@ const id = `cap-${source}`;
   }
 </style>
 
-<script>
+<script is:inline define:vars={{ SEND_TO: C.sendTo }}>
   // Already registered on this device: no form, one tap, their address shown.
   document.querySelectorAll('.capture').forEach((wrap) => {
     let unlocked = false; let stored = '';
@@ -107,7 +105,7 @@ const id = `cap-${source}`;
         const input = form.querySelector('input[name="email"]') as HTMLInputElement | null;
         const btn = form.querySelector('button') as HTMLButtonElement | null;
         if (input) { input.value = stored; input.hidden = true; }
-        if (btn) btn.textContent = 'Send it to ' + stored;
+        if (btn) btn.textContent = SEND_TO + stored;
         if (blurb) blurb.textContent = 'You are registered. One tap and it is in your inbox.';
       }
     }

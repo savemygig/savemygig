@@ -1,0 +1,233 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+import Detail from '../../../components/Detail.astro';
+
+// COMO FORMATEAR UN USB PARA CDJ, ESPANOL NEUTRO (LATAM). Fuente de
+// estructura, componentes, clases, data-* y CSS:
+// src/pages/fix/format-usb-for-cdj.astro. Solo cambian el texto legible y los
+// hrefs, que apuntan a /es.
+
+import { CHECKED } from '../../../data/facts.js';
+
+// CHECKED es una cadena en ingles dentro de facts.js. Renderizarla en espanol
+// es una decision de copy, asi que pasa aqui y no en el archivo de datos. Es
+// el mismo helper que usa src/pages/es/knowledge/pioneer-dj/cdj-3000.astro.
+const MESES = {
+  January: 'enero', February: 'febrero', March: 'marzo', April: 'abril',
+  May: 'mayo', June: 'junio', July: 'julio', August: 'agosto',
+  September: 'septiembre', October: 'octubre', November: 'noviembre', December: 'diciembre',
+};
+const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = esDate(CHECKED);
+
+// LOS PASOS DEL HowTo SON LAS PALABRAS VISIBLES DE LA PAGINA. El paso 1 es el
+// panel de advertencia; los pasos 2 a 5 son los cuatro items de "La version de
+// 60 segundos", palabra por palabra, sin la marcacion. Cada `name` es un trozo
+// literal de su propio `text`. Si editas el <ol class="art-steps">, edita este
+// arreglo en el mismo commit.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  '@id': 'https://www.savemygig.com/es/fix/format-usb-for-cdj#howto',
+  name: 'Cómo formatear un USB para CDJ Pioneer (FAT32 + MBR)',
+  description: 'Formatea una memoria USB para que la lea cualquier CDJ y XDJ Pioneer: sistema de archivos FAT32, esquema de partición MBR, en macOS y en Windows, incluidas las unidades de más de 32GB.',
+  totalTime: 'PT10M',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-20',
+  dateModified: '2026-07-26',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/fix/format-usb-for-cdj#webpage' },
+  image: 'https://www.savemygig.com/og/format-usb-for-cdj.png',
+  supply: [{ '@type': 'HowToSupply', name: 'Una memoria USB de 32 a 64 GB' }],
+  tool: [{ '@type': 'HowToTool', name: 'Utilidad de Discos de macOS o el formateo de Windows' }],
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: 'Copia todo a otro lado antes',
+      text: 'Formatear borra la unidad para siempre. Copia todo a otro lado antes.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Mac',
+      text: 'Mac: Utilidad de Discos → Visualización → Mostrar todos los dispositivos → selecciona la unidad, no el volumen → Borrar → MS-DOS (FAT) + Master Boot Record.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Windows',
+      text: 'Windows: clic derecho en la unidad dentro del Explorador de archivos → Formatear → FAT32 → el formateo rápido alcanza en una unidad en la que confías. En una unidad sospechosa, desmarca el rápido y deja correr el formateo completo: trabaja la unidad entera, así que sirve también como prueba de estrés.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Pon música con rekordbox',
+      text: 'Pon música con rekordbox 7.2.13 o más reciente, en modo EXPORT. No arrastres archivos.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Carga un track desde ella en un reproductor',
+      text: 'Carga un track desde ella en un reproductor antes de que dependas de ella.',
+    },
+  ],
+};
+---
+<Base
+  title="Cómo formatear un USB para CDJ: FAT32 + MBR | Save My Gig"
+  description="Sistema de archivos FAT32, esquema de partición MBR: la configuración que lee cualquier CDJ y XDJ Pioneer. Más las dos trampas, Windows escondiendo FAT32 y Mac escondiendo el Esquema."
+  path="/fix/format-usb-for-cdj"
+  ogImage="/og/format-usb-for-cdj.png"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Ruta de navegación">
+      <a href="/es">Inicio</a> <span aria-hidden="true">/</span> <a href="/es/faq">Soluciones</a> <span aria-hidden="true">/</span> <span>Formatear un USB</span>
+    </nav>
+
+    <div class="status-line">Guia_De_Formateo</div>
+    <h1 class="art-h1">Formatear un USB para <span class="accent">CDJ</span></h1>
+    <p class="dim art-updated">Revisado: {UPDATED} · unos 10 minutos</p>
+
+    <div class="panel panel-go">
+      <p style="margin:0">
+        <strong>La respuesta:</strong> sistema de archivos <span class="mono" translate="no">FAT32</span>,
+        esquema de partición <span class="mono" translate="no">MBR</span>, en una unidad de 32 a 64&nbsp;GB.
+        Todo CDJ y XDJ de la era rekordbox lee FAT32, y MBR es el esquema que
+        recomendamos (el porqué está abajo).
+      </p>
+    </div>
+
+    <div class="panel panel-warn" style="margin-top:0.8rem">
+      <p style="margin:0">Formatear <strong>borra la unidad para siempre</strong>. Copia todo a otro lado antes.</p>
+    </div>
+
+    <h2 class="art-h2">La versión de 60 segundos</h2>
+    <ol class="art-steps">
+      <li><strong>Mac:</strong> Utilidad de Discos &rarr; Visualización &rarr; <strong>Mostrar todos los dispositivos</strong> &rarr; selecciona la <strong>unidad</strong>, no el volumen &rarr; Borrar &rarr; <span class="mono" translate="no">MS-DOS (FAT)</span> + <span class="mono" translate="no">Master Boot Record</span>.</li>
+      <li><strong>Windows:</strong> clic derecho en la unidad dentro del Explorador de archivos &rarr; Formatear &rarr; <span class="mono" translate="no">FAT32</span> &rarr; el formateo rápido alcanza en una unidad en la que confías. En una unidad sospechosa, desmarca el rápido y deja correr el formateo completo: trabaja la unidad entera, así que sirve también como prueba de estrés.</li>
+      <li>Pon música con <strong>rekordbox 7.2.13 o más reciente, en modo EXPORT</strong>. No arrastres archivos.</li>
+      <li>Carga un track desde ella en un reproductor <strong>antes de que dependas de ella</strong>.</li>
+    </ol>
+
+    <h2 class="art-h2">Si algo sale mal</h2>
+    <p class="dim art-lead">Abre solo la que te describe.</p>
+
+    <Detail
+      q="FAT32 no aparece en la lista en Windows"
+      hint="Casi siempre es una unidad de más de 32GB. Tres salidas."
+    >
+      <p>
+        Es un límite de la <strong>ventana de formato de Windows</strong>, no de FAT32.
+        FAT32 en sí admite volúmenes de hasta <strong>2&nbsp;TB</strong>. Microsoft
+        simplemente dejó de ofrecerlo por encima de 32&nbsp;GB en la herramienta gráfica.
+        Elige la salida que te sirva:
+      </p>
+      <ul class="checklist">
+        <li><strong>Usa un formateador gratuito.</strong> <span class="mono" translate="no">guiformat</span> (o su gemelo de línea de comandos, <span class="mono" translate="no">fat32format</span>), los dos de Ridgecrop Consultants, formatean una unidad grande en FAT32 en pocos segundos. Es lo que la mayoría de los DJ termina usando.</li>
+        <li><strong>Línea de comandos de Windows 11.</strong> Microsoft subió a 2&nbsp;TB el límite de FAT32 del comando <span class="mono" translate="no">format</span> incorporado (anunciado para Windows 11 en 2024), mientras la ventana gráfica sigue parando en 32&nbsp;GB. Abre una terminal como administrador y ejecuta <span class="mono" translate="no">format X: /FS:FAT32 /Q</span>, cambiando la X por la letra de tu unidad. Revisa la letra dos veces; si tu versión se niega, guiformat hace el mismo trabajo.</li>
+        <li><strong>Reduce la unidad.</strong> Administración de discos &rarr; reduce el volumen a 32&nbsp;GB &rarr; formatea esa partición en FAT32. Pierdes el resto de la capacidad, que en una unidad de gig casi nunca hace falta.</li>
+      </ul>
+      <p>
+        La alternativa tentadora es exFAT, porque Windows te lo ofrece ahí mismo en la
+        lista. No lo tomes salvo que sepas que todos los reproductores que vas a tocar
+        leen exFAT.
+        <a href="/es/fix/exfat-vs-fat32-cdj">Aquí está cuáles sí &rarr;</a>
+      </p>
+    </Detail>
+
+    <Detail
+      q="No hay opción de Esquema en Utilidad de Discos del Mac"
+      hint="Seleccionaste el volumen en vez de la unidad."
+    >
+      <p>
+        Utilidad de Discos esconde el esquema de partición salvo que estés mirando el
+        <strong>dispositivo físico</strong>. Por omisión solo te muestra el volumen que
+        está encima de él.
+      </p>
+      <ul class="checklist">
+        <li>En Utilidad de Discos, elige <strong>Visualización &rarr; Mostrar todos los dispositivos</strong>.</li>
+        <li>La barra lateral ahora muestra la unidad con el volumen <strong>indentado debajo de ella</strong>.</li>
+        <li>Selecciona la <strong>entrada de arriba</strong>, la que tiene el nombre del fabricante, no la indentada.</li>
+        <li>Haz clic en Borrar. Ahora sí aparece el menú <strong>Esquema</strong>. Elige <span class="mono" translate="no">Master Boot Record</span>.</li>
+      </ul>
+      <p>
+        Esto importa más de lo que parece. Borrar solo el volumen deja en su lugar el
+        mapa de partición existente, que en cualquier unidad moderna es <strong>GPT</strong>.
+        El formateo avisa que salió bien, la unidad monta perfecto en tu Mac, y el CDJ la
+        rechaza. Esa es la historia número uno del "pero si formateó perfecto".
+      </p>
+    </Detail>
+
+    <Detail
+      q="Formateó bien y el CDJ sigue sin leerla"
+      hint="Cuatro causas, en el orden que vale la pena revisar."
+    >
+      <ul class="checklist">
+        <li><strong>El esquema es GPT, no MBR.</strong> El sospechoso de siempre, e invisible desde la computadora. Vuelve a borrar seleccionando el dispositivo en vez del volumen (mira arriba). En Windows revisa Administración de discos &rarr; clic derecho en el disco &rarr; Propiedades &rarr; Volúmenes. AlphaTheta lo documenta para modelos específicos: sus artículos de soporte afirman que el CDJ-3000 (artículo 4406135001625) y el XDJ-AN (artículo 53214453591009) no admiten el GUID Partition Map. Para el resto de la línea no publican ningún esquema, así que MBR es la respuesta documentada del fabricante donde él nombra una, y nuestra recomendación en todo lo demás. No cuesta nada y elimina una variable.</li>
+        <li><strong>Está en exFAT, no en FAT32.</strong> Las unidades de más de 32&nbsp;GB salen en exFAT de fábrica, así que una memoria USB "profesional" de 64&nbsp;GB recién comprada falla en un CDJ más viejo apenas la sacas de la caja. Si estás usando una <strong>tarjeta SD</strong> en vez de una memoria USB, exFAT ni siquiera es opción: rekordbox no exporta a una tarjeta SD en exFAT.</li>
+        <li><strong>La música se arrastró, no se exportó.</strong> El reproductor puede no mostrar nada en la vista de playlists. Prueba el botón de navegación <strong>FOLDER</strong>: si los tracks están ahí, fue eso lo que pasó.</li>
+        <li><strong>La unidad misma está fallando.</strong> Si formatea pero da error a mitad de una copia, deja de confiar en ella. <a href="/es/fix/dj-usb-backup-strategy">Dos unidades idénticas, siempre &rarr;</a></li>
+      </ul>
+    </Detail>
+
+    <Detail
+      q="¿Cómo sé que de verdad funcionó?"
+      hint="Treinta segundos ahora le ganan a enterarte en el booth."
+    >
+      <ul class="checklist">
+        <li><strong>Revisa el formato.</strong> Mac: selecciona la unidad en Utilidad de Discos, y tiene que decir <span class="mono" translate="no">MS-DOS (FAT32)</span> y <span class="mono" translate="no">Master Boot Record</span>. Windows: clic derecho en el Explorador de archivos &rarr; Propiedades &rarr; Sistema de archivos tiene que decir <span class="mono" translate="no">FAT32</span>.</li>
+        <li><strong>Exporta y después expulsa como corresponde.</strong> Usa el botón de expulsar del propio rekordbox. Sacar la unidad a mitad de escritura es la forma más común de corromper la base de datos que acabas de construir.</li>
+        <li><strong>Carga un track en un reproductor de verdad.</strong> El tuyo, o llega temprano para probar en el del club. Una unidad que nunca se probó no es un backup, es una esperanza.</li>
+      </ul>
+    </Detail>
+
+    <Detail
+      q="¿Qué tamaño de unidad compro?"
+      hint="De 32 a 64 GB. Más grande es peor aquí."
+    >
+      <p>
+        De 32 a 64&nbsp;GB es el punto justo: suficiente para una biblioteca de trabajo
+        completa, y chico como para formatear en FAT32 sin pelear. Las unidades más
+        grandes tardan más en formatear, más en que el reproductor las escanee, y no te
+        dan nada para un gig.
+      </p>
+      <p>
+        El límite de FAT32 que vale la pena conocer es de <strong>4&nbsp;GB por archivo</strong>, no
+        por unidad. Un MP3 de 320kbps pesa unos 9&nbsp;MB, y hasta un WAV largo sin
+        comprimir rara vez pasa de 1&nbsp;GB, así que en una biblioteca de música nunca
+        aparece. FAT32 tiene otros techos, un límite de 2&nbsp;TB por volumen y las
+        cantidades de archivos y carpetas por modelo que AlphaTheta publica en el
+        artículo de soporte 4406512510105, pero ninguno alcanza a una unidad de gig de
+        32 a 64&nbsp;GB.
+        <a href="/es/fix/best-usb-size-for-djing">Más sobre el tamaño &rarr;</a> ·
+        <a href="/es/gear">Unidades que se portan bien &rarr;</a>
+      </p>
+    </Detail>
+
+    <h2 class="art-h2">La regla que vale la pena recordar</h2>
+    <p class="art-close">
+      <strong>Formatea para el reproductor más viejo que te puedas encontrar, no para el
+      más moderno que tienes.</strong> El escenario principal del festival tiene CDJ-3000.
+      El sótano del after tiene un CDJ-2000 con una quemadura de cigarro encima. FAT32
+      más MBR suena en los dos.
+    </p>
+
+    <ArticleCTA article="format_guide" lang="es" />
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .art-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .art-updated { font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .art-h2 { font-size: clamp(1.3rem, 4.5vw, 1.7rem); margin: 2.4rem 0 0.9rem; text-transform: none; letter-spacing: -0.015em; }
+  .art-lead { font-size: 0.9rem; margin-bottom: 1rem; }
+  .art-steps { margin: 0 0 1rem 1.15rem; color: var(--text-dim); line-height: 1.75; }
+  .art-steps li { margin-bottom: 0.55rem; }
+  .art-steps strong { color: var(--text); }
+  .art-close { color: var(--text-dim); line-height: 1.7; }
+  .art-close strong { color: var(--text); }
+</style>

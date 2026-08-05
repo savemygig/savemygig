@@ -1,0 +1,92 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// ERROR E-8302 EN EL CDJ, ESPANOL NEUTRO (LATAM). Fuente de estructura,
+// componentes, clases, data-* y CSS: src/pages/fix/cdj-error-e-8302.astro.
+// Solo cambian el texto legible y los hrefs, que apuntan a /es.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/es/fix/cdj-error-e-8302#article',
+  headline: 'Error E-8302 en el CDJ: qué significa y cómo se arregla',
+  description: 'El error E-8302 en un CDJ Pioneer significa que el reproductor no puede leer los datos de tu USB, casi siempre una base de datos de rekordbox corrupta. El arreglo inmediato y el definitivo.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/fix/cdj-error-e-8302#webpage' },
+  image: 'https://www.savemygig.com/og/cdj-error-e-8302.png',
+};
+---
+<Base
+  title="Error E-8302 en el CDJ: qué significa y el arreglo | Save My Gig"
+  description="E-8302 en un CDJ Pioneer significa que el reproductor no puede leer los datos de tu USB, casi siempre una base de datos de rekordbox corrupta. El arreglo inmediato y el definitivo."
+  path="/fix/cdj-error-e-8302"
+  ogImage="/og/cdj-error-e-8302.png"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <!-- La definicion de E-8302 ("CANNOT PLAY TRACK", los datos del track no se
+       pueden leer) es de la propia AlphaTheta, en sus articulos oficiales de
+       codigos de error del CDJ-3000 y del CDJ-3000X:
+       support.alphatheta.com/en-US/articles/4406135959961 y /48523815124249.
+       Verificado el 2026-07-26. -->
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Error_E-8302</div>
+    <h1 style="margin-bottom:1.5rem">ERROR <span class="danger">E-8302</span> EN EL CDJ:<br />QUÉ ES Y CÓMO SE ARREGLA</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Versión corta:</strong> E-8302 aparece como <strong>CANNOT PLAY TRACK</strong> en el CDJ-3000 y el CDJ-3000X: el reproductor no puede leer los datos del track en tu USB. Esos son los dos reproductores para los que AlphaTheta documenta el código, y los DJ lo reportan también en CDJ-2000 más viejos, donde significa lo mismo. Casi siempre es una base de datos de rekordbox corrupta o un sistema de archivos equivocado, y las dos cosas se arreglan, muchas veces antes de tu set.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Qué lo causa</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Un export de rekordbox corrupto</strong>, normalmente por sacar el USB sin expulsarlo, o por un sync interrumpido.</li>
+      <li><strong>Sistema de archivos equivocado.</strong> NTFS no tiene soporte nunca, ni en el reproductor ni en el propio rekordbox. La otra causa común es una unidad que quedó con un esquema de partición GPT. <span class="mono" translate="no">FAT32</span> con esquema <span class="mono" translate="no">MBR</span> es la combinación que funciona en todos los booths (el firmware más reciente del CDJ-3000 también lee exFAT, pero FAT32 nunca te sorprende).</li>
+      <li><strong>Una unidad que se está muriendo</strong>, con sectores dañados justo donde vive la base de datos.</li>
+      <li><strong>Firmware viejo del reproductor</strong> frente a un formato de export nuevo de rekordbox.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">El arreglo inmediato (en el lugar)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p class="assumed">
+      Damos por hecho que ya volviste a insertar la unidad y que probaste la otra
+      ranura y el otro reproductor. Expulsa con <span class="mono" translate="no">USB STOP</span>, nunca de un tirón.
+    </p>
+    <ul class="checklist">
+      <li>Si otro reproductor sí la lee, toca desde ese deck por Pro DJ Link.</li>
+      <li>Con computadora: abre el USB en rekordbox. Si lee la unidad, haz un export nuevo de la playlist de hoy. Si no la lee, copia tus archivos de música a la computadora, formatea en FAT32/MBR y vuelve a exportar los tracks de hoy.</li>
+      <li>Sin computadora y sin ningún reproductor que la lea: la base de datos se perdió por hoy, pasa al flujo de emergencia de abajo para la ruta alternativa.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">El arreglo definitivo (en casa)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>Formatea la unidad completa (formateo completo, no rápido) en <span class="mono" translate="no">FAT32</span> + <span class="mono" translate="no">MBR</span>. Si el formateo completo falla o se arrastra, jubila la unidad.</li>
+      <li>Vuelve a exportar tu biblioteca desde cero en rekordbox, en modo Export. Nunca copies una base de datos vieja de vuelta a una unidad limpia.</li>
+      <li>Actualiza el firmware del reproductor y rekordbox.</li>
+      <li>Carga dos unidades idénticas con exports idénticos. Un E-8302 en una unidad es una molestia; en tu única unidad es un desastre.</li>
+    </ul>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="e8302" lang="es" />
+  </main>
+</Base>

@@ -88,6 +88,10 @@ export const UI = {
       blurb: 'We will email you the printable PDF so it is on your phone before the next dark booth. Occasional notes that save gigs. No spam, unsubscribe in one click.',
       emailLabel: 'Your email address',
       placeholder: 'you@email.com',
+      submit: 'Register and send it',
+      sendTo: 'Send it to ',
+      legal: 'Registering is free and counts everywhere on Save My Gig. We send a confirmation email first. Your address is stored with Brevo, our email provider. Unsubscribe any time.',
+      privacy: 'Privacy',
     },
     disclaimer: {
       quiet: 'You follow these steps at your own risk.',
@@ -177,6 +181,10 @@ export const UI = {
       blurb: 'A gente manda o PDF pronto para imprimir, para ele já estar no seu celular antes da próxima booth escura. De vez em quando, um aviso que salva gig. Sem spam, cancela em um clique.',
       emailLabel: 'Seu e-mail',
       placeholder: 'voce@email.com',
+      submit: 'Cadastrar e enviar',
+      sendTo: 'Enviar para ',
+      legal: 'O cadastro é gratuito e vale em todo o Save My Gig. A gente manda um e-mail de confirmação primeiro. Seu endereço fica guardado na Brevo, nosso provedor de e-mail. Você pode cancelar quando quiser.',
+      privacy: 'Privacidade',
     },
     disclaimer: {
       quiet: 'Você segue estes passos por sua conta e risco.',
@@ -262,6 +270,10 @@ export const UI = {
       blurb: 'Te enviamos el PDF listo para imprimir, así lo tienes en el celular antes del próximo booth a oscuras. De vez en cuando, un aviso que salva gigs. Sin spam, te das de baja en un clic.',
       emailLabel: 'Tu correo',
       placeholder: 'tu@email.com',
+      submit: 'Registrarme y enviar',
+      sendTo: 'Enviar a ',
+      legal: 'Registrarte es gratis y vale en todo Save My Gig. Primero te mandamos un correo de confirmación. Tu dirección se guarda en Brevo, nuestro proveedor de correo. Puedes darte de baja cuando quieras.',
+      privacy: 'Privacidad',
     },
     disclaimer: {
       quiet: 'Sigues estos pasos bajo tu propio riesgo.',

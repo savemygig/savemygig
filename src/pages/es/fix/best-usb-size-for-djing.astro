@@ -1,0 +1,81 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// QUE TAMANO DE USB PARA DJ, ESPANOL NEUTRO (LATAM). Fuente de estructura,
+// componentes, clases, data-* y CSS: src/pages/fix/best-usb-size-for-djing.astro.
+// Solo cambian el texto legible y los hrefs, que apuntan a /es.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/es/fix/best-usb-size-for-djing#article',
+  headline: '¿De cuántos GB tiene que ser el USB de un DJ?',
+  description: 'Cuántos tracks entran en un USB de DJ, por qué más grande no es más seguro en un CDJ, y el tamaño que de verdad cargan los profesionales.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/fix/best-usb-size-for-djing#webpage' },
+  image: 'https://www.savemygig.com/og/best-usb-size-for-djing.png',
+};
+---
+<Base
+  title="¿De cuántos GB el USB para DJ? 32, 64 o 128 GB | Save My Gig"
+  description="Cuántos tracks entran en un USB de DJ, por qué más grande no es más seguro en un CDJ, y el tamaño que de verdad cargan los profesionales."
+  path="/fix/best-usb-size-for-djing"
+  ogImage="/og/best-usb-size-for-djing.png"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line">Tamano_Del_USB</div>
+    <h1 style="margin-bottom:1.5rem">¿QUÉ TAMAÑO DEBE TENER<br>UN <span class="accent">USB</span> DE DJ?</h1>
+
+    <div class="panel panel-go">
+      <p style="margin:0"><strong>Respuesta corta: de 32 a 64 GB, de marca de calidad, y compra dos.</strong> Son varios miles de tracks, más música de la que podrías tocar en una semana de sets, con montaje rápido y FAT32 sin dramas.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">La cuenta de los tracks</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>MP3 320kbps:</strong> unos 9MB por track → una unidad de 32GB guarda unos 3500 tracks; una de 64GB, unos 7000.</li>
+      <li><strong>Sin compresión (AIFF/WAV):</strong> de 40 a 60MB por track → 32GB ≈ 600 tracks, 64GB ≈ 1200, y siguen siendo más de 20 horas de música.</li>
+      <li>Un set de 4 horas son de 60 a 80 tracks. Hasta la unidad de 32GB sin compresión carga ocho sets completos de opciones.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Por qué las unidades enormes son peores en el booth</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Tiempo de montaje:</strong> el reproductor indexa la base de datos al insertar la unidad, y un USB de 256GB atiborrado te puede dejar mirando una pantalla de carga en pleno cambio de DJ.</li>
+      <li><strong>Navegación:</strong> 20 mil tracks en la pantalla de un CDJ no son una biblioteca, son un pajar. La curaduría le gana a la capacidad.</li>
+      <li><strong>Radio de la explosión:</strong> cuando muere la unidad que tiene todo, muere todo. Dos unidades medianas le ganan a una gigante. <a href="/es/fix/dj-usb-backup-strategy">La estrategia de dos unidades →</a></li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Qué comprar en concreto</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>32 o 64GB de una marca grande, mejor de cuerpo metálico (en el booth se derraman tragos), y USB-A: funciona en todos los reproductores. Los puertos de almacenamiento USB-C solo aparecen en el CDJ-3000X y el CDJ-1500X.</li>
+      <li>Formatea en <span class="mono" translate="no">FAT32 + MBR</span> sin importar cómo venga de fábrica. <a href="/es/fix/exfat-vs-fat32-cdj">Aquí está el porqué</a>.</li>
+      <li>Dos idénticas. Siempre dos. <a href="/es/gear">Los modelos exactos en los que confiamos →</a></li>
+    </ul>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="usb_size" lang="es" />
+  </main>
+</Base>

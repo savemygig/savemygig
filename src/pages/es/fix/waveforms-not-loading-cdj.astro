@@ -1,0 +1,82 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// NO CARGAN LAS WAVEFORMS EN EL CDJ, ESPANOL NEUTRO (LATAM). Fuente de
+// estructura, componentes, clases, data-* y CSS:
+// src/pages/fix/waveforms-not-loading-cdj.astro. Solo cambian el texto legible
+// y los hrefs, que apuntan a /es.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/es/fix/waveforms-not-loading-cdj#article',
+  headline: 'No cargan las waveforms en el CDJ: qué significa',
+  description: 'Los tracks suenan pero las waveforms quedan en blanco o tardan una eternidad en el CDJ. Falta de análisis, unidades lentas o una base de datos que sufre: este es el orden de arreglo.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/fix/waveforms-not-loading-cdj#webpage' },
+  image: 'https://www.savemygig.com/og/waveforms-not-loading-cdj.png',
+};
+---
+<Base
+  title="¿No cargan las waveforms en el CDJ? Causas y arreglos | Save My Gig"
+  description="Los tracks suenan pero las waveforms quedan en blanco o tardan una eternidad en el CDJ. Falta de análisis, unidades lentas o una base de datos que sufre: este es el orden de arreglo."
+  path="/fix/waveforms-not-loading-cdj"
+  ogImage="/og/waveforms-not-loading-cdj.png"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Waveforms_En_Blanco</div>
+    <h1 style="margin-bottom:1.5rem">¿<span class="danger">NO CARGAN</span> LAS WAVEFORMS?<br>Lee esto primero</h1>
+
+    <div class="panel panel-go">
+      <p style="margin:0"><strong>Versión corta:</strong> una waveform en blanco casi nunca detiene un set. El audio suena bien; lo que te falta es comodidad, no música. Abajo está el orden de arreglo.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Las tres causas</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Los tracks nunca se analizaron.</strong> Los archivos arrastrados a mano (o importados y exportados demasiado rápido) no llevan datos de waveform. El reproductor muestra una onda que se construye lentamente, o nada.</li>
+      <li><strong>La unidad está lenta o se está muriendo.</strong> Los datos de waveform se leen desde el USB; una unidad que sufre muestra los tracks al instante pero las waveforms se arrastran. Trátalo como una alerta temprana.</li>
+      <li><strong>Base de datos que no coincide.</strong> Firmware viejo del reproductor con versiones nuevas de rekordbox a veces se saltan los datos de waveform detallada. El audio igual suena.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">En el lugar</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>Sigue tocando. La onda se dibuja en tiempo real mientras el reproductor lee el track, y beatmatcheas de oído como lo hacían los veteranos.</li>
+      <li>Si las waveforms se arrastran Y además la navegación va lenta: la unidad está sufriendo. No confíes en ella para el próximo gig. <a href="/es/fix/usb-not-recognized-cdj">Así terminan esas unidades</a>.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">En casa</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>En rekordbox: selecciona tu biblioteca → clic derecho → <strong>Analyze</strong>. Déjalo terminar por completo.</li>
+      <li>Vuelve a exportar las playlists de hoy en modo <span class="mono" translate="no">EXPORT</span>; el análisis viaja con el export.</li>
+      <li>Actualiza el firmware del reproductor y rekordbox a las versiones que soporta tu equipo.</li>
+      <li>Formatea completo (no rápido) la unidad sospechosa; si se arrastra, jubílala. <a href="/es/gear">Unidades que no hacen esto →</a></li>
+    </ul>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="waveforms" lang="es" />
+  </main>
+</Base>

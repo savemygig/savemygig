@@ -1,0 +1,108 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// PASAR LA BIBLIOTECA DE REKORDBOX A OTRA COMPUTADORA, ESPANOL NEUTRO (LATAM).
+// Fuente de estructura, componentes, clases, data-* y CSS:
+// src/pages/fix/move-rekordbox-library-new-laptop.astro. Solo cambian el texto
+// legible y los hrefs, que apuntan a /es.
+//
+// LOS PASOS DEL HowTo SON LAS PALABRAS VISIBLES DE LA PAGINA. Los cuatro pasos
+// son los cuatro items de "La forma correcta", palabra por palabra, sin la
+// marcacion. Cada `name` es un trozo literal de su propio `text`. Si editas esa
+// lista, edita este arreglo en el mismo commit.
+//
+// Sin totalTime: la pagina dice "de 30 a 60 min", que es un rango, y una
+// duracion ISO 8601 no expresa rangos.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  '@id': 'https://www.savemygig.com/es/fix/move-rekordbox-library-new-laptop#howto',
+  name: 'Pasa tu biblioteca de rekordbox a otra computadora sin perder los cues',
+  description: 'La forma segura de migrar una biblioteca de rekordbox a otra computadora con los cues, los grids y las playlists intactos. Y la forma equivocada, la que destruye años de preparación sin avisar.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/fix/move-rekordbox-library-new-laptop#webpage' },
+  image: 'https://www.savemygig.com/og/move-rekordbox-library-new-laptop.png',
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: 'Computadora vieja',
+      text: 'Computadora vieja: en rekordbox, File → Library → Backup Library → elige "include music files" → apunta a un disco externo con espacio suficiente.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Computadora nueva',
+      text: 'Computadora nueva: instala rekordbox, entra con la misma cuenta Pioneer, y después File → Library → Restore Library desde el disco externo.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Verifica',
+      text: 'Verifica: abre tus playlists clave, carga algunos tracks, y los cues y los grids tienen que estar exactamente donde los dejaste.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Vuelve a exportar tus USB de gig',
+      text: 'Vuelve a exportar tus USB de gig desde cero en la máquina nueva, las dos unidades, y prueba una en un reproductor antes del próximo gig.',
+    },
+  ],
+};
+---
+<Base
+  title="Pasar rekordbox a otra computadora sin perder cues | Save My Gig"
+  description="La forma segura de migrar una biblioteca de rekordbox a otra computadora con los cues, los grids y las playlists intactos. Y la forma equivocada, la que destruye años de preparación sin avisar."
+  path="/fix/move-rekordbox-library-new-laptop"
+  ogImage="/og/move-rekordbox-library-new-laptop.png"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line">Migracion_De_Biblioteca</div>
+    <h1 style="margin-bottom:1.5rem">COMPUTADORA NUEVA,<br>MISMA <span class="accent">BIBLIOTECA</span></h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>El error que destruye años de trabajo:</strong> copiar tu carpeta de música a la computadora nueva y volver a importarla. La música sobrevive; cada cue, cada loop, cada ajuste de grid y cada playlist muere. Usa el Library Backup que trae rekordbox.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">La forma correcta (de 30 a 60 min, casi todo esperar)</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Computadora vieja:</strong> en rekordbox, <span class="mono" translate="no">File → Library → Backup Library</span> → elige "include music files" → apunta a un disco externo con espacio suficiente.</li>
+      <li><strong>Computadora nueva:</strong> instala rekordbox, entra con la misma cuenta Pioneer, y después <span class="mono" translate="no">File → Library → Restore Library</span> desde el disco externo.</li>
+      <li><strong>Verifica:</strong> abre tus playlists clave, carga algunos tracks, y los cues y los grids tienen que estar exactamente donde los dejaste.</li>
+      <li><strong>Vuelve a exportar tus USB de gig</strong> desde cero en la máquina nueva, las dos unidades, y prueba una en un reproductor antes del próximo gig.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Alternativa en la nube</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p>La función Cloud Library Sync de rekordbox (con un plan de suscripción) puede migrar cues y playlists por la nube de Pioneer, cómodo para quien trabaja de forma permanente con dos computadoras. Para una mudanza única, el backup local es más rápido, es gratis y no depende de tu velocidad de subida.</p>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Ya que estás</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li>Ese archivo de backup es además tu <strong>seguro contra desastres</strong>. Haz uno al mes y guárdalo fuera del bolso del gig.</li>
+      <li>¿La computadora vieja sigue viva? De aquí en adelante deja que UNA sola máquina sea dueña de las unidades de gig, porque dos escritores corrompen la base de datos del dispositivo. <a href="/es/fix/playlists-not-showing-cdj">Así termina eso →</a></li>
+    </ul>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="library_migration" lang="es" />
+  </main>
+</Base>

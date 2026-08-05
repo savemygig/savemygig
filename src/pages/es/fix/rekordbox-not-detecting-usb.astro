@@ -1,0 +1,80 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleCTA from '../../../components/ArticleCTA.astro';
+
+// REKORDBOX NO RECONOCE EL USB, ESPANOL NEUTRO (LATAM). Fuente de estructura,
+// componentes, clases, data-* y CSS:
+// src/pages/fix/rekordbox-not-detecting-usb.astro. Solo cambian el texto
+// legible y los hrefs, que apuntan a /es.
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/es/fix/rekordbox-not-detecting-usb#article',
+  headline: 'rekordbox no reconoce el USB: por qué no aparece el dispositivo y cómo arreglarlo',
+  description: '¿El USB no aparece en la lista de dispositivos de rekordbox en modo Export? Las razones reales por las que falta y los arreglos, en orden, para exportar antes del gig y no durante el gig.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-07-24',
+  dateModified: '2026-07-27',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/fix/rekordbox-not-detecting-usb#webpage' },
+  image: 'https://www.savemygig.com/og/rekordbox-not-detecting-usb.png',
+};
+---
+<Base
+  title="¿rekordbox no reconoce el USB? Cómo arreglarlo | Save My Gig"
+  description="¿El USB no aparece en la lista de dispositivos de rekordbox en modo EXPORT? Casi siempre es el sistema de archivos o el mapa de partición. Las causas reales y los arreglos, en orden."
+  path="/fix/rekordbox-not-detecting-usb"
+  ogImage="/og/rekordbox-not-detecting-usb.png"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap wrap-wide">
+    <div class="status-line red">Dispositivo_No_Aparece</div>
+    <h1 style="margin-bottom:1.5rem">¿REKORDBOX NO VE TU <span class="danger">USB</span>?<br />ARRÉGLALO ANTES DEL GIG</h1>
+
+    <div class="panel panel-danger">
+      <p style="margin:0"><strong>Versión corta:</strong> si la unidad no está en la lista de dispositivos, la causa es casi siempre una de tres: no estás en modo Export, el propio sistema operativo no ve la unidad, o la unidad está formateada de una forma en la que rekordbox no puede escribir. Revísalas en ese orden.</p>
+    </div>
+
+        <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Las revisiones de 60 segundos</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Confirma que estás en modo Export.</strong> El árbol de dispositivos con tu USB solo aparece en Export. Arriba a la izquierda en rekordbox, cambia de Performance o Lighting a <span class="mono" translate="no">EXPORT</span>.</li>
+      <li><strong>Revisa primero que la computadora vea la unidad.</strong> Abre el Finder (Mac) o el Explorador de archivos (Windows). Si el USB tampoco está ahí, esto no es un problema de rekordbox, es un problema de unidad o de conexión. Vuelve a insertarla, prueba otro puerto, sáltate el hub.</li>
+      <li><strong>Conecta directo, sin hub.</strong> Los hubs USB y los adaptadores son la razón número uno de que una unidad monte en el sistema y nunca llegue a rekordbox. Directo a la computadora.</li>
+      <li><strong>Reinicia rekordbox con la unidad ya insertada.</strong> Algunas versiones solo escanean unidades extraíbles al arrancar. Primero la insertas, después abres la aplicación.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">¿Sigue sin aparecer? Las causas reales</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <ul class="checklist">
+      <li><strong>Permisos de macOS.</strong> Las versiones nuevas de macOS le bloquean a las aplicaciones el acceso a unidades extraíbles hasta que tú lo autorizas. Ajustes del Sistema, Privacidad y seguridad, Archivos y carpetas (o Volúmenes extraíbles), activa rekordbox y vuelve a abrirlo. Esta atrapa a mucha gente después de actualizar el sistema.</li>
+      <li><strong>Formato equivocado.</strong> Los exports van a <span class="mono" translate="no">FAT32</span>, <span class="mono" translate="no">exFAT</span> (solo unidades USB) y, en macOS, <span class="mono" translate="no">HFS+</span>, nunca a NTFS ni a APFS. Una unidad formateada en NTFS (común en Windows) o en APFS (Mac) puede montar en la computadora pero no acepta un export. La respuesta segura para todos los CDJ es <span class="mono" translate="no">FAT32</span> más <span class="mono" translate="no">MBR</span>. <a href="/es/fix/format-usb-for-cdj">El paso a paso de formateo está aquí</a>.</li>
+      <li><strong>Protección contra escritura.</strong> Algunas unidades traen un interruptor físico de bloqueo, y otras llegan de fábrica en solo lectura. Si el sistema la muestra pero no se le puede copiar nada, esa es la causa.</li>
+      <li><strong>Una unidad que está fallando.</strong> Si monta, desaparece y vuelve a aparecer, o lanza errores de lectura en el Finder o en el Explorador, el hardware se está yendo. Copia tu música ahora y jubila la unidad. <a href="/es/fix/dj-usb-backup-strategy">Por qué dos unidades idénticas</a>.</li>
+    </ul>
+
+
+      </div>
+    </details>
+
+    <details class="acc-sec" name="fix-acc">
+      <summary><h2 class="acc-h2">Si el gig es pronto</h2><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+    <p>Si tienes los tracks en la computadora, la ruta segura más rápida es formatear una unidad que funcione en <span class="mono" translate="no">FAT32</span> más <span class="mono" translate="no">MBR</span>, exportar de nuevo desde rekordbox y expulsar como corresponde con el botón de expulsar de rekordbox. Si la unidad que falló tiene la única copia de algo, no la formatees, trátala como recuperación. El flujo de emergencia de abajo recorre todo esto paso a paso, incluido qué hacer cuando ya no queda tiempo.</p>
+      </div>
+    </details>
+
+
+
+    <ArticleCTA article="rekordbox_not_detecting_usb" lang="es" />
+  </main>
+</Base>
