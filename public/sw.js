@@ -265,6 +265,155 @@ async function precache() {
     if (res && res.ok) await cache.put(url, res.clone());
   });
 
+  // The 24-hour revalidation window (below) starts now. A device that has just
+  // finished precaching has, by definition, the current copy of everything, so
+  // without this the revalidation that runs on activate would immediately
+  // re-fetch all 65 routes it downloaded one second ago.
+  await stampRevalidation(cache, Date.now());
+}
+
+/*
+ * ---------------------------------------------------------------------------
+ * BACKGROUND REVALIDATION (H15, 2026-08-05)
+ *
+ * THE BUG THIS FIXES. Until now the precache was only ever refreshed by a
+ * manual CACHE version bump in this file. A phone that installed the app on
+ * Aug 4 and then lived in that app kept serving Aug 4 tunnel copy forever: the
+ * HTML fetch handler is network-first, so an ONLINE visit did refresh whatever
+ * page the DJ opened, but the other 64 precached routes were never touched
+ * again. Every instruction corrected since install stayed wrong on that device
+ * until someone remembered to bump a constant. On a site whose entire purpose
+ * is telling a DJ which button to press, silently serving a superseded
+ * instruction is the worst failure mode available.
+ *
+ * WHAT IT DOES. At most once every 24 hours, re-fetch the precached HTML
+ * routes and re-put only the ones whose response actually differs.
+ *
+ * DESIGN CONSTRAINTS, all deliberate:
+ *   - QUIET. No message to the page, no reload, no notification. The DJ finds
+ *     out by the next screen being right.
+ *   - NON-BLOCKING. It never sits in front of respondWith. It runs inside
+ *     waitUntil, which keeps the worker alive without delaying a single byte
+ *     to the page.
+ *   - THE READ PATH IS UNTOUCHED. The fetch handlers below are byte for byte
+ *     what they were: network-first HTML, cache-first assets, offline
+ *     fallback. This only writes.
+ *   - SILENT OFFLINE. Every fetch is inside pooled()'s try/catch. In a
+ *     basement the whole pass fails and nothing is disturbed.
+ *   - CHEAP WHEN NOTHING CHANGED. ETag or Last-Modified decides it without
+ *     reading a body wherever the edge sends them; a body hash is the fallback
+ *     for when it does not. An unchanged route costs one conditional-ish GET
+ *     and no cache write.
+ *   - THROTTLED ACROSS RESTARTS. The timestamp lives in the cache itself, not
+ *     in a variable, because a service worker is killed and restarted
+ *     constantly. IndexedDB would do the same job with a second storage API
+ *     to get wrong.
+ *
+ * WHY THE CACHE-BUSTING QUERY. Without it a plain fetch can be answered by the
+ * browser's own HTTP cache with the exact bytes we already hold, which makes
+ * the whole pass a no-op that reports success. `cache: 'no-store'` covers most
+ * of it; the query string covers the intermediaries that ignore it. The
+ * response is stored under the CLEAN url, so nothing in the read path ever
+ * sees the parameter.
+ *
+ * KNOWN BOUND. New /_astro/*.css and *.js referenced by changed HTML are
+ * fetched and added (without this, a deploy that changes a content hash would
+ * leave the offline copy of a page styled by a stylesheet that is not in the
+ * cache, which was the exact bug the 2026-08-04 pass fixed). Superseded asset
+ * files are NOT deleted here: the cache still only grows on a real deploy, and
+ * a CACHE version bump clears the lot. If that ever becomes a storage problem
+ * it is a prune step here, not a redesign.
+ */
+const REVALIDATE_EVERY_MS = 24 * 60 * 60 * 1000;
+
+// A synthetic cache key, not a route. It is under a path the site does not
+// serve and nothing ever requests, so the fetch handler cannot collide with
+// it; it exists only because Cache Storage is the one place a worker can write
+// that survives being killed between events.
+const REVALIDATE_STAMP = '/__smg-revalidated-at';
+
+function stampRevalidation(cache, when) {
+  return cache.put(REVALIDATE_STAMP, new Response(String(when)));
+}
+
+async function revalidationDue(cache, now) {
+  const hit = await cache.match(REVALIDATE_STAMP);
+  if (!hit) return true;
+  const t = Number(await hit.text());
+  return !t || now - t >= REVALIDATE_EVERY_MS;
+}
+
+/** SHA-256 of a response body, hex. Only called when no validator header is
+ *  available on both sides. */
+async function bodyHash(res) {
+  const buf = await res.arrayBuffer();
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  return Array.prototype.map
+    .call(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+/** true when `fresh` is the same document we already have cached. Consumes
+ *  both bodies only in the no-validator case. */
+async function unchanged(hit, fresh) {
+  const he = hit.headers.get('etag');
+  const fe = fresh.headers.get('etag');
+  // Weak/strong prefixes are compared as-is: we only care whether the edge
+  // says "same" or "different", not which flavour of same.
+  if (he && fe) return he === fe;
+  const hm = hit.headers.get('last-modified');
+  const fm = fresh.headers.get('last-modified');
+  if (hm && fm) return hm === fm;
+  const [a, b] = await Promise.all([bodyHash(hit), bodyHash(fresh)]);
+  return a === b;
+}
+
+// One pass at a time per worker instance. Two navigations landing in the same
+// second would otherwise both pass the 24-hour check and race each other.
+let revalidating = null;
+
+async function revalidate() {
+  const cache = await caches.open(CACHE);
+  const now = Date.now();
+  if (!(await revalidationDue(cache, now))) return;
+  // Claim the window BEFORE doing any work, so a pass that dies halfway (the
+  // worker being killed, the DJ walking out of signal) does not turn into a
+  // retry on every navigation.
+  await stampRevalidation(cache, now);
+
+  const newAssets = new Set();
+
+  await pooled(ROUTES, 3, async (url) => {
+    const bust = url + (url.indexOf('?') === -1 ? '?' : '&') + '__smgrv=' + now;
+    const fresh = await fetch(bust, { credentials: 'same-origin', cache: 'no-store' });
+    if (!fresh || !fresh.ok) return;
+    const store = fresh.clone();
+    const hit = await cache.match(url);
+    if (hit && (await unchanged(hit, fresh))) return;
+    await cache.put(url, store.clone());
+    const html = await store.text();
+    ASSET_RE.lastIndex = 0;
+    let m;
+    while ((m = ASSET_RE.exec(html)) !== null) newAssets.add(m[1]);
+  });
+
+  // Only the ones we do not already hold: content-hashed names never change
+  // under the same url, so anything already cached is already current.
+  const wanted = [];
+  for (const a of newAssets) if (!(await cache.match(a))) wanted.push(a);
+  await pooled(wanted, 3, async (url) => {
+    const res = await fetch(url, { credentials: 'same-origin' });
+    if (res && res.ok) await cache.put(url, res.clone());
+  });
+}
+
+/** Throttled entry point. Safe to call on every navigation. */
+function maybeRevalidate() {
+  if (revalidating) return revalidating;
+  revalidating = revalidate()
+    .catch(() => {})
+    .then(() => { revalidating = null; });
+  return revalidating;
 }
 
 self.addEventListener('install', (e) => {
@@ -293,6 +442,11 @@ self.addEventListener('activate', (e) => {
           .map((k) => caches.delete(k))
       ))
       .then(() => self.clients.claim())
+      // Revalidation trigger 1 of 2: activation. Claim the pages FIRST, then
+      // look at the precache, so nothing about taking control waits on it.
+      // Right after a fresh install this returns immediately, because
+      // precache() has already stamped the 24-hour window.
+      .then(() => maybeRevalidate())
   );
 });
 
@@ -323,6 +477,15 @@ self.addEventListener('fetch', (e) => {
 
   const isHTML = req.mode === 'navigate' ||
     (req.headers.get('accept') || '').includes('text/html');
+
+  // Revalidation trigger 2 of 2: navigation. Activation happens once, and a
+  // worker only runs when an event wakes it, so the 24-hour timer needs
+  // something to check it. This is that something, and it is deliberately here
+  // rather than inside respondWith: waitUntil keeps the worker alive for the
+  // pass WITHOUT the page waiting on any of it, and maybeRevalidate() returns
+  // an already-settled promise on all but one navigation a day. The response
+  // this event produces is decided entirely by the code below, unchanged.
+  if (isHTML) e.waitUntil(maybeRevalidate());
 
   // The search index regenerates every deploy: cache-first froze it at
   // whatever the visitor's first fetch saw, so pages added later never
