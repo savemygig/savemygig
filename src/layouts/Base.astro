@@ -268,11 +268,25 @@ const entityGraph = {
         function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
         function set(v) { try { localStorage.setItem(KEY, v); } catch (e) { /* private mode */ } }
 
-        // A language in the URL is an explicit choice, made by the visitor or
-        // by Google serving them the right hreflang. Record it and stop: this
-        // branch NEVER navigates, which is what keeps deep links untouched.
+        // ARRIVING IS NOT CHOOSING. Antonio's rule, 2026-08-05: the language
+        // the site remembers is the last one the visitor PICKED, and it
+        // survives into the next session.
+        //
+        // So this branch only ever SEEDS an empty preference, it never
+        // overwrites one. A first-time visitor who lands on a Portuguese page
+        // from a search has told us something real, and we keep it. A visitor
+        // who already chose English in the header and then opens a Portuguese
+        // link a friend sent them has NOT changed their mind, and the first
+        // version of this silently replaced their choice with an accident.
+        // They still read that page in Portuguese, because the URL always
+        // decides what is on screen, but the plain domain still gives them
+        // English next time.
+        //
+        // The picker writes SMG_LANG itself and always overwrites, which is
+        // what makes a deliberate change stick. This branch NEVER navigates,
+        // which is what keeps deep links untouched.
         if (PAGE_LANG !== DEF) {
-          if (LIVE.indexOf(PAGE_LANG) > -1) set(PAGE_LANG);
+          if (LIVE.indexOf(PAGE_LANG) > -1 && !get()) set(PAGE_LANG);
           return;
         }
         if (!IS_ROOT) return;
