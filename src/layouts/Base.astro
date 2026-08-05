@@ -81,10 +81,23 @@ const ogImageUrl = `${SITE}${ogImage ?? '/images/og-share.jpg'}`;
 //
 // It is computed BEFORE the entity graph because the WebPage node below
 // references it by @id.
-const CRUMB_HUBS: Record<string, string> = {
-  '/knowledge': S.footer.knowledgeBase,
-  '/knowledge/pioneer-dj': 'Pioneer DJ / AlphaTheta',
-  '/legal': S.footer.legal,
+// `at` (2026-08-05) is an OVERRIDE for the URL a hub crumb points at, for the
+// one case where the segment is real but the page behind it is not. Without
+// it a hub could only ever link its own path, which is why /fix could not be
+// in this table at all: the 13 fix articles live under /fix and there is no
+// /fix index page, so a crumb linking /fix would be a breadcrumb pointing at a
+// 404, which the note above says is worse than no breadcrumb.
+//
+// /faq IS the fix library's hub, and this is not a new opinion: the visible
+// breadcrumb on /fix/format-usb-for-cdj has read "Home / Fixes / Format a USB"
+// with Fixes pointing at /faq since that page was written. This makes the
+// machine-readable trail say the same thing as the printed one, which is the
+// only version of this that is worth having.
+const CRUMB_HUBS: Record<string, { name: string; at?: string }> = {
+  '/knowledge': { name: S.footer.knowledgeBase },
+  '/knowledge/pioneer-dj': { name: 'Pioneer DJ / AlphaTheta' },
+  '/legal': { name: S.footer.legal },
+  '/fix': { name: S.crumbs.fixes, at: '/faq' },
 };
 
 const crumbItems: { name: string; item?: string }[] = [{ name: S.home, item: `${SITE}${localizedPath('/', lang)}` }];
@@ -94,11 +107,12 @@ const crumbItems: { name: string; item?: string }[] = [{ name: S.home, item: `${
   for (const seg of segs) {
     acc += `/${seg}`;
     if (acc === path) break; // the leaf is handled separately below
-    if (CRUMB_HUBS[acc]) crumbItems.push({ name: CRUMB_HUBS[acc], item: `${SITE}${localizedPath(acc, lang)}` });
+    const hub = CRUMB_HUBS[acc];
+    if (hub) crumbItems.push({ name: hub.name, item: `${SITE}${localizedPath(hub.at ?? acc, lang)}` });
   }
   // The current page. Google allows omitting it, so a page that did not pass
   // crumbName just ends its trail at the last hub instead of guessing a name.
-  const leaf = crumbName ?? (path !== '/' ? CRUMB_HUBS[path] : undefined);
+  const leaf = crumbName ?? (path !== '/' ? CRUMB_HUBS[path]?.name : undefined);
   if (leaf) crumbItems.push({ name: leaf, item: canonical });
 }
 

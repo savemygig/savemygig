@@ -23,6 +23,13 @@ export const UI = {
   en: {
     skip: 'Skip to content',
     home: 'Home',
+    // BREADCRUMB HUB LABELS. `fixes` is the label for the /fix library in
+    // the BreadcrumbList Base.astro builds. There is no /fix index page, so
+    // the crumb points at /faq, which is where the visible breadcrumb on
+    // /fix/format-usb-for-cdj has always sent it. Kept out of footer.* on
+    // purpose: the footer has no such link, and a label that is only ever
+    // read by a crawler should not be filed with the ones a human clicks.
+    crumbs: { fixes: 'Fixes' },
     nav: {
       checklist: 'Checklist',
       emergency: 'Emergency',
@@ -159,6 +166,7 @@ export const UI = {
   pt: {
     skip: 'Pular para o conteúdo',
     home: 'Início',
+    crumbs: { fixes: 'Soluções' },
     nav: {
       checklist: 'Checklist',
       emergency: 'Emergência',
@@ -293,6 +301,7 @@ export const UI = {
   es: {
     skip: 'Saltar al contenido',
     home: 'Inicio',
+    crumbs: { fixes: 'Soluciones' },
     nav: {
       checklist: 'Checklist',
       emergency: 'Emergencia',
