@@ -60,6 +60,22 @@ export const UI = {
       clear: 'Clear search',
       results: 'Search results',
       close: 'Close search',
+      // THE ZERO STATE, in pieces (2026-08-05). It was one hardcoded English
+      // sentence inside Search.astro with two unprefixed links in it, so a
+      // Brazilian who searched for something we do not have was told
+      // "Nothing matched" and then sent into the English FAQ. It is composed
+      // rather than stored as one string because the two links have to carry
+      // the reader's language prefix, which means the hrefs are built at
+      // runtime and cannot live in a catalogue. Assembled in Search.astro as
+      //   noneFor "query". noneTry <noneFaq>, noneOr <noneStart>.
+      // so the pieces have to read as one sentence in each language.
+      noneFor: 'Nothing matched',
+      noneTry: 'Try the',
+      noneFaq: 'FAQ',
+      noneOr: 'or',
+      // Same words as footer.emergencyMode in each language, lowercased into
+      // the sentence. The reader should meet one name for the rescue flow.
+      noneStart: 'start emergency mode',
     },
     footer: {
       shareLead: 'Every DJ knows a DJ who needs this:',
@@ -196,6 +212,11 @@ export const UI = {
       clear: 'Limpar busca',
       results: 'Resultados da busca',
       close: 'Fechar busca',
+      noneFor: 'Nada encontrado para',
+      noneTry: 'Tente o',
+      noneFaq: 'FAQ',
+      noneOr: 'ou',
+      noneStart: 'abra o Modo emergência',
     },
     footer: {
       // "Todo DJ conhece um DJ que precisa disso" keeps the English line's
@@ -328,6 +349,11 @@ export const UI = {
       clear: 'Borrar búsqueda',
       results: 'Resultados de búsqueda',
       close: 'Cerrar búsqueda',
+      noneFor: 'Nada encontrado para',
+      noneTry: 'Prueba el',
+      noneFaq: 'FAQ',
+      noneOr: 'o',
+      noneStart: 'abre el Modo emergencia',
     },
     footer: {
       shareLead: 'Todo DJ conoce a un DJ que necesita esto:',

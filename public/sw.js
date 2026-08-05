@@ -106,7 +106,14 @@ const LANG_PREFIX = (function () {
 // below only deletes caches for THIS language, so switching back does not
 // force a re-download of the language you just left.
 // Bump the version part when the precache list changes.
-const CACHE = 'smg-v15' + (LANG_PREFIX ? '-' + LANG_PREFIX.slice(1) : '');
+const CACHE = 'smg-v16' + (LANG_PREFIX ? '-' + LANG_PREFIX.slice(1) : '');
+
+// The search index this language needs. One flat search-index.json used to
+// hold all three languages, which meant every install downloaded 412 KB to
+// use a third of it, and the search box never filtered what it got back.
+// Three files ship now, one per language, and the worker precaches exactly
+// the one its pages will ask for. See scripts/build-search-index.mjs.
+const SEARCH_INDEX = '/search-index.' + (LANG_PREFIX ? LANG_PREFIX.slice(1) : 'en') + '.json';
 
 const ROUTES_EN = [
   '/',
@@ -192,10 +199,10 @@ const ROUTES = LANG_PREFIX
   : ROUTES_EN;
 
 // Non-HTML things the rescue path needs offline. The two woff2 files are the
-// site's whole typography; /search-index.json is what makes offline search
-// work. Everything else a page needs is DERIVED from the page, below.
+// site's whole typography; the language's search index is what makes offline
+// search work. Everything else a page needs is DERIVED from the page, below.
 const EXTRA = [
-  '/search-index.json',
+  SEARCH_INDEX,
   '/fonts/archivo-latin-wght-normal.woff2',
   '/fonts/inter-latin-wght-normal.woff2',
   // The brand mark. Added 2026-08-04 after seeing it: with the CSS fix in
@@ -309,7 +316,7 @@ self.addEventListener('fetch', (e) => {
   // whatever the visitor's first fetch saw, so pages added later never
   // appeared in THEIR search (caught live in production with "DJM 900").
   // Network-first keeps search current online and still works offline.
-  const isSearchIndex = url.pathname === '/search-index.json';
+  const isSearchIndex = url.pathname === SEARCH_INDEX;
 
   if (isHTML || isSearchIndex) {
     const net = fetch(req).then((res) => { stash(req, res); return res; });

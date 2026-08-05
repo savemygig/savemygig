@@ -18,6 +18,7 @@
  * per-instance now and the script wires every instance it finds.
  */
 import { t } from '../i18n/ui';
+import { localizedPath } from '../i18n/registry';
 
 const uid = 'srch-' + Math.random().toString(36).slice(2, 8);
 // lang localizes every string this component owns. A page may still pass its
@@ -26,8 +27,37 @@ const uid = 'srch-' + Math.random().toString(36).slice(2, 8);
 const { lang = 'en', placeholder } = Astro.props;
 const S = t(lang);
 const ph = placeholder ?? S.search.placeholder;
+
+// EVERYTHING LOCALIZED IS HANDED OVER ON THE WRAPPER, NOT VIA define:vars.
+// Two boxes render on the homepage and on /faq (the header overlay plus the
+// inline one), so this script is emitted twice on those pages. define:vars
+// would emit `const NONE = ...` twice at the top level of the same document,
+// which is a duplicate declaration and a SyntaxError: it would kill search
+// outright on exactly the two pages that have the most of it. Data attributes
+// are per instance and cannot collide.
+const idxUrl = `/search-index.${lang}.json`;
+const noneBits = {
+  for: S.search.noneFor,
+  try: S.search.noneTry,
+  faq: S.search.noneFaq,
+  or: S.search.noneOr,
+  start: S.search.noneStart,
+  faqHref: localizedPath('/faq', lang),
+  startHref: localizedPath('/emergency', lang),
+};
 ---
-<div class="srch" data-search>
+<div
+  class="srch"
+  data-search
+  data-index={idxUrl}
+  data-none-for={noneBits.for}
+  data-none-try={noneBits.try}
+  data-none-faq={noneBits.faq}
+  data-none-or={noneBits.or}
+  data-none-start={noneBits.start}
+  data-faq-href={noneBits.faqHref}
+  data-start-href={noneBits.startHref}
+>
   <label class="sr-only" for={uid}>{S.aria.search}</label>
   <div class="srch-box">
     <svg class="srch-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -92,6 +122,14 @@ const ph = placeholder ?? S.search.placeholder;
     var out = wrap.querySelector('.srch-results');
     var clear = wrap.querySelector('.srch-clear');
     var docs = null, loadP = null, cur = -1;
+    // ONE INDEX PER LANGUAGE (2026-08-05). This used to fetch a single flat
+    // search-index.json holding all three languages and never filtered it, so
+    // an English reader searching "usb" was offered Spanish articles and a
+    // Brazilian searching "E-8302" got the English one. The language is fixed
+    // at build time by the page that rendered this box, so the filter is the
+    // file name and costs nothing at runtime.
+    var D = wrap.dataset;
+    var INDEX = D.index || '/search-index.en.json';
 
     // Callers always get a promise that resolves AFTER the index exists.
     // (The old version resolved immediately while a fetch was in flight, so
@@ -99,7 +137,7 @@ const ph = placeholder ?? S.search.placeholder;
     function load() {
       if (docs) return Promise.resolve();
       if (!loadP) {
-        loadP = fetch('/search-index.json')
+        loadP = fetch(INDEX)
           .then(function (r) { return r.json(); })
           .then(function (d) { docs = d; })
           .catch(function () { loadP = null; });
@@ -155,8 +193,14 @@ const ph = placeholder ?? S.search.placeholder;
                      .slice(0, 8);
       cur = -1;
       if (!hits.length) {
-        out.innerHTML = '<p class="srch-none">Nothing matched “' + esc(q) +
-          '”. Try the <a href="/faq">FAQ</a>, or <a href="/emergency">start emergency mode</a>.</p>';
+        // Localized and language-prefixed. Both links used to be hardcoded
+        // "/faq" and "/emergency", so the one moment a reader had already
+        // failed to find something was also the moment we dropped them into
+        // another language.
+        out.innerHTML = '<p class="srch-none">' + esc(D.noneFor) + ' “' + esc(q) +
+          '”. ' + esc(D.noneTry) + ' <a href="' + D.faqHref + '">' + esc(D.noneFaq) +
+          '</a>, ' + esc(D.noneOr) + ' <a href="' + D.startHref + '">' + esc(D.noneStart) +
+          '</a>.</p>';
       } else {
         // Each option gets an id so aria-activedescendant can point at it.
         // Without that, arrow-key navigation moved a visual highlight only:

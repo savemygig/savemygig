@@ -89,10 +89,21 @@ for (const path of OFFLINE_PAGES) {
 }
 
 // ---- search index served from cache offline
+// Per language since 2026-08-05: the worker precaches the index for the ONE
+// language it was installed from, so an English install must have the English
+// file and must NOT be carrying the other two.
 const idx = await page.evaluate(async () => {
-  try { const r = await fetch('/search-index.json'); return r.ok; } catch { return false; }
+  try { const r = await fetch('/search-index.en.json'); return r.ok; } catch { return false; }
 });
 ok('offline: search index available', idx);
+const strays = await page.evaluate(async () => {
+  const hits = [];
+  for (const p of ['/search-index.json', '/search-index.pt.json', '/search-index.es.json']) {
+    if (await caches.match(p)) hits.push(p);
+  }
+  return hits;
+});
+ok('offline: only this language\'s index is cached', strays.length === 0, strays.join(', '));
 
 await browser.close();
 server.close();

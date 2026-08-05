@@ -29,6 +29,14 @@
  * nav and footer into every single record, so every query would match every
  * page.
  *
+ * ONE INDEX PER LANGUAGE (2026-08-05). Until today this emitted a single flat
+ * search-index.json covering all three languages and Search.astro never
+ * filtered it, so an English reader searching "usb" got Spanish pages in the
+ * results and a Brazilian got English ones. Three files now ship, and each
+ * search box fetches only its own: search-index.en.json (everything NOT under
+ * /pt/ or /es/), search-index.pt.json, search-index.es.json. Each is roughly a
+ * third of the old payload, so the first keystroke is also cheaper.
+ *
  * Run: node scripts/build-search-index.mjs dist
  */
 import { readdir, readFile, writeFile } from 'node:fs/promises';
@@ -87,6 +95,13 @@ function stripNoise(html) {
     .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
     .replace(/<svg\b[\s\S]*?<\/svg>/gi, ' ')
     .replace(/<noscript\b[\s\S]*?<\/noscript>/gi, ' ')
+    // .status-line is the decorative code-styled eyebrow above a page title
+    // ("USB_Not_Recognized", "Tamano_Del_USB"). It is styling, not language:
+    // it is hidden entirely on mobile, and its underscored form is not a
+    // string any human types into a search box. Indexed, it produced snippets
+    // that opened with a slug instead of the sentence that answers the
+    // question. Removed from body AND headings (2026-08-05).
+    .replace(/<(div|p)\b[^>]*\bclass="[^"]*\bstatus-line\b[^"]*"[^>]*>[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<!--[\s\S]*?-->/g, ' ');
 }
 
@@ -142,15 +157,38 @@ for (const file of files) {
 }
 
 docs.sort((a, b) => a.u.localeCompare(b.u));
-const json = JSON.stringify(docs);
-await writeFile(join(ROOT, 'search-index.json'), json);
+
+// A page's language is its URL prefix, which is the same rule the service
+// worker, the sitemap and lang-roots.mjs already use. No page is in two
+// indexes and no page is in none.
+const langOf = (u) => (u === '/pt' || u.startsWith('/pt/') ? 'pt'
+  : u === '/es' || u.startsWith('/es/') ? 'es' : 'en');
+
+const byLang = { en: [], pt: [], es: [] };
+for (const d of docs) byLang[langOf(d.u)].push(d);
+
+const sizes = [];
+for (const [code, list] of Object.entries(byLang)) {
+  const json = JSON.stringify(list);
+  await writeFile(join(ROOT, `search-index.${code}.json`), json);
+  sizes.push(`${code} ${list.length}p/${(json.length / 1024).toFixed(1)}KB`);
+}
 
 const empty = docs.filter((d) => !d.b || d.b.length < 60).map((d) => d.u);
 const noHeads = docs.filter((d) => d.h.length === 0).map((d) => d.u);
 
-console.log(`Search index: ${docs.length} pages, ${(json.length / 1024).toFixed(1)} KB, ${skipped.length} skipped`);
+console.log(`Search index: ${docs.length} pages in 3 files (${sizes.join(', ')}), ${skipped.length} skipped`);
 if (empty.length) console.log(`  WARNING empty/short body: ${empty.join(', ')}`);
 if (noHeads.length) console.log(`  note, no headings: ${noHeads.join(', ')}`);
+
+// An empty per-language index means a whole language's search box would answer
+// every query with the zero-state. Cheap to assert, impossible to miss.
+for (const [code, list] of Object.entries(byLang)) {
+  if (!list.length) {
+    console.error(`Search index FAIL: search-index.${code}.json has no pages.`);
+    process.exit(1);
+  }
+}
 
 // A page indexed with no body is the exact failure this script was written to
 // end. Fail the build rather than shipping a silently broken index again.

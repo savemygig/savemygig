@@ -95,6 +95,73 @@ const ok = (name, cond, detail = '') => {
   await page.close();
 }
 
+// LANGUAGE FILTER (2026-08-05). One flat index covered all three languages
+// and the box never filtered it, so an English reader searching "usb" was
+// offered Spanish articles. Each box now fetches /search-index.<lang>.json.
+// Asserted on the RESULT HREFS, which is the thing the reader actually sees.
+for (const [label, home, prefix, query] of [
+  ['/', '/', '', 'usb'],
+  ['/pt', '/pt', '/pt', 'E-8302'],
+  ['/es', '/es', '/es', 'USB'],
+]) {
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.goto(base + home, { waitUntil: 'load' });
+  const input = page.locator('#main .srch-input').first();
+  await input.click();
+  // The homepage box hands off to the header overlay, so type wherever the
+  // focus landed rather than assuming.
+  const live = (await page.locator('#searchOverlay:visible').count())
+    ? page.locator('.so-panel .srch-input')
+    : input;
+  const outSel = (await page.locator('#searchOverlay:visible').count())
+    ? '.so-panel .srch-results' : '#main .srch-results';
+  await live.fill(query);
+  const results = page.locator(outSel);
+  let hrefs = [];
+  try {
+    await results.waitFor({ state: 'visible', timeout: 8000 });
+    hrefs = await results.locator('.srch-hit').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+  } catch {}
+  ok(`${label}: "${query}" returns results`, hrefs.length > 0, `${hrefs.length} hits`);
+  const wrong = hrefs.filter((h) => {
+    const lang = /^\/pt(\/|$)/.test(h) ? '/pt' : /^\/es(\/|$)/.test(h) ? '/es' : '';
+    return lang !== prefix;
+  });
+  ok(`${label}: every result is in this language`, hrefs.length > 0 && wrong.length === 0, wrong.join(', ').slice(0, 120));
+  await page.close();
+}
+
+// ZERO STATE, localized and language-prefixed. It was one hardcoded English
+// sentence with two unprefixed links, so the moment a reader failed to find
+// something was also the moment we dropped them into English.
+for (const [label, home, prefix, expect] of [
+  ['/', '/', '', 'Nothing matched'],
+  ['/pt', '/pt', '/pt', 'Nada encontrado para'],
+  ['/es', '/es', '/es', 'Nada encontrado para'],
+]) {
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.goto(base + home, { waitUntil: 'load' });
+  const input = page.locator('#main .srch-input').first();
+  await input.click();
+  const live = (await page.locator('#searchOverlay:visible').count())
+    ? page.locator('.so-panel .srch-input') : input;
+  const outSel = (await page.locator('#searchOverlay:visible').count())
+    ? '.so-panel .srch-results' : '#main .srch-results';
+  await live.fill('zzqqxx nothingmatchesthis');
+  const none = page.locator(outSel + ' .srch-none');
+  let text = '', links = [];
+  try {
+    await none.waitFor({ state: 'visible', timeout: 8000 });
+    text = (await none.innerText()).trim();
+    links = await none.locator('a').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+  } catch {}
+  ok(`${label}: zero state is in this language`, text.startsWith(expect), JSON.stringify(text.slice(0, 60)));
+  const want = [prefix + '/faq', prefix + '/emergency'];
+  ok(`${label}: zero state links stay in this language`,
+    links.length === 2 && want.every((w) => links.includes(w)), links.join(', '));
+  await page.close();
+}
+
 await browser.close();
 server.close();
 if (fails.length) { console.log(`\nSEARCH TEST FAIL: ${fails.length}`); process.exit(1); }
