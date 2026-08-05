@@ -233,6 +233,17 @@ const entityGraph = {
 <html lang={L.tag} dir={L.dir}>
 <head>
   <meta charset="utf-8" />
+  {/* DO NOT MOVE, DO NOT DELETE, AND DO NOT LET ANYTHING BE INSERTED IN ITS
+      PLACE. Without this line a phone renders the page at a 980px virtual
+      viewport and shows the DESKTOP layout, shrunk: the full horizontal nav
+      instead of the drawer, unreadable type, the footer in four columns.
+      It was deleted by accident on 2026-08-05 while the language detection
+      block below was being added, it shipped, and it was caught only because
+      Antonio opened the site on his own iPhone. Every mobile visitor between
+      those two moments got a broken site, on a product whose entire audience
+      is holding a phone in a dark booth. scripts/check-head.mjs now fails the
+      build if it ever goes missing again. */}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   {/* LANGUAGE DETECTION. Built exactly to the spec approved on 2026-08-03,
       and it emits NOTHING AT ALL until a translation is actually live, so
       today this is zero bytes on every page. Four rules, each of which is

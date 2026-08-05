@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "lint:content": "node scripts/lint-content.mjs dist",
     "gate:geo": "node scripts/geo-check.mjs dist",
-    "gate": "astro build && node scripts/strip-comments.mjs dist && node scripts/autolink.mjs dist && node scripts/build-search-index.mjs dist && node scripts/check-source-dashes.mjs && node scripts/check-functions.mjs && node scripts/check-tree.mjs && node scripts/check-concepts.mjs dist && node scripts/check-llms.mjs dist && node scripts/check-redirects.mjs dist && node scripts/lang-roots.mjs dist && node scripts/check-i18n.mjs dist && node scripts/lint-content.mjs dist && node scripts/geo-check.mjs dist && node scripts/fold-check.mjs dist && node scripts/test-pdf-gate.mjs dist && node scripts/test-checklist-drag.mjs dist && node scripts/test-offline.mjs dist && node scripts/test-search.mjs dist && node scripts/test-promo-fit.mjs dist"
+    "gate": "astro build && node scripts/strip-comments.mjs dist && node scripts/autolink.mjs dist && node scripts/build-search-index.mjs dist && node scripts/check-source-dashes.mjs && node scripts/check-functions.mjs && node scripts/check-head.mjs dist && node scripts/check-tree.mjs && node scripts/check-concepts.mjs dist && node scripts/check-llms.mjs dist && node scripts/check-redirects.mjs dist && node scripts/lang-roots.mjs dist && node scripts/check-i18n.mjs dist && node scripts/lint-content.mjs dist && node scripts/geo-check.mjs dist && node scripts/fold-check.mjs dist && node scripts/test-pdf-gate.mjs dist && node scripts/test-checklist-drag.mjs dist && node scripts/test-offline.mjs dist && node scripts/test-search.mjs dist && node scripts/test-promo-fit.mjs dist"
   },
   "keywords": [],
   "author": "",
