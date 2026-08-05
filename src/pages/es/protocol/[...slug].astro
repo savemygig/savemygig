@@ -80,15 +80,23 @@ const dataAttrs = (o, i) => {
     <Fragment>
       <p class="dim" style="margin-bottom:0.9rem">{RUNLIST_HEAD}</p>
       <p class="assumed">{RUNLIST_ASSUMED}</p>
+      {/* NI UN TOQUE ENTRE UN DJ EN PÁNICO Y UN BOTÓN (H6, 2026-08-05).
+          Los cuatro moves eran cuatro sustantivos pelados (FOLDER, LINK,
+          RESTART, BORROW) con una línea de resumen, y los botones que hay que
+          apretar de verdad quedaban dentro de un disclosure cerrado en cada
+          uno. Esta es la pantalla más visitada del túnel y era la única
+          pantalla de rescate que pedía un toque antes de dar una instrucción;
+          su hermana, usb/booth, muestra el contenido equivalente como
+          checklist visible. Así que el disclosure se fue, no quedó "abierto
+          por defecto": no hay razón para ofrecer esconder la instrucción. Ver
+          el comentario en la versión en inglés para la jerarquía que sostiene
+          la legibilidad. */}
       <ol class="moves">
         {RUNLIST.map((s) => (
           <li>
             <span class="move-verb">{s.verb}</span>
             <span class="move-action">{s.action}</span>
-            <details class="move-more">
-              <summary>Por qué, y cómo</summary>
-              <p>{s.detail}</p>
-            </details>
+            <p class="move-why">{s.detail}</p>
           </li>
         ))}
       </ol>
@@ -191,10 +199,20 @@ const dataAttrs = (o, i) => {
     text-transform: uppercase;
     margin-bottom: 0.3rem;
   }
+  /* LA LÍNEA DE LECTURA (H6, 2026-08-05). Pasó de --text-dim al color completo: ahora es lo único que hay entre el verbo y un párrafo, así que tiene que ser la línea donde cae el ojo al recorrer las cuatro tarjetas. */
   .move-action {
     display: block;
     font-size: 0.97rem;
     line-height: 1.4;
+    color: var(--text);
+  }
+  /* El cómo, antes escondido detrás del disclosure "Por qué, y cómo". Mismo tamaño, color e interlineado que ya tenía el cuerpo del disclosure (global.css .move-more p): el texto no cambió, cambió solo que ya no hace falta un toque. La hairline es el separador que el sitio ya usa entre ítems de checklist, y le da ritmo interno a la tarjeta para que los cuatro moves sigan leyéndose como cuatro moves. */
+  .move-why {
+    margin: var(--sp-3) 0 0;
+    padding-top: var(--sp-3);
+    border-top: var(--stroke) solid var(--edge-soft);
+    font-size: 0.88rem;
+    line-height: 1.5;
     color: var(--text-dim);
   }
   .last-resort { margin: 0 0 1.6rem; }

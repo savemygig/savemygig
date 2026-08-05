@@ -85,15 +85,22 @@ const dataAttrs = (o, i) => {
     <Fragment>
       <p class="dim" style="margin-bottom:0.9rem">{RUNLIST_HEAD}</p>
       <p class="assumed">{RUNLIST_ASSUMED}</p>
+      {/* NENHUM TOQUE ENTRE UM DJ EM PÂNICO E UM BOTÃO (H6, 2026-08-05).
+          Os quatro moves eram quatro substantivos secos (FOLDER, LINK,
+          RESTART, BORROW) com uma linha de resumo, e os apertos de botão de
+          verdade ficavam dentro de um disclosure fechado em cada um. Esta é a
+          tela mais visitada do túnel e era a única tela de resgate que pedia
+          um toque antes de dar uma instrução; a tela irmã, usb/booth, mostra
+          o conteúdo equivalente como checklist visível. Então o disclosure
+          saiu, não virou "aberto por padrão": não há motivo para oferecer a
+          opção de esconder a instrução. Ver o comentário na versão em inglês
+          para a hierarquia que segura a legibilidade. */}
       <ol class="moves">
         {RUNLIST.map((s) => (
           <li>
             <span class="move-verb">{s.verb}</span>
             <span class="move-action">{s.action}</span>
-            <details class="move-more">
-              <summary>Por que, e como</summary>
-              <p>{s.detail}</p>
-            </details>
+            <p class="move-why">{s.detail}</p>
           </li>
         ))}
       </ol>
@@ -197,10 +204,20 @@ const dataAttrs = (o, i) => {
     text-transform: uppercase;
     margin-bottom: 0.3rem;
   }
+  /* A LINHA DE LEITURA (H6, 2026-08-05). Passou de --text-dim para a cor cheia: agora ela é a única coisa entre o verbo e um parágrafo, então precisa ser a linha em que o olho bate ao passar pelos quatro cards. */
   .move-action {
     display: block;
     font-size: 0.97rem;
     line-height: 1.4;
+    color: var(--text);
+  }
+  /* O como, antes escondido atrás do disclosure "Por que, e como". Mesmo tamanho, cor e entrelinha que o corpo do disclosure já tinha (global.css .move-more p): o texto não mudou, mudou só o fato de não precisar de toque. A hairline é o separador que o site já usa entre itens de checklist, e dá ritmo interno ao card para os quatro moves continuarem lendo como quatro moves. */
+  .move-why {
+    margin: var(--sp-3) 0 0;
+    padding-top: var(--sp-3);
+    border-top: var(--stroke) solid var(--edge-soft);
+    font-size: 0.88rem;
+    line-height: 1.5;
     color: var(--text-dim);
   }
   .last-resort { margin: 0 0 1.6rem; }

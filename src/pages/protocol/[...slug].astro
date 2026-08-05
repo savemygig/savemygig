@@ -93,15 +93,26 @@ const dataAttrs = (o, i) => {
     <Fragment>
       <p class="dim" style="margin-bottom:0.9rem">{RUNLIST_HEAD}</p>
       <p class="assumed">{RUNLIST_ASSUMED}</p>
+      {/* NO TAP BETWEEN A PANICKING DJ AND A BUTTON PRESS (H6, 2026-08-05).
+          The four moves used to render as four bare nouns (FOLDER, LINK,
+          RESTART, BORROW) with a one-line gloss, and the actual button
+          presses sat inside a closed "Why, and how" disclosure on every one.
+          This is the most-visited screen in the tunnel and it was the only
+          rescue screen that asked for a tap before it gave an instruction;
+          its own sibling, usb/booth, prints the equivalent content as a plain
+          visible checklist. So the disclosure is gone, not defaulted open:
+          there is no reason to offer to hide the instruction.
+          The hierarchy that made the collapsed version scannable is kept and
+          sharpened instead of dropped, so the screen still reads as four
+          moves and not as a wall of text: VERB at arm's length, the action in
+          full-strength body text as the scan line, and the how below a
+          hairline in smaller dim text. Same three levels, all visible. */}
       <ol class="moves">
         {RUNLIST.map((s) => (
           <li>
             <span class="move-verb">{s.verb}</span>
             <span class="move-action">{s.action}</span>
-            <details class="move-more">
-              <summary>Why, and how</summary>
-              <p>{s.detail}</p>
-            </details>
+            <p class="move-why">{s.detail}</p>
           </li>
         ))}
       </ol>
@@ -233,10 +244,29 @@ const dataAttrs = (o, i) => {
     text-transform: uppercase;
     margin-bottom: 0.3rem;
   }
+  /* THE SCAN LINE (H6, 2026-08-05). Promoted from --text-dim to full strength
+     because it is now the only thing standing between the verb and a
+     paragraph: it has to be the line a DJ's eye lands on when they skim four
+     cards, and dim body text one size below the verb was not winning that
+     against the paragraph underneath it. */
   .move-action {
     display: block;
     font-size: 0.97rem;
     line-height: 1.4;
+    color: var(--text);
+  }
+  /* The how, previously behind a "Why, and how" disclosure. Same size, colour
+     and leading the disclosure's own body had (global.css .move-more p), so
+     nothing about the text itself changed, only whether you have to tap for
+     it. The hairline is the site's existing separator token, the same one
+     .checklist puts between items: it gives the card an internal rhythm so
+     four expanded moves still read as four moves. */
+  .move-why {
+    margin: var(--sp-3) 0 0;
+    padding-top: var(--sp-3);
+    border-top: var(--stroke) solid var(--edge-soft);
+    font-size: 0.88rem;
+    line-height: 1.5;
     color: var(--text-dim);
   }
   .last-resort { margin: 0 0 1.6rem; }
