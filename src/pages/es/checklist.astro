@@ -934,7 +934,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .bl-short { display: none; }
   .unlock-form input {
     width: 100%; padding: 0.9rem 1rem; font-family: inherit; font-size: 16px;
-    color: var(--text); background: var(--bg); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
+    color: var(--text); background: var(--bg); border: var(--stroke) solid var(--edge-strong); border-radius: var(--radius);
   }
   .unlock-form input::placeholder { color: var(--text-faint); }
   .unlock-form input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
@@ -1088,7 +1088,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     width: 100%; resize: vertical; min-height: 84px;
     padding: 0.75rem 0.9rem; font-family: inherit; font-size: 16px;
     line-height: 1.5; color: var(--text);
-    background: var(--bg); border: var(--stroke) dashed var(--edge); border-radius: var(--radius);
+    background: var(--bg); border: var(--stroke) dashed var(--edge-strong); border-radius: var(--radius);
   }
   .notes-area::placeholder { color: var(--text-faint); }
   .notes-area:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
@@ -1119,7 +1119,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   #list[data-mode="custom"][data-edit="on"] ~ .add-section { display: flex; }
   .add-section .add-input {
     flex: 1; padding: 0.75rem 0.9rem; font-family: inherit; font-size: 16px; color: var(--text);
-    background: var(--bg); border: var(--stroke) dashed var(--edge); border-radius: var(--radius);
+    background: var(--bg); border: var(--stroke) dashed var(--edge-strong); border-radius: var(--radius);
   }
   .add-section .add-input::placeholder { color: var(--text-faint); }
   .add-section .add-input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
@@ -1147,7 +1147,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .backup-form[hidden] { display: none; }
   .backup-form input {
     flex: 1; padding: 0.7rem 0.9rem; font-family: inherit; font-size: 16px; color: var(--text);
-    background: var(--bg); border: var(--stroke) solid var(--edge); border-radius: var(--radius);
+    background: var(--bg); border: var(--stroke) solid var(--edge-strong); border-radius: var(--radius);
   }
   .backup-form input::placeholder { color: var(--text-faint); }
   .backup-form .btn { margin: 0; width: auto; }
@@ -1157,7 +1157,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .backup-msg.err { color: var(--red); }
   .add-own .add-input {
     flex: 1; padding: 0.75rem 0.9rem; font-family: inherit; font-size: 16px; color: var(--text);
-    background: var(--bg); border: var(--stroke) dashed var(--edge); border-radius: var(--radius);
+    background: var(--bg); border: var(--stroke) dashed var(--edge-strong); border-radius: var(--radius);
   }
   .add-own .add-input::placeholder { color: var(--text-faint); }
   .add-own .add-input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
@@ -1298,7 +1298,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      .ls-new-form/.ls-name-edit below didn't. */
   .acct-form input {
     flex: 1 1 200px; min-width: 0; background: var(--bg); color: var(--text);
-    border: var(--stroke) solid var(--edge); border-radius: var(--radius);
+    border: var(--stroke) solid var(--edge-strong); border-radius: var(--radius);
     padding: 0.7rem 0.8rem; font-family: var(--font-body); font-size: 16px;
   }
   .acct-form input::placeholder { color: var(--text-faint); }
@@ -1507,7 +1507,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
      input Antonio reported directly). */
   .ls-new-form input {
     flex: 1 1 160px; min-width: 0; background: var(--bg); color: var(--text);
-    border: var(--stroke) solid var(--edge); border-radius: var(--radius);
+    border: var(--stroke) solid var(--edge-strong); border-radius: var(--radius);
     padding: 0.55rem 0.7rem; font-family: var(--font-body); font-size: 16px;
   }
   .ls-new-form input::placeholder { color: var(--text-faint); }

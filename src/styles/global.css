@@ -77,6 +77,20 @@
   --surf: #151413;
   --surf-2: #1c1a17;
   --edge: #2a2723;
+  /* FUNCTIONAL boundaries: the edge of a text field a DJ has to find and tap
+     in a dark booth. --edge above is 1.33:1 on --bg and stays exactly where
+     it belongs, on decorative hairlines and panel outlines that carry no
+     information. Added 2026-08-05, because every text input on the site drew
+     itself in --edge, so at booth brightness the fields were effectively
+     invisible until you tapped one.
+     MEASURED: 2.11:1 on --bg, 1.96:1 on --surf. That is a 59% improvement on
+     what was there and it is NOT yet the 3:1 WCAG 2.1 SC 1.4.11 asks of a
+     control's boundary. The approved value for this pass is this hex; a true
+     3:1 needs about #655e54 (3.09:1 on --bg, 2.88:1 on --surf, so even that
+     misses on the .srch-box surface), which is a visibly lighter edge and a
+     brand decision for Antonio rather than an accessibility detail we can
+     settle here. Flagged in the Aug 5 audit notes. */
+  --edge-strong: #4a463f;
   --edge-soft: #201e1b;
   --red: #ff4d2e;          /* accent + stop/danger */
   --red-dim: rgba(255, 77, 46, 0.12);
