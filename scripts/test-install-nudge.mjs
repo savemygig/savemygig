@@ -196,15 +196,15 @@ async function tab({ ios = false, standalone = null, chromium: chr = false,
 }
 
 const PAGES = [
-  ['/saved', 'en', 'Keep the rescue on your phone'],
-  ['/card', 'en', 'Keep the rescue on your phone'],
-  ['/checklist', 'en', 'Keep the rescue on your phone'],
-  ['/pt/saved', 'pt', 'Deixe o resgate no seu celular'],
-  ['/pt/card', 'pt', 'Deixe o resgate no seu celular'],
-  ['/pt/checklist', 'pt', 'Deixe o resgate no seu celular'],
-  ['/es/saved', 'es', 'Llévate el rescate en el celular'],
-  ['/es/card', 'es', 'Llévate el rescate en el celular'],
-  ['/es/checklist', 'es', 'Llévate el rescate en el celular'],
+  ['/saved', 'en', 'Keep the rescue on your device'],
+  ['/card', 'en', 'Keep the rescue on your device'],
+  ['/checklist', 'en', 'Keep the rescue on your device'],
+  ['/pt/saved', 'pt', 'Deixe o resgate no seu aparelho'],
+  ['/pt/card', 'pt', 'Deixe o resgate no seu aparelho'],
+  ['/pt/checklist', 'pt', 'Deixe o resgate no seu aparelho'],
+  ['/es/saved', 'es', 'Llévate el rescate en tu dispositivo'],
+  ['/es/card', 'es', 'Llévate el rescate en tu dispositivo'],
+  ['/es/checklist', 'es', 'Llévate el rescate en tu dispositivo'],
 ];
 
 // ---------------------------------------------------------------------------

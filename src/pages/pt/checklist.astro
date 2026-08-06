@@ -97,12 +97,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       })();
     </script>
 
-    {/* DOIS LINKS DE CONTEXTO, 2026-08-05. Espelha src/pages/checklist.astro:
-        linha propria, nunca dentro do paragrafo de cima, que e copy PROTEGIDA. */}
-    <p class="dim" style="font-size:0.86rem;margin-bottom:1.6rem">
-      <a href="/pt/prepare">As regras que estão por trás desta lista</a> ·
-      <a href="/pt/install">Instale para o checklist sobreviver a uma aba fechada</a>
-    </p>
+    {/* OS DOIS LINKS DE CONTEXTO FORAM PARA O CARD DE INSTALACAO NO PE DESTA
+        PAGINA (2026-08-06, pedido do Antonio: o topo tem que ficar limpo).
+        Nada se perdeu: /install sempre foi o assunto daquele card, e /prepare
+        virou um link secundario discreto ali. Razao completa em
+        src/pages/checklist.astro. O paragrafo de cima continua sendo copy
+        PROTEGIDA e nada foi dobrado de volta nele. */}
 
     <!-- Round 11.5 (Antonio, "very very very important"): a standing
          reminder that this runs on servers, and servers can and do go down
@@ -636,8 +636,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     {/* Install recommendation, QUIET, at the foot. Preparing for a gig is the
         calm moment to set this up, which is why the page qualifies at all, but
         the reader came here to tick boxes: no accent rail, no icon disc, no
-        filled button. Same words, less voice. */}
-    <InstallNudge lang="pt" path="/checklist" tone="quiet" placement="checklist_foot" />
+        filled button. Same words, less voice.
+        variant="checklist" (2026-08-06) is what makes this card the new home of
+        the two context links that used to sit under the h1: it adds the clause
+        about the ticked list surviving a closed tab, and the quiet /prepare
+        link. Only this page passes it. */}
+    <InstallNudge lang="pt" path="/checklist" tone="quiet" variant="checklist" placement="checklist_foot" />
 
     {/* The post-install registration ask, sharing the foot with the install
         card above it. Exactly one of the two can ever be visible: the card

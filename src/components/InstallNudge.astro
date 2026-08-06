@@ -90,15 +90,38 @@ interface Props {
   /** `quiet` drops the accent rail and the icon: same words, less voice, for
    *  the foot of /checklist where the reader is mid-task. */
   tone?: 'default' | 'quiet';
+  /** CONTENT variant, where `tone` above is the VISUAL one. They stay separate
+   *  because a page can want the quiet look without the extra copy.
+   *  `checklist` adds two things, and only /checklist passes it (2026-08-06,
+   *  Antonio, reviewing on his phone: the two context links at the top of that
+   *  page had to go, and "that information should be integrated into, or merged
+   *  with" this card):
+   *    - ONE EXTRA CLAUSE on the body: that the ticked list also survives a
+   *      closed tab. That is the half of the install promise this card was not
+   *      already making, and it is a clause rather than a second link because
+   *      the install IS this card's whole subject.
+   *    - ONE QUIET SECONDARY LINK to /prepare, which is where the removed row's
+   *      other link went. It uses cta.preventBtn, the same name that
+   *      destination now carries on every fix article: one name per
+   *      destination, sitewide.
+   *  Neither appears on /saved or /card, and that is deliberate: /saved already
+   *  carries a full prevention panel and /card a prevention link, so this would
+   *  be the same destination twice on one page, and neither page has a ticked
+   *  list to keep. */
+  variant?: 'default' | 'checklist';
   /** Analytics placement, so three call sites are tellable apart. */
   placement?: string;
 }
-const { lang = DEFAULT_LANG, path, tone = 'default', placement = 'unknown' } = Astro.props;
+const { lang = DEFAULT_LANG, path, tone = 'default', variant = 'default', placement = 'unknown' } = Astro.props;
 
 const S = t(lang).installNudge;
 // Button and dismiss wording come from the homepage banner's catalogue on
 // purpose. See the note in the header about one product, one vocabulary.
 const B = t(lang).installBanner;
+// The prevention destination's name, from the catalogue the fix articles use,
+// so this link and that button cannot drift apart.
+const RULES = t(lang).cta.preventBtn;
+const isChecklist = variant === 'checklist';
 
 // The guard, in the component. A call site cannot opt into Emergency Mode.
 const show = !insideEmergencyMode(path) && path !== '/';
@@ -113,7 +136,10 @@ const show = !insideEmergencyMode(path) && path !== '/';
       )}
       <div class="ing-txt">
         <strong class="ing-h">{S.head}</strong>
-        <p class="ing-body">{S.body}</p>
+        {/* Two sentences at most, and the second one only on /checklist. It is
+            appended INSIDE the same paragraph rather than added as a second
+            block so the card grows by a clause, not by a line of its own. */}
+        <p class="ing-body">{S.body}{isChecklist && ` ${S.bodyList}`}</p>
         {/* THE iOS BRANCH. Hidden until the script confirms iOS, because a
             Chromium user must never be told to tap a Share icon that is not
             there. The glyph is the site's own stroke vocabulary at 24x24,
@@ -126,8 +152,17 @@ const show = !insideEmergencyMode(path) && path !== '/';
           </span>
           <span>{S.ios}</span>
         </p>
+        {/* One row, both links, separated by the same middot the removed
+            top-of-page row used, so relocating that link costs the card no
+            height at all when it fits and wraps like prose when it does not.
+            The /prepare link keeps the prepare_click event every other route to
+            that page fires, with its own placement, so the move is measurable
+            rather than assumed. */}
         <p class="ing-more">
           <a href={localizedPath('/install', lang)} data-event="step_completed" data-step="install_more" data-placement={placement}>{B.more} &rarr;</a>
+          {isChecklist && (
+            <Fragment> · <a href={localizedPath('/prepare', lang)} data-event="step_completed" data-step="prepare_click" data-placement={`${placement}_rules`}>{RULES}</a></Fragment>
+          )}
         </p>
       </div>
       {/* The one-tap button, revealed only where the browser has actually

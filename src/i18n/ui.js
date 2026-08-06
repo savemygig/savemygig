@@ -114,14 +114,26 @@ export const UI = {
     // vocabulary the homepage banner uses; two words for one button is how a
     // product starts sounding like two products.
     installNudge: {
-      head: 'Keep the rescue on your phone',
+      // "device", NOT "phone" (2026-08-06, Antonio). This card renders on
+      // /saved, /card and /checklist, all three of which are read on desktop
+      // too, where "phone" was simply wrong: the body copy two lines below has
+      // said "your device" since the card was written. `done` moved with it for
+      // the same reason, so the card no longer says device and then phone.
+      head: 'Keep the rescue on your device',
       body: 'Install it as an app and every rescue screen stays on your device, ready with no signal, no data and no searching.',
+      // ONE EXTRA CLAUSE, /checklist ONLY (variant="checklist"). It carries the
+      // one thing the removed top-of-page link said that this card did not:
+      // that the TICKED LIST, not just the rescue screens, survives a closed
+      // tab. It is a clause on the body rather than a second link, because the
+      // install is already this card's whole subject and a second link to the
+      // same place would have been the weaker half of the trade.
+      bodyList: 'It also keeps your ticked list through a closed tab.',
       // iOS has no install API, so the only honest thing to render is the
       // gesture. The label names match the ones on /install exactly, because a
       // reader who follows one and then the other must not meet two wordings
       // for the same menu item.
       ios: 'Tap the Share icon, then Add to Home Screen.',
-      done: 'Installed. The rescue is on your phone now.',
+      done: 'Installed. The rescue is on your device now.',
     },
     // THE ASK THAT COMES AFTER THE INSTALL, not before it.
     //
@@ -344,10 +356,16 @@ export const UI = {
     // durabilidade, não eternidade. Os nomes dos itens do menu do iPhone são
     // exatamente os mesmos usados em /pt/install.
     installNudge: {
-      head: 'Deixe o resgate no seu celular',
+      // "aparelho", nao "celular" (2026-08-06): o card tambem aparece no
+      // desktop, e o `body` logo abaixo ja dizia "no seu aparelho" desde o
+      // inicio. `done` acompanha, para o card nao dizer aparelho e depois
+      // celular. Ver o comentario completo na versao em ingles.
+      head: 'Deixe o resgate no seu aparelho',
       body: 'Instale como app e todas as telas de resgate ficam salvas no seu aparelho, prontas sem sinal, sem dados e sem procurar nada.',
+      // Uma clausula extra, so no /checklist (variant="checklist").
+      bodyList: 'Também mantém a sua lista marcada mesmo com a aba fechada.',
       ios: 'Toque em Compartilhar e depois em Adicionar à Tela de Início.',
-      done: 'Instalado. O resgate está no seu celular agora.',
+      done: 'Instalado. O resgate está no seu aparelho agora.',
     },
     // O pedido vem DEPOIS da instalação, nunca antes. "Emergency Card" é nome
     // de produto e não se traduz. Ver o comentário na versão em inglês para o
@@ -527,10 +545,16 @@ export const UI = {
     // inicio da durabilidad, no eternidad. Los nombres de los ítems del menú
     // del iPhone son los mismos que usa /es/install.
     installNudge: {
-      head: 'Llévate el rescate en el celular',
+      // "dispositivo", no "celular" (2026-08-06): el card tambien se ve en
+      // desktop, y el `body` de abajo ya decia "en tu dispositivo" desde el
+      // principio. `done` va con el, para que el card no diga dispositivo y
+      // despues celular. Ver el comentario completo en la version en ingles.
+      head: 'Llévate el rescate en tu dispositivo',
       body: 'Instálalo como app y todas las pantallas de rescate se quedan en tu dispositivo, listas sin señal, sin datos y sin buscar nada.',
+      // Una cláusula extra, solo en /checklist (variant="checklist").
+      bodyList: 'También mantiene tu lista marcada aunque cierres la pestaña.',
       ios: 'Toca Compartir y luego Agregar a inicio.',
-      done: 'Instalado. El rescate ya está en tu celular.',
+      done: 'Instalado. El rescate ya está en tu dispositivo.',
     },
     // El pedido va DESPUÉS de instalar, nunca antes. "Emergency Card" es
     // nombre de producto y no se traduce. Ver el comentario en la versión en

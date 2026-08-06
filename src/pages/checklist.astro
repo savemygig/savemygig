@@ -81,18 +81,21 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       })();
     </script>
 
-    {/* TWO CONTEXT LINKS, 2026-08-05. This page had no path back to the
-        doctrine it is the routine FOR, and none forward to the install that
-        keeps the routine alive after a closed tab. Both are one tap from the
-        top of the page now.
-        IT IS ITS OWN ROW, NOT AN EDIT TO THE INTRO ABOVE. That paragraph is
-        PROTECTED copy (see the note above it), and threading two links through
-        it is exactly the "improvement" that note forbids. A separate row also
-        leaves the returning-visitor auto-hide on its own element, untouched. */}
-    <p class="dim" style="font-size:0.86rem;margin-bottom:1.6rem">
-      <a href="/prepare">The rules behind this list</a> ·
-      <a href="/install">Install it so the checklist survives a closed tab</a>
-    </p>
+    {/* THE TWO CONTEXT LINKS THAT USED TO SIT HERE ARE NOW IN THE INSTALL CARD
+        AT THE FOOT OF THIS PAGE (2026-08-06, Antonio, reviewing on his phone:
+        "I don't want those red warning boxes there... The top must stay
+        clean.") They were added on 2026-08-05 because the page had no path
+        back to the doctrine it is the routine FOR and none forward to the
+        install that keeps it alive after a closed tab. Both of those needs are
+        real and neither is lost: /install was always the install card's whole
+        subject, so the closed-tab promise is a clause in its body copy now,
+        and /prepare is a quiet secondary link in the same card. Nothing was
+        deleted, it moved to the calm end of the page.
+        WHAT DID NOT CHANGE, and it is the reason this is a deletion rather
+        than an edit: the intro paragraph above is PROTECTED copy (see the note
+        on it), and folding either link back into it is exactly the
+        "improvement" that note forbids. The returning-visitor auto-hide also
+        still has that paragraph to itself. */}
 
     <!-- Round 11.5 (Antonio, "very very very important"): a standing
          reminder that this runs on servers, and servers can and do go down
@@ -633,8 +636,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     {/* Install recommendation, QUIET, at the foot. Preparing for a gig is the
         calm moment to set this up, which is why the page qualifies at all, but
         the reader came here to tick boxes: no accent rail, no icon disc, no
-        filled button. Same words, less voice. */}
-    <InstallNudge path="/checklist" tone="quiet" placement="checklist_foot" />
+        filled button. Same words, less voice.
+        variant="checklist" (2026-08-06) is what makes this card the new home of
+        the two context links that used to sit under the h1: it adds the clause
+        about the ticked list surviving a closed tab, and the quiet /prepare
+        link. Only this page passes it. */}
+    <InstallNudge path="/checklist" tone="quiet" variant="checklist" placement="checklist_foot" />
 
     {/* The post-install registration ask, sharing the foot with the install
         card above it. Exactly one of the two can ever be visible: the card

@@ -97,12 +97,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       })();
     </script>
 
-    {/* DOS LINKS DE CONTEXTO, 2026-08-05. Espeja src/pages/checklist.astro:
-        fila propia, nunca dentro del parrafo de arriba, que es copy PROTEGIDA. */}
-    <p class="dim" style="font-size:0.86rem;margin-bottom:1.6rem">
-      <a href="/es/prepare">Las reglas que hay detrás de esta lista</a> ·
-      <a href="/es/install">Instálalo para que el checklist sobreviva a una pestaña cerrada</a>
-    </p>
+    {/* LOS DOS ENLACES DE CONTEXTO SE MUDARON AL CARD DE INSTALACION AL PIE DE
+        ESTA PAGINA (2026-08-06, pedido de Antonio: el tope tiene que quedar
+        limpio). No se perdio nada: /install siempre fue el tema de ese card, y
+        /prepare quedo ahi como enlace secundario discreto. Razon completa en
+        src/pages/checklist.astro. El parrafo de arriba sigue siendo copy
+        PROTEGIDA y nada se doblo de vuelta dentro de el. */}
 
     <!-- Round 11.5 (Antonio, "very very very important"): a standing
          reminder that this runs on servers, and servers can and do go down
@@ -636,8 +636,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     {/* Install recommendation, QUIET, at the foot. Preparing for a gig is the
         calm moment to set this up, which is why the page qualifies at all, but
         the reader came here to tick boxes: no accent rail, no icon disc, no
-        filled button. Same words, less voice. */}
-    <InstallNudge lang="es" path="/checklist" tone="quiet" placement="checklist_foot" />
+        filled button. Same words, less voice.
+        variant="checklist" (2026-08-06) is what makes this card the new home of
+        the two context links that used to sit under the h1: it adds the clause
+        about the ticked list surviving a closed tab, and the quiet /prepare
+        link. Only this page passes it. */}
+    <InstallNudge lang="es" path="/checklist" tone="quiet" variant="checklist" placement="checklist_foot" />
 
     {/* The post-install registration ask, sharing the foot with the install
         card above it. Exactly one of the two can ever be visible: the card
