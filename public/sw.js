@@ -738,7 +738,17 @@ self.addEventListener('fetch', (e) => {
   // whatever the visitor's first fetch saw, so pages added later never
   // appeared in THEIR search (caught live in production with "DJM 900").
   // Network-first keeps search current online and still works offline.
-  const isSearchIndex = url.pathname === SEARCH_INDEX;
+  //
+  // ALL THREE INDEXES, NOT JUST THE INSTALLED ONE (2026-08-06). This tested
+  // `=== SEARCH_INDEX`, which is only the install language's file, so a request
+  // for either of the other two fell through to the cache-first branch below
+  // and was frozen at whatever the first fetch happened to return, permanently.
+  // That is reachable in one tap: a reader who installed from /pt and follows
+  // any link into an English page (an autolink fallback, the undo line, the
+  // picker) and searches there was getting the exact bug network-first exists
+  // to prevent. The worker still PRECACHES only its own language; this is about
+  // how the other two are READ on the occasions a page asks for them.
+  const isSearchIndex = /^\/search-index\.(?:en|pt|es)\.json$/.test(url.pathname);
 
   if (isHTML || isSearchIndex) {
     const net = fetch(req).then((res) => { stash(req, res); return res; });
