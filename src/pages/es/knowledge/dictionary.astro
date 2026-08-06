@@ -143,14 +143,26 @@ const schema = {
   publisher: { '@id': `${SITE}/#org` },
   isPartOf: { '@id': `${SITE}/es/knowledge/dictionary#webpage` },
   mainEntityOfPage: { '@id': `${SITE}/es/knowledge/dictionary#webpage` },
+  // NAME AND url ONLY, PER TERM (2026-08-06). Each term used to carry its full
+  // `description` as well, which is the same sentence the page already prints
+  // directly underneath it, so all 59 definitions shipped TWICE in every byte of
+  // this page: 36 KB of JSON-LD on a 167 KB page, about a fifth of it, on a page
+  // a DJ may be loading in a basement.
+  // It bought nothing. Google has never had a rich result for DefinedTerm or
+  // DefinedTermSet, and an answer engine that wants the text reads the page,
+  // which is where the text is. What the markup usefully adds is the SHAPE:
+  // there is a defined term set here, these are its terms, and each one has its
+  // own citable anchor. Names and urls say all of that.
+  // `inLanguage` and `inDefinedTermSet` went with it, for the same reason rather
+  // than to save bytes: the set above already declares the language and already
+  // contains these terms through hasDefinedTerm, so both were restating on 59
+  // nodes what one node says once. The terms are blank nodes now, which is
+  // ordinary valid JSON-LD, and `url` is still what a crawler follows to cite
+  // one definition rather than the whole page.
   hasDefinedTerm: groups.flatMap((g) => g.terms.map((x) => ({
     '@type': 'DefinedTerm',
-    '@id': `${SITE}/es/knowledge/dictionary#${termId(x)}`,
-    url: `${SITE}/es/knowledge/dictionary#${termId(x)}`,
     name: x.t,
-    description: x.d,
-    inLanguage: 'es',
-    inDefinedTermSet: { '@id': `${SITE}/es/knowledge/dictionary#terms` },
+    url: `${SITE}/es/knowledge/dictionary#${termId(x)}`,
   }))),
 };
 ---

@@ -42,8 +42,11 @@
  *    /images/seal-72.webp appear in no HTML in the built site (checked across
  *    all 107 pages); the only references anywhere in the repo were these two
  *    lines. They cost a measured 35.1 KB of the install on every first visit.
- *    Removed from the list. The files stay in public/ in case a page wants
- *    them back.
+ *    Removed from the list. THE FILES THEMSELVES WENT ON 2026-08-06: "they stay
+ *    in public/ in case a page wants them back" is how a repo accumulates 274 KB
+ *    of assets nothing has ever rendered, and an unreferenced file is not a
+ *    spare, it is something every future audit has to re-investigate. Deleted
+ *    files live in git history, which is the right place for them.
  *
  * 3. INSTALL WAS 77 PARALLEL FETCHES. Measured at the origin (the page's own
  *    devtools session does not see service-worker requests) a first visit was

@@ -99,9 +99,10 @@
 
 # The last few uncovered static files. Lighthouse flagged these as having no
 # cache lifetime, which is small (about 5 KiB) but free to fix.
-/favicon.svg
-  Cache-Control: public, max-age=2592000
-
+# /favicon.svg's rule came out on 2026-08-06 with the file. It was a
+# byte-identical copy of /images/logo-shield.svg (verified with cmp), the
+# <link rel="icon"> has pointed at logo-shield.svg since 2026-08-04, and a cache
+# header for a URL that 404s is a rule that can only ever be wrong.
 /apple-touch-icon.png
   Cache-Control: public, max-age=2592000
 

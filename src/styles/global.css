@@ -557,6 +557,23 @@ a { color: var(--red); }
   position: absolute;
   inset: 0;
 }
+/* THE PHOTO IS SIZED BY THE VIEWPORT, AND THE MARKUP NOW SAYS SO (2026-08-06).
+   The eight panel-full.webp masters (95 to 181 KB) shipped with no width, no
+   height and no srcset, so the browser learned the aspect ratio only after the
+   bytes arrived, and a phone was handed a 1400px master to draw in about 340
+   CSS px. Intrinsic dimensions are on all 24 <img> tags now (8 photos x 3
+   languages) and each carries an 800px sibling in a srcset.
+   `width: auto; height: auto` below are what let the attributes be honest: the
+   attributes state the file's real pixels, which is where the aspect ratio comes
+   from, and these two lines hand the actual sizing back to the two max-*
+   constraints. Take them out and the photo would render at its intrinsic size.
+   sizes IS `92vw`, deliberately not tighter. It is literally the width cap on
+   this element, so it can never under-serve and blur a photo somebody has just
+   tapped to see bigger. A tighter value would have to encode `max-height: 88vh`,
+   which no `sizes` can express (there are no vh units in a sizes attribute), and
+   it would have to differ for the one landscape photo in the set. The saving
+   lands where it matters anyway: a 390px phone at DPR 2 asks for about 700px and
+   gets the 800px file. */
 .lightbox img {
   position: relative;
   max-width: 92vw;
