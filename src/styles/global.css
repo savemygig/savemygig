@@ -240,6 +240,32 @@ html {
   overscroll-behavior-x: none;
 }
 
+/* THE [hidden] ATTRIBUTE NOW ACTUALLY HIDES (2026-08-06).
+   The UA stylesheet's `[hidden] { display: none }` has specificity (0,1,0),
+   exactly the same as a single class, so ANY rule of the form
+   `.thing { display: flex }` beats it on source order alone and an element
+   the script believes it hid stays on screen. Not theoretical: the /feedback
+   form set `form.hidden = true` on a successful submit, `.fbp-form
+   { display: flex }` won, and the whole form stayed up with its button frozen
+   on "Sending..." while the thank-you rendered underneath it. Every visitor
+   who ever sent feedback saw that.
+   The codebase had been paying for this one element at a time: twenty-odd
+   `.x[hidden] { display: none }` rules across the checklist, the search box,
+   the install nudge, the language picker and the promo banner, each written
+   after the same bug was found on that one component, plus two code comments
+   explaining the trap to the next reader. This is the reset all of those were
+   approximating.
+   !important IS LOAD-BEARING, not defensive: without it this rule is just one
+   more (0,1,0) selector in the tie it exists to settle. Nothing here depends
+   on a `hidden` element being visible (checked: every `[hidden]` selector in
+   src sets display:none, and nothing reveals an element by overriding one),
+   and every reveal path in the code removes the attribute rather than
+   fighting it in CSS, so this only ever agrees with what the scripts intend.
+   The per-component rules stay: redundant now, still correct, and deleting
+   twenty of them across three languages would be churn in files this change
+   has no other reason to touch. */
+[hidden] { display: none !important; }
+
 body {
   background: var(--bg);
   color: var(--text);

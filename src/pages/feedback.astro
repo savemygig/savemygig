@@ -88,7 +88,15 @@ import Base from '../layouts/Base.astro';
     font-family: var(--font-body); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.04em;
     text-transform: uppercase; color: var(--text); margin: 1.3rem 0 0.5rem;
   }
-  .fbp-label:first-child { margin-top: 0; }
+  /* ONE RULE SETS THE LABEL RHYTHM, and only the first label in the form is
+     exempt (2026-08-06). `:first-child` alone also matched the NAME and EMAIL
+     labels, because each of them is the first child of its own .fbp-col
+     wrapper, so those two got margin-top: 0 and sat flush against the bottom
+     edge of the Instagram field above them: measured 20.8px, 20.8px, then
+     0.0px, 0.0px down the form. `.fbp-form >` restores the intent (the type
+     question at the very top needs no gap; every other label does) without
+     patching individual pairs. */
+  .fbp-form > .fbp-label:first-child { margin-top: 0; }
   .fbp-hint { color: var(--text-faint); font-weight: 500; text-transform: none; letter-spacing: 0; font-size: 0.78rem; }
 
   /* Segmented type control, big and tappable. */
@@ -101,7 +109,14 @@ import Base from '../layouts/Base.astro';
     transition: background var(--t-fast), color var(--t-fast);
   }
   .fbp-seg label:last-of-type { border-right: none; }
-  .fbp-seg input:checked + label { background: var(--red); color: #0a0a0b; }
+  /* SELECTED IS OFF-WHITE, NOT EMERGENCY RED (2026-08-06). This is the same
+     segmented control /checklist uses for Base/Advanced/Custom, and there the
+     selected chip is `background: var(--text)` with dark text. Here it was
+     solid --red, which is the colour this site reserves for "move now, the
+     room is at risk". Spending the alarm colour on "you picked Suggestion"
+     costs it meaning on the pages where it has to work. One pattern, one
+     selected state; the value is copied from .mode-btn.is-on, not invented. */
+  .fbp-seg input:checked + label { background: var(--text); color: #0a0a0b; }
   .fbp-seg input:focus-visible + label { outline: 2px solid var(--red); outline-offset: 2px; }
 
   .fbp-input {
@@ -144,6 +159,28 @@ import Base from '../layouts/Base.astro';
   const done = document.getElementById('fbDone');
   const another = document.getElementById('fbAnother');
 
+  // TWO DIFFERENT FAILURES, TWO DIFFERENT SENTENCES (2026-08-06). Every
+  // failure used to be reported as "No connection", including a 500 from our
+  // own endpoint on a perfectly good connection. That sends the DJ off to
+  // check their wifi over a fault on our side, and it offers no other way to
+  // reach us. navigator.onLine is only trustworthy in the negative (false
+  // really does mean no network interface; true does not promise a working
+  // route), and the negative is exactly what is being tested here.
+  //
+  // NEITHER PATH TOUCHES THE TEXTAREA. A form that eats a long, considered
+  // piece of feedback because our server coughed is worse than the error, and
+  // the visitor has no copy of what they wrote. The only reset() on this page
+  // is the one behind "Send another", after a submit that actually succeeded.
+  const OFFLINE_MSG = 'No connection. Your message is still here, so try again once you are back online.';
+  const SERVER_MSG = 'Something broke on our side, not on yours. Your message is still in the box: try again in a minute, or send it to <a href="mailto:info@savemygig.com">info@savemygig.com</a>.';
+  function showFailure() {
+    if (!statusEl) return;
+    const offline = typeof navigator !== 'undefined' && navigator.onLine === false;
+    if (offline) statusEl.textContent = OFFLINE_MSG;
+    else statusEl.innerHTML = SERVER_MSG;
+    statusEl.className = 'fbp-status err';
+  }
+
   if (form) {
     form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
@@ -172,11 +209,11 @@ import Base from '../layouts/Base.astro';
           if (done) done.hidden = false;
           done && done.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
-          if (statusEl) { statusEl.textContent = 'Could not send right now. Try again in a minute.'; statusEl.className = 'fbp-status err'; }
+          showFailure();
           if (btn) { btn.removeAttribute('disabled'); btn.textContent = 'Send it'; }
         }
       } catch (e) {
-        if (statusEl) { statusEl.textContent = 'No connection. Try again later.'; statusEl.className = 'fbp-status err'; }
+        showFailure();
         if (btn) { btn.removeAttribute('disabled'); btn.textContent = 'Send it'; }
       }
     });
