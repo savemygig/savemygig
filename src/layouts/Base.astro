@@ -1103,12 +1103,25 @@ const entityGraph = {
      marker is reference info for testers/us, not something every visitor
      needs to read. */
   .foot-version { font-size: 0.7rem; color: var(--text-faint); opacity: 0.6; }
-  /* Desktop: centered under the social row, same 176px measure (4 x 38px
-     buttons + 3 x 0.5rem gaps), one tidy stack. Antonio tried left-justified
-     for an afternoon and called it back: centered with the icons wins on
-     desktop, LEFT wins on phones (see the media block below). */
+  /* Under the social row, on the SAME LEFT EDGE as everything else in this
+     block, and holding the 176px measure (4 x 38px circles + 3 x 8px gaps) as
+     the box it lives in.
+
+     HISTORY, because this reverses a call he made once: it was centred inside
+     that 176px box on desktop ("Antonio tried left-justified for an afternoon
+     and called it back: centered with the icons wins on desktop"), and LEFT on
+     phones. It is now left on both, on his 2026-08-06 instruction that the
+     lockup, the tagline, the social row and this link all share one vertical
+     line. Two things also made the old centring stop being what he approved:
+     the social row's visible ink had drifted 3px right (see the note on
+     .soc-btn::before in global.css), so "centred with the icons" was centred
+     on the wrong thing; and centring is only stable while the label fits, so
+     the Portuguese label, which wrapped, was landing at a different x than the
+     English and Spanish ones on the same screen. Left-aligned, the label's
+     length cannot move it. If he calls this back again, this is one commit to
+     revert and nothing else depends on it. */
   .foot-bmc {
-    display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+    display: flex; align-items: center; justify-content: flex-start; gap: 0.45rem;
     width: 176px; margin: 0.8rem 0 0;
     font-size: 0.8rem; text-decoration: none;
   }
@@ -1137,8 +1150,11 @@ const entityGraph = {
        Left edge on the Prepare column (50% + half the 1.2rem column gap),
        vertically centered, 80% of the stack height (his -20% call). */
     .foot-brand { grid-column: 1 / -1; position: relative; }
-    /* On a phone the coffee link left-aligns with the icons (his mockup). */
-    .foot-bmc { justify-content: flex-start; width: auto; }
+    /* Left alignment is now the default for this link at every width, so only
+       the width is overridden here: on a phone the brand block spans the whole
+       grid, and hugging the label beats a fixed 176px box that a long
+       translation would wrap inside. */
+    .foot-bmc { width: auto; }
     /* Phones up to the iPhone 15 / S23 class (Antonio, second pass: both
        still crowded, "reduce fifteen percent more"). The Pro Max width
        (428+) is EXCLUDED on his call: "on 15 Pro Max looks awesome", so it
