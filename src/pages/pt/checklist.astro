@@ -174,9 +174,24 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
       <div class="mode-switch" role="group" aria-label="Profundidade do checklist">
         <button type="button" class="mode-btn is-on" data-mode-set="basic" aria-pressed="true">Base</button>
         <span class="mode-switch-div" aria-hidden="true"></span>
-        <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Avançado</button>
+        <!-- LOCKED IS VISIBLE BEFORE THE TAP (2026-08-06). Tapping Advanced or
+             Custom while signed out appeared to do nothing: the segmented
+             control did not move (correctly, the mode did not change) and the
+             account card opened around 140px further down the page with no
+             visual link to the tap at all. A calm visitor reads that as a
+             broken button, not as a gate.
+             The lock ships in the MARKUP, not applied by script on load, for
+             the same reason the groups ship collapsed (2026-08-04, CLS 0.349
+             -> 0.115): a first-time visitor IS locked, so the initial HTML
+             should say so rather than repainting once a 58KB module has
+             parsed. unlockAll() below strips both the class and the .sr-only
+             word the moment this device is registered.
+             13px, currentColor, stroke 2.2, so it inherits the chip's own
+             colour and stays legible at booth brightness instead of being a
+             dimmed-out state nobody can see in the dark. -->
+        <button type="button" class="mode-btn is-locked" data-mode-set="advanced" aria-pressed="false">Avançado<svg class="mode-lock" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span class="sr-only mode-lock-sr">Bloqueado, precisa de uma conta gratuita.</span></button>
         <span class="mode-switch-div" aria-hidden="true"></span>
-        <button type="button" class="mode-btn" data-mode-set="custom" aria-pressed="false">Pessoal</button>
+        <button type="button" class="mode-btn is-locked" data-mode-set="custom" aria-pressed="false">Pessoal<svg class="mode-lock" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span class="sr-only mode-lock-sr">Bloqueado, precisa de uma conta gratuita.</span></button>
       </div>
       <div class="mode-row-right">
         <!-- Info toggle (Antonio, 2026-07-30 round 3): now shown on BOTH
@@ -270,7 +285,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              required on the email path specifically: unlike Google, this
              path never opens a session, so there is no later screen to
              collect it in. -->
-        <input type="text" name="artist" required autocomplete="nickname" placeholder="Nome artístico ou primeiro nome" aria-label="Nome artístico ou primeiro nome" aria-describedby="unlockMsg" maxlength="80" />
+        <input type="text" name="artist" required autocomplete="nickname" placeholder="Obrigatório: nome artístico ou primeiro nome" aria-label="Obrigatório: nome artístico ou primeiro nome" aria-describedby="unlockMsg" maxlength="80" />
         <!-- The follow promise lives INSIDE the field now (Antonio): one line
              less under the form, and the pitch sits exactly where the answer
              goes. Long placeholder ellipsizes on narrow phones; the handle
@@ -314,6 +329,16 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
          untouched; the account is the optional layer on top. No passwords
          exist anywhere: Google, or an emailed one-tap link. -->
     <div class="acct-card" id="acctCard" hidden>
+      <!-- THE CARD NAMES WHAT WAS ASKED FOR (2026-08-06). Opened from the
+           Sync chip this card is self-explanatory; opened by tapping a locked
+           mode it was an unlabelled account box a screen away from the tap,
+           and the visitor had to infer the connection. Filled by JS only on
+           the locked-tab path, so the Sync path is byte for byte what it was.
+           A <p>, not a heading element: .unlock-title is the same thing on the
+           gate panel below and this borrows its exact styling, and inserting a
+           real h3 here would sit above the seven category h2s and break the
+           document outline this page fixed on 2026-08-04. -->
+      <p class="unlock-title acct-gate-h" id="acctGateH" hidden></p>
       <div id="acctOut">
         <!-- Round 7 (Antonio): this is now the FIRST thing shown for
              Advanced/Custom too, not just Sync, so the wording has to work
@@ -355,7 +380,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              already knows it; never blocks sync. -->
         <form class="acct-form acct-profile" id="acctProfile" hidden novalidate>
           <p class="dim acct-copy" style="flex:1 1 100%;margin-bottom:0.1rem">Para a gente saber como te chamar:</p>
-          <input type="text" name="artist" required autocomplete="nickname" placeholder="Nome artístico ou primeiro nome" aria-label="Nome artístico ou primeiro nome" aria-describedby="acctProfileMsg" maxlength="80" />
+          <input type="text" name="artist" required autocomplete="nickname" placeholder="Obrigatório: nome artístico ou primeiro nome" aria-label="Obrigatório: nome artístico ou primeiro nome" aria-describedby="acctProfileMsg" maxlength="80" />
           <input type="text" name="instagram" autocomplete="off" inputmode="text" placeholder="Opcional: @seu.instagram.artistico, vamos seguir seu trabalho" aria-label="Opcional: seu Instagram artístico, vamos seguir seu trabalho" aria-describedby="acctProfileMsg" maxlength="80" />
           <button type="submit" class="btn btn-neutral">Salvar</button>
           <p class="acct-msg" id="acctProfileMsg" role="status" aria-live="polite"></p>
@@ -674,6 +699,18 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   .mode-btn.is-on { background: var(--text); color: #0a0a0b; }
   .mode-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  /* THE LOCK. inline-flex so the glyph sits on the label's own baseline row
+     rather than in the text flow, where a 13px icon between two uppercase
+     words would ride the descender line. The gap is the only width this state
+     costs, which is why it is 0.32rem and not the 0.5rem used elsewhere: this
+     row is measured to the pixel at 360 (see .mode-row's wrap rule below).
+     Both the glyph and the screen-reader word are hidden, not removed, when
+     the state clears, so unlocking is a class toggle and never DOM surgery on
+     a control that has explainer listeners bound to it. */
+  .mode-btn { display: inline-flex; align-items: center; gap: 0.32rem; }
+  .mode-btn:not(.is-locked) .mode-lock,
+  .mode-btn:not(.is-locked) .mode-lock-sr { display: none; }
+  .mode-lock { flex: 0 0 auto; }
   /* It is sticky, so it is on screen the whole time you work the list. That
      makes height expensive: one line ("0 of 36 ready" + the percentage) with a
      thin bar under it, on every screen size. The READINESS label was saying
@@ -1334,6 +1371,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     background: var(--surf); border: var(--stroke) solid var(--green); border-radius: var(--radius);
   }
   .acct-card[hidden] { display: none; }
+  /* Borrows .unlock-title's type wholesale (the gate panel above uses it for
+     exactly this job) and only adds the gap under it, because this heading
+     sits directly on .acct-copy rather than on .unlock-copy's own margin. */
+  .acct-gate-h { margin-bottom: 0.6rem; }
   .acct-copy { font-size: 0.88rem; margin-bottom: 0.85rem; }
   .acct-who { color: var(--text); font-weight: 600; }
   .gsi-holder { margin-bottom: 0.85rem; }
@@ -1779,7 +1820,20 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     try { localStorage.setItem(OPEN_KEY, JSON.stringify(o)); } catch (e) { /* blocked */ }
   }
   function isUnlocked(): boolean { try { return localStorage.getItem(UNLOCK_KEY) === '1'; } catch (e) { return false; } }
-  function setUnlocked() { try { localStorage.setItem(UNLOCK_KEY, '1'); } catch (e) { /* blocked */ } }
+  function setUnlocked() { try { localStorage.setItem(UNLOCK_KEY, '1'); } catch (e) { /* blocked */ } syncLockedState(); }
+  // THE CONTROL CARRIES THE LOCK, and it has to be right before the first tap
+  // and right after the last unlock. The markup ships locked (a first-time
+  // visitor is), so this only ever has work to do on a device that registered:
+  // it runs from setUnlocked() above, from the sign-out/delete path that
+  // removes the key, and once during init for a returning visitor. A class
+  // toggle, never DOM surgery: these buttons carry explainer listeners.
+  function syncLockedState() {
+    const locked = !isUnlocked();
+    modeBtns.forEach((b) => {
+      const gated = b.dataset.modeSet === 'advanced' || b.dataset.modeSet === 'custom';
+      b.classList.toggle('is-locked', gated && locked);
+    });
+  }
   // Old group ids (pre-redesign 2026-07-27) mapped to their closest new
   // home, so custom items added under the old taxonomy keep appearing.
   const CAT_MIGRATE: Record<string, string> = { basics: 'logistics', extras: 'personal' };
@@ -2990,13 +3044,37 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // Google-first flow. So this now just opens #acctCard, exactly like
   // clicking Sync does -- see applyPendingModeIfAny() below for what
   // happens once sign-in actually completes.
+  // THE TAP HAS TO VISIBLY GO SOMEWHERE (2026-08-06). Tapping a locked mode
+  // used to do three things a calm visitor could not connect: nothing to the
+  // segmented control (correct, the mode did not change), nothing to the
+  // scroll position, and it revealed an unlabelled account card about 140px
+  // further down. Read from the top of the page that is a dead button. Now the
+  // card says which list was asked for and the page moves to it.
+  const GATE_HEADS: Record<string, string> = {
+    advanced: 'A lista Avançado precisa de uma conta gratuita',
+    custom: 'A lista Pessoal precisa de uma conta gratuita',
+  };
+  function openAcctGate(target: string) {
+    const h = document.getElementById('acctGateH');
+    if (h) { h.textContent = GATE_HEADS[target] || ''; h.hidden = !GATE_HEADS[target]; }
+    if (acctCard) acctCard.hidden = false;
+    if (acctLine) acctLine.setAttribute('aria-expanded', 'true');
+    // Same reduced-motion gate as every other scroll on this page.
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (acctCard) acctCard.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  }
+  // Opened from the Sync chip the card explains itself, so the heading must
+  // not survive from an earlier locked-tab tap and mislabel it.
+  function clearAcctGateHead() {
+    const h = document.getElementById('acctGateH');
+    if (h) { h.textContent = ''; h.hidden = true; }
+  }
   modeBtns.forEach((b) => b.addEventListener('click', () => {
     const target = b.dataset.modeSet || 'basic';
     if ((target === 'advanced' || target === 'custom') && !isUnlocked()) {
       pendingMode = target;
       setPendingMode(target);
-      if (acctCard) acctCard.hidden = false;
-      if (acctLine) acctLine.setAttribute('aria-expanded', 'true');
+      openAcctGate(target);
       return;
     }
     if (unlockEl) unlockEl.hidden = true;
@@ -3112,6 +3190,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   if (restored) savedMode = 'custom';
   if ((savedMode === 'advanced' || savedMode === 'custom') && !isUnlocked()) savedMode = 'basic';
   setMode(savedMode);
+  // The markup ships locked, which is right for a first visit and wrong for a
+  // returning registered one. This is the one call that clears it on load.
+  syncLockedState();
 
   // reset (ticks only, keeps your custom items and mode)
   const resetBtn = document.getElementById('resetBtn');
@@ -3881,6 +3962,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   if (acctLine && acctCard) acctLine.addEventListener('click', () => {
     const open = acctCard.hidden;
     acctCard.hidden = !open;
+    clearAcctGateHead();
     acctLine.setAttribute('aria-expanded', open ? 'true' : 'false');
     // Round 7: a manual close means "not now" -- drop any pending
     // Advanced/Custom intent so a later, unrelated sign-in never
@@ -4064,6 +4146,9 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
             localStorage.removeItem('SMG_ARTIST');
             localStorage.removeItem(DELETED_KEY);
           } catch (e) { /* blocked */ }
+          // Deleting the account re-locks the two gated modes, so the control
+          // has to say so again.
+          syncLockedState();
           if (typeof (window as any).gtag === 'function') {
             (window as any).gtag('event', 'account_delete', { placement: 'checklist' });
           }
