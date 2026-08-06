@@ -158,6 +158,29 @@ const c = COPY[lang];
     max-width: var(--site-w); margin: 0 auto;
     padding: var(--page-top) var(--site-pad) 0;
   }
+  /* THE DEAD BOX, PART TWO (2026-08-06). Part one removed the wrapper at BUILD
+     time wherever no strip could ever render, which fixed every English page and
+     every pt/es tunnel page. It did not fix the common case, and the comments
+     claiming it was "removed sitewide" were wrong.
+     Both strips ship hidden and are revealed by script, and the translation
+     notice is revealed only until the reader DISMISSES it. From that moment on,
+     for that reader, every pt and es page renders a wrapper whose children are
+     all display:none and whose padding-top is still there. Measured at 390x844
+     on /pt/checklist: 125px tall with the notice up and the h1 at 260px, then
+     24px tall with the h1 at 142px after one dismissal and a reload. 24px of
+     nothing under the nav on every translated page, for every returning reader,
+     which is the majority state after a first visit.
+     A build-time check cannot know about a runtime dismissal, so this is the
+     runtime half: the padding exists only while a strip is actually drawable.
+     WRITTEN AS :not(:has(...)) RATHER THAN THE OTHER WAY ROUND, deliberately. A
+     browser without :has() ignores the rule and keeps exactly today's spacing,
+     so its worst case is the old cosmetic box rather than a strip jammed against
+     the nav. The site already depends on :has() in global.css for the sticky CTA
+     stack, so this is not a new dependency, just a careful use of one. */
+  .tx-wrap:not(:has(> .tx-notice:not([hidden]))) { padding-top: 0; }
+  /* Kept as a backstop and nothing more. It has never once matched: Astro leaves
+     a newline where a top-level {cond && ...} renders nothing, and :empty counts
+     whitespace text nodes. That is the bug the rule above exists to finish. */
   .tx-wrap:empty { display: none; }
 
   /* Quiet by construction: the amber rail marks it as information, the same

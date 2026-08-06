@@ -578,11 +578,22 @@ const entityGraph = {
         counts whitespace TEXT NODES: Astro leaves a newline where a top-level
         `{cond && ...}` renders nothing, so this div has never once been empty.
         The selector never matched, and every English page plus every pt/es
-        rescue-tunnel page has been carrying a dead 24px box under the nav.
-        Removing it brings the last homepage door up 21px on the tightest phone
-        in the gate and the fifth /emergency door up 24px in all three
-        languages. Full measurements in the anyNotice() comment in
-        src/i18n/registry.js. `.tx-wrap:empty` stays in the CSS as a backstop. */}
+        rescue-tunnel page was carrying a dead 24px box under the nav. Removing
+        it brings the last homepage door up 21px on the tightest phone in the
+        gate and the fifth /emergency door up 24px in all three languages. Full
+        measurements in the anyNotice() comment in src/i18n/registry.js.
+
+        anyNotice() IS ONLY HALF OF IT, and the first version of this note said
+        otherwise (2026-08-06). This test is answered at BUILD time, so it can
+        only remove the wrapper where no strip could EVER draw. On an ordinary pt
+        or es page one can, so the wrapper is emitted, and both strips inside it
+        ship hidden and are revealed by script. Once a reader dismisses the
+        translation notice, every pt and es page they open again had the dead box
+        back, measured at 24px. The runtime half is a :has() rule on .tx-wrap in
+        TranslationNotice.astro that drops the padding while no child strip is
+        visible. Neither mechanism is sufficient alone. Read both before changing
+        either. `.tx-wrap:empty` stays in the CSS as a backstop that has never
+        matched. */}
     {anyNotice(lang, path) && (
       <div class="tx-wrap">
         <LangUndo lang={lang} path={path} />

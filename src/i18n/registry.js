@@ -99,14 +99,34 @@ export const anyTranslationLive = () => liveLangs().some((l) => l.code !== DEFAU
  * nothing, so `<div class="tx-wrap">` has never actually been empty, not even
  * with one child: the built English homepage contained
  * `<div class="tx-wrap">\n\n</div>`. The selector therefore never matched, and
- * every English page plus every pt/es rescue-tunnel page has been carrying a
- * dead 24px --page-top box under the nav. Measured at 390x844 after removing
- * it: the last homepage door came up 21px on the tightest phone in the gate
- * (iPhone SE slack +120px to +141px) and the fifth /emergency door came up 24px
- * in all three languages (tightest case +41px to +65px).
+ * every English page plus every pt/es rescue-tunnel page was carrying a dead
+ * 24px --page-top box under the nav. Measured at 390x844 after removing it: the
+ * last homepage door came up 21px on the tightest phone in the gate (iPhone SE
+ * slack +120px to +141px) and the fifth /emergency door came up 24px in all
+ * three languages (tightest case +41px to +65px).
  * anyNotice() asks the question directly instead, so the wrapper is simply not
- * emitted when neither strip can draw. `.tx-wrap:empty` stays in the CSS as a
- * harmless backstop.
+ * emitted when neither strip CAN draw.
+ *
+ * CORRECTION, 2026-08-06. anyNotice() is HALF the fix and the first version of
+ * this note claimed it was all of it. "Removed sitewide" was wrong, and any doc
+ * repeating it should be corrected. anyNotice() is a BUILD-TIME question, so it
+ * covers only the pages where no strip could ever appear: every English page,
+ * and every pt/es page inside NOTICE_SILENT. On an ordinary pt or es page a
+ * strip CAN draw, so the wrapper is emitted, and both strips ship hidden and are
+ * revealed by script. The translation notice is revealed only until the reader
+ * dismisses it, and from that moment every pt and es page they open had the dead
+ * box back: measured at 24px with the h1 at 142px instead of 260px. That is the
+ * majority state after a first visit, so the common case was the one still
+ * broken.
+ * The runtime half now lives in TranslationNotice.astro's CSS, which drops the
+ * padding whenever no child strip is visible. Read that comment before touching
+ * either. `.tx-wrap:empty` stays in the CSS as a backstop that has never matched.
+ *
+ * THE ACCURATE CLAIM, for anything that quotes this: the dead 24px box is gone
+ * at build time where no strip can render, and gone at runtime where one could
+ * have rendered but none is visible. Between them that is every page and every
+ * state, but it took two mechanisms and one of them was missing for a day.
+ *
  * One list, three readers, no drift.
  *
  * Paths are ENGLISH canonical paths, matched exactly or as a prefix. Extend the
