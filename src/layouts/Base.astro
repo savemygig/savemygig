@@ -561,7 +561,22 @@ const entityGraph = {
     </div>
   </div>
 
-  <div id="main">
+  {/* tabindex="-1" IS WHAT MAKES THE SKIP LINK WORK (2026-08-06).
+      It was a plain div, and a plain div is not focusable, so activating the
+      skip link moved the browser's scroll position and nothing else: on iOS
+      VoiceOver and on Windows virtual-cursor readers the cursor stayed up in
+      the header and the next swipe read the brand again. The link looked like
+      it worked and did not do the one thing it exists for.
+      The page's own <main class="wrap"> is NOT the target on purpose: this
+      wrapper also holds the translation and language-undo strips, which render
+      ABOVE the page's main and are exactly the kind of thing a skipping reader
+      should land before rather than past. One target, and it is the top of the
+      content region.
+      The focus ring is suppressed because this box is the whole page: a 2px
+      red outline around every pixel of content is not a focus indicator, it is
+      a border. Nothing is lost, because the very next Tab lands on a real
+      control that draws its own ring. */}
+  <div id="main" tabindex="-1">
     {/* Sits ABOVE the page's own <main class="wrap">, so it needs the site
         container itself or it would run edge to edge. Bottom padding only:
         the page below brings its own --page-top. */}
@@ -778,14 +793,46 @@ const entityGraph = {
     const sOv = document.getElementById('searchOverlay');
     const sClose = document.getElementById('searchClose');
     if (sBtn && sOv) {
+      // THE OVERLAY PROMISES aria-modal AND NOW KEEPS IT (2026-08-06).
+      // The panel has declared role="dialog" aria-modal="true" since it was
+      // built, and Search.astro added a Tab trap on 2026-08-04, so a KEYBOARD
+      // user was held inside. Nobody was holding a screen reader: swiping on
+      // iOS VoiceOver, or walking the virtual cursor on NVDA, went straight
+      // through the dialog into the header, the whole page and the footer,
+      // which is precisely the thing aria-modal tells a reader cannot happen.
+      // aria-modal is a claim about the accessibility tree, not about Tab.
+      // `inert` is the one primitive that makes the claim true: it removes the
+      // subtree from the tab order AND from the accessibility tree AND from
+      // hit-testing, in one attribute, in every current browser.
+      // The search BUTTON lives inside the header, so the order in
+      // closeSearch below is load-bearing: clear inert first, focus second.
+      // Focusing an inert element is a no-op, and the return focus is the
+      // whole reason the close path exists.
+      // The skip link and the back-to-top button are in this list for the same
+      // reason as the other three, not as extras: they are page chrome that
+      // only sits OUTSIDE header/#main/footer because of where in the DOM it
+      // has to live. Left reachable, the accessibility tree still offered a
+      // reader a jump into the inert content and a scroll control for a page
+      // they cannot read. The cookie card is deliberately NOT here: it is its
+      // own dialog, and whether one modal should silence another is a product
+      // decision, not an attribute.
+      const layers = [
+        document.querySelector('.skip-link'),
+        document.querySelector('header.site-nav-wrap'),
+        document.getElementById('main'),
+        document.querySelector('footer.site-footer'),
+        document.getElementById('toTop'),
+      ].filter(Boolean) as HTMLElement[];
       const openSearch = () => {
         sOv.hidden = false;
         sBtn.setAttribute('aria-expanded', 'true');
+        layers.forEach((el) => { el.inert = true; });
         const inp = sOv.querySelector('.srch-input');
         if (inp) (inp as HTMLInputElement).focus();
       };
       const closeSearch = () => {
         sOv.hidden = true;
+        layers.forEach((el) => { el.inert = false; });
         sBtn.setAttribute('aria-expanded', 'false');
         sBtn.focus();
       };
@@ -990,7 +1037,17 @@ const entityGraph = {
      the copyright rather than beside it. */
   .foot-base { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-align: center; }
   .foot-copy { font-size: 0.8rem; color: var(--text-faint); }
-  .foot-live { font-size: 0.8rem; color: var(--text-faint); opacity: 0.85; }
+  /* NO OPACITY HERE (2026-08-06). It carried opacity: 0.85 on top of
+     --text-faint, and an opacity on text is a colour change that no token can
+     see: #8a867c composited at 85% over --bg is #77736b, which measures
+     4.19:1 and fails AA on the SMALLEST type on the site (0.8rem, 0.74rem
+     under 414px). The token itself clears AA with room to spare (measured
+     5.45:1 on --bg, better than the 4.5:1 its own comment claims), so the
+     colour is fine and the opacity was the whole bug. Deleted, not tuned:
+     nothing on this line needed to be quieter than the copyright above it,
+     which is the same size in the same colour with no opacity. If this ever
+     needs to recede again, do it with a colour that can be measured. */
+  .foot-live { font-size: 0.8rem; color: var(--text-faint); }
   /* Smaller and more muted than the two lines above it on purpose -- a build
      marker is reference info for testers/us, not something every visitor
      needs to read. */
@@ -1158,9 +1215,28 @@ const entityGraph = {
      smaller". 34rem was the old narrow panel. */
   .so-panel { position: relative; max-width: calc(var(--site-w) - 2 * var(--site-pad)); margin: 0 auto; }
   .so-panel .srch { max-width: none; }
-  .so-close { position: absolute; top: -2.6rem; right: 0; background: none; border: 0;
-    color: var(--text-dim); font-size: 2rem; line-height: 1; cursor: pointer; padding: 0 0.3rem; }
-  .so-close:hover { color: var(--text); }
+  /* THE CLOSE BUTTON BELONGS TO THE PANEL (2026-08-06).
+     It measured 28x32 and sat at top:-2.6rem, so on a 390px phone the only
+     control that dismisses the overlay was a bare glyph floating 41px clear of
+     the box it closes, on the blurred backdrop, at a size this project's own
+     --tap-min forbids. Two faults, one cause: it was styled as a decoration
+     rather than as a control.
+     It is now a --tap-min square tab flush on the panel's top-right corner:
+     the panel's own surface and hairline, no bottom border, so the tab and the
+     search box read as one object and the tab's bottom edge IS the box's top
+     edge. Nothing floats.
+     Sizes are read from --tap-min rather than typed, so this cannot silently
+     drop under the touch floor again the next time it is nudged. */
+  .so-close {
+    position: absolute; right: 0; top: calc(-1 * var(--tap-min));
+    width: var(--tap-min); height: var(--tap-min);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surf); border: var(--stroke) solid var(--edge); border-bottom: 0;
+    border-radius: var(--radius) var(--radius) 0 0;
+    color: var(--text-dim); font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0;
+    transition: color var(--t-fast), border-color var(--t-fast);
+  }
+  .so-close:hover { color: var(--text); border-color: var(--text-dim); }
 
   .nav-toggle {
     display: none; width: 44px; height: 44px; flex: 0 0 auto; background: transparent;

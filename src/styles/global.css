@@ -376,10 +376,36 @@ a { color: var(--red); }
 /* "The short version" collapse-to-3-lines on phone (Antonio, 2026-08-01).
    Checkbox hack: no JS, works everywhere, stays keyboard-reachable via the
    sr-only checkbox + label. Desktop is untouched, full text always shows. */
-.sv-toggle { }
+/* THE TOGGLE ONLY EXISTS WHERE ITS LABELS DO (2026-08-06).
+   It shipped as `class="sv-toggle sr-only"` at every width, and both of its
+   <label>s are display:none above 640px. So on all 27 hardware and knowledge
+   pages a desktop or tablet visitor tabbing through the page stopped on a
+   1x1px checkbox with NO accessible name (a label that is display:none names
+   nothing) and the focus ring landed on a pixel they could not see. A stop in
+   the tab order that announces nothing and shows nothing is the worst kind:
+   the reader cannot tell whether the page is broken or they are.
+   display:none removes it from the tab order and the accessibility tree
+   together, which is correct precisely BECAUSE the control it operates does
+   not exist at these widths either. The mobile block below puts it back.
+   NOT `visibility: hidden` or `tabindex="-1"`: the first leaves it in the
+   layout for no reason and the second would need editing 27 pages in three
+   languages to express something the stylesheet already knows. */
+.sv-toggle { display: none; }
 .sv-more { display: none; }
 .sv-more-open { display: none; }
 @media (max-width: 640px) {
+  /* Back in the tab order, still sr-only (.sr-only supplies the 1x1 clip; this
+     only undoes the display:none above). */
+  .sv-toggle { display: block; }
+  /* AND THE RING GOES ON THE THING THE READER CAN SEE. The input is clipped to
+     a pixel, so its own outline was invisible even down here where it is
+     genuinely reachable; the visible control is the label. Both labels are
+     matched because .sv-more-open also carries .sv-more, and only ever one of
+     the pair is displayed, so exactly one ring is ever drawn. Same 2px red at
+     3px offset as every other focus ring on the site. */
+  .panel-go .sv-toggle:focus-visible ~ .sv-more {
+    outline: 2px solid var(--red); outline-offset: 3px;
+  }
   .panel-go .sv-text {
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -1101,6 +1127,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, .pad:focus-visible, 
   text-decoration: none; transition: top var(--t-fast);
 }
 .skip-link:focus { top: 8px; }
+/* THE TARGET HAS TO BE FOCUSABLE OR THE LINK ONLY SCROLLS (2026-08-06).
+   Both layouts pointed #main at an element that cannot take focus: a plain
+   <div> in Base and a plain <main> in Tunnel (neither is focusable by default).
+   Following the link therefore moved the viewport and left document.activeElement
+   on <body>, so on iOS VoiceOver and any virtual-cursor reader the cursor never
+   left the header and the next swipe re-read the brand. tabindex="-1" on both
+   targets, added in the layouts, makes the jump real.
+   The ring is suppressed because #main is the entire content region: a red
+   outline around every pixel of the page is a border, not a focus indicator,
+   and the next Tab lands on a control that draws its own. :focus, not
+   :focus-visible: this focus arrives programmatically from a fragment jump,
+   which is exactly the case :focus-visible may still match in some engines. */
+#main:focus { outline: none; }
 
 /* ---------- Quiet emergency CTA ----------
    Antonio's rule, extending the homepage-door principle ("emergency is never

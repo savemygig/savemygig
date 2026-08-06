@@ -146,7 +146,11 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig?\s*$/i, '');
           screen to screen, and this was the only thing on it that did. */}
     </div>
   </header>
-  <main class="screen" id="main">
+  {/* tabindex="-1": a bare <main> is not focusable either, so the skip link
+      above scrolled without moving the virtual cursor on all 55 rescue
+      screens. Same fix and same reason as the wrapper in Base.astro; the
+      shared `#main:focus { outline: none }` rule lives in global.css. */}
+  <main class="screen" id="main" tabindex="-1">
     <h1 class="sr-only">{srHeading}</h1>
     <!-- The IN TESTING line used to render here, on all 55 tunnel screens.
          Removed 2026-08-03 (polish audit C4, Antonio's go): the disclosure now
