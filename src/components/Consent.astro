@@ -24,15 +24,24 @@ interface Props { lang?: string; }
 const { lang = DEFAULT_LANG } = Astro.props;
 const S = t(lang).consent;
 ---
-<!-- tabindex="-1" + aria-labelledby (2026-08-05): the box is focused the
-     moment it is revealed, so a screen reader announces the dialog and its
-     heading instead of leaving the reader somewhere else on the page with an
-     unannounced fixed layer over the bottom of it. aria-labelledby points at
-     the visible heading rather than repeating it in an aria-label, so the two
-     can never drift apart. -->
-<div id="ck" class="ck" role="dialog" tabindex="-1" aria-labelledby="ck-h" aria-label={S.aria} hidden>
+<!-- tabindex="-1" (2026-08-05): the box is focused the moment it is revealed,
+     so a screen reader announces the dialog instead of leaving the reader
+     somewhere else on the page with an unannounced fixed layer over the bottom
+     of it.
+     THE NAME IS aria-label, AND aria-labelledby IS GONE (2026-08-06). Yesterday
+     added aria-labelledby="ck-h" alongside the aria-label that was already
+     here, on the reasoning that pointing at the visible heading keeps the two
+     from drifting apart. It had the opposite effect, because aria-labelledby
+     WINS: accessible name computation reaches it before aria-label, so the name
+     silently became the heading text and the informative label was dead markup.
+     Measured on /pt/faq: the dialog announced itself as "Antes de comecar.",
+     Portuguese for "Before we begin", with nothing anywhere in the name saying
+     this was a decision about cookies. S.aria says so in all three languages
+     and is translated for exactly this purpose, so it is the name again.
+     Do not add aria-labelledby back. If the two must agree, change the heading. -->
+<div id="ck" class="ck" role="dialog" tabindex="-1" aria-label={S.aria} hidden>
   <p class="ck-t">
-    <strong class="ck-h" id="ck-h">{S.head}</strong>
+    <strong class="ck-h">{S.head}</strong>
     {S.body}
     <a href={localizedPath('/legal/cookies', lang)}>{S.policy}</a>
   </p>
