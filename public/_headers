@@ -49,6 +49,32 @@
 /fonts/*
   Cache-Control: public, max-age=31536000
 
+# THE BRAND LOCKUP, BEFORE /images/* CAN CLAIM IT. Rules concatenate rather
+# than override (see the note at the top of this file), and two Cache-Control
+# directives in one header means caches take the FIRST, so this block has to
+# come before /images/* to win. Order is load-bearing here.
+#
+# WHY IT IS NOT ON THE 30-DAY RULE (2026-08-06). The lockup left the HTML on
+# 2026-08-05 and became this file, and Brand.astro's update instructions said to
+# replace it and bump the sw.js CACHE version. That is correct for installed
+# devices and wrong for everybody else: the version bump has no authority over
+# the BROWSER's HTTP cache, so a corrected logo would have taken up to a month to
+# reach an ordinary returning visitor while the note claimed it was handled.
+#
+# A day, matching /manifest.webmanifest above and for the same reason: this is
+# brand identity rather than content, it is on all 309 pages, and a wrong one
+# should not outlive a deploy by a month. It costs one conditional request a day
+# per visitor, and only for visitors the service worker is not already serving,
+# because sw.js precaches it and reads it cache-first.
+#
+# A CONTENT-HASHED FILENAME WAS THE OTHER OPTION AND WAS REJECTED. It would allow
+# a year plus immutable, but it turns a logo change into four coordinated edits
+# (rename, Brand.astro, the sw.js EXTRA entry, the CACHE bump) where forgetting
+# any one ships a broken image. One header beats four chances to get it wrong on
+# a file that changes once a year.
+/images/brand-lockup.svg
+  Cache-Control: public, max-age=86400
+
 # Content images. Also unhashed, hence 30 days rather than a year: long enough
 # that a returning DJ never refetches the CDJ panel photos, short enough that
 # a corrected photo reaches everyone within a month.
