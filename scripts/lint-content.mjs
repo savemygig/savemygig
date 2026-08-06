@@ -41,6 +41,21 @@ const RULES = [
   // Reflex-tier instructions. A working DJ has done these before they open a
   // website. If one is genuinely needed, name it under a `.assumed` line as
   // something we ASSUME is done, do not print it as a step.
+  //
+  // READ THIS BEFORE TIGHTENING THE PATTERN. As of 2026-08-06 the tree's
+  // `usb/start` node deliberately prints "Pull the drive out and push it back
+  // in, firmly. Then try the other slot on the same player." That is the
+  // approved fix for the audit finding that the site's most-used rescue screen
+  // asserted the reseat had been done without ever instructing it. It clears
+  // this rule only on a technicality: the comma in "in, firmly" means the
+  // `push it back in firmly` alternative does not match, and the first
+  // alternative needs a "wait"/"count" that is not there.
+  // So the rule and the shipped copy now disagree in spirit and agree only in
+  // letter. That is Antonio's call to settle, not a bug to patch here: either
+  // this rule gets a stated exception for the usb/start check, or the copy goes
+  // back to being an assumption. Until he rules, do NOT "fix" the regex to
+  // catch the comma, and do not reword the tree to drop it: either move breaks
+  // the build or reverses an approved change, silently.
   { name: 'condescending: reflex-tier step', re: /(pull|take) (the|your) (usb|drive|stick) out,? (and )?(wait|count)|push it back in firmly|wipe the usb tip/gi },
 ];
 

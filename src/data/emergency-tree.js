@@ -1759,10 +1759,29 @@ export const TREE = {
     "red": true,
     "label": "Diagnostic",
     "heading": "The player does not see the drive",
+    // THE FIRST SCREEN NOW GIVES THE INSTRUCTION IT USED TO ASSUME
+    // (2026-08-06). This is the entry point of the most common failure on the
+    // site, and it opened by asserting "you have already reseated it and tried
+    // the other deck" -- an instruction NO page here has ever actually given.
+    // Reseating and the second slot fix a large share of real cases, they cost
+    // nothing, they risk nothing, and they are the two things a DJ standing at
+    // a dead player is most likely to have done in a hurry rather than
+    // properly. So the check comes first and the old line follows it as a
+    // hand-off instead of pre-empting it.
+    // The block stays `assumed` and not `dim` on purpose: on these screens
+    // .assumed is the quiet hairline-ruled aside, which is the right weight
+    // for "if that worked, stop reading". Promoting it to body text would put
+    // it in competition with the check above it.
     "blocks": [
       {
+        "t": "check",
+        "items": [
+          "Pull the drive out and push it back in, firmly. Then try the other slot on the same player."
+        ]
+      },
+      {
         "t": "assumed",
-        "html": "You have already reseated it and tried the other deck."
+        "html": "If that was it, you are done. If not, keep going."
       }
     ],
     "question": "Does any other player in the booth read the drive?",

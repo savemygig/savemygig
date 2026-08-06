@@ -1750,10 +1750,21 @@ export const TREE = {
     "red": true,
     "label": "Diagnóstico",
     "heading": "El reproductor no ve el USB",
+    // LA PRIMERA PANTALLA AHORA DA LA INSTRUCCIÓN QUE ANTES SOLO SUPONÍA
+    // (2026-08-06). Razón completa en src/data/emergency-tree.js: reconectar
+    // y probar la otra ranura resuelven buena parte de los casos reales, no
+    // cuestan nada y no arriesgan nada, y ninguna página del sitio daba esa
+    // instrucción.
     "blocks": [
       {
+        "t": "check",
+        "items": [
+          "Saca el USB y vuelve a meterlo, con firmeza. Después prueba la otra ranura del mismo reproductor."
+        ]
+      },
+      {
         "t": "assumed",
-        "html": "Ya lo reconectaste y ya probaste el otro deck."
+        "html": "Si era eso, listo. Si no, sigue adelante."
       }
     ],
     "question": "¿Algún otro reproductor del booth lee el USB?",

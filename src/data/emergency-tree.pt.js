@@ -1757,10 +1757,20 @@ export const TREE = {
     "red": true,
     "label": "Diagnóstico",
     "heading": "O player não enxerga o drive",
+    // A PRIMEIRA TELA AGORA DÁ A INSTRUÇÃO QUE ELA SÓ SUPUNHA (2026-08-06).
+    // Motivo completo em src/data/emergency-tree.js: reencaixar e testar o
+    // outro slot resolvem boa parte dos casos reais, não custam nada e não
+    // arriscam nada, e nenhuma página do site dava essa instrução.
     "blocks": [
       {
+        "t": "check",
+        "items": [
+          "Tire o drive e encaixe de novo, com firmeza. Depois teste o outro slot do mesmo player."
+        ]
+      },
+      {
         "t": "assumed",
-        "html": "Você já reencaixou e já testou o outro deck."
+        "html": "Se era isso, acabou. Se não, siga em frente."
       }
     ],
     "question": "Algum outro player da booth lê o drive?",
