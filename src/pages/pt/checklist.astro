@@ -768,7 +768,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     /* Icon, then title hugging it on the LEFT, count+chevron pushed right.
        (space-between briefly centered the title when the icon arrived.) */
     justify-content: flex-start;
-    gap: 0.15rem;
+    /* 0, not 0.15rem: .group-ic's own margin-right is the icon-to-title gap
+       now (see --tg-gap above), and .group-title's flex: 1 keeps the count and
+       chevron hard right, so this gap only ever affected the icon. */
+    gap: 0;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -827,8 +830,11 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .task label {
     display: flex;
     align-items: flex-start;
-    gap: 0.85rem;
-    padding: 0.85rem 0.2rem;
+    /* Same two tokens as the group header above, so the checkbox lands on the
+       card inset (the 0.2rem of horizontal padding used to push it 3.2px off)
+       and the label lands on the shared text column. */
+    gap: var(--tg-gap);
+    padding: 0.85rem 0;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
@@ -839,8 +845,8 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   .task input[type="checkbox"] { position: absolute; opacity: 0; width: 1px; height: 1px; }
   .box {
     flex: 0 0 auto;
-    width: 24px;
-    height: 24px;
+    width: var(--tg-mark);
+    height: var(--tg-mark);
     margin-top: 1px;
     border: 1.5px solid var(--text-faint);
     border-radius: var(--radius);
@@ -1124,7 +1130,24 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
 
   /* Group header icon: same monochrome stroke language as everywhere. */
-  .group-ic { display: inline-flex; flex: 0 0 auto; color: var(--text-dim); margin-right: 0.55rem; }
+  /* ONE TEXT COLUMN, ONE MARK COLUMN (2026-08-06). Inside an expanded group,
+     four different left edges were in play at 1280: the icon and the blurb at
+     321, the checkbox at 324.2, the group title at 349.2 and the task label at
+     361.8, so "Music" and the first task under it started 12.6px apart and
+     nothing in the card lined up with anything else.
+     The two rules that set those edges now read their geometry from the same
+     two custom properties, so they cannot drift again: the icon sits in a box
+     exactly as wide as a checkbox, and the same gap follows both. Result: the
+     icon, the checkbox and the blurb all start on the card's inset, and the
+     group title and every task label start on one text column 24px + gap
+     inside it. The 17px icon is left-aligned in its 24px box, not centred, so
+     its own left edge lands on the checkbox's. */
+  #list { --tg-mark: 24px; --tg-gap: 0.85rem; }
+  .group-ic {
+    display: inline-flex; align-items: center; flex: 0 0 auto;
+    width: var(--tg-mark); margin-right: var(--tg-gap);
+    color: var(--text-dim);
+  }
 
   /* "Add section" row: Custom + Edit only, same anatomy as add-own. */
   .add-section { display: none; gap: 8px; margin: 1rem 0 0; }
@@ -1242,7 +1265,28 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
        (measured with Playwright, not eyeballed, see build notes). */
     .mode-btn { padding: 0.5rem 0.45rem; font-size: 0.72rem; letter-spacing: 0.02em; }
     .mode-switch { gap: 2px; padding: 3px; }
-    .mode-row { gap: 0.3rem; }
+    /* THE RIGHT CLUSTER WRAPS WHEN IT STOPS FITTING, IT DOES NOT CLIP
+       (2026-08-06). Round 4 (Antonio) removed flex-wrap from this row so the
+       (i) + Sync pair stayed on the same line as Base/Advanced/Custom, and
+       tightened the type until the row fitted at 360px. Measured on 2026-08-05
+       it no longer did: .mode-row's right edge is 340 at a 360px viewport,
+       matching the h1, the advice panel, the readiness bar and the button row,
+       but .mode-row-right reached 349.4 in English and 363.9 in Spanish, so the
+       Spanish SYNC chip sat 3.9px outside the viewport and was visibly cut.
+       Tightening the type further was the wrong lever: it was already at
+       0.72rem, and the mode buttons have since gained a lock glyph, which
+       costs width the row does not have at 390 either.
+       So flex-wrap comes back, and Antonio's ruling still holds wherever it
+       physically can: BOTH children are flex: 0 0 auto, so the cluster stays on
+       line one at every width where it fits and drops to its own row, still
+       right-aligned (margin-left: auto, since space-between cannot align a lone
+       wrapped item), only when it does not. No breakpoint is guessed: the
+       browser wraps at the real threshold, which is what a hardcoded 375px was
+       approximating. Verified zero horizontal overflow at 360/390/1280 in all
+       three languages. */
+    .mode-row { gap: 0.45rem 0.3rem; flex-wrap: wrap; }
+    .mode-switch { flex: 0 0 auto; }
+    .mode-row-right { margin-left: auto; }
     /* Round 5, third pass (Antonio, mobile screenshot): Sync + (i) read
        visibly smaller than Base/Advanced/Custom, grown to match, same
        recipe as the desktop `height: 2.6rem` match above, tuned by
