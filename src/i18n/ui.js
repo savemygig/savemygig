@@ -229,10 +229,18 @@ export const UI = {
       preventP2: 'Set up the prevention system once and this page becomes irrelevant.',
       // ONE NAME FOR ONE DESTINATION (2026-08-06). This button was "See the
       // prevention checklist" and it does not point at the checklist: it points
-      // at /prepare, the prevention hub. The site already had the right name for
-      // that destination, in `tunnel.rules` below and hardcoded in the tunnel's
-      // closing note on /protocol/usb/moves, so this is that exact phrasing and
-      // not a new one. A reader who taps this from a fix article and later reads
+      // at /prepare, the prevention hub. The name comes from the tunnel's own
+      // closing note, which each language page hardcodes, so this is that
+      // phrasing and not a new one.
+      //
+      // TWO FORMS, ON PURPOSE, and there used to be a dead `tunnel.rules` key
+      // here pretending otherwise (deleted 2026-08-06: nothing read it). In pt
+      // and es this BUTTON drops the definite article, because a button label is
+      // a name and "As regras de prevencao" needed 246px against 236px of button
+      // at 360px. The tunnel's note keeps the article, because there the words
+      // sit inside a sentence where an article is what a native speaker writes.
+      // Same destination, same noun phrase, two grammatical contexts. English
+      // needs no such split, since "The prevention rules" fits either way. A reader who taps this from a fix article and later reads
       // the tunnel note now meets the same words for the same page, and neither
       // of them promises a checklist that is somewhere else.
       // It also fixes the wrap the 2026-08-05 audit blamed on the emoji. That
@@ -288,7 +296,6 @@ export const UI = {
       restart: 'Start over',
       exitLabel: 'Leave or restart',
       why: 'Why, and how',
-      rules: 'The prevention rules',
     },
     lang: { label: 'Language' },
   },
@@ -476,12 +483,6 @@ export const UI = {
       restart: 'Começar de novo',
       exitLabel: 'Sair ou recomeçar',
       why: 'Por que, e como',
-      // No leading article in pt and es (2026-08-06). This label is a NAME, and
-      // at 360px "As regras de prevenção" needs 246px against 236px of button, so
-      // it wrapped to two lines on the narrowest common Android. English keeps its
-      // article because it fits; each language is internally consistent, which is
-      // what the doctrine asks for, rather than mirroring English structure.
-      rules: 'Regras de prevenção',
     },
     lang: { label: 'Idioma' },
   },
@@ -656,7 +657,6 @@ export const UI = {
       restart: 'Empezar de nuevo',
       exitLabel: 'Salir o empezar de nuevo',
       why: 'Por qué, y cómo',
-      rules: 'Reglas de prevención',
     },
     lang: { label: 'Idioma' },
   },
