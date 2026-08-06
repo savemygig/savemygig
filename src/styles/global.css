@@ -127,7 +127,11 @@
   --amber-dim: rgba(217, 164, 65, 0.1);
   --text: #f3f1ec;
   --text-dim: #9a978f;
-  --text-faint: #8a867c;   /* 4.5:1 on --bg, WCAG AA */
+  /* 5.45:1 on --bg, measured 2026-08-06. The old comment said 4.5:1, which
+     understated it and invited someone to "fix" the token upward. Do NOT
+     stack opacity on it: .foot-live did, which multiplied it down to 4.19:1
+     and failed the very standard the token exists to meet. */
+  --text-faint: #8a867c;
   --border: var(--edge);
   --radius: 2px;
   /* One shared content width + gutter so the nav, every page body, and the

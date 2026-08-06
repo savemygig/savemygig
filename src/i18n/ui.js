@@ -68,6 +68,12 @@ export const UI = {
     // DJs actually type.
     search: {
       placeholder: 'Search: USB not detected, FAT32, E-8302...',
+      // THE SHORT FORM, for the header overlay on a phone (2026-08-06). Same
+      // defect the homepage hero had: the full line asks for more width than a
+      // 360px input has, so it was cut mid-word on every phone, on all 309
+      // pages. Search.astro swaps the two at 640px, and the SHORT one ships in
+      // the markup so a reader with no script gets a complete sentence.
+      placeholderShort: 'USB not detected, FAT32, E-8302',
       clear: 'Clear search',
       results: 'Search results',
       close: 'Close search',
@@ -342,6 +348,9 @@ export const UI = {
     },
     search: {
       placeholder: 'Busque: USB não reconhecido, FAT32, E-8302...',
+      // Two examples, not three: measured at 360px the three-example form
+      // needed 289px against 264px of input, so Portuguese still truncated.
+      placeholderShort: 'USB não reconhecido, E-8302',
       clear: 'Limpar busca',
       results: 'Resultados da busca',
       close: 'Fechar busca',
@@ -525,6 +534,7 @@ export const UI = {
     },
     search: {
       placeholder: 'Busca: USB no reconocido, FAT32, E-8302...',
+      placeholderShort: 'USB no reconocido, E-8302',
       clear: 'Borrar búsqueda',
       results: 'Resultados de búsqueda',
       close: 'Cerrar búsqueda',

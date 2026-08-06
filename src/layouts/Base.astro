@@ -568,7 +568,10 @@ const entityGraph = {
   <div class="nav-scrim" id="navScrim" hidden></div>
   <div class="so" id="searchOverlay" hidden>
     <div class="so-panel" role="dialog" aria-modal="true" aria-label={S.aria.search}>
-      <Search lang={lang} />
+      {/* shortPlaceholder: the overlay is on all 309 pages, so it is the
+          bigger instance of the truncation the hero had. Both strings come
+          from ui.js; Search.astro ships the short one and upgrades. */}
+      <Search lang={lang} shortPlaceholder={S.search.placeholderShort} />
       <button type="button" class="so-close" id="searchClose" aria-label={S.search.close}>&times;</button>
     </div>
   </div>

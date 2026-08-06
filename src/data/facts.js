@@ -96,7 +96,7 @@ export const DJM_A9 = {
   micPhantom: true,           // MIC1 accepts phantom-powered condensers
   newestKnown: '1.19',        // 15 Jan 2026, RMX-IGNITE support. Reference only.
   linkFreezeFix: '1.11',      // 26 Aug 2025: rare freeze under heavy PRO DJ LINK network load fixed.
-  uaspFix: '1.07',            // 14 May 2025: UASP-compatible USB storage not recognised, fixed.
+  uaspFix: '1.07',            // 14 May 2025: UASP-compatible USB storage not recognized, fixed.
   ecoStandbyIntro: '1.05',    // 18 Jul 2024: EU Ecodesign power management, 20 minutes.
   multiIoInsertFix: '1.02',   // 14 Nov 2023: insert method intermittently disabled on Multi I/O
                               // switching; DVS phono input malfunction on USB-B when switching
@@ -112,7 +112,7 @@ export const DJM_V10 = {
   boothEq: true,
   sendReturn: true,           // expanded send/return, external FX combinable with built-in
   newestKnown: '1.20',        // 15 Jan 2026, RMX-IGNITE support. Reference only.
-  uaspFix: '1.16',            // 14 May 2025: UASP-compatible USB storage not recognised, fixed.
+  uaspFix: '1.16',            // 14 May 2025: UASP-compatible USB storage not recognized, fixed.
   ecoStandbyIntro: '1.13',    // 18 Jul 2024: EU Ecodesign power management, 20 minutes.
   cdj3000LinkAudioFix: '1.12',// 15 Dec 2022: potential audio cut-out when connected to CDJ-3000
                               // over the PRO DJ LINK network, fixed.
@@ -223,7 +223,7 @@ export const FIRMWARE_ISSUES = [
     href: '/knowledge/pioneer-dj/djm-v10',
     source: DJM_V10.source,
     issues: [
-      { fixedIn: DJM_V10.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognised.' },
+      { fixedIn: DJM_V10.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognized.' },
       { fixedIn: DJM_V10.cdj3000LinkAudioFix, area: 'Audio', midSet: true, symptom: 'Potential audio cut-out when connected to CDJ-3000s over PRO DJ LINK.' },
       { fixedIn: DJM_V10.midiFix, area: 'MIDI', midSet: false, symptom: 'Incorrect MIDI output under certain operation.' },
       { fixedIn: DJM_V10.channelInputFix, area: 'Audio', midSet: true, symptom: 'Audio sometimes failing to input to a channel.' },
@@ -235,7 +235,7 @@ export const FIRMWARE_ISSUES = [
     source: DJM_A9.source,
     issues: [
       { fixedIn: DJM_A9.linkFreezeFix, area: 'Link', midSet: true, symptom: 'Rare freeze under heavy PRO DJ LINK network load.' },
-      { fixedIn: DJM_A9.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognised.' },
+      { fixedIn: DJM_A9.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognized.' },
       { fixedIn: DJM_A9.multiIoInsertFix, area: 'Routing', midSet: true, symptom: 'Insert method intermittently disabling itself when switching the Multi I/O input selector, and DVS phono input malfunction on USB-B after swapping computers across ports.' },
     ],
   },
