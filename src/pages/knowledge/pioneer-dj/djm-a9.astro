@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import { CHECKED, DJM_A9 } from '../../../data/facts.js';
+import Icon from '../../../components/Icon.astro';
 
 // Fifth equipment page, same template. Facts from DJM_A9 in facts.js
 // (primary sources: AlphaTheta's official change-history PDF and the
@@ -344,7 +345,7 @@ const schema = {
 
     <div class="panel cta-exit" style="margin-top:1.5rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Playing soon and it is not working?</h2>
-      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_djma9"><span aria-hidden="true">🚨</span> Start Emergency Mode</a>
+      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_djma9"><Icon name="siren" /> Start Emergency Mode</a>
     </div>
 
     <div style="margin-top:1.5rem">

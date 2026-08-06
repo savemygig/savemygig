@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import { CHECKED, CDJ_3000, REKORDBOX } from '../../../data/facts.js';
+import Icon from '../../../components/Icon.astro';
 
 // Third equipment page, same template as cdj-2000nxs2.astro. Firmware facts
 // from CDJ_3000 in src/data/facts.js (primary sources: AlphaTheta's own
@@ -365,7 +366,7 @@ const schema = {
 
     <div class="panel cta-exit" style="margin-top:1.5rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Playing soon and it is not working?</h2>
-      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_cdj3000"><span aria-hidden="true">🚨</span> Start Emergency Mode</a>
+      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_cdj3000"><Icon name="siren" /> Start Emergency Mode</a>
     </div>
 
     <div style="margin-top:1.5rem">

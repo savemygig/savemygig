@@ -4,6 +4,7 @@ import Disclaimer from '../../../components/Disclaimer.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import { CHECKED, PLAYERS, VENDOR_LINKS, REKORDBOX } from '../../../data/facts.js';
+import Icon from '../../../components/Icon.astro';
 
 // The rekordbox reference page. Restructured 2026-07-27 per Antonio's spec:
 // keep the design exactly, reorganize the content into six named groups
@@ -507,7 +508,7 @@ const schema = {
 
     <div class="panel cta-exit" style="margin-top:2rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Playing soon and it is not working?</h2>
-      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_rekordbox"><span aria-hidden="true">🚨</span> Start Emergency Mode</a>
+      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_rekordbox"><Icon name="siren" /> Start Emergency Mode</a>
     </div>
 
     <div style="margin-top:1.5rem">

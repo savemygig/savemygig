@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Search from '../components/Search.astro';
+import Icon from '../components/Icon.astro';
 
 // The single canonical FAQPage for the site. The homepage and /emergency used
 // to carry their own FAQPage blocks describing content that was not visible on
@@ -200,7 +201,7 @@ const schema = {
 
     <div class="panel cta-exit" style="margin-top:2rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Question is urgent because you play soon?</h2>
-      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="faq"><span aria-hidden="true">🚨</span> Start Emergency Mode</a>
+      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="faq"><Icon name="siren" /> Start Emergency Mode</a>
     </div>
 
     {/* The other exit, for the reader who is not in trouble. Short answers are

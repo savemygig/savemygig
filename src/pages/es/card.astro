@@ -5,6 +5,7 @@ import EmailCapture from '../../components/EmailCapture.astro';
 import { RUNLIST } from '../../data/runlist.es.js';
 import { hrefFor } from '../../data/concepts.js';
 import { localizedPath } from '../../i18n/registry';
+import Icon from '../../components/Icon.astro';
 const lp = (p) => localizedPath(p, 'es');
 
 // EMERGENCY CARD, ESPANOL NEUTRO (LATAM). Fuente de estructura, paneles,
@@ -40,7 +41,7 @@ const lp = (p) => localizedPath(p, 'es');
   <main class="wrap">
     <div class="status-line">Emergency_Card</div>
     <h1 style="margin-bottom:0.5rem">LA EMERGENCY <span class="accent">CARD</span></h1>
-    <p class="dim" style="margin-bottom:1.5rem"><span aria-hidden="true">📱</span> Toma una captura de esta página ahora, funciona sin señal, en cualquier booth, a cualquier hora.</p>
+    <p class="dim" style="margin-bottom:1.5rem"><Icon name="phone" /> Toma una captura de esta página ahora, funciona sin señal, en cualquier booth, a cualquier hora.</p>
 
     <div class="panel" style="border-color:rgba(0,255,102,0.3)">
       <h2 style="margin-bottom:0.4rem">EL USB MURIÓ EN EL BOOTH</h2>

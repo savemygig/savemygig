@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import InstallNudge from '../../components/InstallNudge.astro';
 import EmailCapture from '../../components/EmailCapture.astro';
+import Icon from '../../components/Icon.astro';
 // OUTCOME PAGE, SPANISH (neutral Latin American). Source of truth for
 // structure, panels, the no_sound query guard and the classes:
 // src/pages/saved.astro. Only the copy and the /es hrefs differ.
@@ -33,7 +34,7 @@ import EmailCapture from '../../components/EmailCapture.astro';
     <section class="panel panel-go" style="margin-bottom:1.5rem">
       <h2 style="margin-bottom:0.75rem">Que esta emergencia no se repita</h2>
       <p class="dim">Esta terminó bien. La siguiente no está garantizada, salvo que tú la garantices. El sistema de prevención se arma en cerca de una hora.</p>
-      <a href="/es/prepare" class="btn btn-solid" data-event="step_completed" data-step="prepare_click" data-placement="saved_hero"><span aria-hidden="true">🛡</span> Armar el sistema de prevención
+      <a href="/es/prepare" class="btn btn-solid" data-event="step_completed" data-step="prepare_click" data-placement="saved_hero"><Icon name="shield" /> Armar el sistema de prevención
       </a>
     </section>
 
@@ -44,7 +45,7 @@ import EmailCapture from '../../components/EmailCapture.astro';
     <section class="panel" id="retirePanel" style="margin-bottom:1.5rem">
       <h3 style="margin-bottom:0.75rem">Jubila el USB que te traicionó</h3>
       <p class="dim">Un USB que falló una vez va a fallar de nuevo. Estos son los que no hacen eso:</p>
-      <a href="/es/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="saved"><span aria-hidden="true">🔌</span> Ver los USB aprobados
+      <a href="/es/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="saved"><Icon name="usb" /> Ver los USB aprobados
       </a>
     </section>
     <script>

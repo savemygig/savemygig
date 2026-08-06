@@ -7,6 +7,7 @@
 import EmailCapture from './EmailCapture.astro';
 import { t } from '../i18n/ui';
 import { localizedPath, DEFAULT_LANG } from '../i18n/registry';
+import Icon from './Icon.astro';
 // LANGUAGE AWARE 2026-08-05. This block closes all 13 /fix articles, which are
 // where cold search traffic lands. It shipped ENGLISH, with unprefixed English
 // hrefs, at the bottom of every translated article: the single largest English
@@ -27,7 +28,7 @@ const lp = (x) => localizedPath(x, lang);
 <div class="panel cta-exit" style="margin-top:3rem">
   <h2 style="margin-bottom:0.75rem">{S.stuckH}</h2>
   <p class="dim">{S.stuckP}</p>
-  <a href={lp("/emergency")} class="btn btn-quiet-danger" data-event="begin_checkout" data-placement={`article_${article}`}><span aria-hidden="true">🚨</span> {S.stuckBtn}
+  <a href={lp("/emergency")} class="btn btn-quiet-danger" data-event="begin_checkout" data-placement={`article_${article}`}><Icon name="siren" /> {S.stuckBtn}
   </a>
   {card && (
     <p class="dim" style="font-size:0.86rem;margin:0.9rem 0 0">
@@ -37,10 +38,10 @@ const lp = (x) => localizedPath(x, lang);
 </div>
 <div class="panel" style="margin-top:1rem">
   <p class="dim" style="margin-bottom:0.75rem"><strong>{S.preventP}</strong> {S.preventP2}</p>
-  <a href={lp("/prepare")} class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement={`article_${article}`}><span aria-hidden="true">🛡</span> {S.preventBtn}
+  <a href={lp("/prepare")} class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement={`article_${article}`}><Icon name="shield" /> {S.preventBtn}
   </a>
 </div>
 <div style="margin-top:1rem">
   <EmailCapture source={`article_${article}`} lang={lang} />
 </div>
-<a href={lp("/emergency")} class="sticky-cta" data-event="begin_checkout" data-placement={`article_${article}_sticky`}><span aria-hidden="true">🚨</span> {S.sticky}</a>
+<a href={lp("/emergency")} class="sticky-cta" data-event="begin_checkout" data-placement={`article_${article}_sticky`}><Icon name="siren" /> {S.sticky}</a>

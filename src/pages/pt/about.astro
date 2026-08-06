@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 // ABOUT, BRAZILIAN PORTUGUESE. Source of truth for structure, panels and
 // classes: src/pages/about.astro. Faceless by decision: no founder names, no
 // founder photo, first person plural only. Only the copy and the /pt hrefs
@@ -54,7 +55,7 @@ import Base from '../../layouts/Base.astro';
 
     <div class="panel cta-exit" style="margin-top:2rem">
       <h2 style="margin-bottom:0.75rem">Está no sufoco agora?</h2>
-      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="about"><span aria-hidden="true">🚨</span> Abrir o Emergency Mode</a>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="about"><Icon name="siren" /> Abrir o Emergency Mode</a>
     </div>
 
     <p class="dim" style="font-size:0.9rem;margin-top:2rem">Dúvidas, correções, histórias de guerra: <a href="mailto:info@savemygig.com">info@savemygig.com</a></p>

@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import InstallNudge from '../../components/InstallNudge.astro';
 import EmailCapture from '../../components/EmailCapture.astro';
+import Icon from '../../components/Icon.astro';
 // OUTCOME PAGE, BRAZILIAN PORTUGUESE. Source of truth for structure, panels,
 // the no_sound query guard and the classes: src/pages/saved.astro. Only the
 // copy and the /pt hrefs differ.
@@ -33,7 +34,7 @@ import EmailCapture from '../../components/EmailCapture.astro';
     <section class="panel panel-go" style="margin-bottom:1.5rem">
       <h2 style="margin-bottom:0.75rem">Nunca mais passe por essa emergência</h2>
       <p class="dim">Esta teve final feliz. A próxima não tem garantia, a menos que você crie a garantia. O sistema de prevenção leva mais ou menos uma hora para montar.</p>
-      <a href="/pt/prepare" class="btn btn-solid" data-event="step_completed" data-step="prepare_click" data-placement="saved_hero"><span aria-hidden="true">🛡</span> Montar o sistema de prevenção
+      <a href="/pt/prepare" class="btn btn-solid" data-event="step_completed" data-step="prepare_click" data-placement="saved_hero"><Icon name="shield" /> Montar o sistema de prevenção
       </a>
     </section>
 
@@ -45,7 +46,7 @@ import EmailCapture from '../../components/EmailCapture.astro';
     <section class="panel" id="retirePanel" style="margin-bottom:1.5rem">
       <h3 style="margin-bottom:0.75rem">Aposente o drive que te traiu</h3>
       <p class="dim">Um USB que falhou uma vez vai falhar de novo. Estes são os drives que não fazem isso:</p>
-      <a href="/pt/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="saved"><span aria-hidden="true">🔌</span> Ver os drives aprovados
+      <a href="/pt/gear" class="btn btn-neutral" data-event="affiliate_click" data-program="gear_page" data-placement="saved"><Icon name="usb" /> Ver os drives aprovados
       </a>
     </section>
     <script>

@@ -3,6 +3,7 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import { CHECKED, DJM_A9 } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
 
 // DJM-A9, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
 // classes, anchors and CSS: src/pages/knowledge/pioneer-dj/djm-a9.astro.
@@ -357,7 +358,7 @@ const schema = {
 
     <div class="panel cta-exit" style="margin-top:1.5rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
-      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_djma9"><span aria-hidden="true">🚨</span> Abrir o Emergency Mode</a>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_djma9"><Icon name="siren" /> Abrir o Emergency Mode</a>
     </div>
 
     <div style="margin-top:1.5rem">

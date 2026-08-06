@@ -85,12 +85,54 @@ try {
   const mf = await readFile(join(ROOT, 'manifest.webmanifest'), 'utf-8');
   if (/[—–]/.test(mf)) hits.push('manifest.webmanifest: em/en dash in manifest text');
 } catch { /* no manifest in this build */ }
+/* NO EMOJI IN A CONTROL'S LABEL (added 2026-08-06).
+   The design system has said "monochrome stroke icons always" since the
+   2026-08-03 polish sprint, and the rescue tunnel and the /gear and
+   /files-lost headers were cleaned under that rule the same day. The CTA
+   labels were missed, because the emoji lived INSIDE the label string rather
+   than in an icon slot, so for three more days the most urgent buttons on the
+   site carried a glossy 3D siren, a shield, a plug and a phone next to a
+   disciplined 17px stroke set, and /recovery had a yellow warning triangle
+   inside a red danger panel. All of them are src/components/Icon.astro now.
+   This is the rule that stops the next one, and it is checked on the BUILT
+   HTML because that is the only place an emoji added via a data file, an i18n
+   catalogue or a component prop becomes visible.
+
+   WHAT COUNTS. Anything in the pictographic planes (U+1F000-U+1FAFF), always,
+   plus any BMP symbol explicitly forced to emoji presentation with a
+   variation selector (U+FE0F). What does NOT count is a plain monochrome
+   glyph: the tunnel's back arrow, the feedback page's tick and the checklist's
+   circled-i are all typographic characters that render as text in every font,
+   and banning them would be a different rule with a different argument.
+
+   WHERE IT LOOKS. Buttons, anchors styled as buttons, the mobile sticky CTA
+   and the rescue tunnel's option pads: everything a DJ taps. Body copy is out
+   of scope on purpose, so this cannot start policing prose. */
+const EMOJI = /[\u{1F000}-\u{1FAFF}]|[\u{2190}-\u{2BFF}\u{2E00}-\u{2E7F}\u{3000}-\u{303F}]\u{FE0F}/gu;
+const CONTROLS = [
+  ['button', /<button\b[^>]*>([\s\S]*?)<\/button>/gi],
+  ['button-styled link', /<a\b[^>]*class="[^"]*\b(?:btn|sticky-cta)\b[^"]*"[^>]*>([\s\S]*?)<\/a>/gi],
+  ['option pad', /<div\b[^>]*class="[^"]*\bpad-title\b[^"]*"[^>]*>([\s\S]*?)<\/div>/gi],
+];
+
 for (const f of files) {
-  const text = visibleText(await readFile(f, 'utf-8'));
+  const raw = await readFile(f, 'utf-8');
+  const text = visibleText(raw);
   for (const r of RULES) {
     const m = text.match(r.re);
     if (m) hits.push(`${f}: ${r.name} -> ${[...new Set(m)].slice(0, 4).join(', ')}`);
   }
+  for (const [what, re] of CONTROLS) {
+    for (const m of raw.matchAll(re)) {
+      // Group 1 for button/pad, and for the anchor form too: the class
+      // alternation is non-capturing so the label is always group 1.
+      const label = visibleText(m[1] || '');
+      const found = label.match(EMOJI);
+      if (found) {
+        hits.push(`${f}: emoji in a ${what} label -> ${[...new Set(found)].join(' ')} in ${JSON.stringify(label.trim().replace(/\s+/g, ' ').slice(0, 50))}`);
+      }
+    }
+  }
 }
 if (hits.length) { console.log('CONTENT LINT FAIL:\n' + hits.join('\n')); process.exit(1); }
-console.log(`Content lint PASS (${files.length} pages, 0 violations)`);
+console.log(`Content lint PASS (${files.length} pages, 0 violations, ${CONTROLS.length} control kinds checked for emoji)`);

@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Search from '../../components/Search.astro';
+import Icon from '../../components/Icon.astro';
 
 // FAQ, SPANISH (neutral Latin American). Source of truth for structure, the
 // entry model, the FAQPage contract and the CSS: src/pages/faq.astro. Only the
@@ -186,7 +187,7 @@ const schema = {
 
     <div class="panel cta-exit" style="margin-top:2rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">¿Tu pregunta es urgente porque tocas en un rato?</h2>
-      <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="faq"><span aria-hidden="true">🚨</span> Abrir Emergency Mode</a>
+      <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="faq"><Icon name="siren" /> Abrir Emergency Mode</a>
     </div>
 
     <p class="dim" style="font-size:0.86rem;margin-top:1.4rem">

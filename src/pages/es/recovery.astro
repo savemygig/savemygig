@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 // DATA RECOVERY, SPANISH (neutral Latin American). Source of truth for
 // structure, panels, cards and classes: src/pages/recovery.astro. Only the
 // copy and the /es hrefs differ. The two tool links are external and stay
@@ -18,7 +19,7 @@ import Base from '../../layouts/Base.astro';
     <p class="dim" style="margin-bottom:1rem">En nuestra experiencia, el software recupera los archivos en la mayoría de los casos en que la unidad todavía enciende. Con una unidad físicamente muerta no puede hacer nada. Esta es la ruta, en orden.</p>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><span aria-hidden="true">⚠️</span> <strong>Antes que nada: deja de escribir en el USB.</strong> No lo formatees, no intentes "un export más". Cada escritura sobrescribe música que todavía se podía recuperar.</p>
+      <p style="margin:0"><Icon name="warn" class="danger" /> <strong>Antes que nada: deja de escribir en el USB.</strong> No lo formatees, no intentes "un export más". Cada escritura sobrescribe música que todavía se podía recuperar.</p>
     </div>
 
     <div class="panel">
@@ -47,7 +48,7 @@ import Base from '../../layouts/Base.astro';
     <div class="panel">
       <h2 style="margin-bottom:0.5rem">Paso 3 - Nunca pagues dos veces por recuperar</h2>
       <p class="dim">Recuperar es lo que haces una vez. Un sistema de backup es lo que haces en lugar de eso, y se arma en una tarde.</p>
-      <a href="/es/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="recovery"><span aria-hidden="true">🛡</span> Armar el sistema de prevención</a>
+      <a href="/es/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="recovery"><Icon name="shield" /> Armar el sistema de prevención</a>
       <p class="dim" style="font-size:0.86rem;margin:0.9rem 0 0">
         <a href="/es/checklist">La próxima vez, pasa por el checklist pre-gig</a>
       </p>

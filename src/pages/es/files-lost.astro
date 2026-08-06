@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import EmailCapture from '../../components/EmailCapture.astro';
+import Icon from '../../components/Icon.astro';
 // FILES LOST, SPANISH (neutral Latin American). Source of truth for structure,
 // panels and classes: src/pages/files-lost.astro. Only the copy and the /es
 // hrefs differ.
@@ -32,7 +33,7 @@ import EmailCapture from '../../components/EmailCapture.astro';
       <p class="dim">Si la computadora detecta el USB de alguna forma, aunque no muestre ningún archivo, el software casi siempre logra sacarle la música. Dos herramientas que sí usaríamos:</p>
       <p class="dim" style="font-size:0.85rem">Las herramientas de la próxima página pueden dejarnos una comisión, sin costo extra para ti. Eso nunca cambia lo que recomendamos, y no hay links pagados dentro del Emergency Mode.</p>
       <a href="/es/recovery" class="btn btn-go" data-event="affiliate_click" data-program="recovery_page" data-placement="files_lost">
-        <span aria-hidden="true">🛠</span> Ver las herramientas →
+        <Icon name="wrench" /> Ver las herramientas →
       </a>
     </div>
 
@@ -44,7 +45,7 @@ import EmailCapture from '../../components/EmailCapture.astro';
     <div class="panel">
       <h2 style="margin-bottom:0.75rem">Paso 3 - Que esta sea la última vez</h2>
       <p class="dim">Los DJs a los que esto nunca les pasa no tienen suerte, tienen un sistema. Se arma en una tarde.</p>
-      <a href="/es/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="files_lost"><span aria-hidden="true">🛡</span> Armar el sistema de prevención
+      <a href="/es/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="files_lost"><Icon name="shield" /> Armar el sistema de prevención
       </a>
     </div>
 

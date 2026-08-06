@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 // Trust-direction rebuild (Landing Lab D3). FACELESS BY DECISION (2026-08-03):
 // no founder names, no founder photo, anywhere public. Made by DJs for DJs.
 // The first-person witness story stays because it carries no name.
@@ -76,7 +77,7 @@ import Base from '../layouts/Base.astro';
 
     <div class="panel cta-exit" style="margin-top:2rem">
       <h2 style="margin-bottom:0.75rem">In trouble right now?</h2>
-      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="about"><span aria-hidden="true">🚨</span> Start Emergency Mode</a>
+      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="about"><Icon name="siren" /> Start Emergency Mode</a>
     </div>
 
     <p class="dim" style="font-size:0.9rem;margin-top:2rem">Questions, corrections, war stories: <a href="mailto:info@savemygig.com">info@savemygig.com</a></p>

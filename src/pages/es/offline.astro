@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 // OFFLINE FALLBACK, SPANISH (neutral Latin American). Source of truth for
 // structure and classes: src/pages/offline.astro. Shown when a page is
 // requested that was never cached and there is no signal, so it deliberately
@@ -20,7 +21,7 @@ import Base from '../../layouts/Base.astro';
       emergencia y el checklist sí. Funcionan sin nada de señal.
     </p>
 
-    <a href="/es/emergency" class="btn btn-solid"><span aria-hidden="true">🚨</span> Emergency Mode</a>
+    <a href="/es/emergency" class="btn btn-solid"><Icon name="siren" /> Emergency Mode</a>
     <a href="/es/checklist" class="btn btn-neutral">Checklist pre-gig</a>
     <a href="/es" class="btn btn-neutral">Inicio</a>
 

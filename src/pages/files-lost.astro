@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import EmailCapture from '../components/EmailCapture.astro';
+import Icon from '../components/Icon.astro';
 // Affiliate links: placeholders marked TODO until accounts approved.
 ---
 <Base
@@ -30,7 +31,7 @@ import EmailCapture from '../components/EmailCapture.astro';
       <p class="dim" style="font-size:0.85rem">The tools on the next page may earn us a commission at no extra cost to you. It never changes what we recommend, and there are no paid links inside Emergency Mode.</p>
       <!-- TODO: replace with real affiliate links once accounts approved -->
       <a href="/recovery" class="btn btn-go" data-event="affiliate_click" data-program="recovery_page" data-placement="files_lost">
-        <span aria-hidden="true">🛠</span> See the recovery tools →
+        <Icon name="wrench" /> See the recovery tools →
       </a>
     </div>
 
@@ -42,7 +43,7 @@ import EmailCapture from '../components/EmailCapture.astro';
     <div class="panel">
       <h2 style="margin-bottom:0.75rem">Step 3 - Make this the last time</h2>
       <p class="dim">The DJs this never happens to aren't lucky, they run a system. It takes one evening to set up.</p>
-      <a href="/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="files_lost"><span aria-hidden="true">🛡</span> Set up the prevention system
+      <a href="/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="files_lost"><Icon name="shield" /> Set up the prevention system
       </a>
     </div>
 

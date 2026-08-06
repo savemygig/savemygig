@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 // DATA RECOVERY, BRAZILIAN PORTUGUESE. Source of truth for structure, panels,
 // cards and classes: src/pages/recovery.astro. Only the copy and the /pt
 // hrefs differ. The two tool links are external and stay untouched.
@@ -17,7 +18,7 @@ import Base from '../../layouts/Base.astro';
     <p class="dim" style="margin-bottom:1rem">Na nossa experiência, o software recupera os arquivos na maioria dos casos em que o drive ainda liga. Ele não resolve um drive fisicamente morto. Esta é a rota, na ordem.</p>
 
     <div class="panel panel-danger">
-      <p style="margin:0"><span aria-hidden="true">⚠️</span> <strong>Antes de qualquer coisa: não escreva mais nada no drive.</strong> Não formate, não tente "mais um export". Cada arquivo novo que entra sobrescreve música que ainda daria para recuperar.</p>
+      <p style="margin:0"><Icon name="warn" class="danger" /> <strong>Antes de qualquer coisa: não escreva mais nada no drive.</strong> Não formate, não tente "mais um export". Cada arquivo novo que entra sobrescreve música que ainda daria para recuperar.</p>
     </div>
 
     <div class="panel">
@@ -46,7 +47,7 @@ import Base from '../../layouts/Base.astro';
     <div class="panel">
       <h2 style="margin-bottom:0.5rem">Etapa 3 - Nunca pague recuperação duas vezes</h2>
       <p class="dim">Recuperação é o que você faz uma vez. Um sistema de backup é o que você faz no lugar disso, e monta em uma noite.</p>
-      <a href="/pt/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="recovery"><span aria-hidden="true">🛡</span> Montar o sistema de prevenção</a>
+      <a href="/pt/prepare" class="btn btn-neutral" data-event="step_completed" data-step="prepare_click" data-placement="recovery"><Icon name="shield" /> Montar o sistema de prevenção</a>
       <p class="dim" style="font-size:0.86rem;margin:0.9rem 0 0">
         <a href="/pt/checklist">Na próxima, passe pelo checklist pré-gig</a>
       </p>

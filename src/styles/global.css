@@ -493,6 +493,21 @@ a { color: var(--red); }
   .btn-go:hover   { background: rgba(58,216,132,0.2); }
 }
 
+/* THE INLINE UI ICON (2026-08-06, src/components/Icon.astro).
+   Stays in the text flow rather than turning its parent into a flexbox: .btn
+   is used in about a hundred places, several of which already override its
+   display (inline-grid for the armed Reset and Delete buttons, inline-block
+   for the checklist toolbar), and a display change on that class is exactly
+   the kind of sitewide edit that has broken those buttons before. Inline also
+   means the icon stays with the first word if a long label wraps, instead of
+   being stranded in its own column.
+   -0.18em, not -0.125em: these are 17px glyphs beside 15.2px uppercase display
+   type, so they need to sit slightly lower than a cap-height baseline to look
+   centred. Measured against the label's cap height, not guessed at.
+   The margin is in em so it tracks the label it belongs to; the checklist's
+   own 13px lock glyph sets its gap from the flex row instead. */
+.ic { vertical-align: -0.18em; margin-right: 0.4em; flex: 0 0 auto; }
+
 /* ---------- Step meta ---------- */
 
 .step-label {

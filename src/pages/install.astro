@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import AccGroup from '../components/AccGroup.astro';
+import Icon from '../components/Icon.astro';
 
 // The install guide. Born 2026-07-27 from Antonio's homepage review: the
 // install banner used to teach ("Tap Share at the bottom of Safari...") and
@@ -176,7 +177,7 @@ const appSchema = {
 
     <div class="panel cta-exit" style="margin-top:2rem">
       <h2 style="margin-bottom:0.75rem">In trouble right now?</h2>
-      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="install"><span aria-hidden="true">🚨</span> Start Emergency Mode</a>
+      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="install"><Icon name="siren" /> Start Emergency Mode</a>
     </div>
   </main>
 </Base>
