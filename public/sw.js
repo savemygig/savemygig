@@ -662,12 +662,54 @@ function stash(req, res) {
   caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
 }
 
-/** Cached copy, then the offline page, then home. Awaited, not ||'d. */
+/*
+ * IGNORE THE QUERY STRING WHEN READING (2026-08-06).
+ *
+ * THE HOLE THIS CLOSES, at the end of every single rescue. Every outcome option
+ * in the three trees routes to /saved with a query string that records which
+ * branch worked: "/saved?path=no_sound&branch=thin" and 74 others. Not one of
+ * them links bare /saved. Cache Storage matches on the FULL url unless told
+ * otherwise, so a cache holding a perfect copy of /saved was a miss for every
+ * URL the tunnel actually navigates to. Measured with the origin process killed:
+ * /saved rendered "YOU'RE BACK ON.", /saved?path=no_sound&branch=thin rendered
+ * "You are offline". The payoff screen at the end of the rescue, in the exact
+ * no-signal basement the precache exists for, told the DJ they had no
+ * connection. /files-lost carries the same shape.
+ *
+ * ignoreSearch is right for this site rather than merely convenient: the query
+ * strings here are ANALYTICS PARAMETERS, read by the page's own script to label
+ * an event. They never change what the document is. There is no URL on this
+ * site where two query strings mean two different pages, and if one is ever
+ * added it needs its own cache key, not a relaxation of this.
+ *
+ * The gate now covers the class rather than the instance: scripts/
+ * test-offline-langs.mjs walks real outcome URLs taken from the trees, in all
+ * three languages, including a /files-lost one.
+ */
+const MATCH_ANY_QUERY = { ignoreSearch: true };
+
+/**
+ * Cached copy, then the offline page, then home. Awaited, not ||'d.
+ *
+ * IN THE INSTALL LANGUAGE FIRST (2026-08-06). Both fallbacks were the ENGLISH
+ * paths, and this worker precaches exactly one language: on a Portuguese install
+ * the cache holds /pt/offline and /pt, never /offline or /, so both branches
+ * missed and a genuinely uncached URL offline resolved to Response.error(), which
+ * is a raw browser error page. Surfaced by the new outcome-URL cases in
+ * scripts/test-offline-langs.mjs, where English at least reached /offline and
+ * Portuguese and Spanish reached net::ERR_FAILED. The English paths are kept as
+ * the second try, because caches.match() spans every cache in the origin and a
+ * reader who has visited both languages may well have them.
+ */
 async function offlineFallback(req, isHTML) {
-  const hit = await caches.match(req);
+  const hit = await caches.match(req, MATCH_ANY_QUERY);
   if (hit) return hit;
   if (isHTML) {
-    return (await caches.match('/offline')) || (await caches.match('/')) || Response.error();
+    return (await caches.match(LANG_PREFIX + '/offline')) ||
+      (await caches.match('/offline')) ||
+      (await caches.match(LANG_PREFIX || '/')) ||
+      (await caches.match('/')) ||
+      Response.error();
   }
   return Response.error();
 }
@@ -703,8 +745,11 @@ self.addEventListener('fetch', (e) => {
     // Whichever answers first: the network, or the cache once the network has
     // had HTML_NET_TIMEOUT to prove itself. `undefined` out of the timeout arm
     // means nothing was cached, so keep waiting on the network.
+    // ignoreSearch for the same reason offlineFallback uses it: on one bar of
+    // signal this arm is what serves the end of the rescue, and every outcome
+    // URL carries a query string. See the note on MATCH_ANY_QUERY.
     const slow = new Promise((resolve) => { setTimeout(resolve, HTML_NET_TIMEOUT); })
-      .then(() => caches.match(req));
+      .then(() => caches.match(req, MATCH_ANY_QUERY));
     e.respondWith(
       Promise.race([net, slow])
         .then((res) => res || net)

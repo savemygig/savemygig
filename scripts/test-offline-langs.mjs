@@ -51,6 +51,32 @@ const ok = (name, cond, detail = '') => {
   console.log(`${cond ? 'PASS' : 'FAIL'}  ${name}${detail ? '  (' + detail + ')' : ''}`);
 };
 
+/*
+ * THE PATH LIST, AND THE HOLE IT USED TO HAVE (2026-08-06).
+ *
+ * This test shipped on 2026-08-05 asserting the offline promise in three
+ * languages with the origin process dead, and it passed while the LAST SCREEN OF
+ * EVERY RESCUE was broken offline. Two mistakes, both worth naming, because they
+ * are the general shape of a test that lies:
+ *
+ *   1. IT TESTED PATHS, NOT THE URLS THE PRODUCT NAVIGATES TO. Every outcome
+ *      option in the three emergency trees routes to /saved with a query string
+ *      recording which branch worked: "/saved?path=no_sound&branch=thin" and 74
+ *      others, and not one bare /saved anywhere. Cache Storage matches on the
+ *      FULL url unless told otherwise, so a cache holding a perfect copy of
+ *      /saved was a miss for every URL a DJ is ever sent to. The list here held
+ *      bare paths only, so the entire class was invisible to it.
+ *   2. IT ASSERTED "A STYLED PAGE CAME BACK", NOT "THE RIGHT PAGE CAME BACK".
+ *      /offline is itself a styled page with a title and the red token, so the
+ *      offline FALLBACK satisfied every condition this test made. It could not
+ *      tell the rescue from the apology.
+ *
+ * Both are fixed. The list now carries real outcome URLs, copied from the `to`
+ * values in src/data/emergency-tree*.js, and the check below compares the served
+ * document's own canonical against the path that was requested. That identity
+ * test is language-agnostic and it hardens all twelve of the original entries
+ * too, not just the five new ones. It is what makes a pass here mean something.
+ */
 const PATHS = [
   ['USB not recognized', '/protocol/usb/start'],
   ['the four booth moves', '/protocol/usb/moves'],
@@ -64,6 +90,15 @@ const PATHS = [
   ['triage', '/emergency'],
   ['checklist', '/checklist'],
   ['Emergency Card', '/card'],
+  // THE END OF THE RESCUE, which is what nothing was testing. Every one of these
+  // is a real `to` value out of the trees, so they are exactly what a DJ's phone
+  // asks for the moment something works. The query string is the whole point: it
+  // is what turned a cached page into a miss.
+  ['outcome, no sound fixed', '/saved?path=no_sound&branch=thin'],
+  ['outcome, frozen player restarted', '/saved?path=frozen&branch=restart'],
+  ['outcome, playing off another drive', '/saved?path=critical&branch=runlist'],
+  ['outcome, export rebuilt', '/saved?path=quick_fix&branch=fresh_usb'],
+  ['hand-off, the files really are gone', '/files-lost?path=critical&branch=survival'],
 ];
 
 const LANGS = [
@@ -110,6 +145,9 @@ for (const L of LANGS) {
 
   const page2 = await ctx.newPage();
   for (const [label, p] of PATHS) {
+    // The path WITHOUT its query string is the document that should come back.
+    // The query is analytics: it labels an event and never changes the page.
+    const wantPath = L.prefix + p.split('?')[0];
     let good = false, detail = '';
     try {
       await page2.goto(base + L.prefix + p, { waitUntil: 'load', timeout: 20000 });
@@ -121,31 +159,51 @@ for (const L of LANGS) {
         const red = getComputedStyle(document.documentElement).getPropertyValue('--red').trim();
         const b = getComputedStyle(document.body);
         const img = document.querySelector('header img[src*="brand"], header img');
+        const can = document.querySelector('link[rel="canonical"]');
         return {
           title: (document.title || '').slice(0, 50),
           h1: h1 ? h1.textContent.trim().slice(0, 30) : '',
           rules, red, bg: b.backgroundColor, font: b.fontFamily.slice(0, 24),
           logo: img ? (img.complete && img.naturalWidth > 0) : null,
+          // WHICH DOCUMENT IS THIS, REALLY. Every page on the site carries a
+          // canonical, so this is the one signal that tells the rescue apart
+          // from the offline apology. Without it this whole loop passed on
+          // /offline, which is how the query-string hole survived a test whose
+          // name is the offline promise.
+          canonical: can ? new URL(can.href).pathname.replace(/\/$/, '') : null,
         };
       });
-      good = !!(i.title && i.rules > 0 && i.red) && i.logo !== false && !/^nf$/i.test(i.title);
-      detail = `rules=${i.rules} red=${i.red || 'MISSING'} bg=${i.bg} logo=${i.logo === null ? 'n/a' : i.logo} font=${i.font}`;
+      const isWanted = i.canonical === (wantPath === '/' ? '' : wantPath);
+      good = isWanted && !!(i.title && i.rules > 0 && i.red) &&
+        i.logo !== false && !/^nf$/i.test(i.title);
+      detail = `rules=${i.rules} red=${i.red || 'MISSING'} bg=${i.bg} ` +
+        `logo=${i.logo === null ? 'n/a' : i.logo} font=${i.font}` +
+        (isWanted ? '' : ` GOT ${i.canonical || 'no canonical'} WANTED ${wantPath}`);
     } catch (e) {
       detail = 'threw: ' + String(e.message).slice(0, 50);
     }
     ok(`${L.code}: OFFLINE ${label} ${L.prefix + p}`, good, detail);
   }
 
-  const s = await page2.evaluate(async (prefix) => {
-    const idx = '/search-index.' + (prefix ? prefix.slice(1) : 'en') + '.json';
+  // A FAILING ASSERTION MUST NOT TAKE THE TEST DOWN WITH IT. If the loop above
+  // left the tab on a browser error page, page2.evaluate throws and the whole
+  // run died with an uncaught exception instead of printing the failures it had
+  // already found. Land somewhere real first, and report rather than crash.
+  const s = await (async () => {
     try {
-      const r = await fetch(idx);
-      if (!r.ok) return { ok: false, why: 'status ' + r.status };
-      const docs = await r.json();
-      const hit = docs.filter((d) => JSON.stringify(d).toLowerCase().includes('usb')).length;
-      return { ok: docs.length > 0 && hit > 0, n: docs.length, hit };
-    } catch (e) { return { ok: false, why: String(e.message).slice(0, 40) }; }
-  }, L.prefix);
+      await page2.goto(base + (L.prefix || '/'), { waitUntil: 'load', timeout: 20000 });
+      return await page2.evaluate(async (prefix) => {
+        const idx = '/search-index.' + (prefix ? prefix.slice(1) : 'en') + '.json';
+        try {
+          const r = await fetch(idx);
+          if (!r.ok) return { ok: false, why: 'status ' + r.status };
+          const docs = await r.json();
+          const hit = docs.filter((d) => JSON.stringify(d).toLowerCase().includes('usb')).length;
+          return { ok: docs.length > 0 && hit > 0, n: docs.length, hit };
+        } catch (e) { return { ok: false, why: String(e.message).slice(0, 40) }; }
+      }, L.prefix);
+    } catch (e) { return { ok: false, why: 'page unusable: ' + String(e.message).slice(0, 40) }; }
+  })();
   ok(`${L.code}: OFFLINE search still answers`, s.ok, s.ok ? `${s.n} docs, ${s.hit} match usb` : s.why);
 
   await ctx.close();
