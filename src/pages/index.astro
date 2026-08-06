@@ -318,7 +318,42 @@ const SUBLINES = [
     .doors { gap: 0.7rem; }
     .doors { gap: clamp(0.5rem, 1.5svh, 1rem); }
 
-    .door { padding: 0.95rem 1.05rem; gap: 0.8rem; }
+    /* THE TEXT COLUMN NEEDED 8px THAT THE GAPS WERE SPENDING (2026-08-06).
+       The door title has to hold ONE line: two lines make this door visibly
+       taller than the other two and break the row of three. It did not.
+       "RESOLVER PROBLEMA" wrapped, live, in pt and es, at 360px and 364px and
+       again at 380px wide, on any viewport over 700px tall. English never did,
+       which is why nothing caught it.
+
+       WHY IT LOOKED FINE ANYWHERE: the .door-title ramp below,
+       calc(7.2vw - 6.5px), grows the type 0.29px per 4px of viewport, and the
+       longest translated title costs about 3.4px of text for that 0.29px, so
+       the box gains only ~0.6px of headroom per step. Across the whole 356 to
+       390 band the translated title had between -1.4px and +2px of room, which
+       is inside the noise of glyph-advance rounding: that is why 368 and 376
+       fit while 360, 364 and 380 did not. There was never any headroom, only
+       luck, and it ran out in two languages at once.
+
+       WHY IT WAS THE GAPS AND NOT THE TYPE: shrinking the ramp to buy 8px
+       means about 0.7px off the font, which is a 3% cut on the primary CTA of
+       the site at every width from 356 to 411, to solve a problem that is
+       17 characters of Portuguese wide. The chrome around the title at 360 was
+       133.37px: 40 page gutter (shared with every page, untouchable), 2 border,
+       33.6 door padding, 13 LED, 19.19 arrow, and 25.6 in these two gaps. The
+       gaps are the only part of that which is pure air with no job but
+       separation, and 8.8px still separates a 13px dot and a 19px arrow from
+       the text perfectly well. The card's own padding, the type size, the LED
+       and the arrow are all untouched.
+
+       Measured after: zero wrapping titles at every width from 356 to 436 in
+       steps of 4, in en, pt and es, and the tightest is +6.6px at 360.
+       fold-check.mjs now asserts one line per title per language, so the next
+       translation that outgrows the box fails the gate instead of the row.
+
+       AND IT IS THE SAME EDIT IN THREE FILES. This style block is duplicated
+       in src/pages/index.astro, src/pages/pt/index.astro and
+       src/pages/es/index.astro. Change one, change all three. */
+    .door { padding: 0.95rem 1.05rem; gap: 0.55rem; }
     .door { padding-block: clamp(0.75rem, 2svh, 1.15rem); }
 
     /* The door title is the loudest thing on a phone, so it leads. It used to
