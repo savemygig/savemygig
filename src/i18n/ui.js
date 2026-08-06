@@ -215,7 +215,20 @@ export const UI = {
       cardLink: 'Screenshot the Emergency Card',
       preventP: 'Never want to read this page again?',
       preventP2: 'Set up the prevention system once and this page becomes irrelevant.',
-      preventBtn: 'See the prevention checklist',
+      // ONE NAME FOR ONE DESTINATION (2026-08-06). This button was "See the
+      // prevention checklist" and it does not point at the checklist: it points
+      // at /prepare, the prevention hub. The site already had the right name for
+      // that destination, in `tunnel.rules` below and hardcoded in the tunnel's
+      // closing note on /protocol/usb/moves, so this is that exact phrasing and
+      // not a new one. A reader who taps this from a fix article and later reads
+      // the tunnel note now meets the same words for the same page, and neither
+      // of them promises a checklist that is somewhere else.
+      // It also fixes the wrap the 2026-08-05 audit blamed on the emoji. That
+      // was never the cause: at 390 the old label needed 293.9px of one-line
+      // width against 266 available, so it was 4.8px too wide even with NO icon
+      // at all. Shorter, and correct, is the fix. Widths remeasured at 360 and
+      // 390 in all three languages.
+      preventBtn: 'The prevention rules',
       sticky: 'PLAYING SOON? START EMERGENCY MODE',
     },
     capture: {
@@ -391,7 +404,9 @@ export const UI = {
       cardLink: 'Tire um print do Emergency Card',
       preventP: 'Não quer ler esta página nunca mais?',
       preventP2: 'Monte o sistema de prevenção uma vez e esta página perde a razão de existir.',
-      preventBtn: 'Ver o checklist de prevenção',
+      // Mesma frase de `tunnel.rules` abaixo: um nome por destino. Ver o
+      // comentario completo na versao em ingles.
+      preventBtn: 'As regras de prevenção',
       sticky: 'VAI TOCAR LOGO? ABRA O EMERGENCY MODE',
     },
     capture: {
@@ -558,7 +573,9 @@ export const UI = {
       cardLink: 'Toma una captura de la Emergency Card',
       preventP: '¿No quieres volver a leer esta página?',
       preventP2: 'Arma el sistema de prevención una vez y esta página deja de hacer falta.',
-      preventBtn: 'Ver el checklist de prevención',
+      // Misma frase que `tunnel.rules` abajo: un nombre por destino. Ver el
+      // comentario completo en la version en ingles.
+      preventBtn: 'Las reglas de prevención',
       sticky: '¿TOCAS PRONTO? ABRE EMERGENCY MODE',
     },
     capture: {
