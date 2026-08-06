@@ -1727,6 +1727,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
 </style>
 
 <script>
+  // TYPE ONLY, so it is erased before anything ships and the account layer is
+  // still reached exclusively through the dynamic import() below. Sharing the
+  // shapes is what stops the seam drifting: change ChecklistCore in that file
+  // and the object built for it here stops compiling.
+  import type { AccountLayer, ChecklistCore, Registry, RegList } from '../../scripts/checklist-account.es';
+
   const STORE_KEY = 'SMG_CHECKLIST_V1';
   const MODE_KEY = 'SMG_CHECKLIST_MODE';
   const OPEN_KEY = 'SMG_CHECKLIST_OPEN';
@@ -1772,7 +1778,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // Declared HERE, above everything that runs during init: tryRestore()
   // fires early and its save* calls reach bumpActive(), which reads these.
   const acct: { email: string | null; google: string | null; artist: string | null } = { email: null, google: null, artist: null };
-  let pushTimer: ReturnType<typeof setTimeout> | undefined;
+  // DECLARED HERE FOR THE SAME REASON `acct` IS, and it is a TDZ trap if it
+  // moves: tryRestore() fires early during init and its save* calls reach
+  // bumpActive(), which reads this. pushTimer used to sit on this line; the
+  // debounce it belonged to lives in the account layer now.
+  let acctLayer: AccountLayer | null = null;
+  let acctLoading: Promise<AccountLayer | null> | null = null;
 
   const listEl = document.getElementById('list');
   const boxes = Array.from(document.querySelectorAll<HTMLInputElement>('.task input[type="checkbox"]'));
@@ -3066,6 +3077,12 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     // Same reduced-motion gate as every other scroll on this page.
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (acctCard) acctCard.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    // Tapping a locked Advanced or Custom IS a first approach to the account,
+    // so it is one of the four triggers. Everything visible has already
+    // happened by this line: the heading, the reveal and the scroll all come
+    // out of markup that is in the document, so the tap answers instantly and
+    // the sign-in controls inside the card wake up a moment later.
+    loadAccounts();
   }
   // Opened from the Sync chip the card explains itself, so the heading must
   // not survive from an earlier locked-tab tap and mislabel it.
@@ -3254,33 +3271,23 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // policy is last-write-wins per named list, no merging. MODE and OPEN are
   // device-local on purpose: what you keep collapsed on your phone is not a
   // property of the list.
-
-  const acctLine = document.getElementById('acctLine');
-  const acctCard = document.getElementById('acctCard');
-  const acctOut = document.getElementById('acctOut');
-  const acctIn = document.getElementById('acctIn');
-  const acctEmailEl = document.getElementById('acctEmail');
-  const acctForm = document.getElementById('acctForm') as HTMLFormElement | null;
-  const acctMsg = document.getElementById('acctMsg');
-  const acctMsg2 = document.getElementById('acctMsg2');
-  // Round 9 (Antonio): "Saved." used to sit there forever, which once got in
-  // the way of a real tap on Delete account right after. Auto-clear it after
-  // a couple seconds -- but only if it is still the same "ok" confirmation
-  // when the timer fires, so it never wipes a later error or "Deleting...".
-  let acctMsg2ClearTimer: ReturnType<typeof setTimeout> | undefined;
-  const listSwitch = document.getElementById('listSwitch');
-  const lsPills = document.getElementById('lsPills');
-  const lsNewBtn = document.getElementById('lsNewBtn');
-  const lsNewForm = document.getElementById('lsNewForm') as HTMLFormElement | null;
-  const lsNewName = document.getElementById('lsNewName') as HTMLInputElement | null;
-  const lsMsg = document.getElementById('lsMsg');
-  // Antonio's cap, revised on his phone review: seven lists total. The row
-  // stays tidy at any count because the pills live inside the collapsed
-  // "Lists" region (his harmonica), so the cap is about sanity, not layout.
-  const MAX_LISTS = 7;
-
-  type RegList = { id: string; n: string; u: number };
-  type Registry = { active: string; lists: RegList[] };
+  //
+  // THE LAYER ITSELF IS A SEPARATE, LAZILY IMPORTED FILE (2026-08-06, perf
+  // batch 8): ../../scripts/checklist-account.es.
+  // It was roughly 16 KB minified of the 58 KB this page shipped to every
+  // visitor, and the large majority of DJs who open the checklist tick a few
+  // boxes and leave. Read that file's header for the reasoning and the seam.
+  //
+  // WHAT IS LEFT HERE IS ONLY WHAT CANNOT WAIT:
+  //   - the registry's reader and writer, because bumpActive() has to stamp the
+  //     active list on every edit whether or not that file ever loads,
+  //   - the sync chip's expand and collapse and the click-away close, because
+  //     the card has to open on the very tap that starts the download,
+  //   - the four triggers that decide the file is needed at all.
+  // NOT here, and this is the one that matters: nothing whatsoever about the
+  // DOWNLOAD email gate. openGate(), the #unlock card and the unlock form are
+  // all above, in this page's own bundle, working off markup that is already in
+  // the document. They do not wait for this import and do not know it exists.
 
   function loadReg(): Registry {
     try {
@@ -3305,661 +3312,83 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     return { active: 'main', lists: [{ id: 'main', n: 'Default', u: 0 }] };
   }
   function saveReg(r: Registry) { try { localStorage.setItem(REG_KEY, JSON.stringify(r)); } catch (e) { /* blocked */ } }
-  function loadDeleted(): string[] {
-    try { const raw = localStorage.getItem(DELETED_KEY); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
-  }
-  function saveDeleted(a: string[]) { try { localStorage.setItem(DELETED_KEY, JSON.stringify(a)); } catch (e) { /* blocked */ } }
 
-  // The active list IS the live keys; a snapshot is just reading them all.
-  function snapshotLive() {
-    return {
-      ticks: load(), custom: loadCustom(), removed: loadRemoved(),
-      renames: loadRenames(), order: loadOrder(), sections: loadSections(),
-      hiddenGroups: loadHiddenGroups(), notes: loadNotes(),
-    };
+  // acctLayer and acctLoading are declared at the top of this script, beside
+  // `acct`, because bumpActive() reads acctLayer during init. Both stay null
+  // until the layer arrives, and everything the page asks of it is safe to skip
+  // while they are: all of it needs somebody signed in first, and being signed
+  // in is one of the things that loads it.
+
+  /**
+   * ONE IMPORT, HOWEVER MANY TRIGGERS FIRE. `me` is the already-fetched
+   * /api/auth/me body when the probe below found a signed-in device; on an
+   * interaction-triggered load it is undefined and the layer asks for itself,
+   * because it needs the Google client id out of that same response to render
+   * the Google button for a signed-OUT visitor.
+   */
+  function loadAccounts(me?: any): Promise<AccountLayer | null> {
+    if (!acctLoading) {
+      acctLoading = import('../../scripts/checklist-account.es')
+        .then((m) => { acctLayer = m.initAccounts(core, me); return acctLayer; })
+        .catch(() => {
+          // Offline, or the chunk 404s: the page carries on being exactly what
+          // it was before accounts existed, which is a fully working checklist.
+          // Cleared so a later tap can try again once there is signal.
+          acctLoading = null;
+          return null;
+        });
+    }
+    return acctLoading;
   }
-  function liveHasContent(): boolean {
-    const s = snapshotLive();
-    return Object.keys(s.ticks).length > 0 || Object.keys(s.custom).length > 0 ||
-      s.removed.length > 0 || Object.keys(s.renames).length > 0 ||
-      Object.keys(s.order).length > 0 || s.sections.length > 0 ||
-      s.hiddenGroups.length > 0 || Object.keys(s.notes).length > 0;
-  }
-  // Writes RAW (not through the save* helpers) so applying a pulled or
-  // parked blob never re-marks the list as freshly edited.
-  function applyBlobStr(str: string) {
-    let b: any = {};
-    try { b = JSON.parse(str) || {}; } catch (e) { b = {}; }
-    try {
-      localStorage.setItem(STORE_KEY, JSON.stringify(b.ticks || {}));
-      localStorage.setItem(CUSTOM_KEY, JSON.stringify(b.custom || {}));
-      localStorage.setItem(REMOVED_KEY, JSON.stringify(b.removed || []));
-      localStorage.setItem(RENAME_KEY, JSON.stringify(b.renames || {}));
-      localStorage.setItem(ORDER_KEY, JSON.stringify(b.order || {}));
-      localStorage.setItem(SECTIONS_KEY, JSON.stringify(b.sections || []));
-      localStorage.setItem(HIDDENG_KEY, JSON.stringify(b.hiddenGroups || []));
-      localStorage.setItem(NOTES_KEY, JSON.stringify(b.notes || {}));
-    } catch (e) { /* blocked */ }
-  }
-  function getParked(id: string): string {
-    try { return localStorage.getItem(LIST_DATA_PREFIX + id) || ''; } catch (e) { return ''; }
-  }
-  function setParked(id: string, blobStr: string) {
-    try { localStorage.setItem(LIST_DATA_PREFIX + id, blobStr); } catch (e) { /* blocked */ }
-  }
-  function dropParked(id: string) { try { localStorage.removeItem(LIST_DATA_PREFIX + id); } catch (e) { /* blocked */ } }
+
+  // The chip and the card. Both are page furniture: the chip's expand/collapse
+  // and the press-and-hold explainer on it stayed here, so their handles do too.
+  const acctLine = document.getElementById('acctLine');
+  const acctCard = document.getElementById('acctCard');
+
+  /** Everything the account layer is allowed to know about this page. */
+  const core: ChecklistCore = {
+    keys: {
+      STORE_KEY, CUSTOM_KEY, REMOVED_KEY, RENAME_KEY, ORDER_KEY, SECTIONS_KEY,
+      HIDDENG_KEY, NOTES_KEY, EMAIL_KEY, REG_KEY, DELETED_KEY, LIST_DATA_PREFIX,
+      UNLOCK_KEY,
+    },
+    acct,
+    loadReg, saveReg,
+    load, loadCustom, loadRemoved, loadRenames, loadOrder, loadSections,
+    loadHiddenGroups, loadNotes,
+    getEmail, setEmail, setUnlocked, syncLockedState,
+    setMode,
+    // GETTERS, NOT VALUES. mode, pendingMode and pendingWant all keep moving
+    // after the layer has loaded, so handing over a copy would let it act on a
+    // state the DJ has already left.
+    getMode: () => mode,
+    pendingMode: () => pendingMode,
+    pendingWant: () => pendingWant,
+    readPendingMode, clearPendingMode,
+    printCurrentList,
+    sendBackup,
+    clearAcctGateHead,
+    attachExplainer,
+    isInfoLit,
+    modeBtns,
+  };
 
   // Every list-mutating save* helper calls this: stamp the active list as
-  // just-edited and queue a push. Cheap and safe when signed out.
+  // just-edited and queue a push. Cheap and safe when signed out, and cheap and
+  // safe when the account layer has never loaded, which is the same thing.
+  // THE STAMP IS NOT DEFERRABLE. An edit made now and a sign-in made later have
+  // to compare correctly, so skipping the stamp until the layer arrived would
+  // leave that edit looking older than it is and losing to a stale server copy.
+  // That is the round-7 bug (removed sections coming back after sync) waiting to
+  // happen again, which is why these ten lines stayed in the page.
   function bumpActive() {
     try {
       const reg = loadReg();
       const a = reg.lists.find((l) => l.id === reg.active);
       if (a) { a.u = Date.now(); saveReg(reg); }
     } catch (e) { /* never let sync bookkeeping break a tick */ }
-    if (acct.email) {
-      if (pushTimer) clearTimeout(pushTimer);
-      pushTimer = setTimeout(() => { pushAll(false); }, 2500);
-    }
-  }
-
-  function payloadLists() {
-    const reg = loadReg();
-    return reg.lists
-      .filter((l) => (l.u || 0) > 0)
-      .map((l) => ({
-        id: l.id, name: l.n, updated_at: l.u,
-        blob: l.id === reg.active ? JSON.stringify(snapshotLive()) : (getParked(l.id) || JSON.stringify({})),
-      }))
-      .filter((l) => l.blob && l.blob !== '{}');
-  }
-  async function pushAll(keepalive: boolean) {
-    if (!acct.email) return;
-    const lists = payloadLists();
-    const deleted = loadDeleted();
-    if (!lists.length && !deleted.length) return;
-    try {
-      const res = await fetch('/api/sync', {
-        method: 'PUT',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ lists, deleted }),
-        keepalive,
-      });
-      if (res.ok) { saveDeleted([]); setDotSynced(true); }
-    } catch (e) { /* offline: localStorage already has everything */ }
-  }
-  // A tab going to background mid-edit should not lose the last change.
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden' && pushTimer) {
-      clearTimeout(pushTimer); pushTimer = undefined;
-      pushAll(true);
-    }
-  });
-
-  async function syncNow() {
-    if (!acct.email) return;
-    // Round 7 BUG FIX (Antonio: removed checklist sections were coming
-    // back after sync). Root cause: this used to PULL first, then push.
-    // Any local edit made in the last few seconds -- still sitting in
-    // bumpActive()'s 2.5s debounce, or just made right as a sign-in
-    // triggered this same syncNow() call -- had not reached the server
-    // yet. If the server happened to hold an older blob for this list
-    // (from before that edit) with a HIGHER updated_at than this device's
-    // pre-push local `u` -- the ordinary state right after a fresh local
-    // edit, before its own push has landed -- the pull branch below would
-    // treat that stale server copy as newer and silently overwrite the
-    // local edit, including anything removed via the x. Reproduced with a
-    // mocked stale-but-newer-timestamp server response; fixed by pushing
-    // BEFORE pulling. This is always safe to do in this order: the server
-    // enforces strictly-newer on its own end (see sync.js), so an older
-    // local push here is just a no-op there, never a rollback of
-    // something another device already stored more recently. Pushing
-    // first only ever helps: it gives this device's own latest edits a
-    // chance to become "the newest" on the server before any pull could
-    // mistake "not pushed yet" for "doesn't exist."
-    await pushAll(false);
-    let server: { id: string; name: string; blob: string; updated_at: number }[] = [];
-    try {
-      const res = await fetch('/api/sync');
-      if (!res.ok) return;
-      const d = await res.json();
-      server = Array.isArray(d.lists) ? d.lists : [];
-    } catch (e) { return; }
-    const reg = loadReg();
-    const deleted = loadDeleted();
-    let activeChanged = false;
-    server.forEach((s) => {
-      if (deleted.indexOf(s.id) !== -1) return; // deleted here; push will clean the server
-      const local = reg.lists.find((l) => l.id === s.id);
-      if (!local) {
-        reg.lists.push({ id: s.id, n: s.name, u: s.updated_at });
-        setParked(s.id, s.blob);
-      } else if (s.updated_at > (local.u || 0)) {
-        local.n = s.name; local.u = s.updated_at;
-        if (reg.active === s.id) { applyBlobStr(s.blob); activeChanged = true; }
-        else setParked(s.id, s.blob);
-      }
-    });
-    saveReg(reg);
-    setDotSynced(true);
-    if (activeChanged) location.reload(); // fresh render from the pulled state; u now matches, so no loop
-    else renderPills();
-  }
-
-  // Signed-out chip is a dim verb ("Sync"), signed-in is a green state
-  // Round 5, fifth pass (Antonio, resolving the round-3 open question
-  // himself): "the sync button could just say Sync. If it is gray, it's
-  // off. If it is green, it's on." SUPERSEDES the earlier "label must
-  // change with the state, not just the colour" ruling above, label now
-  // stays "Sync" always, colour alone carries the state. Agreed this is the
-  // right call when asked: the chip isn't the only place state shows up
-  // (the chevron and, once opened, "Synced with <email>" both reinforce
-  // it), and gray-vs-green is one of the safer color pairs for colorblind
-  // users since gray reads as desaturated regardless of hue perception ,
-  // unlike, say, red/green. Flagged, not silently changed.
-  function setDotSynced(on: boolean) {
-    const synced = on && !!acct.email;
-    if (acctLine) acctLine.classList.toggle('is-synced', synced);
-  }
-
-  function updateAcctUI() {
-    const signedIn = !!acct.email;
-    if (acctOut) acctOut.hidden = signedIn;
-    if (acctIn) acctIn.hidden = !signedIn;
-    if (acctEmailEl) acctEmailEl.textContent = acct.email || '';
-    setDotSynced(signedIn);
-    // Completion step: the account asks what the gate asks, until it has a
-    // name. Prefilled when this device already greeted the DJ. The card
-    // opens itself so the form is actually seen after the sign-in redirect.
-    const profileForm = document.getElementById('acctProfile') as HTMLFormElement | null;
-    if (profileForm) {
-      const needs = signedIn && !acct.artist;
-      profileForm.hidden = !needs;
-      if (needs) {
-        const a = profileForm.querySelector('input[name="artist"]') as HTMLInputElement | null;
-        if (a && !a.value) {
-          try { a.value = localStorage.getItem('SMG_ARTIST') || ''; } catch (e) { /* blocked */ }
-        }
-        if (acctCard && acctCard.hidden && acctLine) {
-          acctCard.hidden = false;
-          acctLine.setAttribute('aria-expanded', 'true');
-        }
-      }
-    }
-    updateListSwitch();
-  }
-
-  function updateListSwitch() {
-    if (!listSwitch) return;
-    const show = mode === 'custom' && !!acct.email;
-    listSwitch.hidden = !show;
-    if (show) renderPills();
-  }
-
-  /* ----- list reorder (drag the handle left or right, Lists Delete/Done
-     mode only). Same concept as the checklist's own task-drag, but the pills
-     live in a horizontal, wrapping row: placement tracks the nearest pill by
-     2D center distance instead of just top/bottom, and the shaft+chevrons
-     icon lies on its side to match (Antonio, round 9). */
-  function makePillDragHandle(pill: HTMLElement, name: string): HTMLButtonElement {
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'ls-drag';
-    b.setAttribute('aria-label', 'Arrastra para reordenar ' + name);
-    b.innerHTML = '<svg viewBox="0 0 22 14" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h18"/><path d="M6 3 2 7l4 4"/><path d="M16 3l4 4-4 4"/></svg>';
-    initPillDrag(b, pill);
-    return b;
-  }
-  function initPillDrag(handle: HTMLElement, pill: HTMLElement) {
-    handle.addEventListener('pointerdown', (ev: PointerEvent) => {
-      if (!listSwitch || !listSwitch.classList.contains('moving')) return;
-      const ul = lsPills as HTMLElement | null; if (!ul) return;
-      ev.preventDefault();
-      ev.stopPropagation();
-      const grabX = ev.clientX - pill.getBoundingClientRect().left;
-      const grabY = ev.clientY - pill.getBoundingClientRect().top;
-      pill.classList.add('dragging');
-      document.body.classList.add('dragging-row');
-
-      const place = (clientX: number, clientY: number) => {
-        pill.style.transform = '';
-        const nat = pill.getBoundingClientRect();
-        const wantLeft = clientX - grabX;
-        const wantTop = clientY - grabY;
-        const cx = wantLeft + nat.width / 2;
-        const cy = wantTop + nat.height / 2;
-        const sibs = Array.from(ul.children).filter((n) => n !== pill) as HTMLElement[];
-        let closest: HTMLElement | null = null;
-        let closestDist = Infinity;
-        sibs.forEach((sib) => {
-          const r = sib.getBoundingClientRect();
-          const d = Math.hypot(cx - (r.left + r.width / 2), cy - (r.top + r.height / 2));
-          if (d < closestDist) { closestDist = d; closest = sib; }
-        });
-        if (closest) {
-          const r = (closest as HTMLElement).getBoundingClientRect();
-          const before = new Map<HTMLElement, DOMRect>();
-          sibs.forEach((s) => before.set(s, s.getBoundingClientRect()));
-          if (cx < r.left + r.width / 2) ul.insertBefore(pill, closest);
-          else ul.insertBefore(pill, (closest as HTMLElement).nextSibling);
-          sibs.forEach((s) => {
-            const before2 = before.get(s); if (!before2) return;
-            const after = s.getBoundingClientRect();
-            const dx = before2.left - after.left, dy = before2.top - after.top;
-            if (!dx && !dy) return;
-            s.style.transition = 'none';
-            s.style.transform = `translate(${dx}px, ${dy}px)`;
-            requestAnimationFrame(() => { s.style.transition = 'transform 0.16s ease'; s.style.transform = ''; });
-          });
-        }
-        pill.style.transform = '';
-        const now = pill.getBoundingClientRect();
-        pill.style.transform = `translate(${(wantLeft - now.left).toFixed(1)}px, ${(wantTop - now.top).toFixed(1)}px) scale(1.03)`;
-      };
-
-      pill.style.transition = 'transform var(--t-fast), box-shadow var(--t-fast)';
-      place(ev.clientX, ev.clientY);
-      window.setTimeout(() => { if (pill.classList.contains('dragging')) pill.style.transition = ''; }, 130);
-      const move = (e: PointerEvent) => { e.preventDefault(); place(e.clientX, e.clientY); };
-      const up = () => {
-        document.removeEventListener('pointermove', move);
-        document.removeEventListener('pointerup', up);
-        document.removeEventListener('pointercancel', up);
-        pill.style.transition = 'transform 0.16s ease';
-        pill.style.transform = '';
-        window.setTimeout(() => { pill.style.transition = ''; }, 190);
-        pill.classList.remove('dragging');
-        document.body.classList.remove('dragging-row');
-        savePillOrderFromDom();
-      };
-      document.addEventListener('pointermove', move, { passive: false });
-      document.addEventListener('pointerup', up);
-      document.addEventListener('pointercancel', up);
-    });
-  }
-  function savePillOrderFromDom() {
-    if (!lsPills) return;
-    const order = Array.from(lsPills.children).map((p) => (p as HTMLElement).dataset.id || '');
-    const reg = loadReg();
-    reg.lists.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
-    saveReg(reg);
-  }
-
-  // Round 11.5 (Antonio): real list rename, not just a checklist item rename.
-  // Bumps just the ONE list's own timestamp (not bumpActive(), which only
-  // ever touches the active list) so a renamed inactive list still gets
-  // picked up by the next debounced push.
-  function bumpList(id: string) {
-    try {
-      const reg = loadReg();
-      const l = reg.lists.find((x) => x.id === id);
-      if (l) { l.u = Date.now(); saveReg(reg); }
-    } catch (e) { /* never let sync bookkeeping break a rename */ }
-    if (acct.email) {
-      if (pushTimer) clearTimeout(pushTimer);
-      pushTimer = setTimeout(() => { pushAll(false); }, 2500);
-    }
-  }
-  function renameList(id: string, name: string) {
-    const t = (name || '').trim().slice(0, 40);
-    if (!t) return;
-    const reg = loadReg();
-    const l = reg.lists.find((x) => x.id === id);
-    if (!l || l.n === t) return;
-    l.n = t;
-    saveReg(reg);
-    bumpList(id);
-  }
-  // Same click-to-edit-inline flow as the checklist item pencil
-  // (makeEditButton/beginRename below), pointed at a list name instead.
-  function beginPillRename(pill: HTMLElement, span: HTMLElement, id: string) {
-    if (pill.querySelector('.ls-name-edit')) return;
-    const input = document.createElement('input');
-    input.type = 'text'; input.className = 'ls-name-edit'; input.maxLength = 40;
-    input.value = span.textContent || '';
-    span.replaceWith(input);
-    input.focus();
-    const n = input.value.length;
-    input.setSelectionRange(n, n);
-    // Typing, clicking or dragging inside the field must never switch or
-    // reorder the list out from under the DJ mid-edit.
-    input.addEventListener('click', (e) => e.stopPropagation());
-    input.addEventListener('pointerdown', (e) => e.stopPropagation());
-    const commit = () => {
-      const t = (input.value || '').trim();
-      if (t) renameList(id, t);
-      renderPills(); // rebuilds the row either way, restoring the span
-    };
-    input.addEventListener('blur', commit);
-    input.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
-      if (e.key === 'Escape') { input.value = span.textContent || ''; input.blur(); }
-    });
-  }
-  function makePillPencil(pill: HTMLElement, span: HTMLElement, id: string, name: string): HTMLButtonElement {
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'ls-pencil';
-    b.setAttribute('aria-label', 'Renombrar ' + name);
-    b.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
-    b.addEventListener('click', (e) => {
-      e.stopPropagation();
-      beginPillRename(pill, span, id);
-    });
-    return b;
-  }
-
-  let pillArmTimer: ReturnType<typeof setTimeout> | undefined;
-  function renderPills() {
-    if (!lsPills || !acct.email) return;
-    const reg = loadReg();
-    // The collapsed header names the active list, so no tap is needed just
-    // to know where you are.
-    const activeName = document.getElementById('lsActiveName');
-    if (activeName) {
-      const a = reg.lists.find((l) => l.id === reg.active);
-      activeName.textContent = a ? a.n : '';
-    }
-    lsPills.innerHTML = '';
-    reg.lists.forEach((l) => {
-      const pill = document.createElement('button');
-      pill.type = 'button';
-      pill.className = 'ls-pill' + (l.id === reg.active ? ' is-on' : '');
-      pill.dataset.id = l.id;
-      const name = document.createElement('span');
-      name.className = 'ls-name';
-      name.textContent = l.n;
-      pill.appendChild(name);
-      // Round 11.5 follow-up: pills are covered controls too now, same as
-      // every other button on the page -- so a DJ can see and read what
-      // tapping a pill does before they've ever tapped one.
-      attachExplainer(pill, () => 'Toca para cambiar a esta lista. Las marcas, las notas y las ediciones se guardan por separado en cada lista.');
-      if (isInfoLit()) pill.classList.add('info-lit');
-      // Round 11.5: rename lives on every pill, including the active one --
-      // the DJ's current list is the one most likely to need a real name.
-      // Gated to Move mode, same as the drag handle appended below.
-      pill.appendChild(makePillPencil(pill, name, l.id, l.n));
-      if (l.id !== reg.active) {
-        pill.addEventListener('click', (e) => {
-          const t = e.target as HTMLElement;
-          if (t.classList.contains('ls-x') || t.closest('.ls-drag') || t.closest('.ls-pencil') || t.closest('.ls-name-edit')) return;
-          switchList(l.id);
-        });
-        // Deleting a whole list is the most destructive tap on the page:
-        // Edit mode only, and the same two-tap contract as Reset.
-        const x = document.createElement('button');
-        x.type = 'button';
-        x.className = 'ls-x';
-        x.textContent = '×';
-        x.setAttribute('aria-label', 'Borrar la lista ' + l.n);
-        x.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (!x.classList.contains('armed')) {
-            x.classList.add('armed');
-            if (pillArmTimer) clearTimeout(pillArmTimer);
-            pillArmTimer = setTimeout(() => x.classList.remove('armed'), 4000);
-            return;
-          }
-          deleteList(l.id);
-        });
-        pill.appendChild(x);
-      }
-      // Round 9 (Antonio): a reorder handle after the delete x, same idea as
-      // the checklist's own drag handle, but sideways since pills sit in a
-      // horizontal row. Lives in the same Delete/Done mode as the x -- one
-      // toggle reveals both, same pattern as the checklist's Edit toggle
-      // revealing pencil + drag + remove together. On for every pill,
-      // including the active one, so the active list can move too.
-      pill.appendChild(makePillDragHandle(pill, l.n));
-      lsPills.appendChild(pill);
-    });
-    // At the cap the "+ New list" affordance disappears entirely: a dead
-    // button would just restate the mess the cap exists to prevent.
-    if (lsNewBtn && lsNewForm) {
-      const atCap = reg.lists.length >= MAX_LISTS;
-      if (atCap) { lsNewBtn.hidden = true; lsNewForm.hidden = true; }
-      else if (lsNewForm.hidden) lsNewBtn.hidden = false;
-    }
-  }
-
-  function switchList(id: string) {
-    const reg = loadReg();
-    if (id === reg.active || !reg.lists.some((l) => l.id === id)) return;
-    setParked(reg.active, JSON.stringify(snapshotLive()));
-    applyBlobStr(getParked(id) || '{}');
-    reg.active = id;
-    saveReg(reg);
-    // A full rebuild beats surgically re-rendering eight kinds of state
-    // (same call Reset makes).
-    location.reload();
-  }
-
-  function createList(name: string) {
-    const t = (name || '').trim();
-    if (!t) return;
-    const reg = loadReg();
-    if (reg.lists.length >= MAX_LISTS) {
-      if (lsMsg) { lsMsg.textContent = 'Siete listas es el límite. Borra alguna que ya no toques.'; lsMsg.className = 'acct-msg err'; }
-      return;
-    }
-    const id = 'l-' + t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 24) + '-' + Math.random().toString(36).slice(2, 6);
-    // A new list is a fresh Custom baseline: the full Advanced set, nothing
-    // ticked, nothing customised yet (that is what Custom means here).
-    reg.lists.push({ id, n: t.slice(0, 40), u: Date.now() });
-    saveReg(reg);
-    setParked(id, JSON.stringify({}));
-    switchList(id);
-  }
-
-  function deleteList(id: string) {
-    const reg = loadReg();
-    if (id === reg.active) return; // the UI never offers this
-    reg.lists = reg.lists.filter((l) => l.id !== id);
-    saveReg(reg);
-    dropParked(id);
-    const del = loadDeleted();
-    if (del.indexOf(id) === -1) { del.push(id); saveDeleted(del); }
-    renderPills();
-    if (acct.email) pushAll(false);
-  }
-
-  function markSignedIn(email: string, artist?: string | null) {
-    acct.email = email;
-    if (artist !== undefined) acct.artist = artist;
-    // Signing in also registers this device (Antonio's ruling 3: same
-    // identity, the account is the layer on top).
-    setUnlocked();
-    if (!getEmail()) setEmail(email);
-    // The artist name follows the DJ like the lists do: a new device learns
-    // it from the account, so the homepage greeting works there too.
-    if (acct.artist) {
-      try {
-        if (!localStorage.getItem('SMG_ARTIST')) localStorage.setItem('SMG_ARTIST', acct.artist.split(/\s+/)[0]);
-      } catch (e) { /* blocked */ }
-    }
-    // A device that never had a registry gets one now; a list that already
-    // has real content on it deserves to reach the account without waiting
-    // for the next edit.
-    const reg = loadReg();
-    const a = reg.lists.find((l) => l.id === reg.active);
-    if (a && !a.u && liveHasContent()) a.u = Date.now();
-    saveReg(reg);
-    updateAcctUI();
-    syncNow();
-    if (typeof (window as any).gtag === 'function') {
-      (window as any).gtag('event', 'account_signin', { placement: 'checklist' });
-    }
-  }
-
-  // Round 7: if sign-in just completed because Advanced/Custom was locked
-  // (not because the DJ opened Sync on its own), hand over the mode the
-  // same way the old registration gate used to -- apply it, close the
-  // card, scroll to the top. Called from BOTH sign-in paths: the
-  // synchronous one (Google from the card) and the one that survives a
-  // full page reload (the magic-link redirect), which is exactly why the
-  // pending intent has to live in localStorage and not just a JS variable.
-  // Also preserves the marketing double opt-in the old gate fired
-  // (Antonio's ruling: account sign-in itself does NOT join the marketing
-  // list, only a plain CRM contact -- but arriving via a mode-unlock is
-  // the same funnel the old gate fed, so that specific path still sends
-  // the opt-in email, same as it always did).
-  function applyPendingModeIfAny(): boolean {
-    const pm = readPendingMode();
-    if (!pm) return false;
-    clearPendingMode();
-    setMode(pm);
-    updateListSwitch();
-    if (acctCard) acctCard.hidden = true;
-    if (acctLine) acctLine.setAttribute('aria-expanded', 'false');
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-    try {
-      fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email: acct.email || '', source: 'checklist-' + pm, artist: acct.artist || '', instagram: '' }),
-      });
-    } catch (e) { /* unlocked anyway; feature is free */ }
-    if (typeof (window as any).gtag === 'function') {
-      (window as any).gtag('event', 'advanced_unlock', { placement: 'checklist', mode: pm, method: 'account' });
-    }
-    return true;
-  }
-
-  // Google Identity Services: only injected when the server says a client id
-  // is configured and nobody is signed in. One Tap on THIS page only. TWO
-  // buttons share one callback: the sync card (plain sign-in) and the gate
-  // (registration: artist required, joins the list, fulfils what the DJ
-  // reached for). Which one was used is tracked by pointerenter on the
-  // wrappers, because clicks inside Google's iframe never reach us.
-  let gsiFrom: 'card' | 'gate' = 'card';
-  function initGoogle() {
-    if (!acct.google || acct.email || document.getElementById('gsiScript')) return;
-    const s = document.createElement('script');
-    s.src = 'https://accounts.google.com/gsi/client';
-    s.id = 'gsiScript';
-    s.async = true;
-    s.defer = true;
-    s.onload = () => {
-      const g = (window as any).google;
-      if (!g || !g.accounts || !g.accounts.id) return;
-      g.accounts.id.initialize({
-        client_id: acct.google,
-        callback: async (resp: { credential: string }) => {
-          const fromGate = gsiFrom === 'gate';
-          const body: any = { credential: resp.credential };
-          if (fromGate && unlockForm) {
-            const aInp = unlockForm.querySelector('input[name="artist"]') as HTMLInputElement | null;
-            const iInp = unlockForm.querySelector('input[name="instagram"]') as HTMLInputElement | null;
-            body.artist = aInp ? aInp.value.trim() : '';
-            body.instagram = iInp ? iInp.value.trim() : '';
-            body.register = true;
-          }
-          try {
-            const r = await fetch('/api/auth/google', {
-              method: 'POST',
-              headers: { 'content-type': 'application/json' },
-              body: JSON.stringify(body),
-            });
-            const d = await r.json();
-            if (d && d.ok && d.email) {
-              markSignedIn(d.email, d.artist || null);
-              if (fromGate) {
-                // Same after-registration moves as the email form: hide the
-                // gate and hand over what they actually came for.
-                if (unlockEl) unlockEl.hidden = true;
-                if (pendingWant === 'pdf') {
-                  if (!printCurrentList() && backupMsg) {
-                    backupMsg.textContent = 'Ya estás registrado. Tu navegador bloqueó la ventana de descarga: toca Descargar lista otra vez y permite las ventanas emergentes.';
-                    backupMsg.className = 'backup-msg ok';
-                  }
-                } else if (pendingWant === 'email') {
-                  sendBackup(d.email);
-                } else {
-                  setMode(pendingMode);
-                  updateListSwitch();
-                  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                  window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-                }
-                if (typeof (window as any).gtag === 'function') {
-                  (window as any).gtag('event', 'advanced_unlock', { placement: 'checklist', mode: pendingWant === 'mode' ? pendingMode : pendingWant, method: 'google' });
-                }
-              } else {
-                // Card path (round 7): Google was pressed from the account
-                // card, not the (now PDF/email-only) gate. If that card was
-                // opened because Advanced/Custom was locked, hand over the
-                // mode now; if it was opened by a plain Sync click, this is
-                // a no-op and the card just stays open, unchanged.
-                applyPendingModeIfAny();
-              }
-            } else {
-              const msgEl = fromGate ? unlockMsg : acctMsg;
-              if (msgEl) { msgEl.textContent = 'El acceso con Google no funcionó. Usa tu correo.'; msgEl.className = (fromGate ? 'unlock-msg' : 'acct-msg') + ' err'; }
-            }
-          } catch (e) {
-            const msgEl = fromGate ? unlockMsg : acctMsg;
-            if (msgEl) { msgEl.textContent = 'Sin conexión ahora. Tu lista está a salvo en este dispositivo.'; msgEl.className = (fromGate ? 'unlock-msg' : 'acct-msg') + ' err'; }
-          }
-        },
-      });
-      const holder = document.getElementById('gsiBtn');
-      if (holder) {
-        g.accounts.id.renderButton(holder, { theme: 'filled_black', size: 'large', text: 'continue_with', shape: 'rectangular' });
-        // Same Google-first collapse as the gate (round 5, fourth pass): once
-        // Google actually renders here, hide the email form behind its own
-        // toggle instead of showing both paths stacked and undifferentiated.
-        if (acctForm) acctForm.hidden = true;
-        const cardToggle = document.getElementById('acctEmailToggle');
-        if (cardToggle) cardToggle.hidden = false;
-      }
-      const gateHolder = document.getElementById('gsiGateBtn');
-      if (gateHolder) {
-        g.accounts.id.renderButton(gateHolder, { theme: 'filled_black', size: 'large', text: 'continue_with', shape: 'rectangular', width: 230 });
-        const alt = document.getElementById('unlockAlt');
-        if (alt) alt.hidden = false;
-        // Google is the default path now (round 5): once it actually
-        // renders, collapse the form behind the toggle. Without JS or
-        // without a configured client id, none of this runs and the form
-        // just stays visible, which is the only path there is.
-        if (unlockForm) unlockForm.hidden = true;
-        const toggle = document.getElementById('unlockEmailToggle');
-        if (toggle) toggle.hidden = false;
-      }
-      g.accounts.id.prompt();
-    };
-    document.head.appendChild(s);
-  }
-
-  // Which Google button was pressed: clicks inside Google's iframe never
-  // reach us, so pointerenter on the wrapper is the tell.
-  {
-    const gateWrap = document.getElementById('gsiGateWrap');
-    const cardWrap = document.getElementById('gsiBtn');
-    if (gateWrap) gateWrap.addEventListener('pointerenter', () => { gsiFrom = 'gate'; });
-    if (cardWrap) cardWrap.addEventListener('pointerenter', () => { gsiFrom = 'card'; });
-  }
-
-  // "No Google? No problem. Use your other email." (Antonio's own phrasing,
-  // round 5): reveals the email/artist/instagram form, which starts hidden
-  // once Google is the visible default path above.
-  {
-    const toggle = document.getElementById('unlockEmailToggle');
-    if (toggle) toggle.addEventListener('click', () => {
-      if (unlockForm) unlockForm.hidden = false;
-      toggle.hidden = true;
-      const inp = unlockForm && unlockForm.querySelector('input[name="email"]') as HTMLInputElement | null;
-      if (inp) inp.focus();
-    });
-  }
-  // Same toggle, on the Sync card's own Google/email choice (round 5,
-  // fourth pass), identical reasoning, separate element since the card and
-  // the gate are two different forms on the page.
-  {
-    const cardToggle = document.getElementById('acctEmailToggle');
-    if (cardToggle) cardToggle.addEventListener('click', () => {
-      if (acctForm) acctForm.hidden = false;
-      cardToggle.hidden = true;
-      const inp = acctForm && acctForm.querySelector('input[name="email"]') as HTMLInputElement | null;
-      if (inp) inp.focus();
-    });
+    if (acctLayer) acctLayer.schedulePush();
   }
 
   // The sync chip expands and collapses the account card.
@@ -3972,6 +3401,10 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     // Advanced/Custom intent so a later, unrelated sign-in never
     // surprise-applies a mode the DJ never got around to confirming.
     if (!open) clearPendingMode();
+    // ...and the same tap starts the import. THE CARD OPENED FIRST, above,
+    // without waiting: it is hidden markup that is already in the document, so
+    // the visible answer to the tap is immediate and the layer lands behind it.
+    if (open) loadAccounts();
   });
 
   // Round 10 (Antonio, live on mobile): tapped a locked Advanced button,
@@ -3994,240 +3427,6 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     clearPendingMode();
   }, true);
 
-  // Typed email: send the one-tap link.
-  if (acctForm) {
-    let busy = false;
-    acctForm.addEventListener('submit', async (ev) => {
-      ev.preventDefault();
-      if (busy) return;
-      const inp = acctForm.querySelector('input[name="email"]') as HTMLInputElement;
-      const email = (inp.value || '').trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-        if (acctMsg) { acctMsg.textContent = 'Ese correo no se ve bien. Revísalo e intenta de nuevo.'; acctMsg.className = 'acct-msg err'; }
-        inp.focus();
-        return;
-      }
-      busy = true;
-      if (acctMsg) { acctMsg.textContent = 'Enviando tu enlace...'; acctMsg.className = 'acct-msg'; }
-      try {
-        const res = await fetch('/api/auth/email', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ email }),
-        });
-        if (res.status === 429) {
-          if (acctMsg) { acctMsg.textContent = 'Ya va un enlace en camino. Revisa tu bandeja de entrada, o espera unos minutos por uno nuevo.'; acctMsg.className = 'acct-msg err'; }
-        } else if (res.ok) {
-          if (acctMsg) { acctMsg.textContent = 'Enviado a ' + email + '. Ábrelo en este dispositivo y toca el botón: eso te conecta aquí.'; acctMsg.className = 'acct-msg ok'; }
-        } else {
-          if (acctMsg) { acctMsg.textContent = 'No se pudo enviar ahora, el problema es de nuestro lado. Intenta de nuevo en un minuto.'; acctMsg.className = 'acct-msg err'; }
-        }
-      } catch (e) {
-        if (acctMsg) { acctMsg.textContent = 'Sin conexión. Intenta de nuevo cuando tengas señal.'; acctMsg.className = 'acct-msg err'; }
-      }
-      busy = false;
-    });
-  }
-
-  // The completion step: artist required (same rule and same error line as
-  // the gate), Instagram optional with the follow-back promise.
-  const acctProfileForm = document.getElementById('acctProfile') as HTMLFormElement | null;
-  const acctProfileMsg = document.getElementById('acctProfileMsg');
-  if (acctProfileForm) {
-    let profileBusy = false;
-    acctProfileForm.addEventListener('submit', async (ev) => {
-      ev.preventDefault();
-      if (profileBusy) return;
-      const aInp = acctProfileForm.querySelector('input[name="artist"]') as HTMLInputElement;
-      const iInp = acctProfileForm.querySelector('input[name="instagram"]') as HTMLInputElement | null;
-      const artist = (aInp.value || '').trim();
-      const instagram = iInp ? (iInp.value || '').trim() : '';
-      if (!artist) {
-        if (acctProfileMsg) { acctProfileMsg.textContent = 'Pon tu nombre artístico o tu nombre de pila, para saber cómo llamarte.'; acctProfileMsg.className = 'acct-msg err'; }
-        aInp.focus();
-        return;
-      }
-      profileBusy = true;
-      try {
-        const res = await fetch('/api/profile', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ artist, instagram }),
-        });
-        const d = await res.json();
-        if (res.ok && d && d.ok) {
-          acct.artist = artist;
-          try { localStorage.setItem('SMG_ARTIST', artist.split(/\s+/)[0]); } catch (e) { /* blocked */ }
-          updateAcctUI();
-          if (acctMsg2) {
-            acctMsg2.textContent = instagram ? 'Guardado. Seguimos tu trabajo con gusto.' : 'Guardado.';
-            acctMsg2.className = 'acct-msg ok';
-            if (acctMsg2ClearTimer) clearTimeout(acctMsg2ClearTimer);
-            acctMsg2ClearTimer = setTimeout(() => {
-              if (acctMsg2 && acctMsg2.classList.contains('ok')) { acctMsg2.textContent = ''; acctMsg2.className = 'acct-msg'; }
-            }, 2200);
-          }
-          if (typeof (window as any).gtag === 'function') {
-            (window as any).gtag('event', 'account_profile', { placement: 'checklist' });
-          }
-        } else if (acctProfileMsg) {
-          acctProfileMsg.textContent = 'No se pudo guardar ahora, el problema es de nuestro lado. Intenta de nuevo en un minuto.'; acctProfileMsg.className = 'acct-msg err';
-        }
-      } catch (e) {
-        if (acctProfileMsg) { acctProfileMsg.textContent = 'Sin conexión. Intenta de nuevo cuando tengas señal.'; acctProfileMsg.className = 'acct-msg err'; }
-      }
-      profileBusy = false;
-    });
-  }
-
-  // Sign out: the session ends, the device keeps everything it has.
-  // Round 7 (Antonio): this used to fire on one tap, which was too easy to
-  // hit by accident -- same two-tap arm as Delete account and Reset now.
-  const signOutBtn = document.getElementById('signOutBtn');
-  if (signOutBtn) {
-    let soArmed = false;
-    let soArmTimer: ReturnType<typeof setTimeout> | undefined;
-    const soDisarm = () => {
-      soArmed = false;
-      if (soArmTimer) clearTimeout(soArmTimer);
-      signOutBtn.classList.remove('armed');
-    };
-    signOutBtn.addEventListener('click', async () => {
-      if (!soArmed) {
-        soArmed = true;
-        signOutBtn.classList.add('armed');
-        soArmTimer = setTimeout(soDisarm, 4000);
-        return;
-      }
-      soDisarm();
-      try { await fetch('/api/auth/logout', { method: 'POST' }); } catch (e) { /* cookie dies server-side next visit */ }
-      acct.email = null;
-      // Named lists are an account feature: land back on the main list so the
-      // page never strands you on a list you can no longer switch away from.
-      const reg = loadReg();
-      if (reg.active !== 'main' && reg.lists.some((l) => l.id === 'main')) { switchList('main'); return; }
-      updateAcctUI();
-    });
-  }
-
-  // Delete account: two taps, then everything server-side is gone. The
-  // device's own list stays, because it is the DJ's device.
-  const delAcctBtn = document.getElementById('delAcctBtn');
-  if (delAcctBtn) {
-    let armed = false;
-    let armTimer: ReturnType<typeof setTimeout> | undefined;
-    // Round 5, third pass (Antonio): this line only exists at all once
-    // Delete account is armed, at rest it's empty and hidden, not a
-    // standing warning for something that hasn't happened.
-    // Round 7 (Antonio, exact copy supplied): shorter, drops the "this
-    // session stays on the device" clause entirely and adds the "!".
-    const delFine = document.getElementById('acctDelFine');
-    const delFineWarn = 'Esto no se puede deshacer. Tu cuenta y las listas guardadas y sincronizadas se van a borrar.';
-    const disarm = () => {
-      armed = false;
-      if (armTimer) clearTimeout(armTimer);
-      delAcctBtn.classList.remove('armed');
-      if (delFine) { delFine.hidden = true; delFine.textContent = ''; }
-    };
-    delAcctBtn.addEventListener('click', async () => {
-      if (!armed) {
-        armed = true;
-        delAcctBtn.classList.add('armed');
-        if (delFine) { delFine.hidden = false; delFine.textContent = delFineWarn; }
-        armTimer = setTimeout(disarm, 4000);
-        return;
-      }
-      disarm();
-      if (acctMsg2) { acctMsg2.textContent = 'Borrando...'; acctMsg2.className = 'acct-msg'; }
-      try {
-        const res = await fetch('/api/account', { method: 'DELETE' });
-        const d = await res.json();
-        if (res.ok && d && d.ok) {
-          acct.email = null;
-          try {
-            localStorage.removeItem(UNLOCK_KEY);
-            localStorage.removeItem(EMAIL_KEY);
-            localStorage.removeItem('SMG_ARTIST');
-            localStorage.removeItem(DELETED_KEY);
-          } catch (e) { /* blocked */ }
-          // Deleting the account re-locks the two gated modes, so the control
-          // has to say so again.
-          syncLockedState();
-          if (typeof (window as any).gtag === 'function') {
-            (window as any).gtag('event', 'account_delete', { placement: 'checklist' });
-          }
-          const reg = loadReg();
-          if (reg.active !== 'main' && reg.lists.some((l) => l.id === 'main')) { switchList('main'); return; }
-          updateAcctUI();
-          if (acctMsg) { acctMsg.textContent = 'Cuenta borrada. De nuestro lado ya no queda nada; la lista de este dispositivo sigue siendo tuya.'; acctMsg.className = 'acct-msg ok'; }
-        } else if (acctMsg2) {
-          acctMsg2.textContent = 'No se pudo borrar ahora, el problema es de nuestro lado. Intenta de nuevo en un minuto.'; acctMsg2.className = 'acct-msg err';
-        }
-      } catch (e) {
-        if (acctMsg2) { acctMsg2.textContent = 'Sin conexión. Intenta de nuevo cuando tengas señal.'; acctMsg2.className = 'acct-msg err'; }
-      }
-    });
-  }
-
-  // The lists region folds and unfolds (Antonio: save space, especially on
-  // phones). Collapsed on every load: after a switch the page reloads, and
-  // arriving folded is exactly the calm he asked for.
-  {
-    const lsHead = document.getElementById('lsHead');
-    const lsBody = document.getElementById('lsBody');
-    if (lsHead && lsBody) lsHead.addEventListener('click', () => {
-      const open = lsBody.hidden;
-      lsBody.hidden = !open;
-      lsHead.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-  }
-
-  // New-list controls.
-  if (lsNewBtn && lsNewForm) lsNewBtn.addEventListener('click', () => {
-    lsNewForm.hidden = false;
-    lsNewBtn.hidden = true;
-    if (lsNewName) lsNewName.focus();
-  });
-  if (lsNewForm) lsNewForm.addEventListener('submit', (ev) => {
-    ev.preventDefault();
-    if (lsNewName) createList(lsNewName.value);
-  });
-
-  // Round 11.5 (Antonio, live review): Delete and Move are now two separate,
-  // single-purpose toggles instead of one "Delete" button that also revealed
-  // the reorder handle ("why is the delete button giving me the option to
-  // move? it's a little bit strange"). Mutually exclusive: turning one on
-  // turns the other off, so a DJ is never in both a destructive mode and a
-  // reorganise mode at once. Each toggle's word label lives in its own
-  // .ls-btn-label span now (the button also carries an icon), so the label
-  // swap targets that span instead of the whole button's textContent.
-  const lsDelBtn = document.getElementById('lsDelBtn');
-  const lsMoveBtn = document.getElementById('lsMoveBtn');
-  const lsDelLabel = lsDelBtn && lsDelBtn.querySelector('.ls-btn-label');
-  const lsMoveLabel = lsMoveBtn && lsMoveBtn.querySelector('.ls-btn-label');
-  function setListDeleteMode(on: boolean) {
-    if (!listSwitch || !lsDelBtn) return;
-    listSwitch.classList.toggle('deleting', on);
-    lsDelBtn.classList.toggle('active', on);
-    if (lsDelLabel) lsDelLabel.textContent = on ? 'Listo' : 'Borrar';
-    if (!on) document.querySelectorAll('.ls-x.armed').forEach((x) => x.classList.remove('armed'));
-  }
-  function setListMoveMode(on: boolean) {
-    if (!listSwitch || !lsMoveBtn) return;
-    listSwitch.classList.toggle('moving', on);
-    lsMoveBtn.classList.toggle('active', on);
-    if (lsMoveLabel) lsMoveLabel.textContent = on ? 'Listo' : 'Administrar';
-  }
-  if (lsDelBtn && listSwitch) lsDelBtn.addEventListener('click', () => {
-    const on = !listSwitch.classList.contains('deleting');
-    if (on) setListMoveMode(false); // the two modes never run together
-    setListDeleteMode(on);
-  });
-  if (lsMoveBtn && listSwitch) lsMoveBtn.addEventListener('click', () => {
-    const on = !listSwitch.classList.contains('moving');
-    if (on) setListDeleteMode(false);
-    setListMoveMode(on);
-  });
 
   // Press-and-hold explainers: the controls Antonio's rule + review actually
   // calls for. Reset, Download and Email are behavioral (what exactly
@@ -4244,14 +3443,18 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // trigger itself wasn't covered either, so its whole purpose (opens
   // create/rename/reorder/delete) was invisible under info mode too.
   attachExplainer(document.getElementById('lsHead'), () => 'Abre tus listas guardadas. Desde aquí creas una lista nueva, renombras o reordenas tus listas, o borras alguna.');
-  attachExplainer(lsNewBtn, () => 'Crea una lista nueva, para planear otro gig por separado. Escribe un nombre y guárdala, hasta siete listas.');
-  attachExplainer(lsMoveBtn, () => 'Activa renombrar y reordenar en tus listas guardadas. Toca el lápiz de una lista para renombrarla, o arrástrala por el asa de flechas para reordenar.');
-  attachExplainer(lsDelBtn, () => 'Activa el modo borrar en tus listas guardadas. Toca la × de una lista una vez para armarla, toca de nuevo para borrarla. Tu lista activa no se puede borrar así, cambia a otra primero.');
+  attachExplainer(document.getElementById('lsNewBtn'), () => 'Crea una lista nueva, para planear otro gig por separado. Escribe un nombre y guárdala, hasta siete listas.');
+  attachExplainer(document.getElementById('lsMoveBtn'), () => 'Activa renombrar y reordenar en tus listas guardadas. Toca el lápiz de una lista para renombrarla, o arrástrala por el asa de flechas para reordenar.');
+  attachExplainer(document.getElementById('lsDelBtn'), () => 'Activa el modo borrar en tus listas guardadas. Toca la × de una lista una vez para armarla, toca de nuevo para borrarla. Tu lista activa no se puede borrar así, cambia a otra primero.');
   modeBtns.forEach((b) => attachExplainer(b, () => (MODE_COPY_MAP[b.dataset.modeSet || 'basic'] || MODE_COPY_MAP.basic).f));
   // Round 8 (Antonio): Sync used to be deliberately excluded ("tapping it
   // already opens a card that explains itself") -- he asked for it to be
   // covered too, same as everything else, since hovering it in place is
   // faster than opening the card just to remember what it does.
+  // THE EXPLAINERS FOR THE ACCOUNT CONTROLS STAYED IN THE PAGE (2026-08-06).
+  // They are five string literals and a hover. Gating them behind the account
+  // layer's arrival would mean hovering the Sync chip explained nothing until
+  // after you had already tapped it, which is the wrong way round.
   attachExplainer(acctLine, () => 'Sync te deja entrar una vez, sin contraseña, y mantener tu lista guardada en tu cuenta. Te sigue a cualquier dispositivo donde entres.');
 
   // The "ⓘ" toggle (round 3: shown on touch AND desktop now, doing two
@@ -4302,52 +3505,51 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     });
   }
 
-  // The sign-in redirect lands here. ?signedin=1: the session cookie is
-  // already set, the /api/auth/me call below turns the row green; one line
-  // says so and the param goes away. ?signin=expired: the link was dead or
-  // used; open the card so asking again is one tap away.
+  // COMING BACK FROM A SIGN-IN REDIRECT is an account interaction that started
+  // before this page existed, so it loads the layer eagerly. The layer owns the
+  // two messages and the card it has to open; all that is decided here is that
+  // it is needed. Both parameters are still consumed there, so the URL is still
+  // cleaned up.
   {
     const sp = new URLSearchParams(location.search);
-    if (sp.get('signedin') === '1') {
-      if (acctMsg) { acctMsg.textContent = 'Sesión iniciada. Tus listas te siguen ahora.'; acctMsg.className = 'acct-msg ok'; }
-      sp.delete('signedin');
-      history.replaceState(null, '', location.pathname + (sp.toString() ? '?' + sp.toString() : '') + location.hash);
-    } else if (sp.get('signin')) {
-      if (acctCard && acctLine) { acctCard.hidden = false; acctLine.setAttribute('aria-expanded', 'true'); }
-      if (acctMsg) { acctMsg.textContent = 'Ese enlace de acceso expiró o ya se usó. Pide uno nuevo aquí abajo.'; acctMsg.className = 'acct-msg err'; }
-      sp.delete('signin');
-      history.replaceState(null, '', location.pathname + (sp.toString() ? '?' + sp.toString() : '') + location.hash);
-    }
+    if (sp.get('signedin') === '1' || sp.get('signin')) loadAccounts();
   }
 
-  // The switcher follows the mode. setMode() runs before this block exists
-  // on the timeline, so the hook is a second listener on the same buttons
-  // (registered later = runs after setMode has done its work), not a call
-  // inside setMode that would trip the TDZ during init.
-  modeBtns.forEach((b) => b.addEventListener('click', () => updateListSwitch()));
+  // The switcher follows the mode. It is a second listener on the same buttons
+  // (registered later = runs after setMode has done its work) rather than a
+  // call inside setMode that would trip the TDZ during init. The Lists row only
+  // exists once somebody is signed in, which means the account layer is loaded
+  // by then; before that there is nothing to update and the row is hidden in
+  // the markup.
+  modeBtns.forEach((b) => b.addEventListener('click', () => { if (acctLayer) acctLayer.updateListSwitch(); }));
 
-  // Who is signed in? Asked once per load; offline or on a static test
-  // server this fails quietly and the page is exactly what it was before
-  // accounts existed.
-  (async function initAccount() {
-    try {
-      const res = await fetch('/api/auth/me');
-      const d = await res.json();
-      if (d && d.ok) {
-        acct.google = d.google || null;
-        if (d.email) {
-          markSignedIn(d.email, d.artist || null);
-          // Round 7: catches the magic-link path, which is a full page
-          // reload -- pendingMode (a JS variable) is gone by now, which is
-          // exactly why the pending intent lives in localStorage instead.
-          applyPendingModeIfAny();
-          return;
-        }
-      }
-    } catch (e) { /* signed out is the default state */ }
-    updateAcctUI();
-    initGoogle();
-  })();
+  // WHO IS SIGNED IN, and who is even worth asking (2026-08-06, perf batch 8).
+  // This used to be an /api/auth/me request fired on every single load, by
+  // every visitor, before anything else on the page could settle. It now runs
+  // only for a device that could actually be signed in, and only once the page
+  // has finished loading, so a first-time DJ's checklist makes no account
+  // request at all.
+  //
+  // THE TEST IS SMG_UNLOCKED, NOT A NEW FLAG. Signing in always sets it
+  // (markSignedIn calls setUnlocked), so every account holder is still asked
+  // and their behaviour is unchanged: the chip goes green on load, the server
+  // pull still happens on load, and an edit made and abandoned still pushes.
+  // Nothing to migrate and no new key to get wrong.
+  // A browser with localStorage BLOCKED cannot be asked that question at all,
+  // so it is probed too, rather than silently losing sync in a private window.
+  function storageWorks(): boolean {
+    try { localStorage.setItem('SMG_T', '1'); localStorage.removeItem('SMG_T'); return true; }
+    catch (e) { return false; }
+  }
+  function probeAccount() {
+    if (!isUnlocked() && storageWorks()) return;
+    fetch('/api/auth/me')
+      .then((r) => r.json())
+      .then((d) => { if (d && d.ok && d.email) loadAccounts(d); })
+      .catch(() => { /* offline, or no backend on a static server: signed out */ });
+  }
+  if (document.readyState === 'complete') probeAccount();
+  else window.addEventListener('load', probeAccount, { once: true });
 
   // back to top
   const topBtn = document.getElementById('topBtn');
