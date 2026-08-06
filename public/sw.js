@@ -246,6 +246,70 @@ async function pooled(items, n, fn) {
   await Promise.all(workers);
 }
 
+/*
+ * ---------------------------------------------------------------------------
+ * THE COMPLETENESS MARKER (2026-08-06), and it closes the most dangerous bug
+ * this worker has had.
+ *
+ * WHAT HAPPENED, reproduced rather than theorised. Take a device holding a
+ * complete smg-v17 cache, 73 entries, offline rescue proven. Deploy a version
+ * bump. The device fetches the new sw.js, install runs precache(), and the
+ * network at that moment is a basement with one bar, so every route fetch
+ * fails. pooled() swallows each failure by design, precache() resolves anyway,
+ * skipWaiting() fires either way, and activate then deleted smg-v17 because its
+ * version no longer matched. Measured end state: ONE cache entry, the
+ * revalidation timestamp, and /emergency, /protocol/usb/start and /checklist
+ * all failing to render with the origin dead. A device that had the whole
+ * rescue offline five seconds earlier now has nothing, and the DJ finds out in
+ * the booth.
+ *
+ * The old comment on install said "a precache that partly failed still beats an
+ * old worker sitting in waiting forever". That is true about the WORKER and
+ * false about the CACHE, and conflating the two is what caused this. Taking
+ * control early is cheap. Throwing away a working rescue is not.
+ *
+ * SO: the new cache must PROVE it is usable before anything older is deleted.
+ * precache() checks what actually landed and writes this marker only when the
+ * bar below is met. activate refuses to delete any older cache unless the
+ * marker is present in the NEW one, and asks precache() to try again when it is
+ * not. An old cache surviving one extra version costs storage the browser was
+ * already holding. The alternative costs a gig.
+ *
+ * WHERE THE BAR IS, AND WHY IT IS NOT "EVERYTHING".
+ *   REQUIRED: every entry in ROUTES, plus the search index, the two fonts and
+ *   the brand lockup. That is the whole rescue path, legible and searchable, in
+ *   the install language. Nothing on that list is optional: a missing route is
+ *   a missing screen, a missing font or lockup is a page that renders wrong,
+ *   and the search index is how a DJ finds a screen they cannot name.
+ *   BEST EFFORT: the footer seal, the shield, and the /_astro bundles derived
+ *   from the HTML. They are fetched and cached but do not gate the marker,
+ *   because gating on them would let one decorative SVG failing on a flaky
+ *   connection strand an otherwise perfect install on the old cache forever,
+ *   which is the opposite failure and just as expensive. The tunnel is legible
+ *   without them: scripts/test-offline-langs.mjs asserts the stylesheet rule
+ *   count and the red token, and both come from inline CSS, not from /_astro.
+ * If a future asset becomes load-bearing, move it into REQUIRED_EXTRA and it
+ * starts gating. That is the only edit this decision should ever need.
+ */
+const PRECACHE_COMPLETE = '/__smg-precache-complete';
+
+// The subset of EXTRA the marker requires. See the note above.
+const REQUIRED_EXTRA = [
+  SEARCH_INDEX,
+  '/fonts/archivo-latin-wght-normal.woff2',
+  '/fonts/inter-latin-wght-normal.woff2',
+  '/images/brand-lockup.svg',
+];
+
+/** True when this cache holds a precache that met the bar. */
+async function precacheComplete(cache) {
+  return Boolean(await cache.match(PRECACHE_COMPLETE));
+}
+
+/**
+ * Fill the cache. Resolves true only when the required set is all present,
+ * which is the one thing that authorises deleting an older cache.
+ */
 async function precache() {
   const cache = await caches.open(CACHE);
   const assets = new Set();
@@ -265,11 +329,36 @@ async function precache() {
     if (res && res.ok) await cache.put(url, res.clone());
   });
 
-  // The 24-hour revalidation window (below) starts now. A device that has just
-  // finished precaching has, by definition, the current copy of everything, so
-  // without this the revalidation that runs on activate would immediately
-  // re-fetch all 65 routes it downloaded one second ago.
+  // A RETRY MUST BE ABLE TO FINISH WHAT AN EARLIER PASS STARTED, so the bar is
+  // measured against the CACHE and not against this run's tally. A device that
+  // got 64 of 65 routes and then dropped signal needs to fetch one route on the
+  // next attempt, not all 65.
+  const missing = [];
+  for (const url of ROUTES.concat(REQUIRED_EXTRA)) {
+    if (!(await cache.match(url))) missing.push(url);
+  }
+
+  if (missing.length) {
+    // No marker, so activate keeps the older cache and schedules another try.
+    // The read path is unharmed either way: whatever landed is served from this
+    // cache, and caches.match() spans every cache in the origin, so anything
+    // that did not land still comes out of the previous version's store.
+    return false;
+  }
+
+  await cache.put(PRECACHE_COMPLETE, new Response(String(Date.now())));
+  // The retry budget is spent only on failures, so a completed pass returns it.
+  await cache.delete(PRECACHE_TRIES);
+
+  // The 24-hour revalidation window starts here, and ONLY on a complete pass.
+  // A device that has just finished precaching has, by definition, the current
+  // copy of everything, so without this the revalidation on activate would
+  // immediately re-fetch all 65 routes it downloaded one second ago. Stamping
+  // an INCOMPLETE pass was the second half of the bug above: it locked the one
+  // mechanism that could have refilled the cache out for a full day. See
+  // stampRevalidation and PARTIAL_RETRY_MS below.
   await stampRevalidation(cache, Date.now());
+  return true;
 }
 
 /*
@@ -326,6 +415,58 @@ async function precache() {
  */
 const REVALIDATE_EVERY_MS = 24 * 60 * 60 * 1000;
 
+/*
+ * THE PARTIAL-PASS BACKOFF, BOUNDED (2026-08-06).
+ *
+ * The stamp used to be written unconditionally at the end of precache(), and on
+ * an install that downloaded NOTHING that was measurably the worse half of the
+ * cache-wipe bug documented above precache(): the cache held one entry, the
+ * stamp, and revalidationDue() then said "not for another 24 hours", so the one
+ * mechanism that could have refilled it was locked out for a day. Restoring the
+ * network and navigating brought the cache back to 7 entries and stopped there.
+ *
+ * The naive fix, "do not stamp a failed pass", buys the opposite failure: with
+ * no stamp at all revalidationDue() is always true, so every navigation kicks
+ * off a fresh 65-route pass. On the merely SLOW network that caused the partial
+ * install in the first place that is the worst available answer, because the
+ * retries then compete with the page the DJ is trying to read.
+ *
+ * So an incomplete cache retries on a SHORT window, a BOUNDED number of times,
+ * and then falls back to the daily cycle:
+ *
+ *   PARTIAL_RETRY_MS   two minutes. A DJ walking through the tunnel makes five
+ *                      or ten navigations a minute, so this collapses any real
+ *                      burst into one attempt, while a device that regains
+ *                      signal is complete again within a page load or two
+ *                      rather than tomorrow.
+ *   PARTIAL_RETRY_MAX  five. Ten minutes of trying covers "walked upstairs",
+ *                      "left the basement", "found the wifi password". Past
+ *                      that the network is not momentarily bad, it is bad, and
+ *                      hammering it helps nobody, so the daily cycle takes over
+ *                      and the next real chance is the next day or the next
+ *                      version.
+ *
+ * NEITHER NUMBER IS LOAD-BEARING FOR CORRECTNESS. Throughout all of this the
+ * device is not broken: the previous complete cache is still there and still
+ * serving, because cleanupOldCaches() refuses to delete it. That is what makes
+ * a conservative retry policy affordable here.
+ */
+const PARTIAL_RETRY_MS = 2 * 60 * 1000;
+const PARTIAL_RETRY_MAX = 5;
+
+// Consecutive failed precache passes for THIS cache. Cleared the moment a pass
+// completes. Lives in the cache for the same reason the stamp does: a worker is
+// killed and restarted constantly, so a variable would reset the count on every
+// wake and the bound would never be reached.
+const PRECACHE_TRIES = '/__smg-precache-tries';
+
+async function precacheTries(cache) {
+  const hit = await cache.match(PRECACHE_TRIES);
+  if (!hit) return 0;
+  const n = Number(await hit.text());
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
 // A synthetic cache key, not a route. It is under a path the site does not
 // serve and nothing ever requests, so the fetch handler cannot collide with
 // it; it exists only because Cache Storage is the one place a worker can write
@@ -336,11 +477,23 @@ function stampRevalidation(cache, when) {
   return cache.put(REVALIDATE_STAMP, new Response(String(when)));
 }
 
+/**
+ * How long the current stamp buys. A cache whose precache never completed is on
+ * the short window, because it still has routes to collect and "come back
+ * tomorrow" is the wrong answer to that. Once the bounded number of attempts is
+ * spent it joins the daily cycle like everything else.
+ */
+async function revalidateWindow(cache) {
+  if (await precacheComplete(cache)) return REVALIDATE_EVERY_MS;
+  if ((await precacheTries(cache)) >= PARTIAL_RETRY_MAX) return REVALIDATE_EVERY_MS;
+  return PARTIAL_RETRY_MS;
+}
+
 async function revalidationDue(cache, now) {
   const hit = await cache.match(REVALIDATE_STAMP);
   if (!hit) return true;
   const t = Number(await hit.text());
-  return !t || now - t >= REVALIDATE_EVERY_MS;
+  return !t || now - t >= (await revalidateWindow(cache));
 }
 
 /** SHA-256 of a response body, hex. Only called when no validator header is
@@ -381,6 +534,31 @@ async function revalidate() {
   // retry on every navigation.
   await stampRevalidation(cache, now);
 
+  // AN INCOMPLETE CACHE IS FINISHED BEFORE IT IS REFRESHED (2026-08-06).
+  // install runs once per worker, so a precache that fell short has no second
+  // chance of its own. This is that second chance, and it is the right place for
+  // it: it already runs on activation and on navigation, it is already inside
+  // waitUntil and already throttled, so a device that comes back into signal
+  // completes the rescue path without the DJ doing anything.
+  if (!(await precacheComplete(cache))) {
+    if (await precache()) {
+      // The marker exists now, so the superseded cache this version was not
+      // allowed to touch can finally go. Without this line it would survive
+      // until the NEXT worker activation, which is correct but leaves a whole
+      // spare rescue path in storage for no reason once this one is proven.
+      await cleanupOldCaches();
+      // precache() wrote the marker and its own full-day stamp, and it just
+      // fetched everything, so there is nothing left here to refresh.
+      return;
+    }
+    // Still short. Count the attempt so the retries are bounded, and leave the
+    // short stamp written above in place: the next try is minutes away rather
+    // than a day, and there is no point revalidating a set of routes that is
+    // not all there yet.
+    await cache.put(PRECACHE_TRIES, new Response(String((await precacheTries(cache)) + 1)));
+    return;
+  }
+
   const newAssets = new Set();
 
   await pooled(ROUTES, 3, async (url) => {
@@ -417,8 +595,11 @@ function maybeRevalidate() {
 }
 
 self.addEventListener('install', (e) => {
-  // skipWaiting either way: a precache that partly failed still beats an old
-  // worker sitting in "waiting" forever.
+  // skipWaiting either way. That is a statement about the WORKER and it is still
+  // right: an old worker stuck in "waiting" forever is worse than a new one that
+  // has not finished collecting. What used to be wrong was letting the same
+  // reasoning govern the CACHE, and activate no longer does. See the
+  // PRECACHE_COMPLETE note above precache().
   e.waitUntil(precache().then(() => self.skipWaiting(), () => self.skipWaiting()));
 });
 
@@ -433,20 +614,44 @@ self.addEventListener('install', (e) => {
 const CACHE_VERSION = CACHE.replace(/-(?:pt|es)$/, '');
 const OURS = /^smg-v\d+(?:-(?:pt|es))?$/;
 
+/**
+ * Delete superseded caches, but ONLY once this version has proved it can stand
+ * on its own. See the PRECACHE_COMPLETE note above precache() for the measured
+ * failure this guards: without it, a version bump landing on a dead network
+ * deleted a complete rescue and left one cache entry behind.
+ *
+ * When the marker is absent nothing is deleted and the old cache keeps serving
+ * through caches.match(), which spans every cache in the origin. The cost is one
+ * extra rescue path in storage until the next successful pass. The benefit is
+ * that no DJ is ever left with nothing.
+ */
+async function cleanupOldCaches() {
+  const cache = await caches.open(CACHE);
+  if (!(await precacheComplete(cache))) return false;
+  const keys = await caches.keys();
+  await Promise.all(
+    keys
+      .filter((k) => OURS.test(k) && k.replace(/-(?:pt|es)$/, '') !== CACHE_VERSION)
+      .map((k) => caches.delete(k)),
+  );
+  return true;
+}
+
 self.addEventListener('activate', (e) => {
   e.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(
-        keys
-          .filter((k) => OURS.test(k) && k.replace(/-(?:pt|es)$/, '') !== CACHE_VERSION)
-          .map((k) => caches.delete(k))
-      ))
-      .then(() => self.clients.claim())
-      // Revalidation trigger 1 of 2: activation. Claim the pages FIRST, then
-      // look at the precache, so nothing about taking control waits on it.
-      // Right after a fresh install this returns immediately, because
-      // precache() has already stamped the 24-hour window.
+    // Claim the pages FIRST, so nothing about taking control waits on storage.
+    self.clients.claim()
+      .then(() => cleanupOldCaches())
+      // Revalidation trigger 1 of 2: activation. After a COMPLETE install this
+      // returns immediately, because precache() has already stamped the 24-hour
+      // window. After a partial one it is what retries the precache, and the
+      // cleanup above then happens on the following activation or navigation.
       .then(() => maybeRevalidate())
+      // A completed retry inside maybeRevalidate() means the marker exists now,
+      // so the old cache can go. Cheap: one caches.keys() when there is nothing
+      // to delete.
+      .then(() => cleanupOldCaches())
+      .catch(() => {}),
   );
 });
 

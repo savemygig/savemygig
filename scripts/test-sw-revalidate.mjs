@@ -37,6 +37,19 @@
  *   8. the pass re-stamps, so it cannot run twice in the same window.
  *   9. requests carry the cache-busting parameter, and nothing is ever stored
  *      under a url containing it.
+ *  10. THE COMPLETENESS MARKER AND THE PARTIAL-PASS BACKOFF (2026-08-06). A
+ *      precache that lands nothing writes no marker and no daily stamp; an
+ *      OLDER COMPLETE CACHE IS NOT DELETED while this one is incomplete, and is
+ *      what a read still gets; the incomplete cache is throttled by the short
+ *      retry window rather than a day; the revalidation pass finishes the
+ *      precache; only then is the old cache released; and a later offline pass
+ *      cannot un-mark a cache that is already complete.
+ *      This is here rather than in a browser because staging "the network dies
+ *      during install" is trivial in a sandbox and awkward in Playwright, and
+ *      because the browser repro that found it took forty seconds a run. The
+ *      real failure it prevents: a version bump arriving on a dead network
+ *      deleted a complete 73-entry rescue and left one cache entry behind, so
+ *      every rescue page failed offline on a device that had been fine.
  *
  * Run: node scripts/test-sw-revalidate.mjs
  */
@@ -120,7 +133,10 @@ const factory = new Function(
   `${src}
    return {
      precache, revalidate, maybeRevalidate, stampRevalidation, revalidationDue,
+     precacheComplete, cleanupOldCaches, precacheTries,
      CACHE, ROUTES, REVALIDATE_STAMP, REVALIDATE_EVERY_MS,
+     PRECACHE_COMPLETE, PRECACHE_TRIES, PARTIAL_RETRY_MS, PARTIAL_RETRY_MAX,
+     REQUIRED_EXTRA,
    };`
 );
 const sw = factory(self_, caches, fakeFetch, Response, Request, URL, globalThis.crypto, setTimeout);
@@ -279,6 +295,99 @@ requests = [];
 await sw.maybeRevalidate();
 ok('a completed pass claims the next 24 hours', requests.length === 0,
   `${requests.length} requests on the immediate second attempt`);
+
+/* ==========================================================================
+ * 10. THE COMPLETENESS MARKER AND THE PARTIAL-PASS BACKOFF (2026-08-06).
+ *
+ * The regression this locks down was reproduced in a real browser before it was
+ * fixed: a CACHE version bump arriving while the network was dead let install
+ * fail every fetch, resolve anyway, and activate then deleted the previous
+ * COMPLETE cache. The device went from 73 entries to one, and every rescue page
+ * failed offline. Two rules came out of it and both are asserted here, because
+ * a browser test cannot easily stage "dead network during install" and this
+ * sandbox can.
+ * ========================================================================== */
+
+/** Throw the Cache Storage away and start from nothing. */
+const resetCaches = () => { stores.clear(); };
+
+// -- 10a. a pass that lands nothing writes no marker, so nothing may be deleted.
+resetCaches();
+offline = true;
+let completed = await sw.precache();
+offline = false;
+ok('a precache that landed nothing reports failure', completed === false, String(completed));
+ok('and writes no completeness marker', !store().map.has(sw.PRECACHE_COMPLETE));
+ok('and does NOT stamp the 24-hour window on a failed pass',
+  !store().map.has(sw.REVALIDATE_STAMP));
+
+// -- 10b. an older complete cache SURVIVES an incomplete new one. This is the
+//    finding: an old cache surviving one extra version is far cheaper than a DJ
+//    with no rescue at all.
+const OLD_CACHE = 'smg-v1';
+const oldStore = await caches.open(OLD_CACHE);
+await oldStore.put('/emergency', new Response('old but complete'));
+let deleted = await sw.cleanupOldCaches();
+ok('cleanup refuses to run while this cache is incomplete', deleted === false);
+ok('so the previous version is still there to serve from',
+  (await caches.keys()).includes(OLD_CACHE));
+ok('and the old copy is what a read actually gets',
+  (await (await caches.match('/emergency')).text()) === 'old but complete');
+
+// -- 10c. the short backoff. No stamp at all would mean a full 65-route pass on
+//    every navigation, which on the same bad network is the opposite failure.
+const c0 = await caches.open(sw.CACHE);
+await sw.stampRevalidation(c0, Date.now() - sw.PARTIAL_RETRY_MS + 30_000);
+ok('an incomplete cache is throttled by the SHORT window, not the daily one',
+  (await sw.revalidationDue(c0, Date.now())) === false);
+await sw.stampRevalidation(c0, Date.now() - sw.PARTIAL_RETRY_MS - 1000);
+ok('and once the short window is up it is due again, not tomorrow',
+  (await sw.revalidationDue(c0, Date.now())) === true);
+
+// -- 10c2. and the retries are BOUNDED, so a device on a chronically dead
+//    network stops hammering it and joins the daily cycle.
+requests = [];
+offline = true;
+for (let i = 0; i < sw.PARTIAL_RETRY_MAX + 2; i++) {
+  await sw.stampRevalidation(c0, Date.now() - sw.PARTIAL_RETRY_MS - 1000);
+  await sw.maybeRevalidate();
+}
+offline = false;
+ok('failed retries are counted', (await sw.precacheTries(c0)) === sw.PARTIAL_RETRY_MAX,
+  `${await sw.precacheTries(c0)} of ${sw.PARTIAL_RETRY_MAX} budgeted, then it stopped trying`);
+await sw.stampRevalidation(c0, Date.now() - sw.PARTIAL_RETRY_MS - 1000);
+ok('once the budget is spent the short window no longer applies',
+  (await sw.revalidationDue(c0, Date.now())) === false);
+ok('the old cache is STILL there through all of that',
+  (await caches.keys()).includes(OLD_CACHE));
+
+// -- 10d. the retry. install runs once per worker, so revalidate() is the only
+//    thing that can finish a partial precache.
+requests = [];
+await sw.stampRevalidation(c0, Date.now() - sw.REVALIDATE_EVERY_MS - 1000);
+await sw.maybeRevalidate();
+ok('the revalidation pass finishes the precache instead of refreshing it',
+  await sw.precacheComplete(await caches.open(sw.CACHE)));
+ok('and a completed pass hands the retry budget back',
+  (await sw.precacheTries(await caches.open(sw.CACHE))) === 0);
+ok('every route is present after the retry',
+  sw.ROUTES.every((r) => store().map.has(r)), `${sw.ROUTES.length} routes`);
+ok('and the required extras are too',
+  sw.REQUIRED_EXTRA.every((x) => store().map.has(x)), sw.REQUIRED_EXTRA.join(' '));
+
+// -- 10e. now, and only now, the old cache is released.
+deleted = await sw.cleanupOldCaches();
+ok('cleanup runs once the new cache is proven', deleted === true);
+ok('and the superseded version is gone', !(await caches.keys()).includes(OLD_CACHE));
+
+// -- 10f. a partial pass must not be able to un-mark a cache that is already
+//    complete: one straggler on a later visit cannot cost a DJ the rescue.
+offline = true;
+completed = await sw.precache();
+offline = false;
+ok('an offline pass over an already-complete cache still reports complete',
+  completed === true, String(completed));
+ok('and the marker is intact', await sw.precacheComplete(await caches.open(sw.CACHE)));
 
 console.log('');
 if (fails) {
