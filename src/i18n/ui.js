@@ -399,14 +399,20 @@ export const UI = {
       // onde o fluxo COMEÇA (o que falhou), não de qual pergunta ele faz. Ver
       // o comentário na versão em inglês.
       stuckP: 'O fluxo de emergência passo a passo começa pelo que realmente falhou e te leva até o caminho mais rápido, uma decisão por tela. Grátis, sem cadastro.',
-      stuckBtn: 'Abrir o Emergency Mode',
+      stuckBtn: 'Abrir Emergency Mode',
       // "Emergency Card" é nome de produto, não se traduz.
       cardLink: 'Tire um print do Emergency Card',
       preventP: 'Não quer ler esta página nunca mais?',
       preventP2: 'Monte o sistema de prevenção uma vez e esta página perde a razão de existir.',
       // Mesma frase de `tunnel.rules` abaixo: um nome por destino. Ver o
       // comentario completo na versao em ingles.
-      preventBtn: 'As regras de prevenção',
+      // No leading article, and the same name as tunnel.rules (2026-08-06):
+      // "As regras de prevenção" needed 246px against 236px of button, so it
+      // wrapped to two lines at 360px, the narrowest common Android. A button
+      // label is a name, not a sentence. English keeps its article because it
+      // fits; each language stays internally consistent instead of mirroring
+      // English structure.
+      preventBtn: 'Regras de prevenção',
       sticky: 'VAI TOCAR LOGO? ABRA O EMERGENCY MODE',
     },
     capture: {
@@ -452,7 +458,12 @@ export const UI = {
       restart: 'Começar de novo',
       exitLabel: 'Sair ou recomeçar',
       why: 'Por que, e como',
-      rules: 'As regras de prevenção',
+      // No leading article in pt and es (2026-08-06). This label is a NAME, and
+      // at 360px "As regras de prevenção" needs 246px against 236px of button, so
+      // it wrapped to two lines on the narrowest common Android. English keeps its
+      // article because it fits; each language is internally consistent, which is
+      // what the doctrine asks for, rather than mirroring English structure.
+      rules: 'Regras de prevenção',
     },
     lang: { label: 'Idioma' },
   },
@@ -575,7 +586,7 @@ export const UI = {
       preventP2: 'Arma el sistema de prevención una vez y esta página deja de hacer falta.',
       // Misma frase que `tunnel.rules` abajo: un nombre por destino. Ver el
       // comentario completo en la version en ingles.
-      preventBtn: 'Las reglas de prevención',
+      preventBtn: 'Reglas de prevención',
       sticky: '¿TOCAS PRONTO? ABRE EMERGENCY MODE',
     },
     capture: {
@@ -621,7 +632,7 @@ export const UI = {
       restart: 'Empezar de nuevo',
       exitLabel: 'Salir o empezar de nuevo',
       why: 'Por qué, y cómo',
-      rules: 'Las reglas de prevención',
+      rules: 'Reglas de prevención',
     },
     lang: { label: 'Idioma' },
   },
