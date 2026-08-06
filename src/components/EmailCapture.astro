@@ -14,7 +14,19 @@ interface Props {
   blurb?: string;
   lang?: string;
 }
-const { source, lang = DEFAULT_LANG } = Astro.props;
+// `source` IS DECLARED REQUIRED ABOVE AND ASTRO DOES NOT ENFORCE IT
+// (2026-08-06). All three /knowledge/pioneer-dj/firmware pages rendered
+// <EmailCapture /> with no source, so each shipped id="cap-undefined", an
+// aria-describedby pointing at cap-undefined-msg, and NO data-capture attribute
+// at all, which made the submit handler fall through to its 'unknown' default.
+// Every subscription and every email_capture event from those three pages was
+// unattributable, and the form looked completely normal. The call sites are
+// fixed; this default is the floor, so a future omission degrades to a plain
+// word instead of putting the string "undefined" into an id a screen reader
+// reads out. scripts/check-capture-source.mjs fails the build on either symptom,
+// because an interface nothing checks at build time is documentation and not a
+// guarantee.
+const { source = 'unknown', lang = DEFAULT_LANG } = Astro.props;
 const C = t(lang).capture;
 // Defaults come from the catalogue rather than being English literals, so a
 // caller that passes no title gets the reader's language, not ours.
