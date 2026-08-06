@@ -54,7 +54,13 @@ const id = `cap-${source}`;
       aria-label={C.emailLabel}
       aria-describedby={`${id}-msg`}
     />
-    <button type="submit" class="btn btn-solid" style="margin:0">{C.submit}</button>
+    {/* .btn-neutral, NOT .btn-solid (2026-08-06). Solid red is the
+        emergency route now (see global.css). This was the only solid-fill
+        button on a fix article, which made the mailing list louder than the
+        way out of the emergency. Only its RANK changes: same size, same
+        position, same label, same field above it, and it is still the one
+        button in this panel. */}
+    <button type="submit" class="btn btn-neutral" style="margin:0">{C.submit}</button>
   </form>
 
   {/* The live region is now also the field's DESCRIPTION (2026-08-04). It is

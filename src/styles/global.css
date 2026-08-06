@@ -467,6 +467,27 @@ a { color: var(--red); }
   font-weight: 700;
   font-size: 0.95rem;
   letter-spacing: 0.02em;
+  /* --control-h IS THE HEIGHT OF A BUTTON AGAIN (2026-08-06). The token was
+     added with the note "ONE height for any full-width control", and then no
+     rule in the codebase ever read it: it had zero references. So the stack of
+     three CTAs at the foot of every fix article measured 58.3, 82.6 and 50.0px,
+     and none of those was 56.
+     58.3 vs 50.0 was not a padding difference, it was <a> versus <button>. The
+     UA stylesheet applies a `font` SHORTHAND to form controls, and a shorthand
+     resets every part it does not name, including line-height. So an anchor
+     inherited body's 1.6 and computed 24.32px of leading while an identically
+     classed <button> got `normal`, about 17.5px. Every submit button on the
+     site was ~8px shorter than the link beside it, sitewide, and no rule was
+     wrong: one was simply missing.
+     Stating it here fixes both at once, and the value is derived rather than
+     picked, so the relationship survives a change to either token: one line of
+     text, plus this rule's own vertical padding, plus its two hairlines, IS
+     --control-h. A two-line label is then exactly one line taller, which is
+     why a stack that wraps still reads as a rhythm.
+     NOT min-height. That would have reached the compact .btn overrides on
+     /checklist (the toolbar, the account actions) which deliberately set their
+     own padding and font-size, and inflated them to 56px. */
+  line-height: calc(var(--control-h) - 2 * var(--sp-4) - 2 * var(--stroke));
   text-transform: uppercase;
   text-decoration: none;
   text-align: center;
@@ -487,6 +508,27 @@ a { color: var(--red); }
 }
 .btn-go     { border-color: var(--green); background: var(--green-dim); color: var(--green); }
 .btn-neutral:hover { border-color: var(--text-dim); }
+/* SOLID RED IS THE EMERGENCY ROUTE, AND NOTHING ELSE (2026-08-06).
+   A fix article is where cold search traffic lands, and on one the ONLY
+   solid-fill button on the page was the email capture's "Register and send it",
+   while the route into the rescue was a tinted outline. The mailing list was
+   visually louder than the emergency exit, on the page a DJ reaches from a
+   phone with a dead drive in their hand. That is the whole finding.
+   .btn-solid is now reserved: /404 and /offline (both crisis surfaces, both
+   already using it for the emergency route) and the mobile sticky CTA on fix
+   articles, which is the same red on the same route. The capture submit,
+   /feedback's send button and /saved's prevention hero were the three
+   non-emergency users and are .btn-neutral now.
+   THE EMERGENCY CTA ON CALM PAGES IS NOT PROMOTED TO THIS CLASS, and that is
+   deliberate. The audit's wording was "reserve solid red for the emergency
+   route", which is what happened; making every emergency button solid would
+   have broken the older standing rule 40 lines below, "emergency is never a
+   permanently red box", which has already been tried and reverted once on
+   .cta-exit. Reserving the colour and promoting the button are two different
+   changes, and only the first one was needed to fix the ranking: with the
+   capture demoted, the tinted red CTA is the only coloured button on a fix
+   article and is unambiguously the loudest thing on it. Antonio's call if he
+   wants the second one too. */
 .btn-solid  { background: var(--red); color: #0a0a0b; border-color: var(--red); font-weight: 800; }
 @media (hover: hover) {
   .btn-solid:hover { background: #ff623f; }

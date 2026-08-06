@@ -58,7 +58,11 @@ import Base from '../../layouts/Base.astro';
         </div>
       </div>
 
-      <button type="submit" class="btn btn-solid fbp-send">Enviar</button>
+      {/* .btn-neutral, not .btn-solid (2026-08-06): same reasoning as the
+          segmented control above. Solid emergency red on a suggestion form
+          spends the alarm colour on nothing, and it is reserved for the
+          emergency route sitewide now. */}
+      <button type="submit" class="btn btn-neutral fbp-send">Enviar</button>
       <p class="fbp-status" id="fbStatus" role="status" aria-live="polite"></p>
     </form>
 
