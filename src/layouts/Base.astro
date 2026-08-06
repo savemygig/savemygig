@@ -258,7 +258,15 @@ const entityGraph = {
 };
 ---
 <!doctype html>
-<html lang={L.tag} dir={L.dir}>
+{/* data-sw-lang: which language's offline copy this page installs. It used to
+    reach the registration script through define:vars, which forced that script
+    inline and re-sent it inside all 143 documents. The worker precaches ONE
+    language and a different script URL is a different worker, so the DEFAULT
+    language maps to an empty string here (no ?lang, the original worker URL)
+    and every other language to its own code. The mapping stays in the layout,
+    beside the registry it comes from, rather than being re-derived from
+    <html lang> in script, which would have to know that pt is served as pt-BR. */}
+<html lang={L.tag} dir={L.dir} data-sw-lang={lang === DEFAULT_LANG ? '' : lang}>
 <head>
   <meta charset="utf-8" />
   {/* DO NOT MOVE, DO NOT DELETE, AND DO NOT LET ANYTHING BE INSERTED IN ITS
@@ -789,139 +797,21 @@ const entityGraph = {
       </div>
     </div>
   </footer>
+  {/* THE SHARED SITE SCRIPT (2026-08-06, perf batch 8).
+      Everything that used to be written out here, plus the site search, the
+      language picker, the back-to-top button, the magic-link registration and
+      the service worker registration, now lives in ONE content-hashed file:
+      src/scripts/site.ts. It was 13.0 KB of identical source re-sent inside
+      every one of these 143 documents, 19.5 KB on the homepage and /faq, and
+      not one byte of it was cacheable. See the file for the full reasoning and
+      for the list of scripts that deliberately stayed inline.
+      IT STAYS HERE, IN THE FOOTER, rather than moving to the head. Module
+      scripts execute in document order, a page's own script is appended after
+      the layout's, and the magic-link handler in this bundle writes
+      SMG_UNLOCKED before the checklist's script reads it. Moving this tag
+      would silently reverse that. */}
   <script>
-    const t = document.getElementById('navToggle');
-    const l = document.getElementById('navLinks');
-    const scrim = document.getElementById('navScrim');
-    if (t && l) {
-      // THE SCROLL LOCK IS `overflow: hidden` ON <html> AND NOTHING ELSE.
-      // The usual trick, pinning the body with position:fixed and a negative
-      // top, CANNOT be used here: the drawer lives inside the header, which is
-      // at the top of the document, so pinning the body would drag the open
-      // drawer off the top of the screen with it. overflow:hidden moves
-      // nothing, which is also why the scroll position needs no arithmetic to
-      // survive. It is recorded and re-asserted on close anyway, because an
-      // engine that DOES shift while the root is clipped would otherwise put
-      // the reader somewhere they did not choose, and that is one line.
-      let scrollAt = 0;
-      const setOpen = (open: boolean) => {
-        l.classList.toggle('open', open);
-        t.setAttribute('aria-expanded', open ? 'true' : 'false');
-        // The glyph becomes an X in CSS; the label has to say the same thing
-        // to anyone using a screen reader, IN THE READER'S LANGUAGE. Both
-        // strings ride on the button as data attributes (see the note on the
-        // element): this script is bundled and typed, so it cannot take
-        // define:vars without shipping TypeScript to the browser.
-        t.setAttribute('aria-label', (open ? t.dataset.labelClose : t.dataset.labelOpen) || '');
-        if (scrim) scrim.hidden = !open;
-        if (open) {
-          scrollAt = window.scrollY;
-          document.documentElement.classList.add('nav-open');
-        } else {
-          document.documentElement.classList.remove('nav-open');
-          if (window.scrollY !== scrollAt) window.scrollTo(0, scrollAt);
-        }
-      };
-      t.addEventListener('click', () => setOpen(!l.classList.contains('open')));
-      // Tapping the darkened page closes it, which is what a scrim is FOR: it
-      // is the affordance that tells a reader the layer is dismissible.
-      if (scrim) scrim.addEventListener('click', () => setOpen(false));
-      // Escape closes it, matching the search overlay. It never did before,
-      // which was defensible while the drawer was a panel and is not once it
-      // is a modal-looking layer with a backdrop.
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && l.classList.contains('open')) { setOpen(false); t.focus(); }
-      });
-      // Crossing into desktop width turns the drawer back into a nav row, so
-      // an open drawer stops existing and its scroll lock would have nothing
-      // left to release it. Rotating a tablet was enough to reach that.
-      const wide = window.matchMedia('(min-width: 901px)');
-      const onWide = () => { if (wide.matches && l.classList.contains('open')) setOpen(false); };
-      if (wide.addEventListener) wide.addEventListener('change', onWide);
-      else if ((wide as any).addListener) (wide as any).addListener(onWide);
-    }
-    const sBtn = document.getElementById('navSearchBtn');
-    const sOv = document.getElementById('searchOverlay');
-    const sClose = document.getElementById('searchClose');
-    if (sBtn && sOv) {
-      // THE OVERLAY PROMISES aria-modal AND NOW KEEPS IT (2026-08-06).
-      // The panel has declared role="dialog" aria-modal="true" since it was
-      // built, and Search.astro added a Tab trap on 2026-08-04, so a KEYBOARD
-      // user was held inside. Nobody was holding a screen reader: swiping on
-      // iOS VoiceOver, or walking the virtual cursor on NVDA, went straight
-      // through the dialog into the header, the whole page and the footer,
-      // which is precisely the thing aria-modal tells a reader cannot happen.
-      // aria-modal is a claim about the accessibility tree, not about Tab.
-      // `inert` is the one primitive that makes the claim true: it removes the
-      // subtree from the tab order AND from the accessibility tree AND from
-      // hit-testing, in one attribute, in every current browser.
-      // The search BUTTON lives inside the header, so the order in
-      // closeSearch below is load-bearing: clear inert first, focus second.
-      // Focusing an inert element is a no-op, and the return focus is the
-      // whole reason the close path exists.
-      // The skip link and the back-to-top button are in this list for the same
-      // reason as the other three, not as extras: they are page chrome that
-      // only sits OUTSIDE header/#main/footer because of where in the DOM it
-      // has to live. Left reachable, the accessibility tree still offered a
-      // reader a jump into the inert content and a scroll control for a page
-      // they cannot read. The cookie card is deliberately NOT here: it is its
-      // own dialog, and whether one modal should silence another is a product
-      // decision, not an attribute.
-      const layers = [
-        document.querySelector('.skip-link'),
-        document.querySelector('header.site-nav-wrap'),
-        document.getElementById('main'),
-        document.querySelector('footer.site-footer'),
-        document.getElementById('toTop'),
-      ].filter(Boolean) as HTMLElement[];
-      const openSearch = () => {
-        sOv.hidden = false;
-        sBtn.setAttribute('aria-expanded', 'true');
-        layers.forEach((el) => { el.inert = true; });
-        const inp = sOv.querySelector('.srch-input');
-        if (inp) (inp as HTMLInputElement).focus();
-      };
-      const closeSearch = () => {
-        sOv.hidden = true;
-        layers.forEach((el) => { el.inert = false; });
-        sBtn.setAttribute('aria-expanded', 'false');
-        sBtn.focus();
-      };
-      sBtn.addEventListener('click', openSearch);
-      if (sClose) sClose.addEventListener('click', closeSearch);
-      sOv.addEventListener('click', (e) => { if (e.target === sOv) closeSearch(); });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !sOv.hidden) closeSearch();
-        // "/" opens search, the way every developer tool does it
-        const t = e.target as HTMLElement;
-        const typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
-        if (e.key === '/' && sOv.hidden && !typing) { e.preventDefault(); openSearch(); }
-      });
-    }
-
-    // Footer brand = back to top (Antonio): tapping the wordmark or the
-    // seal pushes you to the beginning of the page, same move as the
-    // floating circle. The href="/" stays as the no-JS fallback.
-    const footTop = (e: Event) => {
-      e.preventDefault();
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-    };
-    document.querySelectorAll('.foot-lockup, .foot-seal').forEach((el) => el.addEventListener('click', footTop));
-
-    const copyBtn = document.getElementById('shareCopy');
-    if (copyBtn) {
-      let copyTimer;
-      copyBtn.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(copyBtn.dataset.shareUrl || 'https://www.savemygig.com');
-          clearTimeout(copyTimer);
-          copyBtn.classList.add('copied');
-          copyTimer = setTimeout(() => copyBtn.classList.remove('copied'), 1500);
-        } catch (e) { /* ignore */ }
-      });
-    }
-
+    import '../scripts/site';
   </script>
   <!-- Back to top, Antonio's ask (modelled on the EPK pattern he likes): on
        any long page, a round button fades in at the bottom-right once you are
@@ -930,60 +820,12 @@ const entityGraph = {
   <button type="button" class="to-top" id="toTop" aria-label={S.aria.toTop} hidden>
     <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
   </button>
-  <script is:inline>
-    (function () {
-      var btn = document.getElementById('toTop');
-      if (!btn) return;
-      var shown = false;
-      function check() {
-        var want = window.scrollY > window.innerHeight * 1.5;
-        if (want !== shown) { shown = want; btn.hidden = !want; }
-      }
-      window.addEventListener('scroll', check, { passive: true });
-      check();
-      btn.addEventListener('click', function () {
-        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-      });
-    })();
-  </script>
-  <script is:inline>
-    // Magic-link device registration: the confirmation email's link carries
-    // #reg=<encoded email>. Clicking it proved ownership of the address (the
-    // token was verified server-side before the redirect), so this device is
-    // registered on the spot: same keys the checklist gate and capture forms
-    // read. Open the same email on a new phone and tap the same button, and
-    // that phone is in. The fragment is stripped immediately: it never
-    // reaches server logs, analytics, or the visible URL for more than a
-    // moment.
-    (function () {
-      var m = (location.hash || '').match(/^#reg=([A-Za-z0-9_-]+)/);
-      if (!m) return;
-      try {
-        var b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
-        var email = decodeURIComponent(atob(b64));
-        if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-          localStorage.setItem('SMG_UNLOCKED', '1');
-          localStorage.setItem('SMG_EMAIL', email);
-        }
-      } catch (e) { /* malformed fragment: ignore */ }
-      history.replaceState(null, '', location.pathname + location.search);
-    })();
-  </script>
-  <script is:inline define:vars={{ swLang: lang === DEFAULT_LANG ? '' : lang }}>
-    // Register the service worker so the rescue flow works with no signal.
-    // The language rides on the URL: the worker precaches ONE language, the
-    // one you installed from, and a different script URL is a different
-    // worker, so switching language installs the right offline copy instead
-    // of leaving a Brazilian with an English rescue path in a basement.
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker
-          .register('/sw.js' + (swLang ? '?lang=' + swLang : ''))
-          .catch(function () {});
-      });
-    }
-  </script>
+  {/* The back-to-top wiring, the magic-link device registration and the
+      service worker registration used to be three is:inline blocks here. All
+      three are in src/scripts/site.ts now, above: none of them touches the
+      page before first paint, all three were identical on every one of these
+      pages, and the service worker's language arrives as data-sw-lang on
+      <html> instead of through define:vars. */}
 </body>
 </html>
 

@@ -141,192 +141,43 @@ const noneBits = {
   .srch-none a { color: var(--red); }
 </style>
 
-<script is:inline>
-  // Runs once per rendered instance; each run wires every instance that is
-  // not wired yet, so however many boxes a page has, they all work.
-  document.querySelectorAll('[data-search]').forEach(function (wrap) {
-    if (wrap.dataset.wired) return;
-    wrap.dataset.wired = '1';
-    var input = wrap.querySelector('.srch-input');
-    var out = wrap.querySelector('.srch-results');
-    var clear = wrap.querySelector('.srch-clear');
-    var docs = null, loadP = null, cur = -1;
-    // ONE INDEX PER LANGUAGE (2026-08-05). This used to fetch a single flat
-    // search-index.json holding all three languages and never filtered it, so
-    // an English reader searching "usb" was offered Spanish articles and a
-    // Brazilian searching "E-8302" got the English one. The language is fixed
-    // at build time by the page that rendered this box, so the filter is the
-    // file name and costs nothing at runtime.
-    var D = wrap.dataset;
-    var INDEX = D.index || '/search-index.en.json';
+{/* THE WIRING LIVES IN src/scripts/site.ts (2026-08-06, perf batch 8).
+    It was 6.5 KB of is:inline in here, shipped inside every document that
+    carries a search box, and TWICE inside the homepage and /faq because those
+    two render a second box. Nothing about it had to be inline: every localized
+    string already rode on the wrapper as a data attribute (see the note above
+    the markup, and it is the reason two boxes never collided), so the block
+    moved out unchanged and is now one cacheable file for the whole site. The
+    "wire every instance that is not wired yet" guard is kept there.
 
-    // Callers always get a promise that resolves AFTER the index exists.
-    // (The old version resolved immediately while a fetch was in flight, so
-    // the first keystroke could render nothing and never retry.)
-    function load() {
-      if (docs) return Promise.resolve();
-      if (!loadP) {
-        loadP = fetch(INDEX)
-          .then(function (r) { return r.json(); })
-          .then(function (d) { docs = d; })
-          .catch(function () { loadP = null; });
-      }
-      return loadP;
-    }
-
-    function esc(s) { return s.replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-
-    function mark(text, terms) {
-      var s = esc(text);
-      terms.forEach(function (t) {
-        if (t.length < 2) return;
-        s = s.replace(new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>');
-      });
-      return s;
-    }
-
-    function snippet(doc, terms) {
-      var b = doc.b || '';
-      var i = -1;
-      for (var k = 0; k < terms.length && i < 0; k++) i = b.toLowerCase().indexOf(terms[k]);
-      if (i < 0) return doc.d || b.slice(0, 120);
-      var start = Math.max(0, i - 50);
-      return (start ? '…' : '') + b.slice(start, start + 150) + '…';
-    }
-
-    function score(doc, terms) {
-      var t = (doc.t || '').toLowerCase();
-      var h = (doc.h || []).join(' ').toLowerCase();
-      var d = (doc.d || '').toLowerCase();
-      var b = (doc.b || '').toLowerCase();
-      var total = 0;
-      for (var i = 0; i < terms.length; i++) {
-        var q = terms[i], hit = 0;
-        if (t.indexOf(q) >= 0) hit += 12;      // title
-        if (h.indexOf(q) >= 0) hit += 8;       // a question on an expandable section
-        if (d.indexOf(q) >= 0) hit += 4;       // meta description
-        if (b.indexOf(q) >= 0) hit += 2;       // body, including collapsed content
-        if (!hit) return 0;                     // every term must appear somewhere
-        total += hit;
-      }
-      return total;
-    }
-
-    function render(q) {
-      var terms = q.toLowerCase().split(/\s+/).filter(Boolean);
-      if (!terms.length || !docs) { out.hidden = true; input.removeAttribute('aria-activedescendant'); input.setAttribute('aria-expanded', 'false'); return; }
-      var hits = docs.map(function (d) { return { d: d, s: score(d, terms) }; })
-                     .filter(function (x) { return x.s > 0; })
-                     .sort(function (a, b) { return b.s - a.s; })
-                     .slice(0, 8);
-      cur = -1;
-      if (!hits.length) {
-        // Localized and language-prefixed. Both links used to be hardcoded
-        // "/faq" and "/emergency", so the one moment a reader had already
-        // failed to find something was also the moment we dropped them into
-        // another language.
-        out.innerHTML = '<p class="srch-none">' + esc(D.noneFor) + ' “' + esc(q) +
-          '”. ' + esc(D.noneTry) + ' <a href="' + D.faqHref + '">' + esc(D.noneFaq) +
-          '</a>, ' + esc(D.noneOr) + ' <a href="' + D.startHref + '">' + esc(D.noneStart) +
-          '</a>.</p>';
-      } else {
-        // Each option gets an id so aria-activedescendant can point at it.
-        // Without that, arrow-key navigation moved a visual highlight only:
-        // focus never leaves the input, so a screen reader announced nothing
-        // as the user walked the list and Enter fired a result they had never
-        // been told about. ids are derived from this instance's results id, so
-        // the homepage box and the header overlay cannot collide.
-        out.innerHTML = hits.map(function (x, i) {
-          return '<a class="srch-hit" role="option" aria-selected="false" id="' +
-            out.id + '-opt-' + i + '" href="' + x.d.u + '">' +
-            '<span class="srch-hit-t">' + mark(x.d.t, terms) + '</span>' +
-            '<span class="srch-hit-d">' + mark(snippet(x.d, terms), terms) + '</span></a>';
-        }).join('');
-      }
-      input.removeAttribute('aria-activedescendant');
-      out.hidden = false;
-      input.setAttribute('aria-expanded', 'true');
-    }
-
-    // The long placeholder, restored above the phone boundary. Same 640px line
-    // the checklist's own label swap uses, so the two never disagree about
-    // where "a phone" ends. Absent data-ph-long, nothing here runs.
-    var phLong = input.dataset.phLong;
-    if (phLong) {
-      var phShort = input.getAttribute('placeholder');
+    WHAT STAYED HERE, and only this. The long placeholder is an ATTRIBUTE, so
+    CSS cannot reach it and the swap has to be script. It MUTATES WHAT IS
+    ALREADY ON SCREEN, which is the one thing a deferred module must not do:
+    a desktop reader would see the short placeholder and then watch it be
+    replaced. The markup ships short on purpose (see the note above), so the
+    upgrade has to happen before first paint, and inline is what does that.
+    It is emitted only for callers that pass a shortPlaceholder, which is the
+    homepage hero box and /faq: six documents, about 250 bytes each.
+    NO TYPESCRIPT AND NO define:vars IN HERE. is:inline ships the block byte
+    for byte; see EmailCapture.astro for what that costs when it is forgotten.
+    Written against [data-ph-long] rather than an id, and marked done on the
+    element, so a page with two of these wires each exactly once. */}
+{shortPlaceholder && (
+  <script is:inline>
+    (function () {
       var wide = window.matchMedia('(min-width: 641px)');
-      var applyPh = function () { input.setAttribute('placeholder', wide.matches ? phLong : phShort); };
-      applyPh();
-      if (wide.addEventListener) wide.addEventListener('change', applyPh);
-      else if (wide.addListener) wide.addListener(applyPh);
-    }
-
-    input.addEventListener('focus', load);
-    input.addEventListener('input', function () {
-      var q = input.value.trim();
-      clear.hidden = !q;
-      if (!q) { out.hidden = true; input.removeAttribute('aria-activedescendant'); input.setAttribute('aria-expanded', 'false'); return; }
-      load().then(function () { render(q); });
-    });
-    clear.addEventListener('click', function () {
-      input.value = ''; clear.hidden = true; out.hidden = true; input.focus();
-      input.removeAttribute('aria-activedescendant');
-      input.setAttribute('aria-expanded', 'false');
-    });
-    input.addEventListener('keydown', function (e) {
-      var items = out.querySelectorAll('.srch-hit');
-      if (e.key === 'Escape') { out.hidden = true; input.removeAttribute('aria-activedescendant'); input.setAttribute('aria-expanded', 'false'); return; }
-      if (!items.length) return;
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        cur = e.key === 'ArrowDown' ? Math.min(cur + 1, items.length - 1) : Math.max(cur - 1, 0);
-        for (var i = 0; i < items.length; i++) {
-          var on = i === cur;
-          items[i].classList.toggle('on', on);
-          items[i].setAttribute('aria-selected', on ? 'true' : 'false');
-        }
-        input.setAttribute('aria-activedescendant', items[cur].id);
-        items[cur].scrollIntoView({ block: 'nearest' });
-      } else if (e.key === 'Enter' && cur >= 0) {
-        e.preventDefault(); window.location.href = items[cur].getAttribute('href');
-      }
-    });
-    document.addEventListener('click', function (e) {
-      if (!wrap.contains(e.target)) { out.hidden = true; input.removeAttribute('aria-activedescendant'); input.setAttribute('aria-expanded', 'false'); }
-    });
-
-    // FOCUS TRAP (2026-08-04). When this instance is the one inside the
-    // header's search overlay, that overlay declares aria-modal="true" but
-    // did nothing to hold focus: Tab walked straight out of the dialog and
-    // through the page behind it, which is exactly what aria-modal promises
-    // a screen-reader user it will not do. The inline boxes (homepage, /faq)
-    // are not in a dialog, so closest() finds nothing and they are untouched.
-    // Escape and its focus return live in Base.astro and are left alone.
-    var dlg = wrap.closest('[role="dialog"][aria-modal="true"]');
-    if (dlg && !dlg.dataset.trapped) {
-      dlg.dataset.trapped = '1';
-      var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]),' +
-        ' select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-      // Re-queried on every Tab rather than cached once on open, because the
-      // result list is built as you type: caching would leave the hits out
-      // of the cycle and trap you on the input.
-      var tabbable = function () {
-        return Array.prototype.filter.call(dlg.querySelectorAll(FOCUSABLE), function (el) {
-          return !el.hasAttribute('hidden') && el.getClientRects().length > 0;
-        });
-      };
-      // The dialog is only laid out while its wrapper is shown, so a live
-      // client rect is the open test; no need to watch the hidden attribute.
-      document.addEventListener('keydown', function (e) {
-        if (e.key !== 'Tab' || !dlg.getClientRects().length) return;
-        var list = tabbable();
-        if (!list.length) return;
-        var first = list[0], last = list[list.length - 1], a = document.activeElement;
-        if (!dlg.contains(a)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); return; }
-        if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
-      }, true);
-    }
-  });
-</script>
+      document.querySelectorAll('input[data-ph-long]').forEach(function (input) {
+        if (input.dataset.phDone) return;
+        input.dataset.phDone = '1';
+        var phLong = input.dataset.phLong;
+        var phShort = input.getAttribute('placeholder');
+        var applyPh = function () {
+          input.setAttribute('placeholder', wide.matches ? phLong : phShort);
+        };
+        applyPh();
+        if (wide.addEventListener) wide.addEventListener('change', applyPh);
+        else if (wide.addListener) wide.addListener(applyPh);
+      });
+    })();
+  </script>
+)}

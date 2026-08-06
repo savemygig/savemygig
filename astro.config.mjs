@@ -94,6 +94,33 @@ export default defineConfig({
      */
     inlineStylesheets: 'always',
   },
+  vite: {
+    build: {
+      /*
+       * KEEP THE SHARED SITE SCRIPT EXTERNAL (perf batch 8, 2026-08-06).
+       *
+       * Astro inlines a bundled script chunk into every page that references it
+       * when the chunk is under build.assetsInlineLimit, which defaults to 4 KB
+       * (astro/dist/core/build/plugins/plugin-scripts.js). For a script that
+       * belongs to ONE page that is the right call: an external file would cost
+       * a round trip to save nothing, because nothing else will ever reuse it.
+       * For src/scripts/site.ts, which all 143 Base-layout pages load, it is
+       * exactly backwards: inlining means re-sending the same bytes with every
+       * document and putting a copy inside each of the 70 routes the service
+       * worker precaches.
+       *
+       * The chunk is comfortably over 4 KB today, so it would be external
+       * anyway. That is not a thing to depend on. This states the decision for
+       * that one chunk instead of letting it turn on a byte count a later
+       * deletion could quietly cross, which would silently put 8 KB back into
+       * every page with nothing failing. Returning null for everything else
+       * means Vite's default applies unchanged, so per-page scripts stay
+       * inlined and no asset changes how it is emitted.
+       */
+      assetsInlineLimit: (filePath) =>
+        /Base\.astro_astro_type_script/.test(filePath) ? false : null,
+    },
+  },
   integrations: [
     sitemap({
       filter: (page) => {

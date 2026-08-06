@@ -106,7 +106,7 @@ const NOTICES = {
 };
 const held = opts.filter((l) => !l.live && NOTICES[l.code]);
 ---
-<details class="lang" id="langWrap">
+<details class="lang" id="langWrap" data-current={lang}>
   <summary class="lang-sum" aria-label={`${S.lang.label}: ${here.name}`}>
     {/* Desktop: this IS the square. Mobile: it is the value at the end of the
         row, so the collapsed row still answers "what language am I in". */}
@@ -298,93 +298,8 @@ const held = opts.filter((l) => !l.live && NOTICES[l.code]);
   }
 </style>
 
-<script is:inline define:vars={{ CURRENT: lang }}>
-  (function () {
-    var wrap = document.getElementById('langWrap');
-    var list = document.getElementById('langList');
-    if (!wrap || !list) return;
-    var sum = wrap.querySelector('.lang-sum');
-
-    function notes() { return wrap.querySelectorAll('.lang-note'); }
-
-    function showList() {
-      list.hidden = false;
-      notes().forEach(function (n) { n.hidden = true; });
-    }
-
-    function showNote(code) {
-      var note = document.getElementById('langNote-' + code);
-      if (!note) return;
-      list.hidden = true;
-      notes().forEach(function (n) { n.hidden = n !== note; });
-      var back = note.querySelector('[data-back]');
-      if (back) back.focus();
-    }
-
-    // Always reopen on the list, never on whichever notice was left showing.
-    wrap.addEventListener('toggle', function () { if (!wrap.open) showList(); });
-
-    // THE REVIEW DOOR. ?preview=1 turns the held-back languages into working
-    // links in this browser only. It is read on every page so Antonio can
-    // switch it on once and then browse normally.
-    try {
-      var q = new URLSearchParams(location.search).get('preview');
-      if (q === '1') localStorage.setItem('SMG_PREVIEW', '1');
-      else if (q === '0') localStorage.removeItem('SMG_PREVIEW');
-    } catch (e) { /* private mode: no preview, which is the safe default */ }
-    function preview() {
-      try { return localStorage.getItem('SMG_PREVIEW') === '1'; } catch (e) { return false; }
-    }
-
-    // Remember the choice, but ONLY a published language. Storing a held-back
-    // one would send a reviewer's next bare visit into a language the public
-    // cannot see, and the detection script would then have to defend against
-    // a value it should never have been given.
-    function remember(code, isLive) {
-      if (!isLive) return;
-      try { localStorage.setItem('SMG_LANG', code); } catch (e) { /* nothing to do */ }
-    }
-
-    wrap.addEventListener('click', function (e) {
-      var opt = e.target.closest ? e.target.closest('.lang-opt') : null;
-      if (opt) {
-        var code = opt.getAttribute('data-lang');
-        var isLive = opt.getAttribute('data-live') === '1';
-        // The language you are already reading: nothing to do but close.
-        if (code === CURRENT) {
-          e.preventDefault();
-          wrap.open = false;
-          if (sum) sum.focus();
-          return;
-        }
-        if (isLive) { remember(code, true); return; } // let the anchor navigate
-        // Held back. A reviewer goes through; everyone else gets the notice
-        // in their own language.
-        if (preview()) {
-          var href = opt.getAttribute('data-href');
-          if (href) { location.href = href; return; }
-        }
-        showNote(code);
-        return;
-      }
-      if (e.target.closest && e.target.closest('[data-back]')) showList();
-    });
-
-    // Click outside and Escape, which native <details> does not give us. Both
-    // are desktop behaviours: on a phone this is an inline drawer row and
-    // closing it by tapping elsewhere in the menu would be surprising.
-    function floating() { return window.matchMedia('(min-width: 901px)').matches; }
-
-    document.addEventListener('click', function (e) {
-      if (!wrap.open || !floating()) return;
-      if (!wrap.contains(e.target)) wrap.open = false;
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && wrap.open && floating()) {
-        wrap.open = false;
-        if (sum) sum.focus();
-      }
-    });
-  })();
-</script>
+{/* THE WIRING LIVES IN src/scripts/site.ts (2026-08-06, perf batch 8).
+    2.6 KB of is:inline, identical on all 143 pages that carry the header, and
+    forced inline only because CURRENT arrived through define:vars. The language
+    is data-current on #langWrap now, which is the same substitution the nav
+    toggle's two aria labels made, and the block moved out unchanged. */}
