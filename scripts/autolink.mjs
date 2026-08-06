@@ -88,16 +88,31 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { CONCEPTS, DICTIONARY } from '../src/data/concepts.js';
-import { LANGS } from '../src/i18n/registry.js';
+import { LANGS, EMERGENCY_MODE } from '../src/i18n/registry.js';
 
 const DIST = process.argv[2] || 'dist';
 
-// Rules 2 and 3. Utility and machine-facing pages are excluded too: they are
-// not read as prose and a link in them is noise.
-// These are ENGLISH paths. Rule 10: a page URL has its language prefix
-// stripped before it is tested against them, so one entry covers all three
-// languages and a new language is covered the day it ships.
-const EXCLUDED_PREFIXES = ['/protocol', '/legal', '/404', '/offline', '/card', '/card-ready'];
+/*
+ * Rules 2 and 3. Utility and machine-facing pages are excluded too: they are
+ * not read as prose and a link in them is noise.
+ * These are ENGLISH paths. Rule 10: a page URL has its language prefix
+ * stripped before it is tested against them, so one entry covers all three
+ * languages and a new language is covered the day it ships.
+ *
+ * EMERGENCY MODE COMES FROM THE REGISTRY (2026-08-06), and that is a BUG FIX.
+ * This list said '/protocol' and stopped, so /emergency was never excluded, and
+ * the triage screen shipped two injected links per language, six in all: the
+ * words "rekordbox" and "CDJ-3000" in the lead paragraph, pointing into the
+ * knowledge base, sitting directly under the fifth door at both 390 and 1280.
+ * That is precisely what rule 2 above was written to prevent, on the one page
+ * the rule forgot, and it went live the day autolink first ran in production.
+ *
+ * The cause was two definitions of one boundary. src/i18n/registry.js already
+ * exports EMERGENCY_MODE for exactly this question and already includes both
+ * /emergency and /protocol, so this list is built FROM it. One definition, and
+ * the next page that joins Emergency Mode is excluded here the same day.
+ */
+const EXCLUDED_PREFIXES = [...EMERGENCY_MODE, '/legal', '/404', '/offline', '/card', '/card-ready'];
 
 // Rule 10. From the registry, so the day a fourth language lands it is
 // covered without touching this file.
@@ -110,8 +125,38 @@ const stripLang = (url) => {
   return p ? (url.slice(p.length) || '/') : url;
 };
 
-// Rule 6.
-const SKIP_TAGS = new Set(['a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code', 'pre', 'button', 'summary', 'svg', 'script', 'style', 'textarea', 'select', 'option', 'title']);
+/*
+ * Rule 6, extended 2026-08-06 with three tags and one class, all of them found
+ * live once this script started running in production.
+ *
+ * label  A link inside a form label is never right. /checklist renders each
+ *        task as <label><input type=checkbox><span class="task-label">, and
+ *        four task labels per language, twelve in all, had a 48px red
+ *        underlined FAT32 or rekordbox injected into them: a competing tap
+ *        target inside the control that ticks the task, on the page a DJ is
+ *        working down before a gig. Measured: the tap navigates away.
+ * dt th  A definition term and a table header are LABELS, and the argument that
+ *        put h1 to h6 on this list is the same argument. 11 anchors were sitting
+ *        in <dt> and 3 in <th>.
+ * mono   THE CLASS, not a tag. This site's code-styled chip is
+ *        <span class="mono">, not <code>, so excluding code and pre missed the
+ *        entire vocabulary it actually uses: FAT32, MBR, exFAT, USB STOP,
+ *        EXPORT. 39 anchors were inside one, which rendered as a red underlined
+ *        word inside a grey chip, next to identical chips that were not links.
+ *        On /fix/exfat-vs-fat32-cdj a linked NTFS chip sat beside a plain APFS
+ *        chip on the same line. It reads as a rendering fault, and worse, half
+ *        of these chips carry translate="no" because they are hardware labels,
+ *        not prose.
+ */
+const SKIP_TAGS = new Set(['a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code', 'pre', 'button', 'summary', 'svg', 'script', 'style', 'textarea', 'select', 'option', 'title', 'label', 'dt', 'th']);
+
+// Ancestor CLASSES that behave like SKIP_TAGS. A word boundary match, so
+// "mono" hits and a hypothetical "monotone" does not.
+const SKIP_CLASSES = [/\bmono\b/];
+const isSkippedClass = (attrs) => {
+  const cls = (attrs.match(/class="([^"]*)"/) || [])[1];
+  return cls ? SKIP_CLASSES.some((re) => re.test(cls)) : false;
+};
 
 const destOf = (c) => (c.kind === 'product' ? c.page : (c.article || `${DICTIONARY}#${c.anchor}`));
 
@@ -172,10 +217,20 @@ const localizeDest = (dest, prefix) => {
   return prefix + p + (frag ? `#${frag}` : '');
 };
 
+/*
+ * THE INJECTION MARKER. Present only between the write loop and the assertions,
+ * removed before this script exits, so no page ever ships it. It exists because
+ * the assertions cannot otherwise tell an injected anchor from a hand-written
+ * one, and every placement rule below is about what THIS SCRIPT did.
+ */
+const MARK = ' data-autolink';
+const MARK_RE = / data-autolink(?=[ >])/g;
+
 let totalLinks = 0;
 let pagesTouched = 0;
 const perTerm = new Map();
 const files = walk(DIST);
+const touched = [];
 
 for (const file of files) {
   const url = urlOf(file) || '/';
@@ -256,7 +311,11 @@ for (const file of files) {
       const end = lt === -1 ? body.length : lt;
       let text = body.slice(i, end);
 
-      if (text.trim() && !stack.some((t) => SKIP_TAGS.has(t))) {   // rule 6
+      // Rule 6, on the tag stack AND on the class stack. Both are ancestor
+      // tests: a term anywhere inside a <label> or inside a .mono chip is out,
+      // however deeply nested.
+      const skipped = stack.some((t) => SKIP_TAGS.has(t.n) || t.skipClass);
+      if (text.trim() && !skipped) {
         // ALL MATCHES ARE FOUND AGAINST THE ORIGINAL TEXT, THEN SPLICED ONCE.
         // Matching term-by-term against a string that previous terms had
         // already rewritten is what produced
@@ -293,9 +352,18 @@ for (const file of files) {
         }
 
         // Splice from the end so earlier offsets stay valid.
+        // MARKED WHILE WRITING, CHECKED, THEN UNMARKED (2026-08-06). The
+        // assertions below have to answer "where did THIS SCRIPT put a link",
+        // and they cannot do it by pattern: a bare <a href="/..."> is also what
+        // an author writes by hand, including the one editorial link the
+        // emergency tree deliberately places inside the tunnel. Guessing was
+        // how four placement bugs (mono chips, checklist labels, dt, th) shipped
+        // under a checker that only looked at nesting. The attribute makes the
+        // question exact, and it is stripped from every touched file at the end
+        // of this run, so nothing ships with it. See MARK below.
         for (let k = kept.length - 1; k >= 0; k--) {
           const h = kept[k];
-          text = text.slice(0, h.at) + `<a href="${escHtml(h.dest)}">${h.word}</a>` + text.slice(h.end);
+          text = text.slice(0, h.at) + `<a href="${escHtml(h.dest)}"${MARK}>${h.word}</a>` + text.slice(h.end);
         }
         for (const h of kept) {
           done.add(h.dest);
@@ -336,11 +404,12 @@ for (const file of files) {
     const name = (tag.match(/^<\/?\s*([a-zA-Z0-9-]+)/) || [])[1]?.toLowerCase();
     if (name) {
       if (tag[1] === '/') {
-        const idx = stack.lastIndexOf(name);
+        let idx = -1;
+        for (let k = stack.length - 1; k >= 0; k--) if (stack[k].n === name) { idx = k; break; }
         if (idx !== -1) stack.splice(idx, 1);
         if (BLOCK_TAGS.has(name) && blockDepth > 0) { blockDepth--; if (!blockDepth) blockLinks = 0; }
       } else if (!tag.endsWith('/>') && !VOID.has(name)) {
-        stack.push(name);
+        stack.push({ n: name, skipClass: isSkippedClass(tag) });
         // Rule 9 bookkeeping. A new block resets the budget; anchors already
         // inside it count against that budget.
         if (BLOCK_TAGS.has(name)) { if (!blockDepth) blockLinks = 0; blockDepth++; }
@@ -355,13 +424,62 @@ for (const file of files) {
     fs.writeFileSync(file, head + rebuilt + tail);
     totalLinks += added;
     pagesTouched++;
+    touched.push(file);
   }
 }
 
-// ------------------------------------------------------------------ ASSERTIONS
-// A silent autolinker is a liability: it edits every page in the site and
-// nobody reads 107 diffs. These are the invariants that make it trustworthy.
+/*
+ * ------------------------------------------------------------------ ASSERTIONS
+ * A silent autolinker is a liability: it edits every page in the site and nobody
+ * reads 107 diffs. These are the invariants that make it trustworthy.
+ *
+ * WHAT WAS MISSING UNTIL 2026-08-06, and it cost four live bugs on the day this
+ * script first ran in production: the only thing checked about PLACEMENT was
+ * that no anchor ended up inside another one. Balance and nesting are the
+ * failures that break navigation, so they were the ones somebody thought of.
+ * Every rule about WHERE a link may go, which is most of the rules at the top of
+ * this file, was enforced by the writer and asserted by nobody. So when the
+ * writer's idea of "not in code" turned out to mean <code> and not this site's
+ * .mono chip, nothing said so, and 39 hardware labels shipped as hyperlinks.
+ *
+ * Placement is now asserted on the real output, per class, using the injection
+ * marker so the question is exact rather than inferred:
+ *   - nothing inside a SKIP_TAGS element, which now includes label, dt and th,
+ *   - nothing inside a .mono chip or any other SKIP_CLASSES element,
+ *   - nothing at all inside Emergency Mode, in any language.
+ * A rule with no assertion is a rule waiting to be broken quietly.
+ */
 const problems = [];
+
+/** Ancestors of every marked anchor in `body`, as {tags, classes} per anchor. */
+function markedAnchorContexts(body) {
+  const VOIDS = new Set(['br', 'img', 'input', 'hr', 'meta', 'link', 'source', 'path', 'circle', 'rect', 'use', 'col', 'area', 'embed', 'track', 'wbr']);
+  const found = [];
+  const stack = [];
+  const re = /<(\/?)([a-zA-Z0-9-]+)([^>]*)>/g;
+  let m;
+  while ((m = re.exec(body)) !== null) {
+    const name = m[2].toLowerCase();
+    const attrs = m[3];
+    if (m[1] === '/') {
+      for (let k = stack.length - 1; k >= 0; k--) if (stack[k].n === name) { stack.splice(k, 1); break; }
+      continue;
+    }
+    if (name === 'a' && MARK_RE.test(attrs)) {
+      MARK_RE.lastIndex = 0;
+      found.push({
+        href: (attrs.match(/href="([^"]*)"/) || [])[1] || '?',
+        tags: stack.map((s) => s.n),
+        skipClass: stack.some((s) => s.skipClass),
+      });
+    }
+    MARK_RE.lastIndex = 0;
+    if (!attrs.endsWith('/') && !VOIDS.has(name)) {
+      stack.push({ n: name, skipClass: isSkippedClass(attrs) });
+    }
+  }
+  return found;
+}
 
 for (const file of walk(DIST)) {
   const url = urlOf(file) || '/';
@@ -370,7 +488,18 @@ for (const file of walk(DIST)) {
   // Rules 2, 3 and 10 held. Same prefix-stripped test as the writer above:
   // if the two ever disagree, the checker skips pages the writer edited.
   const enUrl = stripLang(url);
-  if (EXCLUDED_PREFIXES.some((p) => enUrl === p || enUrl.startsWith(p + '/'))) continue;
+  if (EXCLUDED_PREFIXES.some((p) => enUrl === p || enUrl.startsWith(p + '/'))) {
+    // AND NOTHING WAS INJECTED HERE AT ALL. Checked rather than assumed, because
+    // the writer skipping a page and the checker skipping the same page is
+    // exactly the arrangement that let /emergency carry six injected links while
+    // both agreed there was nothing to look at. The hand-written editorial link
+    // the emergency tree places in the tunnel has no marker, so it is untouched
+    // by this and stays allowed.
+    if (html.includes(MARK)) {
+      problems.push(`${url}: excluded page carries an injected link (${EXCLUDED_PREFIXES.find((p) => enUrl === p || enUrl.startsWith(p + '/'))})`);
+    }
+    continue;
+  }
 
   // No nested anchors. This is the one failure that would break navigation
   // invisibly, so it is checked on the real output rather than trusted.
@@ -396,6 +525,14 @@ for (const file of walk(DIST)) {
     if (depth < 0) { problems.push(`${url}: unbalanced </a>`); break; }
   }
 
+  // Rule 6 held, per class, on the marked anchors. All four of these were live
+  // on 2026-08-05 and are named in the SKIP_TAGS comment at the top.
+  for (const a of markedAnchorContexts(body)) {
+    const badTag = a.tags.find((t) => SKIP_TAGS.has(t));
+    if (badTag) problems.push(`${url}: injected link to ${a.href} inside <${badTag}>`);
+    else if (a.skipClass) problems.push(`${url}: injected link to ${a.href} inside a code-styled chip`);
+  }
+
   // Rule 10 held. On a translated page, no anchor may point at an English
   // registry destination that HAS a translated page. This is checked on the
   // real output because the whole class of bug being fixed here was invisible
@@ -414,10 +551,31 @@ for (const file of walk(DIST)) {
   }
 }
 
+// ---------------------------------------------------------------------- UNMARK
+// The marker exists for the assertions above and for nothing else, so it comes
+// off before any downstream step reads dist and long before anything is
+// published. Only the files this run wrote are rewritten. If an assertion failed
+// the process has NOT exited yet, so this still runs: a failing build should
+// leave dist in the state it would have shipped, minus the failure.
+let unmarked = 0;
+for (const file of touched) {
+  const html = fs.readFileSync(file, 'utf8');
+  if (!MARK_RE.test(html)) { MARK_RE.lastIndex = 0; continue; }
+  MARK_RE.lastIndex = 0;
+  fs.writeFileSync(file, html.replace(MARK_RE, ''));
+  unmarked++;
+}
+// Belt and braces: nothing anywhere in dist may still carry it.
+const leftover = walk(DIST).filter((f) => fs.readFileSync(f, 'utf8').includes(MARK));
+if (leftover.length) {
+  problems.push(`${leftover.length} page(s) still carry the injection marker, first: ${urlOf(leftover[0])}`);
+}
+
 const top = [...perTerm.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
 console.log(`Autolink: ${totalLinks} links added across ${pagesTouched} pages`);
 console.log(`  top terms: ${top.map(([k, n]) => `${k} ${n}`).join(', ')}`);
 console.log(`  excluded: ${EXCLUDED_PREFIXES.join(' ')} (in every language)`);
+console.log(`  never inside: ${[...SKIP_TAGS].join(' ')} or .mono`);
 console.log(`  language: ${localizedLinks} links prefixed, ${englishFallbackLinks} left English (no translated page)`);
 if (missingTranslations.size) {
   console.log(`  no translated page for: ${[...missingTranslations].sort().slice(0, 6).join(' ')}${missingTranslations.size > 6 ? ` (+${missingTranslations.size - 6})` : ''}`);
@@ -428,4 +586,4 @@ if (problems.length) {
   problems.slice(0, 20).forEach((p) => console.error('  ' + p));
   process.exit(1);
 }
-console.log('Autolink PASS (no nested or unbalanced anchors)');
+console.log(`Autolink PASS (no nested or unbalanced anchors; no link inside a heading, label, chip or Emergency Mode; ${unmarked} pages unmarked)`);
