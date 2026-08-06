@@ -1517,9 +1517,31 @@ summary:focus-visible {
 .site-footer .soc-btn:hover::before { border-color: var(--text-dim); background: var(--surf-2); }
 .site-footer .soc-btn svg { position: relative; }
 .site-footer .foot-social { gap: 2px; }
+/* AND THE PARAGRAPH ABOVE WAS WRONG ABOUT THE ONE THING IT PROMISED, which is
+   what Antonio saw: "the social icons are not aligned with the lettering above
+   them". Growing the box to 44px and CENTRING a smaller circle inside it does
+   not leave the row's ink where it was. It insets the visible circle by half
+   the difference, every time:
+       desktop   (44 - 38) / 2 = 3px
+       <= 414px  (44 - 32) / 2 = 6px
+   The row's BOX still starts flush with the wordmark, so every devtools
+   measurement said 0 and looked fine, while the thing a human actually sees,
+   the ring, started 3px (6px on a phone) to the right of the S in SAVE. The
+   brand block's whole point is that the wordmark, the tagline and the social
+   row share one left edge, and it had quietly not shared it since 2026-08-04.
+
+   Pulled back by exactly the inset. This moves the circle AND its glyph as one
+   piece, so the icon stays centred in its own ring, the 44x44 tap target is
+   untouched (it just starts 3px further left, still inside the page gutter),
+   the gaps between circles do not move, and the row's visible ink returns to
+   the 176px measure that .foot-bmc's width and the lockup width were both
+   derived from. Do not "simplify" this to left-aligning the pseudo-element:
+   the glyph is centred by flex in the 44px box, so the circle would slide out
+   from under it. */
+.site-footer .foot-social { margin-left: -3px; }
 @media (max-width: 414px) {
   .site-footer .soc-btn::before { width: 32px; height: 32px; }
-  .site-footer .foot-social { gap: 0px; }
+  .site-footer .foot-social { gap: 0px; margin-left: -6px; }
 }
 /* Footer nav links: 23px of text needs a bigger target, but the target must
    not cost the footer its rhythm. Two wrong versions before this one:
