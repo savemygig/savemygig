@@ -1,12 +1,17 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { LANGS } from './src/i18n/registry.js';
+import { makeLastmod } from './scripts/git-lastmod.mjs';
 
 // Pages that must never appear in the sitemap: the sealed rescue tunnel
 // (noindex by design), outcome pages, and utility pages. Everything else is
 // picked up automatically. The old hand-maintained public/sitemap.xml drifted
 // twice (it was missing /emergency and /checklist), so it is now generated.
 const BUILD_DATE = new Date().toISOString();
+// PER-PAGE lastmod, DERIVED FROM GIT (2026-08-06). See scripts/git-lastmod.mjs
+// for the reasoning and for what does and does not count as a change to a page.
+// BUILD_DATE survives only as the fallback for a page with no history.
+const lastmodFor = makeLastmod(BUILD_DATE);
 
 const EXCLUDE = [
   '/protocol/',
@@ -107,7 +112,17 @@ export default defineConfig({
       },
       // Freshness signal. Both classic search and AI answer engines weight
       // demonstrably-maintained content, and the old sitemap had no dates at all.
-      serialize: (item) => ({ ...item, lastmod: BUILD_DATE }),
+      //
+      // IT WAS THE BUILD TIMESTAMP ON ALL 111 URLs UNTIL 2026-08-06, which is
+      // worse than no dates: /legal and a fix article rewritten this morning
+      // claimed the same lastmod, and every one of the 111 moved on a build that
+      // touched a single file. Google's own guidance is that it stops reading a
+      // lastmod it has learned to distrust, so the field was costing bytes and
+      // teaching the crawler to ignore the one signal it was added to send.
+      serialize: (item) => ({
+        ...item,
+        lastmod: lastmodFor(item.url.replace('https://www.savemygig.com', '') || '/'),
+      }),
     }),
   ],
 });
