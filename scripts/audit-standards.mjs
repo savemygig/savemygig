@@ -203,15 +203,49 @@ for (const [fam, fm] of [...familyTypes].sort()) {
   console.log(`  ${fam}: ${[...fm].map(([k, n]) => `${k} x${n}`).join(' | ')}`);
 }
 
+/*
+ * H. SEARCH INDEX. Repaired 2026-08-06, and it had TWO faults, not one.
+ *
+ *   1. It read a single flat search-index.json. That file stopped existing on
+ *      2026-08-05 when the index was split per language, so this section threw
+ *      ENOENT and took the whole audit down with it. That is the fault that got
+ *      noticed.
+ *   2. It read the wrong key, and had done since it was written. Entries look
+ *      like {u,t,d,h,b}; this asked for `r.url ?? r.path ?? r.route ?? r.href`,
+ *      all four of which are undefined. So idxRoutes was a set containing
+ *      exactly `undefined`, and the section reported EVERY content page as
+ *      missing from the index. Whoever last ran it either did not read the
+ *      output or read it and assumed the noise was the audit working.
+ *
+ * Fault 2 is the more interesting one: a broken diagnostic that still prints is
+ * worse than one that crashes, because a crash gets fixed. Kept and repaired
+ * rather than deleted, because the rest of this file (link resolution, JSON-LD
+ * families, canonicals) is not duplicated by anything in the gate.
+ */
 console.log('\n=== H. SEARCH INDEX ===');
-const idx = JSON.parse(await readFile(join(ROOT, 'search-index.json'), 'utf8'));
-const idxRoutes = new Set(idx.map((r) => r.url ?? r.path ?? r.route ?? r.href));
-console.log('  index entries:', idx.length, '| sample keys:', Object.keys(idx[0]).join(','));
+const IDX_LANGS = ['en', 'pt', 'es'];
+const idxRoutes = new Set();
+let idxTotal = 0;
+let idxKeys = [];
+for (const code of IDX_LANGS) {
+  const file = join(ROOT, `search-index.${code}.json`);
+  if (!existsSync(file)) { console.log(`  MISSING INDEX FILE: search-index.${code}.json`); continue; }
+  const part = JSON.parse(await readFile(file, 'utf8'));
+  idxTotal += part.length;
+  if (!idxKeys.length && part.length) idxKeys = Object.keys(part[0]);
+  for (const r of part) idxRoutes.add(r.u);
+  console.log(`  search-index.${code}.json: ${part.length} entries`);
+}
+console.log('  total index entries:', idxTotal, '| keys:', idxKeys.join(','));
+// English canonical paths. A pt or es route has its prefix stripped before the
+// test, so one list covers all three languages. Same rule as autolink rule 10.
 const EXCLUDE = ['/protocol/', '/saved', '/files-lost', '/card-ready', '/feedback',
   '/legal/privacy', '/legal/terms', '/legal/cookies', '/partners', '/404', '/search', '/offline'];
+const enRoute = (r) => r.replace(/^\/(?:pt|es)(?=\/|$)/, '') || '/';
 const missing = [];
 for (const p of pages) {
-  if (EXCLUDE.some((x) => p.route === x || p.route.startsWith(x))) continue;
+  const en = enRoute(p.route);
+  if (EXCLUDE.some((x) => en === x || en.startsWith(x))) continue;
   if (!idxRoutes.has(p.route)) missing.push(p.route);
 }
 console.log(missing.length ? '  CONTENT PAGES MISSING FROM INDEX: ' + missing.join(', ') : '  all non-excluded pages indexed');
