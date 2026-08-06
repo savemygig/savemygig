@@ -398,7 +398,24 @@ export const UI = {
       shareText: 'Todo DJ conhece um DJ que precisa disso: Save My Gig, DJ Booth Intelligence, para quando o pen drive morre antes do set.',
       copy: 'Copiar link',
       copied: 'Copiado',
-      coffee: 'Pague um café pra gente',
+      // "Pague um café pra gente" until 2026-08-06. Two problems, and only one
+      // of them was the words. At 0.8rem the label wants 153px of text in the
+      // 151.8px slot .foot-bmc's 176px measure leaves beside the cup icon, so on
+      // desktop it was the only coffee link of the three languages that WRAPPED
+      // to two lines, sitting next to a Spanish one (105px) that fits. It lost
+      // by 1.2px, which is why it looked fine on a phone, where the link hugs
+      // its own content, and broken on the 1280px screen he reviewed it on.
+      // Antonio read the wrap as the phrase being wrong, which is the usual way
+      // a layout bug gets reported.
+      // "Nos pague um café" keeps what matters: an imperative in the você
+      // register, the same warm ask as "Invítanos un café", and the "us" that
+      // makes this a coffee for the crew and not a generic donate button.
+      // Sentence-initial "Nos" is the ordinary Brazilian pattern ("nos siga",
+      // "nos ajude"), not a Europeanism, and "pague" matches the imperative the
+      // Portuguese site already uses ("Conte pra gente"). Chosen over the
+      // shorter "Pague um café", which fits too but drops the "us" and reads
+      // like a coffee for nobody in particular.
+      coffee: 'Nos pague um café',
       colRescue: 'Resgate',
       colPrepare: 'Preparação',
       colMore: 'Mais',
