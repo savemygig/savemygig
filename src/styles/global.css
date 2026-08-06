@@ -361,6 +361,18 @@ h3 { font-size: clamp(1.1rem, 3.6vw, 1.35rem); font-weight: 800; letter-spacing:
    that sizes it (.dsc-h on the Disclaimer), and :not([class]) keeps this off
    them. section.panel is excluded too, which is what /saved and the
    /checklist category panels use. */
+/* SAME FIX, FOR section.panel (2026-08-06). /card-ready and its pt and es
+   copies were the last three pages still going h1 straight to h3. The rule
+   below deliberately excludes section.panel, so those three needed a class
+   rather than a selector: the LEVEL is corrected, the SIZE is unchanged, and
+   the margin the inline style used to carry moves here with it. */
+.panel-h3 {
+  font-size: clamp(1.1rem, 3.6vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.75rem;
+}
+
 div.panel > h2:first-child:not([class]) {
   font-size: clamp(1.1rem, 3.6vw, 1.35rem);
   letter-spacing: -0.01em;
@@ -942,6 +954,28 @@ a { color: var(--red); }
 .pad-neutral { --tone: var(--red); }
 .pad::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--tone); transition: background var(--t-fast); }
 .pad-neutral::before { background: var(--edge); }
+
+/* WEIGHT, NOT HUE, ON THE SCREENS THAT ERASE (2026-08-06).
+   On /protocol/rebuild/erase the destructive option and the way out were
+   pixel identical: same amber rail, same fill, same height, told apart by
+   wording alone, on the one screen in this product where a mis-tap destroys
+   somebody's music library.
+   Green was NOT the answer and is deliberately absent here. Green reading as
+   "the safe one" beside an irreversible erase was tried and reverted, and
+   that decision stands: nothing on an erase screen is safe.
+   So the difference is weight. The destructive pad gains a faint wash of its
+   own tone, which makes it the heavier object on the screen without adding a
+   colour or a word. The way out drops to .pad-neutral in the tree data, so it
+   rests with an invisible rail and dimmer text and only borrows the house red
+   when a cursor is actually on it. Consequence stays legible, and the quiet
+   option is quiet rather than camouflaged. */
+.screen[data-risk] .pad-yellow {
+  background: linear-gradient(90deg, var(--amber-dim) 0%, var(--surf) 60%);
+}
+.screen[data-risk] .pad-neutral .pad-title { color: var(--text-dim); }
+@media (hover: hover) {
+  .screen[data-risk] .pad-neutral:hover .pad-title { color: var(--text); }
+}
 .pad::after { content: '\2192'; position: absolute; right: 18px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--text-faint); transition: color var(--t-fast), transform var(--t-fast); }
 .pad-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .pad-header .led { width: 9px; height: 9px; }

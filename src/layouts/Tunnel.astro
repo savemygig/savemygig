@@ -150,7 +150,12 @@ const srHeading = heading ?? title.replace(/\s*\|\s*Save My Gig?\s*$/i, '');
       above scrolled without moving the virtual cursor on all 55 rescue
       screens. Same fix and same reason as the wrapper in Base.astro; the
       shared `#main:focus { outline: none }` rule lives in global.css. */}
-  <main class="screen" id="main" tabindex="-1">
+  {/* data-risk: the renderer already knows which screens instruct or
+        consent to a format or an erase (RISK_NODES), and this layout
+        already took the flag for the disclaimer variant. It now reaches
+        the markup too, so CSS can give the destructive option more
+        WEIGHT than the way out. See .screen[data-risk] in global.css. */}
+  <main class="screen" id="main" tabindex="-1" data-risk={risk ? '1' : undefined}>
     <h1 class="sr-only">{srHeading}</h1>
     <!-- The IN TESTING line used to render here, on all 55 tunnel screens.
          Removed 2026-08-03 (polish audit C4, Antonio's go): the disclosure now

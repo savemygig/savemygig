@@ -1120,9 +1120,17 @@ const entityGraph = {
      English and Spanish ones on the same screen. Left-aligned, the label's
      length cannot move it. If he calls this back again, this is one commit to
      revert and nothing else depends on it. */
+  /* min-height 24px (2026-08-06): this measured 120x20 and is a BLOCK level
+     link, so the "inline in a sentence" exemption from WCAG 2.5.8 does not
+     apply to it. It is also the only support ask on the site, which made it
+     the hardest footer target to hit. The height comes from min-height plus
+     symmetrical padding rather than from margin, so the wordmark, tagline and
+     social row above it do not move: verified by measuring all four before
+     and after. */
   .foot-bmc {
     display: flex; align-items: center; justify-content: flex-start; gap: 0.45rem;
     width: 176px; margin: 0.8rem 0 0;
+    min-height: 24px; padding: 2px 0;
     font-size: 0.8rem; text-decoration: none;
   }
   /* Brand red, same as the wordmark's "!" (Antonio): dim grey let the one

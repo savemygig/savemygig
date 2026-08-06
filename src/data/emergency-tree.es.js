@@ -404,7 +404,7 @@ export const TREE = {
         "label": "NO, NO BORRAR ESTE USB",
         "to": "rebuild/no-erase",
         // Declining destruction is caution, never the red answer.
-        "tone": "amber"
+        "tone": "neutral"
       }
     ]
   },
@@ -640,7 +640,7 @@ export const TREE = {
         "label": "NO, PARAR AQUÍ",
         "to": "rebuild/no-erase",
         // Same: stopping before an erase is legitimate, not failure.
-        "tone": "amber"
+        "tone": "neutral"
       }
     ]
   },
@@ -1590,7 +1590,7 @@ export const TREE = {
         "to": "export/fresh",
         "desc": "Armamos el gig de hoy en otro USB.",
         // Keeping the drive intact has a real route. Caution, not danger.
-        "tone": "amber"
+        "tone": "neutral"
       }
     ]
   },
