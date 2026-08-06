@@ -24,9 +24,24 @@ const uid = 'srch-' + Math.random().toString(36).slice(2, 8);
 // lang localizes every string this component owns. A page may still pass its
 // own placeholder (the homepage and /faq boxes do); the default comes from
 // the ui.js catalogue so the header overlay is never English on /pt or /es.
-const { lang = 'en', placeholder } = Astro.props;
+const { lang = 'en', placeholder, shortPlaceholder } = Astro.props;
 const S = t(lang);
 const ph = placeholder ?? S.search.placeholder;
+// A SHORT PLACEHOLDER FOR NARROW PHONES (2026-08-06).
+// The homepage hero box asks for 348px of placeholder against 264px of input at
+// 360px and 294px at 390px, in all three languages, so the one line on the page
+// that says what the box is FOR was cut off mid-word on every phone.
+// The checklist solves the identical problem for its RESET LIST / RESET buttons
+// with a .bl-full / .bl-short pair swapped by a 640px media query. A
+// placeholder is an ATTRIBUTE, not a text node, so CSS cannot reach it: the
+// equivalent here is the same 640px boundary expressed once in matchMedia.
+// THE SHORT FORM IS WHAT SHIPS IN THE MARKUP and the long one is the upgrade,
+// deliberately that way round. If the script never runs, the reader who is hurt
+// is the one on the narrow phone, and this way that reader gets a complete
+// sentence while a scriptless desktop merely gets a terser one.
+// Callers that pass no shortPlaceholder are byte-identical to before: no
+// data attribute is emitted and the script's branch is never entered.
+const phShort = shortPlaceholder ?? ph;
 
 // EVERYTHING LOCALIZED IS HANDED OVER ON THE WRAPPER, NOT VIA define:vars.
 // Two boxes render on the homepage and on /faq (the header overlay plus the
@@ -63,7 +78,8 @@ const noneBits = {
     <svg class="srch-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <input
       id={uid} type="search" class="srch-input" autocomplete="off"
-      placeholder={ph}
+      placeholder={phShort}
+      data-ph-long={shortPlaceholder ? ph : undefined}
       aria-controls={uid + '-results'} aria-expanded="false" role="combobox" aria-autocomplete="list"
     />
     <button type="button" class="srch-clear" aria-label={S.search.clear} hidden>&times;</button>
@@ -231,6 +247,19 @@ const noneBits = {
       input.removeAttribute('aria-activedescendant');
       out.hidden = false;
       input.setAttribute('aria-expanded', 'true');
+    }
+
+    // The long placeholder, restored above the phone boundary. Same 640px line
+    // the checklist's own label swap uses, so the two never disagree about
+    // where "a phone" ends. Absent data-ph-long, nothing here runs.
+    var phLong = input.dataset.phLong;
+    if (phLong) {
+      var phShort = input.getAttribute('placeholder');
+      var wide = window.matchMedia('(min-width: 641px)');
+      var applyPh = function () { input.setAttribute('placeholder', wide.matches ? phLong : phShort); };
+      applyPh();
+      if (wide.addEventListener) wide.addEventListener('change', applyPh);
+      else if (wide.addListener) wide.addListener(applyPh);
     }
 
     input.addEventListener('focus', load);

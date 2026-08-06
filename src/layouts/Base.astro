@@ -554,6 +554,18 @@ const entityGraph = {
       </nav>
     </div>
   </header>
+  {/* THE DRAWER NEEDED A BACKDROP TO BE AN OVERLAY (2026-08-06).
+      It was position:absolute with box-shadow:none, nothing behind it and the
+      body still scrolling underneath, so on a phone it did not read as a layer
+      over the page: it read as the page splitting in half, with the old content
+      still sliding around below the seam. Same scrim as the search overlay, on
+      purpose, because they are the same gesture one tap apart and there is no
+      reason for a reader to meet two different treatments of "the site is
+      showing you something on top of what you were reading".
+      A real element rather than a pseudo-element on the header, because the
+      header has to paint ABOVE the scrim (its own toggle is the way out) and a
+      child cannot sit behind its parent's own background. */}
+  <div class="nav-scrim" id="navScrim" hidden></div>
   <div class="so" id="searchOverlay" hidden>
     <div class="so-panel" role="dialog" aria-modal="true" aria-label={S.aria.search}>
       <Search lang={lang} />
@@ -777,9 +789,20 @@ const entityGraph = {
   <script>
     const t = document.getElementById('navToggle');
     const l = document.getElementById('navLinks');
+    const scrim = document.getElementById('navScrim');
     if (t && l) {
-      t.addEventListener('click', () => {
-        const open = l.classList.toggle('open');
+      // THE SCROLL LOCK IS `overflow: hidden` ON <html> AND NOTHING ELSE.
+      // The usual trick, pinning the body with position:fixed and a negative
+      // top, CANNOT be used here: the drawer lives inside the header, which is
+      // at the top of the document, so pinning the body would drag the open
+      // drawer off the top of the screen with it. overflow:hidden moves
+      // nothing, which is also why the scroll position needs no arithmetic to
+      // survive. It is recorded and re-asserted on close anyway, because an
+      // engine that DOES shift while the root is clipped would otherwise put
+      // the reader somewhere they did not choose, and that is one line.
+      let scrollAt = 0;
+      const setOpen = (open: boolean) => {
+        l.classList.toggle('open', open);
         t.setAttribute('aria-expanded', open ? 'true' : 'false');
         // The glyph becomes an X in CSS; the label has to say the same thing
         // to anyone using a screen reader, IN THE READER'S LANGUAGE. Both
@@ -787,7 +810,32 @@ const entityGraph = {
         // element): this script is bundled and typed, so it cannot take
         // define:vars without shipping TypeScript to the browser.
         t.setAttribute('aria-label', (open ? t.dataset.labelClose : t.dataset.labelOpen) || '');
+        if (scrim) scrim.hidden = !open;
+        if (open) {
+          scrollAt = window.scrollY;
+          document.documentElement.classList.add('nav-open');
+        } else {
+          document.documentElement.classList.remove('nav-open');
+          if (window.scrollY !== scrollAt) window.scrollTo(0, scrollAt);
+        }
+      };
+      t.addEventListener('click', () => setOpen(!l.classList.contains('open')));
+      // Tapping the darkened page closes it, which is what a scrim is FOR: it
+      // is the affordance that tells a reader the layer is dismissible.
+      if (scrim) scrim.addEventListener('click', () => setOpen(false));
+      // Escape closes it, matching the search overlay. It never did before,
+      // which was defensible while the drawer was a panel and is not once it
+      // is a modal-looking layer with a backdrop.
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && l.classList.contains('open')) { setOpen(false); t.focus(); }
       });
+      // Crossing into desktop width turns the drawer back into a nav row, so
+      // an open drawer stops existing and its scroll lock would have nothing
+      // left to release it. Rotating a tablet was enough to reach that.
+      const wide = window.matchMedia('(min-width: 901px)');
+      const onWide = () => { if (wide.matches && l.classList.contains('open')) setOpen(false); };
+      if (wide.addEventListener) wide.addEventListener('change', onWide);
+      else if ((wide as any).addListener) (wide as any).addListener(onWide);
     }
     const sBtn = document.getElementById('navSearchBtn');
     const sOv = document.getElementById('searchOverlay');
@@ -1208,7 +1256,7 @@ const entityGraph = {
 
   /* Search overlay */
   .so { position: fixed; inset: 0; z-index: 90; background: rgba(10,10,11,0.82);
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: 14vh 1.25rem 0; }
+    backdrop-filter: blur(6px); padding: 14vh 1.25rem 0; }
   .so[hidden] { display: none; }
   /* Full content width (Antonio): the overlay box must be the SAME length
      as the homepage search box, which spans the site column, "large, not
@@ -1237,6 +1285,49 @@ const entityGraph = {
     transition: color var(--t-fast), border-color var(--t-fast);
   }
   .so-close:hover { color: var(--text); border-color: var(--text-dim); }
+
+  /* The drawer's backdrop. Same colour, same blur and same intent as .so
+     above: one treatment for "there is a layer over what you were reading".
+     z-index 25 puts it over the page and under the drawer's own 30.
+     The header is lifted above it while open, and given a background, because
+     the scrim's blur would otherwise show straight through the transparent
+     header and smear the brand and the toggle, which is the one control the
+     reader needs in order to get out.
+     touch-action: none so a drag on the darkened area cannot scroll the
+     document underneath on engines where clipping the root is not enough. */
+  .nav-scrim {
+    position: fixed; inset: 0; z-index: 25;
+    background: rgba(10, 10, 11, 0.82);
+    backdrop-filter: blur(6px);
+    touch-action: none;
+  }
+  /* THE FROSTED BACKDROP HAS NOT RENDERED IN CHROME SINCE THE CSS WAS MINIFIED
+     (found 2026-08-06 while building the drawer's scrim, and it is about .so,
+     not about this new rule).
+     Both rules were written the normal way, standard property first and
+     `-webkit-backdrop-filter` after it as the old-Safari fallback. The CSS
+     minifier treats the pair as one property with two spellings and keeps only
+     the LAST, so what shipped was the -webkit- spelling alone. Chromium 141
+     answers false to CSS.supports('-webkit-backdrop-filter', 'blur(6px)'): the
+     alias is gone. So on Chrome, Edge and every Chromium browser the search
+     overlay has been a flat 82% black wash with no blur, and nobody could see
+     it because a flat wash looks deliberate.
+     Order alone cannot fix it: whichever spelling goes last is the only one
+     that survives, so putting the standard one last simply moves the breakage
+     from Chromium to Safari 9 through 17, which is a very large number of
+     iPhones. @supports is the way out, because a declaration inside an at-rule
+     is not a duplicate of one outside it and the minifier leaves both alone.
+     Anything that does not understand the standard property is exactly the
+     thing that needs the prefix, which is what this query says. */
+  @supports not (backdrop-filter: blur(1px)) {
+    .so, .nav-scrim { -webkit-backdrop-filter: blur(6px); }
+  }
+  html.nav-open { overflow: hidden; }
+  html.nav-open .site-nav-wrap { position: relative; z-index: 30; background: var(--bg); }
+  /* Above 900px there is no drawer, so there is no backdrop either. Belt for a
+     rotate or a resize while it is open; the script closes the drawer on the
+     same boundary so the scroll lock comes off with it. */
+  @media (min-width: 901px) { .nav-scrim { display: none; } }
 
   .nav-toggle {
     display: none; width: 44px; height: 44px; flex: 0 0 auto; background: transparent;
@@ -1316,7 +1407,10 @@ const entityGraph = {
       flex-direction: column; gap: 0; background: var(--surf);
       border-bottom: var(--stroke) solid var(--edge); padding: 0.25rem 1.25rem 0.75rem;
     }
-    .nav-links.open { display: flex; }
+    /* The overlay shadow, so the drawer sits ON the page instead of being
+       spliced into it. --shadow-overlay is the token the search dropdown and
+       every other floating layer uses; there is no second value for this. */
+    .nav-links.open { display: flex; box-shadow: var(--shadow-overlay); }
     .nav-links a { padding: 0.8rem 0; border-bottom: var(--stroke) solid var(--edge-soft); font-size: 0.95rem; }
     .nav-links a:last-child { border-bottom: none; }
     /* Gear out of the mobile drawer (Antonio, 2026-07-31): on a phone,

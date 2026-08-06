@@ -8,11 +8,24 @@ import Icon from '../components/Icon.astro';
   path="/404"
   noindex
 >
+  {/* ONE ALIGNMENT AXIS (2026-08-06). The eyebrow carried
+      justify-content:center and the CTA carried margin:0 auto, so at 1280 this
+      page centred two of its five elements while the h1, the paragraph and the
+      Home link sat on the left column every other page on the site uses. Two
+      axes on one screen reads as a page assembled from two templates, and this
+      is a crisis surface: a reader arriving here is already confused about
+      where they are.
+      /offline is the reference and it is not an arbitrary one: it is the other
+      crisis surface, it carries the same red route out, and it has always been
+      left-aligned with a plain full-width .btn. So the inline styles are
+      DELETED rather than adjusted, and the two pages now differ in copy only.
+      The pt and es copies name this file as their structural source, so the
+      reasoning is not repeated in them. */}
   <main class="wrap" style="padding-top:4rem">
-    <div class="status-line red" style="justify-content:center">Signal_Lost</div>
+    <div class="status-line red">Signal_Lost</div>
     <h1 class="danger" style="margin-bottom:1rem">404 - WRONG CABLE</h1>
     <p class="dim" style="margin-bottom:2rem">This page isn't plugged in. But if your USB just died before a gig, you're two taps from the fix.</p>
-    <a href="/emergency" class="btn btn-solid" style="max-width:24rem;margin:0 auto"><Icon name="siren" /> Start Emergency Mode</a>
+    <a href="/emergency" class="btn btn-solid"><Icon name="siren" /> Start Emergency Mode</a>
     <p style="margin-top:1.5rem"><a href="/" class="dim" style="text-decoration:none">← Home</a></p>
   </main>
 </Base>

@@ -43,7 +43,7 @@ const lp = (p) => localizedPath(p, 'es');
     <h1 style="margin-bottom:0.5rem">LA EMERGENCY <span class="accent">CARD</span></h1>
     <p class="dim" style="margin-bottom:1.5rem"><Icon name="phone" /> Toma una captura de esta página ahora, funciona sin señal, en cualquier booth, a cualquier hora.</p>
 
-    <div class="panel" style="border-color:rgba(0,255,102,0.3)">
+    <div class="panel panel-go">
       <h2 style="margin-bottom:0.4rem">EL USB MURIÓ EN EL BOOTH</h2>
       <p class="dim" style="font-size:0.85rem;margin-bottom:0.9rem">
         Damos por hecho que ya lo reconectaste y ya probaste el otro deck.
@@ -56,7 +56,7 @@ const lp = (p) => localizedPath(p, 'es');
       </ol>
     </div>
 
-    <div class="panel" style="border-color:rgba(255,176,32,0.3)">
+    <div class="panel panel-warn">
       <h2 style="margin-bottom:0.75rem">LOS AJUSTES SAGRADOS</h2>
       <ul class="checklist">
         <li>Formato: <span class="mono" translate="no"><a href={lp(hrefFor('fat32'))}>FAT32</a></span> · Esquema: <span class="mono" translate="no"><a href={lp(hrefFor('mbr'))}>MBR</a></span> · Tamaño: 32 a 64 GB</li>

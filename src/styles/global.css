@@ -281,12 +281,63 @@ body {
 
 /* ---------- Type ---------- */
 
+/* ARCHIVO'S WORD SPACE IS TOO NARROW FOR THIS SITE (2026-08-06).
+   Archivo draws its word space at roughly 0.18em against Inter's 0.30em, and
+   every display rule on the site then puts -0.01 to -0.02em of tracking on top
+   of it, which eats into the space as well as the letters. The result is
+   readable in a specimen and not readable at a glance in a dark booth: the
+   homepage H1 reads WHATDOYOU, the /prepare rule cards read "Format for the
+   whole room" as "Formatfor thewhole room". It is not a kerning nicety; the
+   whole point of a 3.4rem headline is that it is taken in without being read.
+   0.05em, applied once here, restores about 40% of the difference. The value is
+   MEASURED, not chosen. scripts/measure-headlines.mjs walks 342 headlines
+   across the home page, /emergency, a tunnel screen, /prepare and a fix
+   article, at 360, 390 and 1280, in all three languages; the sweep ran 0.01
+   through 0.06em:
+     0.06em    5 headlines gain a line, one of them at 390, which is a
+               mainstream phone. Rejected on that alone.
+     0.03-0.05 the SAME 2 headlines gain a line, both only at 360, and 0.05
+               costs nothing that 0.03 does not. So 0.05.
+     0.02em    nothing moves, and nothing is fixed either: a sixth of the
+               missing gap is invisible, which buys a clean report and the
+               reader nothing.
+   THE TWO THAT MOVE, at 360 only, stated rather than buried:
+     /prepare "Format for the whole room." 1 -> 2 lines. FOUR of the ten rule
+       headings on that page already take two lines at 360, so this joins a
+       list that wraps rather than breaking one that does not. It is also the
+       exact string that made this item worth doing.
+     /pt/protocol/usb/start "Algum outro player da booth le o drive?" 1 -> 2, a
+       rescue question at 320px of measure. fold-check still passes, and that is
+       the gate that owns the tunnel fold.
+   Nothing overflows at any width in any language.
+   THE BRAND LOCKUP IS NOT IN THIS SET, on purpose. .nb-name, .foot-wordmark
+   and .nb-tag are sized by MEASUREMENT against each other ("wordmark width ==
+   tagline width", four breakpoints, re-measured every time either moves).
+   Word spacing changes that width, so it would break the rectangle rule and
+   the fix would be four more measurements. The wordmark is two short words in
+   a mark; it does not have this problem. Same for .btn: the fix-article CTA
+   stack is held to one line on the narrowest phone by a gate check, and its
+   labels are two or three words. */
 h1, h2, h3, .display {
   font-family: var(--font-display);
   line-height: 1.02;
   letter-spacing: -0.02em;
+  word-spacing: 0.05em;
   text-wrap: balance;
   font-weight: 900;
+}
+/* The rest of the display type, which does not go through h1-h3. These live in
+   page-scoped <style> blocks (.door-title on the homepage, .pv-title on
+   /prepare) or further down this file, so they are collected here rather than
+   spread across three language copies of two page files: one rule, one value,
+   one place to change it. Astro's scoping does not prevent this, the class is
+   on the element either way. */
+.question,
+.pad-title,
+.kb-name, .lg-name, .pt-name,
+.door-title,
+.pv-title {
+  word-spacing: 0.05em;
 }
 h1 { font-size: clamp(2rem, 8vw, 3.4rem); text-transform: uppercase; }
 h2 { font-size: clamp(1.4rem, 5vw, 2.1rem); font-weight: 800; letter-spacing: -0.015em; }
@@ -318,14 +369,53 @@ div.panel > h2:first-child:not([class]) {
 p { margin-bottom: 1rem; }
 a { color: var(--red); }
 
-/* small uppercase eyebrow used across pages (status-line) */
+/* ---------- The eyebrow, and its LED ----------
+   THE ALARM LED WAS ON EVERY PAGE (2026-08-06).
+   This rule hardcoded --red and an infinite 2s pulse, so PREVENTION_HUB,
+   KNOWLEDGE_BASE, DICTIONARY, PRE-GIG_CHECKLIST, APPROVED_GEAR, LEGAL and
+   THE_STORY all opened with a red LED blinking at the reader. On a site whose
+   colour language means "red = move now, the room is at risk", an alarm above
+   the dictionary is not decoration, it is a false alarm, and printing one on
+   every page is how a real one stops being read. The `.status-line.red`
+   modifier below was therefore a NO-OP: it restated what the base rule
+   already said, on 24 pages that had bothered to declare their tone.
+
+   The mechanism is --tone, which is not a new idea here: it is exactly what
+   .pad does further down this file, and for the same reason. One custom
+   property per tone, and everything that means "this element's colour" reads
+   it, so a green eyebrow structurally cannot draw a red dot.
+
+   THE TEXT READS --tone TOO, not just the dot. A grey LED beside red words is
+   worse than either mistake on its own: it reads as a rendering fault rather
+   than as a quiet page. The eyebrow is ONE object.
+
+   THE ASSIGNMENTS COME FROM THE HOMEPAGE, not from taste. src/pages/index.astro
+   has assigned .d-ready green (checklist), .d-emergency red and .d-prevent
+   amber since the original build, and the doctrine names it the reference
+   implementation. The axis is TIME PRESSURE, not severity:
+     red     something is failing NOW  -> /emergency, /404, /offline, and the
+             eight /fix articles that name a live symptom
+     amber   it is costing you, but you can think -> /prepare, /recovery,
+             /files-lost, and the five /fix articles that name a decision or a
+             procedure you can still get wrong
+     green   it is working, or you have time -> /checklist, /saved, /card-ready
+     neutral nothing is at stake right now -> /knowledge, /gear, /card,
+             /dictionary, /faq, /about, /legal, /install, /partners, /feedback
+   The /fix split is a RULE, not a per-page opinion, so the next article can be
+   classified without asking: live symptom is red, decision or procedure is
+   amber. The eight red ones were already marked; the five calm ones were the
+   pages this bug was hiding.
+
+   AND THE PULSE IS RED-ONLY. A pulse is the site saying "act now". It belongs
+   to the one tone that means that, and nowhere else. */
 .status-line {
+  --tone: var(--text-dim);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--tone);
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -335,8 +425,7 @@ a { color: var(--red); }
   content: '';
   width: 7px; height: 7px;
   border-radius: var(--radius-round);
-  background: var(--red);
-  animation: pulse 2s ease-in-out infinite;
+  background: var(--tone);
   flex-shrink: 0;
 }
 /* Desktop-only status tag (Antonio, first used on /checklist): the eyebrow
@@ -347,10 +436,15 @@ a { color: var(--red); }
    space above the H1 that a phone can't spare. Desktop keeps it: there's
    room, and it's a useful map of where you are in the knowledge base. */
 @media (max-width: 640px) { .crumb { display: none; } }
-.status-line.red { color: var(--red); }
-.status-line.red::before { background: var(--red); }
+/* The three tones. Neutral is the absence of a modifier, so a page that says
+   nothing about itself gets the quiet dot rather than the alarm. */
+.status-line.red { --tone: var(--red); }
+.status-line.amber { --tone: var(--amber); }
+.status-line.green { --tone: var(--green); }
+/* The pulse belongs to red and to nothing else: see the note above. */
+.status-line.red::before { animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
-@media (prefers-reduced-motion: reduce) { .status-line::before { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .status-line.red::before { animation: none; } }
 
 /* ---------- Layout ---------- */
 
@@ -370,7 +464,20 @@ a { color: var(--red); }
   margin-bottom: var(--sp-4);
 }
 .panel-warn   { background: var(--amber-dim); border-color: rgba(217, 164, 65, 0.4); }
-.panel-danger { background: var(--red-dim);   border-color: var(--red-border); }
+/* ONE DANGER GEOMETRY (2026-08-06).
+   The site had two. `.alert-card` on the rescue screens is a 1px red hairline
+   with a 3px red rail down the left edge; `.panel-danger` on /recovery, /fix
+   and /card was a uniform 1px hairline with no rail. Same meaning, same
+   colour, two shapes, so "this is the dangerous box" was drawn differently
+   depending on which part of the site a reader happened to be in.
+   The rail wins, and not by preference: on a near-black theme a 12%-alpha tint
+   inside a 50%-alpha hairline is a very quiet box, and the rail is the only
+   part of it that survives being seen out of the corner of an eye. The tunnel
+   already had it. This is the other 33 panels catching up, and it is a one
+   line change here rather than 33 edits in three languages.
+   The rail replaces the left hairline rather than sitting beside it, which is
+   why `border-left` comes AFTER `border-color`. */
+.panel-danger { background: var(--red-dim);   border-color: var(--red-border); border-left: 3px solid var(--red); }
 .panel-go     { background: var(--green-dim); border-color: var(--green-border); }
 
 /* "The short version" collapse-to-3-lines on phone (Antonio, 2026-08-01).
