@@ -5,7 +5,7 @@ import Consent from '../components/Consent.astro';
 import LangPicker from '../components/LangPicker.astro';
 import Search from '../components/Search.astro';
 import { VERSION_LABEL, IS_BETA } from '../lib/version';
-import { LANGS, byCode, liveLangs, localizedPath, DEFAULT_LANG, anyTranslationLive, anyNotice } from '../i18n/registry';
+import { LANGS, byCode, liveLangs, localizedPath, DEFAULT_LANG, anyTranslationLive, anyNotice, insideEmergencyMode } from '../i18n/registry';
 import { t } from '../i18n/ui';
 import TranslationNotice from '../components/TranslationNotice.astro';
 import LangUndo from '../components/LangUndo.astro';
@@ -487,8 +487,18 @@ const entityGraph = {
       it (Tunnel.astro does not include the component); the triage screen is
       the same situation one tap earlier. The choice is still asked everywhere
       else, and it is still asked before anything is measured: Analytics only
-      ever runs through __smgLoadAnalytics, which only a stored yes calls. */}
-  {path !== '/emergency' && <Consent lang={lang} />}
+      ever runs through __smgLoadAnalytics, which only a stored yes calls.
+
+      THE TEST IS insideEmergencyMode(), NOT `path !== '/emergency'`
+      (2026-08-06). It shipped as the literal on the same day the helper was
+      extracted into src/i18n/registry.js to be the single definition of this
+      boundary, which left two of them. That is not hypothetical tidiness: the
+      autolinker had the same split the same day, its copy said /protocol and
+      stopped, and /emergency shipped six injected links out of the rescue as a
+      result. Behaviour here is identical today, because Base renders /emergency
+      and Tunnel renders /protocol, but the next page to join Emergency Mode is
+      now covered instead of silently getting the banner back. */}
+  {!insideEmergencyMode(path) && <Consent lang={lang} />}
   <header class="site-nav-wrap">
     <div class="site-nav">
       <a href={lp("/")} class="nav-brand" aria-label={S.aria.brandHome}>
