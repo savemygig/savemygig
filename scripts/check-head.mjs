@@ -68,7 +68,39 @@ const REQUIRED = [
   },
 ];
 
+/*
+ * THE LENGTH BUDGET (added 2026-08-06).
+ *
+ * A title over about 60 characters and a description over about 155 are cut off
+ * in a search result, so the part of the sentence that was doing the persuading
+ * is the part Google throws away. The English pages mostly respected that.
+ * Nobody was CHECKING, and by the time pt and es shipped, 30 Portuguese and 33
+ * Spanish pages were over, with descriptions up to 200 characters. That is not
+ * carelessness by whoever wrote them, it is the predictable result of
+ * translating a sentence written TO a limit into a language that needs 15 to 25%
+ * more room to say the same thing: the limit does not survive translation unless
+ * something enforces it. The offenders were rewritten FOR each market rather
+ * than trimmed, and this is what stops the next page drifting back over.
+ *
+ * ENTITIES ARE DECODED FIRST, and that is load-bearing: "Don&#39;t" is eight
+ * bytes in the HTML and one apostrophe to both a reader and Google. Counting raw
+ * bytes flags four English pages that are inside the budget, and a check that
+ * cries wolf is a check somebody deletes.
+ *
+ * HARD FAIL, not a warning. A warning in a 32-check gate is a line nobody reads.
+ */
+const T_MAX = 60;
+const D_MAX = 155;
+// One pass is enough: these are attribute and text values, so the only entities
+// in play are the handful Astro has to escape.
+const decode = (s) => s
+  .replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"')
+  .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+  .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+  .replace(/&amp;/g, '&');
+
 const files = walk(DIST);
+let over = 0;
 for (const f of files) {
   const html = fs.readFileSync(f, 'utf8');
   const head = (html.match(/<head[\s\S]*?<\/head>/i) || [''])[0];
@@ -79,6 +111,16 @@ for (const f of files) {
     const hay = r.name.includes('<html>') ? html : head;
     if (!r.re.test(hay)) fail.push(`${rel}: MISSING ${r.name} (${r.why})`);
   }
+  const title = decode((head.match(/<title>([^<]*)<\/title>/i) || ['', ''])[1]);
+  const desc = decode((head.match(/<meta\s+name="description"\s+content="([^"]*)"/i) || ['', ''])[1]);
+  if (title.length > T_MAX) {
+    over++;
+    fail.push(`${rel}: <title> is ${title.length} chars, budget ${T_MAX}, Google cuts the rest\n      ${title}`);
+  }
+  if (desc.length > D_MAX) {
+    over++;
+    fail.push(`${rel}: description is ${desc.length} chars, budget ${D_MAX}, Google cuts the rest\n      ${desc}`);
+  }
 }
 
 if (fail.length) {
@@ -87,4 +129,4 @@ if (fail.length) {
   if (fail.length > 15) console.error(`  ... and ${fail.length - 15} more`);
   process.exit(1);
 }
-console.log(`Head check PASS (${files.length} pages carry viewport, charset, lang and title)`);
+console.log(`Head check PASS (${files.length} pages carry viewport, charset, lang and title; every title within ${T_MAX} chars and every description within ${D_MAX})`);
