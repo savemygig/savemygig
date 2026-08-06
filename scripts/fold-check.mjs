@@ -50,6 +50,35 @@ import { readFile } from 'node:fs/promises';
 import { extname, join } from 'node:path';
 import { createRequire } from 'node:module';
 
+// COUNT LINES, NOT BOXES (2026-08-06).
+// This measured Range.getClientRects().length, which equals the line count
+// only while .door-title holds a bare text node. It gained child spans the day
+// the middle door's title became responsive (a .dt-full / .dt-short pair, so
+// wide screens get "RESOLVER UM PROBLEMA" and phones keep the label that
+// fits), and a range containing an ELEMENT returns a rect for the element AND
+// another for its text: two identical boxes on one line, reported as a wrap.
+// It failed the gate on a page that was rendering perfectly.
+// Grouping by rounded top counts actual lines, works for bare text and for
+// nested spans alike, and ignores anything display:none, which contributes no
+// box at all. innerText rather than textContent for the label, so a failure
+// message quotes what the reader SEES rather than both variants concatenated.
+const LINE_BOXES = `
+  window.lineBoxes = function (el) {
+    var rg = document.createRange();
+    rg.selectNodeContents(el);
+    var rects = Array.prototype.slice.call(rg.getClientRects())
+      .filter(function (x) { return x.width > 0.5 && x.height > 0.5; });
+    var tops = {}, widest = 0;
+    rects.forEach(function (x) {
+      var key = Math.round(x.top);
+      tops[key] = Math.max(tops[key] || 0, x.width);
+    });
+    Object.keys(tops).forEach(function (k) { widest = Math.max(widest, tops[k]); });
+    return { lines: Object.keys(tops).length || 1, widest: Math.round(widest) };
+  };
+`;
+
+
 let chromium;
 try { ({ chromium } = await import('playwright')); }
 catch { chromium = createRequire('/opt/node-tools/')('playwright').chromium; }
@@ -103,6 +132,7 @@ for (const { path, lang } of LANGS) {
     const page = await browser.newPage({ viewport: { width: d.w, height: visible } });
     await page.goto(base + path, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.querySelector('#ck')?.remove());
+    await page.addScriptTag({ content: LINE_BOXES });
     const m = await page.evaluate(() => {
       const doors = [...document.querySelectorAll('.door')];
       return doors.map((el) => {
@@ -114,11 +144,9 @@ for (const { path, lang } of LANGS) {
         // has rounded a one-line title up to two on this site before.
         let lines = 1, widest = 0;
         if (t) {
-          const rg = document.createRange();
-          rg.selectNodeContents(t);
-          const rects = [...rg.getClientRects()].filter((x) => x.width > 0.5);
-          lines = rects.length;
-          widest = Math.round(Math.max(...rects.map((x) => x.width)));
+          const r2 = lineBoxes(t);
+          lines = r2.lines;
+          widest = r2.widest;
         }
         return {
           title: t ? t.textContent.trim() : '?',
@@ -198,16 +226,15 @@ for (const { path, lang } of LANGS) {
     const page = await browser.newPage({ viewport: { width: w, height: TALL } });
     await page.goto(base + path, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.querySelector('#ck')?.remove());
+    await page.addScriptTag({ content: LINE_BOXES });
     const m = await page.evaluate(() => {
       const out = [];
       for (const t of document.querySelectorAll('.door-title')) {
-        const rg = document.createRange();
-        rg.selectNodeContents(t);
-        const rects = [...rg.getClientRects()].filter((x) => x.width > 0.5);
+        const r2 = lineBoxes(t);
         out.push({
-          title: t.textContent.trim(),
-          lines: rects.length,
-          widest: Math.round(Math.max(...rects.map((x) => x.width))),
+          title: t.innerText.trim(),
+          lines: r2.lines,
+          widest: r2.widest,
           avail: Math.round(t.getBoundingClientRect().width),
           fontPx: Math.round(parseFloat(getComputedStyle(t).fontSize) * 100) / 100,
         });
@@ -275,6 +302,7 @@ for (const { path, lang } of EMERGENCY) {
     // would invalidate the measurement, so this is belt and braces and it
     // also keeps the two sections measuring the same thing.
     await page.evaluate(() => document.querySelector('#ck')?.remove());
+    await page.addScriptTag({ content: LINE_BOXES });
     const m = await page.evaluate(() => {
       const pads = [...document.querySelectorAll('.pad-grid > .pad')];
       return {

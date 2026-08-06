@@ -51,7 +51,21 @@ const SUBLINES = [
       <a class="door d-emergency" href="/pt/emergency" data-event="begin_checkout" data-placement="home_door_emergency">
         <span class="door-led" aria-hidden="true"></span>
         <span class="door-body">
-          <span class="door-title">RESOLVER PROBLEMA</span>
+          {/* THE ARTICLE IS A DESKTOP-ONLY LUXURY (Antonio, 2026-08-06).
+              He asked for "RESOLVER UM PROBLEMA", which answers the h1's
+               question the way a Brazilian actually would. Measured, it does
+               not fit a phone: 264px against the 227px a 360px screen leaves,
+               and it still loses on an iPhone Pro Max by 6px. Holding one line
+               there would have cost a 14% type cut on the primary CTA.
+               So he chose desktop only, and the door already had the mechanism:
+               the DESCRIPTIONS have carried a .dd-full / .dd-short pair swapped
+               at 640px since launch, for exactly this reason. The title now
+               does the same. Wide screens get the article, phones keep the
+               shorter label that fits, and neither is a compromise on the one
+               it ships to. fold-check asserts one line per title per language,
+               so it guards the short form; the long form is measured at 641,
+               720, 768 and 1280. */}
+          <span class="door-title"><span class="dt-full">RESOLVER UM PROBLEMA</span><span class="dt-short">RESOLVER PROBLEMA</span></span>
           <span class="door-desc"><span class="dd-full">USB, player ou mixer falhando. Volte a tocar.</span><span class="dd-short">USB, player ou mixer falhando?</span></span>
         </span>
         <span class="door-arrow" aria-hidden="true">&rarr;</span>
@@ -172,6 +186,7 @@ const SUBLINES = [
   /* Two lengths, one message. Both stay in the HTML, so search engines and AI
      crawlers still read the full text. */
   .dd-short { display: none; }
+  .dt-short { display: none; }
   .door-arrow { flex: 0 0 auto; font-size: 1.4rem; color: var(--text-faint); transition: color var(--t-fast); }
 
   .d-emergency:hover, .d-emergency:active, .d-emergency:focus-visible { border-color: var(--red); }
@@ -248,6 +263,8 @@ const SUBLINES = [
     .door-desc { font-size: clamp(0.79rem, calc(3.4vw + 0.3px), 1rem); line-height: 1.35; }
     .dd-full { display: none; }
     .dd-short { display: inline; }
+    .dt-full { display: none; }
+    .dt-short { display: inline; }
     .door-arrow { font-size: 1.2rem; }
     .known { margin-top: 1.15rem; font-size: 0.85rem; }
   }
