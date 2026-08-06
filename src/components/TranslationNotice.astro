@@ -78,6 +78,11 @@ const { lang, path } = Astro.props;
 // drift. Extend it THERE rather than adding conditions at call sites.
 const show = lang !== DEFAULT_LANG && !noticeSilent(path);
 
+// RULE 6 needs to know it is on the homepage. See the note beside it in the
+// script below: only the homepage has three doors competing for the first
+// screen, so only the homepage yields.
+const isHome = path === '/';
+
 // Antonio, 2026-08-05: reworded from an apology ("ainda não está perfeita")
 // to continuous improvement ("em constante evolução"). The CTA is the closing
 // sentence of the lead, rendered in brand red, and now that /pt/feedback and
@@ -115,7 +120,7 @@ const c = COPY[lang];
 )}
 
 {show && c && (
-  <script is:inline define:vars={{ lang }}>
+  <script is:inline define:vars={{ lang, isHome }}>
     (function () {
       var el = document.getElementById('txNotice');
       if (!el) return;
@@ -134,6 +139,39 @@ const c = COPY[lang];
       // Checked here rather than by LangUndo reaching in and hiding #txNotice,
       // because this script runs last and would simply undo that.
       if (window.__smgAutoLang) return;
+
+      // RULE 6, ADDED 2026-08-06: ON THE HOMEPAGE, THE THIRD DOOR OUTRANKS THIS.
+      // Rule 5 above is the same judgement against a different competitor, and
+      // the sentence it turns on is the one that matters here too: a door a DJ
+      // cannot see is a door they do not know exists.
+      //
+      // This strip costs 125px, and it spends them at the very top of the page,
+      // above the h1. On a 375x667 iPhone SE the first screen is about 559px
+      // once the URL bar is expanded, so those 125px are 22% of everything the
+      // reader gets on load. Measured on /pt and /es at that size, the third
+      // door's bottom edge lands at 557px with four of the five rotating
+      // taglines and 560px with the fifth: two pixels of room, then one pixel
+      // short. English, which never renders this strip, has 141px of room on
+      // the same phone. The strip IS the difference, and the doors were only
+      // ever passing by luck.
+      //
+      // Buying it back inside the strip is not possible: it has already been
+      // through that pass, 227px down to 125px, and what is left is one
+      // paragraph of the smallest type on the site. The remaining choice is
+      // which of the two things loses, and the project answered that in Rule 5.
+      //
+      // SCOPED TIGHT, deliberately. Only the homepage, because only the
+      // homepage puts three doors on the first screen, and only under 620px of
+      // viewport height, which in the gate's device list is the iPhone SE alone
+      // (the next shortest phone loads with 672px and has 61px of room). Every
+      // other page and every other phone is untouched.
+      //
+      // Nothing is lost by yielding, for the same reason Rule 5 loses nothing:
+      // this notice is marked seen only when it is DISMISSED, never when it is
+      // merely skipped, so the reader gets it in full on the next page they
+      // open, where no door is waiting on those 125px. Read at load, while the
+      // URL bar is still expanded, which is the moment the fold is tightest.
+      if (isHome && window.innerHeight <= 620) return;
 
       var KEY = 'SMG_TX_NOTICE_' + lang;
       var seen = false;

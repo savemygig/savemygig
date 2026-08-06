@@ -126,6 +126,54 @@ let worstAt = '';
 const fails = [];
 const wraps = [];
 
+// MEASURE EVERY SUBLINE, NOT THE ONE random() HAPPENED TO PICK (2026-08-06).
+//
+// The homepage tagline is one of five rotating lines, chosen client-side by
+// Math.random() on load. .sub reserves a min-height for the longest of them at
+// each breakpoint, so MOST of the time the choice costs nothing. Most is the
+// problem. At 375x559, which is an iPhone SE on first load, the Portuguese
+// lines all fitted on one line except the first, which wrapped, added 3px, and
+// put the third door 1px under the fold. The whole pt/es homepage lives at
+// +2px of slack there, because the translation notice takes 125px off the top,
+// so 3px is the difference between shipping and not.
+//
+// This check therefore passed or failed BY DICE. Two consecutive runs against
+// the same dist reported +2px and -1px, and the -1px was the honest one: one DJ
+// in five, on that phone, in that language, saw a clipped door. The sixth time
+// this project has been bitten by a check that measured something other than
+// what ships.
+//
+// So force each line in turn and keep the WORST. The random pick is never
+// trusted, a failure names the tagline responsible, and the reported slack is
+// the slack of the unluckiest reader rather than the average one.
+async function measureDoors(page) {
+  return page.evaluate(() => {
+    const doors = [...document.querySelectorAll('.door')];
+    return doors.map((el) => {
+      const r = el.getBoundingClientRect();
+      const t = el.querySelector('.door-title');
+      // ONE RECT PER VISUAL LINE. A Range over the text nodes, never the
+      // element's own box: .door-title is display:block, so its own
+      // getClientRects() is always length 1 and its height/line-height ratio
+      // has rounded a one-line title up to two on this site before.
+      let lines = 1, widest = 0;
+      if (t) {
+        const r2 = lineBoxes(t);
+        lines = r2.lines;
+        widest = r2.widest;
+      }
+      return {
+        title: t ? t.innerText.trim() : '?',
+        bottom: Math.round(r.bottom),
+        lines,
+        widest,
+        avail: t ? Math.round(t.getBoundingClientRect().width) : 0,
+        fontPx: t ? Math.round(parseFloat(getComputedStyle(t).fontSize) * 100) / 100 : 0,
+      };
+    });
+  });
+}
+
 for (const { path, lang } of LANGS) {
   for (const d of DEVICES) {
     const visible = d.h - URL_BAR;
@@ -133,47 +181,50 @@ for (const { path, lang } of LANGS) {
     await page.goto(base + path, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.querySelector('#ck')?.remove());
     await page.addScriptTag({ content: LINE_BOXES });
-    const m = await page.evaluate(() => {
-      const doors = [...document.querySelectorAll('.door')];
-      return doors.map((el) => {
-        const r = el.getBoundingClientRect();
-        const t = el.querySelector('.door-title');
-        // ONE RECT PER VISUAL LINE. A Range over the text nodes, never the
-        // element's own box: .door-title is display:block, so its own
-        // getClientRects() is always length 1 and its height/line-height ratio
-        // has rounded a one-line title up to two on this site before.
-        let lines = 1, widest = 0;
-        if (t) {
-          const r2 = lineBoxes(t);
-          lines = r2.lines;
-          widest = r2.widest;
-        }
-        return {
-          title: t ? t.textContent.trim() : '?',
-          bottom: Math.round(r.bottom),
-          lines,
-          widest,
-          avail: t ? Math.round(t.getBoundingClientRect().width) : 0,
-          fontPx: t ? Math.round(parseFloat(getComputedStyle(t).fontSize) * 100) / 100 : 0,
-        };
-      });
-    });
+
+    // One pass per rotating tagline. A page without the rotator measures once.
+    const subCount = await page.evaluate(
+      () => document.querySelectorAll('#sub .sub-line').length
+    );
+    const passes = [];
+    for (let i = 0; i < Math.max(subCount, 1); i++) {
+      const shown = await page.evaluate((idx) => {
+        const lines = [...document.querySelectorAll('#sub .sub-line')];
+        if (!lines.length) return null;
+        lines.forEach((el, j) => { el.hidden = j !== idx; });
+        return lines[idx].textContent.trim();
+      }, i);
+      passes.push({ sub: shown, doors: await measureDoors(page) });
+    }
     await page.close();
 
     // Three doors, always. A missing door would otherwise make this check pass
     // by having less to fit, the same trap the /emergency section guards.
-    if (m.length !== 3) {
-      fails.push(`${path} ${d.name}: expected 3 doors, found ${m.length}`);
-      console.log(`FAIL ${(lang + ' ' + d.name).padEnd(22)} only ${m.length} doors`);
+    const bad = passes.find((p) => p.doors.length !== 3);
+    if (bad) {
+      fails.push(`${path} ${d.name}: expected 3 doors, found ${bad.doors.length}`);
+      console.log(`FAIL ${(lang + ' ' + d.name).padEnd(22)} only ${bad.doors.length} doors`);
       continue;
     }
 
+    // The unluckiest tagline is the one that decides whether this device passes.
+    const tightest = passes.reduce((a, b) =>
+      b.doors[b.doors.length - 1].bottom > a.doors[a.doors.length - 1].bottom ? b : a
+    );
+    const m = tightest.doors;
     const last = m[m.length - 1];
     const slack = visible - last.bottom;
     if (slack < worst) { worst = slack; worstAt = `${lang} ${d.name}`; }
     const cut = slack < 0;
-    if (cut) fails.push(`${path} ${d.name} ${d.w}x${d.h}: "${last.title}" cut off by ${-slack}px`);
+    if (cut) {
+      fails.push(
+        `${path} ${d.name} ${d.w}x${d.h}: "${last.title}" cut off by ${-slack}px` +
+        (tightest.sub ? `, with the tagline "${tightest.sub}"` : '')
+      );
+    }
 
+    // A title that wraps under ANY tagline is a wrapped title: the tagline
+    // moves the doors vertically, it never changes their width.
     const wrapped = m.filter((x) => x.lines > 1);
     for (const x of wrapped) {
       wraps.push(
@@ -182,10 +233,14 @@ for (const { path, lang } of LANGS) {
       );
     }
 
+    const bottoms = passes.map((p) => p.doors[p.doors.length - 1].bottom);
+    const spread = Math.max(...bottoms) - Math.min(...bottoms);
     console.log(
       `${cut || wrapped.length ? 'FAIL' : 'ok  '} ${(lang + ' ' + d.name).padEnd(22)} ${d.w}x${d.h} ` +
       `visible=${visible}px  lastDoorBottom=${last.bottom}px  slack=${slack >= 0 ? '+' : ''}${slack}px  ` +
-      `titles=${m.map((x) => x.lines).join('/')}line${wrapped.length ? ' <<< WRAPPED' : ''}`
+      `titles=${m.map((x) => x.lines).join('/')}line  ` +
+      `worst of ${passes.length} tagline${passes.length === 1 ? '' : 's'} (spread ${spread}px)` +
+      `${wrapped.length ? ' <<< WRAPPED' : ''}`
     );
   }
 }

@@ -288,6 +288,56 @@ for (const [code, prefix, phrase] of [
 }
 
 // ---------------------------------------------------------------------------
+// 11. RULE 6: ON A SHORT PHONE, THE HOMEPAGE'S THIRD DOOR OUTRANKS THE NOTICE.
+//
+// The translation strip costs 125px above the h1. On a 375x667 iPhone SE the
+// first screen is about 559px with the URL bar expanded, and with the strip up
+// the third homepage door landed at 557 to 560px depending on which rotating
+// tagline the page happened to pick: two pixels of room, or one pixel short. So
+// on the homepage only, and under 620px of viewport height only, the strip
+// stands down, exactly as Rule 5 makes it stand down for the undo line.
+//
+// FOUR ASSERTIONS, because the failure mode of a rule like this is not that it
+// fails to fire, it is that it fires everywhere and quietly deletes the notice.
+// So: it fires on the short homepage, it does NOT fire on a tall one, it does
+// NOT fire on an inner page at the same short height, and a reader who was
+// skipped is not recorded as having seen it.
+// ---------------------------------------------------------------------------
+{
+  const SHORT = { width: 375, height: 559 }; // iPhone SE, URL bar expanded
+  const TALL = { width: 375, height: 812 };  // iPhone 13 mini, same width
+
+  const noticeAt = async (viewport, path) => {
+    const ctx = await browser.newContext({ viewport });
+    await noServiceWorker(ctx);
+    const page = await ctx.newPage();
+    await page.goto(base + path, { waitUntil: 'load' });
+    const s = await page.evaluate(() => {
+      const tx = document.getElementById('txNotice');
+      let seen = null;
+      try { seen = localStorage.getItem('SMG_TX_NOTICE_pt'); } catch (e) { /* private mode */ }
+      return { present: !!tx, visible: !!tx && !tx.hidden, seen };
+    });
+    await ctx.close();
+    return s;
+  };
+
+  const shortHome = await noticeAt(SHORT, '/pt');
+  ok('rule 6: /pt at 375x559 renders the strip but leaves it down',
+    shortHome.present === true && shortHome.visible === false, JSON.stringify(shortHome));
+  ok('rule 6: standing down does not mark it seen',
+    shortHome.seen === null, String(shortHome.seen));
+
+  const tallHome = await noticeAt(TALL, '/pt');
+  ok('rule 6: /pt at 375x812 still shows the strip',
+    tallHome.visible === true, JSON.stringify(tallHome));
+
+  const shortInner = await noticeAt(SHORT, '/pt/checklist');
+  ok('rule 6: /pt/checklist at 375x559 still shows the strip (no doors to lose)',
+    shortInner.visible === true, JSON.stringify(shortInner));
+}
+
+// ---------------------------------------------------------------------------
 // THE MARKER LEAKS NOWHERE. Static, but it belongs with the rest: the whole
 // reason it is sessionStorage and not a query parameter is that it must not
 // reach the index, the sitemap or analytics as a new page.
