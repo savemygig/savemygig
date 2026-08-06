@@ -233,6 +233,62 @@ const EXTRA = [
 // rather than written down.
 const ASSET_RE = /(?:href|src)="(\/_astro\/[^"]+?\.(?:css|js))"/g;
 
+/*
+ * AND WHAT THOSE SCRIPTS THEMSELVES IMPORT (2026-08-06).
+ *
+ * The rule above reads assets out of the HTML, which was complete for as long
+ * as every bundle was a single self-contained file. /checklist code-splits its
+ * account layer now, and Vite answers a dynamic import() by giving the entry
+ * chunk a STATIC import of a small preload helper. That helper appears in no
+ * HTML at all, so it was invisible here, and a module whose static import 404s
+ * does not run: the offline checklist would have rendered perfectly and then
+ * done nothing, no ticking, no meter, no printable list. Exactly the class of
+ * bug as the missing stylesheets in note 1, one layer deeper.
+ *
+ * So the JS is read too, and its static imports are followed to a fixed point.
+ * Static ONLY, deliberately: `import(` never matches, because after `import`
+ * this pattern requires a quote and a dynamic import has a parenthesis there.
+ * That is the line that keeps 20 KB of account and sync code, which cannot
+ * work without a network anyway, out of an offline rescue kit.
+ */
+const JS_IMPORT_RE = /(?:from|import)\s*(["'])((?:\.\/|\/_astro\/)[^"']+?\.js)\1/g;
+
+/** Resolve a specifier found inside /_astro/x.js to an absolute path. */
+function astroSpecifier(spec) {
+  return spec.indexOf('/_astro/') === 0 ? spec : '/_astro/' + spec.replace(/^\.\//, '');
+}
+
+/**
+ * Fetch and cache every asset in `assets`, following the static imports of any
+ * JS among them until nothing new turns up. Returns the full set it cached.
+ */
+async function cacheAssets(cache, assets, poolSize) {
+  const done = new Set();
+  let wave = Array.from(assets);
+  // Two waves cover today's graph (entry -> helper); the loop is written as a
+  // fixed point so a deeper chain cannot silently fall out of the cache.
+  while (wave.length) {
+    const next = new Set();
+    await pooled(wave, poolSize, async (url) => {
+      if (done.has(url)) return;
+      done.add(url);
+      const res = await fetch(url, { credentials: 'same-origin' });
+      if (!res || !res.ok) return;
+      await cache.put(url, res.clone());
+      if (!/\.js$/.test(url)) return;
+      const code = await res.clone().text();
+      JS_IMPORT_RE.lastIndex = 0;
+      let m;
+      while ((m = JS_IMPORT_RE.exec(code)) !== null) {
+        const dep = astroSpecifier(m[2]);
+        if (!done.has(dep)) next.add(dep);
+      }
+    });
+    wave = Array.from(next);
+  }
+  return done;
+}
+
 /** Run `fn` over `items` with at most `n` in flight. */
 async function pooled(items, n, fn) {
   const queue = items.slice();
@@ -327,10 +383,7 @@ async function precache() {
     while ((m = ASSET_RE.exec(html)) !== null) assets.add(m[1]);
   });
 
-  await pooled(EXTRA.concat(Array.from(assets)), 6, async (url) => {
-    const res = await fetch(url, { credentials: 'same-origin' });
-    if (res && res.ok) await cache.put(url, res.clone());
-  });
+  await cacheAssets(cache, EXTRA.concat(Array.from(assets)), 6);
 
   // A RETRY MUST BE ABLE TO FINISH WHAT AN EARLIER PASS STARTED, so the bar is
   // measured against the CACHE and not against this run's tally. A device that
@@ -579,13 +632,12 @@ async function revalidate() {
   });
 
   // Only the ones we do not already hold: content-hashed names never change
-  // under the same url, so anything already cached is already current.
+  // under the same url, so anything already cached is already current. The
+  // import graph is walked from the ones that ARE new, which is enough: a new
+  // helper hash can only arrive with a new entry hash that imports it.
   const wanted = [];
   for (const a of newAssets) if (!(await cache.match(a))) wanted.push(a);
-  await pooled(wanted, 3, async (url) => {
-    const res = await fetch(url, { credentials: 'same-origin' });
-    if (res && res.ok) await cache.put(url, res.clone());
-  });
+  await cacheAssets(cache, wanted, 3);
 }
 
 /** Throttled entry point. Safe to call on every navigation. */

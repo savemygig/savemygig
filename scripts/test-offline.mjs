@@ -88,6 +88,39 @@ for (const path of OFFLINE_PAGES) {
   ok(`offline: ${path} styled`, styled);
 }
 
+// ---- THE OFFLINE CHECKLIST HAS TO WORK, NOT JUST DRAW (2026-08-06).
+// Rendering and styling proved the HTML and CSS were cached; they say nothing
+// about the script. /checklist code-splits its account layer now, and Vite
+// answers that with a STATIC import of a small preload helper in the entry
+// chunk, referenced from no HTML: it was invisible to the worker's asset scan,
+// and a module whose static import is missing does not run at all. The page
+// would have looked perfect offline and done nothing.
+// So: tick a real box and watch the readiness meter follow. That exercises the
+// whole entry chunk and every static import it needs.
+{
+  await page.goto(base + '/checklist', { waitUntil: 'load', timeout: 15000 });
+  await page.waitForTimeout(600);
+  const before = await page.evaluate(() => document.getElementById('pct')?.textContent || '');
+  // Clicked through the DOM rather than with a real pointer: the groups ship
+  // COLLAPSED (the 2026-08-04 CLS fix), so the first row is display:none and a
+  // pointer cannot reach it. A collapsed row still counts toward readiness, so
+  // this is the same state change a DJ makes after opening the section.
+  await page.evaluate(() => {
+    const b = document.querySelector('.task input[type="checkbox"]');
+    if (b) b.click();
+  });
+  await page.waitForTimeout(300);
+  const after = await page.evaluate(() => document.getElementById('pct')?.textContent || '');
+  ok('offline: /checklist actually ticks (its script and every static import are cached)',
+    before !== '' && after !== '' && before !== after, `${before} -> ${after}`);
+  // ...and the tick survives an offline reload, which is the local persistence
+  // the account layer must never have been in front of.
+  await page.reload({ waitUntil: 'load', timeout: 15000 });
+  await page.waitForTimeout(600);
+  const kept = await page.evaluate(() => document.getElementById('pct')?.textContent || '');
+  ok('offline: /checklist restores that tick after a reload', kept === after, `${kept} vs ${after}`);
+}
+
 // ---- search index served from cache offline
 // Per language since 2026-08-05: the worker precaches the index for the ONE
 // language it was installed from, so an English install must have the English

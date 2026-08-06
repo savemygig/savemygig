@@ -185,6 +185,38 @@ for (const L of LANGS) {
     ok(`${L.code}: OFFLINE ${label} ${L.prefix + p}`, good, detail);
   }
 
+  // THE CHECKLIST HAS TO WORK, NOT JUST DRAW, and this is the run that proves it
+  // because the origin process is DEAD (2026-08-06). The loop above says the
+  // HTML and CSS are cached; it says nothing about the script. /checklist
+  // code-splits its account layer now, and Vite answers that with a STATIC
+  // import of a preload helper in the entry chunk which is referenced from no
+  // HTML at all: it was invisible to the worker's asset scan, and a module whose
+  // static import is missing does not run. The page would have drawn perfectly
+  // offline and done nothing. sw.js follows those imports now; this is the
+  // assertion that keeps it true.
+  const tick = await (async () => {
+    try {
+      await page2.goto(base + L.prefix + '/checklist', { waitUntil: 'load', timeout: 20000 });
+      await page2.waitForTimeout(600);
+      const before = await page2.evaluate(() => document.getElementById('pct')?.textContent || '');
+      // Clicked through the DOM, not with a pointer: the groups ship COLLAPSED
+      // (the 2026-08-04 CLS fix) so the first row is display:none. A collapsed
+      // row still counts toward readiness, so this is the same state change.
+      await page2.evaluate(() => {
+        const b = document.querySelector('.task input[type="checkbox"]');
+        if (b) b.click();
+      });
+      await page2.waitForTimeout(300);
+      const after = await page2.evaluate(() => document.getElementById('pct')?.textContent || '');
+      await page2.reload({ waitUntil: 'load', timeout: 20000 });
+      await page2.waitForTimeout(600);
+      const kept = await page2.evaluate(() => document.getElementById('pct')?.textContent || '');
+      return { ok: !!before && !!after && before !== after && kept === after, before, after, kept };
+    } catch (e) { return { ok: false, why: String(e.message).slice(0, 50) }; }
+  })();
+  ok(`${L.code}: OFFLINE the checklist ticks and remembers`, tick.ok,
+    tick.why || `${tick.before} -> ${tick.after}, kept ${tick.kept}`);
+
   // A FAILING ASSERTION MUST NOT TAKE THE TEST DOWN WITH IT. If the loop above
   // left the tab on a browser error page, page2.evaluate throws and the whole
   // run died with an uncaught exception instead of printing the failures it had

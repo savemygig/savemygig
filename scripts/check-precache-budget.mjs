@@ -85,6 +85,14 @@ const EXTRA_LITERALS = arrayLiteral('EXTRA');
 // disagree, the gate should be measuring what the worker actually does, and a
 // shared import would hide the disagreement.
 const ASSET_RE = /(?:href|src)="(\/_astro\/[^"]+?\.(?:css|js))"/g;
+// And the same for the static imports the worker now follows out of that JS
+// (2026-08-06): /checklist's entry chunk statically imports Vite's dynamic-import
+// helper, which appears in no HTML, so measuring only what the HTML references
+// would under-report the install AND hide a file whose absence stops the
+// checklist's script running offline. Static imports only, exactly as in sw.js:
+// a dynamic import() has a parenthesis where this requires a quote, which is
+// what keeps the lazily loaded account layer out of the offline kit.
+const JS_IMPORT_RE = /(?:from|import)\s*(["'])((?:\.\/|\/_astro\/)[^"']+?\.js)\1/g;
 
 const GZIP_EXT = new Set(['.html', '.css', '.js', '.mjs', '.json', '.svg', '.txt', '.xml', '.webmanifest']);
 
@@ -99,7 +107,7 @@ async function load(p) {
       const buf = await readFile(cand);
       const n = GZIP_EXT.has(extname(cand)) ? gzipSync(buf, { level: 9 }).length : buf.length;
       sizes.set(p, n);
-      if (extname(cand) === '.html') bodies.set(p, buf.toString('utf-8'));
+      if (extname(cand) === '.html' || extname(cand) === '.js') bodies.set(p, buf.toString('utf-8'));
       return n;
     } catch { /* try the next candidate */ }
   }
@@ -131,6 +139,22 @@ for (const { name, prefix } of LANGS) {
     ASSET_RE.lastIndex = 0;
     let m;
     while ((m = ASSET_RE.exec(body)) !== null) assets.add(m[1]);
+  }
+
+  // Follow the static imports of the JS, to a fixed point, the way precache()
+  // does. Done before the sizes are summed so a helper chunk counts.
+  const pending = [...assets];
+  while (pending.length) {
+    const a = pending.shift();
+    if (!a.endsWith('.js')) continue;
+    if ((await load(a)) === null) continue;
+    const code = bodies.get(a) || '';
+    JS_IMPORT_RE.lastIndex = 0;
+    let m;
+    while ((m = JS_IMPORT_RE.exec(code)) !== null) {
+      const dep = m[2].startsWith('/_astro/') ? m[2] : '/_astro/' + m[2].replace(/^\.\//, '');
+      if (!assets.has(dep)) { assets.add(dep); pending.push(dep); }
+    }
   }
 
   let assetBytes = 0;
