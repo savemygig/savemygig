@@ -1754,7 +1754,7 @@ export const TREE = {
     ]
   },
   "usb/start": {
-    "title": "USB Not Recognized",
+    "title": "USB Not Recognised",
     "status": "Critical_Path",
     "red": true,
     "label": "Diagnostic",

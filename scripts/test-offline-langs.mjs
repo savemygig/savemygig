@@ -78,7 +78,7 @@ const ok = (name, cond, detail = '') => {
  * too, not just the five new ones. It is what makes a pass here mean something.
  */
 const PATHS = [
-  ['USB not recognized', '/protocol/usb/start'],
+  ['USB not recognised', '/protocol/usb/start'],
   ['the four booth moves', '/protocol/usb/moves'],
   ['music will not load', '/protocol/music/start'],
   ['no sound', '/protocol/sound/start'],

@@ -11,7 +11,7 @@ import Base from '../layouts/Base.astro';
 // The rescue tunnel under /protocol/ is the site's best procedural content
 // and it is noindex by design, so nothing in any index pointed at it. An
 // answer engine that landed here could read the five doors as anchor text and
-// nothing more: it had no way to state that "USB NOT RECOGNIZED" is the entry
+// nothing more: it had no way to state that "USB NOT RECOGNISED" is the entry
 // to a step-by-step route, or where that route starts.
 //
 // This ItemList is a straight transcription of the visible <nav> below: the
@@ -24,7 +24,7 @@ import Base from '../layouts/Base.astro';
 // would tell a reader to do all five in order, which is the opposite of what
 // this screen is for.
 const doors = [
-  { name: 'USB NOT RECOGNIZED', description: 'The player does not see the drive at all.', href: '/protocol/usb/start' },
+  { name: 'USB NOT RECOGNISED', description: 'The player does not see the drive at all.', href: '/protocol/usb/start' },
   { name: "MUSIC WON'T LOAD", description: 'Drive mounts, but playlists are missing or tracks refuse to play.', href: '/protocol/music/start' },
   { name: 'THERE IS NO SOUND', description: 'A dead channel, silent master, or nothing in your headphones.', href: '/protocol/sound/start' },
   { name: 'FROZEN PLAYER', description: 'Screen or controls locked, mid-set or idle.', href: '/protocol/frozen/start' },
@@ -94,7 +94,7 @@ const schema = {
         <a href="/protocol/usb/start" class="pad pad-neutral" data-event="symptom_selected" data-symptom="usb_not_recognized">
           <div class="pad-header">
             <div class="led led-r"></div>
-            <div class="pad-title">USB NOT RECOGNIZED</div>
+            <div class="pad-title">USB NOT RECOGNISED</div>
           </div>
           <div class="pad-desc">The player does not see the drive at all.</div>
         </a>
@@ -192,7 +192,7 @@ const schema = {
         Do not restyle this row. */}
     <p class="emerg-next">
       Read the full fix instead:
-      <a href="/fix/usb-not-recognized-cdj">USB not recognized</a> ·
+      <a href="/fix/usb-not-recognized-cdj">USB not recognised</a> ·
       <a href="/fix/playlists-not-showing-cdj">playlists not showing</a> ·
       <a href="/fix/rekordbox-export-failed">rekordbox export failed</a> ·
       <a href="/fix/emergency-loop-mode">Emergency Loop mode</a> ·

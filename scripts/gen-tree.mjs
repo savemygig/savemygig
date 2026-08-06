@@ -182,7 +182,7 @@ for (const [route, id] of Object.entries(MAP)) {
 /* ---------- hand-authored nodes: the new topology ---------- */
 
 TREE['usb/start'] = {
-  title: 'USB Not Recognized', status: 'Critical_Path', red: true,
+  title: 'USB Not Recognised', status: 'Critical_Path', red: true,
   label: 'Diagnostic',
   heading: 'The player does not see the drive',
   blocks: [
