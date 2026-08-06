@@ -38,25 +38,56 @@ const RULES = [
 
   // Condescension. Every one of these has actually shipped on this site.
   { name: 'condescending: telling a pro to calm down', re: /\bstay calm\b|\bdon'?t panic\b|\bdo not panic\b|\bbefore you panic\b|\bbefore panicking\b|\bstop panicking\b|\bpanic not required\b|\bfirst,? breathe\b|\btake a (deep )?breath\b|\brelax,\b/gi },
-  // Reflex-tier instructions. A working DJ has done these before they open a
-  // website. If one is genuinely needed, name it under a `.assumed` line as
-  // something we ASSUME is done, do not print it as a step.
-  //
-  // READ THIS BEFORE TIGHTENING THE PATTERN. As of 2026-08-06 the tree's
-  // `usb/start` node deliberately prints "Pull the drive out and push it back
-  // in, firmly. Then try the other slot on the same player." That is the
-  // approved fix for the audit finding that the site's most-used rescue screen
-  // asserted the reseat had been done without ever instructing it. It clears
-  // this rule only on a technicality: the comma in "in, firmly" means the
-  // `push it back in firmly` alternative does not match, and the first
-  // alternative needs a "wait"/"count" that is not there.
-  // So the rule and the shipped copy now disagree in spirit and agree only in
-  // letter. That is Antonio's call to settle, not a bug to patch here: either
-  // this rule gets a stated exception for the usb/start check, or the copy goes
-  // back to being an assumption. Until he rules, do NOT "fix" the regex to
-  // catch the comma, and do not reword the tree to drop it: either move breaks
-  // the build or reverses an approved change, silently.
-  { name: 'condescending: reflex-tier step', re: /(pull|take) (the|your) (usb|drive|stick) out,? (and )?(wait|count)|push it back in firmly|wipe the usb tip/gi },
+  /* Reflex-tier instructions. A working DJ has done these before they open a
+     website. If one is genuinely needed, name it under a `.assumed` line as
+     something we ASSUME is done, do not print it as a step.
+
+     WHAT THIS RULE ACTUALLY GUARDS, AND WHAT IT DOES NOT (settled 2026-08-06,
+     after going back to the commit that wrote it, 6f0f967 "Write for DJs who
+     are already DJs"). It encodes ONE editorial filter of Antonio's, quoted
+     from that commit message:
+
+       "DOES A COMPETENT DJ, MID-PANIC, PLAUSIBLY FAIL TO THINK OF THIS? If
+        they would have done it in the first ten seconds on instinct, it does
+        not belong on the page."
+
+     Applying that filter is what deleted reseat, the other slot, the other
+     player, wiping the contacts and swapping in your own clone from the
+     emergency list, replacing all five with a single `.assumed` line. The three
+     patterns below are the fragments of the copy that was removed.
+
+     So this is NOT a rule about hedging, vague qualifiers or the "just try
+     wiggling it a bit" register, and reading it that way inverts it. "Firmly"
+     is not the offence: a precise physical qualifier is the USEFUL part of any
+     instruction that survives the filter, and an instruction that survives it
+     should be as exact as we can make it. The offence is printing an INSTINCT
+     as a STEP at all. Do not narrow this rule to punctuation or register; it is
+     about which moves earn a line on a rescue screen.
+
+     ONE SANCTIONED EXCEPTION, NAMED RATHER THAN ACCIDENTAL. The tree's
+     `usb/start` node now prints the reseat as a check, because the 2026-08-05
+     audit found the screen ASSERTED it had been done while no page on the site
+     had ever asked for it, and because reseating firmly and into the second
+     slot fixes a large share of real cases at zero risk. That is a deliberate
+     partial reversal of the July filter on one screen, on new evidence, and it
+     is listed in `allow` below as the exact sentence it is allowed to be.
+
+     Two consequences of doing it this way, both wanted:
+      - The pattern got STRICTER, not looser. It used to be evadable by
+        punctuation: "push it back in, firmly" slipped past `push it back in
+        firmly` on the comma alone, which meant the rule was already not
+        enforcing itself and nobody had noticed.
+      - Rewording the sanctioned sentence fails the build. That is the point. If
+        this copy changes, the exception should be re-argued, not inherited.
+
+     The patterns are English only, as they have been since July, so the pt and
+     es mirrors of this sentence are not machine-checked. Their wording is held
+     in step by the same-commit mirroring rule and by check-tree, not here. */
+  {
+    name: 'condescending: reflex-tier step',
+    re: /(pull|take) (the|your) (usb|drive|stick) out,? (and )?(wait|count)|push it back in,?\s*firmly|wipe the usb tip/gi,
+    allow: ['Pull the drive out and push it back in, firmly. Then try the other slot on the same player.'],
+  },
 ];
 
 async function walk(dir) {
@@ -118,8 +149,13 @@ const CONTROLS = [
 for (const f of files) {
   const raw = await readFile(f, 'utf-8');
   const text = visibleText(raw);
+  // Whitespace-normalised copy of the page, used only by rules that carry an
+  // `allow` list: the sanctioned sentence has to be removable by exact match,
+  // and visibleText leaves the markup's own line breaks in place.
+  const flat = text.replace(/\s+/g, ' ');
   for (const r of RULES) {
-    const m = text.match(r.re);
+    const subject = r.allow ? r.allow.reduce((s, a) => s.split(a).join(' '), flat) : text;
+    const m = subject.match(r.re);
     if (m) hits.push(`${f}: ${r.name} -> ${[...new Set(m)].slice(0, 4).join(', ')}`);
   }
   for (const [what, re] of CONTROLS) {
