@@ -123,6 +123,27 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      // HREFLANG IN THE SITEMAP (2026-08-06). The pages have carried reciprocal
+      // hreflang in their <head> since the translations went live, and that is
+      // the version Google reads once it has FETCHED a page. This is the version
+      // it reads BEFORE fetching anything: every entry now declares its three
+      // alternates, so discovering one URL in the file tells the crawler the
+      // other two exist and are the same content in another language.
+      //
+      // It matters right now because the Portuguese and Spanish sections went
+      // live on 2026-08-05 and are, as expected for a section that age, unknown
+      // to Google. Head hreflang cannot help discovery, because it is only read
+      // after a crawl. Sitemap hreflang can.
+      //
+      // English sits at the root with no /en/ prefix, so it is the defaultLocale
+      // and every unprefixed URL is grouped as English. Codes match the ones the
+      // pages already declare: pt-BR, not pt, because the translation is
+      // Brazilian and a Portuguese reader in Portugal should not be told this is
+      // written for them.
+      i18n: {
+        defaultLocale: 'en',
+        locales: { en: 'en', pt: 'pt-BR', es: 'es' },
+      },
       filter: (page) => {
         const raw = page.replace('https://www.savemygig.com', '');
         // An unpublished language is invisible, full stop.
