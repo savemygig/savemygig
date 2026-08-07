@@ -37,7 +37,7 @@ const schema = {
 ---
 <Base
   title="XDJ-700: apagado automático y FAT32 | Save My Gig"
-  description="Manual de campo del XDJ-700: el apagado automático de 20 minutos que parece un deck muerto, solo FAT32 o HFS+, y ninguna ranura de tarjeta SD."
+  description="Manual de campo del XDJ-700: el apagado automático de 20 minutos que parece un deck muerto, sin exFAT, sin ranura de tarjeta SD y sin backup en el deck."
   path="/knowledge/pioneer-dj/xdj-700"
   crumbName="XDJ-700"
   lang="es"
@@ -130,6 +130,30 @@ const schema = {
       </div>
     </details>
 
+    <details class="acc-sec" name="xdj700-acc" id="file-will-not-load">
+      <summary><h3 class="acc-h2">Un track no carga, o el ruido está mal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Dos fallas de archivo documentadas, las
+        dos curadas en {XDJ_700.aiffLoadFix}: un AIFF a 24bit/48kHz se detenía y no se
+        podía cargar a un deck, y ciertos archivos WAV producían ruido blanco
+        digitalmente distorsionado.</p>
+        <p><strong>Por qué pasa esto.</strong> El decoder encontrando un archivo que
+        no puede interpretar. Desde donde tú estás se ve exactamente como un track
+        corrupto o una memoria fallando, y eso es lo que la hace cara: revisas la
+        memoria mientras la falla está en el firmware.</p>
+        <p><strong>Resuélvelo ahora.</strong> Carga otro track de la misma memoria. Si
+        funciona, la memoria está bien y el problema es ese archivo en este firmware.
+        Pon otra cosa.</p>
+        <p><strong>Evítalo la próxima vez.</strong> En un deck por debajo de
+        {XDJ_700.aiffLoadFix}, evita AIFF lossless a 24bit/48kHz y desconfía de WAV de
+        fuentes poco comunes. La misma versión también corrigió que algunas funciones
+        de un CDJ-2000NXS2 o XDJ-1000MK2 más nuevo quedaran desactivadas por PRO DJ
+        LINK, así que en un booth mezclado revisa la versión de este deck cuando al
+        más nuevo le falte algo.</p>
+        <p class="acc-related">Relacionados: <a href="/es/fix/rekordbox-file-is-missing">Archivo de rekordbox no encontrado</a> <a href="/es/knowledge/pioneer-dj/cdj-2000nxs#stuck-loading">Las mismas fallas en el 2000NXS</a></p>
+      </div>
+    </details>
+
     <details class="acc-sec" name="xdj700-acc" id="empty-browser">
       <summary><h3 class="acc-h2">La pantalla de navegación está vacía, o faltan mis categorías</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
@@ -203,8 +227,10 @@ const schema = {
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> Sigue recibiendo mantenimiento, a
         diferencia del CDJ-900NXS: {FLOOR} llegó en noviembre de 2024. Cada entrada
-        de abajo es la redacción de la propia AlphaTheta, condensada.</p>
+        de abajo es la redacción de la propia AlphaTheta, condensada, y la más vieja
+        de todas es la que más importa.</p>
         <dl class="rb-errors">
+          <dt>{XDJ_700.aiffLoadFix}</dt><dd>La reproducción de un archivo AIFF a 24bit/48kHz se detenía y los tracks no se podían cargar a un deck. Ruido blanco digitalmente distorsionado en ciertos archivos WAV. Por PRO DJ LINK, algunas funciones del CDJ-2000NXS2 o del XDJ-1000MK2 quedaban desactivadas. Problemas en Control Mode. Un loop activo podía activar un loop muy corto. Se agregaron MASTER PLAYER SELECT (AUTO) y la búsqueda por varias palabras.</dd>
           <dt>{XDJ_700.browserManyTracksFix}</dt><dd>Información como categorías y tracks no se mostraba en la pantalla de navegación cuando la base de datos tenía muchos tracks. Los resultados de búsqueda no aparecían al mover el cursor durante SEARCH. Problemas durante la reproducción y la selección de tracks.</dd>
           <dt>{XDJ_700.searchFix}</dt><dd>SEARCH funcionaba de forma incorrecta bajo ciertas condiciones.</dd>
           <dt>{XDJ_700.syncBpmFix}</dt><dd>La velocidad de reproducción a veces no volvía al BPM mostrado en pantalla con Sync activado. Un chasquido durante un loop con QUANTIZE y MASTER TEMPO activados. Un HOT CUE arrancaba después del salto al punto de LOOP-IN al cambiar el largo del loop en beats con QUANTIZE activado.</dd>

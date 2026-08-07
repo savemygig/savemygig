@@ -36,7 +36,7 @@ const schema = {
 ---
 <Base
   title="XDJ-700: desligamento automático e FAT32 | Save My Gig"
-  description="Manual de campo do XDJ-700: o desligamento automático de 20 minutos que parece um deck morto, só FAT32 ou HFS+, e nenhum slot de cartão SD."
+  description="Manual de campo do XDJ-700: o desligamento automático de 20 minutos que parece um deck morto, sem exFAT, sem slot de cartão SD e sem backup no deck."
   path="/knowledge/pioneer-dj/xdj-700"
   crumbName="XDJ-700"
   lang="pt"
@@ -129,6 +129,30 @@ const schema = {
       </div>
     </details>
 
+    <details class="acc-sec" name="xdj700-acc" id="file-will-not-load">
+      <summary><h3 class="acc-h2">Uma track não carrega, ou o ruído está errado</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Duas falhas de arquivo documentadas, as
+        duas curadas na {XDJ_700.aiffLoadFix}: um AIFF em 24bit/48kHz parava de tocar
+        e não podia ser carregado num deck, e certos arquivos WAV produziam ruído
+        branco digitalmente distorcido.</p>
+        <p><strong>Por que isso acontece.</strong> O decoder encontrando um arquivo
+        que ele não consegue interpretar. De onde você está, parece exatamente uma
+        track corrompida ou um drive falhando, e é isso que a torna cara: você
+        investiga o drive enquanto a falha está no firmware.</p>
+        <p><strong>Resolva agora.</strong> Carregue outra track do mesmo drive. Se
+        funcionar, o drive está bem e o problema é aquele arquivo neste firmware.
+        Toque outra coisa.</p>
+        <p><strong>Evite da próxima vez.</strong> Num deck abaixo da
+        {XDJ_700.aiffLoadFix}, evite AIFF lossless em 24bit/48kHz e desconfie de WAV
+        de fontes incomuns. A mesma versão também corrigiu alguns recursos de um
+        CDJ-2000NXS2 ou XDJ-1000MK2 mais novo ficarem desativados pelo PRO DJ LINK,
+        então numa booth misturada confira a versão deste deck quando falta alguma
+        coisa no mais novo.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/rekordbox-file-is-missing">Arquivo do rekordbox não encontrado</a> <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs#stuck-loading">As mesmas falhas no 2000NXS</a></p>
+      </div>
+    </details>
+
     <details class="acc-sec" name="xdj700-acc" id="empty-browser">
       <summary><h3 class="acc-h2">A tela de browse está vazia, ou as minhas categorias sumiram</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
@@ -201,8 +225,10 @@ const schema = {
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> Ainda recebe manutenção, diferente do
         CDJ-900NXS: a {FLOOR} chegou em novembro de 2024. Cada entrada abaixo é a
-        redação da própria AlphaTheta, condensada.</p>
+        redação da própria AlphaTheta, condensada, e a mais antiga delas é a que mais
+        importa.</p>
         <dl class="rb-errors">
+          <dt>{XDJ_700.aiffLoadFix}</dt><dd>A reprodução de um arquivo AIFF em 24bit/48kHz parava e as tracks não podiam ser carregadas num deck. Ruído branco digitalmente distorcido em certos arquivos WAV. Pelo PRO DJ LINK, alguns recursos do CDJ-2000NXS2 ou do XDJ-1000MK2 ficavam desativados. Problemas no Control Mode. Um loop ativo podia acionar um loop muito curto. Adicionados o MASTER PLAYER SELECT (AUTO) e a busca por várias palavras.</dd>
           <dt>{XDJ_700.browserManyTracksFix}</dt><dd>Informações como categorias e tracks não eram exibidas na tela de browse quando o banco de dados tinha muitas tracks. Os resultados de busca não apareciam ao mover o cursor durante o SEARCH. Problemas durante a reprodução e a seleção de tracks.</dd>
           <dt>{XDJ_700.searchFix}</dt><dd>O SEARCH funcionava de forma incorreta em certas condições.</dd>
           <dt>{XDJ_700.syncBpmFix}</dt><dd>A velocidade de reprodução às vezes não voltava ao BPM mostrado na tela com o Sync ligado. Um estalo durante um loop com QUANTIZE e MASTER TEMPO ligados. Um HOT CUE começava depois do salto para o ponto de LOOP-IN ao mudar o tamanho do loop em tempos com o QUANTIZE ligado.</dd>

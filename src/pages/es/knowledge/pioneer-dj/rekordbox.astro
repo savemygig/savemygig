@@ -30,9 +30,14 @@ const NOTES_ES = {
   'CDJ-3000X': 'Sin slot de tarjeta SD. USB-A x1, USB-C x2.',
   'CDJ-1500X': 'Anunciado en julio de 2026. Necesita rekordbox 7.2.16 o más reciente.',
   'CDJ-3000': 'Device Library en el firmware 3.22. El firmware 3.30 agregó OneLibrary pero fue retirado.',
-  'CDJ-2000NXS2': 'El caballo de batalla de la mayoría de los booths de club. Solo FAT32.',
-  'CDJ-2000 / NXS': 'Todavía está en todos lados. Solo FAT32.',
-  'CDJ-900 / 850': 'Solo FAT32.',
+  // "Solo FAT32" estaba MAL en estas filas, corregido el 07/08/2026. Todos estos
+  // reproductores también leen HFS+, así que a un DJ de Mac con una unidad HFS+
+  // que funcionaba esta tabla le decía que no se podía leer. El exFAT sigue
+  // siendo No en todos, y exFAT es lo que un DJ formatea hoy.
+  'CDJ-2000NXS2': 'El caballo de batalla de la mayoría de los booths de club. FAT32, FAT16 o HFS+.',
+  'CDJ-2000 / NXS': 'Todavía está en todos lados. FAT32, FAT o HFS+.',
+  'CDJ-900NXS': 'FAT32, FAT o HFS+. El firmware terminó en 1.31, en 2017.',
+  'CDJ-900 / 850': 'FAT32, FAT16 o HFS+.',
   'XDJ-AN': 'Agregado en rekordbox 7.2.16.',
   'XDJ-700': 'Oficialmente solo FAT32, FAT o HFS+.',
   'OPUS-QUAD': 'Primer reproductor con OneLibrary.',

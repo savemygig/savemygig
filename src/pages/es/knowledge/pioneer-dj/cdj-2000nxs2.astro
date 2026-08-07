@@ -17,6 +17,14 @@ const MESES = {
 };
 const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = esDate(CHECKED);
+// SISTEMAS DE ARCHIVOS. Esta página decía "solo FAT32" hasta el 2026-08-07, y
+// eso era INCORRECTO. El manual oficial de AlphaTheta (documento DRI1290A,
+// sección "About USB devices") dice: FAT16, FAT32 y HFS+ están soportados, NTFS
+// no. O sea, el reproductor SÍ lee HFS+, y a un DJ de Mac se le estaba diciendo
+// que su memoria USB no se podía leer en un booth. Lo que sigue siendo cierto, y
+// es la parte útil, es el exFAT: exFAT es lo que se formatea hoy y este
+// reproductor no lo lee.
+const FS = CDJ_2000NXS2.fileSystems.join(', ');
 
 const schema = {
   '@context': 'https://schema.org',
@@ -90,9 +98,10 @@ const schema = {
         <strong>Briefing de booth.</strong> Salió en 2016, y sigue siendo el deck que
         más probablemente encuentres en un booth de club real, incluso al lado de
         equipo más nuevo. Lee <strong>solo Device Library</strong>, nunca OneLibrary,
-        y su puerto USB es <strong>solo FAT32</strong>, no lee exFAT. Formatea tu USB
-        en FAT32 con esquema de partición MBR y exporta normal, y este reproductor
-        nunca te sorprende. Lo que agarra desprevenida a la gente: un USB preparado
+        y <strong>no lee exFAT</strong>, que es como viene formateada la mayoría de
+        las memorias USB hoy. Lee {FS}, y NTFS tampoco está soportado. Formatea tu
+        USB en FAT32 con esquema de partición MBR y exporta normal, y este
+        reproductor nunca te sorprende. Lo que agarra desprevenida a la gente: un USB preparado
         solo para un reproductor OneLibrary (CDJ-3000X, CDJ-1500X) puede no mostrar
         ninguna playlist aquí aunque el USB funcione perfecto en otro lado.
       </p>
@@ -109,8 +118,12 @@ const schema = {
         es casi siempre el sistema de archivos. Si se lee pero no muestra playlists,
         es muy probable que el USB haya sido exportado para un reproductor
         OneLibrary, y este deck no puede leer OneLibrary.</p>
-        <p><strong>Por qué pasa esto.</strong> Este reproductor lee solo FAT32, aquí
-        exFAT no está soportado, y lee solo el formato de base de datos
+        {/* Aquí decía "solo FAT32" hasta el 2026-08-07, y era incorrecto: el manual
+            lista FAT16, FAT32 y HFS+. Los que no lee son exFAT y NTFS. */}
+        <p><strong>Por qué pasa esto.</strong> Este reproductor <strong>no lee
+        exFAT</strong> en ninguna versión de firmware, y NTFS tampoco está
+        soportado. Lee {FS}, así que una memoria USB en HFS+ hecha en una Mac sí
+        funciona. Y lee solo el formato de base de datos
         <strong>Device Library</strong>, nunca OneLibrary.</p>
         <p><strong>Resuélvelo ahora.</strong> Confirma que el USB es FAT32 con
         esquema de partición MBR. Si se lee pero no muestra playlists, vuelve a
@@ -320,7 +333,9 @@ const schema = {
 
     <details class="acc-sec" name="cdj2knxs2-acc" id="compatibility"><summary><h3 class="acc-h2">rekordbox, formato de biblioteca y Pro DJ Link</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Respuesta corta.</strong> Solo Device Library, solo FAT32, y el
+        {/* Decía "solo FAT32", corregido el 2026-08-07. El límite real es que no lee exFAT. */}
+        <p><strong>Respuesta corta.</strong> Solo Device Library, sin exFAT (lee
+        {' '}{FS}), y el
         Pro DJ Link funciona entre generaciones AlphaTheta / Pioneer DJ (los raros
         bugs entre modelos están corregidos por firmware, mira la matriz de
         firmware), el formato de biblioteca es una pregunta aparte de la
@@ -344,7 +359,8 @@ const schema = {
     <details class="acc-sec" name="cdj2knxs2-acc" id="faq"><summary><h3 class="acc-h2">Respuestas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <dl class="rb-errors">
-          <dt>¿Este reproductor lee exFAT?</dt><dd>No. Solo FAT32.</dd>
+          {/* "No. Solo FAT32." era incorrecto, corregido el 2026-08-07. */}
+          <dt>¿Este reproductor lee exFAT?</dt><dd>No, y ninguna versión de firmware lo agrega. Lee {FS}, y NTFS tampoco está soportado.</dd>
           <dt>¿Soporta OneLibrary?</dt><dd>No. Solo Device Library.</dd>
           <dt>¿Puedo usar Device Library?</dt><dd>Sí, es el formato que lee de forma nativa.</dd>
           <dt>¿Puedo hacer link con un CDJ-3000 o un CDJ-3000X?</dt><dd>Sí, por Pro DJ Link para tempo y control de reproducción. Que las playlists aparezcan en cada deck depende de qué formato de biblioteca lleva tu USB, no del Link. <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla completa</a>.</dd>
@@ -375,8 +391,10 @@ const schema = {
     </div>
 
     <p class="rb-sources dim">
-      Fuentes: las páginas oficiales de especificaciones de AlphaTheta / Pioneer DJ
-      y el documento de historial de cambios de firmware del CDJ-2000NXS2, revisados
+      Fuentes: las páginas oficiales de especificaciones de AlphaTheta / Pioneer DJ,
+      el documento de historial de cambios de firmware del CDJ-2000NXS2 y el
+      <a href={CDJ_2000NXS2.sourceFileSystems} target="_blank" rel="noopener">manual de instrucciones del CDJ-2000NXS2, PDF →</a>
+      para los sistemas de archivos soportados, revisados
       el {UPDATED}. Los pasos generales de diagnóstico (corriente, cableado,
       reinicios) reflejan la práctica estándar, no un defecto documentado
       específico. El firmware y el comportamiento cambian sin aviso, vuelve a revisar

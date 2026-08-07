@@ -46,6 +46,20 @@ export const CDJ_2000NXS2 = {
   slipHotCueFix: '1.60',               // startup and SLIP HOT CUE issue fixed, 11 Jan 2017.
   waveformColorFix: '1.55',            // waveform colour selection, briefly broken, restored, 13 Dec 2016.
   controlModeDropoutFix: '1.51',       // audio dropouts in Control Mode eliminated, 20 Oct 2016.
+  // "FAT32 ONLY" WAS WRONG AND SHIPPED BOLD (corrected 2026-08-07, same error as
+  // the CDJ-2000NXS and CDJ-900NXS pages). AlphaTheta's Operating Instructions,
+  // document DRI1290A, "About USB devices", p. 6: "Supported file systems FAT16,
+  // FAT32 and HFS+ (NTFS is not supported.)" So HFS+ IS read, and a Mac DJ with
+  // a working HFS+ drive was being told a club booth could not read it. There is
+  // no help-centre article covering this for the NXS2, the manual is the only
+  // primary source, so sourceFileSystems points at the manual PDF.
+  // The true and still-useful claim is the exFAT one: exFAT is what a DJ formats
+  // by default today and this player does not read it, at any firmware version.
+  // The same manual gives the card slot as SD FAT12/FAT16 and SDHC FAT32.
+  exfat: false,
+  fileSystems: ['FAT16', 'FAT32', 'HFS+'],
+  ntfsSupported: false,
+  sourceFileSystems: 'https://downloads.support.alphatheta.com/manuals/dj-players/CDJ-2000NXS2/CDJ-2000NXS2_DRI1290A_manual.pdf',
   source: 'https://downloads.support.alphatheta.com/firmwares/dj-players/CDJ-2000NXS2/CDJ-2000NXS2-Firmware-Change-History-Ver186-en.pdf',
 };
 
@@ -424,9 +438,27 @@ export const PLAYERS = [
   { m: 'CDJ-3000X',      lib: 'OneLibrary',     exfat: 'Yes',                note: 'No SD card slot. USB-A x1, USB-C x2.' },
   { m: 'CDJ-1500X',      lib: 'OneLibrary',     exfat: 'Yes',                note: 'Announced July 2026. Needs rekordbox 7.2.16 or later.' },
   { m: 'CDJ-3000',       lib: 'Device Library', exfat: 'Yes, firmware 1.20+', note: 'Device Library on firmware 3.22. Firmware 3.30 added OneLibrary but was withdrawn.' },
-  { m: 'CDJ-2000NXS2',   lib: 'Device Library', exfat: 'No',                 note: 'The workhorse in most club booths. FAT32 only.' },
-  { m: 'CDJ-2000 / NXS', lib: 'Device Library', exfat: 'No',                 note: 'Still everywhere. FAT32 only.' },
-  { m: 'CDJ-900 / 850',  lib: 'Device Library', exfat: 'No',                 note: 'FAT32 only.' },
+  // "FAT32 only" SHIPPED ON THESE FOUR ROWS AND WAS WRONG (corrected 2026-08-07).
+  // Every one of these players reads HFS+ as well, which means a Mac DJ with a
+  // working HFS+ drive was being told by this table that it could not be read.
+  // exFAT remains correctly No on all of them, and exFAT is the one a DJ formats
+  // today, so the useful half of the claim survives. Verified per model against
+  // AlphaTheta's own support articles and operating instructions:
+  //   CDJ-2000NXS2  FAT16, FAT32, HFS+  manual DRI1290A, "About USB devices"
+  //   CDJ-2000      FAT, FAT32, HFS+    support.alphatheta.com/en-US/articles/19501354615449
+  //   CDJ-2000NXS   FAT32, FAT, HFS+    support.alphatheta.com/en-US/articles/4406137645977
+  //   CDJ-900NXS    FAT32, FAT, HFS+    support.alphatheta.com/en-US/articles/4406501395993
+  //   CDJ-900       FAT16, FAT32, HFS+  support.alphatheta.com/en-US/articles/19545915622937
+  //   CDJ-850       FAT16, FAT32, HFS+  support.alphatheta.com/en-US/articles/19618126081561
+  // AlphaTheta's docs disagree with themselves on FAT versus FAT16 for some of
+  // these. They agree on FAT32 and HFS+, which is what the note claims.
+  //
+  // NTFS is separately unsupported everywhere and is stated in the caveat below
+  // the table rather than repeated on every row.
+  { m: 'CDJ-2000NXS2',   lib: 'Device Library', exfat: 'No',                 note: 'The workhorse in most club booths. FAT32, FAT16 or HFS+.' },
+  { m: 'CDJ-2000 / NXS', lib: 'Device Library', exfat: 'No',                 note: 'Still everywhere. FAT32, FAT or HFS+.' },
+  { m: 'CDJ-900NXS',     lib: 'Device Library', exfat: 'No',                 note: 'FAT32, FAT or HFS+. Firmware ended at 1.31 in 2017.' },
+  { m: 'CDJ-900 / 850',  lib: 'Device Library', exfat: 'No',                 note: 'FAT32, FAT16 or HFS+.' },
   { m: 'XDJ-AZ',         lib: 'OneLibrary',     exfat: 'Yes',                note: '' },
   // XDJ-AN: added to rekordbox in 7.2.16 alongside the CDJ-1500X. Filesystems
   // (FAT16/FAT32/exFAT/HFS+) per official article

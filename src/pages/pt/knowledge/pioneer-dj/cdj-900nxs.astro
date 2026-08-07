@@ -17,13 +17,16 @@ const MESES = {
 const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = ptDate(CDJ_900NXS.checked);
 const FLOOR = CDJ_900NXS.newestKnown;
+// "Só FAT32" estava errado. A AlphaTheta diz que o player "não suporta
+// sistemas de arquivos além de FAT32, FAT ou HFS+". O limite real é o exFAT.
+const FS = CDJ_900NXS.fileSystems.join(', ');
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
   '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/cdj-900nxs#article',
   headline: 'CDJ-900NXS: a referência operacional',
-  description: 'O que todo DJ precisa saber antes de trabalhar num CDJ-900NXS: o histórico de firmware terminou em 2017, o que a 1.31 corrigiu, a falha do BEAT DIVIDE que parava o áudio, e por que esta geração é só FAT32.',
+  description: 'O que todo DJ precisa saber antes de trabalhar num CDJ-900NXS: o histórico de firmware terminou em 2017, o que a 1.31 corrigiu, a falha do BEAT DIVIDE que parava o áudio, e por que ele não lê exFAT.',
   author: { '@id': 'https://www.savemygig.com/#org' },
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   datePublished: '2026-08-07',
@@ -34,8 +37,8 @@ const schema = {
 };
 ---
 <Base
-  title="CDJ-900NXS: firmware parou na 1.31 e FAT32 | Save My Gig"
-  description="Manual de campo do CDJ-900NXS: o firmware parou em 2017, o que a 1.31 corrigiu, a falha do BEAT DIVIDE que parava o áudio, e o limite do FAT32."
+  title="CDJ-900NXS: firmware parou na 1.31, sem exFAT | Save My Gig"
+  description="Manual de campo do CDJ-900NXS: o firmware parou em 2017, o que a 1.31 corrigiu, a falha do BEAT DIVIDE que parava o áudio, e por que ele não lê exFAT."
   path="/knowledge/pioneer-dj/cdj-900nxs"
   crumbName="CDJ-900NXS"
   lang="pt"
@@ -89,14 +92,14 @@ const schema = {
       <p class="sv-text" style="margin:0">
         <strong>Briefing de booth. Este deck está encerrado, e isso muda o
         conselho.</strong> O firmware {FLOOR} chegou em outubro de 2017 e nada foi
-        publicado depois, então, diferente de um CDJ-2000NXS, não existe atualização
-        esperando para corrigir nada. Ou a falha foi curada, ou ela é permanente.
-        Saiba qual: <strong>a reprodução parava quando o BEAT DIVIDE era
-        usado</strong> abaixo da {CDJ_900NXS.beatDivideFix}, um <strong>AIFF em
-        24bit/48kHz não carregava de jeito nenhum</strong> abaixo da
-        {CDJ_900NXS.aiffLoadFix}, e o Link com players mais novos só funcionou
-        direito a partir da {CDJ_900NXS.nxs2LinkFix}. E <strong>só FAT32</strong>,
-        permanentemente.
+        publicado depois, então não existe atualização esperando para corrigir nada.
+        Ou a falha já foi curada, ou você contorna ela. Saiba qual:
+        <strong>a reprodução parava quando o BEAT DIVIDE era usado</strong> abaixo da
+        {CDJ_900NXS.beatDivideFix}, um <strong>AIFF em 24bit/48kHz não carregava de
+        jeito nenhum</strong> abaixo da {CDJ_900NXS.aiffLoadFix}, e alguns recursos de
+        um deck mais novo ao lado ficavam desativados no Link até a
+        {CDJ_900NXS.nxs2LinkFix}. E <strong>sem exFAT</strong>, permanentemente. Ele
+        lê {FS}.
       </p>
       <label for="sv-toggle" class="sv-more">Ler mais…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
@@ -130,8 +133,9 @@ const schema = {
       <summary><h3 class="acc-h2">O player não lê o meu drive</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> Quase sempre é o sistema de arquivos.
-        Esta geração é <strong>só FAT32</strong>, sem exFAT, e nenhuma versão de
-        firmware vai adicionar, porque não existem mais versões de firmware.</p>
+        Esta geração lê <strong>{FS}</strong> e <strong>não lê exFAT</strong>, e
+        nenhuma versão de firmware vai adicionar isso, porque não existem mais
+        versões de firmware.</p>
         <p><strong>Por que isso acontece.</strong> exFAT é a escolha moderna
         sensata e todo player novo lê, então um drive formatado para uma booth com
         CDJ-3000 é invisível aqui. Nada está quebrado. O formato é mais novo que o
@@ -165,7 +169,7 @@ const schema = {
         Toque outra coisa.</p>
         <p><strong>Evite da próxima vez.</strong> Num deck abaixo da
         {CDJ_900NXS.aiffLoadFix}, evite AIFF lossless em 24bit/48kHz e desconfie de
-        WAV de fontes incomuns. MP3 e AAC nunca foram afetados.</p>
+        WAV de fontes incomuns. Nenhuma das duas falhas atingiu MP3 ou AAC.</p>
         <p class="acc-related">Relacionados: <a href="/pt/fix/rekordbox-file-is-missing">Arquivo do rekordbox não encontrado</a> <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs#stuck-loading">As mesmas falhas no 2000NXS</a></p>
       </div>
     </details>
@@ -173,10 +177,10 @@ const schema = {
     <details class="acc-sec" name="cdj900nxs-acc" id="link-trouble">
       <summary><h3 class="acc-h2">O Link está estranho com os decks mais novos</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> Documentado. A compatibilidade de PRO DJ
-        LINK com o CDJ-2000NXS2 e com o XDJ-1000MK2 foi corrigida na
-        {CDJ_900NXS.nxs2LinkFix}. Abaixo dessa versão, um 900NXS do lado de um
-        player mais novo é uma causa conhecida em vez de um mistério.</p>
+        <p><strong>Resposta curta.</strong> Documentado, e com precisão: abaixo da
+        {CDJ_900NXS.nxs2LinkFix}, quando conectado por PRO DJ LINK, alguns recursos do
+        CDJ-2000NXS2 ou do XDJ-1000MK2 ficavam desativados. O Link em si funcionava. O
+        sintoma aparece no deck MAIS NOVO.</p>
         <p><strong>Por que isso acontece.</strong> Uma booth misturada é o caso
         normal numa casa que atualizou aos poucos, e o deck antigo é o que ninguém
         pensou em atualizar porque ele ainda toca música.</p>
@@ -224,19 +228,20 @@ const schema = {
     <details class="acc-sec" name="cdj900nxs-acc" id="finished-firmware">
       <summary><h3 class="acc-h2">Um deck sem mais atualizações a caminho</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> A {FLOOR} é onde o software deste player
-        termina. Isso não é uma crítica, é um fato de planejamento.</p>
-        <p><strong>Por que importa.</strong> Num modelo que ainda recebe suporte,
-        vale reportar um comportamento estranho e esperar. Aqui, o que não está na
-        lista acima ou é comportamento normal ou é algo que você contorna de forma
-        permanente. Também significa que uma atualização é toda a história de
-        manutenção: leve ele para a {FLOOR} e o lado de software está fechado para
-        sempre.</p>
+        <p><strong>Resposta curta.</strong> A {FLOOR} é a última versão que a
+        AlphaTheta publicou, de outubro de 2017. Isso não é uma crítica, é um fato de
+        planejamento.</p>
+        <p><strong>Por que importa.</strong> Num modelo que ainda recebe suporte
+        ativo, vale reportar um comportamento estranho e esperar. Aqui, o que não está
+        na lista acima ou é comportamento normal ou é algo que você contorna. Planeje
+        contando que nada mais vem, sabendo que não é impossível: o CDJ-2000NXS
+        recebeu uma versão em 2024, mais de seis anos depois da anterior.</p>
         <p><strong>Quando profissionais usam.</strong> Muita casa que trabalha ainda
         roda esses decks, e um 900NXS na {FLOOR} é um deck confiável. O risco não é
         o player, é supor que existe correção para alguma coisa.</p>
-        <p><strong>Erros comuns.</strong> Esperar uma atualização que não vem. Achar
-        que o suporte a exFAT talvez chegue.</p>
+        <p><strong>Erros comuns.</strong> Esperar uma atualização para planejar em
+        cima dela. Achar que o suporte a exFAT talvez chegue: nunca chegou nesta
+        geração.</p>
         <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas por versão</a></p>
       </div>
     </details>
@@ -285,12 +290,12 @@ const schema = {
       <summary><h3 class="acc-h2">Manter um deck antigo confiável</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> Uma atualização de firmware para a
-        {FLOOR}, e depois é puramente físico: slots limpos, drives com cuidado, e o
-        jog como a peça de desgaste num deck desta idade.</p>
+        {FLOOR}, e depois é essencialmente físico: slots limpos, drives com cuidado, e
+        o jog como a peça de desgaste num deck desta idade.</p>
         <p><strong>Por que importa.</strong> Um player desta idade já levou uma
-        década de drives empurrados nele e uma década de poeira. Com a história do
-        software fechada de forma permanente, tudo o que der errado daqui para a
-        frente é mecânico.</p>
+        década de drives empurrados nele e uma década de poeira. Com o lado do
+        software resolvido na {FLOOR}, quase tudo o que der errado daqui para a frente
+        é mecânico.</p>
         <p><strong>Faça assim.</strong> Atualize entre bookings, nunca em dia de
         gig. Sopre os slots de USB e de SD em vez de empurrar a sujeira para dentro.
         Puxe os drives retos, pelo conector.</p>
@@ -303,10 +308,12 @@ const schema = {
     <details class="acc-sec" name="cdj900nxs-acc" id="compatibility">
       <summary><h3 class="acc-h2">Booths misturadas, software e PRO DJ LINK</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> Ele faz link com players mais novos a
-        partir da {CDJ_900NXS.nxs2LinkFix}, especificamente o CDJ-2000NXS2 e o
-        XDJ-1000MK2, que a AlphaTheta nomeou nessa correção. A navegação por Serato
-        DJ HID também melhorou na {CDJ_900NXS.hddFolderFix}.</p>
+        <p><strong>Resposta curta.</strong> O Link em si funciona entre gerações. O
+        que a {CDJ_900NXS.nxs2LinkFix} corrigiu é mais estreito: abaixo dessa versão,
+        alguns recursos de um CDJ-2000NXS2 ou XDJ-1000MK2 conectado ficavam
+        desativados, então o sintoma aparece no deck mais novo e não neste. A
+        AlphaTheta nomeou os dois modelos nessa correção. A navegação por Serato DJ
+        HID também melhorou na {CDJ_900NXS.hddFolderFix}.</p>
         <p><strong>Faça assim.</strong> Numa booth que mistura gerações, confira a
         versão deste deck quando algo está errado num mais novo. Formato de
         biblioteca é do lado do player: este deck precisa de
@@ -323,14 +330,14 @@ const schema = {
       <div class="acc-body">
         <dl class="rb-errors">
           <dt>Em qual firmware ele deveria estar?</dt><dd>{FLOOR}, publicada em outubro de 2017. Nada veio depois dela, então essa é ao mesmo tempo a versão mínima e o teto.</dd>
-          <dt>Ele lê exFAT?</dt><dd>Não, e nunca vai ler. Só FAT32.</dd>
+          <dt>Ele lê exFAT?</dt><dd>Não. Ele lê {FS}.</dd>
           <dt>Por que o deck ficou mudo quando eu usei o BEAT DIVIDE?</dt><dd>Documentado, e corrigido na {CDJ_900NXS.beatDivideFix}. Abaixo dessa versão o recurso parava a reprodução.</dd>
           <dt>Por que um AIFF não carrega?</dt><dd>AIFF em 24bit/48kHz não carregava nem tocava abaixo da {CDJ_900NXS.aiffLoadFix}.</dd>
-          <dt>Vai sair mais firmware?</dt><dd>Nada foi publicado desde outubro de 2017. Planeje contando que não.</dd>
+          <dt>Vai sair mais firmware?</dt><dd>Nada foi publicado desde outubro de 2017, então planeje contando que não. A AlphaTheta não emitiu nenhuma declaração de fim de suporte, e ela publicou uma versão para o CDJ-2000NXS em 2024, depois de um intervalo de seis anos, então não é impossível.</dd>
           <dt>Qual formato de biblioteca?</dt><dd>{CDJ_900NXS.library}. Não OneLibrary.</dd>
           <dt>O slot de cartão SD é útil?</dt><dd>Sim. O mesmo set num cartão, já dentro do deck, é a recuperação mais rápida da booth.</dd>
           <dt>Dá para usar um HD externo grande?</dt><dd>Dá, e existiam falhas documentadas de reconhecimento de drive e de pastas num drive de 2TB. Um pen drive é mais seguro aqui.</dd>
-          <dt>Ele faz link com um CDJ-2000NXS2?</dt><dd>Faz, e essa compatibilidade só foi corrigida na {CDJ_900NXS.nxs2LinkFix}, então confira a versão se o Link estiver estranho.</dd>
+          <dt>Ele faz link com um CDJ-2000NXS2?</dt><dd>Faz. Abaixo da {CDJ_900NXS.nxs2LinkFix}, alguns recursos do deck MAIS NOVO ficavam desativados no Link, então confira a versão deste deck se o novo estiver sem alguma coisa.</dd>
         </dl>
       </div>
     </details>

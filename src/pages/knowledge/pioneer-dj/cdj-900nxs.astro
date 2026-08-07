@@ -72,7 +72,7 @@ const schema = {
 ---
 <Base
   title="CDJ-900NXS: Firmware Ended at 1.31, No exFAT | Save My Gig"
-  description="The CDJ-900NXS field manual: its firmware history ended in 2017, what 1.31 fixed, the BEAT DIVIDE fault that silenced playback, and the FAT32 limit."
+  description="The CDJ-900NXS field manual: its firmware ended in 2017, what 1.31 fixed, the BEAT DIVIDE fault that silenced playback, and why it cannot read exFAT."
   path="/knowledge/pioneer-dj/cdj-900nxs"
   crumbName="CDJ-900NXS"
 >
@@ -334,10 +334,12 @@ const schema = {
     <details class="acc-sec" name="cdj900nxs-acc" id="compatibility">
       <summary><h3 class="acc-h2">Mixed booths, software and PRO DJ LINK</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Short answer.</strong> It links to newer players from
-        {CDJ_900NXS.nxs2LinkFix}, specifically the CDJ-2000NXS2 and XDJ-1000MK2,
-        which AlphaTheta named in that fix. Serato DJ HID browsing was also
-        improved in {CDJ_900NXS.hddFolderFix}.</p>
+        <p><strong>Short answer.</strong> Link itself works across generations.
+        What {CDJ_900NXS.nxs2LinkFix} fixed is narrower: below that version, some
+        features of a connected CDJ-2000NXS2 or XDJ-1000MK2 were disabled, so the
+        symptom appears on the newer deck rather than on this one. AlphaTheta named
+        both of those models in that fix. Serato DJ HID browsing was also improved
+        in {CDJ_900NXS.hddFolderFix}.</p>
         <p><strong>Do this.</strong> In a booth mixing generations, check this deck's
         version when something is wrong on a newer one. Library format is
         player-side: this deck needs {CDJ_900NXS.library}, so a booth with both this

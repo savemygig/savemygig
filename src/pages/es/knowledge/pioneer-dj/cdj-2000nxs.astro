@@ -18,13 +18,18 @@ const MESES = {
 const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = esDate(CDJ_2000NXS.checked);
 const FLOOR = CDJ_2000NXS.newestKnown;
+// Lee FAT32, FAT y HFS+. Decir "solo FAT32" estaba MAL: AlphaTheta dice que el
+// reproductor "no soporta sistemas de archivos distintos de FAT32, FAT o HFS+",
+// así que a un DJ de Mac con una unidad HFS+ se le estaba diciendo que su unidad
+// no se podía leer. La afirmación verdadera y útil es la del exFAT.
+const FS = CDJ_2000NXS.fileSystems.join(', ');
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
   '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/cdj-2000nxs#article',
   headline: 'CDJ-2000NXS: la referencia operativa',
-  description: 'Lo que todo DJ necesita saber antes de trabajar con un CDJ-2000NXS: las caídas, los congelamientos y los cortes de audio documentados, qué versión de firmware corrigió cada uno, y por qué esta generación es solo FAT32.',
+  description: 'Lo que todo DJ necesita saber antes de trabajar con un CDJ-2000NXS: las caídas, los congelamientos y los cortes de audio documentados, qué versión de firmware corrigió cada uno, y por qué esta generación no lee exFAT.',
   author: { '@id': 'https://www.savemygig.com/#org' },
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   datePublished: '2026-08-07',
@@ -36,7 +41,7 @@ const schema = {
 ---
 <Base
   title="CDJ-2000NXS: fallas de firmware y FAT32 | Save My Gig"
-  description="Manual de campo del CDJ-2000NXS: caídas, congelamientos y cortes de audio documentados, qué firmware corrigió cada uno y por qué es solo FAT32."
+  description="Manual de campo del CDJ-2000NXS: caídas, congelamientos y cortes de audio documentados, qué firmware corrigió cada uno y por qué no lee exFAT."
   path="/knowledge/pioneer-dj/cdj-2000nxs"
   crumbName="CDJ-2000NXS"
   lang="es"
@@ -95,9 +100,9 @@ const schema = {
         documentado <strong>caerse, congelarse, cortar el audio en el deck slave con
         SYNC, negarse a cargar un AIFF y quedarse en "Loading.."</strong> para
         siempre. AlphaTheta corrigió todo eso. La versión mínima es
-        <strong>{FLOOR}</strong>. Segunda cosa: <strong>solo FAT32</strong>, esta
-        generación no tiene exFAT, y por eso un USB moderno puede ser rechazado por
-        un booth viejo.
+        <strong>{FLOOR}</strong>. Segunda cosa: <strong>sin exFAT</strong> en esta
+        generación. Lee {FS}, y exFAT es lo que un DJ formatea hoy, y por eso un USB
+        moderno puede ser rechazado por un booth viejo.
       </p>
       <label for="sv-toggle" class="sv-more">Leer más…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Leer menos</label>
@@ -109,7 +114,7 @@ const schema = {
       <summary><h3 class="acc-h2">El deck se congeló o se reinició solo</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> Con firmware viejo esto es
-        comportamiento documentado, no mala suerte. Se corrigieron tres
+        comportamiento documentado, no mala suerte. Se corrigieron dos
         congelamientos distintos y una caída total: una caída al presionar HOT CUE
         repetidamente con Master Tempo activado ({CDJ_2000NXS.crashHotCueFix}), un
         congelamiento al editar la TAG LIST ({CDJ_2000NXS.tagListFreezeFix}), y un
@@ -123,8 +128,8 @@ const schema = {
         eso se reportaron y se corrigieron, y por eso un deck que nunca se actualizó
         va a seguir haciéndolas todas.</p>
         <p><strong>Resuélvelo ahora.</strong> Saca sonido del otro deck primero, y
-        después apaga y prende este. Un CDJ-2000NXS arranca en bastante menos de un
-        minuto. No intentes reproducir la falla para entenderla con la sala
+        después apaga y prende este. Cuenta con el tiempo de arranque en tu cambio.
+        No intentes reproducir la falla para entenderla con la sala
         esperando.</p>
         <p><strong>Evítalo la próxima vez.</strong> Revisa la versión al llegar. Si
         está por debajo de {FLOOR}, evita los disparadores específicos por esa
@@ -139,9 +144,9 @@ const schema = {
       <summary><h3 class="acc-h2">El reproductor no lee mi USB</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> Casi siempre es el sistema de archivos.
-        Esta generación es <strong>solo FAT32</strong>. No existe soporte de exFAT en
-        un CDJ-2000NXS, en ninguna versión de firmware, y ninguna actualización lo va
-        a agregar.</p>
+        Esta generación lee <strong>{FS}</strong> y nada más. <strong>No existe
+        soporte de exFAT</strong> en un CDJ-2000NXS, en ninguna versión de
+        firmware.</p>
         <p><strong>Por qué pasa esto.</strong> exFAT es la opción moderna sensata
         para una unidad grande y todo reproductor nuevo lo lee, así que un DJ que
         formateó para un booth con CDJ-3000 llega a una sala más vieja con un USB que
@@ -180,8 +185,9 @@ const schema = {
         firmware específico. Pon otra cosa y sigue.</p>
         <p><strong>Evítalo la próxima vez.</strong> En decks por debajo de {FLOOR},
         evita AIFF lossless a 24bit/48kHz y desconfía de WAV de fuentes poco
-        comunes. MP3 y AAC nunca se vieron afectados por ninguna de las dos
-        fallas.</p>
+        comunes. Ninguna de esas dos fallas tocó MP3 ni AAC, aunque
+        {CDJ_2000NXS.crashHotCueFix} sí corrigió una falla de cue aparte en
+        MP3.</p>
         <p class="acc-related">Relacionados: <a href="/es/fix/rekordbox-file-is-missing">Archivo de rekordbox no encontrado</a> <a href="#known-issues">Correcciones documentadas por versión</a></p>
       </div>
     </details>
@@ -217,16 +223,21 @@ const schema = {
     <details class="acc-sec" name="cdj2000nxs-acc" id="known-issues">
       <summary><h3 class="acc-h2">Correcciones documentadas, por versión de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Respuesta corta.</strong> Esta es la lista documentada más larga
-        de cualquier reproductor de este sitio, y la razón por la que la versión
-        importa más aquí que en cualquier otro lado. Cada entrada de abajo es la
-        redacción de la propia AlphaTheta, condensada. La versión mínima es
-        <strong>{FLOOR}</strong>.</p>
+        <p><strong>Respuesta corta.</strong> La lista documentada más larga de
+        cualquier reproductor de este sitio, y la razón por la que la versión
+        importa más aquí que en cualquier otro lado. El historial de cambios de
+        AlphaTheta llega a dieciséis versiones y todas las que corrigieron algo que
+        un DJ nota están abajo, en la redacción del propio fabricante, condensada.
+        La versión mínima es <strong>{FLOOR}</strong>.</p>
         <dl class="rb-errors">
+          <dt>{CDJ_2000NXS.bpmSyncFix}</dt><dd>El BPM podía fluctuar durante la reproducción usando Sync, y también el tempo de un track con Slip Mode activado. La entrada más vieja del historial, octubre de 2012.</dd>
           <dt>{CDJ_2000NXS.crashHotCueFix}</dt><dd>El reproductor se cayó cuando el botón HOT CUE se presionaba repetidamente con Master Tempo activado. También se corrigió el comportamiento del back cue después de llamar un memory cue en un MP3.</dd>
           <dt>{CDJ_2000NXS.syncDropoutFix}</dt><dd>Corte de audio en el deck slave usando SYNC, y cambio inesperado entre reproductor master y slave durante slip scratch o slip pause.</dd>
           <dt>{CDJ_2000NXS.tagListFreezeFix}</dt><dd>Podía ocurrir un congelamiento al editar la TAG LIST.</dd>
-          <dt>{CDJ_2000NXS.browseSlowFix}</dt><dd>La pantalla de navegación se ponía lenta o se detenía después de usar la unidad por varias horas. Un congelamiento al mantener HOT CUE por más de un segundo durante la carga automática de hot cue. La reproducción no iniciaba, no se detenía o no se podía seleccionar después de desconectar un dispositivo USB grande, de unos 20.000 tracks.</dd>
+          <dt>{CDJ_2000NXS.browseSlowFix}</dt><dd>La pantalla de navegación se ponía lenta o se detenía después de usar la unidad por varias horas. Un congelamiento al mantener HOT CUE por más de un segundo durante la carga automática de hot cue. Un problema poco frecuente en el que la reproducción desde otros medios no iniciaba, no se detenía o no se podía seleccionar después de desconectar un dispositivo USB grande, de unos 20.000 tracks.</dd>
+          <dt>{CDJ_2000NXS.loopDisplayFix}</dt><dd>Dos cambios de comportamiento más que correcciones: el display de beats del loop vuelve al display WAVE cuando termina un loop, y SYNC MASTER cambia automáticamente cuando se desactiva SYNC.</dd>
+          <dt>{CDJ_2000NXS.needleSearchFix}</dt><dd>Problemas del pad de needle search. Una playlist ordenada no se restauraba al volver a ella desde un nivel arriba. El Master Player cambiaba cuando arrancaba un Active Loop.</dd>
+          <dt>{CDJ_2000NXS.kuvoTagIntro}</dt><dd>Se agregó análisis de tags MP3 y AIFF para dar soporte al servicio KUVO. Una función, no una corrección.</dd>
           <dt>{CDJ_2000NXS.wavHeaderFix}</dt><dd>Un archivo WAVE con un header incompatible no cargaba, pero "Loading.." quedaba en pantalla indefinidamente. Los tracks de algunas carpetas de un disco duro de 2TB no se mostraban al navegar.</dd>
           <dt>{CDJ_2000NXS.hddRecognitionFix}</dt><dd>Algunos discos duros no se reconocían al conectarlos. Se podía escuchar ruido cuando se activaba Master Tempo.</dd>
           <dt>{CDJ_2000NXS.aiffLoadFix}</dt><dd>La reproducción de un archivo AIFF a 24bit/48kHz se detenía y los tracks no se podían cargar a un deck. Ocurría ruido de audio durante el scratch.</dd>
@@ -252,10 +263,10 @@ const schema = {
     <AccGroup icon="sliders" title="Funciones explicadas" />
 
     <details class="acc-sec" name="cdj2000nxs-acc" id="fat32-only">
-      <summary><h3 class="acc-h2">Solo FAT32, y lo que eso te cuesta</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <summary><h3 class="acc-h2">Sin exFAT, y lo que eso te cuesta</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Respuesta corta.</strong> Sin exFAT, en ninguna versión de
-        firmware. FAT32 también limita cualquier archivo suelto a 4GB, lo que casi
+        <p><strong>Respuesta corta.</strong> Lee {FS}. Sin exFAT, en ninguna versión
+        de firmware. FAT32 también limita cualquier archivo suelto a 4GB, lo que casi
         nunca importa para música y sí importa para un set largo grabado.</p>
         <p><strong>Por qué importa.</strong> Esta es la línea de falla entre booths
         viejos y nuevos. Un USB formateado en exFAT funciona en todo reproductor
@@ -267,8 +278,8 @@ const schema = {
         problema.</p>
         <p><strong>Errores comunes.</strong> Formatear pensando en el booth más
         moderno en el que tocaste en lugar del más viejo en el que puedes tocar.
-        Suponer que una actualización de firmware podría agregar exFAT a esta
-        generación. No puede.</p>
+        Esperar soporte de exFAT: AlphaTheta nunca lo agregó a esta generación y no
+        hay ningún indicio de que lo vaya a agregar.</p>
         <p class="acc-related">Relacionados: <a href="/es/fix/exfat-vs-fat32-cdj">exFAT o FAT32</a> <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla de compatibilidad de reproductores</a></p>
       </div>
     </details>
@@ -304,9 +315,9 @@ const schema = {
         pasar esta noche.</p>
         <p><strong>Por qué importa.</strong> Esta es la única página de este sitio
         donde un número te dice tanto. Todo otro modelo tiene dos o tres fallas
-        documentadas. Este tiene once versiones de ellas, y el deck es lo bastante
-        viejo como para que una porción grande de las unidades instaladas sea
-        anterior a la mayoría de las correcciones.</p>
+        documentadas. Este tiene un historial de cambios que pasa de diez versiones,
+        y el deck es lo bastante viejo como para que una porción grande de las
+        unidades instaladas sea anterior a la mayoría de las correcciones.</p>
         <p><strong>Hazlo así.</strong> Hazlo parte de la misma vuelta en la que
         revisas el ruteo del mixer. Versión por debajo de {FLOOR} significa nada de
         editar TAG LIST, nada de depender de SYNC, Master Tempo tratado como
@@ -362,9 +373,9 @@ const schema = {
       <summary><h3 class="acc-h2">Respuestas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <dl class="rb-errors">
-          <dt>¿Lee exFAT?</dt><dd>No, y ninguna versión de firmware lo agrega. Solo FAT32.</dd>
+          <dt>¿Lee exFAT?</dt><dd>No, y ninguna versión de firmware lo agrega. Lee {FS}.</dd>
           <dt>¿En qué firmware debería estar?</dt><dd>{FLOOR}. Revisado el {UPDATED}.</dd>
-          <dt>¿Por qué se congeló el deck?</dt><dd>Con firmware viejo hay tres congelamientos documentados y una caída. Mira la lista de versiones de arriba.</dd>
+          <dt>¿Por qué se congeló el deck?</dt><dd>Con firmware viejo hay dos congelamientos documentados y una caída, más una pantalla de navegación que, según AlphaTheta, podía "ponerse lenta o detenerse". Mira la lista de versiones de arriba.</dd>
           <dt>¿Por qué un AIFF no carga?</dt><dd>AIFF a 24bit/48kHz no cargaba ni sonaba por debajo de {CDJ_2000NXS.aiffLoadFix}.</dd>
           <dt>¿Por qué un track se queda en "Loading.."?</dt><dd>Un archivo WAVE con un header incompatible hacía exactamente eso por debajo de {CDJ_2000NXS.wavHeaderFix}.</dd>
           <dt>¿La ranura de tarjeta SD sirve?</dt><dd>Sí. Es el backup más rápido del booth: el mismo set en una tarjeta, ya dentro del deck.</dd>
