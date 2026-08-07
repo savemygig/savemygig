@@ -127,6 +127,7 @@ a route makes no sense without the decisions that led to it.
 - [DJM-V5](https://www.savemygig.com/knowledge/pioneer-dj/djm-v5): 3-channel mixer with NO CROSSFADER, verified in AlphaTheta's own instruction manual. A long-blend desk in the DJM-V10-LF tradition, not a reduced 4-channel mixer. 96 kHz, 32-bit converters, SonicLink wireless monitoring built in, send and return. Pro DJ Link carries up to 3 multi players and 2 computers. No firmware change history published yet.
 - [DJM-V10](https://www.savemygig.com/knowledge/pioneer-dj/djm-v10)
 - [DJM-900NXS2](https://www.savemygig.com/knowledge/pioneer-dj/djm-900nxs2)
+- [euphonia](https://www.savemygig.com/knowledge/pioneer-dj/euphonia): 4-channel ROTARY mixer, so channel levels are knobs and there is NO CROSSFADER, not even a channel fader curve. Master transformer circuit co-designed with Rupert Neve Designs across all master output, 32-bit converters, 96 kHz / 64-bit floating point DSP. The 3-band Master Isolator with Boost Send acts on the WHOLE master output, not one channel, which is the most common mistake on this desk. Send effects: Delay, Tape Echo, Echo Verb, Reverb, Shimmer, plus a high-pass filter, plus Send/Return and a Master Insert. One USB-C only, so a laptop handover is a cable swap. PRO DJ LINK is NOT documented by AlphaTheta in either direction and no LAN terminal is listed, so it is not asserted here. No firmware change history published.
 - [DJM-REC](https://www.savemygig.com/knowledge/pioneer-dj/djm-rec)
 
 ## Prevention

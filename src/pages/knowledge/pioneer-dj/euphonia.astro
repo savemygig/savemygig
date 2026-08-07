@@ -1,0 +1,439 @@
+---
+import Base from '../../../layouts/Base.astro';
+import EmailCapture from '../../../components/EmailCapture.astro';
+import AccGroup from '../../../components/AccGroup.astro';
+import { EUPHONIA } from '../../../data/facts.js';
+import Icon from '../../../components/Icon.astro';
+
+/**
+ * euphonia. Eleventh equipment page, and the only rotary mixer on the site.
+ *
+ * LOWERCASE THROUGHOUT, deliberately. AlphaTheta writes it "euphonia", never
+ * "Euphonia", including at the start of a sentence. Getting a manufacturer's own
+ * capitalisation wrong on a reference page is a small thing that tells a
+ * knowledgeable reader we are not paying attention.
+ *
+ * THE PAGE IS BUILT AROUND WHAT A ROTARY MIXER DOES DIFFERENTLY, not around the
+ * spec sheet. Three things carry it:
+ *
+ *   1. NO CROSSFADER, because rotary faders replace the whole idea. Same practical
+ *      consequence as the DJM-V5 and the V10-LF: a blending desk, not a cutting
+ *      desk. Ask before accepting the booking.
+ *   2. ROTARY IS A DIFFERENT INSTRUMENT. There is no fader curve to steepen, no
+ *      muscle memory transfer from a line fader, and no fast cut available at all.
+ *      A DJ who has only ever worked line faders is not "adapting", they are
+ *      learning a control they have never used, live.
+ *   3. THE MASTER ISOLATOR IS NOT CHANNEL EQ. It acts on the whole master output.
+ *      Reaching for it the way you reach for a channel EQ during a blend affects
+ *      both tracks and the entire room at once.
+ *
+ * PRO DJ LINK IS RECORDED AS UNKNOWN, and that is a deliberate editorial choice
+ * rather than a gap. AlphaTheta's product page does not state it in either
+ * direction and lists no LAN terminal among the connections. This is a mixer DJs
+ * will plan a rig around, so a confident guess here is exactly the kind of claim
+ * that gets quoted back at us. The page says what we know and what we do not.
+ *
+ * NO FIRMWARE CHANGE HISTORY IS PUBLISHED, checked 7 August 2026, so Known issues
+ * says that and lists nothing, exactly as on the CDJ-1500X and DJM-V5 pages. See
+ * the long note in cdj-1500x.astro for why an empty section beats an invented one.
+ *
+ * Facts from EUPHONIA in facts.js, sourced to AlphaTheta's product page and its
+ * own launch article, both linked at the foot of the page.
+ */
+const UPDATED = EUPHONIA.checked;
+const FX = EUPHONIA.sendEffects.join(', ');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/euphonia#article',
+  headline: 'euphonia: the operational reference',
+  description: 'What every DJ should know before working an AlphaTheta euphonia: rotary faders and no crossfader, the Rupert Neve master transformer, how the Master Isolator differs from channel EQ, and what is not documented about PRO DJ LINK.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'en',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/euphonia#webpage' },
+  image: 'https://www.savemygig.com/images/euphonia-panel-full.webp',
+};
+---
+<Base
+  title="euphonia: Rotary Faders, No Crossfader | Save My Gig"
+  description="The euphonia field manual: rotary faders and no crossfader, the Rupert Neve master transformer, why the Master Isolator is not channel EQ, and one USB-C."
+  path="/knowledge/pioneer-dj/euphonia"
+  crumbName="euphonia"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span>
+      <a href="/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>euphonia</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">euphonia</div>
+        <h1 class="rb-h1">euphonia, <span class="accent">the field manual</span></h1>
+        <p class="dim rb-updated">Reviewed: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#euphonia-lightbox"
+        aria-label="Open a larger photo of the euphonia control panel"
+      >
+        <img
+          src="/images/euphonia-panel-thumb.webp"
+          alt="AlphaTheta euphonia four-channel rotary DJ mixer control panel, top view"
+          width="647"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="euphonia-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/euphonia-panel-full.webp"
+        srcset="/images/euphonia-panel-800.webp 800w, /images/euphonia-panel-full.webp 1812w"
+        sizes="92vw"
+        alt="AlphaTheta euphonia four-channel rotary DJ mixer control panel, top view"
+        width="1812"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing. Rotary faders, and therefore no crossfader.</strong>
+        If you cut, this is not your desk, and that is a question to ask before you
+        accept the booking rather than a discovery to make at load in. If you blend,
+        it is one of the best sounding mixers made: {EUPHONIA.channels} channels,
+        {EUPHONIA.converters}, and a <strong>master transformer circuit co-designed
+        with Rupert Neve Designs</strong> sitting across everything that leaves the
+        booth. Two things catch people. <strong>The Master Isolator is not channel
+        EQ</strong>, it works on the whole room. And there is
+        <strong>one USB-C socket</strong>, so a laptop handover is physical. No
+        firmware change history has been published.
+      </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
+    </div>
+
+    <AccGroup icon="zap" title="Emergency fixes" />
+
+    <details class="acc-sec" name="euphonia-acc" id="no-crossfader">
+      <summary><h3 class="acc-h2">There is no crossfader, and the faders are knobs</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Correct, and nothing has been removed.
+        This is a rotary mixer: each channel's level is a knob, and there is no
+        crossfader at all.</p>
+        <p><strong>Why this happens.</strong> Rotary is an older and different
+        philosophy of mixing, built for long blends and level riding rather than
+        cuts. It is the same family as the DJM-V5 and the DJM-V10-LF in what it
+        will not let you do, and it goes further: there is not even a channel fader
+        curve to steepen, because there is no channel fader.</p>
+        <p><strong>Fix it now.</strong> Mix with what is there. Level with the
+        knobs, shape with the channel controls, use the high-pass filter to pull a
+        track out of the way, and let the Master Isolator carry the big moves. If
+        your set genuinely cannot survive without cutting, that conversation belongs
+        with the technical manager before your first track, not during your third.</p>
+        <p><strong>Avoid it next time.</strong> Ask which mixer is installed when
+        you take the booking. On a rotary the answer changes how you prepare, not
+        just what you expect.</p>
+        <p class="acc-related">Related: <a href="#rotary">Rotary faders, in practice</a> <a href="/knowledge/pioneer-dj/djm-v5">DJM-V5, also no crossfader</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="euphonia-acc" id="isolator-mistake">
+      <summary><h3 class="acc-h2">The whole room changed when I touched one knob</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> You are probably on the Master Isolator,
+        which is {EUPHONIA.masterIsolator}. It acts on the entire master output, not
+        on one channel.</p>
+        <p><strong>Why this happens.</strong> It sits where a DJ expects EQ to sit
+        and it looks like EQ. On any DJM, three knobs in that region belong to a
+        channel. Here they belong to the room, so a move that would have swapped the
+        low end between two tracks removes the low end from both of them and from
+        everything else playing.</p>
+        <p><strong>Fix it now.</strong> Return the isolator to centre. If you are
+        not certain which control you moved, centre the isolator first, because it is
+        the one with the widest consequence.</p>
+        <p><strong>Avoid it next time.</strong> Learn the isolator as a master
+        effect rather than as EQ, and find it by feel in soundcheck. Note that Boost
+        Send is part of it, with a Boost Level of +12dB, +6dB or 0dB, so it can add
+        as well as remove.</p>
+        <p class="acc-related">Related: <a href="#isolator">The Master Isolator and Boost</a> <a href="/knowledge/pioneer-dj/djm-900nxs2#gain-staging">Gain staging first</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="euphonia-acc" id="no-signal">
+      <summary><h3 class="acc-h2">A channel has no signal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> The usual order, with two extras on this
+        desk: the send and return path, and the Master Insert.</p>
+        <p><strong>Why this happens.</strong> The inputs are {EUPHONIA.inputs}, so
+        a channel can be selected to phono while you feed it a line source, or to
+        the digital input while you feed it analogue. Beyond that,
+        {EUPHONIA.externalFx} means external gear can be sitting in either a single
+        channel's path or across the entire master. A Master Insert with nothing
+        returning takes the whole output with it, which reads as a dead desk rather
+        than a dead channel.</p>
+        <p><strong>Fix it now.</strong> Move the source to another channel to
+        isolate it. If everything is silent rather than one channel, suspect the
+        Master Insert before you suspect the mixer.</p>
+        <p><strong>Avoid it next time.</strong> One routing pass before doors,
+        including whatever the previous DJ left patched into send, return and
+        insert.</p>
+        <p class="acc-related">Related: <a href="/emergency">Start Emergency Mode</a> <a href="#connections">Connections and the single USB-C</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Known issues" />
+
+    <details class="acc-sec" name="euphonia-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Documented fixes, by firmware version</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer. There are none published, and that is the honest
+        answer.</strong> AlphaTheta has released no firmware change history for the
+        euphonia, checked {UPDATED}, so there is no documented fault to report and
+        no version threshold to sit above.</p>
+        <p><strong>Why we say so instead of leaving the section out.</strong> The
+        CDJ-2000NXS page on this site lists eleven versions of documented faults
+        because the manufacturer published them. An empty section here is
+        information: it says nobody has published a known problem, and it says this
+        page is not filling a template with guesses.</p>
+        <p><strong>One thing this page also does not claim.</strong>
+        <strong>PRO DJ LINK is not documented for this mixer</strong> on
+        AlphaTheta's product page, in either direction, and no LAN terminal appears
+        among its connections. We are not going to assert that it does or does not
+        support it. If you are planning a rig that depends on Link, confirm it with
+        AlphaTheta or the venue rather than with any website, including this one.</p>
+        <p style="margin-top:1rem">
+          <strong>Official documentation.</strong> <a href={EUPHONIA.source} target="_blank" rel="noopener">AlphaTheta product page →</a><br />
+          <a href={EUPHONIA.sourceAnnounce} target="_blank" rel="noopener">Launch article →</a><br />
+          <span class="dim" style="font-size:0.85rem">Found a change history we have missed? <a href="/feedback">Tell us</a> and we will add it.</span>
+        </p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/firmware">Every model, by firmware version</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Features explained" />
+
+    <details class="acc-sec" name="euphonia-acc" id="rotary">
+      <summary><h3 class="acc-h2">Rotary faders, in practice</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> {EUPHONIA.channels} channels, each
+        levelled with a weighted knob rather than a line fader.</p>
+        <p><strong>Why it matters.</strong> A line fader is a single gesture you can
+        make without looking. A rotary is a continuous adjustment you hold, which
+        changes how you think about a transition: you are riding two levels against
+        each other for the length of the blend rather than travelling from one to the
+        other. DJs who have worked rotaries describe it as slower and more musical.
+        DJs who have not usually find their first hour clumsy.</p>
+        <p><strong>When professionals use it.</strong> Long form, house, disco, dub,
+        anything where the mix is the performance rather than the cut. This is why
+        rotary desks are installed in listening rooms and why they are unusual on a
+        festival stage.</p>
+        <p><strong>Common mistakes.</strong> Treating your first rotary set as a
+        normal set on unfamiliar gear. Book an hour on one before you play one if
+        you possibly can, and if you cannot, arrive early and practise the transition
+        you rely on most.</p>
+        <p class="acc-related">Related: <a href="#no-crossfader">There is no crossfader</a> <a href="/checklist">The pre-gig checklist</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="euphonia-acc" id="transformer">
+      <summary><h3 class="acc-h2">The Rupert Neve master transformer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> {EUPHONIA.transformer}. Processing is
+        {EUPHONIA.dsp}, with {EUPHONIA.converters}.</p>
+        <p><strong>Why it matters.</strong> It is the reason the mixer exists and
+        the reason it costs what it costs. Practically, it means the master path has
+        a character of its own that is always present: you are not hearing your
+        channels summed neutrally, you are hearing them through a circuit chosen for
+        how it colours them.</p>
+        <p><strong>When professionals use it.</strong> Always, because it is not
+        switchable in the way an effect is. What professionals adjust is what they
+        send into it, and the honest advice is to arrive with your levels
+        conservative and let the master do its work rather than pushing into it and
+        hoping.</p>
+        <p><strong>Common mistakes.</strong> Assuming a premium master stage
+        forgives a hot channel. It does not fix gain staging, it just makes bad gain
+        staging sound expensive.</p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/djm-900nxs2#gain-staging">Gain staging first</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="euphonia-acc" id="isolator">
+      <summary><h3 class="acc-h2">The Master Isolator, Boost and the send effects</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> The isolator is
+        {EUPHONIA.masterIsolator}. The built-in send effects are {FX}, and there is
+        a high-pass filter as well.</p>
+        <p><strong>Why it matters.</strong> Isolator plus Boost Send is the mixer's
+        main performance gesture: you can pull a band out of the whole room and feed
+        that band into an effect at the same time. That is a very large move, and on
+        a big system it is the difference between a moment and a mistake.</p>
+        <p><strong>When professionals use it.</strong> On the transition, not
+        continuously, and rehearsed. The send effects are chosen for space and time
+        rather than mangling, which tells you what the desk expects of you.</p>
+        <p><strong>Common mistakes.</strong> Using the isolator as channel EQ, which
+        is the single most common euphonia error. Leaving Boost Level somewhere the
+        previous DJ set it, and discovering it on your first big move.</p>
+        <p class="acc-related">Related: <a href="#isolator-mistake">The whole room changed</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="euphonia-acc" id="connections">
+      <summary><h3 class="acc-h2">Connections, and the single USB-C</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Inputs {EUPHONIA.inputs}. Outputs
+        {EUPHONIA.outputs}. {EUPHONIA.usbPorts}. Software:
+        {EUPHONIA.software.join(' and ')}, with DVS supported.</p>
+        <p><strong>Why it matters.</strong> One USB-C means one computer. A back to
+        back where both DJs are on laptops is a physical cable swap between sets, not
+        a switch, and that swap happens live. It is worth agreeing who unplugs what
+        before you start rather than negotiating it over a track.</p>
+        <p><strong>When professionals use it.</strong> Resident rigs where the
+        outboard is patched once and left. Four phono inputs means this desk expects
+        turntables, plural.</p>
+        <p><strong>Common mistakes.</strong> Planning a laptop handover as if there
+        were two sound cards. Arriving without knowing whether the venue has the
+        cable you need.</p>
+        <p class="acc-related">Related: <a href="#no-signal">A channel has no signal</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Professional tips" />
+
+    <details class="acc-sec" name="euphonia-acc" id="get-time-on-one">
+      <summary><h3 class="acc-h2">Get an hour on a rotary before you play one</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Rotary is not an adjustment, it is a
+        control you have not used. Sixty minutes of practice removes almost all of
+        the risk.</p>
+        <p><strong>Why it matters.</strong> Everything else about this desk is
+        learnable in soundcheck. The physical habit of levelling with a knob under
+        pressure is not, and the first place most DJs discover that is in front of
+        an audience who came for a listening room.</p>
+        <p><strong>Do this.</strong> Ask which mixer is installed when you take the
+        booking. If it is a rotary, find one: a shop, a studio, a friend's setup,
+        or arrive two hours early. Practise the one transition you rely on most,
+        then practise recovering from getting it wrong.</p>
+        <p class="acc-related">Related: <a href="#rotary">Rotary faders, in practice</a> <a href="/prepare">The full prevention system</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Preventive maintenance" />
+
+    <details class="acc-sec" name="euphonia-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Keeping the desk reliable</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Rotary knobs are the wear item, the rear
+        panel is dense, and at {EUPHONIA.weight} this is a mixer to lift properly
+        rather than drag.</p>
+        <p><strong>Why it matters.</strong> A rotary that has developed a scratchy
+        spot mid-travel is a fault you hear during every blend, and a knob is harder
+        to swap in a hurry than a fader. The rear carries digital, line, phono and
+        mic inputs plus master, booth, record, phones, send, return and insert, so
+        there are a lot of connectors to strain.</p>
+        <p><strong>Do this.</strong> Keep drinks away from the rotary row, unplug by
+        the connector, keep it covered, and if a channel knob starts to feel
+        gritty get it serviced rather than living with it.</p>
+        <p class="acc-related">Related: <a href="/prepare">The full prevention system</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Frequently asked questions" />
+
+    <details class="acc-sec" name="euphonia-acc" id="faq">
+      <summary><h3 class="acc-h2">Quick answers</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>Does the euphonia have a crossfader?</dt><dd>No. It is a rotary mixer, so channel levels are knobs and there is no crossfader.</dd>
+          <dt>Can I scratch on it?</dt><dd>Not in the usual sense. If cutting is central to your set, ask which mixer is installed before accepting the booking.</dd>
+          <dt>How many channels?</dt><dd>{EUPHONIA.channels}, with four phono and four line inputs.</dd>
+          <dt>Does it support PRO DJ LINK?</dt><dd>AlphaTheta does not state it either way on the product page, and no LAN terminal is listed among the connections. We will not guess. Confirm with AlphaTheta or the venue if your rig depends on it.</dd>
+          <dt>What is the transformer?</dt><dd>{EUPHONIA.transformer}.</dd>
+          <dt>Is the Master Isolator the same as channel EQ?</dt><dd>No, and confusing the two is the most common mistake on this desk. The isolator acts on the whole master output.</dd>
+          <dt>What effects are built in?</dt><dd>{FX}, plus a high-pass filter, and {EUPHONIA.externalFx} for outboard.</dd>
+          <dt>Can two laptops share it?</dt><dd>Not simultaneously. {EUPHONIA.usbPorts}, so a laptop handover is a cable swap.</dd>
+          <dt>Does it work with rekordbox and Serato?</dt><dd>Yes, {EUPHONIA.software.join(' and ')}, with DVS supported.</dd>
+          <dt>Are there known firmware bugs?</dt><dd>None published. AlphaTheta has released no change history for this mixer.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Related guides</h2>
+      <p class="dim" style="margin:0">
+        <a href="/knowledge/pioneer-dj/djm-v5">DJM-V5</a> ·
+        <a href="/knowledge/pioneer-dj/djm-v10">DJM-V10 / V10-LF</a> ·
+        <a href="/knowledge/pioneer-dj/djm-a9">DJM-A9</a> ·
+        <a href="/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
+        <a href="/checklist">Club setup checklist</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Playing soon and it is not working?</h2>
+      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_euphonia"><Icon name="siren" /> Start Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_euphonia" />
+    </div>
+
+    <p class="rb-sources dim">
+      Sources: AlphaTheta's official euphonia <a href={EUPHONIA.source} target="_blank" rel="noopener">product page</a>
+      and <a href={EUPHONIA.sourceAnnounce} target="_blank" rel="noopener">launch article</a>,
+      checked {UPDATED}. No firmware change history has been published for this
+      mixer, so none is quoted, and PRO DJ LINK support is not documented either
+      way, so it is not asserted. General mixing guidance reflects standard
+      practice on rotary desks. Specifications change without notice, re-check
+      before a big show.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* Photo anchored to hw-head's own bottom edge, not sized by a flex row.
+     See the long note in djm-v10.astro for why a flex row was wrong.
+     NOTE this photo is LANDSCAPE, unlike every other model shot on the site: a
+     rotary mixer is wider than it is deep. max-width and max-height both at 100%
+     inside the fixed 200px box means it letterboxes itself rather than
+     overflowing, so no per-page override is needed. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>
