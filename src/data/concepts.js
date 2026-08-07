@@ -25,12 +25,11 @@
  *   Give it an `article` later and every link on the site follows, with no
  *   other edit anywhere. That is the point of the file.
  *
- * `aliases` are the other ways the same idea is written in copy. Nothing
- * consumes them yet: they exist so that IF we later automate first-mention
- * linking, the matcher has the vocabulary and we are not rewriting this file.
- * Antonio's steer is that linking stays intelligent rather than automatic,
- * editorial for now, so today this registry is used by hand and validated by
- * the gate.
+ * `aliases` are the other ways the same idea is written in copy, and they ARE
+ * consumed: scripts/autolink.mjs flattens label plus aliases into one
+ * vocabulary and matches longest first. This comment used to say nothing
+ * consumed them, which was true when the file was written and stopped being
+ * true the day the autolinker shipped. Corrected 2026-08-07.
  *
  * GUARDRAIL: scripts/check-concepts.mjs fails the build if any destination
  * here does not resolve in the built site, including the #anchor. A renamed
@@ -43,15 +42,60 @@ export const CONCEPTS = [
   // ---------------------------------------------------------------- PRODUCTS
   // Every one of these has a real page. They never point at the dictionary,
   // even where the dictionary also mentions them.
+  // ANTONIO'S EQUIPMENT LINKING RULE, 2026-08-07: if the text names a model and
+  // a page exists, link it. This registry held SIX of the fifteen models with
+  // pages, so nine models were being named across the site and never linked,
+  // including every one on the /emergency lead paragraph. All fifteen are here
+  // now, and adding a model page means adding one line here as well.
+  //
+  // Rule 7 in autolink.mjs (longest label first) is what makes this safe: a
+  // bare family word can never steal a link from a specific model, because
+  // "CDJ-3000X" is matched before "CDJ-3000" and both before "CDJ".
   { key: 'cdj-3000x', kind: 'product', label: 'CDJ-3000X', page: '/knowledge/pioneer-dj/cdj-3000x', aliases: ['CDJ 3000X'] },
   { key: 'cdj-3000', kind: 'product', label: 'CDJ-3000', page: '/knowledge/pioneer-dj/cdj-3000', aliases: ['CDJ 3000'] },
   { key: 'cdj-2000nxs2', kind: 'product', label: 'CDJ-2000NXS2', page: '/knowledge/pioneer-dj/cdj-2000nxs2', aliases: ['CDJ 2000NXS2', 'CDJ-2000 NXS2'] },
-  { key: 'djm-900nxs2', kind: 'product', label: 'DJM-900NXS2', page: '/knowledge/pioneer-dj/djm-900nxs2', aliases: ['DJM 900NXS2'] },
+  { key: 'cdj-2000nxs', kind: 'product', label: 'CDJ-2000NXS', page: '/knowledge/pioneer-dj/cdj-2000nxs', aliases: ['CDJ 2000NXS', 'CDJ-2000 NXS', 'CDJ-2000nexus'] },
+  { key: 'cdj-1500x', kind: 'product', label: 'CDJ-1500X', page: '/knowledge/pioneer-dj/cdj-1500x', aliases: ['CDJ 1500X'] },
+  { key: 'cdj-900nxs', kind: 'product', label: 'CDJ-900NXS', page: '/knowledge/pioneer-dj/cdj-900nxs', aliases: ['CDJ 900NXS', 'CDJ-900 NXS'] },
+  { key: 'xdj-1000mk2', kind: 'product', label: 'XDJ-1000MK2', page: '/knowledge/pioneer-dj/xdj-1000mk2', aliases: ['XDJ 1000MK2', 'XDJ-1000 MK2'] },
+  { key: 'xdj-700', kind: 'product', label: 'XDJ-700', page: '/knowledge/pioneer-dj/xdj-700', aliases: ['XDJ 700'] },
   { key: 'djm-a9', kind: 'product', label: 'DJM-A9', page: '/knowledge/pioneer-dj/djm-a9', aliases: ['DJM A9'] },
   { key: 'djm-v10', kind: 'product', label: 'DJM-V10', page: '/knowledge/pioneer-dj/djm-v10', aliases: ['DJM V10', 'DJM-V10-LF'] },
+  { key: 'djm-v5', kind: 'product', label: 'DJM-V5', page: '/knowledge/pioneer-dj/djm-v5', aliases: ['DJM V5'] },
+  { key: 'djm-900nxs2', kind: 'product', label: 'DJM-900NXS2', page: '/knowledge/pioneer-dj/djm-900nxs2', aliases: ['DJM 900NXS2'] },
+  { key: 'djm-900nxs', kind: 'product', label: 'DJM-900NXS', page: '/knowledge/pioneer-dj/djm-900nxs', aliases: ['DJM 900NXS', 'DJM-900nexus'] },
+  { key: 'djm-750mk2', kind: 'product', label: 'DJM-750MK2', page: '/knowledge/pioneer-dj/djm-750mk2', aliases: ['DJM 750MK2', 'DJM-750 MK2'] },
+  // euphonia is lower case in AlphaTheta's own branding and on our page, and the
+  // capitalised form appears in copy too, so both are carried.
+  { key: 'euphonia', kind: 'product', label: 'euphonia', page: '/knowledge/pioneer-dj/euphonia', aliases: ['Euphonia', 'EUPHONIA'] },
   { key: 'rekordbox', kind: 'product', label: 'rekordbox', page: '/knowledge/pioneer-dj/rekordbox', aliases: ['Rekordbox'] },
   { key: 'djm-rec', kind: 'product', label: 'DJM-REC', page: '/knowledge/pioneer-dj/djm-rec', aliases: ['DJM REC'] },
   { key: 'firmware-matrix', kind: 'product', label: 'firmware issues by version', page: '/knowledge/pioneer-dj/firmware' },
+
+  // ------------------------------------------------------- PRODUCT FAMILIES
+  // Antonio's rule 2, 2026-08-07: when only the FAMILY is named and no page
+  // exists for the family itself, send the reader to the most representative
+  // model, so a bare "CDJ" is a starting point rather than a dead word.
+  //
+  // These are LAST in the products block on purpose. Rule 7 sorts by label
+  // length across the whole vocabulary, so a three-letter family word loses to
+  // every model name automatically and can only win where no model is named.
+  // The plural forms are carried as aliases because the matcher's word-boundary
+  // test would otherwise skip "CDJs" entirely.
+  //
+  // MEASURED BEFORE SHIPPING: a bare family word appears on 103 pages for CDJ,
+  // 32 for DJM and 24 for XDJ, so with first-mention-per-page this adds at most
+  // 159 links across three languages, roughly 53 per language.
+  //
+  // WORTH A SECOND LOOK, and it is a judgement call rather than a defect: every
+  // one of those 103 CDJ links lands on the CDJ-3000X, on pages that are mostly
+  // not about the CDJ-3000X. The alternative destination is /equipment, which
+  // lists every model and is arguably the truer "logical starting point" in
+  // Antonio's own words. It is one line to switch, here, and nothing else in the
+  // site needs to change.
+  { key: 'family-cdj', kind: 'product', label: 'CDJ', page: '/knowledge/pioneer-dj/cdj-3000x', aliases: ['CDJs'] },
+  { key: 'family-djm', kind: 'product', label: 'DJM', page: '/knowledge/pioneer-dj/djm-a9', aliases: ['DJMs'] },
+  { key: 'family-xdj', kind: 'product', label: 'XDJ', page: '/knowledge/pioneer-dj/xdj-1000mk2', aliases: ['XDJs'] },
 
   // ---------------------------------------------------------------- CONCEPTS
   // WITH a fuller article: the article wins over the dictionary line.
