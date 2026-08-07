@@ -59,7 +59,7 @@ const schema = {
 ---
 <Base
   title="XDJ-700: Auto Power Off, FAT32, No SD Slot | Save My Gig"
-  description="The XDJ-700 field manual: the 20-minute auto power off that looks like a dead deck, FAT32 or HFS+ only, no SD card slot, no in-deck backup."
+  description="The XDJ-700 field manual: the 20-minute auto power off that looks like a dead deck, no exFAT, no SD card slot and no in-deck backup."
   path="/knowledge/pioneer-dj/xdj-700"
   crumbName="XDJ-700"
 >
@@ -149,6 +149,29 @@ const schema = {
       </div>
     </details>
 
+    <details class="acc-sec" name="xdj700-acc" id="file-will-not-load">
+      <summary><h3 class="acc-h2">One track will not load, or the noise is wrong</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Two documented file faults, both cured in
+        {XDJ_700.aiffLoadFix}: an AIFF at 24bit/48kHz stopped playing and could not
+        be loaded to a deck, and certain WAV files produced digitally distorted white
+        noise.</p>
+        <p><strong>Why this happens.</strong> The decoder meeting a file it cannot
+        parse. From where you are standing it looks exactly like a corrupt track or a
+        failing drive, which is what makes it expensive: you troubleshoot the drive
+        while the fault is in the firmware.</p>
+        <p><strong>Fix it now.</strong> Load a different track from the same drive. If
+        that works, the drive is fine and the problem is that file on this firmware.
+        Play something else.</p>
+        <p><strong>Avoid it next time.</strong> On a deck below
+        {XDJ_700.aiffLoadFix}, avoid lossless AIFF at 24bit/48kHz and be wary of WAV
+        from unusual sources. The same version also fixed some features of a newer
+        CDJ-2000NXS2 or XDJ-1000MK2 being disabled over PRO DJ LINK, so in a mixed
+        booth check this deck's version when the newer one is missing something.</p>
+        <p class="acc-related">Related: <a href="/fix/rekordbox-file-is-missing">rekordbox file is missing</a> <a href="/knowledge/pioneer-dj/cdj-2000nxs#stuck-loading">The same faults on the 2000NXS</a></p>
+      </div>
+    </details>
+
     <details class="acc-sec" name="xdj700-acc" id="empty-browser">
       <summary><h3 class="acc-h2">The browser is empty, or my categories are missing</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
@@ -217,8 +240,9 @@ const schema = {
       <div class="acc-body">
         <p><strong>Short answer.</strong> Still maintained, unlike the CDJ-900NXS:
         {FLOOR} arrived in November 2024. Every entry below is AlphaTheta's own
-        wording, condensed.</p>
+        wording, condensed, and the oldest of them is the one that matters most.</p>
         <dl class="rb-errors">
+          <dt>{XDJ_700.aiffLoadFix}</dt><dd>Playback of an AIFF file at 24bit/48kHz stopped and tracks could not be loaded to a deck. Digitally distorted white noise on certain WAV files. Over PRO DJ LINK, some features of the CDJ-2000NXS2 or XDJ-1000MK2 were disabled. Problems in Control Mode. An active loop could activate a very short loop. Added MASTER PLAYER SELECT (AUTO) and multi-word search.</dd>
           <dt>{XDJ_700.browserManyTracksFix}</dt><dd>Information such as categories and tracks was not shown in the browser screen when a database had many tracks. Search results did not appear when moving the cursor during SEARCH. Issues during playback and track selection.</dd>
           <dt>{XDJ_700.searchFix}</dt><dd>SEARCH worked incorrectly under certain conditions.</dd>
           <dt>{XDJ_700.syncBpmFix}</dt><dd>Playback speed sometimes did not return to the BPM shown on screen with Sync enabled. A popping noise during a loop with QUANTIZE and MASTER TEMPO enabled. A HOT CUE started after jumping to the LOOP-IN point when changing loop beat length with QUANTIZE enabled.</dd>

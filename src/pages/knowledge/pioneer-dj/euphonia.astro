@@ -27,11 +27,22 @@ import Icon from '../../../components/Icon.astro';
  *      Reaching for it the way you reach for a channel EQ during a blend affects
  *      both tracks and the entire room at once.
  *
- * PRO DJ LINK IS RECORDED AS UNKNOWN, and that is a deliberate editorial choice
- * rather than a gap. AlphaTheta's product page does not state it in either
- * direction and lists no LAN terminal among the connections. This is a mixer DJs
- * will plan a rig around, so a confident guess here is exactly the kind of claim
- * that gets quoted back at us. The page says what we know and what we do not.
+ * PRO DJ LINK: NOT SUPPORTED. THIS PAGE SAID "WE DO NOT KNOW" AND THAT WAS WRONG
+ * (corrected 2026-08-07 by an independent fact-check).
+ *
+ * AlphaTheta publishes a table, "What DJ units support PRO DJ LINK?", and the
+ * euphonia row reads no for Wi-Fi, no for USB and no for Ethernet. It is the only
+ * unit in that table unsupported on every connection. The manual documents no LAN
+ * terminal either.
+ *
+ * WHY THE ORIGINAL WAS WORSE THAN A WRONG GUESS. The page presented its refusal as
+ * rigour, and sent a reader planning a rig off to "confirm with AlphaTheta" about a
+ * question AlphaTheta had already answered in public. That is not caution, it is an
+ * incomplete search dressed as a principle, and it pushed the reader AWAY from an
+ * answer this page should have found.
+ *
+ * The principle survives and gains the test it was missing: publishing "we do not
+ * know" is honest only after looking properly.
  *
  * NO FIRMWARE CHANGE HISTORY IS PUBLISHED, checked 7 August 2026, so Known issues
  * says that and lists nothing, exactly as on the CDJ-1500X and DJM-V5 pages. See
@@ -48,7 +59,7 @@ const schema = {
   '@type': 'TechArticle',
   '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/euphonia#article',
   headline: 'euphonia: the operational reference',
-  description: 'What every DJ should know before working an AlphaTheta euphonia: rotary faders and no crossfader, the Rupert Neve master transformer, how the Master Isolator differs from channel EQ, and what is not documented about PRO DJ LINK.',
+  description: 'What every DJ should know before working an AlphaTheta euphonia: rotary faders and no crossfader, the Rupert Neve master transformer, how the Master Isolator differs from channel EQ, and why it does not support PRO DJ LINK.',
   author: { '@id': 'https://www.savemygig.com/#org' },
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   datePublished: '2026-08-07',
@@ -114,7 +125,7 @@ const schema = {
         <strong>Booth briefing. Rotary faders, and therefore no crossfader.</strong>
         If you cut, this is not your desk, and that is a question to ask before you
         accept the booking rather than a discovery to make at load in. If you blend,
-        it is one of the best sounding mixers made: {EUPHONIA.channels} channels,
+        the specification is serious: {EUPHONIA.channels} channels,
         {EUPHONIA.converters}, and a <strong>master transformer circuit co-designed
         with Rupert Neve Designs</strong> sitting across everything that leaves the
         booth. Two things catch people. <strong>The Master Isolator is not channel
@@ -140,8 +151,9 @@ const schema = {
         will not let you do, and it goes further: there is not even a channel fader
         curve to steepen, because there is no channel fader.</p>
         <p><strong>Fix it now.</strong> Mix with what is there. Level with the
-        knobs, shape with the channel controls, use the high-pass filter to pull a
-        track out of the way, and let the Master Isolator carry the big moves. If
+        knobs, shape with the channel controls, and let the Master Isolator carry
+        the big moves. The high-pass filter here is one of the SEND effects, not a
+        channel filter, so it is not the tool for pulling one track out of the way. If
         your set genuinely cannot survive without cutting, that conversation belongs
         with the technical manager before your first track, not during your third.</p>
         <p><strong>Avoid it next time.</strong> Ask which mixer is installed when
@@ -209,12 +221,18 @@ const schema = {
         because the manufacturer published them. An empty section here is
         information: it says nobody has published a known problem, and it says this
         page is not filling a template with guesses.</p>
-        <p><strong>One thing this page also does not claim.</strong>
-        <strong>PRO DJ LINK is not documented for this mixer</strong> on
-        AlphaTheta's product page, in either direction, and no LAN terminal appears
-        among its connections. We are not going to assert that it does or does not
-        support it. If you are planning a rig that depends on Link, confirm it with
-        AlphaTheta or the venue rather than with any website, including this one.</p>
+        <p><strong>One thing that is settled, and worth saying plainly.</strong>
+        <strong>The euphonia does not support PRO DJ LINK.</strong> AlphaTheta's own
+        compatibility table lists it as no for Wi-Fi, no for USB and no for
+        Ethernet, and it is the only unit in that table unsupported on every
+        connection. The manual documents no LAN terminal either. If your rig depends
+        on Link, this mixer is not part of that plan, and that is a booking-stage
+        fact rather than a soundcheck one.</p>
+        <p><strong>A correction on record.</strong> This page previously said the
+        answer was not documented and that we would not guess. The answer was
+        published, we had not found it, and sending a reader to ask AlphaTheta about
+        something AlphaTheta had already answered is worse than being wrong
+        quickly.</p>
         <p style="margin-top:1rem">
           <strong>Official documentation.</strong> <a href={EUPHONIA.source} target="_blank" rel="noopener">AlphaTheta product page →</a><br />
           <a href={EUPHONIA.sourceAnnounce} target="_blank" rel="noopener">Launch article →</a><br />
@@ -275,8 +293,8 @@ const schema = {
       <summary><h3 class="acc-h2">The Master Isolator, Boost and the send effects</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> The isolator is
-        {EUPHONIA.masterIsolator}. The built-in send effects are {FX}, and there is
-        a high-pass filter as well.</p>
+        {EUPHONIA.masterIsolator}. The built-in send effects are {FX}, and the
+        high-pass filter is one of them rather than a per-channel filter.</p>
         <p><strong>Why it matters.</strong> Isolator plus Boost Send is the mixer's
         main performance gesture: you can pull a band out of the whole room and feed
         that band into an effect at the same time. That is a very large move, and on
@@ -360,10 +378,10 @@ const schema = {
           <dt>Does the euphonia have a crossfader?</dt><dd>No. It is a rotary mixer, so channel levels are knobs and there is no crossfader.</dd>
           <dt>Can I scratch on it?</dt><dd>Not in the usual sense. If cutting is central to your set, ask which mixer is installed before accepting the booking.</dd>
           <dt>How many channels?</dt><dd>{EUPHONIA.channels}, with four phono and four line inputs.</dd>
-          <dt>Does it support PRO DJ LINK?</dt><dd>AlphaTheta does not state it either way on the product page, and no LAN terminal is listed among the connections. We will not guess. Confirm with AlphaTheta or the venue if your rig depends on it.</dd>
+          <dt>Does it support PRO DJ LINK?</dt><dd>No. AlphaTheta's compatibility table lists the euphonia as no for Wi-Fi, no for USB and no for Ethernet, and the manual documents no LAN terminal.</dd>
           <dt>What is the transformer?</dt><dd>{EUPHONIA.transformer}.</dd>
           <dt>Is the Master Isolator the same as channel EQ?</dt><dd>No, and confusing the two is the most common mistake on this desk. The isolator acts on the whole master output.</dd>
-          <dt>What effects are built in?</dt><dd>{FX}, plus a high-pass filter, and {EUPHONIA.externalFx} for outboard.</dd>
+          <dt>What effects are built in?</dt><dd>{FX}. The HPF is one of the send effects, not a per-channel filter. {EUPHONIA.externalFx} handles outboard.</dd>
           <dt>Can two laptops share it?</dt><dd>Not simultaneously. {EUPHONIA.usbPorts}, so a laptop handover is a cable swap.</dd>
           <dt>Does it work with rekordbox and Serato?</dt><dd>Yes, {EUPHONIA.software.join(' and ')}, with DVS supported.</dd>
           <dt>Are there known firmware bugs?</dt><dd>None published. AlphaTheta has released no change history for this mixer.</dd>
@@ -394,9 +412,10 @@ const schema = {
     <p class="rb-sources dim">
       Sources: AlphaTheta's official euphonia <a href={EUPHONIA.source} target="_blank" rel="noopener">product page</a>
       and <a href={EUPHONIA.sourceAnnounce} target="_blank" rel="noopener">launch article</a>,
-      checked {UPDATED}. No firmware change history has been published for this
-      mixer, so none is quoted, and PRO DJ LINK support is not documented either
-      way, so it is not asserted. General mixing guidance reflects standard
+      checked {UPDATED}. PRO DJ LINK support is taken from AlphaTheta's own
+      <a href={EUPHONIA.sourceProDjLink} target="_blank" rel="noopener">compatibility table</a>,
+      which lists this mixer as unsupported on every connection type. No firmware
+      change history has been published for this mixer, so none is quoted. General mixing guidance reflects standard
       practice on rotary desks. Specifications change without notice, re-check
       before a big show.
     </p>

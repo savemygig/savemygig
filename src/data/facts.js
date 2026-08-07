@@ -143,17 +143,27 @@ export const CDJ_1500X = {
   //    the latest rekordbox first. A DJ arriving with a drive that a CDJ-2000NXS2
   //    reads fine can find this player will not browse it.
   library: 'OneLibrary',
+  // 7.2.16 IS CORRECT AND WAS WRONGLY SOURCED (corrected 2026-08-07). Neither
+  // the product page nor the launch article states a version number: the product
+  // page says only "the latest version of rekordbox" and the announcement says a
+  // supporting update was scheduled for 9 July. The actual source is rekordbox's
+  // own release notes, ver. 7.2.16, 9 July 2026, "CDJ-1500X compatibility added".
+  // Recorded here because the number is identical to REKORDBOX.newestKnown, and
+  // without this note it is indistinguishable from a forbidden snapshot copy.
   rekordboxMin: '7.2.16',
+  sourceRekordbox: 'https://rekordbox.com/en/support/releasenote/',
   deviceLibraryNeedsConversion: true,
-  // 3. Only THREE of the ports take a drive, and one of the USB-C sockets is
-  //    for a computer, not storage. In a dark booth they look identical.
+  // 3. Only TWO of the three ports take a drive: the second USB-C socket is for
+  //    a computer, not storage. In a dark booth they look identical. (This
+  //    comment said "THREE" until 2026-08-07, contradicting storagePorts below
+  //    and every line of copy on the page.)
   usbPorts: 'USB Type-A x1 (storage), USB Type-C x2 (storage x1, PC connection x1)',
   storagePorts: 2,
   formats: ['MP3', 'AAC', 'WAV', 'AIFF', 'Apple Lossless', 'FLAC'],
   // PRO DJ LINK caps at FOUR here, not the six an all-CDJ-3000 rig allows.
   maxLinkedUnits: 4,
   linkNote: 'Up to 4 units can be connected when using a switching hub',
-  wirelessLan: 'IEEE 802.11 a/b/n/ac',
+  wirelessLan: 'IEEE 802.11 a/b/g/n/ac',   // the g was missing until 2026-08-07
   screen: '10.1-inch capacitive full-color touchscreen',
   displayModes: ['Dark', 'Light'],
   hotCues: 8,
@@ -223,12 +233,23 @@ export const CDJ_2000NXS = {
   checked: '7 August 2026',
   newestKnown: '1.44',           // 27 Feb 2024, "minor bugs have been fixed"
   // THE ONES THAT END A SET, oldest fix first so the version reads as a floor.
+  // FOUR VERSIONS WERE MISSING and the page claimed the history was "read in
+  // full" (corrected 2026-08-07). 1.04, 1.20, 1.21 and 1.22 were omitted, so the
+  // real total is 16 versions, not the eleven the prose claimed.
+  bpmSyncFix: '1.04',            // 29 Oct 2012: BPM could fluctuate during playback using Sync.
+                                 // Also the tempo of a track with Slip Mode engaged.
   crashHotCueFix: '1.06',        // 10 Dec 2012: player CRASHES on repeated HOT CUE with Master Tempo on.
   syncDropoutFix: '1.10',        // 25 Feb 2013: audio dropout on the slave deck when using SYNC.
   tagListFreezeFix: '1.11',      // 15 Apr 2013: freeze while editing the TAG LIST.
   browseSlowFix: '1.13',         // 17 Jun 2013: browse screen slows or STOPS after several hours of use,
                                  // plus a freeze holding HOT CUE over 1 second during auto hot cue loading,
                                  // plus playback failing after a large USB (20,000 tracks) is disconnected.
+  loopDisplayFix: '1.20',        // 3 Sep 2013: loop beat display returning to WAVE after a loop ends,
+                                 // and SYNC MASTER switching automatically when SYNC is disabled.
+  needleSearchFix: '1.21',       // 19 Nov 2013: Needle Search pad issues, a sorted playlist not being
+                                 // restored on return, and the Master Player switching when an Active
+                                 // Loop starts.
+  kuvoTagIntro: '1.22',          // 1 Apr 2014: MP3/AIFF tag analysis added for the KUVO service.
   wavHeaderFix: '1.23',          // 17 Feb 2015: an incompatible WAVE header leaves "Loading.." on screen forever.
                                  // Same version fixed folders not listing on a 2TB HDD.
   hddRecognitionFix: '1.24',     // 20 Aug 2015: some HDDs not recognized; noise with Master Tempo.
@@ -240,10 +261,19 @@ export const CDJ_2000NXS = {
   slipHotCueFix: '1.41',         // 3 Apr 2017: issues during playback and track selection, and SLIP HOT CUE.
   syncBpmFix: '1.43',            // 19 Oct 2017: speed not returning to the displayed BPM with Sync on,
                                  // and a popping noise in a LOOP with QUANTIZE and MASTER TEMPO enabled.
-  // Media and library. FAT32 only: no exFAT on this generation, which is the
-  // single most common reason a modern drive fails in an old booth.
+  // Media and library.
+  //
+  // "FAT32 ONLY" WAS WRONG AND SHIPPED BOLD (corrected 2026-08-07 by an
+  // independent fact-check). AlphaTheta's own support article says, verbatim:
+  // "The CDJ-2000nexus does not support file systems other than FAT32, FAT or
+  // HFS+." So HFS+ IS supported, and a Mac DJ with a working HFS+ drive was
+  // being told by this site that their drive could not be read. The true and
+  // still-useful claim is the exFAT one: exFAT is what a DJ formats today and
+  // this generation cannot read it.
   library: 'Device Library',
   exfat: false,
+  fileSystems: ['FAT32', 'FAT', 'HFS+'],
+  sourceFileSystems: 'https://support.alphatheta.com/en-US/articles/4406137645977',
   media: 'USB and SD card',
   source: 'https://support.alphatheta.com/en-US/articles/21976886580633',
   sourceHistory: 'https://downloads.support.alphatheta.com/firmwares/dj-players/CDJ-2000NXS/CDJ-2000NXS-Firmware-Change-History-Ver144-en.pdf',
@@ -263,8 +293,12 @@ export const CDJ_900NXS = {
   wavNoiseFix: '1.30',           // Same version: digitally distorted white noise on certain .WAV files.
   nxs2LinkFix: '1.30',           // Same version: PRO DJ LINK compatibility with CDJ-2000NXS2 and XDJ-1000MK2.
   syncBpmFix: '1.31',            // 5 Oct 2017: speed not returning to the displayed BPM with Sync enabled.
+  // Same correction as the CDJ-2000NXS: "FAT32 only" was wrong. AlphaTheta:
+  // "The CDJ-900NXS does not support file systems other than FAT32, FAT or HFS+."
   library: 'Device Library',
   exfat: false,
+  fileSystems: ['FAT32', 'FAT', 'HFS+'],
+  sourceFileSystems: 'https://support.alphatheta.com/en-US/articles/4406501395993',
   media: 'USB and SD card',
   source: 'https://support.alphatheta.com/en-US/articles/4404787206681',
   sourceHistory: 'https://downloads.support.alphatheta.com/firmwares/dj-players/CDJ-900NXS/CDJ-900NXS-Firmware-Change-History-Ver131-en.pdf',
@@ -277,6 +311,17 @@ export const CDJ_900NXS = {
 export const XDJ_700 = {
   checked: '7 August 2026',
   newestKnown: '1.15',           // 7 Nov 2024
+  // VERSION 1.10 WAS MISSING, and it is the one with the set-enders (corrected
+  // 2026-08-07). The page claimed the change history was "read in full" while
+  // starting at 1.11, so the faults this site exists to warn about were absent
+  // from the very model page that should carry them.
+  aiffLoadFix: '1.10',           // 10 Nov 2016: AIFF 24bit/48kHz playback stopped and tracks could not
+                                 // be loaded to a deck.
+  wavNoiseFix: '1.10',           // Same version: digitally distorted white noise on certain .WAV files.
+  nxs2LinkFix: '1.10',           // Same version: over PRO DJ LINK, some features of the CDJ-2000NXS2 or
+                                 // XDJ-1000MK2 were disabled.
+  controlModeFix: '1.10',        // Same version: problems in Control Mode, and an active loop activating
+                                 // a very short loop.
   browserManyTracksFix: '1.11',  // 7 Mar 2017: categories and tracks not shown in the browser on a large database.
                                  // Same version fixed search results not appearing when moving the cursor.
   searchFix: '1.12',             // 25 Apr 2017: SEARCH worked incorrectly under certain conditions.
@@ -314,14 +359,33 @@ export const EUPHONIA = {
   // with Rupert Neve Designs, applied to all master output.
   transformer: 'Master transformer circuit co-designed by AlphaTheta and Rupert Neve Designs, applied to all master audio output',
   masterIsolator: '3-band (low, mid, high) with Boost Send and a Boost Level of +12dB, +6dB or 0dB',
-  sendEffects: ['Delay', 'Tape Echo', 'Echo Verb', 'Reverb', 'Shimmer'],
-  highPassFilter: true,
+  // THE HPF IS ONE OF THE SEND EFFECTS, not a separate channel filter, and
+  // splitting it out here produced advice that does not work on the desk
+  // (corrected 2026-08-07). AlphaTheta lists all six together: "5 built-in
+  // spatial effects and a high-pass filter: Delay, Tape Echo, Echo Verb, Reverb,
+  // Shimmer, and HPF", and the manual places HPF on the SEND FX selector, applied
+  // through the send path rather than on a channel's direct output. The page had
+  // told a DJ to "use the high-pass filter to pull a track out of the way",
+  // which is a channel-filter move this mixer does not have.
+  sendEffects: ['Delay', 'Tape Echo', 'Echo Verb', 'Reverb', 'Shimmer', 'HPF'],
+  hpfIsSendFx: true,
   externalFx: 'Send/Return plus a Master Insert',
   energyVisualizer: true,
   inputs: 'Digital (coaxial) x4, Line (RCA) x4, Phono (RCA) x4, Mic x1 (XLR / 1/4" TRS)',
   outputs: 'Master (XLR), Booth (1/4" TRS), REC (RCA), Phones (1/4" and 3.5mm)',
   usbPorts: 'USB Type-C x1',
-  proDjLink: null,               // not stated by AlphaTheta, deliberately not guessed
+  // PRO DJ LINK: NOT SUPPORTED, AND THIS WAS RECORDED AS UNKNOWN BY MISTAKE.
+  // Corrected 2026-08-07. AlphaTheta publishes a compatibility table, "What DJ
+  // units support PRO DJ LINK?", and the euphonia row reads no for Wi-Fi, no for
+  // USB and no for Ethernet. It is the only unit in that table with no support on
+  // any connection. The manual also documents no LAN terminal.
+  //
+  // The earlier `null` was not caution, it was an incomplete search: this page
+  // told a reader planning a rig to "confirm with AlphaTheta" about a question
+  // AlphaTheta had already answered in public. Publishing "we do not know" is
+  // only honest when nobody knows.
+  proDjLink: false,
+  sourceProDjLink: 'https://support.alphatheta.com/en-US/articles/8840691832985',
   software: ['rekordbox', 'Serato DJ Pro'],
   dvs: true,
   dimensions: '429.2 x 331.0 x 119.9 mm',
