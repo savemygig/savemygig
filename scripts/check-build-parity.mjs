@@ -46,7 +46,18 @@ const MUTATORS = [
   'scripts/autolink.mjs',
   'scripts/build-search-index.mjs',
   'scripts/lang-roots.mjs',
+  'scripts/sitemap-index-lastmod.mjs',
 ];
+
+// Scripts in the gate that DO write a file, but never into dist, so they are not
+// transforms and must not be compared as ones. Each needs a reason.
+//   check-i18n.mjs  rewrites scripts/en-urls.json, the committed manifest of
+//                   English URLs it checks against. Repo file, not build output.
+//   this file       writes nothing. It matches its own detector because WRITE_RE
+//                   below spells the write calls out as regex source, which is
+//                   code and survives comment stripping. Listing it beats
+//                   teaching the detector to parse regex literals.
+const NON_DIST_WRITERS = ['scripts/check-i18n.mjs', 'scripts/check-build-parity.mjs'];
 const isMutator = (step) => MUTATORS.some((m) => step.includes(m));
 
 const buildSteps = split(pkg.scripts.build).filter(isMutator);
@@ -63,13 +74,46 @@ for (let i = 0; i < n; i++) {
   }
 }
 
-// Anything that writes to dist and is not on the MUTATORS list would slip
-// through the comparison above, so name the risk rather than trusting it.
-const unknownGate = split(pkg.scripts.gate).filter(
-  (s) => /strip|autolink|rewrite|inject|minify|transform/i.test(s) && !isMutator(s),
-);
-if (unknownGate.length) {
-  fails.push(`gate step looks like a dist transform but is not declared in MUTATORS: ${unknownGate.join(', ')}`);
+// ANYTHING THAT WRITES AND IS NOT DECLARED WOULD SLIP THROUGH THE COMPARISON
+// ABOVE, so this reads the scripts rather than guessing from their names.
+//
+// It used to match the STEP TEXT against /strip|autolink|rewrite|inject|minify|
+// transform/, which is a list of words we happened to have used so far. It would
+// not have caught sitemap-index-lastmod.mjs, which rewrites dist/sitemap-index.xml
+// and is named after none of those. A denylist of vocabulary only ever catches
+// the mistakes already made.
+//
+// So the signal is now the only one that cannot be renamed around: does the
+// script's source contain a write call. Every gate step that runs a script is
+// read, and any that writes must appear in MUTATORS (mirrored into build) or in
+// NON_DIST_WRITERS (with a reason). Unreadable file: reported, never ignored.
+const SCRIPT_RE = /scripts\/[A-Za-z0-9._-]+\.(?:mjs|cjs|js)/;
+const WRITE_RE = /writeFileSync|writeFile\(|createWriteStream|copyFileSync|cpSync|renameSync|rmSync|unlinkSync|appendFileSync/;
+const undeclared = [];
+for (const step of split(pkg.scripts.gate)) {
+  const m = step.match(SCRIPT_RE);
+  if (!m) continue;
+  const file = m[0];
+  if (isMutator(step) || NON_DIST_WRITERS.includes(file)) continue;
+  let src;
+  try {
+    src = readFileSync(new URL('../' + file, import.meta.url), 'utf8');
+  } catch {
+    undeclared.push(`${file} (could not be read, so it cannot be cleared)`);
+    continue;
+  }
+  // Comments describe writes without performing them, and several of these
+  // scripts explain at length what the build steps do.
+  const code = src
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|[^:])\/\/.*$/gm, '$1');
+  if (WRITE_RE.test(code)) undeclared.push(file);
+}
+if (undeclared.length) {
+  fails.push(
+    'gate step writes files but is declared in neither MUTATORS nor NON_DIST_WRITERS: ' +
+    undeclared.join(', ')
+  );
 }
 
 if (fails.length) {
