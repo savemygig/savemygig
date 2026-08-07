@@ -123,21 +123,14 @@ const schema = {
     <div class="panel panel-go">
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
-        <strong>Booth briefing. This mixer has no PRO DJ LINK.</strong> There is
-        no LAN terminal on it, and AlphaTheta defines PRO DJ LINK as what you get
-        when players and a mixer are connected by LAN cables. In a CDJ booth that
-        means no linked BPM, no quantised sync arriving from the players and no
-        rekordbox over LAN. Nothing is broken and nothing is switched off in a
-        menu, so this is a question for the booking, not for soundcheck. What you
-        get instead is a {DJM_750MK2.channels}-channel desk carrying the EQ and
-        fader curves, SOUND COLOR FX, BEAT FX and SEND/RETURN that AlphaTheta
-        developed for the DJM-900NXS2, a Magvel crossfader and
-        {' '}{DJM_750MK2.beatFxCount} Beat FX. Two documented limits look like
-        faults and are not: <strong>{AUX_SILENT_N} effects never reach the
-        RETURN AUX channel</strong>, so an outboard or iOS effect in AUX mode goes
-        silent, and Beat FX cannot be pre-listened on channels 1 to 4. From
-        firmware {DJM_750MK2.ecoStandbyIntro} power management switches the desk
-        off after {DJM_750MK2.ecoStandbyMinutes} minutes of no audio and no touch.
+        <strong>Booth briefing. This mixer has no PRO DJ LINK.</strong> There is no
+        LAN terminal on it, so in a CDJ booth that means no linked BPM, no
+        quantised sync arriving from the players and no rekordbox over LAN. Nothing
+        is broken and nothing is switched off in a menu, so this is a question for
+        the booking, not for soundcheck. The other thing to know before you touch
+        it: <strong>{AUX_SILENT_N} effects never reach the RETURN AUX channel</strong>
+        by design, so an outboard or iOS effect patched in AUX mode goes silent.
+        Both are explained below.
       </p>
       <label for="sv-toggle" class="sv-more">Read more…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>

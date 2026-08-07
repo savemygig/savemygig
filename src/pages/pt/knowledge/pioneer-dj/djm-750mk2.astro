@@ -100,22 +100,14 @@ const schema = {
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
         <strong>Briefing de booth. Este mixer não tem PRO DJ LINK.</strong> Não
-        existe terminal LAN nele, e a AlphaTheta define PRO DJ LINK como o que
-        você tem quando players e um mixer estão ligados por cabos LAN. Numa booth
-        com CDJs isso significa nenhum BPM linkado, nenhum sync quantizado
-        chegando dos players e nenhum rekordbox pela LAN. Nada está quebrado e
-        nada está desligado em algum menu, então essa é uma pergunta para o
-        booking, e não para a passagem de som. O que você tem em troca é uma mesa
-        de {DJM_750MK2.channels} canais com as curvas de EQ e de fader, SOUND
-        COLOR FX, BEAT FX e SEND/RETURN que a AlphaTheta desenvolveu para o
-        DJM-900NXS2, um crossfader Magvel e
-        {' '}{DJM_750MK2.beatFxCount} Beat FX. Dois limites documentados parecem
-        defeito e não são: <strong>{AUX_SILENT_N} efeitos nunca chegam ao canal
-        RETURN AUX</strong>, então um efeito externo ou de iOS em modo AUX fica em
-        silêncio, e o Beat FX não faz pré-escuta nos canais 1 a 4. A partir do
-        firmware {DJM_750MK2.ecoStandbyIntro} o Power Management desliga a mesa
-        depois de {DJM_750MK2.ecoStandbyMinutes} minutos sem áudio e sem ninguém
-        tocar nela.
+        existe terminal LAN nele, então numa booth com CDJs isso significa nenhum
+        BPM linkado, nenhum sync quantizado chegando dos players e nenhum
+        rekordbox pela LAN. Nada está quebrado e nada está desligado em algum
+        menu, então essa é uma pergunta para o booking, e não para a passagem de
+        som. A outra coisa para saber antes de encostar nele: <strong>{AUX_SILENT_N}
+        efeitos nunca chegam ao canal RETURN AUX</strong> por projeto, então um
+        efeito externo ou de iOS em modo AUX fica em silêncio. Os dois estão
+        explicados abaixo.
       </p>
       <label for="sv-toggle" class="sv-more">Ler mais…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>

@@ -158,22 +158,14 @@ const schema = {
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
         <strong>Booth briefing. Below firmware {DJM_900NXS.shutdownFix} this mixer
-        is documented to shut itself down.</strong> AlphaTheta's own wording for
-        that fix is "Fixed an infrequently-encountered issue where DJM-900NXS
-        unexpectedly shuts down", and on a desk that was the club standard for
-        years, and is still bolted into rooms nobody has updated, that is the whole
-        master output going away mid-set. Below {FLOOR} there is a second one:
-        standby "sometimes could not be canceled" when the LFO FORM (WAKE UP)
-        button was pressed, so a mixer that slept between sets can look dead on the
-        stand. Three more behaviours look like faults and are not. Cueing Beat FX
-        with {CUE_DRY_LIST} selected gives you dry sound whether the effect is on
-        or off, and has done since {CUE_DRY_FROM}, by design. Peak Limiter is
-        switched <strong>on by default</strong> after a firmware update, which is
-        the answer to a master that sounds squashed. And QUANTIZE silently does not
-        apply to {NO_QUANTIZE_N} of the Beat FX. One thing you can stop worrying
-        about: there is no USB storage role on this mixer at all, firmware goes in
-        from a computer over a LAN cable, so {NOT_APPLICABLE_FS} are not
-        unsupported here, they are simply not applicable.
+        is documented to shut itself down.</strong> AlphaTheta's own wording is
+        "Fixed an infrequently-encountered issue where DJM-900NXS unexpectedly
+        shuts down", and on a desk still bolted into rooms nobody has updated that
+        is the whole master output going away mid-set. Below {FLOOR} standby can
+        also refuse to cancel, so a mixer that slept between sets looks dead on the
+        stand. Read the version off the unit before you play. Three more behaviours
+        on this desk look like faults and are not, and they are the sections
+        directly below.
       </p>
       <label for="sv-toggle" class="sv-more">Read more…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
