@@ -945,23 +945,47 @@ const entityGraph = {
      marker is reference info for testers/us, not something every visitor
      needs to read. */
   .foot-version { font-size: 0.7rem; color: var(--text-faint); opacity: 0.6; }
-  /* Under the social row, on the SAME LEFT EDGE as everything else in this
-     block, and holding the 176px measure (4 x 38px circles + 3 x 8px gaps) as
-     the box it lives in.
+  /* CENTRED under the brand block on desktop, inside the 176px measure
+     (4 x 38px circles + 3 x 8px gaps), and LEFT on phones. This is Antonio's
+     rule and it has now survived being questioned twice, so treat it as settled.
 
-     HISTORY, because this reverses a call he made once: it was centred inside
-     that 176px box on desktop ("Antonio tried left-justified for an afternoon
-     and called it back: centered with the icons wins on desktop"), and LEFT on
-     phones. It is now left on both, on his 2026-08-06 instruction that the
-     lockup, the tagline, the social row and this link all share one vertical
-     line. Two things also made the old centring stop being what he approved:
-     the social row's visible ink had drifted 3px right (see the note on
-     .soc-btn::before in global.css), so "centred with the icons" was centred
-     on the wrong thing; and centring is only stable while the label fits, so
-     the Portuguese label, which wrapped, was landing at a different x than the
-     English and Spanish ones on the same screen. Left-aligned, the label's
-     length cannot move it. If he calls this back again, this is one commit to
-     revert and nothing else depends on it. */
+     THE FULL HISTORY, because it went centred, then left, then back:
+
+     2026-07-30, centred. "Antonio tried left-justified for an afternoon and
+     called it back: centered with the icons wins on desktop, LEFT wins on
+     phones."
+
+     2026-08-06 morning, left. He asked for the footer social circles to line up
+     with the lettering, and I took that to mean one vertical line for all four
+     items in the block: lockup, tagline, circles, coffee. Three of those four
+     were genuinely misaligned. This one was where it was ON PURPOSE, and I moved
+     it anyway. That was me over-reading a specific instruction into a general
+     principle, and it silently reversed a decision he had already made once.
+
+     2026-08-06 evening, centred again, on sight: "it was supposed to be
+     justified to the center of that block composed by the Save My Gig and the DJ
+     booth intelligence like it was before. I wondered like that justified to the
+     center on the three languages."
+
+     THE ARGUMENT I MADE FOR LEFT WAS THAT CENTRING WAS NOT STABLE, and it is
+     worth recording that the argument was right and is now spent. Centring only
+     holds while the label fits on one line, and in the morning the Portuguese
+     "Pague um café pra gente" WRAPPED, filled the box, and pinned the cup at
+     x+0 while English sat at +27.91 and Spanish at +23.41. Same element, three
+     positions, three languages. That is what made centring look broken.
+
+     But the label was shortened to "Nos pague um café" in the same batch, for
+     its own separate reasons, and all three now fit on one line. The instability
+     is gone, so the reason for left-aligning is gone with it, and what remains
+     is his aesthetic call, which was always his to make.
+
+     WHAT KEEPS IT STABLE FROM HERE: a coffee label that fits 176px on one line
+     in every language. check-i18n.mjs now asserts exactly that, so a future
+     translation cannot quietly reintroduce the wrap and drag this element back
+     out of position without the gate saying so.
+
+     The 176px box and the phone override are unchanged; only the alignment
+     inside the box moved back. */
   /* min-height 24px (2026-08-06): this measured 120x20 and is a BLOCK level
      link, so the "inline in a sentence" exemption from WCAG 2.5.8 does not
      apply to it. It is also the only support ask on the site, which made it
@@ -970,7 +994,7 @@ const entityGraph = {
      social row above it do not move: verified by measuring all four before
      and after. */
   .foot-bmc {
-    display: flex; align-items: center; justify-content: flex-start; gap: 0.45rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.45rem;
     width: 176px; margin: 0.8rem 0 0;
     min-height: 24px; padding: 2px 0;
     font-size: 0.8rem; text-decoration: none;
@@ -1000,10 +1024,17 @@ const entityGraph = {
        Left edge on the Prepare column (50% + half the 1.2rem column gap),
        vertically centered, 80% of the stack height (his -20% call). */
     .foot-brand { grid-column: 1 / -1; position: relative; }
-    /* Left alignment is now the default for this link at every width, so only
-       the width is overridden here: on a phone the brand block spans the whole
-       grid, and hugging the label beats a fixed 176px box that a long
-       translation would wrap inside. */
+    /* LEFT ON PHONES, which is Antonio's rule from 2026-07-30 and has never
+       changed: "centered with the icons wins on desktop, LEFT wins on phones."
+       Expressed as width:auto rather than as justify-content, because a
+       content-sized flex box has nothing left to centre, so the desktop
+       `justify-content: center` above becomes a no-op here and the link simply
+       starts at the block's left edge. Written this way on purpose: the phone
+       brand block spans the whole grid, so hugging the label also avoids a fixed
+       176px box that a long translation could wrap inside.
+       If the width ever stops being auto here, this rule needs an explicit
+       justify-content: flex-start or the phone alignment will silently follow
+       the desktop one. */
     .foot-bmc { width: auto; }
     /* Phones up to the iPhone 15 / S23 class (Antonio, second pass: both
        still crowded, "reduce fifteen percent more"). The Pro Max width
