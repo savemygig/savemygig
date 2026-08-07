@@ -429,6 +429,28 @@ export const FIRMWARE_ISSUES = [
     ],
   },
   {
+    // THE LONGEST LIST HERE, and the reason this matrix exists. Eleven versions of
+    // documented faults on a player still installed in an enormous number of
+    // booths, most of which have never been updated. Every entry is AlphaTheta's
+    // own wording, condensed, from the change history PDF read in full.
+    model: 'CDJ-2000NXS',
+    href: '/knowledge/pioneer-dj/cdj-2000nxs',
+    source: CDJ_2000NXS.sourceHistory,
+    issues: [
+      { fixedIn: CDJ_2000NXS.crashHotCueFix, area: 'Playback', midSet: true, symptom: 'The player crashed on repeated HOT CUE presses with Master Tempo enabled.' },
+      { fixedIn: CDJ_2000NXS.syncDropoutFix, area: 'Audio', midSet: true, symptom: 'Audio dropout on the slave deck when using SYNC.' },
+      { fixedIn: CDJ_2000NXS.tagListFreezeFix, area: 'Browse', midSet: true, symptom: 'A freeze could occur while editing the TAG LIST.' },
+      { fixedIn: CDJ_2000NXS.browseSlowFix, area: 'Browse', midSet: true, symptom: 'The browse screen slowed or stopped after several hours of use, and a freeze occurred holding HOT CUE over a second during auto hot cue loading.' },
+      { fixedIn: CDJ_2000NXS.wavHeaderFix, area: 'Playback', midSet: true, symptom: 'A WAVE file with an incompatible header left "Loading.." on screen indefinitely. Folders did not list on a 2TB HDD.' },
+      { fixedIn: CDJ_2000NXS.hddRecognitionFix, area: 'USB', midSet: true, symptom: 'Some hard drives were not recognized. Noise when Master Tempo was activated.' },
+      { fixedIn: CDJ_2000NXS.aiffLoadFix, area: 'Playback', midSet: true, symptom: 'AIFF at 24bit/48kHz stopped playing and could not be loaded to a deck. Audio noise while scratching.' },
+      { fixedIn: CDJ_2000NXS.nxs2FeatureFix, area: 'Link', midSet: true, symptom: 'Linked to a CDJ-2000NXS, some CDJ-2000NXS2 features were disabled.' },
+      { fixedIn: CDJ_2000NXS.wavNoiseFix, area: 'Audio', midSet: true, symptom: 'Digitally distorted white noise on certain WAV files. An active loop could activate a very short loop.' },
+      { fixedIn: CDJ_2000NXS.slipHotCueFix, area: 'Playback', midSet: true, symptom: 'Issues during playback and track selection, and with SLIP HOT CUE.' },
+      { fixedIn: CDJ_2000NXS.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync on. Popping noise in a loop with QUANTIZE and MASTER TEMPO enabled.' },
+    ],
+  },
+  {
     model: 'DJM-V10 / V10-LF',
     href: '/knowledge/pioneer-dj/djm-v10',
     source: DJM_V10.source,
