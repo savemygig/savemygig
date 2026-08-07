@@ -182,7 +182,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
              13px, currentColor, stroke 2.2, so it inherits the chip's own
              colour and stays legible at booth brightness instead of being a
              dimmed-out state nobody can see in the dark. -->
-        <button type="button" class="mode-btn is-locked" data-mode-set="advanced" aria-pressed="false">Advanced<svg class="mode-lock" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span class="sr-only mode-lock-sr">Locked, needs a free account.</span></button>
+        <button type="button" class="mode-btn" data-mode-set="advanced" aria-pressed="false">Advanced</button>
         <span class="mode-switch-div" aria-hidden="true"></span>
         <button type="button" class="mode-btn is-locked" data-mode-set="custom" aria-pressed="false">Custom<svg class="mode-lock" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span class="sr-only mode-lock-sr">Locked, needs a free account.</span></button>
       </div>
@@ -1767,6 +1767,26 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   // unrelated sign-in.
   const PENDING_MODE_KEY = 'SMG_PENDING_MODE';
   const PENDING_MODE_TTL = 60 * 60 * 1000; // 1 hour
+  // WHICH MODES COST AN ACCOUNT, IN ONE PLACE (Antonio, 2026-08-07).
+  //
+  // His call: "when you click advanced you must log in. lets make that only for
+  // the custom mode." So Advanced is now free and Custom still asks.
+  //
+  // THIS EXISTS BECAUSE THE ANSWER WAS WRITTEN OUT FOUR TIMES PER LANGUAGE, as
+  // the literal `advanced || custom`, in readPendingMode, syncLockedState, the
+  // mode click handler and the restore-on-load path. Twelve copies across the
+  // three checklist pages, plus a padlock hard-coded into two buttons in each
+  // markup. Changing which modes are gated meant finding all of them, and
+  // missing one would have produced the worst possible failure: a button that
+  // looks free and opens a registration form, or one that looks locked and is
+  // not. Now the list is the single source and every site asks it.
+  //
+  // HIS THREE EXCEPTIONS NEEDED NO CODE. Edit is Custom-mode only (see setMode:
+  // editToggle is hidden unless the mode is custom), so it stays behind the
+  // account for free. Email has its own isUnlocked() gate. Download PDF keeps
+  // its own too, which is his standing business decision and not ours to move.
+  const GATED_MODES = ['custom'];
+  function isGatedMode(m: string): boolean { return GATED_MODES.indexOf(m) !== -1; }
   function setPendingMode(m: string) { try { localStorage.setItem(PENDING_MODE_KEY, m + '|' + Date.now()); } catch (e) { /* blocked */ } }
   function clearPendingMode() { try { localStorage.removeItem(PENDING_MODE_KEY); } catch (e) { /* blocked */ } }
   function readPendingMode(): string | null {
@@ -1774,7 +1794,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
     try { raw = localStorage.getItem(PENDING_MODE_KEY); } catch (e) { return null; }
     if (!raw) return null;
     const [m, ts] = raw.split('|');
-    if ((m !== 'advanced' && m !== 'custom') || !ts || (Date.now() - Number(ts)) > PENDING_MODE_TTL) {
+    if (!isGatedMode(m) || !ts || (Date.now() - Number(ts)) > PENDING_MODE_TTL) {
       clearPendingMode();
       return null;
     }
@@ -1850,7 +1870,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   function syncLockedState() {
     const locked = !isUnlocked();
     modeBtns.forEach((b) => {
-      const gated = b.dataset.modeSet === 'advanced' || b.dataset.modeSet === 'custom';
+      const gated = isGatedMode(b.dataset.modeSet || '');
       b.classList.toggle('is-locked', gated && locked);
     });
   }
@@ -3097,7 +3117,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   }
   modeBtns.forEach((b) => b.addEventListener('click', () => {
     const target = b.dataset.modeSet || 'basic';
-    if ((target === 'advanced' || target === 'custom') && !isUnlocked()) {
+    if (isGatedMode(target) && !isUnlocked()) {
       pendingMode = target;
       setPendingMode(target);
       openAcctGate(target);
@@ -3214,7 +3234,7 @@ const total = groups.reduce((n, g) => n + g.items.length, 0);
   let savedMode = 'basic';
   try { savedMode = localStorage.getItem(MODE_KEY) || 'basic'; } catch (e) { /* ignore */ }
   if (restored) savedMode = 'custom';
-  if ((savedMode === 'advanced' || savedMode === 'custom') && !isUnlocked()) savedMode = 'basic';
+  if (isGatedMode(savedMode) && !isUnlocked()) savedMode = 'basic';
   setMode(savedMode);
   // The markup ships locked, which is right for a first visit and wrong for a
   // returning registered one. This is the one call that clears it on load.

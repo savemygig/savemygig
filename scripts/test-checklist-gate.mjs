@@ -62,8 +62,65 @@ const PAGES = [
   { path: '/es/checklist', advanced: 'Avanzado', custom: 'Personal' },
 ];
 
+// WHICH MODES ARE GATED, AND WHICH ARE DELIBERATELY NOT (Antonio, 2026-08-07).
+//
+// This loop used to run over ['advanced', 'custom'] and assert both were locked.
+// His call moved Advanced out from behind the account: "lets make that only for
+// the custom mode." So the list changed, and the test that proved the old
+// contract now proves the new one.
+//
+// GATED and FREE are BOTH asserted, on purpose. A test that only checks the
+// locked mode would still pass if Advanced were quietly re-locked tomorrow, and
+// re-locking it is the exact regression this change invites: the condition lived
+// in twelve places before today, and the padlock was hard-coded into the markup.
+// It is one place now (GATED_MODES in each checklist page), so the FREE assertion
+// below is what keeps it one place.
+const GATED = ['custom'];
+const FREE = ['advanced'];
+
 for (const page_ of PAGES) {
-  for (const mode of ['advanced', 'custom']) {
+  // A free mode must switch on the tap with NO account card, and must not ship a
+  // padlock in its first paint. Same fresh-context discipline as the gated loop.
+  for (const mode of FREE) {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const page = await ctx.newPage();
+    const pageErrors = [];
+    page.on('pageerror', (e) => pageErrors.push(e.message));
+    await page.goto(base + page_.path, { waitUntil: 'load' });
+    await page.evaluate(() => document.querySelector('#ck')?.remove());
+    await page.waitForTimeout(250);
+
+    const shipped = await page.evaluate((m) => {
+      const b = document.querySelector(`.mode-btn[data-mode-set="${m}"]`);
+      return {
+        exists: !!b,
+        locked: !!(b && b.classList.contains('is-locked')),
+        glyph: !!(b && b.querySelector('.mode-lock')),
+      };
+    }, mode);
+    ok(`${page_.path} ${mode}: exists`, shipped.exists);
+    ok(`${page_.path} ${mode}: ships with NO lock class`, shipped.locked === false);
+    ok(`${page_.path} ${mode}: ships with NO padlock glyph`, shipped.glyph === false);
+
+    await page.click(`.mode-btn[data-mode-set="${mode}"]`);
+    await page.waitForTimeout(250);
+    const after = await page.evaluate((m) => {
+      const card = document.getElementById('acctCard');
+      const b = document.querySelector(`.mode-btn[data-mode-set="${m}"]`);
+      return {
+        gateShown: !!(card && !card.hidden),
+        modeOn: !!(b && b.classList.contains('is-on')),
+        listMode: (document.getElementById('list') || {}).dataset?.mode || null,
+      };
+    }, mode);
+    ok(`${page_.path} ${mode}: tapping it does NOT open the account gate`, after.gateShown === false);
+    ok(`${page_.path} ${mode}: the mode actually switches on`, after.modeOn === true);
+    ok(`${page_.path} ${mode}: the list is in that mode`, after.listMode === mode, String(after.listMode));
+    ok(`${page_.path} ${mode}: no page errors`, pageErrors.length === 0, pageErrors.join(' | '));
+    await ctx.close();
+  }
+
+  for (const mode of GATED) {
     // A fresh context every time: a registered device is not gated, and
     // registration is exactly what a previous run would have left behind.
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
