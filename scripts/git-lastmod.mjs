@@ -101,11 +101,60 @@ function sourceFor(path) {
  * Returns lastmod(urlPath) -> ISO string. `fallback` is used for any page whose
  * source, or whose git history, cannot be found.
  */
+/**
+ * IS THIS A SHALLOW CLONE, AND DID THE DATES DEGENERATE (2026-08-07).
+ *
+ * The header note above has always warned that `git clone --depth 1` gives every
+ * file the same single commit date, which silently collapses all 111 per-page
+ * dates into one and throws away the whole point of this file. The warning was
+ * there. NOTHING CHECKED IT, and the check has to run where the risk lives.
+ *
+ * It lives on Cloudflare, not here. Every claim that per-page dates "work" was
+ * measured on a local dist built from a full clone, which is precisely the
+ * local-versus-production mistake this project has a standing rule about. What
+ * triggered writing this: production served a sitemap index dated exactly the
+ * HEAD commit's timestamp, which is the signature of a shallow clone, while the
+ * same build here produced a different and correct date.
+ *
+ * So the build log now says which it got. Loud, and on every build, because a
+ * build log nobody reads is still better than a silent regression, and this is
+ * the only place production can be observed without a browser.
+ *
+ * It does NOT fail the build. A degraded freshness signal is not worth blocking
+ * a deploy over, and failing here would take the site down for an SEO nicety.
+ */
+function reportHealth(history, dates) {
+  let shallow = false;
+  try {
+    shallow = execFileSync('git', ['rev-parse', '--is-shallow-repository'], {
+      cwd: ROOT, encoding: 'utf8',
+    }).trim() === 'true';
+  } catch { /* no git: the fallback path already covers it */ }
+
+  const distinct = new Set(dates).size;
+  const label = `lastmod: ${dates.length} pages, ${distinct} distinct date(s), ` +
+    `${history.size} paths in history, shallow=${shallow}`;
+
+  if (shallow || (dates.length > 10 && distinct <= 1)) {
+    console.warn(
+      `\n  WARNING  ${label}\n` +
+      '  Every page is about to claim the same lastmod, so the sitemap carries no\n' +
+      '  freshness signal at all. Cause is almost always a shallow clone on the\n' +
+      '  build host (git clone --depth 1), which leaves one commit for git log to\n' +
+      '  find. The fix is on the HOST, not in this file: give the build a full\n' +
+      '  clone, or run `git fetch --unshallow` before `astro build`.\n'
+    );
+  } else {
+    console.log(`  ${label}`);
+  }
+}
+
 export function makeLastmod(fallback) {
   const history = historyByPath();
   const cache = new Map();
+  const issued = [];
   const dateOf = (abs) => history.get(relative(ROOT, abs).split('\\').join('/'));
-  return (path) => {
+  const issue = (path) => {
     if (cache.has(path)) return cache.get(path);
     let answer = fallback;
     const file = sourceFor(path);
@@ -115,6 +164,18 @@ export function makeLastmod(fallback) {
       if (dates.length) answer = dates.sort()[dates.length - 1];
     }
     cache.set(path, answer);
+    issued.push(answer);
     return answer;
   };
+
+  // REPORTED ON EXIT, not from a call site in astro.config.mjs. The sitemap
+  // integration serializes pages inside its own build hook, so there is no
+  // moment in the config where "all the dates have been issued" is knowable.
+  // Process exit is that moment, it needs no cooperation from Astro's
+  // internals, and it cannot be forgotten by whoever edits the config next.
+  process.on('exit', () => {
+    if (issued.length) reportHealth(history, issued);
+  });
+
+  return issue;
 }
