@@ -466,6 +466,13 @@ export const PLAYERS = [
   { m: 'XDJ-AN',         lib: 'OneLibrary',     exfat: 'Yes',                note: 'Added in rekordbox 7.2.16.' },
   { m: 'XDJ-RX3',        lib: 'Device Library', exfat: 'Yes, firmware 1.11+', note: '' },
   { m: 'XDJ-XZ',         lib: 'Device Library', exfat: 'Yes, firmware 1.23+', note: '' },
+  // XDJ-1000MK2 ADDED 2026-08-07, having been DELIBERATELY EXCLUDED until now with
+  // the note "no official filesystem article, we will not guess". The narrow claim
+  // was true and the useful one was wrong: the formats are a spec-table row in the
+  // Operating Instructions DRI1396-B and the Quick Start Guide DRH1671-C,
+  // "Supported file systems FAT16, FAT32 and HFS+ (NTFS is not supported.)"
+  // A support article is not the only place AlphaTheta documents a fact.
+  { m: 'XDJ-1000MK2',    lib: 'Device Library', exfat: 'No',                 note: 'FAT16, FAT32 or HFS+. Only the first partition of a drive is read.' },
   { m: 'XDJ-700',        lib: 'Device Library', exfat: 'No',                 note: 'Officially FAT32, FAT or HFS+ only.' },
   { m: 'OPUS-QUAD',      lib: 'OneLibrary',     exfat: 'Yes',                note: 'First OneLibrary player.' },
   { m: 'OMNIS-DUO',      lib: 'OneLibrary',     exfat: 'Yes',                note: '' },
@@ -616,6 +623,199 @@ export const FIRMWARE_ISSUES = [
   },
 ];
 
+// XDJ-1000MK2. Added 2026-08-07, and it ARRIVES WITH A CORRECTION TO THIS SITE.
+//
+// The rekordbox page has been publishing this caveat: "There is no official
+// AlphaTheta filesystem article for either the XDJ-1000MK2 or the XDJ-RX2, and we
+// will not guess about a drive you are going to trust with a gig. Treat both as
+// FAT32-only and you will be fine."
+//
+// The narrow claim was TRUE, there is no support-centre article. The useful claim
+// was WRONG: the file systems are documented, as a specification-table row in the
+// Operating Instructions and again in the Quick Start Guide. "FAT16, FAT32 and
+// HFS+ (NTFS is not supported.)"
+//
+// THIS IS THE THIRD TIME TODAY the same failure has been found: refusing to answer
+// a question the vendor HAD answered, because the answer was not where we looked.
+// The euphonia PRO DJ LINK refusal was the first, the "FAT32 only" claim on six
+// models was the second. The rule that keeps surviving: publishing "we do not
+// know" is honest only AFTER looking properly, and a support article is not the
+// only place AlphaTheta documents a fact. The manual counts. The spec table counts.
+export const XDJ_1000MK2 = {
+  checked: '7 August 2026',
+  newestKnown: '1.45',              // 22 Aug 2024, Ecodesign. Reference only.
+  ecoStandbyIntro: '1.45',          // 22 Aug 2024: EU Ecodesign, 20 minutes, renamed Power Management.
+  alacPlayFix: '1.42',              // 4 Feb 2020: some Apple Lossless files would not play.
+  catalinaAudioFix: '1.42',         // 4 Feb 2020: macOS Catalina 10.15 could not see it as an audio device.
+  matchingFix: '1.41',              // 21 Aug 2018: inconsistencies in the matching function.
+  loopPopFix: '1.30',               // 21 Sep 2017: popping noise during a LOOP with QUANTIZE and MASTER TEMPO on.
+  hotCueLoopFix: '1.30',            // 21 Sep 2017: a HOT CUE fired after jumping to LOOP-IN when changing loop beat length with QUANTIZE on.
+  ddjXp1Intro: '1.30',              // 21 Sep 2017: DDJ-XP1 added.
+  syncBpmFix: '1.23',               // 13 Jul 2017: playback speed did not return to the displayed BPM with Sync on.
+  apeTagLoopFix: '1.22',            // 3 Apr 2017: emergency loop on certain MP3s carrying APE tag data.
+  controlModeDropoutFix: '1.20',    // 7 Feb 2017: audio dropouts in Control Mode.
+  longSessionLoadFix: '1.20',       // 7 Feb 2017: track load time grew after several hours of use.
+  slipHotCueFix: '1.20',            // 7 Feb 2017: issues using SLIP HOT CUE.
+  tour1PlaybackFix: '1.10',         // 25 Aug 2016: some tracks would not play on a linked CDJ-TOUR1.
+  hidIntro: '1.10',                 // 25 Aug 2016: rekordbox dj HID control.
+  media: 'USB only, with no SD card slot and no disc drive',
+  library: 'Device Library',
+  // Spec-table row, Operating Instructions DRI1396-B and Quick Start Guide
+  // DRH1671-C: "Supported file systems FAT16, FAT32 and HFS+ (NTFS is not
+  // supported.)" Firmware UPDATE specifically requires FAT or FAT32, not HFS+.
+  fileSystems: ['FAT16', 'FAT32', 'HFS+'],
+  exfat: false,
+  ntfsSupported: false,
+  sourceFileSystems: 'https://downloads.support.alphatheta.com/manuals/dj-players/XDJ-1000MK2/XDJ-1000MK2_DRI1396B_manual.pdf',
+  maxPlayers: 4,                    // PRO DJ LINK, over LAN
+  hotCues: 8,
+  folderLayers: 8,                  // files deeper than the 8th layer cannot be played
+  cueLoopPointsPerTrack: 10,        // the 11th is refused with CUE/LOOP POINT FULL
+  firstPartitionOnly: true,         // only the first partition of a multi-partition drive is usable
+  usbHubs: false,
+  ecoStandbyMinutes: 20,
+  screen: '7 inch full colour LCD touch screen',
+  // NO END-OF-SUPPORT STATEMENT IS PUBLISHED. 1.45 is the newest and it is two
+  // years old, and the last release was regulatory rather than functional, but
+  // "the firmware line has ended" is an INFERENCE from silence and the page must
+  // say so rather than assert it. Same discipline as the CDJ-900NXS page.
+  firmwareEndedIsInference: true,
+  source: 'https://downloads.support.alphatheta.com/firmwares/dj-players/XDJ-1000MK2/XDJ-1000MK2-Firmware-Change-History-Ver145-en.pdf',
+  sourceManual: 'https://downloads.support.alphatheta.com/manuals/dj-players/XDJ-1000MK2/XDJ-1000MK2_DRI1396B_manual.pdf',
+  sourceFirmwarePage: 'https://support.alphatheta.com/en-US/articles/4404821857945',
+};
+
+// DJM-750MK2. Added 2026-08-07.
+//
+// THE HONEST FRAMING: this is a four-channel mixer with the DJM-900NXS2's EQ,
+// fader curve, SOUND COLOR FX, BEAT FX and SEND/RETURN, and NO PRO DJ LINK. There
+// is no LAN terminal in the specifications and no LAN item in the rear-panel list,
+// and AlphaTheta defines PRO DJ LINK as a LAN-cable feature. In a booth with CDJs
+// it is a standalone mixer: no linked BPM, no quantised sync from the players, no
+// rekordbox over LAN. That is a booking-stage fact rather than a soundcheck one.
+//
+// The two capability limits below are the reason a DJ thinks it is broken when it
+// is not, and they are the most useful thing on the page.
+export const DJM_750MK2 = {
+  checked: '7 August 2026',
+  newestKnown: '1.07',              // 23 Jun 2026. Reference only.
+  iosAudioFix: '1.07',              // 23 Jun 2026: audio communication with iOS/iPadOS devices.
+  ecoStandbyIntro: '1.06',          // 18 Jul 2024: EU Ecodesign, 20 minutes, renamed Power Management.
+  minorFix: '1.05',                 // 18 May 2021: "Minor issues", no detail published.
+  recHaltFix: '1.04',               // 15 Jan 2020: DJM-REC recording or live streaming sometimes stopped.
+  fxAssignPopFix: '1.03',           // 8 Aug 2017: popping noise via USB audio (FX SEND/RETURN) when switching FX assign with BEAT FX on.
+  // The published history STARTS at 1.03. Versions 1.00 to 1.02 are not listed,
+  // so their contents are not published. Do not describe the history as complete.
+  historyStartsAt: '1.03',
+  channels: 4,
+  crossfader: true,                 // Magvel, with CROSS FADER ASSIGN A/THRU/B per channel
+  sendReturn: true,                 // AUX or INSERT return, analogue jacks or digital USB for iOS
+  beatFxCount: 11,
+  beatFx: ['DELAY', 'ECHO', 'PING PONG', 'SPIRAL', 'REVERB', 'TRANS', 'FLANGER', 'PITCH', 'ROLL', 'VINYL BRAKE', 'HELIX'],
+  soundColorFx: ['DUB ECHO', 'SWEEP', 'NOISE', 'FILTER'],
+  usbPorts: 'one Type A on the top panel for a mobile device, one Type B on the rear for a computer',
+  proDjLink: false,                 // no LAN terminal exists on this mixer
+  sourceProDjLink: 'https://downloads.support.alphatheta.com/manuals/dj-mixers/DJM-750MK2/DJM-750MK2_DRI1470C_manual.pdf',
+  dvs: true,                        // rekordbox dvs and TRAKTOR PRO 3
+  seratoCertified: false,           // AlphaTheta: Serato DJ "may not work normally", not certified
+  // ONE headphone output in two connector sizes, which AlphaTheta also markets as
+  // usable by two DJs at once. Recorded as the spec states it, not as marketing.
+  headphoneOutputs: 'one 1/4 inch stereo jack and one 3.5 mm stereo mini jack',
+  micInputs: 1,                     // a single combo XLR / 1/4 inch TRS
+  // TWO CAPABILITY LIMITS THAT LOOK LIKE FAULTS, both documented by AlphaTheta.
+  // 1. Several effects never reach the RETURN AUX channel by design, so a DJ who
+  //    patches an iOS or outboard effect in AUX mode hears nothing.
+  // 2. Beat FX cannot be pre-listened on channels 1 to 4 with CUE.
+  auxReturnSilentFx: ['DUB ECHO', 'DELAY', 'ECHO', 'PING PONG', 'SPIRAL', 'REVERB', 'TRANS', 'FLANGER', 'PITCH'],
+  sourceAuxReturn: 'https://support.alphatheta.com/en-US/articles/4411086479897',
+  cueNotMonitorableFx: ['DELAY', 'ECHO', 'PING PONG', 'SPIRAL', 'REVERB'],
+  usbHubs: false,
+  ecoStandbyMinutes: 20,
+  // Firmware update reads a USB stick, and ONLY for that. There is no music
+  // playback or recording to storage: DJM-REC records to an iPhone or iPad.
+  updateFileSystems: ['FAT', 'FAT32'],
+  sourceUpdate: 'https://support.alphatheta.com/en-US/articles/4413930690329',
+  dimensions: '320.0 x 107.9 x 387.9 mm',
+  weight: '6.6 kg',
+  source: 'https://downloads.support.alphatheta.com/firmwares/dj-mixers/DJM-750MK2/DJM-750MK2-Firmware-Change-History-Ver107-en.pdf',
+  sourceManual: 'https://downloads.support.alphatheta.com/manuals/dj-mixers/DJM-750MK2/DJM-750MK2_DRI1470C_manual.pdf',
+  sourceSpecs: 'https://downloads.support.alphatheta.com/manuals/dj-mixers/DJM-750MK2/DJM-750MK2_DRH1650D_quickstart-manual.pdf',
+};
+
+// DJM-900NXS. Added 2026-08-07. The first nexus generation, NOT the NXS2.
+//
+// THE ONE FACT THAT MATTERS MOST: below firmware 1.28 this mixer is documented to
+// SHUT ITSELF DOWN. AlphaTheta's own wording is "an infrequently-encountered issue
+// where DJM-900NXS unexpectedly shuts down". That is the whole master output going
+// away mid-set, in the mixer that was the club standard for years and is still
+// installed in a lot of rooms nobody has updated.
+//
+// SECOND: below 1.32 it can refuse to LEAVE standby when the wake button is
+// pressed. So a mixer that went to sleep between sets can look dead.
+//
+// NO USB STORAGE ROLE AT ALL, and this one is genuinely unusual. Firmware is
+// updated FROM A COMPUTER OVER THE LAN CABLE into the LINK port, not from a USB
+// stick like every other Pioneer unit on this site. So there is no file system
+// question here: exFAT and NTFS are not unsupported, they are not applicable.
+export const DJM_900NXS = {
+  checked: '7 August 2026',
+  newestKnown: '1.32',              // 15 Nov 2016. Reference only.
+  wakeUpFix: '1.32',                // 15 Nov 2016: standby sometimes could not be cancelled with LFO FORM (WAKE UP).
+  usbNoiseFix: '1.31',              // 27 Feb 2014: noise in USB audio in and out on some computers.
+  effectsNotEngagingFix: '1.30',    // 16 Oct 2013: some effects did not work as expected when switched on.
+  peakLimiterIntro: '1.30',         // 16 Oct 2013: Peak Limiter added, and it is ON by default after updating.
+  kuvoIntro: '1.30',                // 16 Oct 2013
+  shutdownFix: '1.28',              // 26 Nov 2012: the unit unexpectedly shutting down. THE BIG ONE.
+  slipBpmDisplayFix: '1.28',        // 26 Nov 2012: BPM display fluctuating when SLIP was used on a linked CDJ-2000NXS or CDJ-900.
+  mountainLionSupport: '1.26',      // 19 Nov 2012
+  rollVolumeFix: '1.26',            // 26 Jun 2012: ROLL, REV ROLL and SLIP ROLL volume not always stable.
+  revRollSilentFix: '1.26',         // 26 Jun 2012: no effect sound when REV ROLL followed ROLL immediately.
+  xpadNoiseFix: '1.26',             // 26 Jun 2012: slight noise while operating the X-PAD.
+  midiClockFix: '1.21',             // 5 Oct 2011
+  channels: 4,
+  crossfader: true,
+  sendReturn: true,                 // discrete SEND and RETURN terminals for an outboard effector
+  beatFxCount: 13,                  // 13 internal effects; the selector has a 14th position, SND/RTN
+  beatFxSelectorPositions: 14,
+  soundColorFx: ['FILTER', 'CRUSH', 'GATE/COMP', 'DUB ECHO', 'NOISE', 'SPACE'],
+  eqBands: 3,                       // 3-band EQ isolator per channel
+  proDjLink: true,
+  maxPlayers: 4,                    // with a switching hub
+  maxComputers: 2,
+  hubRequired: true,                // 100Base-TX, and AlphaTheta warns some hubs do not work
+  dvs: true,                        // rekordbox dvs (DVS Plus Pack), Serato DJ DVS (Club Kit), TRAKTOR SCRATCH certified
+  traktorCertified: true,
+  traktorFirmwareFloor: '1.28',     // AlphaTheta renders this as "1.280"
+  seratoScratchLive: false,         // explicitly NOT supported, per the product page
+  micInputs: 2,
+  samplingRate: '96 kHz',
+  // NO STORAGE ROLE. Firmware updates over LAN from a computer, so there is no
+  // USB stick and no file system to get wrong.
+  usbStorageRole: false,
+  updateOverLan: true,
+  // Quantize does NOT apply to four of the Beat FX, silently. A DJ expecting
+  // beat-locked FX gets un-quantised FX and no error.
+  quantizeExcludedFx: ['REVERB', 'ROBOT', 'MELODIC', 'SND/RTN'],
+  // Peak Limiter is ON by default after a firmware update, in CLUB SETUP as
+  // PKLIMIT. It is the answer to "why does the master sound squashed".
+  peakLimiterDefaultOn: true,
+  // NO END-OF-SUPPORT STATEMENT IS PUBLISHED. 1.32 is from November 2016 and is
+  // still the offered download, which is nearly ten years. "Ended" is an
+  // INFERENCE from silence, not a documented fact, and the page says so.
+  firmwareEndedIsInference: true,
+  // AlphaTheta names NO predecessor and NO successor for this mixer, and does not
+  // describe the NXS2 as replacing it. It shipped firmware 1.32 ten months AFTER
+  // the NXS2 was announced, so the two overlapped as supported products. Do not
+  // write that the NXS2 replaced it, and do not write that it replaced a DJM-800:
+  // that claim exists only on blogs.
+  successorDocumented: false,
+  archivedUrlPath: true,            // it lives on an /archive/ path, with no textual notice
+  source: 'https://downloads.support.alphatheta.com/firmwares/dj-mixers/DJM-900NXS/DJM-900NXS-Windows-Firmware-Change-History-Ver132-en.pdf',
+  sourceManual: 'https://downloads.support.alphatheta.com/manuals/dj-mixers/DJM-900NXS/DJM-900NXS_DRB1741_manual.pdf',
+  sourceProduct: 'https://www.pioneerdj.com/en-us/product/mixer/archive/djm-900nxs/black/overview/',
+  sourcePeakLimiter: 'https://downloads.support.alphatheta.com/firmwares/dj-mixers/DJM-900NXS/PEAK_LIMITER_DJM-900NXS_E.pdf',
+};
+
 // ---------------------------------------------------------------------------
 // THE EQUIPMENT GRAPH (2026-08-07)
 //
@@ -731,6 +931,14 @@ export const EQUIPMENT = [
     siblings: ['cdj-900nxs', 'cdj-2000nxs'],
     tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep', 'ecodesign'],
   },
+  {
+    slug: 'xdj-1000mk2', name: 'XDJ-1000MK2', kind: 'player', released: 2015,
+    newer: null,                       // nothing officially named as its successor
+    older: null,                       // the XDJ-1000 has no page here
+    paired: ['djm-900nxs2', 'djm-900nxs'],
+    siblings: ['xdj-700', 'cdj-2000nxs2'],
+    tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep', 'ecodesign'],
+  },
   // ------------------------------------------------------------- MIXERS
   {
     slug: 'djm-a9', name: 'DJM-A9', kind: 'mixer', released: 2022,
@@ -771,6 +979,25 @@ export const EQUIPMENT = [
     paired: ['cdj-3000', 'cdj-3000x'],
     siblings: ['djm-v10', 'djm-a9'],
     tags: ['firmware', 'dvs', 'long-blend', 'no-crossfader', 'rotary'],
+  },
+  {
+    slug: 'djm-900nxs', name: 'DJM-900NXS', kind: 'mixer', released: 2011,
+    newer: 'djm-900nxs2',              // the next nexus generation, though AlphaTheta
+                                       // never called it a replacement
+    older: null,
+    paired: ['cdj-2000nxs', 'xdj-1000mk2'],
+    siblings: ['djm-900nxs2', 'djm-750mk2'],
+    tags: ['prodjlink', 'firmware', 'dvs', 'link-network'],
+  },
+  {
+    slug: 'djm-750mk2', name: 'DJM-750MK2', kind: 'mixer', released: 2017,
+    newer: null,
+    older: null,                       // the DJM-750 original has no page here
+    paired: ['cdj-2000nxs2', 'xdj-700'],
+    // NO PRO DJ LINK, so it is paired on what shares a booth with it rather than
+    // on what it links to. Nothing links to this mixer.
+    siblings: ['djm-900nxs2', 'djm-v5'],
+    tags: ['firmware', 'dvs', 'ecodesign'],
   },
 ];
 

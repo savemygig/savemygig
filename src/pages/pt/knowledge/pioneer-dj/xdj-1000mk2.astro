@@ -1,0 +1,674 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import { XDJ_1000MK2 } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
+
+// XDJ-1000MK2, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors and CSS: src/pages/knowledge/pioneer-dj/xdj-1000mk2.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(XDJ_1000MK2.checked);
+const FLOOR = XDJ_1000MK2.newestKnown;
+const FS = XDJ_1000MK2.fileSystems.join(', ');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/xdj-1000mk2#article',
+  headline: 'XDJ-1000MK2: a referência operacional',
+  description: `O que todo DJ precisa saber antes de trabalhar num XDJ-1000MK2: ele lê ${FS} e não lê exFAT, os dropouts de áudio no Control Mode corrigidos na ${XDJ_1000MK2.controlModeDropoutFix}, o tempo de carregamento que cresce numa noite longa, e o Power Management que já sai de fábrica ligado.`,
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/xdj-1000mk2#webpage' },
+  image: 'https://www.savemygig.com/images/xdj-1000mk2-panel-full.webp',
+};
+---
+<Base
+  title="XDJ-1000MK2: HFS+, FAT32, sem exFAT | Save My Gig"
+  description={`Manual de campo do XDJ-1000MK2: ele lê HFS+ além de FAT32, sem exFAT, os dropouts no Control Mode da ${XDJ_1000MK2.controlModeDropoutFix}, e uma tela apagada que é configuração.`}
+  path="/knowledge/pioneer-dj/xdj-1000mk2"
+  crumbName="XDJ-1000MK2"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>XDJ-1000MK2</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line">Revisado: {UPDATED}</div>
+        <h1 class="rb-h1">XDJ-1000MK2, <span class="accent">o manual de campo</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#xdj-1000mk2-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do XDJ-1000MK2"
+      >
+        <img
+          src="/images/xdj-1000mk2-panel-thumb.webp"
+          alt="Painel de controle do media player Pioneer DJ XDJ-1000MK2, visto de cima"
+          width="404"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="xdj-1000mk2-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/xdj-1000mk2-panel-full.webp"
+        srcset="/images/xdj-1000mk2-panel-800.webp 800w, /images/xdj-1000mk2-panel-full.webp 1130w"
+        sizes="92vw"
+        alt="Painel de controle do media player Pioneer DJ XDJ-1000MK2, visto de cima"
+        width="1130"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth. Este player lê mais do que este site dizia
+        que ele lia.</strong> Os sistemas de arquivos dele são
+        <strong>{FS}</strong>, publicados na tabela de especificações do próprio
+        manual, então um drive HFS+ vindo de um Mac funciona aqui. Continua
+        <strong>sem exFAT</strong> e NTFS nunca é suportado. Mais três coisas: o
+        firmware {XDJ_1000MK2.controlModeDropoutFix} corrigiu
+        <strong>dropouts de áudio no Control Mode</strong> e o tempo de
+        carregamento de track que crescia depois de várias horas de uso, o
+        <strong>Power Management sai de fábrica ligado</strong> e a AlphaTheta
+        documenta ele como causa de tela apagada, e só
+        <strong>{XDJ_1000MK2.cueLoopPointsPerTrack} pontos de cue e loop por
+        track</strong> podem ser salvos num drive. A versão mais alta publicada
+        é <strong>{FLOOR}</strong>.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="usb-not-read">
+      <summary><h3 class="acc-h2">O player não lê o meu drive</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Confira o sistema de arquivos
+        primeiro. Este player lê <strong>{FS}</strong> e nada além disso.
+        <strong>Sem exFAT</strong>, e NTFS não é suportado. Depois confira duas
+        coisas em que um drive saudável ainda falha: só a
+        <strong>primeira partição</strong> de um drive com várias partições pode
+        ser usada, e <strong>hubs USB não podem ser usados</strong>.</p>
+        <p><strong>Por que isso acontece.</strong> exFAT é o que um DJ
+        formatando um drive grande hoje escolheria com razão, e esta geração
+        nunca ganhou isso. Ele está fora da lista de hardware exFAT da
+        AlphaTheta, e a versão do rekordbox que introduziu o export em exFAT cita
+        só o CDJ-3000, o XDJ-XZ e o XDJ-RX3. Nada está com defeito de nenhum dos
+        dois lados.</p>
+        <p><strong>Resolva agora.</strong> Peça um drive FAT32 emprestado, ou
+        toque pelo outro deck. Conecte direto no deck em vez de passar por
+        qualquer coisa da booth que multiplique tomadas. Reformatar apaga o
+        drive, então não é manobra de meio de set a não ser que a música exista
+        em outro lugar também. Um drive que puxa energia demais faz o indicador
+        USB piscar, e isso é o player te dizendo que o drive é o problema.</p>
+        <p><strong>Evite da próxima vez.</strong> Uma partição FAT32, formatada
+        em casa. HFS+ é realmente suportado para reprodução, então um DJ de Mac
+        tem uma segunda opção, com uma ressalva que vale saber: uma
+        <strong>atualização de firmware</strong> precisa especificamente de FAT
+        ou FAT32, e não de HFS+. A AlphaTheta também avisa que drives montados em
+        cima de leitores de cartão podem simplesmente não funcionar.</p>
+        <p class="acc-related">Relacionados: <a href="#correction">Uma correção registrada</a> <a href="/pt/fix/exfat-vs-fat32-cdj">exFAT ou FAT32</a> <a href="/pt/fix/format-usb-for-cdj">Como formatar um drive</a> <a href="/pt/fix/usb-not-recognized-cdj">USB não reconhecido</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="control-mode-dropouts">
+      <summary><h3 class="acc-h2">O áudio corta quando eu uso ele como controlador</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Documentado, e corrigido na
+        {XDJ_1000MK2.controlModeDropoutFix}: dropouts de áudio no Control Mode.
+        Leia a versão do deck em UTILITY antes de montar um set em cima de
+        controle por software nele.</p>
+        <p><strong>Por que isso acontece.</strong> Control Mode é o deck
+        controlando o software de DJ por USB em vez de tocar de um drive, então o
+        caminho do áudio passa pelo computador. Um corte ali soa exatamente como
+        problema de notebook, e o DJ passa a noite caçando configuração de buffer
+        enquanto a falha está no firmware do player. A mesma versão também
+        resolveu problemas no uso do SLIP HOT CUE e problemas não especificados
+        durante a reprodução e a seleção de tracks.</p>
+        <p><strong>Resolva agora.</strong> Toque de um drive USB em vez de pelo
+        software. Isso tira a falha reportada do seu caminho de sinal na hora e
+        te custa só os recursos que você estava controlando.</p>
+        <p><strong>Evite da próxima vez.</strong> Deixe o deck na {FLOOR}. O
+        controle HID do rekordbox precisa da {XDJ_1000MK2.hidIntro} ou mais nova
+        no mínimo, o macOS usa o driver dele mesmo e não tem nada para instalar,
+        e o Windows precisa do driver de áudio 1.500 ou mais novo da AlphaTheta
+        para a saída de áudio. Confirme tudo isso em casa, não na booth.</p>
+        <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas por versão</a> <a href="#compatibility">Controle por software, Link e booths misturadas</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="slow-loads">
+      <summary><h3 class="acc-h2">As tracks carregam mais devagar do que no começo da noite</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Documentado, e corrigido na
+        {XDJ_1000MK2.longSessionLoadFix}: o tempo de carregamento de track às
+        vezes ficava maior depois de usar o player por várias horas. Essa é a que
+        todo DJ que trabalha reconhece, porque ela aparece na quarta hora e não
+        na primeira.</p>
+        <p><strong>Por que isso acontece.</strong> Ela chega devagar, então
+        parece drive cansado ou booth quente em vez de falha de firmware. Duas
+        coisas separadas pioram o tempo de carregamento independentemente dela: a
+        quantidade de pastas e arquivos no drive, e arquivos que não são música
+        parados nele. A instrução da própria AlphaTheta é direta, "não armazene
+        arquivos ou pastas que não sejam arquivos de música no dispositivo
+        USB".</p>
+        <p><strong>Resolva agora.</strong> Carregue mais cedo e dê ao deck os
+        segundos que ele está pedindo, em vez de jogar uma track com oito
+        compassos sobrando. Se o outro deck está ligado há menos tempo, carregue
+        as viradas apertadas nele.</p>
+        <p><strong>Evite da próxima vez.</strong> Uma versão igual ou acima da
+        {XDJ_1000MK2.longSessionLoadFix} tira a falha documentada. Um drive só
+        com música, numa estrutura de pastas rasa, tira o resto.</p>
+        <p class="acc-related">Relacionados: <a href="#prepare-the-drive">Prepare um drive que este player gosta</a> <a href="/pt/fix/waveforms-not-loading-cdj">Waveforms não carregam</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="blank-screen">
+      <summary><h3 class="acc-h2">A tela está apagada e o deck parece morto</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Desconfie da configuração antes do
+        hardware. A entrada de troubleshooting da própria AlphaTheta diz "nada é
+        exibido. A função Power Management está ativada? Esta unidade é enviada
+        com a função Power Management ligada." O tempo é de
+        <strong>{XDJ_1000MK2.ecoStandbyMinutes} minutos</strong> sem uso,
+        introduzido pelo firmware {XDJ_1000MK2.ecoStandbyIntro} para atender ao
+        Ecodesign da União Europeia, que também renomeou o recurso de Auto
+        Standby e Auto Power-Off para Power Management.</p>
+        <p><strong>Por que isso acontece.</strong> Essa janela é mais curta que
+        muitos intervalos reais: a esticada longa do DJ de apoio no outro deck,
+        uma virada que passou do tempo, uma passagem de som da qual você se
+        afastou. O deck estava funcionando, ninguém tocou nele, e ele fez o que
+        vem configurado para fazer. Nada no painel frontal explica isso.</p>
+        <p><strong>Resolva agora.</strong> Use a chave de força. A AlphaTheta não
+        publica um procedimento para acordar este player, então como ele deveria
+        voltar de um desligamento do Power Management <strong>não é
+        documentado</strong> e esta página não vai inventar um. Trate como
+        partida a frio, inclua o tempo de boot na sua passagem, e conte que
+        qualquer coisa marcada e não salva se foi.</p>
+        <p><strong>Evite da próxima vez.</strong> Num deck que você controla,
+        ajuste UTILITY, depois POWER MANAGEMENT, depois NEVER. Num deck que você
+        não controla, toque em cada player durante um intervalo longo. Qual era o
+        tempo antes da {XDJ_1000MK2.ecoStandbyIntro} também não é documentado,
+        então numa versão mais antiga trate o tempo como desconhecido em vez de
+        supor que você tem mais folga.</p>
+        <p class="acc-related">Relacionados: <a href="#power-management">Power Management e os 20 minutos</a> <a href="/pt/knowledge/pioneer-dj/xdj-700#deck-turned-off">A mesma mudança no XDJ-700</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="cue-loop-full">
+      <summary><h3 class="acc-h2">Ele se recusa a salvar mais um ponto de cue ou loop</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Está cheio, não está quebrado. Só
+        <strong>{XDJ_1000MK2.cueLoopPointsPerTrack} pontos de cue e loop por
+        track</strong> podem ser salvos num dispositivo USB. O próximo é
+        recusado com [CUE/LOOP POINT FULL]. Uma mensagem diferente, [USB FULL],
+        quer dizer que o drive está protegido contra gravação ou sem espaço, e
+        nesse estado os pontos simplesmente não são salvos.</p>
+        <p><strong>Por que isso acontece.</strong> As duas mensagens aparecem
+        rápido no meio de um set, que é o pior momento possível para ler uma
+        tela, então o que fica é a sensação de que o deck te ignorou. Nos dois
+        casos o player está reportando um limite de armazenamento.</p>
+        <p><strong>Resolva agora.</strong> Apague um ponto que você não está
+        usando naquela track e crie o novo. Se a mensagem foi [USB FULL],
+        confira primeiro a chave de proteção contra gravação do drive, depois o
+        espaço livre, e aceite que até isso ser resolvido nada que você marcar
+        hoje está sendo guardado.</p>
+        <p><strong>Evite da próxima vez.</strong> Crie os seus pontos no
+        rekordbox, onde o limite não existe, e exporte. Deixe espaço livre de
+        verdade no drive. Os pontos também se perdem se o drive sair do player
+        sem o procedimento de parada ou se a energia for cortada, então
+        "confirme que o indicador USB parou de piscar antes de remover o
+        dispositivo USB", e depois de mudar configurações espere pelo menos dez
+        segundos antes de desligar ou a mudança vai embora com ela.</p>
+        <p class="acc-related">Relacionados: <a href="#limits">Os limites publicados</a> <a href="/pt/fix/dj-usb-backup-strategy">Estratégia de backup</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="tracks-missing">
+      <summary><h3 class="acc-h2">Parte da minha música não aparece no player</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Quatro limites documentados explicam
+        quase toda versão disso. Arquivos em pastas além da
+        <strong>{XDJ_1000MK2.folderLayers}ª camada não podem ser
+        tocados</strong>. Nada depois da 10.000ª pasta, ou depois do 10.000º
+        arquivo dentro de uma mesma pasta, é exibido. Só a
+        <strong>primeira partição</strong> do drive pode ser usada. E navegar
+        pela biblioteca precisa dos dados de biblioteca no drive, então sem eles
+        você só tem navegação por pasta.</p>
+        <p><strong>Por que isso acontece.</strong> Cada um desses escala com
+        preparação, ou seja, o DJ com mais chance de encontrar eles é o que
+        organizou mais. Uma árvore de pastas profunda montada para notebook
+        coloca a música abaixo da camada que o player lê, e uma segunda partição
+        fica invisível em vez de quebrada.</p>
+        <p><strong>Resolva agora.</strong> Navegue por pasta se a estrutura
+        permitir, o que custa as suas playlists e cues mas coloca música para
+        tocar. Se as tracks que faltam estão fundas na árvore, as cópias que você
+        alcança são as que estão mais perto do topo.</p>
+        <p><strong>Evite da próxima vez.</strong> Achate a estrutura, mantenha o
+        material da gig bem dentro de {XDJ_1000MK2.folderLayers} camadas, uma
+        partição, e exporte os dados {XDJ_1000MK2.library} para a navegação por
+        biblioteca funcionar. Tracks com DRM não tocam de jeito nenhum, faça o
+        que quiser com as pastas.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/playlists-not-showing-cdj">Playlists não aparecem</a> <a href="/pt/fix/rekordbox-file-is-missing">Arquivo do rekordbox não encontrado</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="correction">
+      <summary><h3 class="acc-h2">Uma correção registrada: os sistemas de arquivos estavam publicados esse tempo todo</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A tabela de compatibilidade de
+        players deste site deixou este modelo de fora de propósito, e publicou o
+        motivo: não existia artigo oficial da AlphaTheta sobre sistemas de
+        arquivos para ele, e a gente não ia chutar. A afirmação estreita era
+        verdadeira, não existe artigo no centro de suporte. A afirmação útil
+        estava errada. Os formatos estão publicados, como uma linha da tabela de
+        especificações no manual de instruções e de novo no guia de início
+        rápido, nas palavras da própria AlphaTheta, "sistemas de arquivos
+        suportados FAT16, FAT32 e HFS+ (NTFS não é suportado.)"</p>
+        <p><strong>O que isso custou para quem leu.</strong> Um DJ de Mac com um
+        drive HFS+ funcionando ouviu deste site que tratasse o player como
+        FAT32 e nada mais, e quem queria certeza foi mandado perguntar para a
+        AlphaTheta uma coisa que a AlphaTheta já tinha respondido na caixa em que
+        o player veio. O player lê {FS}. Agora ele está na tabela, onde
+        pertence.</p>
+        <p><strong>Por que a correção está na página e não só numa mensagem de
+        commit.</strong> Esta é a terceira vez que o mesmo erro acontece num
+        único dia neste site, depois de a gente se recusar a responder se o
+        euphonia suporta PRO DJ LINK quando a tabela de compatibilidade dizia
+        isso com toda a clareza, e depois de "só FAT32" ter ido ao ar em seis
+        modelos que também leem HFS+. O padrão é um hábito, não três erros:
+        tratar o centro de suporte como o único lugar onde um fato pode morar.
+        Publicar "a gente não sabe" só é honesto depois de ter procurado direito.
+        Um manual conta. Uma tabela de especificações conta. Um guia de início
+        rápido conta.</p>
+        <p><strong>O que fica sem correção, de propósito.</strong> O XDJ-RX2
+        continua fora daquela tabela, porque esse de verdade não está documentado
+        até onde a gente procurou, e a ressalva agora diz isso sobre aquele
+        modelo apenas. Se você achar a linha que a gente não viu, avise e a gente
+        publica.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a> <a href="/pt/knowledge/pioneer-dj/euphonia">A correção do euphonia</a> <a href="/pt/feedback">Conte o que a gente errou</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Correções documentadas, por versão de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A {FLOOR} é a versão mais alta que a
+        AlphaTheta publicou para este player. Cada entrada abaixo é a redação do
+        próprio fabricante, condensada, e as duas mais antigas são as que um DJ
+        que trabalha vai reconhecer.</p>
+        <dl class="rb-errors">
+          <dt>{XDJ_1000MK2.ecoStandbyIntro}</dt><dd>Não é correção de bug. Seguindo a Diretiva de Ecodesign da União Europeia, o tempo até a unidade se desligar sozinha passou para {XDJ_1000MK2.ecoStandbyMinutes} minutos, e o recurso foi renomeado de Auto Standby e Auto Power-Off para Power Management. Publicada em agosto de 2024.</dd>
+          <dt>{XDJ_1000MK2.catalinaAudioFix}</dt><dd>O macOS Catalina 10.15 não reconhecia o player como dispositivo de áudio. Alguns arquivos Apple Lossless não tocavam. A ordenação por KEY era diferente na categoria PLAYLIST.</dd>
+          <dt>{XDJ_1000MK2.matchingFix}</dt><dd>Inconsistências no uso da função de matching.</dd>
+          <dt>{XDJ_1000MK2.ddjXp1Intro}</dt><dd>Adicionados suporte ao DDJ-XP1 e o ALL CLEAR no SEARCH. Corrigidos um estalo durante um loop com QUANTIZE e MASTER TEMPO ligados, e um HOT CUE que começava depois do salto para o ponto de LOOP-IN ao mudar o tamanho do loop em tempos com o QUANTIZE ligado.</dd>
+          <dt>{XDJ_1000MK2.syncBpmFix}</dt><dd>A velocidade de reprodução às vezes não voltava ao BPM mostrado na tela com o Sync ligado.</dd>
+          <dt>{XDJ_1000MK2.apeTagLoopFix}</dt><dd>Um problema de loop de emergência com certos arquivos MP3 que carregam dados de tag APE. Informação errada ao mostrar uma PLAYLIST por atalho depois de um SEARCH. Os resultados de busca não apareciam ao mover o cursor durante o SEARCH.</dd>
+          <dt>{XDJ_1000MK2.controlModeDropoutFix}</dt><dd>Dropouts de áudio no Control Mode. O tempo de carregamento de track às vezes ficava maior depois de usar o player por várias horas. BACKGROUND COLOR e WAVE FORM COLOR ficavam acinzentados. Problemas no uso do SLIP HOT CUE. Problemas não especificados durante a reprodução e a seleção de tracks. Remover tracks de uma tag list ficou mais rápido com o REMOVE.</dd>
+          <dt>{XDJ_1000MK2.hidIntro}</dt><dd>Adicionados o controle HID do rekordbox dj, o suporte a KUVO e um waveform geral mais preciso. Corrigidas algumas tracks que não tocavam num CDJ-TOUR1 conectado a este player.</dd>
+        </dl>
+        <p style="margin-top:1rem"><strong>Duas lacunas nessa lista, nomeadas em
+        vez de preenchidas.</strong> Uma versão de 2021 não publicou nada além de
+        "problemas menores", então não existe detalhe para relatar dela. Uma
+        versão do começo de 2018 adicionou BPM e KEY ao menu de ordenação e às
+        categorias do usuário, comentários ao SEARCH, e corrigiu problemas de
+        conexão com o rekordbox no iOS e com o ShowKontrol. Nenhuma das duas
+        cria um limite que valha planejar em cima.</p>
+        <p style="margin-top:1rem"><strong>Faça assim.</strong> Num deck que você
+        controla, fique na {FLOOR}, atualizada entre bookings e nunca na véspera
+        de um. Num deck que você não controla, leia a versão e trate a lista
+        acima como o que ainda pode acontecer hoje.</p>
+        <p style="margin-top:1rem">
+          <strong>Downloads de firmware.</strong> <a href={XDJ_1000MK2.sourceFirmwarePage} target="_blank" rel="noopener">Página oficial de suporte da AlphaTheta →</a><br />
+          <a href={XDJ_1000MK2.source} target="_blank" rel="noopener">Histórico completo de alterações, PDF →</a><br />
+          <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="storage">
+      <summary><h3 class="acc-h2">Storage, mídia e formato de biblioteca</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Sistemas de arquivos {FS}, sem exFAT
+        e sem NTFS. A mídia é {XDJ_1000MK2.media}. O formato de biblioteca é
+        {XDJ_1000MK2.library}.</p>
+        <p><strong>Por que importa.</strong> Três restrições se acumulam. O
+        sistema de arquivos limita qual drive você pode levar. A falta de slot de
+        cartão tira o backup dentro do deck que um CDJ-2000NXS ou um CDJ-900NXS
+        te dá, então a redundância tem que sair da sua bag. {XDJ_1000MK2.library}
+        significa que um export OneLibrary de um rekordbox mais novo não vai
+        abrir aqui. Um DJ que resolve duas das três ainda não toca. Mídia óptica
+        e iPods estão fora do que este player aceita.</p>
+        <p><strong>Quando profissionais usam.</strong> Um drive FAT32 com um
+        export {XDJ_1000MK2.library}, e um segundo drive idêntico na bag. Essa
+        combinação funciona nesta booth e em quase todas as outras salas que este
+        site cobre.</p>
+        <p><strong>Erros comuns.</strong> Supor que um player com tela sensível
+        ao toque de 7 polegadas tem suporte moderno de storage. Não tem. Supor
+        que HFS+ também serve para atualizar o firmware: esse passo pede
+        especificamente FAT ou FAT32.</p>
+        <p class="acc-related">Relacionados: <a href="#correction">Uma correção registrada</a> <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a> <a href="/pt/fix/exfat-vs-fat32-cdj">exFAT ou FAT32</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="power-management">
+      <summary><h3 class="acc-h2">Power Management e os {XDJ_1000MK2.ecoStandbyMinutes} minutos</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A unidade se desliga sozinha depois
+        de {XDJ_1000MK2.ecoStandbyMinutes} minutos sem uso, e ela <strong>já sai
+        de fábrica com isso ligado</strong>. Esse tempo chegou com o firmware
+        {XDJ_1000MK2.ecoStandbyIntro} para atender à Diretiva de Ecodesign da
+        União Europeia.</p>
+        <p><strong>Por que importa.</strong> A AlphaTheta lista isso no
+        troubleshooting embaixo de tela apagada, o que te diz com que frequência
+        isso é confundido com defeito. O XDJ-700, o DJM-V10 e o DJM-A9 têm a
+        mesma mudança de Ecodesign, então uma booth pode ter várias peças fazendo
+        isso na mesma noite.</p>
+        <p><strong>Quando profissionais usam.</strong> Residentes e técnicos
+        desligam, em UTILITY, depois POWER MANAGEMENT, depois NEVER, porque a
+        energia economizada vale menos que uma passagem confusa. Num deck que não
+        é seu, trate isso como um fato da sala.</p>
+        <p><strong>Erros comuns.</strong> Escalar para a casa um deck desligado
+        como se fosse falha. Perder cue points não salvos por causa disso. Supor
+        que existe um procedimento publicado para acordar o deck: não existe, e o
+        tempo antes da {XDJ_1000MK2.ecoStandbyIntro} também não é
+        documentado.</p>
+        <p class="acc-related">Relacionados: <a href="#blank-screen">A tela está apagada</a> <a href="/pt/knowledge/pioneer-dj/djm-v10">DJM-V10, a mesma mudança de Ecodesign</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="firmware-silence">
+      <summary><h3 class="acc-h2">O que o silêncio desde a {FLOOR} significa e o que não significa</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A {FLOOR} é a versão mais alta
+        publicada, ela chegou em agosto de 2024, e foi uma mudança regulatória em
+        vez de funcional. Nenhuma versão nova foi publicada desde então. A
+        AlphaTheta não emitiu <strong>nenhuma declaração de fim de
+        suporte</strong>, então "a linha de firmware acabou" é uma inferência
+        tirada do silêncio e não algo que o fabricante disse, e esta página não
+        vai vestir isso de fato.</p>
+        <p><strong>Por que importa.</strong> A diferença prática está no que você
+        faz com um comportamento estranho. Num modelo que recebe atualização
+        ativa, vale reportar e esperar. Aqui, planeje partindo do princípio de
+        que o que não está na lista documentada é ou comportamento normal ou
+        coisa para contornar, sabendo que não é impossível que mais chegue: o
+        CDJ-2000NXS recebeu uma versão em 2024, mais de seis anos depois da
+        anterior.</p>
+        <p><strong>Quando profissionais usam.</strong> Muita sala que trabalha
+        roda estes, e um player na {FLOOR} é um deck confiável. O risco não é o
+        hardware, é supor que existe correção para alguma coisa.</p>
+        <p><strong>Erros comuns.</strong> Esperar uma atualização para planejar
+        em cima. Supor que o suporte a exFAT pode chegar: ele nunca chegou nesta
+        geração. A AlphaTheta também não marcou o player como arquivado ou
+        descontinuado, e não indica sucessor para ele, então trate essas
+        afirmações com a mesma desconfiança onde você as ler.</p>
+        <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas por versão</a> <a href="/pt/knowledge/pioneer-dj/cdj-900nxs#finished-firmware">A mesma pergunta no CDJ-900NXS</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="limits">
+      <summary><h3 class="acc-h2">Os limites publicados, num só lugar</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Quase tudo que parece defeito neste
+        player é um limite documentado. Ler eles uma vez em casa é mais barato
+        que encontrar um deles à 1h da manhã.</p>
+        <dl class="rb-errors">
+          <dt>Profundidade de pastas</dt><dd>Arquivos em pastas além da {XDJ_1000MK2.folderLayers}ª camada não podem ser tocados.</dd>
+          <dt>Quanto ele vai listar</dt><dd>Nada depois da 10.000ª pasta, ou depois do 10.000º arquivo dentro de uma mesma pasta, é exibido.</dd>
+          <dt>Pontos por track</dt><dd>{XDJ_1000MK2.cueLoopPointsPerTrack} pontos de cue e loop podem ser salvos num drive, e {XDJ_1000MK2.hotCues} hot cues por track estão disponíveis no painel.</dd>
+          <dt>Partições e hubs</dt><dd>Só a primeira partição pode ser usada, e hubs USB não podem ser usados. Drives montados em cima de leitores de cartão podem não funcionar.</dd>
+          <dt>Tempo do Quantize</dt><dd>O Quantize atrasa o reloop e o reverse para o próximo tempo. A nota da própria AlphaTheta: "se você quiser que a operação seja executada no instante em que o botão é pressionado, desligue a função quantize."</dd>
+          <dt>Tracks longas e VBR</dt><dd>Nenhuma escala é desenhada para tracks acima de 15 minutos. Um arquivo VBR pode deixar o tempo restante em branco por um instante. O auto cue desiste depois de 10 segundos de busca.</dd>
+          <dt>HISTORY</dt><dd>Só funciona com um dispositivo USB carregado, então um set tocado do drive do outro deck não deixa registro aqui.</dd>
+          <dt>Formatos</dt><dd>MP3, AAC, WAV, AIFF, Apple Lossless, e FLAC em 16 ou 24 bit, 44,1 ou 48 kHz. Arquivos com DRM não tocam.</dd>
+          <dt>Saídas</dt><dd>Saída analógica RCA, mais uma saída digital coaxial em 44,1 kHz, 24 ou 16 bit.</dd>
+        </dl>
+        <p style="margin-top:1rem"><strong>O que o deck te dá.</strong> Uma
+        {XDJ_1000MK2.screen} com 18 idiomas, {XDJ_1000MK2.hotCues} hot cues por
+        track, modo Slip, Beat Jump em 1, 2 ou 4 tempos, Quantize, e Beat Sync
+        para um sync master do PRO DJ LINK. A AlphaTheta descreve ele como uma
+        evolução de um dos seus multi players só USB mais populares, com o jog e
+        a tela sensível ao toque vindos do CDJ-2000NXS2.</p>
+        <p class="acc-related">Relacionados: <a href="#cue-loop-full">Ele se recusa a salvar mais um ponto</a> <a href="#tracks-missing">Parte da minha música não aparece</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas profissionais" />
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="two-drives">
+      <summary><h3 class="acc-h2">Ande com dois drives idênticos para esta booth</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Dois drives FAT32, o mesmo export
+        {XDJ_1000MK2.library} nos dois, os dois na bag.</p>
+        <p><strong>Por que importa.</strong> Este player é
+        {XDJ_1000MK2.media}, então o backup dentro do deck que um CDJ-2000NXS te
+        dá não existe aqui. A redundância veio com você ou ela não existe, e essa
+        é toda a diferença entre uma falha de drive ser um evento de trinta
+        segundos e ser o fim do set.</p>
+        <p><strong>Faça assim.</strong> Exporte uma vez, copie para dois drives,
+        e confira os dois ejetando e navegando neles em vez de confiar na janela
+        de cópia. Etiquete eles para saber qual você já tentou.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/dj-usb-backup-strategy">Estratégia de backup</a> <a href="/pt/checklist">O checklist pré-gig</a> <a href="/pt/gear">Drives em que confiamos</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="prepare-the-drive">
+      <summary><h3 class="acc-h2">Prepare um drive que este player gosta</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Uma partição FAT32, um export
+        {XDJ_1000MK2.library}, uma árvore de pastas rasa, e só música.</p>
+        <p><strong>Por que importa.</strong> Toda causa documentada de uma
+        navegação lenta ou incompleta neste player é decidida por como o drive
+        foi preparado: profundidade de pastas, quantidade de arquivos por pasta,
+        arquivos que não são música, e se existem dados de biblioteca ali. Nada
+        disso se resolve na booth, e tudo isso são dez minutos em casa.</p>
+        <p><strong>Faça assim.</strong> Mantenha o material da gig bem dentro de
+        {XDJ_1000MK2.folderLayers} camadas. Deixe as suas fotos, arquivos de
+        projeto e instaladores fora do drive, que é a instrução da própria
+        AlphaTheta e não preferência. Crie os pontos de cue e loop no rekordbox,
+        onde o limite de {XDJ_1000MK2.cueLoopPointsPerTrack} pontos não atrapalha
+        você. Tenha um drive FAT ou FAT32 à mão se você pretende atualizar o
+        firmware, porque esse passo não aceita HFS+.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/format-usb-for-cdj">Como formatar um drive</a> <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção preventiva" />
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Manter o deck confiável</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A entrada USB e a tela sensível ao
+        toque são as peças de desgaste, e as duas têm um procedimento documentado
+        anexado. Firmware até a {FLOOR} entre bookings.</p>
+        <p><strong>Por que importa.</strong> Sem slot de cartão, a única entrada
+        USB é o caminho inteiro da mídia, então uma entrada forçada de lado por
+        anos vira uma falha intermitente que parece exatamente um drive ruim. A
+        tela é o browser, o waveform e as configurações, então um display que
+        registra o toque errado leva os três com ele.</p>
+        <p><strong>Faça assim.</strong> Puxe os drives retos, pelo conector,
+        depois de o indicador USB parar de piscar, nunca de lado. Dê pelo menos
+        dez segundos às mudanças de configuração antes de cortar a energia. Se a
+        tela sensível ao toque parar de registrar com precisão, a tela de
+        calibração é alcançável até de um deck desligado: segure OUT, marcado
+        como OUT ADJUST, enquanto liga a unidade, e você chega em TOUCH DISPLAY
+        CALIBRATION. Um drive que faz o indicador USB piscar está puxando
+        corrente demais, então pare de usar ele em vez de tentar de novo.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="compatibility">
+      <summary><h3 class="acc-h2">Controle por software, Link e booths misturadas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> PRO DJ LINK por LAN, até
+        {XDJ_1000MK2.maxPlayers} players, 100Base-TX com cabos Categoria 5e. Um
+        hub LAN é obrigatório para três players ou mais, ou para dois players ou
+        mais junto com um mixer. Um DJM-2000NXS ou um DJM-2000 já tem esse hub
+        embutido. Com um DJM-900NXS2, um DJM-900NXS ou um DJM-900SRT você tem que
+        levar um hub LAN separado. O caminho por Wi-Fi para o rekordbox no
+        celular também é suportado.</p>
+        <p><strong>Quando o Link não sobe.</strong> A ordem da própria
+        AlphaTheta, e ela é a ordem certa: PLAYER No. duplicado primeiro, então
+        coloque o PLAYER No. em AUTO ou num número diferente, depois o cabo LAN,
+        depois se o hub de switching realmente tem energia, depois se tem alguma
+        coisa desnecessária pendurada no hub.</p>
+        <p><strong>Controle por software.</strong> O HID do rekordbox dj chegou
+        na {XDJ_1000MK2.hidIntro}. USB-HID e MIDI passam pela entrada USB-B sem
+        driver para instalar no macOS, e o Windows quer o driver de áudio 1.500
+        ou mais novo da AlphaTheta para a saída de áudio. O TRAKTOR PRO 3 é
+        suportado a partir do TRAKTOR 3.3.0 com o firmware
+        {XDJ_1000MK2.catalinaAudioFix} ou mais novo, a mesma versão que devolveu
+        o reconhecimento do dispositivo de áudio no macOS Catalina. Timecode e
+        DVS <strong>não são documentados</strong> para este player em nenhuma das
+        direções, então se controle por vinil é o seu plano, confirme com a casa
+        e não com esta página.</p>
+        <p><strong>Gerações misturadas.</strong> Uma falha de reprodução entre
+        modelos está documentada, num CDJ-TOUR1 conectado, corrigida na
+        {XDJ_1000MK2.tour1PlaybackFix}. Nada foi publicado sobre recursos serem
+        desativados quando este player está conectado a um CDJ-3000 ou a um
+        CDJ-3000X, então esta página não especula sobre isso. O perigo real numa
+        booth misturada em 2026 é o formato de biblioteca, abaixo.</p>
+        <p class="acc-related">Relacionados: <a href="#library-split">Device Library e OneLibrary</a> <a href="/pt/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="library-split">
+      <summary><h3 class="acc-h2">Device Library e OneLibrary na mesma booth</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Este é um player
+        {XDJ_1000MK2.library}, e essa é a divisão que decide se o seu drive vai
+        abrir. O aviso de março de 2026 da própria AlphaTheta coloca ele do lado
+        {XDJ_1000MK2.library} e alerta que "playlists e tracks em formato Device
+        Library vão aparecer em produtos como o CDJ-3000, mas podem não aparecer
+        em unidades compatíveis com OneLibrary como o CDJ-3000X".</p>
+        <p><strong>Por que importa.</strong> Uma booth com este player ao lado de
+        uma unidade OneLibrary são duas expectativas de drive diferentes no mesmo
+        palco, e a falha é silenciosa: o player monta o drive e te mostra menos do
+        que você levou. A AlphaTheta é clara na parte tranquilizadora, "os seus
+        arquivos de música e playlists nunca são apagados do seu USB", então um
+        drive que abre incompleto em algum lugar não é um drive que perdeu
+        alguma coisa.</p>
+        <p><strong>Quando profissionais usam.</strong> Pergunte quais players
+        estão na booth na hora do booking, e decida o formato do export uma vez
+        só. Se a sala é realmente misturada, dois drives preparados para os dois
+        formatos é a resposta que sempre funciona, e sai mais barato que
+        descobrir isso durante uma virada.</p>
+        <p><strong>Erros comuns.</strong> Exportar para a unidade mais nova e
+        supor que a mais antiga dá conta. Converter um drive
+        {XDJ_1000MK2.library} que funciona na véspera de uma gig sem um segundo
+        drive na bag.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a> <a href="/pt/knowledge/pioneer-dj/cdj-3000x">CDJ-3000X</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Perguntas frequentes" />
+
+    <details class="acc-sec" name="xdj1000mk2-acc" id="faq">
+      <summary><h3 class="acc-h2">Respostas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>Quais sistemas de arquivos ele lê?</dt><dd>{FS}, pela tabela de especificações do manual de instruções dele mesmo. Sem exFAT, e NTFS não é suportado. Uma atualização de firmware precisa de FAT ou FAT32 em vez de HFS+.</dd>
+          <dt>Existe slot de cartão SD?</dt><dd>Não. Ele é {XDJ_1000MK2.media}, então o seu backup tem que ser um segundo drive que você trouxe.</dd>
+          <dt>Por que a tela apagou?</dt><dd>Na maioria das vezes é o Power Management, que sai de fábrica ligado e desliga a unidade depois de {XDJ_1000MK2.ecoStandbyMinutes} minutos sem uso a partir do firmware {XDJ_1000MK2.ecoStandbyIntro}. A AlphaTheta lista isso embaixo de tela apagada no troubleshooting.</dd>
+          <dt>Como ele é acordado de novo?</dt><dd>Não é documentado. A AlphaTheta não publica procedimento para acordar, então trate como partida a frio e conte com o tempo de boot.</dd>
+          <dt>Por que ele não salva mais um cue point?</dt><dd>{XDJ_1000MK2.cueLoopPointsPerTrack} pontos de cue e loop por track é o limite de armazenamento. O próximo é recusado com [CUE/LOOP POINT FULL].</dd>
+          <dt>Por que parte da música não aparece no browser?</dt><dd>Normalmente profundidade de pastas, já que arquivos além da {XDJ_1000MK2.folderLayers}ª camada não podem ser tocados, ou uma segunda partição, já que só a primeira pode ser usada.</dd>
+          <dt>Em qual firmware ele deveria estar?</dt><dd>{FLOOR}, de agosto de 2024. A {XDJ_1000MK2.controlModeDropoutFix} é o limite que mais importa, pelos dropouts no Control Mode e pelo tempo de carregamento em noites longas.</dd>
+          <dt>Qual formato de biblioteca?</dt><dd>{XDJ_1000MK2.library}. Não OneLibrary.</dd>
+          <dt>Ele suporta DVS ou vinil de timecode?</dt><dd>Não é documentado em nenhuma das direções, então este site não afirma nada nos dois sentidos. Confirme com a casa se timecode é o seu plano.</dd>
+          <dt>Dá para usar um hub USB ou um leitor de cartão?</dt><dd>Não. Hubs não podem ser usados, e drives montados em cima de leitores de cartão podem não funcionar.</dd>
+          <dt>Ele foi descontinuado, e o que substitui ele?</dt><dd>A AlphaTheta não marcou ele como arquivado, e não indica sucessor. O XDJ-1000 original está no caminho do arquivo, este não.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="xdj-1000mk2" lang="pt" />
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_xdj1000mk2"><Icon name="siren" /> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_xdj1000mk2" lang="pt" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: a <a href={XDJ_1000MK2.sourceFirmwarePage} target="_blank" rel="noopener">página de firmware</a> oficial
+      do XDJ-1000MK2 da AlphaTheta, o seu <a href={XDJ_1000MK2.source} target="_blank" rel="noopener">PDF de histórico completo de alterações</a> e o seu
+      <a href={XDJ_1000MK2.sourceManual} target="_blank" rel="noopener">manual de instruções</a>,
+      cuja tabela de especificações é de onde vêm os sistemas de arquivos acima, lidos
+      por inteiro e conferidos em {UPDATED}. Cada falha e cada limite documentado
+      acima é a redação do próprio fabricante, condensada. Os conselhos gerais de
+      booth refletem a prática padrão. Especificações e comportamento mudam sem aviso,
+      confira de novo antes de um show grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* Photo anchored to hw-head's own bottom edge, not sized by a flex row.
+     See the long note in djm-v10.astro for why a flex row was wrong. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

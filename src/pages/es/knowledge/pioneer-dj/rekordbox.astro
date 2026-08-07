@@ -39,6 +39,7 @@ const NOTES_ES = {
   'CDJ-900NXS': 'FAT32, FAT o HFS+. El firmware terminó en 1.31, en 2017.',
   'CDJ-900 / 850': 'FAT32, FAT16 o HFS+.',
   'XDJ-AN': 'Agregado en rekordbox 7.2.16.',
+  'XDJ-1000MK2': 'FAT16, FAT32 o HFS+. Solo se lee la primera partición de la unidad.',
   'XDJ-700': 'Oficialmente solo FAT32, FAT o HFS+.',
   'OPUS-QUAD': 'Primer reproductor con OneLibrary.',
 };
@@ -82,9 +83,8 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-desktop">rekordbox</div>
+        <div class="status-line">Revisado: {UPDATED}</div>
         <h1 class="rb-h1">rekordbox, <span class="accent">explicado</span></h1>
-        <p class="dim rb-updated">Revisado: {UPDATED}</p>
       </div>
       <a
         class="hw-thumb"
@@ -425,11 +425,15 @@ const schema = {
           </table>
         </div>
         <p class="rb-caveat">
-          Dejamos a propósito el <strong>XDJ-1000MK2</strong> y el
-          <strong>XDJ-RX2</strong> fuera de esta tabla. No existe un artículo oficial
-          de AlphaTheta sobre sistemas de archivos para ninguno de los dos, y no vamos
-          a adivinar sobre un USB al que le vas a confiar un gig. Trátalos a los dos
-          como solo FAT32 y vas a estar bien. <strong>NTFS nunca está
+          Dejamos a propósito el <strong>XDJ-RX2</strong> fuera de esta tabla. No
+          encontramos ninguna información oficial de AlphaTheta sobre sus sistemas de
+          archivos, y no vamos a adivinar sobre un USB al que le vas a confiar un gig.
+          Trátalo como solo FAT32 y vas a estar bien.
+          <strong>Una corrección:</strong> el XDJ-1000MK2 estaba en esa misma lista
+          hasta el 7 de agosto de 2026, y no debía estar. Sus formatos sí están
+          publicados, en la tabla de especificaciones del manual y no en un artículo
+          de soporte, así que ahora está en la tabla de arriba, que es su lugar.
+          <strong>NTFS nunca está
           soportado</strong>, y esto no es leyenda: el manual de rekordbox de
           AlphaTheta lista NTFS como no soportado tanto para tarjetas SD como para
           unidades USB, así que rekordbox ni siquiera escribe en él.

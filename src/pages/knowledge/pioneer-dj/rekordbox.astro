@@ -17,10 +17,25 @@ import Icon from '../../../components/Icon.astro';
 // FACT DISCIPLINE: every claim on this page traces back to already-verified
 // copy that shipped elsewhere on the site (this page's own prior version,
 // /prepare, /faq, /fix/*) or to src/data/facts.js. Nothing new was invented
-// for this restructure. Two things stay deliberately unverified: the exFAT
-// status of the XDJ-1000MK2 and XDJ-RX2 (no official filesystem article
-// exists), and the meaning of error E-8306. Do not add them without a
-// primary source.
+// for this restructure. One thing stays deliberately unverified: the meaning
+// of error E-8306. Do not add it without a primary source.
+//
+// THE XDJ-1000MK2 USED TO BE ON THAT LIST AND SHOULD NOT HAVE BEEN (corrected
+// 2026-08-07). This page published "there is no official AlphaTheta filesystem
+// article for either, and we will not guess". The narrow claim was true, there is
+// no support-centre article. The useful claim was wrong: the formats are a
+// specification-table row in the Operating Instructions DRI1396-B and again in the
+// Quick Start Guide DRH1671-C, "Supported file systems FAT16, FAT32 and HFS+ (NTFS
+// is not supported.)" So the player reads HFS+ and "treat it as FAT32-only"
+// understated it.
+//
+// THIRD INSTANCE OF THE SAME ERROR TODAY, after the euphonia PRO DJ LINK refusal
+// and "FAT32 only" on six models. Refusing to answer is only honest AFTER looking
+// properly, and a support article is not the only place AlphaTheta documents a
+// fact. The manual counts. The spec table counts.
+//
+// The XDJ-RX2 stays off, because that one really is undocumented as far as we have
+// looked, and the caveat now says so about that model alone.
 const UPDATED = CHECKED;
 
 // FAT32 + MBR works on every player listed here, always. The table is
@@ -77,9 +92,8 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-desktop">rekordbox</div>
+        <div class="status-line">Reviewed: {UPDATED}</div>
         <h1 class="rb-h1">rekordbox, <span class="accent">explained</span></h1>
-        <p class="dim rb-updated">Reviewed: {UPDATED}</p>
       </div>
       <a
         class="hw-thumb"
@@ -398,10 +412,14 @@ const schema = {
           </table>
         </div>
         <p class="rb-caveat">
-          We have deliberately left the <strong>XDJ-1000MK2</strong> and
-          <strong>XDJ-RX2</strong> off this table. There is no official AlphaTheta
-          filesystem article for either, and we will not guess about a drive you are
-          going to trust with a gig. Treat both as FAT32-only and you will be fine.
+          We have deliberately left the <strong>XDJ-RX2</strong> off this table.
+          We have found no official AlphaTheta statement of its file systems, and we
+          will not guess about a drive you are going to trust with a gig. Treat it as
+          FAT32-only and you will be fine. <strong>A correction:</strong> the
+          XDJ-1000MK2 was on that list until 7 August 2026, and it should not have
+          been. Its formats are published, in the specification table of its
+          Operating Instructions rather than in a support article, so it is now in
+          the table above where it belongs.
           <strong>NTFS is never supported</strong>, and this one is not folklore:
           AlphaTheta's rekordbox manual lists NTFS as unsupported for both SD cards
           and USB drives, so rekordbox will not even write to it.

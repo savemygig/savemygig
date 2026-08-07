@@ -1,0 +1,683 @@
+---
+import Base from '../../../layouts/Base.astro';
+import EmailCapture from '../../../components/EmailCapture.astro';
+import AccGroup from '../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import { DJM_750MK2, DJM_REC } from '../../../data/facts.js';
+import Icon from '../../../components/Icon.astro';
+
+/**
+ * DJM-750MK2. A four-channel DJM whose most important fact is a capability that
+ * was never built into it, which makes it the same shape of page as djm-v5.astro
+ * and it follows that page's structure deliberately.
+ *
+ * THE HEADLINE IS THAT THERE IS NO PRO DJ LINK. It is an absence of a port and
+ * an absence of documentation, not a fault and not a setting hidden in a utility
+ * menu. The rear panel list in AlphaTheta's own Operating Instructions runs
+ * power button, RETURN, SIGNAL GND, PHONO, LINE, MIC, Kensington slot, USB,
+ * BOOTH, MASTER2, MASTER1, SEND, AC IN. There is no LAN terminal in it, and
+ * AlphaTheta defines PRO DJ LINK as what you get when players and a mixer are
+ * connected by LAN cables. So in a CDJ booth this is a standalone mixer.
+ *
+ * Why it leads: like the V5's missing crossfader, this is a BOOKING-STAGE fact
+ * rather than a soundcheck one. No linked BPM, no quantised sync arriving from
+ * the players and no rekordbox over LAN cannot be solved on the night, and a DJ
+ * whose set assumes any of them needs to know weeks earlier.
+ *
+ * THE TWO LIMITS THAT LOOK LIKE FAULTS get their own emergency accordions,
+ * because both make working gear look broken. Several effects never reach the
+ * RETURN AUX channel by design, so an iOS or outboard effect patched in AUX mode
+ * is silent, and Beat FX cannot be pre-listened on channels 1 to 4 with CUE.
+ * Both are AlphaTheta's own documented behaviour and both are quoted.
+ *
+ * THE PUBLISHED FIRMWARE HISTORY STARTS AT 1.03. Versions 1.00 to 1.02 are not
+ * listed anywhere, so this page says where the record starts instead of calling
+ * it complete. Nothing in that record is a crash, a freeze, a channel going
+ * silent or a total dropout, and the page says so: it is honest and it is
+ * reassuring, and it is the kind of absence this site is supposed to report.
+ *
+ * Every version number, effect list and source URL comes from DJM_750MK2 in
+ * facts.js and is rendered from it rather than retyped into prose. Facts that
+ * the constant does not hold, the manual's troubleshooting table and the driver
+ * situation, are attributed in the copy and in the sources line.
+ */
+const UPDATED = DJM_750MK2.checked;
+const RECOK = DJM_REC.compatibleMixers.includes('DJM-750MK2');
+
+const FX = DJM_750MK2.beatFx.join(', ');
+const COLOR_FX = DJM_750MK2.soundColorFx.join(', ');
+// The effects AlphaTheta names as never reaching the RETURN AUX channel, and,
+// derived from the same data rather than retyped, the ones it does not name.
+const AUX_SILENT = DJM_750MK2.auxReturnSilentFx.join(', ');
+const AUX_SILENT_N = DJM_750MK2.auxReturnSilentFx.length;
+const AUX_UNLISTED = [...DJM_750MK2.beatFx, ...DJM_750MK2.soundColorFx]
+  .filter((fx) => !DJM_750MK2.auxReturnSilentFx.includes(fx))
+  .join(', ');
+const CUE_SILENT = DJM_750MK2.cueNotMonitorableFx.join(', ');
+const UPDATE_FS = DJM_750MK2.updateFileSystems.join(' or ');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/djm-750mk2#article',
+  headline: 'DJM-750MK2: the operational reference',
+  description: `What every DJ should know before working a DJM-750MK2: it has no Pro DJ Link, ${AUX_SILENT_N} effects never reach the RETURN AUX channel, Beat FX cannot be pre-listened on channels 1 to 4, and power management switches the desk off after ${DJM_750MK2.ecoStandbyMinutes} minutes from firmware ${DJM_750MK2.ecoStandbyIntro}.`,
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'en',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/djm-750mk2#webpage' },
+  image: 'https://www.savemygig.com/images/djm-750mk2-panel-full.webp',
+};
+---
+<Base
+  title="DJM-750MK2: No Pro DJ Link, FX Limits | Save My Gig"
+  description={`The DJM-750MK2 field manual: no Pro DJ Link, ${AUX_SILENT_N} effects that never reach the RETURN AUX channel, and ${DJM_750MK2.ecoStandbyMinutes} minute power management from firmware ${DJM_750MK2.ecoStandbyIntro}.`}
+  path="/knowledge/pioneer-dj/djm-750mk2"
+  crumbName="DJM-750MK2"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span>
+      <a href="/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>DJM-750MK2</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line">Reviewed: {UPDATED}</div>
+        <h1 class="rb-h1">DJM-750MK2, <span class="accent">the field manual</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#djm-750mk2-lightbox"
+        aria-label="Open a larger photo of the DJM-750MK2 control panel"
+      >
+        <img
+          src="/images/djm-750mk2-panel-thumb.webp"
+          alt="Pioneer DJ DJM-750MK2 four-channel DJ mixer control panel, top view"
+          width="416"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="djm-750mk2-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/djm-750mk2-panel-full.webp"
+        srcset="/images/djm-750mk2-panel-800.webp 800w, /images/djm-750mk2-panel-full.webp 1166w"
+        sizes="92vw"
+        alt="Pioneer DJ DJM-750MK2 four-channel DJ mixer control panel, top view"
+        width="1166"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing. This mixer has no PRO DJ LINK.</strong> There is
+        no LAN terminal on it, and AlphaTheta defines PRO DJ LINK as what you get
+        when players and a mixer are connected by LAN cables. In a CDJ booth that
+        means no linked BPM, no quantised sync arriving from the players and no
+        rekordbox over LAN. Nothing is broken and nothing is switched off in a
+        menu, so this is a question for the booking, not for soundcheck. What you
+        get instead is a {DJM_750MK2.channels}-channel desk carrying the EQ and
+        fader curves, SOUND COLOR FX, BEAT FX and SEND/RETURN that AlphaTheta
+        developed for the DJM-900NXS2, a Magvel crossfader and
+        {' '}{DJM_750MK2.beatFxCount} Beat FX. Two documented limits look like
+        faults and are not: <strong>{AUX_SILENT_N} effects never reach the
+        RETURN AUX channel</strong>, so an outboard or iOS effect in AUX mode goes
+        silent, and Beat FX cannot be pre-listened on channels 1 to 4. From
+        firmware {DJM_750MK2.ecoStandbyIntro} power management switches the desk
+        off after {DJM_750MK2.ecoStandbyMinutes} minutes of no audio and no touch.
+      </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
+    </div>
+
+    <AccGroup icon="zap" title="Emergency fixes" />
+
+    <details class="acc-sec" name="djm750mk2-acc" id="no-pro-dj-link">
+      <summary><h3 class="acc-h2">There is no Pro DJ Link on this mixer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Correct, and nothing is faulty or
+        disabled. The DJM-750MK2 was built without the port. The rear panel list
+        in AlphaTheta's Operating Instructions runs power button, RETURN, SIGNAL
+        GND, PHONO, LINE, MIC, Kensington slot, USB, BOOTH, MASTER2, MASTER1,
+        SEND and AC IN, and there is no LAN terminal in it. AlphaTheta also
+        publishes no Pro DJ Link documentation for this desk, because there is
+        nothing to document.</p>
+        <p><strong>Why this happens.</strong> AlphaTheta's own definition ties the
+        feature to the cable: Pro DJ Link is what you get when multi players and a
+        DJ mixer are connected via LAN cables. Take the LAN terminal away and the
+        feature has nowhere to live. In a booth with CDJs this is a standalone
+        mixer, so no BPM arrives at the desk from the players, no quantised sync
+        comes back the other way, and rekordbox does not reach it over a network.</p>
+        <p><strong>Fix it now.</strong> Nothing to fix, so work the way the desk
+        works. The players still feed the mixer through their own audio outputs,
+        so the set is unaffected. Beat FX run from the mixer's own BPM reading
+        rather than a linked value, and the TAP button sets the tempo by hand when
+        a track will not read. Player to player sync, where the players support
+        it, is a job for a LAN cable between the players and never touches this
+        mixer.</p>
+        <p><strong>Avoid it next time.</strong> Ask which mixer is installed when
+        you take the booking, and say out loud what your set expects from Link. A
+        set built on quantised FX and shared browsing needs a different desk, and
+        that is a conversation for the promoter weeks out.</p>
+        <p class="acc-related">Related: <a href="#compatibility">Players, software and DVS</a> <a href="/checklist">The pre-gig checklist</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="aux-return-silent">
+      <summary><h3 class="acc-h2">Your outboard or iOS effect is silent in AUX mode</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Neither your pedal nor the mixer is
+        broken. {AUX_SILENT_N} of this desk's effects never reach the RETURN AUX
+        channel, by design. AlphaTheta's wording: "The following effect sounds of
+        this DJM applied to the channel selected by the effect channel switch at
+        [SEND/RETURN] are not outputted to the RETURN AUX channel due to the
+        specification."</p>
+        <p><strong>Which ones.</strong> {AUX_SILENT}. The ones AlphaTheta does not
+        name in that list are {AUX_UNLISTED}.</p>
+        <p><strong>Why this happens.</strong> AUX return brings the external
+        signal back as its own channel rather than back into the channel it left.
+        The internal effect stays on the channel the effect channel switch
+        selected, and it is not carried into that returning AUX path. The symptom
+        is the one that fools people: the send is working, the app or the pedal is
+        making sound, and the mixer output has none of it.</p>
+        <p><strong>Fix it now.</strong> Switch the return from AUX to INSERT, so
+        the external signal comes back into the path it left. If AUX is what you
+        need, take the internal effect off the send channel, or use one of the
+        effects AlphaTheta does not list. Check the effect channel switch position
+        as well, because it decides which channel the internal effect is applied
+        to in the first place.</p>
+        <p><strong>Avoid it next time.</strong> Rehearse the exact combination you
+        plan to use, the same effect on the same return mode, at home. This is not
+        a fault that shows up in a general soundcheck, it shows up in the one
+        setup you were relying on.</p>
+        <p class="acc-related">Related: <a href="#send-return">Send and return, analogue or USB</a> <a href="/emergency">Start Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="beat-fx-no-cue">
+      <summary><h3 class="acc-h2">Beat FX will not pre-listen on channels 1 to 4</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Documented behaviour, not a headphone
+        fault. AlphaTheta: "When [1] to [4] is selected with the effect channel
+        selector switch, the effect sound cannot be monitored even if the [CUE]
+        button of the selected channel is pressed." It applies to
+        {' '}{CUE_SILENT}.</p>
+        <p><strong>Why this happens.</strong> These are the time based effects,
+        and on this desk their output is not fed to the cue bus for a channel
+        selected on the effect channel switch. So the headphone check you would
+        normally make before committing an effect to the room is not available for
+        those five.</p>
+        <p><strong>Fix it now.</strong> Bring the effect in on the master with the
+        depth and level control low and open it up, rather than trying to audition
+        it first. If you want to hear one in isolation before it reaches the floor,
+        that has to happen somewhere other than this desk's cue.</p>
+        <p><strong>Avoid it next time.</strong> Know these five by ear and by
+        control position before the gig. A time based effect you have to commit to
+        blind is one you should already be able to predict.</p>
+        <p class="acc-related">Related: <a href="#beat-fx">Beat FX, Sound Color FX and FX FREQUENCY</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="mixer-switched-off">
+      <summary><h3 class="acc-h2">The mixer switched itself off between sets</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Press the [UTILITY (WAKE UP)] button.
+        AlphaTheta: "Pressing the [UTILITY (WAKE UP)] button cancels the Off mode
+        state." The desk is asleep, not dead.</p>
+        <p><strong>Why this happens.</strong> From firmware
+        {' '}{DJM_750MK2.ecoStandbyIntro} the power management timing follows EU
+        Ecodesign, and the feature was renamed from auto standby to POWER
+        MANAGEMENT at the same time. AlphaTheta's condition, verbatim: the unit
+        automatically enters the Off mode if {DJM_750MK2.ecoStandbyMinutes}
+        {' '}minutes elapses with all of the following conditions met, none of this
+        unit's buttons or controls are operated, and no audio signal is input to
+        any channel of this unit. A soundcheck that finishes early, a break
+        between sets, or a support DJ who plays entirely off their own gear all
+        meet it. The desk also ships this way: AlphaTheta states the unit is
+        shipped with the Power Management function turned on.</p>
+        <p><strong>Below {DJM_750MK2.ecoStandbyIntro} the timeout is different,
+        and the old value is not published.</strong> So on an older desk, expect
+        the same behaviour on a schedule nobody can tell you.</p>
+        <p><strong>Fix it now.</strong> [UTILITY (WAKE UP)], then check the master
+        level before you push a fader, because you are coming back into a room
+        that has been quiet.</p>
+        <p><strong>Avoid it next time.</strong> On a desk you control, set POWER
+        MANAGEMENT to OFF in the utility menu and leave it off for the show. On a
+        desk you do not control, keep something feeding a channel during a long
+        gap rather than trusting silence.</p>
+        <p class="acc-related">Related: <a href="#known-issues">Documented fixes, by firmware version</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="no-signal">
+      <summary><h3 class="acc-h2">A channel has no signal, or the master is quiet</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> On this desk the crossfader assign is the
+        first suspect, then the input selector, then a hidden attenuator on the
+        master. The manual's own remedy for a silent channel is to set the [CROSS
+        FADER ASSIGN (A, THRU, B)] selector switches for the different channels
+        properly.</p>
+        <p><strong>Why this happens.</strong> Every channel has its own crossfader
+        assign, so a channel routed to the side of the Magvel crossfader you are
+        not pushing is silent while its fader is up and its meter can still move.
+        The input selector can also be sitting on PHONO while you feed it a line
+        source. For a master that is present but small, AlphaTheta's troubleshooting
+        table points at the attenuator: check whether ATT. for MASTER OUT is set to
+        a value such as minus 6 dB in the UTILITY screen. A previous DJ or an
+        installer can leave that there and nothing on the surface says so.</p>
+        <p><strong>Fix it now.</strong> Crossfader assign to THRU on the channel
+        you want, input selector matched to the source, then UTILITY and the master
+        attenuator. If it is still silent, move the source to another channel to
+        decide whether the fault is the strip or upstream of the mixer, and take
+        send and return out of the path while you are there.</p>
+        <p><strong>Avoid it next time.</strong> One routing pass before doors,
+        every channel, including the crossfader assign switches and the utility
+        settings you inherited.</p>
+        <p class="acc-related">Related: <a href="#send-return">Send and return, analogue or USB</a> <a href="/knowledge/pioneer-dj/djm-900nxs2#gain-staging">Gain staging first</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="beat-fx-dead">
+      <summary><h3 class="acc-h2">Beat FX sounds like it is doing nothing</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Usually the FX FREQUENCY band buttons
+        rather than a fault. AlphaTheta's remedy is to press the FX FREQUENCY
+        button for the band you want so that it lights.</p>
+        <p><strong>Why this happens.</strong> Beat FX on this desk can be applied
+        to chosen frequency bands, and an unlit band is a band the effect is not
+        being applied to. Leave all of them unlit and the effect is engaged,
+        indicated, and inaudible.</p>
+        <p><strong>Fix it now.</strong> Light the band or bands you want, then
+        check the effect channel switch is pointing at the channel you are
+        playing, then the effect level and depth control.</p>
+        <p><strong>Avoid it next time.</strong> Look at the FX FREQUENCY row as
+        part of the same glance that checks the effect channel switch. The two
+        together decide whether an effect is heard at all.</p>
+        <p class="acc-related">Related: <a href="#beat-fx">Beat FX, Sound Color FX and FX FREQUENCY</a> <a href="#beat-fx-no-cue">Beat FX will not pre-listen</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="phono-distortion">
+      <summary><h3 class="acc-h2">A turntable distorts and its TRIM does nothing</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> It is a turntable with a built in phono
+        equaliser plugged into the PHONO inputs. AlphaTheta's remedy is to connect
+        it to the LINE terminals instead.</p>
+        <p><strong>Why this happens.</strong> The PHONO inputs already apply phono
+        equalisation and gain. A deck that has done that internally arrives at line
+        level into a phono stage, which distorts, and the TRIM control has no
+        useful range left to give you.</p>
+        <p><strong>Fix it now.</strong> Move that deck to a LINE input and set the
+        channel's input selector to match. If the turntable has a switch for its
+        internal equaliser, the other option is to switch it off and stay on
+        PHONO.</p>
+        <p><strong>Avoid it next time.</strong> Ask what the guest is bringing. A
+        modern belt drive deck with a USB output usually has a preamp inside it,
+        and it will be the second thing that goes wrong at a hybrid gig.</p>
+        <p class="acc-related">Related: <a href="#compatibility">Players, software and DVS</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="bpm-detection">
+      <summary><h3 class="acc-h2">The BPM reading will not settle</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Use TAP. AlphaTheta says plainly that for
+        some tracks it may not be possible to measure the tempo, and names the
+        [TAP] button as the manual way in.</p>
+        <p><strong>Why this happens.</strong> With no Pro DJ Link there is no
+        tempo arriving from the players, so the mixer measures the audio itself.
+        Sparse intros, live drums, half time and swung material are the usual
+        material it cannot lock to.</p>
+        <p><strong>Fix it now.</strong> Tap the tempo in. The beat effects then
+        run off the value you gave it rather than a reading that is jumping
+        around.</p>
+        <p><strong>Avoid it next time.</strong> Treat TAP as part of playing this
+        desk rather than as a workaround, especially on a set with live or
+        non-quantised material in it.</p>
+        <p class="acc-related">Related: <a href="#no-pro-dj-link">There is no Pro DJ Link</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Known issues" />
+
+    <details class="acc-sec" name="djm750mk2-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Documented fixes, by firmware version</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Where the record starts.</strong> AlphaTheta's published change
+        history for this mixer begins at {DJM_750MK2.historyStartsAt}. Versions
+        1.00 to 1.02 are not listed at all, so what they changed is not public and
+        this page does not pretend otherwise.</p>
+        <p><strong>What is in it.</strong> Fixed in
+        {' '}{DJM_750MK2.fxAssignPopFix}: a popping noise through USB audio on the
+        FX send and return path when the FX assign was switched in rekordbox with
+        Beat FX enabled. Fixed in {DJM_750MK2.recHaltFix}: recording or live
+        streaming with DJM-REC sometimes stopping. {DJM_750MK2.minorFix} is
+        published as minor issues with no detail. Fixed in
+        {' '}{DJM_750MK2.iosAudioFix}, which shipped in June 2026: an issue with
+        audio communication with iOS and iPadOS devices, so any desk sitting below
+        it is exposed the moment an iPhone or iPad is used for DJM-REC or for
+        effects.</p>
+        <p><strong>One behaviour change, not a bug.</strong>
+        {' '}{DJM_750MK2.ecoStandbyIntro} moved the automatic switch off to
+        {' '}{DJM_750MK2.ecoStandbyMinutes} minutes under EU Ecodesign and renamed
+        the feature POWER MANAGEMENT. A desk that turned itself off between
+        soundcheck and doors is obeying that, not failing.</p>
+        <p><strong>What is not in it, and this is worth knowing.</strong> No crash,
+        no freeze, no channel going silent by itself and no total audio dropout
+        appears anywhere in the published history. For a mixer that has been in
+        rooms since 2017, a record whose worst entries are a popping noise, a
+        recording halt and an iOS audio fault is a genuinely reassuring one.</p>
+        <p><strong>Do this.</strong> Note the version on any desk you play. On one
+        you control, sit at {DJM_750MK2.iosAudioFix} if anything in your setup is
+        an iPhone or an iPad.</p>
+        <p style="margin-top:1rem">
+          <strong>Official documentation.</strong> <a href={DJM_750MK2.source} target="_blank" rel="noopener">Firmware change history, PDF →</a><br />
+          <a href={DJM_750MK2.sourceManual} target="_blank" rel="noopener">Operating Instructions, PDF →</a><br />
+          <span class="dim" style="font-size:0.85rem">Found an entry we have missed? <a href="/feedback">Tell us</a> and we will add it.</span>
+        </p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/firmware">Every model, by firmware version</a> <a href="#mixer-switched-off">The mixer switched itself off</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Features explained" />
+
+    <details class="acc-sec" name="djm750mk2-acc" id="beat-fx">
+      <summary><h3 class="acc-h2">Beat FX, Sound Color FX and FX FREQUENCY</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> {DJM_750MK2.beatFxCount} Beat FX,
+        {' '}{FX}. {DJM_750MK2.soundColorFx.length} Sound Color FX, {COLOR_FX},
+        one knob per channel. Two effect units, and Beat FX carries an FX
+        FREQUENCY band control.</p>
+        <p><strong>Why it matters.</strong> AlphaTheta's own claim for this desk is
+        that it is equipped with the EQ and fader curve, SOUND COLOR FX, BEAT FX
+        and SEND/RETURN functions that were newly developed for the DJM-900NXS2,
+        which is the permanent equipment in a club. That is the useful way to read
+        it: the FX and the feel come from the club desk, the network does not.</p>
+        <p><strong>When professionals use it.</strong> The effect channel switch is
+        the control that decides what is being processed, and it reaches channels
+        1 to 4, MIC, either side of the crossfader, and MASTER. Sound Color FX for
+        per channel colour under your hand all night, Beat FX for the moments.</p>
+        <p><strong>Common mistakes.</strong> Leaving every FX FREQUENCY band unlit
+        and concluding the effect section is dead, and expecting the five time
+        based effects to be auditionable in headphones on channels 1 to 4, which
+        they are not.</p>
+        <p class="acc-related">Related: <a href="#beat-fx-dead">Beat FX sounds like it is doing nothing</a> <a href="#beat-fx-no-cue">Beat FX will not pre-listen</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="send-return">
+      <summary><h3 class="acc-h2">Send and return, analogue or USB</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> An independent send and return section
+        with a choice of AUX or INSERT for how the signal comes back, and two ways
+        to connect: analogue quarter inch jacks on the rear, or the digital USB
+        route on the top panel for an iOS app.</p>
+        <p><strong>Why it matters.</strong> This is the part of the desk borrowed
+        straight from the DJM-900NXS2, and on a mixer with no Link it is where the
+        creative headroom is. An iPad running an effect over USB is a serious
+        instrument to have in a booth for the price of a cable.</p>
+        <p><strong>When professionals use it.</strong> Outboard on a resident rig
+        with the return set to INSERT, and iOS effects for a set that has a signature
+        sound in it. The source channel is whatever the effect channel switch is
+        pointing at, so plan the two controls together.</p>
+        <p><strong>Common mistakes.</strong> Using AUX return with one of the
+        {' '}{AUX_SILENT_N} effects that never reach it, then troubleshooting the
+        pedal. Leaving the loop engaged after the external unit has been unplugged,
+        which sounds exactly like a dead channel.</p>
+        <p class="acc-related">Related: <a href="#aux-return-silent">Your outboard or iOS effect is silent in AUX mode</a> <a href="#no-signal">A channel has no signal</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="io-and-headphones">
+      <summary><h3 class="acc-h2">The I/O, the headphone jacks and the single mic input</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> {DJM_750MK2.channels} channels with four
+        sets of PHONO and four sets of LINE on RCA, one RETURN and one SEND on
+        quarter inch, MASTER1 on XLR, MASTER2 on RCA and BOOTH on quarter inch
+        TRS. Sampling is 48 kHz. The desk is {DJM_750MK2.dimensions} and weighs
+        {' '}{DJM_750MK2.weight}.</p>
+        <p><strong>Headphones: one output, two connector sizes.</strong> The spec
+        is {DJM_750MK2.headphoneOutputs}, which is one headphone section you can
+        plug into with either connector rather than two independent outputs with
+        their own level and mix. AlphaTheta does market it as letting two DJs cue
+        at once, and that framing is theirs. If you are planning a back to back
+        where both of you need your own cue mix, read the spec rather than the
+        marketing line.</p>
+        <p><strong>One microphone input.</strong> {DJM_750MK2.micInputs}, a single
+        combo XLR and quarter inch TRS. A show with a host and a vocalist needs a
+        small mixer in front of it, and that is a thing to discover before you
+        load in.</p>
+        <p><strong>USB.</strong> {DJM_750MK2.usbPorts}. The mobile port supplies
+        5 V at 2.1 A or less. USB hubs cannot be used, on either port.</p>
+        <p class="acc-related">Related: <a href="#compatibility">Players, software and DVS</a> <a href="/knowledge/pioneer-dj/djm-rec">DJM-REC</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Professional tips" />
+
+    <details class="acc-sec" name="djm750mk2-acc" id="ask-the-desk">
+      <summary><h3 class="acc-h2">Ask which mixer is installed</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> One message to the promoter or the
+        technical manager before you accept: which mixer, and is there a Link
+        network in the booth.</p>
+        <p><strong>Why it matters.</strong> Almost everything else about this desk
+        is learnable in twenty minutes at soundcheck. The absence of Pro DJ Link
+        is not, because it changes what your set can assume. If your show is built
+        on quantised effects, shared browsing or a linked tempo, that is a
+        planning decision and not a booth one.</p>
+        <p><strong>Do this.</strong> Add the mixer model to whatever you already
+        ask for. If the answer is a DJM-750MK2, plan a set that owns its own tempo,
+        take TAP seriously, and bring the effects you want in on send and return
+        rather than expecting them from the network.</p>
+        <p class="acc-related">Related: <a href="#no-pro-dj-link">There is no Pro DJ Link</a> <a href="/prepare">The full prevention system</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="drivers">
+      <summary><h3 class="acc-h2">The laptop side, before you rely on it</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Install and test the driver at home. The
+        macOS driver was taken to 4.0.4 in April 2026 for macOS Tahoe. The Windows
+        driver has not been updated since 1.110 in December 2021, so a Windows DVS
+        user on this mixer is working on a driver that is years old.</p>
+        <p><strong>Why it matters.</strong> One of the fixes in the macOS line is
+        exactly the failure that ruins a load in: the audio driver not being
+        recognised after a Mac restart, addressed in the 4.0.0 release for Big Sur.
+        A laptop that boots and cannot see the mixer is not a mixer fault, and it
+        is not something you want to meet for the first time in a booth.</p>
+        <p><strong>Do this.</strong> Boot the laptop, connect the mixer and open
+        your software, at home, in the state you will arrive in. Reboot once with
+        the mixer connected. Then pack.</p>
+        <p class="acc-related">Related: <a href="#compatibility">Players, software and DVS</a> <a href="/prepare">The full prevention system</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Preventive maintenance" />
+
+    <details class="acc-sec" name="djm750mk2-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Keeping the desk reliable</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Connector care, connections made with the
+        power off, and a cover between gigs.</p>
+        <p><strong>Why it matters.</strong> AlphaTheta asks for connections to be
+        made with the unit switched off and unplugged, and that is not a formality
+        on a desk carrying four phono pairs, four line pairs, a mic, two masters, a
+        booth output and a send and return loop. Every one of those is a future
+        intermittent fault if it gets levered or strained, and an intermittent
+        phono input is the hardest thing on this list to diagnose at a gig.</p>
+        <p><strong>Do this.</strong> Unplug by the connector rather than the cable,
+        make and break connections with the desk off, keep it covered, and keep the
+        UTILITY settings you rely on written down so a reset or a borrowed desk does
+        not surprise you.</p>
+        <p class="acc-related">Related: <a href="#no-signal">A channel has no signal</a> <a href="/prepare">The full prevention system</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="firmware-update">
+      <summary><h3 class="acc-h2">Updating the firmware, and the USB stick it needs</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> The mixer reads a USB stick for one job
+        only, its own firmware update. AlphaTheta asks for {UPDATE_FS}, Mass
+        Storage Class, with the update file in the root directory and only one
+        update file on the drive.</p>
+        <p><strong>What is not documented.</strong> exFAT, NTFS, HFS Plus and APFS
+        are never mentioned for this purpose. That makes them undocumented rather
+        than officially unsupported, which is a different thing, and the honest
+        answer is to use a {UPDATE_FS} stick and not find out.</p>
+        <p><strong>Do this.</strong> Hold the ON/OFF button in the BEAT FX section
+        and the FX FREQUENCY (MID) button while switching the power on to enter
+        update mode. It takes about 90 seconds. Do not turn the power off or
+        disconnect the USB drive during the update. If it fails, AlphaTheta's own
+        advice is to try a different USB stick, so carry a second one.</p>
+        <p><strong>Worth being clear about.</strong> There is no music playback
+        from a USB drive on this mixer and no recording to one. Recording is
+        DJM-REC on an iPhone or iPad.</p>
+        <p class="acc-related">Related: <a href="#known-issues">Documented fixes, by firmware version</a> <a href="/knowledge/pioneer-dj/djm-rec">DJM-REC</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibility" />
+
+    <details class="acc-sec" name="djm750mk2-acc" id="compatibility">
+      <summary><h3 class="acc-h2">Players, software and DVS</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> No Pro DJ Link, so players connect by
+        audio and nothing else. DVS is supported with rekordbox dvs and with
+        Native Instruments TRAKTOR PRO 3.</p>
+        <p><strong>The rekordbox unlock is the good news.</strong> This mixer is a
+        rekordbox hardware unlock device, so PERFORMANCE mode and DVS are
+        available without a paid plan. For a DJ buying one, that is real money
+        that does not have to be spent on a subscription.</p>
+        <p><strong>Set the control tone per channel.</strong> In the Settings
+        Utility, CH followed by the channel number and Control Tone PHONO for a
+        turntable, or the same setting on LINE for a DJ player. A DVS channel that
+        will not track is very often that setting on the wrong option rather than a
+        timecode or needle problem.</p>
+        {RECOK && (
+          <p><strong>DJM-REC works with this mixer.</strong> It is on AlphaTheta's
+          official compatibility list, so recording a set or streaming from an
+          iPhone or iPad needs no extra hardware. Sit at
+          {' '}{DJM_750MK2.recHaltFix} or above for the recording halt fix, and at
+          {' '}{DJM_750MK2.iosAudioFix} for the iOS audio fix.</p>
+        )}
+        <p><strong>Do this.</strong> Confirm what the booth expects to do over a
+        network before you arrive, because none of it happens at this desk. Library
+        format on a USB drive is a player side question and never touches this
+        mixer.</p>
+        <p class="acc-related">Related: <a href="#serato">Serato DJ is not certified</a> <a href="/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a> <a href="/knowledge/pioneer-dj/rekordbox#which-player">Player compatibility table</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm750mk2-acc" id="serato">
+      <summary><h3 class="acc-h2">Serato DJ is not certified for this mixer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> AlphaTheta's own wording: "Serato DJ may
+        not work normally with DJM-750MK2 as the application has not been certified
+        under the Pioneer DJ Certification Program." Read that as it is written,
+        not as a promise it will fail and not as a promise it will work.</p>
+        <p><strong>Why it matters.</strong> A Serato DJ arriving with their own
+        laptop and their own control vinyl has no supported path on this desk, and
+        no support line to call if something is off. On a mixer where rekordbox dvs
+        and TRAKTOR PRO 3 are both supported, Serato is the one that is not.</p>
+        <p><strong>Do this.</strong> If you play Serato and the booth has a
+        DJM-750MK2, test your exact setup before the night, and have a plan that
+        does not need the mixer's own interface, such as playing out of your own
+        controller or interface into a pair of line inputs.</p>
+        <p class="acc-related">Related: <a href="#compatibility">Players, software and DVS</a> <a href="#drivers">The laptop side</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Frequently asked questions" />
+
+    <details class="acc-sec" name="djm750mk2-acc" id="faq">
+      <summary><h3 class="acc-h2">Quick answers</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>Does the DJM-750MK2 have Pro DJ Link?</dt><dd>No. There is no LAN terminal on it, and AlphaTheta defines Pro DJ Link as a feature of players and a mixer connected by LAN cables. It was not built with it, so in a CDJ booth it is a standalone mixer.</dd>
+          <dt>Why is my iOS or outboard effect silent on the return?</dt><dd>Because {AUX_SILENT_N} of this desk's effects are documented as never reaching the RETURN AUX channel, by specification. Switch the return to INSERT, or use an effect AlphaTheta does not list. The listed ones are {AUX_SILENT}.</dd>
+          <dt>Can I cue Beat FX in my headphones?</dt><dd>Not with channels 1 to 4 selected on the effect channel switch. AlphaTheta documents that the effect sound cannot be monitored even with the channel's CUE pressed, for {CUE_SILENT}.</dd>
+          <dt>The mixer turned itself off. Is it broken?</dt><dd>No. Press [UTILITY (WAKE UP)]. From firmware {DJM_750MK2.ecoStandbyIntro} it switches off after {DJM_750MK2.ecoStandbyMinutes} minutes with no controls touched and no audio on any channel, and it ships with that turned on. Below {DJM_750MK2.ecoStandbyIntro} the timeout is a different value that AlphaTheta does not publish.</dd>
+          <dt>Are there known firmware bugs?</dt><dd>The published history starts at {DJM_750MK2.historyStartsAt} and contains a USB audio popping noise fixed in {DJM_750MK2.fxAssignPopFix}, DJM-REC recording or streaming stopping fixed in {DJM_750MK2.recHaltFix}, minor issues in {DJM_750MK2.minorFix}, power management timing in {DJM_750MK2.ecoStandbyIntro} and an iOS audio fix in {DJM_750MK2.iosAudioFix}. No crash, freeze or audio dropout is documented.</dd>
+          <dt>How many channels and how many Beat FX?</dt><dd>{DJM_750MK2.channels} channels and {DJM_750MK2.beatFxCount} Beat FX: {FX}.</dd>
+          <dt>Does it have a crossfader?</dt><dd>Yes, a Magvel crossfader, with a CROSS FADER ASSIGN switch per channel. A channel assigned to the side you are not pushing is silent.</dd>
+          <dt>Does it work with Serato DJ?</dt><dd>It is not certified. AlphaTheta says Serato DJ may not work normally with the DJM-750MK2 because the application has not been certified under the Pioneer DJ Certification Program. rekordbox dvs and TRAKTOR PRO 3 are supported.</dd>
+          <dt>Do I need a rekordbox subscription?</dt><dd>No. It is a rekordbox hardware unlock device, so PERFORMANCE mode and DVS work without a paid plan.</dd>
+          <dt>How many headphone outputs are there?</dt><dd>One, in two connector sizes: {DJM_750MK2.headphoneOutputs}. AlphaTheta markets that as two DJs cueing at once, which is their framing rather than a second independent output.</dd>
+          <dt>Can I record onto a USB drive?</dt><dd>No. The drive slot exists for firmware updates, on a {UPDATE_FS} stick. Recording is DJM-REC on an iPhone or iPad.</dd>
+          <dt>Did it replace the DJM-750?</dt><dd>AlphaTheta presents it as a four-channel mixer joining the range that inherits features and design elements from the DJM-900NXS2, and names no predecessor and no successor for it. So this page does not name one either.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="djm-750mk2" />
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Playing soon and it is not working?</h2>
+      <a href="/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_djm750mk2"><Icon name="siren" /> Start Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_djm750mk2" />
+    </div>
+
+    <p class="rb-sources dim">
+      Sources: AlphaTheta's official DJM-750MK2 <a href={DJM_750MK2.source} target="_blank" rel="noopener">firmware change history</a>,
+      <a href={DJM_750MK2.sourceManual} target="_blank" rel="noopener">Operating Instructions</a>,
+      <a href={DJM_750MK2.sourceSpecs} target="_blank" rel="noopener">quick start manual</a>,
+      the support article on <a href={DJM_750MK2.sourceAuxReturn} target="_blank" rel="noopener">effects and the RETURN AUX channel</a>
+      and the <a href={DJM_750MK2.sourceUpdate} target="_blank" rel="noopener">firmware update instructions</a>,
+      checked {UPDATED}. The absence of Pro DJ Link is taken from the rear panel
+      list in the Operating Instructions and from AlphaTheta's own definition of
+      the feature, not inferred from marketing copy. The published firmware
+      history begins at {DJM_750MK2.historyStartsAt}, so versions before that are
+      not described. Driver versions come from the official download pages.
+      General troubleshooting steps reflect standard mixing practice.
+      Specifications change without notice, re-check before a big show.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* Photo anchored to hw-head's own bottom edge, not sized by a flex row.
+     See the long note in djm-v10.astro for why a flex row was wrong. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

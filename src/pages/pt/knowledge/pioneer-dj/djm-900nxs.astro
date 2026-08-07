@@ -1,0 +1,920 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import { DJM_900NXS } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
+
+// DJM-900NXS, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors and CSS: src/pages/knowledge/pioneer-dj/djm-900nxs.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(DJM_900NXS.checked);
+// A versão mínima e o teto ao mesmo tempo, do mesmo jeito que o FLOOR funciona
+// na página do CDJ-900NXS: não existe versão mais alta para buscar.
+const FLOOR = DJM_900NXS.newestKnown;
+const FX = DJM_900NXS.soundColorFx.join(', ');
+const NO_QUANTIZE = DJM_900NXS.quantizeExcludedFx.join(', ');
+const NO_QUANTIZE_N = DJM_900NXS.quantizeExcludedFx.length;
+// Os quatro Beat FX que fazem cue seco. O DJM_900NXS não guarda chave para esta
+// lista, então ela é declarada uma vez aqui e renderizada daqui, nunca
+// redigitada na prosa. A mudança entrou dentro do bloco combinado 1.21 a 1.26,
+// que é o motivo de a versão renderizada ao lado dela ser a rollVolumeFix.
+const CUE_DRY = ['MELODIC', 'ROLL', 'REV ROLL', 'SLIP ROLL'];
+const CUE_DRY_LIST = CUE_DRY.join(', ');
+const CUE_DRY_N = CUE_DRY.length;
+const CUE_DRY_FROM = DJM_900NXS.rollVolumeFix;
+// Onde o histórico publicado começa. Nada abaixo desta versão está listado em
+// lugar nenhum, então a página nomeia a borda do registro em vez de chamar o
+// registro de completo. Também não é uma chave do DJM_900NXS.
+const HISTORY_STARTS_AT = '1.20';
+// Os sistemas de arquivos que NÃO SE APLICAM em vez de serem não suportados,
+// porque nenhum drive nunca entra neste mixer.
+const NOT_APPLICABLE_FS = ['exFAT', 'NTFS'].join(' e ');
+// As três funções de PRO DJ LINK que a AlphaTheta nomeia para este mixer.
+// Também não é uma chave do DJM_900NXS, então é declarada uma vez e renderizada
+// duas.
+const LINK_FUNCTIONS = ['LINK MONITOR', 'STATUS INFORMATION', 'QUANTIZE'];
+const LINK_FUNCTIONS_LIST = `${LINK_FUNCTIONS.slice(0, -1).join(', ')} e ${LINK_FUNCTIONS.at(-1)}`;
+// Versões e datas de driver das páginas oficiais de download. Mantidas juntas
+// para que os dois números e as duas datas não se separem na prosa.
+const MAC_DRIVER = { version: '4.0.2', date: ptDate('18 May 2023'), floor: '4.0.0' };
+const WIN_DRIVER = { version: '1.810', date: ptDate('9 December 2021'), floor: '1.710' };
+// A cifra de A/D que a AlphaTheta publica em dois lugares, de formas diferentes.
+const AD_MANUAL = '24-bit';
+const AD_PRODUCT = '32-bit';
+const DA_MANUAL = '32-bit';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/djm-900nxs#article',
+  headline: 'DJM-900NXS: a referência operacional',
+  description: `O que todo DJ precisa saber antes de trabalhar num DJM-900NXS: ele se desliga sozinho abaixo do firmware ${DJM_900NXS.shutdownFix}, o standby às vezes não podia ser cancelado abaixo da ${FLOOR}, o cue do Beat FX sai seco em ${CUE_DRY_N} efeitos por projeto, o Peak Limiter fica ligado por padrão depois de uma atualização, e não existe nenhum papel de storage USB.`,
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/djm-900nxs#webpage' },
+  image: 'https://www.savemygig.com/images/djm-900nxs-panel-full.webp',
+};
+---
+<Base
+  title={`DJM-900NXS: desliga sozinho abaixo da ${DJM_900NXS.shutdownFix} | Save My Gig`}
+  description={`Manual de campo do DJM-900NXS: desligava sozinho abaixo do firmware ${DJM_900NXS.shutdownFix}, o standby podia travar abaixo da ${FLOOR}, e o cue do Beat FX é seco por projeto.`}
+  path="/knowledge/pioneer-dj/djm-900nxs"
+  crumbName="DJM-900NXS"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>DJM-900NXS</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line">Revisado: {UPDATED}</div>
+        <h1 class="rb-h1">DJM-900NXS, <span class="accent">o manual de campo</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#djm-900nxs-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do DJM-900NXS"
+      >
+        <img
+          src="/images/djm-900nxs-panel-thumb.webp"
+          alt="Painel de controle do mixer de quatro canais Pioneer DJ DJM-900NXS, visto de cima"
+          width="426"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="djm-900nxs-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/djm-900nxs-panel-full.webp"
+        srcset="/images/djm-900nxs-panel-800.webp 800w, /images/djm-900nxs-panel-full.webp 1192w"
+        sizes="92vw"
+        alt="Painel de controle do mixer de quatro canais Pioneer DJ DJM-900NXS, visto de cima"
+        width="1192"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth. Abaixo do firmware {DJM_900NXS.shutdownFix}
+        este mixer se desliga sozinho, e isso está documentado.</strong> A redação
+        da própria AlphaTheta para essa correção é "Corrigido um problema pouco
+        frequente em que o DJM-900NXS se desliga de forma inesperada", e numa mesa
+        que foi o padrão de clube por anos, e que ainda está parafusada em salas
+        que ninguém atualizou, isso é o master inteiro indo embora no meio do set.
+        Abaixo da {FLOOR} tem uma segunda: o standby "às vezes não podia ser
+        cancelado" quando o botão LFO FORM (WAKE UP) era apertado, então um mixer
+        que dormiu entre sets pode parecer morto na bancada. Outros três
+        comportamentos parecem defeito e não são. Fazer o cue do Beat FX com
+        {CUE_DRY_LIST} selecionado te dá som seco, esteja o efeito ligado ou
+        desligado, e é assim desde a {CUE_DRY_FROM}, por projeto. O Peak Limiter
+        fica <strong>ligado por padrão</strong> depois de uma atualização de
+        firmware, e é essa a resposta para um master que soa esmagado. E o
+        QUANTIZE silenciosamente não vale para {NO_QUANTIZE_N} dos Beat FX. Uma
+        coisa com a qual você pode parar de se preocupar: não existe nenhum papel
+        de storage USB neste mixer, o firmware entra de um computador por cabo
+        LAN, então {NOT_APPLICABLE_FS} não são "não suportados" aqui, eles
+        simplesmente não se aplicam.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="djm900nxs-acc" id="unexpected-shutdown">
+      <summary><h3 class="acc-h2">O mixer se desligou sozinho no meio do set</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Documentado, e corrigido na
+        {DJM_900NXS.shutdownFix}, publicada em 26 de novembro de 2012. A redação
+        da AlphaTheta é "Corrigido um problema pouco frequente em que o
+        DJM-900NXS se desliga de forma inesperada". Abaixo dessa versão, a mesa se
+        desligando sozinha é uma falha conhecida de firmware, e não um
+        mistério.</p>
+        <p><strong>Por que isso acontece.</strong> É o pior lugar onde uma falha
+        pode estar. Tudo na booth passa pelo mixer, então quando o mixer vai a
+        sala vai com ele, e "pouco frequente" é exatamente o motivo de ninguém
+        encontrar isso na passagem de som. Também não é o standby: standby é um
+        estado do qual você acorda com um botão, isso aqui é a unidade desligando
+        sem aviso.</p>
+        <p><strong>Resolva agora.</strong> Ligue de novo e deixe dar boot.
+        Enquanto ele inicia, os players continuam tocando para uma mesa morta,
+        então decida por onde você volta em vez de sair puxando fader no escuro.
+        Depois leia a versão no primeiro momento de calma, porque isso muda o que
+        você vai falar para a casa depois.</p>
+        <p><strong>Evite da próxima vez.</strong> Numa mesa que você controla,
+        leve ela para a {FLOOR} entre bookings. Numa mesa que você não controla,
+        leia a versão na passagem de som, e se estiver abaixo da
+        {DJM_900NXS.shutdownFix} fale isso para quem cuida da sala. Este é o único
+        item desta página que uma casa realmente quer ouvir, porque a correção é
+        de graça e a falha derruba a noite inteira.</p>
+        <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas, por versão de firmware</a> <a href="#read-the-version">Leia a versão em dez segundos</a> <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="will-not-wake">
+      <summary><h3 class="acc-h2">Ele parece morto na bancada e não acorda</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Desconfie do standby antes de
+        desconfiar da fonte de alimentação. Existe uma função de standby
+        automático, o controle que cancela ela é o botão LFO FORM (WAKE UP), e
+        abaixo da {DJM_900NXS.wakeUpFix} o standby "às vezes não podia ser
+        cancelado quando o botão [LFO FORM (WAKE UP)] era apertado". Essa é a
+        descrição da própria AlphaTheta para a falha que ela corrigiu.</p>
+        <p><strong>Por que isso acontece.</strong> Uma mesa que passou por uma
+        virada longa, por um set de abertura que estourou o horário ou por uma
+        passagem de som abandonada pode se colocar em standby, e numa versão
+        antiga o caminho documentado de volta é justamente o que às vezes não
+        funcionava. De frente, isso parece um mixer que morreu.</p>
+        <p><strong>Resolva agora.</strong> Aperte LFO FORM (WAKE UP). Se nada
+        acontecer, a chave de força é o plano B, e um reinício te custa o master
+        pelo tempo que o boot levar, então faça isso antes de precisar da mesa e
+        não no meio de uma transição.</p>
+        <p><strong>Evite da próxima vez.</strong> Leve a mesa para a
+        {DJM_900NXS.wakeUpFix}, que é a versão que corrigiu isso, e encoste em
+        algum controle nos intervalos longos. O que esta página não vai te dizer é
+        quanto tempo dura o timeout nem como desligar o standby: a AlphaTheta não
+        publica o timeout, o padrão de fábrica nem o procedimento para desativar
+        neste modelo em nada que a gente conseguiu ler, e nós não vamos pegar um
+        número emprestado de outro mixer para tapar o buraco.</p>
+        <p class="acc-related">Relacionados: <a href="#auto-standby">Standby automático, e o que não está documentado</a> <a href="#known-issues">Correções documentadas, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="beat-fx-cue-dry">
+      <summary><h3 class="acc-h2">Fiz o cue de um Beat FX e não ouvi efeito</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Esse é o comportamento documentado e
+        intencional, não é defeito. Da {CUE_DRY_FROM} em diante, apertar o botão
+        CUE do Beat FX com {CUE_DRY_LIST} selecionado entrega o som original sem
+        efeito nenhum em cima, esteja o efeito ligado ou desligado.</p>
+        <p><strong>Por que isso acontece.</strong> A AlphaTheta mudou isso de
+        propósito no bloco de atualização que termina na {CUE_DRY_FROM} e escreveu
+        a mudança no histórico, então um DJ que testa um desses {CUE_DRY_N} no
+        fone e ouve um sinal limpo está ouvindo o mixer funcionar como
+        especificado. É uma decisão de projeto genuinamente confusa, e custa uma
+        passagem de som para todo mundo que encontra ela pela primeira vez.</p>
+        <p><strong>Resolva agora.</strong> Não tem nada para resolver. Julgue
+        esses {CUE_DRY_N} na mixagem em vez de no cue, ou traga o efeito com o
+        controle de profundidade baixo e abra depois que ele já estiver no ar.</p>
+        <p><strong>Evite da próxima vez.</strong> Aprenda quais são esses
+        {CUE_DRY_N}, {CUE_DRY_LIST}, e trate o resto do Beat FX como normalmente
+        pré-escutável. Num mixer abaixo da {CUE_DRY_FROM} o cue se comportava de
+        outra forma, então uma mesa que você conhece de uma casa pode se comportar
+        diferente em outra.</p>
+        <p class="acc-related">Relacionados: <a href="#beat-fx">Beat FX, e por que a conta dá 13 ou 14</a> <a href="#quantize">QUANTIZE, e onde ele silenciosamente não faz nada</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="master-squashed">
+      <summary><h3 class="acc-h2">O master soa esmagado neste mixer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Procure o PKLIMIT no CLUB SETUP. O
+        Peak Limiter chegou no firmware {DJM_900NXS.peakLimiterIntro} e a
+        AlphaTheta é explícita sobre a consequência: "Ao atualizar o firmware, o
+        Peak Limiter passa a ficar ativado por padrão." O padrão de fábrica é
+        ligado, então uma mesa atualizada está limitando o master, tenha alguém
+        escolhido isso ou não.</p>
+        <p><strong>Por que isso acontece.</strong> O limitador existe para
+        atenuar "o clipping digital repentino e desagradável da saída de master",
+        então ele está fazendo o trabalho dele. Empurrado forte, porém, ele é
+        audível como uma compressão que você não pediu, e como ele apareceu numa
+        atualização de firmware e não no painel, quase ninguém sabe que ele está
+        ali.</p>
+        <p><strong>Resolva agora.</strong> Resolva o ganho primeiro. Se os
+        medidores estão morando no topo, o limitador é o sintoma e o seu trim é a
+        causa. Se os níveis estão razoáveis e o master ainda soa prensado, o
+        PKLIMIT no CLUB SETUP é o ajuste, e isso é uma decisão para tomar de
+        propósito em vez de um defeito para limpar.</p>
+        <p><strong>Evite da próxima vez.</strong> Numa casa em que você toca
+        sempre, descubra uma vez como está o PKLIMIT e anote, porque ele sobrevive
+        entre as suas visitas e muda como a mesa responde a um canal quente.</p>
+        <p class="acc-related">Relacionados: <a href="#peak-limiter">Peak Limiter, explicado</a> <a href="#known-issues">Correções documentadas, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="fx-noise-and-silence">
+      <summary><h3 class="acc-h2">Um efeito está com ruído, mudo ou com nível irregular</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Quatro falhas de efeito documentadas,
+        todas corrigidas em firmware. Alguns efeitos "não funcionam como esperado
+        quando esses efeitos são ativados" abaixo da
+        {DJM_900NXS.effectsNotEngagingFix}. O volume de ROLL, REV ROLL e SLIP ROLL
+        "não é sempre estável" abaixo da {DJM_900NXS.rollVolumeFix}. O som do
+        efeito "não é sempre emitido quando o REV ROLL é ativado imediatamente
+        depois do ROLL" abaixo da {DJM_900NXS.revRollSilentFix}. E um leve ruído
+        ao operar o X-PAD abaixo da {DJM_900NXS.xpadNoiseFix}.</p>
+        <p><strong>Por que isso acontece.</strong> São falhas de firmware na
+        seção de performance, que é a parte da mesa que ninguém testa antes de
+        abrir as portas. A do REV ROLL em especial só aparece quando você encadeia
+        ele direto depois do ROLL, que é exatamente como um DJ usaria e nada
+        parecido com o jeito que alguém confere um mixer.</p>
+        <p><strong>Resolva agora.</strong> Troque de efeito. Se um roll está
+        caindo de nível ou chegando mudo, outro Beat FX faz a transição, e nenhuma
+        dessas falhas encosta no caminho de sinal do canal.</p>
+        <p><strong>Evite da próxima vez.</strong> Leia a versão e depois descarte
+        esses efeitos pela noite em vez de descobrir na hora quais se comportam.
+        Numa mesa que você controla, a {FLOOR} limpa as quatro de uma vez. Existe
+        também um ruído documentado separado do lado do computador: abaixo da
+        {DJM_900NXS.usbNoiseFix}, "pode ser ouvido um ruído na entrada e na saída
+        de áudio da porta USB em alguns computadores", que é uma falha específica
+        de notebook e não de efeito.</p>
+        <p class="acc-related">Relacionados: <a href="#beat-fx">Beat FX</a> <a href="#sound-card">A placa de som embutida</a> <a href="#known-issues">Correções documentadas, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="bpm-display-jumping">
+      <summary><h3 class="acc-h2">O BPM no display do mixer fica pulando</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Documentado, e a causa está na outra
+        máquina. Abaixo da {DJM_900NXS.slipBpmDisplayFix}, "os valores de BPM no
+        display podem oscilar aleatoriamente se a função SLIP for usada num
+        CDJ-2000NXS ou CDJ-900 ligado ao DJM-900NXS por PRO DJ LINK". O sintoma
+        está no mixer, o gatilho é um player.</p>
+        <p><strong>Por que isso acontece.</strong> É a pegadinha clássica de booth
+        misturada, ao contrário: a falha aparece no aparelho que você está
+        olhando, causada por um recurso usado num aparelho que você não está
+        olhando. Ninguém liga um BPM pulando no display da mesa com alguém usando
+        SLIP num deck.</p>
+        <p><strong>Resolva agora.</strong> Nada no seu áudio está errado. Bata o
+        BPM na mão ou ajuste o Beat FX de ouvido pelo resto daquela track, e não
+        confie na leitura automática enquanto o SLIP estiver em uso num player
+        ligado no Link.</p>
+        <p><strong>Evite da próxima vez.</strong> A
+        {DJM_900NXS.slipBpmDisplayFix} no mixer resolve. Numa booth que mistura
+        gerações, vale saber disso antes de depender de efeitos sincronizados ao
+        beat por cima do trabalho de SLIP de outro DJ.</p>
+        <p class="acc-related">Relacionados: <a href="#compatibility">Players e PRO DJ LINK</a> <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs">CDJ-2000NXS</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="link-not-working">
+      <summary><h3 class="acc-h2">O PRO DJ LINK não sobe</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Desconfie do hub antes de desconfiar
+        do mixer. A instrução da própria AlphaTheta é "Use um switching hub
+        compatível com 100Base-TX. Alguns switching hubs podem não funcionar
+        corretamente", que é um fabricante dizendo em voz alta que o hub errado é
+        uma forma prevista de isso falhar. Com um hub, dá para conectar até
+        {DJM_900NXS.maxPlayers} players de DJ e {DJM_900NXS.maxComputers}
+        computadores.</p>
+        <p><strong>Por que isso acontece.</strong> O Link neste mixer é um cabo
+        LAN no terminal LINK, e qualquer coisa além de uma conexão única passa por
+        um hub que normalmente é o que a casa tinha na gaveta. Um hub que funciona
+        perfeitamente para uma impressora não é necessariamente um que dá conta
+        disso.</p>
+        <p><strong>Resolva agora.</strong> O áudio não precisa da rede. Cada
+        player continua tocando pela própria saída com o cabo de Link fora, então
+        você perde {LINK_FUNCTIONS_LIST} e não perde o set. Se a sala tiver um
+        segundo hub, trocar ele é um teste mais rápido do que reencaixar cabo por
+        cabo.</p>
+        <p><strong>Evite da próxima vez.</strong> Se você viaja com a sua própria
+        rede de booth, leve o hub que você sabe que funciona. Numa casa que você
+        não controla, planeje o set para que efeitos quantizados e navegação por
+        Link sejam um bônus, e não uma dependência.</p>
+        <p class="acc-related">Relacionados: <a href="#compatibility">Players e PRO DJ LINK</a> <a href="#quantize">QUANTIZE</a> <a href="/pt/fix/cdj-error-e-8302">Erro E-8302</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="djm900nxs-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Correções documentadas, por versão de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Oito entradas publicadas, indo da
+        {HISTORY_STARTS_AT} de junho de 2011 até a {FLOOR} de novembro de 2016.
+        <strong>A {FLOOR} é ao mesmo tempo a versão mínima e o teto</strong>,
+        porque nada veio depois dela. Cada entrada abaixo é a redação da própria
+        AlphaTheta, condensada.</p>
+        <p><strong>O que esta lista não é.</strong> Ela não é o histórico completo
+        do produto. Nada abaixo da {HISTORY_STARTS_AT} está publicado em nada que
+        a gente conseguiu ler, e as versões 1.22 a 1.25, 1.27 e 1.29 não aparecem
+        em lista nenhuma, então o registro tem buracos e nós preferimos nomear
+        eles a apresentar uma lista parcial como se fosse completa.</p>
+        <dl class="rb-errors">
+          <dt>{FLOOR}</dt><dd>15 de novembro de 2016. O modo standby às vezes não podia ser cancelado quando o botão LFO FORM (WAKE UP) era apertado.</dd>
+          <dt>{DJM_900NXS.usbNoiseFix}</dt><dd>27 de fevereiro de 2014. "Pode ser ouvido um ruído na entrada e na saída de áudio da porta USB em alguns computadores."</dd>
+          <dt>{DJM_900NXS.peakLimiterIntro}</dt><dd>16 de outubro de 2013. Peak Limiter adicionado, e ativado por padrão assim que o firmware é atualizado. Suporte ao serviço KUVO. Alguns efeitos não funcionavam como esperado quando esses efeitos eram ativados.</dd>
+          <dt>{DJM_900NXS.shutdownFix}</dt><dd>26 de novembro de 2012. "Um problema pouco frequente em que o DJM-900NXS se desliga de forma inesperada." Também: "os valores de BPM no display podem oscilar aleatoriamente se a função SLIP for usada num CDJ-2000NXS ou CDJ-900 ligado ao DJM-900NXS por PRO DJ LINK."</dd>
+          <dt>{DJM_900NXS.mountainLionSupport}</dt><dd>19 de novembro de 2012. Suporte ao OS X Mountain Lion 10.8.</dd>
+          <dt>{DJM_900NXS.midiClockFix} a {DJM_900NXS.rollVolumeFix}</dt><dd>26 de junho de 2012, publicado como um bloco único cobrindo tudo entre essas duas versões. Precisão do AUTO BPM melhorada. A partir desta atualização, apertar o CUE do Beat FX com {CUE_DRY_LIST} selecionado entrega o som original sem o efeito, ligado ou desligado. Um leve ruído ao operar o X-PAD. "O nível de volume de ROLL, REV ROLL e SLIP ROLL não é sempre estável." "O som do efeito não é sempre emitido quando o REV ROLL é ativado imediatamente depois do ROLL." Tempo de resposta do botão SOUND COLOR FX melhorado.</dd>
+          <dt>{DJM_900NXS.midiClockFix}</dt><dd>5 de outubro de 2011. Precisão do clock de tempo de MIDI.</dd>
+          <dt>{HISTORY_STARTS_AT}</dt><dd>28 de junho de 2011. Mudanças no som de REVERB, TRANS, MELODIC, SLIP ROLL, DUB ECHO, GATE/COMP e FILTER. O texto da própria AlphaTheta para esta entrada tem erros de grafia, o que vale saber se você for procurar essas palavras no PDF.</dd>
+        </dl>
+        <p style="margin-top:1rem"><strong>A linha de firmware terminou?</strong>
+        Leia isso como uma observação, e não como uma promessa. A {FLOOR} é datada
+        de 15 de novembro de 2016 e continua sendo o download que a AlphaTheta
+        oferece, o que dá quase dez anos, e não existe declaração de fim de
+        suporte para este mixer. Então "terminou" é a nossa inferência a partir do
+        silêncio, não um fato documentado, e o silêncio já esteve errado antes: o
+        CDJ-2000NXS recebeu uma versão de firmware em 2024, mais de seis anos
+        depois da anterior. Planeje contando que nada mais vem, sem tratar isso
+        como resolvido.</p>
+        <p style="margin-top:1rem"><strong>Um detalhe que deixa a linha do tempo
+        mais interessante do que parece.</strong> A {FLOOR} saiu cerca de dez
+        meses depois do anúncio do DJM-900NXS2, então os dois mixers foram
+        suportados em paralelo, e não um passando o bastão para o outro. A
+        AlphaTheta não nomeia antecessor nem sucessor para este modelo.</p>
+        <p style="margin-top:1rem">
+          <strong>Downloads de firmware.</strong> <a href={DJM_900NXS.source} target="_blank" rel="noopener">Histórico oficial de alterações da AlphaTheta, PDF →</a><br />
+          <a href={DJM_900NXS.sourceProduct} target="_blank" rel="noopener">Página oficial do produto →</a><br />
+          <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo, por versão de firmware</a> <a href="#firmware-update">Como a atualização entra</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="djm900nxs-acc" id="beat-fx">
+      <summary><h3 class="acc-h2">Beat FX, e por que a conta dá 13 ou 14</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Os dois números estão certos, e eles
+        se reconciliam: existem {DJM_900NXS.beatFxCount} efeitos dentro do mixer,
+        enquanto o seletor tem {DJM_900NXS.beatFxSelectorPositions} posições,
+        porque a posição extra é o SND/RTN (MIDI LFO), que manda para os terminais
+        SEND e RETURN em vez de para um efeito interno. O marketing da AlphaTheta
+        conta os efeitos e a tabela do manual conta o seletor.</p>
+        <p><strong>Por que importa.</strong> Se você leu
+        {DJM_900NXS.beatFxCount} num lugar e contou
+        {DJM_900NXS.beatFxSelectorPositions} na mesa, não tem nada errado nem com
+        o mixer nem com a documentação. Isso também te diz algo útil sobre o
+        projeto: o loop externo é tratado como um dos Beat FX e não como um patch
+        bay separado, então ele cai na mesma superfície de controle que todo o
+        resto.</p>
+        <p><strong>Quando profissionais usam.</strong> O Beat FX trava o tempo no
+        BPM, então um echo ou um roll cai no lugar musicalmente. O X-PAD é o
+        caminho rápido, e o tempo de resposta do botão SOUND COLOR FX melhorou no
+        bloco {DJM_900NXS.midiClockFix} a {DJM_900NXS.rollVolumeFix} se você
+        estiver comparando uma mesa antiga com uma mais nova.</p>
+        <p><strong>Erros comuns.</strong> Confiar numa leitura automática de BPM
+        sem conferir. Esperar pré-escutar todos os efeitos: {CUE_DRY_N} deles
+        fazem cue seco por projeto. Supor que o QUANTIZE vale para todos, o que
+        não é o caso.</p>
+        <p class="acc-related">Relacionados: <a href="#beat-fx-cue-dry">Fazer o cue de um efeito e não ouvir nada</a> <a href="#quantize">QUANTIZE</a> <a href="#send-return">O loop de send e return</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="sound-color-fx">
+      <summary><h3 class="acc-h2">Sound Color FX</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {DJM_900NXS.soundColorFx.length}
+        efeitos em cada canal, um knob para cada, sem menu: {FX}.</p>
+        <p><strong>Por que importa.</strong> Eles ficam no strip do canal ao lado
+        de um isolador de EQ de {DJM_900NXS.eqBands} bandas, então são rápidos o
+        suficiente para usar no meio da mixagem sem desviar o olho da sala nem da
+        próxima track.</p>
+        <p><strong>Quando profissionais usam.</strong> FILTER entrando num
+        breakdown, SPACE para abrir uma track antes de um drop, DUB ECHO para
+        entregar o último compasso de um disco que está saindo.</p>
+        <p><strong>Erros comuns.</strong> Abusar do CRUSH ou do NOISE num sistema
+        grande, eles soam dramáticos no fone e podem ficar ásperos num PA
+        completo. Note também que o som de vários efeitos, incluindo DUB ECHO e
+        GATE/COMP, foi mudado na {HISTORY_STARTS_AT}, então uma mesa muito antiga
+        não soa idêntica a uma atualizada.</p>
+        <p class="acc-related">Relacionados: <a href="#beat-fx">Beat FX</a> <a href="#master-squashed">Um master esmagado</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="quantize">
+      <summary><h3 class="acc-h2">QUANTIZE, e onde ele silenciosamente não faz nada</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O QUANTIZE chega pelo PRO DJ LINK e
+        trava o Beat FX na grade, e ele não funciona em {NO_QUANTIZE_N} deles.
+        AlphaTheta: "A função QUANTIZE não pode ser usada quando [REVERB],
+        [ROBOT], [MELODIC] ou [SND/RTN(MIDI LFO)] está selecionado." Não tem erro
+        e não tem indicador, você simplesmente fica com efeitos não
+        quantizados.</p>
+        <p><strong>Por que importa.</strong> Uma exceção silenciosa é pior do que
+        uma recusa. Você vai atrás de um REVERB quantizado, ele cai onde o seu
+        dedo caiu e não no beat, e a conclusão óbvia é que o QUANTIZE está com
+        defeito ou que o Link caiu. Nenhuma das duas é verdade. As
+        {NO_QUANTIZE_N} exceções são {NO_QUANTIZE}.</p>
+        <p><strong>Faça assim.</strong> Existe uma segunda condição que pega as
+        pessoas: "Os arquivos de música precisam ser analisados no rekordbox antes
+        para que a função QUANTIZE possa ser usada." Uma track sem análise não tem
+        grade para quantizar, então o QUANTIZE não faz nada por motivos que não
+        têm nada a ver com o mixer.</p>
+        <p><strong>Erros comuns.</strong> Montar uma transição em cima de um
+        efeito quantizado que está na lista de exceções. Supor que um drive
+        exportado sem análise vai se comportar igual à sua própria biblioteca
+        preparada.</p>
+        <p class="acc-related">Relacionados: <a href="#beat-fx">Beat FX</a> <a href="#link-not-working">O PRO DJ LINK não sobe</a> <a href="/pt/knowledge/pioneer-dj/rekordbox">A referência do rekordbox</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="peak-limiter">
+      <summary><h3 class="acc-h2">Peak Limiter, e por que ele já está ligado</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Um limitador da saída de master
+        adicionado no firmware {DJM_900NXS.peakLimiterIntro} para atenuar "o
+        clipping digital repentino e desagradável da saída de master". Ele mora no
+        CLUB SETUP como PKLIMIT, e o padrão de fábrica dele é ligado.</p>
+        <p><strong>Por que importa.</strong> A AlphaTheta afirma com todas as
+        letras que "ao atualizar o firmware, o Peak Limiter passa a ficar ativado
+        por padrão", então instalar uma atualização de firmware muda como a mesa
+        soa no topo da faixa dela. Isso é incomum, e é o motivo pelo qual um
+        DJM-900NXS atualizado pode soar diferente daquele que você lembra na mesma
+        booth.</p>
+        <p><strong>Quando profissionais usam.</strong> Como rede de segurança
+        numa sala em que você não controla todas as fontes, o que é quase toda
+        sala. Ele protege o PA e o público de um pico digital repentino, e isso
+        vale algum headroom.</p>
+        <p><strong>Erros comuns.</strong> Tratar limitação audível como defeito e
+        caçar isso na seção de efeitos. Desligar ele para recuperar volume em vez
+        de resolver o ganho que está empurrando.</p>
+        <p class="acc-related">Relacionados: <a href="#master-squashed">O master soa esmagado</a> <a href="#known-issues">Correções documentadas, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="no-usb-storage">
+      <summary><h3 class="acc-h2">Nenhum drive entra neste mixer, e o que isso significa</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Não existe nenhum papel de storage
+        USB neste mixer. O único terminal USB é para um computador, e o firmware
+        entra de um computador por cabo LAN no terminal LINK. Sem pen drive, sem
+        cartão, sem tocar música de mídia e sem gravar em mídia.</p>
+        <p><strong>Por que importa, e esta é a parte interessante.</strong> Toda
+        outra unidade Pioneer desta referência te obriga a pensar em formato de
+        drive, e várias delas punem a resposta errada. Aqui a pergunta não existe.
+        {NOT_APPLICABLE_FS} não são "não suportados" num DJM-900NXS, eles
+        <strong>não se aplicam</strong>, porque nada nunca é formatado para ele. É
+        a única unidade deste site em que um DJ não tem nenhuma decisão de formato
+        de drive para tomar.</p>
+        <p><strong>Faça assim.</strong> Gravação é o REC OUT analógico, ou por
+        USB para um computador. Se o plano da noite envolve capturar o set, essa
+        decisão é tomada no notebook ou no gravador, não no mixer.</p>
+        <p><strong>Erros comuns.</strong> Chegar com uma atualização de firmware
+        num pen drive, que é como toda outra unidade Pioneer é atualizada e não é
+        como esta é. Esperar que uma gravação apareça em mídia depois.</p>
+        <p class="acc-related">Relacionados: <a href="#firmware-update">Como a atualização entra</a> <a href="/pt/fix/exfat-vs-fat32-cdj">exFAT ou FAT32, nos players</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="sound-card">
+      <summary><h3 class="acc-h2">A placa de som embutida, e uma profundidade de bits que a AlphaTheta declara duas vezes</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Um terminal USB para um computador, e
+        uma placa de som estéreo embutida de 4 entradas / 4 saídas a
+        {DJM_900NXS.samplingRate}. A assimetria é documentada e vale saber: os
+        quatro conjuntos de entrada vêm de um único computador, enquanto os quatro
+        conjuntos de saída podem ser escolhidos entre os canais 1 a
+        {DJM_900NXS.channels}, REC OUT, os lados A e B do crossfader, e o
+        microfone.</p>
+        <p><strong>Onde o registro oficial discorda de si mesmo.</strong> A
+        AlphaTheta publica duas cifras diferentes de A/D para este mixer. As
+        Instruções de Operação descrevem um "conversor A/D de {AD_MANUAL} de alta
+        qualidade de som e um conversor D/A de {DA_MANUAL} de alta qualidade de
+        som", e a página do produto diz "um conversor A/D de {AD_PRODUCT}". Nós
+        não vamos escolher uma. As duas são oficiais, elas se contradizem, e a
+        posição honesta é que os próprios documentos da AlphaTheta discordam sobre
+        o estágio de A/D.</p>
+        <p><strong>Quando profissionais usam.</strong> Os lados do crossfader
+        roteáveis separadamente são o detalhe útil aqui, porque eles deixam um
+        setup de DVS ou de gravação capturar os dois lados do crossfader de forma
+        independente, e não só o master somado.</p>
+        <p><strong>Erros comuns.</strong> Supor que um segundo computador pode
+        dividir a placa de som. Existe um terminal USB, e o lado de entrada é
+        documentado como vindo de um único computador.</p>
+        <p class="acc-related">Relacionados: <a href="#dvs-and-software">DVS e software</a> <a href="#drivers">Drivers</a> <a href="#fx-noise-and-silence">Ruído no áudio USB</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="ins-and-outs">
+      <summary><h3 class="acc-h2">Entradas, saídas e as especificações que ninguém publica</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {DJM_900NXS.channels} canais, um
+        isolador de EQ de {DJM_900NXS.eqBands} bandas por canal, um crossfader com
+        assign de crossfader, {DJM_900NXS.micInputs} entradas de microfone,
+        MASTER1, MASTER2, uma saída BOOTH em TRS que aceita balanceado ou
+        desbalanceado, REC OUT, e um DIGITAL IN coaxial. Terminais SEND e RETURN
+        discretos para um efeito externo, e capacidade completa de controlador
+        MIDI.</p>
+        <p><strong>Uma saída de fone.</strong> A AlphaTheta documenta um único
+        terminal PHONES, e esta página não vai insinuar um segundo. O tamanho do
+        conector, e se existe um mini jack ao lado dele, não são recuperáveis dos
+        documentos que a gente conseguiu ler, então se você vai levar adaptador,
+        leve os dois.</p>
+        <p><strong>O que não é publicado.</strong> A AlphaTheta não coloca
+        nenhuma tabela de especificações na web para este modelo. Dimensões, peso,
+        consumo, resposta de frequência, relação sinal ruído e números de
+        distorção não estão publicados em nenhuma página que a gente conseguiu
+        ler, e as páginas de especificação de arquivo só apontam de volta para as
+        Instruções de Operação. Então esta página não declara nenhum deles. Se
+        você precisa das dimensões para um case ou para um recorte de booth, tire
+        elas das
+        <a href={DJM_900NXS.sourceManual} target="_blank" rel="noopener">Instruções de Operação</a>
+        e não de algum número da internet, incluindo o nosso.</p>
+        <p><strong>Erros comuns.</strong> Dimensionar uma booth por uma ficha
+        técnica achada no anúncio de uma loja. Supor que as medidas do
+        DJM-900NXS2 valem aqui, que é um produto diferente.</p>
+        <p class="acc-related">Relacionados: <a href="#send-return">O loop de send e return</a> <a href="#sound-card">A placa de som embutida</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="auto-standby">
+      <summary><h3 class="acc-h2">Standby automático, e o que não está documentado sobre ele</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A função existe, e existe um controle
+        dedicado para sair dela: o botão LFO FORM (WAKE UP), que a AlphaTheta
+        descreve como "WAKE UP: cancela o modo de standby automático."</p>
+        <p><strong>O que não está documentado, e nós não vamos inventar.</strong>
+        Quanto tempo a mesa espera antes de entrar em standby, se ela sai de
+        fábrica com a função ligada ou desligada, e como desativar ela não estão
+        publicados em nada que a gente conseguiu ler. Essa informação está numa
+        página das Instruções de Operação que as nossas ferramentas não
+        conseguiram extrair. Procuramos isso em artigos de suporte que traziam uma
+        trilha de DJM-900NXS e encontramos artigos cujo corpo falava de produtos
+        completamente diferentes, então esses foram descartados em vez de citados.
+        Nenhuma cifra de timeout aparece nesta página, e nenhuma foi pega
+        emprestada de outro mixer.</p>
+        <p><strong>Faça assim.</strong> Trate o tempo como desconhecido, não como
+        generoso. Encoste em algum controle nos intervalos longos, e saiba onde
+        fica o botão LFO FORM (WAKE UP) antes de precisar dele numa booth
+        escura.</p>
+        <p><strong>Uma nota de firmware.</strong> Nenhuma versão introduz ou muda
+        o standby automático. A {DJM_900NXS.wakeUpFix} só corrige o caso em que
+        cancelar ele não funcionava.</p>
+        <p class="acc-related">Relacionados: <a href="#will-not-wake">Ele parece morto e não acorda</a> <a href="#known-issues">Correções documentadas, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="finished-firmware">
+      <summary><h3 class="acc-h2">Uma mesa sem atualização esperando por ela</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A {FLOOR}, de novembro de 2016, é a
+        versão que a AlphaTheta oferece, e nada veio depois dela. Isso não é uma
+        crítica, é um fato de planejamento, e muda o conselho.</p>
+        <p><strong>Por que importa.</strong> Num produto que recebe manutenção,
+        um comportamento estranho vale reportar e esperar. Aqui, ou a falha está
+        na lista desta página e uma atualização cura ela, ou é comportamento que
+        você contorna. Leia isso como uma observação e não como um veredito: não
+        existe declaração de fim de suporte para este mixer, e a AlphaTheta já
+        quebrou silêncios longos antes, publicando uma versão para o CDJ-2000NXS
+        em 2024, depois de mais de seis anos. Planeje contando que nada vem,
+        sabendo que não é impossível.</p>
+        <p><strong>Quando profissionais usam.</strong> Muita casa que trabalha
+        ainda roda esses mixers, e um DJM-900NXS na {FLOOR} é uma mesa confiável
+        com um conjunto conhecido de arestas. O risco não é o mixer, é supor que
+        existe correção para alguma coisa.</p>
+        <p><strong>Erros comuns.</strong> Ler a data de lançamento da {FLOOR}
+        como o fim da vida do produto. Ela saiu cerca de dez meses depois do
+        anúncio do DJM-900NXS2, então os dois se sobrepuseram como produtos
+        suportados, e a AlphaTheta não nomeia nem antecessor nem sucessor para
+        este mixer.</p>
+        <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas, por versão de firmware</a> <a href="/pt/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas profissionais" />
+
+    <details class="acc-sec" name="djm900nxs-acc" id="read-the-version">
+      <summary><h3 class="acc-h2">Leia a versão, depois decida o que você não vai usar</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Segure o CUE da seção BEAT EFFECT e o
+        ON/OFF da seção BEAT EFFECT enquanto liga a força, e a versão aparece no
+        display.</p>
+        <p><strong>Por que importa.</strong> Neste mixer a versão não é
+        curiosidade, é uma lista do que pode acontecer com você hoje à noite.
+        Abaixo da {DJM_900NXS.shutdownFix} a mesa pode se desligar sozinha. Abaixo
+        da {DJM_900NXS.wakeUpFix} ela pode se recusar a sair do standby. Abaixo da
+        {DJM_900NXS.effectsNotEngagingFix} não existe Peak Limiter e existem
+        efeitos que se comportam mal quando ativados. Abaixo da
+        {DJM_900NXS.slipBpmDisplayFix} um player ligado no Link usando SLIP pode
+        embaralhar a leitura de BPM.</p>
+        <p><strong>Faça assim.</strong> Faça isso na chegada, na mesma volta em
+        que você confere roteamento e ganho, e seja específico com você mesmo
+        sobre o que está deixando de lado em vez de contar com a sorte. Se a mesa
+        estiver abaixo da {DJM_900NXS.shutdownFix}, levante isso com a casa: essa
+        vale uma conversa.</p>
+        <p><strong>Erros comuns.</strong> Ler a versão e não anotar. Numa casa em
+        que você toca sempre, uma nota por booth vale mais do que uma nota por
+        gig.</p>
+        <p class="acc-related">Relacionados: <a href="#unexpected-shutdown">Ele se desligou sozinho</a> <a href="/pt/checklist">O checklist pré-gig</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="send-return">
+      <summary><h3 class="acc-h2">O loop de send e return, e a 14ª posição do seletor</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Existem terminais SEND e RETURN
+        discretos para um efeito externo, e o loop externo é alcançável a partir
+        do próprio seletor de Beat FX, como SND/RTN (MIDI LFO) na posição
+        {DJM_900NXS.beatFxSelectorPositions}.</p>
+        <p><strong>Por que importa.</strong> Isso quer dizer que uma caixa externa
+        se comporta como um dos efeitos do próprio mixer, e não como um patch em
+        que você tem que pensar, o que é um bom motivo para levar um reverb ou um
+        delay favorito para uma residência. É também por isso que a conta de
+        efeitos dá {DJM_900NXS.beatFxCount} num lugar e
+        {DJM_900NXS.beatFxSelectorPositions} em outro.</p>
+        <p><strong>Faça assim.</strong> Teste o loop antes de abrir as portas, com
+        a caixa externa ajustada do jeito que você vai usar de verdade. E lembre
+        que o QUANTIZE não vale para o SND/RTN, então um efeito externo não vai
+        ser travado no beat pelo mixer.</p>
+        <p><strong>Erros comuns.</strong> Montar um set em cima de um efeito
+        externo quantizado. Deixar o seletor no SND/RTN sem nada plugado e depois
+        ficar se perguntando por que a seção de Beat FX não faz nada.</p>
+        <p class="acc-related">Relacionados: <a href="#beat-fx">Beat FX</a> <a href="#quantize">QUANTIZE</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção preventiva" />
+
+    <details class="acc-sec" name="djm900nxs-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Manter confiável uma mesa desta idade</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Uma passada de firmware até a
+        {FLOOR}, e depois é conector, cabo e capa. Não tem slot de drive para
+        manter limpo e não tem mídia para falhar.</p>
+        <p><strong>Por que importa.</strong> Um mixer que está numa booth desde o
+        começo dos anos 2010 tem uma década de cabos entrando e saindo dele à
+        força. Pares de phono e de line, duas entradas de microfone, dois masters,
+        uma saída de booth, um loop de send e return, uma entrada digital coaxial e
+        uma porta LAN são todos falhas intermitentes futuras se forem forçados, e
+        uma entrada intermitente é a coisa mais difícil desta página de
+        diagnosticar durante um set.</p>
+        <p><strong>Faça assim.</strong> Desconecte pelo conector e não pelo cabo,
+        faça e desfaça conexões com a mesa desligada, mantenha ela coberta entre
+        as gigs, e anote os ajustes de CLUB SETUP dos quais você depende, PKLIMIT
+        incluído, para que um reset ou uma mesa emprestada não te surpreenda.</p>
+        <p><strong>Evite da próxima vez.</strong> Não enrole os cabos apertado em
+        volta dos conectores, é ali que o dano por esforço começa, e não deixe a
+        atualização de firmware para o dia do show.</p>
+        <p class="acc-related">Relacionados: <a href="#firmware-update">Como a atualização entra</a> <a href="/pt/prepare">Por que dia de gig não se atualiza nada</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="firmware-update">
+      <summary><h3 class="acc-h2">Como a atualização entra, por cabo LAN</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> De um computador, pela rede, não de um
+        pen drive. A instrução da AlphaTheta é "conecte o cabo LAN à porta LINK no
+        painel traseiro", rodar o atualizador no computador, e "não remova o cabo
+        de força nem o cabo LAN durante a atualização".</p>
+        <p><strong>Por que importa.</strong> Esta é a exceção de toda a
+        referência. Toda outra unidade Pioneer daqui pega o firmware de um pen
+        drive formatado, então um DJ ou um técnico que já fez uma dúzia de
+        atualizações de CDJ vai chegar com a coisa errada e sem cabo LAN. Não tem
+        slot de drive para colocar isso.</p>
+        <p><strong>Faça assim.</strong> Reserve tempo. Estabelecer a rede pode
+        levar cerca de um minuto, e a AlphaTheta observa que se a janela Connect
+        continuar aparecendo por 30 segundos ou mais, a conexão de rede pode não
+        estar estabelecida, o que é problema de hub ou de cabo e não do mixer.
+        Faça isso entre bookings, nunca no dia do show, e deixe a mesa ligada e
+        cabeada até o atualizador dizer que terminou.</p>
+        <p><strong>Evite da próxima vez.</strong> Mantenha junto com a mesa um
+        cabo LAN que você sabe que funciona e um hub em que você confia, porque o
+        caminho da atualização e o PRO DJ LINK dependem da mesma porta e do mesmo
+        tipo de hardware.</p>
+        <p class="acc-related">Relacionados: <a href="#no-usb-storage">Nenhum drive entra neste mixer</a> <a href="#link-not-working">O PRO DJ LINK não sobe</a> <a href="#read-the-version">Leia a versão</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="djm900nxs-acc" id="compatibility">
+      <summary><h3 class="acc-h2">Players e PRO DJ LINK</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> PRO DJ LINK por LAN no terminal LINK,
+        com até {DJM_900NXS.maxPlayers} players de DJ e
+        {DJM_900NXS.maxComputers} computadores quando um switching hub é usado. As
+        três funções de Link nomeadas neste mixer são {LINK_FUNCTIONS_LIST}.</p>
+        <p><strong>A dedução de gerações misturadas, e ela é nossa, não da
+        AlphaTheta.</strong> Na seção de QUANTIZE o manual diz "para usar em
+        combinação com o CDJ-2000 ou o CDJ-900, atualize primeiro o firmware para
+        a versão 4.0 ou posterior". Essa frase não diz o firmware de quem. Não
+        pode ser o do mixer, que nunca passou da {FLOOR}, então a nossa leitura é
+        que ela quer dizer o firmware <strong>do player</strong>. Estamos
+        rotulando isso como dedução em vez de vestir como citação, porque a
+        AlphaTheta nunca diz isso.</p>
+        <p><strong>Faça assim.</strong> O único outro item documentado de
+        gerações misturadas é a falha do display de BPM corrigida na
+        {DJM_900NXS.slipBpmDisplayFix}, em que o SLIP num CDJ-2000NXS ou CDJ-900
+        ligado no Link embaralhava a leitura neste mixer. Além desses dois, nada
+        está documentado sobre como esta mesa se comporta com um CDJ-3000, um
+        CDJ-2000NXS2 ou qualquer player mais novo, então esta página não chuta. O
+        Link é um protocolo de LAN e o caminho de áudio é áudio analógico ou
+        digital, então muita dessas booths funciona bem, mas "funciona bem na
+        prática" não é a mesma afirmação que "documentado" e nós não vamos
+        misturar as duas.</p>
+        <p class="acc-related">Relacionados: <a href="#link-not-working">O PRO DJ LINK não sobe</a> <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs">CDJ-2000NXS</a> <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="dvs-and-software">
+      <summary><h3 class="acc-h2">DVS e software, com as condições que vêm anexas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Todas as três plataformas de DVS, e
+        cada uma delas carrega uma condição. O rekordbox dvs precisa do DVS Plus
+        Pack. O DVS do Serato DJ é suportado só com o Serato DJ Club Kit. O
+        TRAKTOR SCRATCH PRO 2 e o SCRATCH DUO 2 são
+        <strong>certificados</strong>, e essa operação certificada exige firmware
+        do mixer {DJM_900NXS.traktorFirmwareFloor} ou posterior, que a AlphaTheta
+        escreve como "1.280".</p>
+        <p><strong>A palavra certificado está fazendo trabalho de verdade
+        ali.</strong> A AlphaTheta usa "certificado" para o TRAKTOR e "suportado"
+        para o Serato DJ, e esta página mantém essa distinção em vez de achatar as
+        duas numa palavra só.</p>
+        <p><strong>Um não seco.</strong> O Serato SCRATCH LIVE explicitamente não
+        é suportado. As palavras da própria página do produto são "Não suporta o
+        Serato SCRATCH LIVE". Se esse é o seu setup, isso é um problema para a
+        hora de fechar o booking, não para a passagem de som.</p>
+        <p><strong>Erros comuns.</strong> Aparecer com Serato DJ e sem Club Kit.
+        Aparecer com operação certificada do TRAKTOR no plano e um mixer abaixo da
+        {DJM_900NXS.traktorFirmwareFloor}, que é a mesma versão que corrigiu o
+        desligamento inesperado, então é uma versão que vale conferir por dois
+        motivos.</p>
+        <p class="acc-related">Relacionados: <a href="#read-the-version">Leia a versão</a> <a href="#sound-card">A placa de som embutida</a> <a href="/pt/knowledge/dictionary">Dicionário de DJ</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djm900nxs-acc" id="drivers">
+      <summary><h3 class="acc-h2">Drivers, e uma lista de sistemas operacionais que discute com ela mesma</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O driver de macOS foi atualizado por
+        último em {MAC_DRIVER.date}, na versão {MAC_DRIVER.version}. O driver de
+        Windows foi atualizado por último em {WIN_DRIVER.date}, na versão
+        {WIN_DRIVER.version}. Os dois continuam publicados para um mixer cujo
+        próprio firmware parou em 2016, o que vale notar.</p>
+        <p><strong>Duas falhas documentadas que vale carregar.</strong> Abaixo do
+        driver de Windows {WIN_DRIVER.floor}, "aplicativos de DJ rodando em certas
+        versões do Windows 10 não detectavam equipamento Pioneer DJ". Abaixo do
+        driver de macOS {MAC_DRIVER.floor}, o "software de driver de áudio não era
+        reconhecido corretamente depois de reiniciar um Mac com macOS Big Sur". Um
+        notebook que liga e depois não consegue ver o mixer não é defeito do
+        mixer.</p>
+        <p><strong>Onde o registro discorda de si mesmo.</strong> A lista de
+        suporte a sistemas operacionais da AlphaTheta afirma suporte até o macOS
+        Tahoe 26, enquanto o artigo do driver de Mac para este mixer é intitulado
+        "for macOS Ventura". Essa é uma inconsistência da AlphaTheta e nós estamos
+        reportando ela em vez de resolver. Se a sua máquina é mais nova que o
+        Ventura, teste o driver em casa antes de depender dele numa booth.</p>
+        <p><strong>Faça assim.</strong> Ligue o notebook, conecte o mixer e abra
+        o seu software em casa, no estado em que você vai chegar, e reinicie uma
+        vez com o mixer conectado. Depois faça as malas.</p>
+        <p class="acc-related">Relacionados: <a href="#sound-card">A placa de som embutida</a> <a href="#dvs-and-software">DVS e software</a> <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Perguntas frequentes" />
+
+    <details class="acc-sec" name="djm900nxs-acc" id="faq">
+      <summary><h3 class="acc-h2">Respostas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>Em qual firmware ele deveria estar?</dt><dd>A {FLOOR}, publicada em 15 de novembro de 2016. Nada veio depois dela, então essa é ao mesmo tempo a versão mínima e o teto.</dd>
+          <dt>É verdade que ele pode se desligar sozinho?</dt><dd>Abaixo da {DJM_900NXS.shutdownFix}, sim, e é uma falha documentada pela própria AlphaTheta: "um problema pouco frequente em que o DJM-900NXS se desliga de forma inesperada". Na {DJM_900NXS.shutdownFix} ou acima está corrigido.</dd>
+          <dt>Por que nada aconteceu quando eu apertei o botão de wake?</dt><dd>Abaixo da {DJM_900NXS.wakeUpFix}, o standby às vezes não podia ser cancelado com o botão LFO FORM (WAKE UP). Essa versão corrigiu isso.</dd>
+          <dt>Quanto tempo até ele entrar em standby, e dá para desligar isso?</dt><dd>Não está documentado. A função existe e o controle de wake é o botão LFO FORM (WAKE UP), mas o timeout, o padrão de fábrica e o procedimento para desativar não estão publicados em nada que a gente conseguiu ler, e nós não vamos pegar um número emprestado de outro mixer.</dd>
+          <dt>Por que eu não ouço efeito quando faço o cue do Beat FX?</dt><dd>Porque é assim que ele deve funcionar com {CUE_DRY_LIST} selecionado. Da {CUE_DRY_FROM} em diante esses {CUE_DRY_N} fazem cue seco, esteja o efeito ligado ou desligado.</dd>
+          <dt>Por que o master soa comprimido?</dt><dd>Peak Limiter, PKLIMIT no CLUB SETUP, adicionado na {DJM_900NXS.peakLimiterIntro} e ligado por padrão assim que o firmware é atualizado.</dd>
+          <dt>O QUANTIZE funciona em todos os Beat FX?</dt><dd>Não. Ele não pode ser usado com {NO_QUANTIZE}, sem nenhum erro na tela, e ele precisa de tracks analisadas no rekordbox antes.</dd>
+          <dt>São {DJM_900NXS.beatFxCount} Beat FX ou {DJM_900NXS.beatFxSelectorPositions}?</dt><dd>Os dois. {DJM_900NXS.beatFxCount} efeitos dentro do mixer, e um seletor com {DJM_900NXS.beatFxSelectorPositions} posições porque a posição extra é o SND/RTN (MIDI LFO) para um efeito externo.</dd>
+          <dt>Ele lê exFAT?</dt><dd>A pergunta não se aplica. Nenhum drive entra neste mixer, então {NOT_APPLICABLE_FS} não se aplicam em vez de serem não suportados. O firmware entra de um computador por cabo LAN.</dd>
+          <dt>Dá para gravar o meu set num pen drive no mixer?</dt><dd>Não. A gravação é o REC OUT analógico ou por USB para um computador.</dd>
+          <dt>O conversor A/D é de {AD_MANUAL} ou de {AD_PRODUCT}?</dt><dd>Os próprios documentos da AlphaTheta discordam. As Instruções de Operação dizem A/D de {AD_MANUAL} com D/A de {DA_MANUAL}, e a página do produto diz A/D de {AD_PRODUCT}. Nós publicamos as duas em vez de escolher.</dd>
+          <dt>Quantas saídas de fone existem?</dt><dd>Um terminal PHONES documentado. O tamanho do conector não é recuperável dos documentos que a gente conseguiu ler, então leve adaptador.</dd>
+          <dt>Quais são as dimensões e o peso?</dt><dd>A AlphaTheta não publica nenhuma tabela de especificações na web para este modelo, então nós não declaramos isso. Tire das <a href={DJM_900NXS.sourceManual} target="_blank" rel="noopener">Instruções de Operação</a>.</dd>
+          <dt>Ele funciona com Serato?</dt><dd>O Serato DJ é suportado para DVS com o Serato DJ Club Kit. O Serato SCRATCH LIVE explicitamente não é suportado.</dd>
+          <dt>O TRAKTOR é certificado nele?</dt><dd>É, o TRAKTOR SCRATCH PRO 2 e o SCRATCH DUO 2, e a operação certificada precisa do firmware do mixer {DJM_900NXS.traktorFirmwareFloor} ou posterior.</dd>
+          <dt>O PRO DJ LINK não sobe. O mixer está com defeito?</dt><dd>Talvez não. A AlphaTheta diz que alguns switching hubs podem não funcionar corretamente e pede um hub compatível com 100Base-TX, então o hub é um suspeito documentado.</dd>
+          <dt>O DJM-900NXS2 substituiu ele?</dt><dd>A AlphaTheta não nomeia sucessor nem antecessor para este mixer. O firmware {FLOOR} saiu cerca de dez meses depois do anúncio do NXS2, então os dois foram suportados em paralelo.</dd>
+          <dt>Vai sair mais firmware?</dt><dd>Nada foi publicado desde novembro de 2016, então planeje contando que não. Não existe declaração de fim de suporte, e a AlphaTheta publicou uma versão para o CDJ-2000NXS em 2024 depois de mais de seis anos, então não é impossível.</dd>
+          <dt>Documentos com o título DJM-900nexus são o mesmo mixer?</dt><dd>São. A capa das Instruções de Operação imprime os dois nomes, "DJM-900NXS / DJM-900nexus", para um produto só.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="djm-900nxs" lang="pt" />
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_djm900nxs"><Icon name="siren" /> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_djm900nxs" lang="pt" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: o <a href={DJM_900NXS.source} target="_blank" rel="noopener">histórico oficial de alterações de firmware</a> do
+      DJM-900NXS da AlphaTheta, as
+      <a href={DJM_900NXS.sourceManual} target="_blank" rel="noopener">Instruções de Operação</a>, a
+      <a href={DJM_900NXS.sourceProduct} target="_blank" rel="noopener">página do produto</a>
+      e o <a href={DJM_900NXS.sourcePeakLimiter} target="_blank" rel="noopener">documento do Peak Limiter</a>,
+      conferidos em {UPDATED}. Cada falha documentada acima é a redação do próprio
+      fabricante, condensada. O histórico publicado de firmware começa na
+      {HISTORY_STARTS_AT} e as versões 1.22 a 1.25, 1.27 e 1.29 não aparecem,
+      então este é o registro que a AlphaTheta publica e não o histórico completo
+      do produto. Duas coisas desta página são contradições dentro dos próprios
+      documentos da AlphaTheta, a profundidade de bits do A/D e a lista de suporte
+      a macOS, e as duas são publicadas aqui sem resolução. A leitura de "versão
+      4.0 ou posterior" como o firmware do player é a nossa dedução e está
+      rotulada como tal. O timeout do standby automático, as dimensões, o peso e
+      as especificações elétricas não são publicados para este modelo, então eles
+      não aparecem aqui. As versões de driver vêm das páginas oficiais de
+      download. Os passos gerais de diagnóstico refletem a prática padrão de
+      booth. Especificações mudam sem aviso, confira de novo antes de um show
+      grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning -- see djm-v10.astro / djm-a9.astro / cdj-3000x.astro /
+     cdj-3000.astro / cdj-2000nxs2.astro for the full rationale (Antonio,
+     2026-07-31: a flex-row approach races text height against photo
+     height and breaks the flush touch at in-between widths). flow-root on
+     the parent stops margin collapse from throwing off the anchor. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>
