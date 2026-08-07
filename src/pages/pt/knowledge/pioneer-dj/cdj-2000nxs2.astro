@@ -2,6 +2,7 @@
 import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
 import { CHECKED, CDJ_2000NXS2, REKORDBOX } from '../../../../data/facts.js';
 import Icon from '../../../../components/Icon.astro';
 
@@ -367,16 +368,7 @@ const schema = {
       </div>
     </details>
 
-    <div class="panel" style="margin-top:2rem">
-      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guias relacionados</h2>
-      <p class="dim" style="margin:0">
-        <a href="/pt/knowledge/pioneer-dj/rekordbox">Referência do rekordbox</a> ·
-        <a href="/pt/fix/format-usb-for-cdj">Preparação do pen drive</a> ·
-        <a href="/pt/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
-        <a href="/pt/fix/usb-not-recognized-cdj">Quando o USB não é reconhecido</a> ·
-        <a href="/pt/checklist">Checklist pré-gig</a>
-      </p>
-    </div>
+    <RelatedEquipment slug="cdj-2000nxs2" lang="pt" />
 
     <div class="panel cta-exit" style="margin-top:1.5rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>

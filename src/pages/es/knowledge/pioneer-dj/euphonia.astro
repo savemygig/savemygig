@@ -2,6 +2,7 @@
 import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
 import { EUPHONIA } from '../../../../data/facts.js';
 import Icon from '../../../../components/Icon.astro';
 
@@ -367,16 +368,7 @@ const schema = {
       </div>
     </details>
 
-    <div class="panel" style="margin-top:2rem">
-      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guías relacionadas</h2>
-      <p class="dim" style="margin:0">
-        <a href="/es/knowledge/pioneer-dj/djm-v5">DJM-V5</a> ·
-        <a href="/es/knowledge/pioneer-dj/djm-v10">DJM-V10 / V10-LF</a> ·
-        <a href="/es/knowledge/pioneer-dj/djm-a9">DJM-A9</a> ·
-        <a href="/es/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
-        <a href="/es/checklist">Checklist de setup de club</a>
-      </p>
-    </div>
+    <RelatedEquipment slug="euphonia" lang="es" />
 
     <div class="panel cta-exit" style="margin-top:1.5rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">¿Vas a tocar pronto y no funciona?</h2>

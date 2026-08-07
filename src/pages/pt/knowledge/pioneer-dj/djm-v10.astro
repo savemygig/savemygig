@@ -2,6 +2,7 @@
 import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
 import { CHECKED, DJM_V10 } from '../../../../data/facts.js';
 import Icon from '../../../../components/Icon.astro';
 
@@ -323,16 +324,7 @@ const schema = {
       </div>
     </details>
 
-    <div class="panel" style="margin-top:2rem">
-      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guias relacionados</h2>
-      <p class="dim" style="margin:0">
-        <a href="/pt/knowledge/pioneer-dj/djm-a9">DJM-A9</a> ·
-        <a href="/pt/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
-        <a href="/pt/knowledge/pioneer-dj/cdj-3000">CDJ-3000</a> ·
-        <a href="/pt/knowledge/pioneer-dj/rekordbox">Referência do rekordbox</a> ·
-        <a href="/pt/checklist">Checklist pré-gig</a>
-      </p>
-    </div>
+    <RelatedEquipment slug="djm-v10" lang="pt" />
 
     <div class="panel cta-exit" style="margin-top:1.5rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>

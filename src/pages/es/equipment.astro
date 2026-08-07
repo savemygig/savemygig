@@ -1,0 +1,155 @@
+---
+import Base from '../../layouts/Base.astro';
+import { EQUIPMENT } from '../../data/facts.js';
+
+// /equipment EN ESPAÑOL LATINOAMERICANO NEUTRO. La fuente de verdad de la
+// estructura, de los componentes, de las clases y del CSS es
+// src/pages/equipment.astro. Aquí solo cambian el texto legible por humanos y
+// los hrefs con prefijo /es. Si la página en inglés cambia, cambia esta en el
+// mismo commit.
+
+// Players first, then mixers, each ordered the way the manufacturer hub orders
+// them: family first, then descending model number. That is Antonio's rule from
+// earlier today and this page must not disagree with the page it feeds.
+const ORDER = [
+  'cdj-3000x', 'cdj-3000', 'cdj-2000nxs2', 'cdj-2000nxs', 'cdj-1500x', 'cdj-900nxs', 'xdj-700',
+  'djm-v10', 'djm-v5', 'djm-a9', 'djm-900nxs2', 'euphonia',
+];
+const rank = (slug: string) => {
+  const i = ORDER.indexOf(slug);
+  return i === -1 ? ORDER.length : i;
+};
+const sorted = [...EQUIPMENT].sort((a, b) => rank(a.slug) - rank(b.slug));
+const players = sorted.filter((e) => e.kind === 'player');
+const mixers = sorted.filter((e) => e.kind === 'mixer');
+
+// One brand today. The shape is a list so adding a manufacturer is data rather
+// than a rewrite of the markup, exactly like the manufacturer hub was built to
+// be reusable.
+const brands = [
+  {
+    key: 'pioneer-dj',
+    name: 'Pioneer DJ / AlphaTheta',
+    hub: '/es/knowledge/pioneer-dj',
+    lead: 'El equipo que está en la mayoría de los booths profesionales. Fallas documentadas, la versión de firmware que resolvió cada una, y qué hacer cuando te pasa en mitad del set.',
+    groups: [
+      { label: 'Reproductores', items: players },
+      { label: 'Mixers', items: mixers },
+    ],
+  },
+];
+
+const liveCount = players.length + mixers.length;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': 'https://www.savemygig.com/es/equipment#collection',
+  name: 'Referencia de equipos de DJ',
+  description: 'Referencias operativas de los reproductores y mixers de DJ instalados en booths profesionales, por modelo.',
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  about: [
+    { '@type': 'Thing', name: 'Pioneer DJ' },
+    { '@type': 'Thing', name: 'AlphaTheta' },
+    { '@type': 'Thing', name: 'Equipos CDJ y DJM' },
+  ],
+  mainEntity: {
+    '@type': 'ItemList',
+    name: 'Referencias de equipos de DJ por modelo',
+    numberOfItems: liveCount,
+    itemListElement: sorted.map((m, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: m.name,
+      url: `https://www.savemygig.com/es/knowledge/pioneer-dj/${m.slug}`,
+    })),
+  },
+};
+---
+<Base
+  title="Equipo de DJ: referencias de CDJ y DJM | Save My Gig"
+  description="Referencia operativa de los CDJ y DJM instalados en booths profesionales. Encuentra tu modelo, mira las fallas documentadas y qué hacer en pleno set."
+  path="/equipment"
+  crumbName="Equipo"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <div class="status-line">EQUIPO</div>
+    <h1 style="margin-bottom:0.8rem">Encuentra <span class="accent">tu modelo</span></h1>
+    <p class="dim kb-lead">
+      Probablemente llegaste aquí por un aparato específico, el que tienes
+      enfrente o el que vas a tocar esta noche. Cada referencia de abajo está
+      construida a partir de la documentación del propio fabricante: qué se sabe
+      que sale mal, qué versión de firmware lo resolvió, y qué hacer cuando pasa
+      con la pista mirando.
+    </p>
+
+    {brands.map((b) => (
+      <section class="eq-brand">
+        <h2 class="kb-h">{b.name}</h2>
+        <p class="dim eq-lead">{b.lead}</p>
+
+        {b.groups.map((g) => (
+          <>
+            <h3 class="eq-group">{g.label}</h3>
+            <div class="kb-grid">
+              {g.items.map((m) => (
+                <a class="kb-card kb-live" href={`/es/knowledge/pioneer-dj/${m.slug}`}>
+                  <span class="kb-name">{m.name}</span>
+                  <span class="kb-go">Abrir la guía &rarr;</span>
+                </a>
+              ))}
+            </div>
+          </>
+        ))}
+
+        <p class="eq-more">
+          <a href={b.hub}>Todos los modelos {b.name}, incluido lo que todavía está por venir &rarr;</a>
+        </p>
+      </section>
+    ))}
+
+    <!-- Cross-model entry point, the same one the manufacturer hub promotes.
+         It belongs here too: "what is broken on this deck" is a question that
+         comes BEFORE "which model am I looking at", and a DJ who does not know
+         the model name can still read a version number off the screen. -->
+    <a class="pdj-matrix" href="/es/knowledge/pioneer-dj/firmware">
+      <span class="pdj-matrix-k">En todos los modelos</span>
+      <span class="pdj-matrix-t">Qué está roto en ese reproductor, por versión de firmware &rarr;</span>
+      <span class="pdj-matrix-b">Lee la versión en el propio aparato y mira qué fallas documentadas siguen vivas en él.</span>
+    </a>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">¿Otro fabricante?</h2>
+      <p class="dim" style="margin-bottom:1rem">
+        Pioneer DJ y AlphaTheta vinieron primero porque es lo que está instalado
+        en la mayoría de los booths. Denon DJ, Allen &amp; Heath y RANE son los
+        que más se piden después. Dinos qué usas de verdad y sube en la fila.
+      </p>
+      <a href="/es/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Cuéntanos qué usas</a>
+    </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">
+      ¿Buscas dudas de biblioteca y de export? <a href="/es/knowledge/pioneer-dj/rekordbox">La referencia de rekordbox</a> cubre eso.
+      ¿Buscas memorias USB en vez de reproductores? <a href="/es/gear">Memorias USB en las que confiar</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  /* Reuses .kb-grid, .kb-card, .kb-live, .kb-name, .kb-go and .kb-h from
+     global.css so this page cannot drift from the manufacturer hub it feeds.
+     Only the brand and group wrappers are new. */
+  .eq-brand { margin-top: 2rem; }
+  .eq-lead { margin-bottom: 1.25rem; }
+  .eq-group {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 1.5rem 0 0.75rem;
+    color: var(--ink-dim);
+  }
+  .eq-more { margin: 1.25rem 0 0; font-size: 0.9rem; }
+</style>

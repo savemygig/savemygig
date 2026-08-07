@@ -540,8 +540,34 @@ const entityGraph = {
         <a href={lp("/emergency")} class:list={[{ 'nav-on': path.startsWith('/emergency') || path.startsWith('/protocol') }]}>{S.nav.emergency}</a>
         <a href={lp("/prepare")} class:list={[{ 'nav-on': path.startsWith('/prepare') }]}>{S.nav.prepare}</a>
         <a href={lp("/recovery")} class:list={[{ 'nav-on': path.startsWith('/recovery') }]}>{S.nav.recovery}</a>
-        <a href={lp("/knowledge")} class:list={[{ 'nav-on': path.startsWith('/knowledge') }]}>{S.nav.knowledge}</a>
-        <a href={lp("/gear")} class:list={['nav-more', 'nav-gear-hide-mobile', { 'nav-on': path.startsWith('/gear') }]}>{S.nav.gear}</a>
+        <a href={lp("/knowledge")} class:list={[{ 'nav-on': path.startsWith('/knowledge') && !path.startsWith('/knowledge/pioneer-dj') }]}>{S.nav.knowledge}</a>
+        <!-- EQUIPMENT (Antonio, 2026-08-07). It is `nav-more` (mobile drawer plus
+             desktop footer) and NOT a primary desktop item, and that is a
+             MEASURED constraint rather than a preference.
+             .site-nav is a fixed 760px border-box container, matched exactly by
+             .wrap and the footer, so it does not grow with the viewport. At the
+             tightest desktop width the six existing primary links plus the brand
+             and the magnifier fill it to EXACTLY 0px of slack. Measured with the
+             link hidden and shown: overflow goes 0px to 69px in English, 85px in
+             Portuguese, 48px in Spanish, which is precisely the width of the new
+             link in each language. It still overflows at 1500px, because the
+             container is capped, so no shorter label fixes it either.
+             A seventh primary item therefore requires DEMOTING one of Antonio's
+             existing six, shortening labels he has already ruled on, or widening
+             the site's 760px measure. All three are his calls, not mine, so this
+             ships in the drawer where his hamburger brief was aimed and the
+             desktop decision goes to him.
+             `nav-on` also lights for /knowledge/pioneer-dj, and Knowledge gives it
+             up there, because a reader on a model page IS inside the equipment
+             section however they arrived. -->
+        <a href={lp("/equipment")} class:list={['nav-more', { 'nav-on': path.startsWith('/equipment') || path.startsWith('/knowledge/pioneer-dj') }]}>{S.nav.equipment}</a>
+        <!-- Gear keeps `nav-more` (secondary: drawer on mobile, footer on
+             desktop) but LOSES `nav-gear-hide-mobile`, which had hidden it at
+             EVERY width and left it unreachable from the nav entirely. That
+             class existed because the label "Gear" read as equipment when the
+             page is a USB drive shortlist. The label now says what it is, so the
+             ambiguity that justified hiding it is gone. -->
+        <a href={lp("/gear")} class:list={['nav-more', { 'nav-on': path.startsWith('/gear') }]}>{S.nav.gear}</a>
         <!-- "About us", not "About" (Antonio, 2026-08-03): in the drawer the
              one word sat short against CHECKLIST and KNOWLEDGE and the column
              read ragged. Nav label only; the footer column keeps the short
@@ -1313,12 +1339,16 @@ const entityGraph = {
     .nav-links.open { display: flex; box-shadow: var(--shadow-overlay); }
     .nav-links a { padding: 0.8rem 0; border-bottom: var(--stroke) solid var(--edge-soft); font-size: 0.95rem; }
     .nav-links a:last-child { border-bottom: none; }
-    /* Gear out of the mobile drawer (Antonio, 2026-07-31): on a phone,
-       "Gear" next to Checklist/Emergency/Recovery reads like it's about DJ
-       equipment, not the hardware knowledge base. Desktop already hides it
-       from the top bar via .nav-more; this just closes the mobile gap. Not
-       removed from the DOM, still reachable via /gear and in-page links. */
-    .nav-gear-hide-mobile { display: none; }
+    /* .nav-gear-hide-mobile REMOVED 2026-08-07, and the rule it enforced is
+       worth keeping on the record because it was a symptom, not a fix.
+       Antonio's complaint on 2026-07-31 was correct: on a phone, "Gear" next to
+       Checklist and Emergency reads like it is about DJ equipment, when the page
+       is a USB drive shortlist. Hiding it on mobile answered that, but desktop
+       already hid it via .nav-more, so between the two rules the item was hidden
+       at EVERY width and /gear became unreachable from the nav altogether,
+       footer only, which nobody decided.
+       The real problem was the label. It now says "USB drives", so the item is
+       visible in the drawer again and the word Equipment belongs to equipment. */
   }
 
   /* Narrowest phones: with both header buttons pinned at 44px, the brand must

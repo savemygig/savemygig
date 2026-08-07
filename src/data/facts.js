@@ -615,3 +615,269 @@ export const FIRMWARE_ISSUES = [
     note: 'AlphaTheta has published no hardware defect fix for this mixer beyond the DJM-REC recording halts. The rest of its change history is feature work.',
   },
 ];
+
+// ---------------------------------------------------------------------------
+// THE EQUIPMENT GRAPH (2026-08-07)
+//
+// WHY THIS EXISTS. Antonio asked every equipment page to link one newer model,
+// one older model, and the gear it is genuinely found beside in a working booth.
+// Written by hand that is 12 equipment pages times 3 languages, so 36 places
+// where a relationship lives, and the CDJ-3000X arriving means editing all of
+// them and missing some. That is exactly the failure that put "FAT32 only" on
+// six models: a fact restated by hand in more places than anyone could count.
+//
+// So relationships are DATA and pages READ them. Adding a model here updates
+// every page that should now point at it, in all three languages, with no page
+// edit at all.
+//
+// THE THREE FIELDS, and they are not the same kind of claim.
+//
+//   newer / older   LINEAGE. Which model in the SAME family replaced this one
+//                   or was replaced by it. This is a documented fact: release
+//                   order within a product line. A model at the top of its line
+//                   has no `newer`, one at the bottom has no `older`, and that
+//                   is Antonio's rule rather than a gap to fill.
+//
+//   siblings        SAME CATEGORY, COMPARABLE TIER, DIFFERENT LINE. Needed
+//                   because lineage alone leaves dead ends: the euphonia is
+//                   rotary and outside the DJM line entirely, the DJM-V10 opens
+//                   its own six channel line, and the XDJ-700's successor has no
+//                   page here. Antonio's own worked example asks the DJM-V10 to
+//                   show the DJM-A9 and DJM-900NXS2, which are siblings and not
+//                   lineage. So the rule is: fill the related list from lineage
+//                   FIRST, then top it up from siblings to two. Every page then
+//                   has somewhere to go, which was the point of the brief.
+//
+//   paired          THE COUNTERPART CATEGORY. A player names mixers, a mixer
+//                   names players. This is the useful link, because a DJ
+//                   reading about a deck is standing in front of a whole booth.
+//
+//   tags            TOPICS the model actually raises, used to COMPUTE related
+//                   guides instead of hand-listing them. See GUIDE_INDEX below.
+//
+// PAIRED IS NOT A SOURCED CLAIM, AND MUST NOT BE PRESENTED AS ONE. Every other
+// hardware fact on this site cites AlphaTheta. No vendor publishes "these are
+// usually installed together". This is field knowledge about club, festival and
+// rental installs, and it is good, but it is a DIFFERENT KIND OF CLAIM and the
+// component that renders it says so in its own words. The site's credibility
+// comes from never blurring those two voices. Today's lesson, applied forward:
+// an unsourced confident claim is how the FAT32 error happened.
+//
+// `null` means deliberately nothing. A model with no page yet is simply absent
+// from `newer`/`older`/`paired` rather than listed and unlinkable, because a
+// dead end labelled "coming soon" is a worse experience than a shorter list.
+// The renderer resolves every slug against EQUIPMENT and drops anything unknown,
+// so this file can never emit a broken link.
+export const EQUIPMENT = [
+  // ------------------------------------------------------------- PLAYERS
+  {
+    slug: 'cdj-3000x', name: 'CDJ-3000X', kind: 'player', released: 2026,
+    newer: null,                       // top of the CDJ line
+    older: 'cdj-3000',
+    paired: ['djm-a9', 'djm-v10'],     // flagship deck, flagship desks
+    siblings: ['cdj-1500x'],
+    tags: ['onelibrary', 'exfat', 'prodjlink', 'firmware', 'usb-prep', 'cloud'],
+  },
+  {
+    slug: 'cdj-3000', name: 'CDJ-3000', kind: 'player', released: 2020,
+    newer: 'cdj-3000x',
+    older: 'cdj-2000nxs2',
+    paired: ['djm-a9', 'djm-v10', 'djm-900nxs2'],
+    siblings: ['cdj-3000x'],
+    // The 900NXS2 belongs here even though the A9 replaced it: a very large
+    // number of installed booths still run a CDJ-3000 into a 900NXS2, because
+    // clubs replace players and mixers on different budgets and cycles.
+    tags: ['devicelibrary', 'exfat', 'prodjlink', 'firmware', 'usb-prep', 'ecodesign'],
+  },
+  {
+    slug: 'cdj-2000nxs2', name: 'CDJ-2000NXS2', kind: 'player', released: 2016,
+    newer: 'cdj-3000',
+    older: 'cdj-2000nxs',
+    paired: ['djm-900nxs2'],           // the definitive booth pairing of its era
+    siblings: ['cdj-3000'],
+    tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep'],
+  },
+  {
+    slug: 'cdj-2000nxs', name: 'CDJ-2000NXS', kind: 'player', released: 2012,
+    newer: 'cdj-2000nxs2',
+    older: null,                       // the CDJ-2000 has no page here
+    paired: ['djm-900nxs2'],
+    siblings: ['cdj-900nxs'],
+    tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep'],
+  },
+  {
+    slug: 'cdj-1500x', name: 'CDJ-1500X', kind: 'player', released: 2026,
+    newer: null,                       // opens its own tier, nothing above it
+    older: null,                       // and nothing below it yet
+    paired: ['djm-v5', 'djm-a9'],
+    siblings: ['cdj-3000x', 'cdj-3000'],
+    // A mid-tier OneLibrary deck lands in rooms buying a V5, and in bigger
+    // rooms as the spare beside an A9. Neither is a vendor statement.
+    tags: ['onelibrary', 'exfat', 'prodjlink', 'firmware', 'usb-prep', 'cloud'],
+  },
+  {
+    slug: 'cdj-900nxs', name: 'CDJ-900NXS', kind: 'player', released: 2012,
+    newer: null,                       // the 900 line ended here
+    older: null,
+    paired: ['djm-900nxs2'],
+    siblings: ['cdj-2000nxs', 'xdj-700'],
+    tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep'],
+  },
+  {
+    slug: 'xdj-700', name: 'XDJ-700', kind: 'player', released: 2015,
+    newer: null,                       // the XDJ-1000MK2 has no page here
+    older: null,
+    paired: ['djm-900nxs2'],
+    siblings: ['cdj-900nxs', 'cdj-2000nxs'],
+    tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep', 'ecodesign'],
+  },
+  // ------------------------------------------------------------- MIXERS
+  {
+    slug: 'djm-a9', name: 'DJM-A9', kind: 'mixer', released: 2022,
+    newer: null,                       // current top of the DJM-900 lineage
+    older: 'djm-900nxs2',
+    paired: ['cdj-3000', 'cdj-3000x'],
+    siblings: ['djm-v10'],
+    tags: ['prodjlink', 'firmware', 'dvs', 'link-network'],
+  },
+  {
+    slug: 'djm-900nxs2', name: 'DJM-900NXS2', kind: 'mixer', released: 2016,
+    newer: 'djm-a9',
+    older: null,                       // the DJM-900NXS has no page here
+    paired: ['cdj-2000nxs2', 'cdj-3000'],
+    siblings: ['djm-v10'],
+    tags: ['prodjlink', 'firmware', 'dvs', 'link-network'],
+  },
+  {
+    slug: 'djm-v10', name: 'DJM-V10 / V10-LF', kind: 'mixer', released: 2019,
+    newer: null,
+    older: null,                       // the V series starts here, six channels
+    paired: ['cdj-3000', 'cdj-3000x'],
+    siblings: ['djm-a9', 'djm-900nxs2'],
+    tags: ['prodjlink', 'firmware', 'dvs', 'link-network', 'long-blend'],
+  },
+  {
+    slug: 'djm-v5', name: 'DJM-V5', kind: 'mixer', released: 2024,
+    newer: null,
+    older: null,                       // four-channel V series, its own tier
+    paired: ['cdj-3000', 'cdj-1500x'],
+    siblings: ['djm-v10', 'djm-a9'],
+    tags: ['prodjlink', 'firmware', 'dvs', 'link-network', 'long-blend', 'no-crossfader'],
+  },
+  {
+    slug: 'euphonia', name: 'euphonia', kind: 'mixer', released: 2024,
+    newer: null,
+    older: null,                       // rotary, outside the DJM lineage entirely
+    paired: ['cdj-3000', 'cdj-3000x'],
+    siblings: ['djm-v10', 'djm-a9'],
+    tags: ['firmware', 'dvs', 'long-blend', 'no-crossfader', 'rotary'],
+  },
+];
+
+// GUIDE INDEX. Every guide worth reaching from an equipment page, tagged with
+// the topics it answers. Related guides are the INTERSECTION of a model's tags
+// with these, so a page never lists a guide that has nothing to do with it and
+// a new guide reaches every relevant model the day it is tagged.
+//
+// `weight` IS THE PRIMARY SORT, and tag-hit count only breaks ties within a
+// weight. That order was the other way round in the first version of this file
+// and it was wrong, for a reason worth recording because it is a trap in any
+// tag-scoring scheme:
+//
+//   RANKING BY NUMBER OF MATCHING TAGS SILENTLY RANKS BY HOW MANY TAGS A GUIDE
+//   HAPPENS TO CARRY. The firmware table has exactly one tag, `firmware`, so it
+//   could never score above one hit and it fell off the CDJ-2000NXS, CDJ-900NXS
+//   and XDJ-700 pages, which are the three pages where firmware matters MOST.
+//   The whole argument of the CDJ-2000NXS page is "look at the firmware version"
+//   and the link to the firmware table was being dropped by an artifact of how
+//   many topics its own guide entry listed. That is not relevance, it is
+//   bookkeeping leaking into editorial.
+//
+// So: weight expresses EDITORIAL PRIORITY WHEN RELEVANT, hits only order guides
+// of equal priority. A guide with one precise tag now competes properly with a
+// guide carrying five loose ones.
+//
+//   weight 1  the reader is probably here because this is broken
+//   weight 2  reference they will need next
+//   weight 3  useful, take a slot if one is free
+//   weight 4  last
+export const GUIDE_INDEX = [
+  // `dvs` added 2026-08-07: rekordbox IS the DVS software, and without that tag
+  // this guide had ZERO intersection with all five mixer pages, so no mixer
+  // linked the rekordbox reference at all.
+  { key: 'rekordbox',   href: '/knowledge/pioneer-dj/rekordbox',        tags: ['onelibrary', 'devicelibrary', 'usb-prep', 'exfat', 'no-exfat', 'dvs'], weight: 2 },
+  { key: 'onelibrary',  href: '/knowledge/pioneer-dj/rekordbox#onelibrary', tags: ['onelibrary', 'devicelibrary'], weight: 3 },
+  { key: 'firmware',    href: '/knowledge/pioneer-dj/firmware',         tags: ['firmware'], weight: 1 },
+  { key: 'exfatVsFat',  href: '/fix/exfat-vs-fat32-cdj',                tags: ['exfat', 'no-exfat', 'filesystems'], weight: 1 },
+  { key: 'formatUsb',   href: '/fix/format-usb-for-cdj',                tags: ['filesystems', 'no-exfat', 'usb-prep'], weight: 1 },
+  { key: 'usbNotRead',  href: '/fix/usb-not-recognized-cdj',            tags: ['usb-prep', 'filesystems'], weight: 1 },
+  { key: 'playlists',   href: '/fix/playlists-not-showing-cdj',         tags: ['onelibrary', 'devicelibrary', 'usb-prep'], weight: 1 },
+  { key: 'waveforms',   href: '/fix/waveforms-not-loading-cdj',         tags: ['usb-prep'], weight: 3 },
+  { key: 'exportFail',  href: '/fix/rekordbox-export-failed',           tags: ['usb-prep'], weight: 3 },
+  { key: 'backup',      href: '/fix/dj-usb-backup-strategy',            tags: ['usb-prep'], weight: 3 },
+  { key: 'errorE8302',  href: '/fix/cdj-error-e-8302',                  tags: ['prodjlink', 'link-network'], weight: 2 },
+  { key: 'emergencyLoop', href: '/fix/emergency-loop-mode',             tags: ['ecodesign', 'firmware'], weight: 3 },
+  { key: 'checklist',   href: '/checklist',                             tags: ['usb-prep', 'prodjlink', 'link-network', 'firmware'], weight: 2 },
+  { key: 'prepare',     href: '/prepare',                               tags: ['usb-prep', 'firmware', 'ecodesign'], weight: 3 },
+  { key: 'dictionary',  href: '/knowledge/dictionary',                  tags: ['rotary', 'long-blend', 'no-crossfader', 'dvs', 'prodjlink'], weight: 3 },
+  { key: 'gear',        href: '/gear',                                  tags: ['usb-prep', 'filesystems'], weight: 4 },
+];
+
+// Resolve helpers. Pages call these instead of reasoning about the graph, so
+// the rules live in one place and every page and language behaves identically.
+const BY_SLUG = new Map(EQUIPMENT.map((e) => [e.slug, e]));
+
+export function equipmentFor(slug) {
+  return BY_SLUG.get(slug) ?? null;
+}
+
+// Lineage, nearest first, unknown slugs dropped so a broken link cannot ship.
+export function relatedModels(slug, limit = 2) {
+  const e = BY_SLUG.get(slug);
+  if (!e) return [];
+  const out = [];
+  const push = (s) => {
+    const m = BY_SLUG.get(s);
+    if (m && m.slug !== slug && !out.some((x) => x.slug === m.slug)) out.push(m);
+  };
+  // Lineage first, newer before older, because "what replaced this" is the
+  // question a DJ standing in an old booth is actually asking.
+  push(e.newer);
+  push(e.older);
+  // Then top up from siblings, so a model at the end of its line still leads
+  // somewhere instead of showing an empty heading.
+  for (const s of e.siblings ?? []) {
+    if (out.length >= limit) break;
+    push(s);
+  }
+  return out.slice(0, limit);
+}
+
+// The counterpart category. Players get mixers, mixers get players.
+export function pairedModels(slug) {
+  const e = BY_SLUG.get(slug);
+  if (!e) return [];
+  return (e.paired ?? []).map((s) => BY_SLUG.get(s)).filter(Boolean);
+}
+
+// Guides whose tags intersect the model's, best first, capped. The cap is the
+// point: "every page should lead somewhere useful" fails if it leads to
+// fourteen places at once, which is a link farm rather than a next step.
+// Six, not five. Five cost the legacy players their link to the firmware table
+// even after the weights were fixed, and six is what the hand-written blocks
+// these replaced already carried, so it is not a step up in link density.
+export function relatedGuides(slug, limit = 6) {
+  const e = BY_SLUG.get(slug);
+  if (!e) return [];
+  const tags = new Set(e.tags ?? []);
+  return GUIDE_INDEX
+    .map((g) => ({ g, hits: g.tags.filter((t) => tags.has(t)).length }))
+    .filter((x) => x.hits > 0)
+    // Weight first, hits second. See the note above GUIDE_INDEX: sorting by hits
+    // first ranks guides by how many tags they happen to carry, not by how much
+    // they help, and it dropped the firmware table off the three pages that are
+    // ABOUT firmware.
+    .sort((a, b) => a.g.weight - b.g.weight || b.hits - a.hits || a.g.key.localeCompare(b.g.key))
+    .slice(0, limit)
+    .map((x) => x.g);
+}

@@ -30,13 +30,54 @@ export const UI = {
     // purpose: the footer has no such link, and a label that is only ever
     // read by a crawler should not be filed with the ones a human clicks.
     crumbs: { fixes: 'Fixes' },
+    // RELATED EQUIPMENT AND GUIDES (2026-08-07). Labels only; the
+    // relationships themselves are data in facts.js and the same for every
+    // language. `pairedNote` is load bearing: it is the sentence that keeps a
+    // field judgement from being read as a vendor specification.
+    related: {
+      players: 'Related players',
+      mixers: 'Related mixers',
+      pairedMixers: 'Commonly paired mixers',
+      pairedPlayers: 'Commonly paired players',
+      pairedNote: 'What you usually find beside it in working booths, from club, festival and rental installs rather than from a manufacturer document.',
+      guides: 'Related guides',
+      browseAll: 'All Pioneer DJ and AlphaTheta equipment',
+      guideLabels: {
+        rekordbox: 'rekordbox reference',
+        onelibrary: 'OneLibrary vs Device Library',
+        firmware: 'Every model, by firmware version',
+        exfatVsFat: 'exFAT vs FAT32 on a CDJ',
+        formatUsb: 'How to format a USB for a CDJ',
+        usbNotRead: 'The CDJ will not read the USB',
+        playlists: 'Playlists not showing on the deck',
+        waveforms: 'Waveforms not loading',
+        exportFail: 'A rekordbox export failed',
+        backup: 'A USB backup strategy that holds',
+        errorE8302: 'CDJ error E-8302',
+        emergencyLoop: 'Emergency Loop, explained',
+        checklist: 'The pre-gig checklist',
+        prepare: 'The full prevention system',
+        dictionary: 'The DJ technical dictionary',
+        gear: 'USB drives worth trusting',
+      },
+    },
     nav: {
       checklist: 'Checklist',
       emergency: 'Emergency',
       prepare: 'Prevention',
       recovery: 'Recovery',
       knowledge: 'Knowledge',
-      gear: 'Gear',
+      // EQUIPMENT (2026-08-07). Antonio: nobody thinks "I want to browse the
+      // knowledge base", they think "I need information about my CDJ-3000".
+      // A single brand agnostic entry, so it scales to Denon and RANE without a
+      // nav entry per manufacturer.
+      equipment: 'Equipment',
+      // WAS 'Gear', WHICH POINTED AT THE USB DRIVE SHORTLIST. Antonio flagged on
+      // 2026-07-31 that on a phone "Gear" beside Checklist and Emergency reads
+      // like it is about DJ equipment, and the fix then was to HIDE the item at
+      // every width. Now that Equipment exists and means equipment, the honest
+      // fix is available: name this page what it is.
+      gear: 'USB drives',
       about: 'About us',
     },
     aria: {
@@ -317,6 +358,35 @@ export const UI = {
     skip: 'Pular para o conteúdo',
     home: 'Início',
     crumbs: { fixes: 'Soluções' },
+    // EQUIPAMENTO RELACIONADO E GUIAS (2026-08-07). Só rótulos; as relações
+    // são dados em facts.js e iguais para os três idiomas.
+    related: {
+      players: 'Players relacionados',
+      mixers: 'Mixers relacionados',
+      pairedMixers: 'Mixers usados junto',
+      pairedPlayers: 'Players usados junto',
+      pairedNote: 'O que você normalmente encontra ao lado dele em booths de verdade, a partir de instalações de clube, festival e rental, e não de um documento do fabricante.',
+      guides: 'Guias relacionados',
+      browseAll: 'Todo o equipamento Pioneer DJ e AlphaTheta',
+      guideLabels: {
+        rekordbox: 'Referência do rekordbox',
+        onelibrary: 'OneLibrary e Device Library',
+        firmware: 'Cada modelo, por versão de firmware',
+        exfatVsFat: 'exFAT e FAT32 num CDJ',
+        formatUsb: 'Como formatar um pen drive para CDJ',
+        usbNotRead: 'O CDJ não lê o pen drive',
+        playlists: 'Playlists não aparecem no deck',
+        waveforms: 'Waveforms não carregam',
+        exportFail: 'O export do rekordbox falhou',
+        backup: 'Uma estratégia de backup que aguenta',
+        errorE8302: 'Erro E-8302 no CDJ',
+        emergencyLoop: 'Emergency Loop, explicado',
+        checklist: 'O checklist antes da gig',
+        prepare: 'O sistema de prevenção completo',
+        dictionary: 'O dicionário técnico de DJ',
+        gear: 'Pen drives em que dá para confiar',
+      },
+    },
     nav: {
       checklist: 'Checklist',
       emergency: 'Emergência',
@@ -327,7 +397,11 @@ export const UI = {
       // navigation only, page titles and content keep the full nouns.
       recovery: 'Recuperar',
       knowledge: 'Aprender',
-      gear: 'Equipamento',
+      equipment: 'Equipamento',
+      // Era 'Equipamento', que apontava para a lista de pen drives. Agora
+      // 'Equipamento' é a entrada de equipamento de verdade e esta página é
+      // nomeada pelo que ela é.
+      gear: 'Pen drives',
       about: 'Sobre nós',
     },
     aria: {
@@ -523,6 +597,35 @@ export const UI = {
     skip: 'Saltar al contenido',
     home: 'Inicio',
     crumbs: { fixes: 'Soluciones' },
+    // EQUIPO RELACIONADO Y GUÍAS (2026-08-07). Solo etiquetas; las relaciones
+    // son datos en facts.js e iguales para los tres idiomas.
+    related: {
+      players: 'Reproductores relacionados',
+      mixers: 'Mixers relacionados',
+      pairedMixers: 'Mixers que se usan junto',
+      pairedPlayers: 'Reproductores que se usan junto',
+      pairedNote: 'Lo que normalmente encuentras al lado en booths reales, a partir de instalaciones de club, festival y rental, y no de un documento del fabricante.',
+      guides: 'Guías relacionadas',
+      browseAll: 'Todo el equipo Pioneer DJ y AlphaTheta',
+      guideLabels: {
+        rekordbox: 'Referencia de rekordbox',
+        onelibrary: 'OneLibrary y Device Library',
+        firmware: 'Cada modelo, por versión de firmware',
+        exfatVsFat: 'exFAT y FAT32 en un CDJ',
+        formatUsb: 'Cómo formatear una memoria USB para CDJ',
+        usbNotRead: 'El CDJ no lee la memoria USB',
+        playlists: 'Las playlists no aparecen en el deck',
+        waveforms: 'Los waveforms no cargan',
+        exportFail: 'El export de rekordbox falló',
+        backup: 'Una estrategia de backup que aguanta',
+        errorE8302: 'Error E-8302 en el CDJ',
+        emergencyLoop: 'Emergency Loop, explicado',
+        checklist: 'El checklist antes del gig',
+        prepare: 'El sistema de prevención completo',
+        dictionary: 'El diccionario técnico de DJ',
+        gear: 'Memorias USB en las que confiar',
+      },
+    },
     nav: {
       checklist: 'Checklist',
       emergency: 'Emergencia',
@@ -530,7 +633,10 @@ export const UI = {
       // Antonio, 2026-08-05: same nav-width fix as pt. Top navigation only.
       recovery: 'Recuperar',
       knowledge: 'Aprender',
-      gear: 'Equipo',
+      equipment: 'Equipo',
+      // Era 'Equipo', que apuntaba a la lista de memorias USB. Ahora 'Equipo' es
+      // la entrada de equipo de verdad y esta página se llama por lo que es.
+      gear: 'Memorias USB',
       about: 'Nosotros',
     },
     aria: {

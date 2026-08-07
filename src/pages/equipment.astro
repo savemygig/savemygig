@@ -1,0 +1,179 @@
+---
+import Base from '../layouts/Base.astro';
+import { EQUIPMENT } from '../data/facts.js';
+
+/**
+ * /equipment. THE TOP-LEVEL EQUIPMENT ENTRY POINT.
+ *
+ * WHY IT EXISTS (Antonio, 2026-08-07). Equipment was four levels deep:
+ * Knowledge, then Equipment, then Pioneer DJ / AlphaTheta, then the model. His
+ * argument, and it is the right one: nobody thinks "I want to browse the
+ * knowledge base". They think "I need information about my CDJ-3000" or "I am
+ * playing on Pioneer gear tonight". Search traffic arrives with a model number,
+ * not with a taxonomy.
+ *
+ * SO THIS PAGE LISTS THE MODELS THEMSELVES, not just the manufacturer. A brand
+ * hub that only linked to another brand hub would have removed one click out of
+ * three and left the actual problem in place. From the nav it is now two clicks
+ * to any model page instead of four.
+ *
+ * WHY IT IS BRAND-AGNOSTIC AND NOT /pioneer-dj. Antonio's own reasoning, which
+ * settled it: a single top-level Equipment entry gives the discoverability
+ * without over-promoting one manufacturer, and it scales the day Denon DJ,
+ * Allen & Heath or RANE arrive. Those get a section here, not a nav entry each.
+ *
+ * IT DOES NOT DUPLICATE /knowledge/pioneer-dj. That page is the FULL catalogue
+ * including every model still queued and visibly labelled "Coming soon", plus
+ * all-in-ones, turntables, effectors and controllers. This page is the fast
+ * path: the models that actually have a researched page today, nothing else,
+ * because a landing page whose job is speed should not be padded with cards
+ * that go nowhere. The link to the full catalogue is at the foot of each brand.
+ *
+ * THE MODEL LIST IS READ FROM THE EQUIPMENT GRAPH, so a new model appears here
+ * the moment it is added to facts.js and nobody has to remember this file.
+ */
+
+// Players first, then mixers, each ordered the way the manufacturer hub orders
+// them: family first, then descending model number. That is Antonio's rule from
+// earlier today and this page must not disagree with the page it feeds.
+const ORDER = [
+  'cdj-3000x', 'cdj-3000', 'cdj-2000nxs2', 'cdj-2000nxs', 'cdj-1500x', 'cdj-900nxs', 'xdj-700',
+  'djm-v10', 'djm-v5', 'djm-a9', 'djm-900nxs2', 'euphonia',
+];
+const rank = (slug: string) => {
+  const i = ORDER.indexOf(slug);
+  return i === -1 ? ORDER.length : i;
+};
+const sorted = [...EQUIPMENT].sort((a, b) => rank(a.slug) - rank(b.slug));
+const players = sorted.filter((e) => e.kind === 'player');
+const mixers = sorted.filter((e) => e.kind === 'mixer');
+
+// One brand today. The shape is a list so adding a manufacturer is data rather
+// than a rewrite of the markup, exactly like the manufacturer hub was built to
+// be reusable.
+const brands = [
+  {
+    key: 'pioneer-dj',
+    name: 'Pioneer DJ / AlphaTheta',
+    hub: '/knowledge/pioneer-dj',
+    lead: 'The gear in most professional booths. Documented faults, the firmware version that fixed each one, and what to do when it happens to you mid-set.',
+    groups: [
+      { label: 'Players', items: players },
+      { label: 'Mixers', items: mixers },
+    ],
+  },
+];
+
+const liveCount = players.length + mixers.length;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': 'https://www.savemygig.com/equipment#collection',
+  name: 'DJ equipment reference',
+  description: 'Operational references for the DJ players and mixers installed in professional booths, by model.',
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  about: [
+    { '@type': 'Thing', name: 'Pioneer DJ' },
+    { '@type': 'Thing', name: 'AlphaTheta' },
+    { '@type': 'Thing', name: 'CDJ and DJM equipment' },
+  ],
+  mainEntity: {
+    '@type': 'ItemList',
+    name: 'DJ equipment references by model',
+    numberOfItems: liveCount,
+    itemListElement: sorted.map((m, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: m.name,
+      url: `https://www.savemygig.com/knowledge/pioneer-dj/${m.slug}`,
+    })),
+  },
+};
+---
+<Base
+  title="DJ Equipment: CDJ and DJM References | Save My Gig"
+  description="Operational references for the CDJs and DJMs installed in professional booths. Find your model, see the documented faults, and know what to do mid-set."
+  path="/equipment"
+  crumbName="Equipment"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <div class="status-line">EQUIPMENT</div>
+    <h1 style="margin-bottom:0.8rem">Find <span class="accent">your model</span></h1>
+    <p class="dim kb-lead">
+      You are probably here because of one specific unit, either the one in front
+      of you or the one you are playing on tonight. Every reference below is
+      built from the manufacturer's own documentation: what is known to go wrong,
+      which firmware version fixed it, and what to do when it happens with a room
+      watching.
+    </p>
+
+    {brands.map((b) => (
+      <section class="eq-brand">
+        <h2 class="kb-h">{b.name}</h2>
+        <p class="dim eq-lead">{b.lead}</p>
+
+        {b.groups.map((g) => (
+          <>
+            <h3 class="eq-group">{g.label}</h3>
+            <div class="kb-grid">
+              {g.items.map((m) => (
+                <a class="kb-card kb-live" href={`/knowledge/pioneer-dj/${m.slug}`}>
+                  <span class="kb-name">{m.name}</span>
+                  <span class="kb-go">Open the guide &rarr;</span>
+                </a>
+              ))}
+            </div>
+          </>
+        ))}
+
+        <p class="eq-more">
+          <a href={b.hub}>Every {b.name} model, including what is still coming &rarr;</a>
+        </p>
+      </section>
+    ))}
+
+    <!-- Cross-model entry point, the same one the manufacturer hub promotes.
+         It belongs here too: "what is broken on this deck" is a question that
+         comes BEFORE "which model am I looking at", and a DJ who does not know
+         the model name can still read a version number off the screen. -->
+    <a class="pdj-matrix" href="/knowledge/pioneer-dj/firmware">
+      <span class="pdj-matrix-k">Across every model</span>
+      <span class="pdj-matrix-t">What's broken on that deck, by firmware version &rarr;</span>
+      <span class="pdj-matrix-b">Read the version off the unit and see which documented faults are still live on it.</span>
+    </a>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">Another manufacturer?</h2>
+      <p class="dim" style="margin-bottom:1rem">
+        Pioneer DJ and AlphaTheta came first because that is what is installed in
+        most booths. Denon DJ, Allen &amp; Heath and RANE are the ones asked for
+        most often after it. Tell us what you actually run and it moves up.
+      </p>
+      <a href="/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Tell us what you use</a>
+    </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">
+      Looking for library and export questions instead? <a href="/knowledge/pioneer-dj/rekordbox">The rekordbox reference</a> covers that.
+      Looking for drives rather than decks? <a href="/gear">USB drives worth trusting</a>.
+    </p>
+  </main>
+</Base>
+
+<style>
+  /* Reuses .kb-grid, .kb-card, .kb-live, .kb-name, .kb-go and .kb-h from
+     global.css so this page cannot drift from the manufacturer hub it feeds.
+     Only the brand and group wrappers are new. */
+  .eq-brand { margin-top: 2rem; }
+  .eq-lead { margin-bottom: 1.25rem; }
+  .eq-group {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 1.5rem 0 0.75rem;
+    color: var(--ink-dim);
+  }
+  .eq-more { margin: 1.25rem 0 0; font-size: 0.9rem; }
+</style>

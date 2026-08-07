@@ -2,6 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../components/RelatedEquipment.astro';
 import { CHECKED, CDJ_3000X, REKORDBOX } from '../../../data/facts.js';
 import Icon from '../../../components/Icon.astro';
 
@@ -296,16 +297,7 @@ const schema = {
       </div>
     </details>
 
-    <div class="panel" style="margin-top:2rem">
-      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Related guides</h2>
-      <p class="dim" style="margin:0">
-        <a href="/knowledge/pioneer-dj/rekordbox">rekordbox reference</a> ·
-        <a href="/knowledge/pioneer-dj/cdj-3000">CDJ-3000</a> ·
-        <a href="/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a> ·
-        <a href="/fix/format-usb-for-cdj">USB preparation</a> ·
-        <a href="/checklist">Club setup checklist</a>
-      </p>
-    </div>
+    <RelatedEquipment slug="cdj-3000x" />
 
     <div class="panel cta-exit" style="margin-top:1.5rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Playing soon and it is not working?</h2>

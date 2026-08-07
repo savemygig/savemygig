@@ -1,0 +1,140 @@
+---
+/**
+ * RELATED EQUIPMENT AND RELATED GUIDES. One component, twelve equipment pages,
+ * three languages.
+ *
+ * WHY IT IS A COMPONENT AND NOT PROSE ON EACH PAGE. Antonio's brief asked every
+ * equipment page to link a newer model, an older model, and the gear it is
+ * genuinely found beside. Written by hand that is 36 places where a
+ * relationship lives, so the CDJ-3000X arriving means editing 36 files and
+ * missing some. That is the same shape as the bug that put "FAT32 only" on six
+ * models: a fact restated by hand in more places than anyone could count. Here
+ * the relationships live in EQUIPMENT in facts.js, and this file only decides
+ * how they look.
+ *
+ * THE THREE BLOCKS ARE THREE DIFFERENT KINDS OF CLAIM, and the design says so.
+ *
+ *   Related players / mixers   LINEAGE, a documented fact. Release order inside
+ *                              a product line, topped up from siblings so a
+ *                              model at the end of its line still leads
+ *                              somewhere. Rendered plainly.
+ *
+ *   Commonly paired            FIELD JUDGEMENT. No manufacturer publishes
+ *                              "these are usually installed together". This is
+ *                              real knowledge from club, festival and rental
+ *                              installs, and it is useful, but it is NOT a
+ *                              sourced specification. So it carries `pairedNote`
+ *                              saying exactly that, every time, in the reader's
+ *                              language. The site's credibility comes from never
+ *                              letting those two voices blur, and an unsourced
+ *                              confident claim is how the FAT32 error happened.
+ *
+ *   Related guides             COMPUTED, not listed. The intersection of the
+ *                              model's topic tags with GUIDE_INDEX, capped at
+ *                              five. The cap is deliberate: "every page should
+ *                              lead somewhere useful" fails if it leads to
+ *                              fourteen places at once, which is a link farm
+ *                              rather than a next step.
+ *
+ * A page never links to itself and never emits a link to a model without a
+ * page, because the resolvers in facts.js drop unknown slugs. So this component
+ * cannot ship a broken link even if someone edits the graph carelessly.
+ */
+import { relatedModels, pairedModels, relatedGuides, equipmentFor } from '../data/facts.js';
+import { UI } from '../i18n/ui.js';
+
+interface Props {
+  slug: string;
+  lang?: 'en' | 'pt' | 'es';
+}
+const { slug, lang = 'en' } = Astro.props;
+
+const S = UI[lang].related;
+const me = equipmentFor(slug);
+const isPlayer = me?.kind === 'player';
+
+// Every internal href gains the language prefix. The graph stores canonical
+// English paths once, exactly like the nav does, so a new model needs no
+// per-language href.
+const lp = (p: string) => (lang === 'en' ? p : `/${lang}${p}`);
+const modelHref = (s: string) => lp(`/knowledge/pioneer-dj/${s}`);
+
+const related = relatedModels(slug);
+const paired = pairedModels(slug);
+const guides = relatedGuides(slug);
+
+const relatedTitle = isPlayer ? S.players : S.mixers;
+const pairedTitle = isPlayer ? S.pairedMixers : S.pairedPlayers;
+---
+{me && (
+  <div class="panel rel-block" style="margin-top:2rem">
+    <div class="rel-grid">
+      {related.length > 0 && (
+        <div class="rel-col">
+          <h2 class="rel-h">{relatedTitle}</h2>
+          <ul class="rel-list">
+            {related.map((m) => (
+              <li><a href={modelHref(m.slug)}>{m.name}</a></li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {paired.length > 0 && (
+        <div class="rel-col">
+          <h2 class="rel-h">{pairedTitle}</h2>
+          <ul class="rel-list">
+            {paired.map((m) => (
+              <li><a href={modelHref(m.slug)}>{m.name}</a></li>
+            ))}
+          </ul>
+          <p class="rel-note dim">{S.pairedNote}</p>
+        </div>
+      )}
+    </div>
+
+    {guides.length > 0 && (
+      <div class="rel-guides">
+        <h2 class="rel-h">{S.guides}</h2>
+        <p class="dim" style="margin:0">
+          {guides.map((g, i) => (
+            <>
+              {i > 0 && <span aria-hidden="true"> · </span>}
+              <a href={lp(g.href)}>{S.guideLabels[g.key]}</a>
+            </>
+          ))}
+        </p>
+      </div>
+    )}
+
+    <p class="rel-all">
+      <a href={lp('/knowledge/pioneer-dj')}>{S.browseAll} →</a>
+    </p>
+  </div>
+)}
+
+<style>
+  /* Two columns on desktop, stacked on phones. The columns are deliberately
+     NOT equal-width cards: lineage is a short list and the paired block carries
+     a sentence under it, so a grid that lets the second column breathe reads
+     better than two boxes of forced equal height. */
+  .rel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .rel-h {
+    font-size: 0.95rem;
+    margin: 0 0 0.5rem;
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .rel-list { list-style: none; margin: 0; padding: 0; }
+  .rel-list li { margin: 0 0 0.3rem; }
+  .rel-note { font-size: 0.8rem; margin: 0.6rem 0 0; line-height: 1.45; }
+  .rel-guides { margin-top: 1.5rem; }
+  .rel-all { margin: 1.25rem 0 0; font-size: 0.9rem; }
+
+  @media (max-width: 640px) {
+    /* One column below 640, matching the breakpoint the knowledge hub
+       categories already collapse at, so the page has one behaviour and not
+       two competing ones. */
+    .rel-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  }
+</style>

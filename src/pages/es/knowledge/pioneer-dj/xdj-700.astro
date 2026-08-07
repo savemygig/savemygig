@@ -2,6 +2,7 @@
 import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
 import { XDJ_700 } from '../../../../data/facts.js';
 import Icon from '../../../../components/Icon.astro';
 
@@ -373,16 +374,7 @@ const schema = {
       </div>
     </details>
 
-    <div class="panel" style="margin-top:2rem">
-      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guías relacionadas</h2>
-      <p class="dim" style="margin:0">
-        <a href="/es/knowledge/pioneer-dj/cdj-2000nxs">CDJ-2000NXS</a> ·
-        <a href="/es/knowledge/pioneer-dj/cdj-900nxs">CDJ-900NXS</a> ·
-        <a href="/es/knowledge/pioneer-dj/firmware">Firmware por versión</a> ·
-        <a href="/es/knowledge/pioneer-dj/rekordbox">Referencia de rekordbox</a> ·
-        <a href="/es/checklist">Checklist de setup de club</a>
-      </p>
-    </div>
+    <RelatedEquipment slug="xdj-700" lang="es" />
 
     <div class="panel cta-exit" style="margin-top:1.5rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">¿Vas a tocar pronto y no funciona?</h2>

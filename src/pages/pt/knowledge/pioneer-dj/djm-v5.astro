@@ -2,6 +2,7 @@
 import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
 import { DJM_V5, DJM_REC } from '../../../../data/facts.js';
 import Icon from '../../../../components/Icon.astro';
 
@@ -368,16 +369,7 @@ const schema = {
       </div>
     </details>
 
-    <div class="panel" style="margin-top:2rem">
-      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guias relacionados</h2>
-      <p class="dim" style="margin:0">
-        <a href="/pt/knowledge/pioneer-dj/djm-v10">DJM-V10 / V10-LF</a> ·
-        <a href="/pt/knowledge/pioneer-dj/djm-a9">DJM-A9</a> ·
-        <a href="/pt/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
-        <a href="/pt/knowledge/pioneer-dj/cdj-1500x">CDJ-1500X</a> ·
-        <a href="/pt/checklist">Checklist de setup de clube</a>
-      </p>
-    </div>
+    <RelatedEquipment slug="djm-v5" lang="pt" />
 
     <div class="panel cta-exit" style="margin-top:1.5rem">
       <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
