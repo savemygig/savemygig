@@ -121,6 +121,97 @@ export const DJM_V10 = {
   source: 'https://downloads.support.alphatheta.com/firmwares/dj-mixers/DJM-V10/DJM-V10-Firmware-Change-History-Ver120-en.pdf',
 };
 
+// CDJ-1500X. Announced 2 July 2026, so this page exists BEFORE any firmware
+// history does: AlphaTheta has published no change history for it yet, and the
+// model pages elsewhere in this file are built around exactly that. Nothing is
+// invented to fill the gap. What the player DOES have is a set of documented
+// traps that catch a DJ on the night, and those are what the page is written
+// around.
+// Sources, both official:
+//   alphatheta.com/en/product/player/cdj-1500x/black/
+//   alphatheta.com/en/information/introducing-the-cdj-1500x-new-dj-multi-player/
+export const CDJ_1500X = {
+  checked: '7 August 2026',
+  announced: '2 July 2026',
+  // THE THREE FACTS THAT END A SET, in the order they bite.
+  // 1. NTFS is not supported, stated in as many words on the spec page. A
+  //    Windows DJ formatting a drive gets NTFS by DEFAULT, so this is the most
+  //    likely single cause of a drive that "works at home" and not in the booth.
+  fileSystems: ['FAT16', 'FAT32', 'exFAT', 'HFS+'],
+  ntfsSupported: false,
+  // 2. OneLibrary. An existing Device Library export has to be converted with
+  //    the latest rekordbox first. A DJ arriving with a drive that a CDJ-2000NXS2
+  //    reads fine can find this player will not browse it.
+  library: 'OneLibrary',
+  rekordboxMin: '7.2.16',
+  deviceLibraryNeedsConversion: true,
+  // 3. Only THREE of the ports take a drive, and one of the USB-C sockets is
+  //    for a computer, not storage. In a dark booth they look identical.
+  usbPorts: 'USB Type-A x1 (storage), USB Type-C x2 (storage x1, PC connection x1)',
+  storagePorts: 2,
+  formats: ['MP3', 'AAC', 'WAV', 'AIFF', 'Apple Lossless', 'FLAC'],
+  // PRO DJ LINK caps at FOUR here, not the six an all-CDJ-3000 rig allows.
+  maxLinkedUnits: 4,
+  linkNote: 'Up to 4 units can be connected when using a switching hub',
+  wirelessLan: 'IEEE 802.11 a/b/n/ac',
+  screen: '10.1-inch capacitive full-color touchscreen',
+  displayModes: ['Dark', 'Light'],
+  hotCues: 8,
+  // CLOUD FEATURES ARE A NETWORK DEPENDENCY, which is the honest way to read
+  // them for this site's purpose: booth Wi-Fi is the least reliable thing in
+  // most rooms, and a set that depends on it has a failure mode a USB does not.
+  cloudPlay: ['rekordbox CloudDirectPlay', 'StreamingDirectPlay'],
+  streamingServices: ['Apple Music', 'Beatport Streaming', 'Tidal'],
+  nfcLogin: true,
+  coBeat: true,
+  software: ['rekordbox (Hardware Unlock)', 'djay Pro', 'Serato DJ Pro'],
+  dimensions: '252.1 x 374.7 x 116.5 mm',
+  weight: '3.6 kg',
+  // No firmware change history published yet. Deliberately null rather than
+  // absent, so a page that reaches for it renders nothing instead of undefined.
+  newestKnown: null,
+  source: 'https://alphatheta.com/en/product/player/cdj-1500x/black/',
+  sourceAnnounce: 'https://alphatheta.com/en/information/introducing-the-cdj-1500x-new-dj-multi-player/',
+};
+
+// DJM-V5. Three channels, and the fact that matters most is a MISSING control.
+// Sources:
+//   alphatheta.com/en/product/dj-mixer/djm-v5/black/
+//   downloads.support.alphatheta.com/manuals/dj-mixers/DJM-V5/DJM-V5_DRI1965A_manual.pdf
+export const DJM_V5 = {
+  checked: '7 August 2026',
+  channels: 3,
+  // NO CROSSFADER. Verified in the instruction manual, not inferred from the
+  // spec page, which simply does not mention one either way. The manual's
+  // channel section documents the channel fader and its three curve options and
+  // there is no crossfader or fader-assign control anywhere in it.
+  // This is the single most important line on the page. A DJ who plans a set
+  // around cuts, or who reaches for a crossfader on instinct, has a problem
+  // that no amount of preparation fixes once they are behind the desk.
+  crossfader: false,
+  samplingRate: '96 kHz',
+  converters: '32-bit A/D and D/A',
+  usbPorts: 'USB Type-C x2 (MULTI I/O x1, PC/Mac x1)',
+  // PRO DJ LINK, and the cap is per the manual, not the marketing page.
+  maxMultiPlayers: 3,
+  maxComputers: 2,
+  linkNote: 'Up to 3 multi players and up to 2 computers via a switching hub',
+  linkNamedPlayers: ['CDJ-3000X', 'CDJ-3000'],
+  inputs: 'PHONO x3 (RCA), LINE x3 (RCA), MIC x1 (XLR / 1/4" TRS)',
+  outputs: 'MASTER x1 (XLR), BOOTH x1 (1/4" TRS), REC OUT x1 (RCA), PHONES x2',
+  sendReturn: 'SEND x1, RETURN x1 (1/4" TS)',
+  // SonicLink is a wireless monitoring transmitter built into the mixer. New
+  // convenience, and a new thing that can be the reason you hear nothing.
+  sonicLink: true,
+  software: ['djay Pro', 'rekordbox (Mac/Windows)', 'Serato DJ Pro'],
+  dvs: true,
+  dimensions: '302.0 x 437.5 x 107.9 mm',
+  weight: '8.0 kg',
+  newestKnown: null,          // no published change history yet
+  source: 'https://alphatheta.com/en/product/dj-mixer/djm-v5/black/',
+  sourceManual: 'https://downloads.support.alphatheta.com/manuals/dj-mixers/DJM-V5/DJM-V5_DRI1965A_manual.pdf',
+};
+
 // DJM-REC (AlphaTheta's iPhone/iPad recording + live-streaming app).
 // Facts verified 28 Jul 2026 against AlphaTheta's own support articles
 // (URLs below). Same threshold discipline as everything else in this file.
