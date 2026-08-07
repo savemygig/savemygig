@@ -7,16 +7,24 @@ import Base from '../../../../layouts/Base.astro';
 // readable copy and the /es hrefs differ. If the English page changes, change
 // this one in the same commit.
 const players = [
-  // ORDER (Antonio, 2026-08-07, on sight): CURRENT GENERATION FIRST, top of the
-  // line down, THEN the legacy line, top down. He caught the CDJ-1500X sitting
-  // below two discontinued decks: it is a 2026 model, so it belongs beside the
-  // two 3000s and not at the bottom with the players it replaced.
-  // "Top of the line down to entry" was never meant to sort by model number.
+  // ORDER: MODEL FAMILY FIRST, THEN DESCENDING MODEL NUMBER (Antonio, 2026-08-07).
+  // So every CDJ, high number to low, and then every XDJ, high number to low.
+  //
+  // THIS REPLACED A WORSE RULE EARLIER THE SAME DAY. That one was "current
+  // generation first, then the legacy line", which put the CDJ-1500X third,
+  // beside the two 3000s. It read correctly today and it carried a judgement that
+  // rots: somebody has to keep deciding which models are still current, and the
+  // 1500X becomes legacy the moment its successor ships, at which point the list
+  // needs re-sorting by whoever can work out why it was sorted that way.
+  //
+  // A number never needs that decision, and it matches how a DJ reads the page:
+  // they are looking for the deck in front of them, by its number. Insert new
+  // models by number, inside their family, and do not think about generations.
   { name: 'CDJ-3000X', href: '/es/knowledge/pioneer-dj/cdj-3000x' },
   { name: 'CDJ-3000', href: '/es/knowledge/pioneer-dj/cdj-3000' },
-  { name: 'CDJ-1500X', href: '/es/knowledge/pioneer-dj/cdj-1500x' },
   { name: 'CDJ-2000NXS2', href: '/es/knowledge/pioneer-dj/cdj-2000nxs2' },
   { name: 'CDJ-2000NXS', href: '/es/knowledge/pioneer-dj/cdj-2000nxs' },
+  { name: 'CDJ-1500X', href: '/es/knowledge/pioneer-dj/cdj-1500x' },
   { name: 'CDJ-900NXS', href: '/es/knowledge/pioneer-dj/cdj-900nxs' },
   { name: 'XDJ-1000MK2', href: null },
   { name: 'XDJ-700', href: '/es/knowledge/pioneer-dj/xdj-700' },
