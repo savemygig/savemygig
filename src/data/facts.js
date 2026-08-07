@@ -212,6 +212,125 @@ export const DJM_V5 = {
   sourceManual: 'https://downloads.support.alphatheta.com/manuals/dj-mixers/DJM-V5/DJM-V5_DRI1965A_manual.pdf',
 };
 
+// CDJ-2000NXS. The workhorse still installed in a very large number of booths,
+// and the model with the most useful change history on this whole site: the
+// documented list includes crashes, freezes, audio dropouts and two separate
+// file-loading failures, all fixed years ago, on units that are routinely still
+// running 2013 firmware because nobody updates a club deck that "works".
+// Source: AlphaTheta's own change history PDF, read in full.
+//   downloads.support.alphatheta.com/firmwares/dj-players/CDJ-2000NXS/CDJ-2000NXS-Firmware-Change-History-Ver144-en.pdf
+export const CDJ_2000NXS = {
+  checked: '7 August 2026',
+  newestKnown: '1.44',           // 27 Feb 2024, "minor bugs have been fixed"
+  // THE ONES THAT END A SET, oldest fix first so the version reads as a floor.
+  crashHotCueFix: '1.06',        // 10 Dec 2012: player CRASHES on repeated HOT CUE with Master Tempo on.
+  syncDropoutFix: '1.10',        // 25 Feb 2013: audio dropout on the slave deck when using SYNC.
+  tagListFreezeFix: '1.11',      // 15 Apr 2013: freeze while editing the TAG LIST.
+  browseSlowFix: '1.13',         // 17 Jun 2013: browse screen slows or STOPS after several hours of use,
+                                 // plus a freeze holding HOT CUE over 1 second during auto hot cue loading,
+                                 // plus playback failing after a large USB (20,000 tracks) is disconnected.
+  wavHeaderFix: '1.23',          // 17 Feb 2015: an incompatible WAVE header leaves "Loading.." on screen forever.
+                                 // Same version fixed folders not listing on a 2TB HDD.
+  hddRecognitionFix: '1.24',     // 20 Aug 2015: some HDDs not recognized; noise with Master Tempo.
+  aiffLoadFix: '1.25',           // 15 Dec 2015: AIFF 24bit/48kHz playback STOPPED and tracks would not load.
+                                 // Same version fixed audio noise while scratching.
+  nxs2FeatureFix: '1.30',        // 9 Mar 2016: linked to a CDJ-2000NXS, some CDJ-2000NXS2 features were disabled.
+  wavNoiseFix: '1.40',           // 24 Nov 2016: digitally distorted white noise on certain .WAV files.
+                                 // Same version fixed a very short active loop and needle-search jumping.
+  slipHotCueFix: '1.41',         // 3 Apr 2017: issues during playback and track selection, and SLIP HOT CUE.
+  syncBpmFix: '1.43',            // 19 Oct 2017: speed not returning to the displayed BPM with Sync on,
+                                 // and a popping noise in a LOOP with QUANTIZE and MASTER TEMPO enabled.
+  // Media and library. FAT32 only: no exFAT on this generation, which is the
+  // single most common reason a modern drive fails in an old booth.
+  library: 'Device Library',
+  exfat: false,
+  media: 'USB and SD card',
+  source: 'https://support.alphatheta.com/en-US/articles/21976886580633',
+  sourceHistory: 'https://downloads.support.alphatheta.com/firmwares/dj-players/CDJ-2000NXS/CDJ-2000NXS-Firmware-Change-History-Ver144-en.pdf',
+};
+
+// CDJ-900NXS. The 2000NXS's smaller sibling, same era, same FAT32 limit, and a
+// change history that stops in 2017: the newest firmware is 1.31 and there has
+// been nothing since, so the floor is simply "be at 1.31".
+// Source: downloads.support.alphatheta.com/firmwares/dj-players/CDJ-900NXS/CDJ-900NXS-Firmware-Change-History-Ver131-en.pdf
+export const CDJ_900NXS = {
+  checked: '7 August 2026',
+  newestKnown: '1.31',           // 5 Oct 2017. Nothing published since.
+  beatDivideFix: '1.20',         // 1 Apr 2014: playback sound STOPS while BEAT DIVIDE is active.
+  hddFolderFix: '1.21',          // 17 Feb 2015: folder browsing on 2TB HDDs; slow track list in Serato DJ HID.
+  hddRecognitionFix: '1.22',     // 20 Aug 2015: HDD recognition; noise when Master Tempo is activated.
+  aiffLoadFix: '1.30',           // 24 Nov 2016: AIFF 24bit/48kHz playback stopped and tracks would not load.
+  wavNoiseFix: '1.30',           // Same version: digitally distorted white noise on certain .WAV files.
+  nxs2LinkFix: '1.30',           // Same version: PRO DJ LINK compatibility with CDJ-2000NXS2 and XDJ-1000MK2.
+  syncBpmFix: '1.31',            // 5 Oct 2017: speed not returning to the displayed BPM with Sync enabled.
+  library: 'Device Library',
+  exfat: false,
+  media: 'USB and SD card',
+  source: 'https://support.alphatheta.com/en-US/articles/4404787206681',
+  sourceHistory: 'https://downloads.support.alphatheta.com/firmwares/dj-players/CDJ-900NXS/CDJ-900NXS-Firmware-Change-History-Ver131-en.pdf',
+};
+
+// XDJ-700. The compact Device Library player, and the one with the tightest
+// file-system limit of the lot: officially FAT32, FAT or HFS+ only, no exFAT.
+// Still updated far more recently than the CDJ-900NXS, 1.15 in Nov 2024.
+// Source: assets.pioneerdjhub.com/XDJ-700-Firmware-Change-History-ver115-en2.pdf
+export const XDJ_700 = {
+  checked: '7 August 2026',
+  newestKnown: '1.15',           // 7 Nov 2024
+  browserManyTracksFix: '1.11',  // 7 Mar 2017: categories and tracks not shown in the browser on a large database.
+                                 // Same version fixed search results not appearing when moving the cursor.
+  searchFix: '1.12',             // 25 Apr 2017: SEARCH worked incorrectly under certain conditions.
+  syncBpmFix: '1.13',            // 19 Oct 2017: speed not returning to the displayed BPM with Sync enabled,
+                                 // and a popping noise in a LOOP with QUANTIZE and MASTER TEMPO enabled.
+  ecoStandbyIntro: '1.14',       // 22 Aug 2024: EU Ecodesign auto power off changed to 20 minutes.
+  usbAudioControlFix: '1.15',    // 7 Nov 2024: USB audio did not work in DJ Software Control mode.
+  library: 'Device Library',
+  exfat: false,
+  fileSystems: ['FAT32', 'FAT', 'HFS+'],
+  media: 'USB only',
+  source: 'https://support.alphatheta.com/en-US/articles/4404827627545',
+  sourceHistory: 'https://assets.pioneerdjhub.com/XDJ-700-Firmware-Change-History-ver115-en2.pdf',
+};
+
+// euphonia. AlphaTheta's 4-channel rotary mixer. NO FIRMWARE CHANGE HISTORY IS
+// PUBLISHED, checked 7 August 2026, so the Known issues section on its page says
+// that and lists nothing, exactly as on the CDJ-1500X and DJM-V5 pages.
+//
+// PRO DJ LINK IS NOT STATED on the official product page, in either direction.
+// That is recorded as null rather than guessed at: this mixer has no LAN
+// terminal listed among its connections, and asserting either way without a
+// source would be the kind of claim this file exists to prevent.
+// Source: alphatheta.com/en/product/dj-mixer/euphonia/black/
+export const EUPHONIA = {
+  checked: '7 August 2026',
+  channels: 4,
+  rotary: true,
+  // Rotary faders, and therefore no crossfader. Same practical consequence as
+  // the DJM-V5 and the V10-LF: this is a blending desk, not a cutting desk.
+  crossfader: false,
+  converters: '32-bit A/D and D/A',
+  dsp: '96 kHz / 64-bit floating point mixing in the DSP',
+  // The headline of the whole product: a master transformer circuit co-designed
+  // with Rupert Neve Designs, applied to all master output.
+  transformer: 'Master transformer circuit co-designed by AlphaTheta and Rupert Neve Designs, applied to all master audio output',
+  masterIsolator: '3-band (low, mid, high) with Boost Send and a Boost Level of +12dB, +6dB or 0dB',
+  sendEffects: ['Delay', 'Tape Echo', 'Echo Verb', 'Reverb', 'Shimmer'],
+  highPassFilter: true,
+  externalFx: 'Send/Return plus a Master Insert',
+  energyVisualizer: true,
+  inputs: 'Digital (coaxial) x4, Line (RCA) x4, Phono (RCA) x4, Mic x1 (XLR / 1/4" TRS)',
+  outputs: 'Master (XLR), Booth (1/4" TRS), REC (RCA), Phones (1/4" and 3.5mm)',
+  usbPorts: 'USB Type-C x1',
+  proDjLink: null,               // not stated by AlphaTheta, deliberately not guessed
+  software: ['rekordbox', 'Serato DJ Pro'],
+  dvs: true,
+  dimensions: '429.2 x 331.0 x 119.9 mm',
+  weight: '9.5 kg',
+  newestKnown: null,             // no published change history
+  source: 'https://alphatheta.com/en/product/dj-mixer/euphonia/black/',
+  sourceAnnounce: 'https://alphatheta.com/en/information/meet-the-euphonia-professional-rotary-mixer/',
+};
+
 // DJM-REC (AlphaTheta's iPhone/iPad recording + live-streaming app).
 // Facts verified 28 Jul 2026 against AlphaTheta's own support articles
 // (URLs below). Same threshold discipline as everything else in this file.
