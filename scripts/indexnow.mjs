@@ -16,6 +16,12 @@
  *     # wait for the deploy to go live (check the Pages dashboard)
  *     node scripts/indexnow.mjs          # announce it
  *
+ * IT CANNOT BE RUN FROM THE CLOUD SANDBOX (verified 2026-08-07). The sandbox's
+ * egress proxy does not allow api.indexnow.org, and it answers 403, the same
+ * status IndexNow uses for a bad key. See the note beside MEANING below. Run it
+ * from Antonio's Mac, or do the equivalent by hand in Bing Webmaster Tools,
+ * which has both an IndexNow panel and a 100-per-day URL Submission form.
+ *
  * IT IS DELIBERATELY NOT IN `npm run build` OR `npm run gate`. Both of those
  * run against a local dist on a machine nobody can reach. Submitting from
  * there announces URLs whose new content is not published yet: the engine
@@ -106,7 +112,22 @@ const MEANING = {
   422: 'unprocessable: a URL is not on this host, or the key does not belong to it',
   429: 'too many requests: back off, this is the abuse guard',
 };
-const note = MEANING[res.status] || 'unexpected status, see the IndexNow docs';
+let note = MEANING[res.status] || 'unexpected status, see the IndexNow docs';
+
+// A SANDBOXED PROXY ALSO ANSWERS 403, AND IT IS NOT THE SAME 403 (2026-08-07).
+// Run from the cloud sandbox this project is developed in, the egress proxy
+// refuses api.indexnow.org and returns 403 with "Host not in allowlist". The
+// table above then printed "the key file was not found or does not match",
+// which sent me looking for a key problem that did not exist: the key file was
+// live and correct the whole time, verified at the keyLocation URL.
+// A wrong explanation of a failure costs more than no explanation, so the
+// proxy's own wording is trusted over the status code when it is present.
+if (/not in allowlist|egress|proxy/i.test(body)) {
+  note = 'BLOCKED BEFORE IT LEFT THIS MACHINE. This is the network egress proxy '
+    + 'refusing the endpoint, not IndexNow refusing the key. Nothing was '
+    + 'submitted and nothing is wrong with the key or the site. Run this from a '
+    + 'machine with open egress, or submit through Bing Webmaster Tools instead.';
+}
 
 if (res.ok) {
   console.log(`\nIndexNow OK  ${res.status} (${note})`);
