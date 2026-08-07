@@ -1,0 +1,406 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { XDJ_700 } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
+
+// XDJ-700, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors and CSS: src/pages/knowledge/pioneer-dj/xdj-700.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(XDJ_700.checked);
+const FLOOR = XDJ_700.newestKnown;
+const FS = XDJ_700.fileSystems.join(', ');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/xdj-700#article',
+  headline: 'XDJ-700: a referência operacional',
+  description: 'O que todo DJ precisa saber antes de trabalhar num XDJ-700: o desligamento automático de 20 minutos que parece um deck morto, só FAT32, FAT ou HFS+, nenhum slot de cartão SD, e a falha que escondia uma biblioteca grande.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/xdj-700#webpage' },
+  image: 'https://www.savemygig.com/images/xdj-700-panel-full.webp',
+};
+---
+<Base
+  title="XDJ-700: desligamento automático e FAT32 | Save My Gig"
+  description="Manual de campo do XDJ-700: o desligamento automático de 20 minutos que parece um deck morto, só FAT32 ou HFS+, e nenhum slot de cartão SD."
+  path="/knowledge/pioneer-dj/xdj-700"
+  crumbName="XDJ-700"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>XDJ-700</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">XDJ-700</div>
+        <h1 class="rb-h1">XDJ-700, <span class="accent">o manual de campo</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#xdj-700-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do XDJ-700"
+      >
+        <img
+          src="/images/xdj-700-panel-thumb.webp"
+          alt="Painel de controle do media player compacto Pioneer DJ XDJ-700, visto de cima"
+          width="402"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="xdj-700-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/xdj-700-panel-full.webp"
+        srcset="/images/xdj-700-panel-800.webp 800w, /images/xdj-700-panel-full.webp 1126w"
+        sizes="92vw"
+        alt="Painel de controle do media player compacto Pioneer DJ XDJ-700, visto de cima"
+        width="1126"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth. Se o deck está morto, ele pode ter se desligado
+        sozinho.</strong> O firmware {XDJ_700.ecoStandbyIntro} passou o
+        desligamento automático para <strong>20 minutos</strong> com o Power
+        Management ligado, seguindo as regras de Ecodesign da União Europeia. Um
+        deck parado durante uma virada demorada se desliga sozinho e parece
+        quebrado. Não está. Mais duas coisas: <strong>só {FS}</strong>, sem exFAT,
+        e <strong>nenhum slot de cartão SD</strong>, então o seu único backup é um
+        segundo pen drive que você lembrou de trazer. A versão mínima é
+        <strong>{FLOOR}</strong>.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="xdj700-acc" id="deck-turned-off">
+      <summary><h3 class="acc-h2">O deck está desligado e não fui eu que desliguei</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Ligue ele de novo. Do firmware
+        {XDJ_700.ecoStandbyIntro} em diante, o desligamento automático acontece
+        depois de <strong>20 minutos</strong> sem uso quando o Power Management
+        está ativado. Isso é uma mudança de comportamento deliberada para atender
+        ao Ecodesign da União Europeia, e não um defeito.</p>
+        <p><strong>Por que isso acontece.</strong> Vinte minutos é menos que muitos
+        intervalos reais: a última esticada do DJ de apoio no outro deck, uma
+        virada demorada, uma passagem de som que você deixou pela metade, a hora
+        antes de a casa abrir. O deck estava funcionando, ninguém tocou nele, e ele
+        se desligou exatamente como foi projetado.</p>
+        <p><strong>Resolva agora.</strong> Ligue. O seu drive continua nele e a sua
+        biblioteca está intacta. Dê o tempo de boot, recarregue a sua track, e
+        saiba que qualquer cue que você tinha criado e não salvou se foi.</p>
+        <p><strong>Evite da próxima vez.</strong> Num deck que você controla,
+        desligue o Power Management. Num que você não controla, toque em cada deck
+        durante um intervalo longo, ou simplesmente conte com isso e inclua o tempo
+        de boot na sua passagem em vez de descobrir ele com trinta segundos
+        sobrando na track que está saindo.</p>
+        <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas por versão</a> <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj700-acc" id="empty-browser">
+      <summary><h3 class="acc-h2">A tela de browse está vazia, ou as minhas categorias sumiram</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Documentado, e corrigido na
+        {XDJ_700.browserManyTracksFix}: informações como categorias e tracks não
+        eram exibidas na tela de browse quando o banco de dados tinha muitas
+        tracks. Abaixo dessa versão, uma biblioteca grande pode gerar uma tela de
+        browse vazia num deck que está perfeitamente bem.</p>
+        <p><strong>Por que isso acontece.</strong> Isso escala com a sua
+        biblioteca, ou seja, os DJs com mais chance de encontrar essa falha são
+        justamente os que prepararam mais. O drive está bem, o export está bem, e o
+        player simplesmente não desenha a lista.</p>
+        <p><strong>Resolva agora.</strong> Navegue por pasta em vez de pela
+        biblioteca, se a estrutura permitir: você perde cues e playlists, mas
+        coloca música para tocar. Se não der, use o outro deck.</p>
+        <p><strong>Evite da próxima vez.</strong> Leve o deck para a {FLOOR}. Se não
+        der, leve um export menor para booths com XDJ-700 antigo: a playlist da gig
+        em vez da biblioteca inteira. A busca também era pouco confiável abaixo da
+        {XDJ_700.searchFix}, então não conte com procurar para sair dessa.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/playlists-not-showing-cdj">Playlists não aparecem</a> <a href="/pt/fix/dj-usb-backup-strategy">Estratégia de backup</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj700-acc" id="usb-not-read">
+      <summary><h3 class="acc-h2">O player não lê o meu drive</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Confira o sistema de arquivos. Este
+        player lê <strong>{FS}</strong> e nada além disso. <strong>Sem
+        exFAT.</strong></p>
+        <p><strong>Por que isso acontece.</strong> Esta é a especificação de storage
+        mais restrita de todos os players deste site, e exFAT é o que um DJ
+        formatando um drive grande hoje escolheria com razão. Nada está com
+        defeito.</p>
+        <p><strong>Resolva agora.</strong> Peça um drive FAT32 emprestado, ou toque
+        pelo outro deck. Reformatar apaga o drive, então não é manobra de meio de
+        set a não ser que a música exista em outro lugar também.</p>
+        <p><strong>Evite da próxima vez.</strong> FAT32 é o formato que funciona na
+        maior variedade de booths, inclusive nesta, então se a sua agenda inclui
+        salas antigas, essa é a resposta em vez da tecnicamente melhor.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/exfat-vs-fat32-cdj">exFAT ou FAT32</a> <a href="/pt/fix/format-usb-for-cdj">Como formatar um drive</a> <a href="/pt/fix/usb-not-recognized-cdj">USB não reconhecido</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj700-acc" id="no-backup-slot">
+      <summary><h3 class="acc-h2">O meu USB falhou e não existe slot de SD</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Correto, este player é só USB. Não
+        existe slot de cartão, então o backup dentro do deck que um CDJ-2000NXS ou
+        um CDJ-900NXS te dá não existe aqui.</p>
+        <p><strong>Por que isso importa mais do que parece.</strong> A recomendação
+        deste site é andar com o mesmo set num segundo meio que já está dentro do
+        deck, porque essa é a recuperação mais rápida da sala. Num XDJ-700 essa
+        recuperação só existe se você trouxe um segundo pen drive, e a maioria dos
+        DJs não trouxe.</p>
+        <p><strong>Resolva agora.</strong> Segundo pen drive, se você tem um. Se
+        não, o outro deck, ou um notebook se a booth tiver um conectado. Este é o
+        momento em que o plano que você fez em casa existe ou não existe.</p>
+        <p><strong>Evite da próxima vez.</strong> Dois pen drives idênticos, os dois
+        na sua bag, para qualquer booth que possa ser baseada em XDJ-700. É o seguro
+        mais barato do DJing e este player é o motivo para fazer isso de
+        verdade.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/dj-usb-backup-strategy">Estratégia de backup</a> <a href="/pt/gear">Drives em que confiamos</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="xdj700-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Correções documentadas, por versão de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Ainda recebe manutenção, diferente do
+        CDJ-900NXS: a {FLOOR} chegou em novembro de 2024. Cada entrada abaixo é a
+        redação da própria AlphaTheta, condensada.</p>
+        <dl class="rb-errors">
+          <dt>{XDJ_700.browserManyTracksFix}</dt><dd>Informações como categorias e tracks não eram exibidas na tela de browse quando o banco de dados tinha muitas tracks. Os resultados de busca não apareciam ao mover o cursor durante o SEARCH. Problemas durante a reprodução e a seleção de tracks.</dd>
+          <dt>{XDJ_700.searchFix}</dt><dd>O SEARCH funcionava de forma incorreta em certas condições.</dd>
+          <dt>{XDJ_700.syncBpmFix}</dt><dd>A velocidade de reprodução às vezes não voltava ao BPM mostrado na tela com o Sync ligado. Um estalo durante um loop com QUANTIZE e MASTER TEMPO ligados. Um HOT CUE começava depois do salto para o ponto de LOOP-IN ao mudar o tamanho do loop em tempos com o QUANTIZE ligado.</dd>
+          <dt>{XDJ_700.usbAudioControlFix}</dt><dd>A função de áudio USB não funcionava no modo DJ Software Control.</dd>
+        </dl>
+        <p style="margin-top:1rem"><strong>Uma mudança de comportamento, e não um
+        bug.</strong> Introduzida na {XDJ_700.ecoStandbyIntro}: seguindo a Diretiva
+        de Ecodesign da União Europeia, o tempo até a unidade se desligar
+        automaticamente passou para 20 minutos com o Power Management ligado. Um
+        deck que se desligou sozinho durante uma virada está seguindo essa
+        configuração.</p>
+        <p style="margin-top:1rem"><strong>Faça assim.</strong> Num deck que você
+        controla, fique na {FLOOR}, atualizada entre bookings e nunca na véspera de
+        um.</p>
+        <p style="margin-top:1rem">
+          <strong>Downloads de firmware.</strong> <a href={XDJ_700.source} target="_blank" rel="noopener">Página oficial de suporte da AlphaTheta →</a><br />
+          <a href={XDJ_700.sourceHistory} target="_blank" rel="noopener">Histórico completo de alterações, PDF →</a><br />
+          <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="xdj700-acc" id="storage">
+      <summary><h3 class="acc-h2">As regras de storage mais restritas daqui</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Sistemas de arquivos {FS}. Mídia só
+        USB. Formato de biblioteca {XDJ_700.library}.</p>
+        <p><strong>Por que importa.</strong> Três restrições separadas se acumulam
+        aqui. Sem exFAT, o drive fica limitado. Sem slot de cartão, você perde o
+        backup dentro do deck. {XDJ_700.library} significa que um export OneLibrary
+        de um rekordbox moderno não vai abrir. Um DJ que resolve duas das três
+        ainda não toca.</p>
+        <p><strong>Quando profissionais usam.</strong> Um pen drive FAT32 com um
+        export {XDJ_700.library}, mais um segundo pen drive idêntico. Essa
+        combinação funciona nesta booth e em quase todas as outras.</p>
+        <p><strong>Erros comuns.</strong> Supor que um player compacto e de
+        aparência moderna tem suporte moderno de storage. Não tem.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a> <a href="/pt/fix/exfat-vs-fat32-cdj">exFAT ou FAT32</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdj700-acc" id="power-management">
+      <summary><h3 class="acc-h2">Power Management e a regra dos 20 minutos</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Com o Power Management ligado, a unidade
+        se desliga sozinha depois de 20 minutos sem uso. Esse tempo entrou na
+        {XDJ_700.ecoStandbyIntro} para atender à Diretiva de Ecodesign da União
+        Europeia.</p>
+        <p><strong>Por que importa.</strong> Isso transforma um intervalo normal de
+        uma noite normal num deck que parece morto. Nada no painel frontal explica,
+        e o DJ que chega para o horário dele não tem motivo para suspeitar de uma
+        configuração de energia. A mesma mudança chegou ao DJM-V10 e ao DJM-A9,
+        então uma booth pode ter várias peças fazendo isso.</p>
+        <p><strong>Quando profissionais usam.</strong> Residentes e técnicos
+        desligam, porque a energia economizada vale menos que uma passagem confusa.
+        Num deck que não é seu, trate isso como um fato da sala.</p>
+        <p><strong>Erros comuns.</strong> Achar que um deck desligado é um deck
+        quebrado e escalar para a casa. Perder cue points não salvos por causa
+        disso.</p>
+        <p class="acc-related">Relacionados: <a href="#deck-turned-off">O deck está desligado e não fui eu que desliguei</a> <a href="/pt/knowledge/pioneer-dj/djm-v10">DJM-V10, a mesma mudança de Ecodesign</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas profissionais" />
+
+    <details class="acc-sec" name="xdj700-acc" id="two-sticks">
+      <summary><h3 class="acc-h2">Ande com dois pen drives idênticos para esta booth</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Dois pen drives FAT32, o mesmo export
+        {XDJ_700.library} nos dois, os dois na bag.</p>
+        <p><strong>Por que importa.</strong> Todo outro player antigo que este site
+        cobre te dá um segundo slot no deck. Este não, então a redundância tem que
+        vir da sua bag ou ela não existe. Essa é toda a diferença entre uma falha
+        de drive ser um evento de trinta segundos e ser o fim do set.</p>
+        <p><strong>Faça assim.</strong> Exporte uma vez, copie para dois pen drives,
+        e confira os dois ejetando e navegando neles em vez de confiar na janela de
+        cópia. Etiquete eles para saber qual você já tentou.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/dj-usb-backup-strategy">Estratégia de backup</a> <a href="/pt/checklist">O checklist pré-gig</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção preventiva" />
+
+    <details class="acc-sec" name="xdj700-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Manter o deck confiável</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A única entrada USB é a peça de
+        desgaste, porque todo drive que você toca passa por ela. Firmware até a
+        {FLOOR} entre bookings.</p>
+        <p><strong>Por que importa.</strong> Sem slot de cartão não existe uma
+        segunda porta para recorrer, então uma entrada USB gasta não é um incômodo
+        neste player, é o caminho inteiro da mídia. Uma entrada forçada de lado por
+        anos vira uma falha intermitente que parece exatamente um pen drive
+        ruim.</p>
+        <p><strong>Faça assim.</strong> Puxe os drives retos, pelo conector, nunca
+        pelo cabo e nunca de lado. Sopre a entrada em vez de empurrar a sujeira
+        mais para dentro. Mantenha a unidade coberta entre as gigs.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="xdj700-acc" id="compatibility">
+      <summary><h3 class="acc-h2">Controle por software, Link e booths misturadas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O modo DJ Software Control é suportado,
+        e a função de áudio USB dele ficou quebrada até a {FLOOR}, o que vale saber
+        se o seu plano é usar este deck como controlador em vez de player.</p>
+        <p><strong>Faça assim.</strong> Se o seu plano envolve controle por
+        software, confirme que o deck está na {FLOOR} antes da gig em vez de
+        descobrir que o caminho de áudio não funciona. O formato de biblioteca é do
+        lado do player: este deck precisa de {XDJ_700.library}, então uma booth que
+        mistura ele com um player OneLibrary precisa de estratégia de drive em vez
+        de suposição.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a> <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs">CDJ-2000NXS</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Perguntas frequentes" />
+
+    <details class="acc-sec" name="xdj700-acc" id="faq">
+      <summary><h3 class="acc-h2">Respostas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>Por que o deck se desligou sozinho?</dt><dd>Power Management, ajustado para 20 minutos sem uso a partir do firmware {XDJ_700.ecoStandbyIntro} para atender ao Ecodesign da União Europeia. Não é defeito.</dd>
+          <dt>Quais sistemas de arquivos ele lê?</dt><dd>{FS}. Sem exFAT.</dd>
+          <dt>Existe slot de cartão SD?</dt><dd>Não. Só USB, então o seu backup tem que ser um segundo pen drive.</dd>
+          <dt>Em qual firmware ele deveria estar?</dt><dd>{FLOOR}, de novembro de 2024.</dd>
+          <dt>Por que a minha tela de browse está vazia?</dt><dd>Abaixo da {XDJ_700.browserManyTracksFix}, categorias e tracks não eram exibidas quando o banco de dados tinha muitas tracks. O gatilho é uma biblioteca grande.</dd>
+          <dt>Qual formato de biblioteca?</dt><dd>{XDJ_700.library}. Não OneLibrary.</dd>
+          <dt>Dá para usar ele como controlador?</dt><dd>Dá, no modo DJ Software Control, e a função de áudio USB não funcionava abaixo da {FLOOR}.</dd>
+          <dt>A busca é confiável?</dt><dd>Ela foi corrigida duas vezes, na {XDJ_700.browserManyTracksFix} e na {XDJ_700.searchFix}. Abaixo dessas, não conte com ela.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guias relacionados</h2>
+      <p class="dim" style="margin:0">
+        <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs">CDJ-2000NXS</a> ·
+        <a href="/pt/knowledge/pioneer-dj/cdj-900nxs">CDJ-900NXS</a> ·
+        <a href="/pt/knowledge/pioneer-dj/firmware">Firmware por versão</a> ·
+        <a href="/pt/knowledge/pioneer-dj/rekordbox">Referência do rekordbox</a> ·
+        <a href="/pt/checklist">Checklist de setup de clube</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_xdj700"><Icon name="siren" /> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_xdj700" lang="pt" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: a <a href={XDJ_700.source} target="_blank" rel="noopener">página de firmware</a> oficial
+      do XDJ-700 da AlphaTheta e o seu <a href={XDJ_700.sourceHistory} target="_blank" rel="noopener">PDF de histórico completo de alterações</a>,
+      lidos por inteiro e conferidos em {UPDATED}. Cada falha documentada acima é a
+      redação do próprio fabricante, condensada. Os passos gerais de diagnóstico
+      refletem a prática padrão de booth. Especificações e comportamento mudam sem
+      aviso, confira de novo antes de um show grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* Photo anchored to hw-head's own bottom edge, not sized by a flex row.
+     See the long note in djm-v10.astro for why a flex row was wrong. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

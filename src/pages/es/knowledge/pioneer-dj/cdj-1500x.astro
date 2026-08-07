@@ -1,0 +1,441 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { CDJ_1500X } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
+
+// CDJ-1500X, NEUTRAL LATIN AMERICAN SPANISH. Source of truth for structure,
+// components, classes, anchors and CSS:
+// src/pages/knowledge/pioneer-dj/cdj-1500x.astro. Only the human readable copy
+// and the /es hrefs differ.
+
+const MESES = {
+  January: 'enero', February: 'febrero', March: 'marzo', April: 'abril',
+  May: 'mayo', June: 'junio', July: 'julio', August: 'agosto',
+  September: 'septiembre', October: 'octubre', November: 'noviembre', December: 'diciembre',
+};
+const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = esDate(CDJ_1500X.checked);
+const ANNOUNCED = esDate(CDJ_1500X.announced);
+const FS = CDJ_1500X.fileSystems.join(', ');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/cdj-1500x#article',
+  headline: 'CDJ-1500X: la referencia operativa',
+  description: 'Lo que todo DJ necesita saber antes de trabajar un CDJ-1500X: los sistemas de archivos que lee y los que rechaza, el requisito de OneLibrary, qué puertos USB aceptan una memoria, y cuánto cuesta depender del Wi-Fi del booth.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/cdj-1500x#webpage' },
+  image: 'https://www.savemygig.com/images/cdj-1500x-panel-full.webp',
+};
+---
+<Base
+  title="CDJ-1500X: sin NTFS, OneLibrary y puertos USB | Save My Gig"
+  description="Manual de campo del CDJ-1500X: por qué rechaza las memorias en NTFS, el requisito de OneLibrary de rekordbox 7.2.16, y qué puertos USB leen una memoria."
+  path="/knowledge/pioneer-dj/cdj-1500x"
+  crumbName="CDJ-1500X"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Ruta de navegación">
+      <a href="/es/knowledge">Base de conocimiento</a> <span aria-hidden="true">/</span>
+      <a href="/es/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>CDJ-1500X</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">CDJ-1500X</div>
+        <h1 class="rb-h1">CDJ-1500X, <span class="accent">el manual de campo</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#cdj-1500x-lightbox"
+        aria-label="Abrir una foto más grande del panel de control del CDJ-1500X"
+      >
+        <img
+          src="/images/cdj-1500x-panel-thumb.webp"
+          alt="Panel de control del multi player DJ AlphaTheta CDJ-1500X, visto desde arriba"
+          width="336"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="cdj-1500x-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Cerrar"></a>
+      <a href="#" class="lightbox-close" aria-label="Cerrar">&times;</a>
+      <img
+        src="/images/cdj-1500x-panel-full.webp"
+        srcset="/images/cdj-1500x-panel-800.webp 800w, /images/cdj-1500x-panel-full.webp 942w"
+        sizes="92vw"
+        alt="Panel de control del multi player DJ AlphaTheta CDJ-1500X, visto desde arriba"
+        width="942"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> Un reproductor compacto con las reglas
+        de biblioteca de un reproductor grande. Tres cosas deciden si tu memoria
+        funciona acá, y las tres se resuelven en casa, no en el booth:
+        <strong>no lee NTFS</strong>, necesita un
+        <strong>export OneLibrary de rekordbox {CDJ_1500X.rekordboxMin} o más
+        reciente</strong>, y de sus tres puertos USB solo
+        <strong>dos aceptan almacenamiento</strong>. Las funciones de nube y de
+        streaming son muy buenas y ponen el Wi-Fi del booth en tu cadena de señal,
+        así que trátalas como un extra y nunca como el plan. Anunciado el
+        {ANNOUNCED}, así que todavía no hay historial de firmware que revisar.
+      </p>
+      <label for="sv-toggle" class="sv-more">Leer más…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Leer menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluciones de emergencia" />
+
+    <details class="acc-sec" name="cdj1500x-acc" id="usb-not-read">
+      <summary><h3 class="acc-h2">El reproductor no lee tu memoria USB</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Revisa el sistema de archivos antes
+        que cualquier otra cosa. Este reproductor lee {FS}. <strong>NTFS no es
+        compatible</strong>, y NTFS es lo que Windows te da por defecto cuando
+        formateas una memoria.</p>
+        <p><strong>Por qué pasa esto.</strong> Una memoria formateada en NTFS monta
+        perfecto en la laptop que la creó, así que nada parece mal hasta que le
+        pides al reproductor que la lea. La memoria no está fallada y los archivos
+        no están dañados. El reproductor simplemente no habla ese formato.</p>
+        <p><strong>Resuélvelo ahora.</strong> Consigue prestada una memoria que ya
+        esté en exFAT o FAT32 y exporta ahí, o toca desde el otro deck mientras
+        vuelves a exportar. Formatear borra la memoria, así que no es una maniobra
+        de mitad de set salvo que tengas la música en otro lado también.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Formatea en exFAT o FAT32 a
+        propósito, una vez, y revísalo en lugar de suponerlo. Una memoria que
+        funcionó en todos los booths durante un año no es prueba: es prueba sobre
+        los reproductores que te tocaron.</p>
+        <p class="acc-related">Relacionados: <a href="/es/fix/exfat-vs-fat32-cdj">exFAT o FAT32</a> <a href="/es/fix/format-usb-for-cdj">Cómo formatear una memoria</a> <a href="/es/emergency">Abrir Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj1500x-acc" id="library-not-browsable">
+      <summary><h3 class="acc-h2">La memoria se lee pero la biblioteca no abre</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Este es un reproductor
+        {CDJ_1500X.library}. Un export viejo de Device Library tiene que
+        convertirse con rekordbox {CDJ_1500X.rekordboxMin} o más reciente antes de
+        que este reproductor pueda navegarlo.</p>
+        <p><strong>Por qué pasa esto.</strong> La memoria está bien y los archivos
+        de audio están bien. Lo que el reproductor no puede usar es la base de
+        datos escrita junto a ellos. Esta es exactamente la trampa para el DJ cuya
+        memoria funciona cada fin de semana en un CDJ-2000NXS2 o un CDJ-3000: esos
+        leen el formato anterior, y este quiere el nuevo.</p>
+        <p><strong>Resuélvelo ahora.</strong> No hay conversión dentro del booth.
+        Si la estructura de carpetas está intacta, muchas veces todavía puedes
+        cargar tracks navegando la memoria por carpetas en lugar de por la
+        biblioteca, lo que te hace perder cues y playlists pero pone música
+        sonando. Si no, usa el otro deck.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Exporta desde rekordbox
+        {CDJ_1500X.rekordboxMin} o más reciente y confirma que el export terminó,
+        en lugar de suponer que una sincronización acabó. Si tocas en booths
+        mezclados, sabe cuál de tus memorias está en cuál formato.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla de compatibilidad por modelo</a> <a href="/es/fix/playlists-not-showing-cdj">Las playlists no aparecen</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj1500x-acc" id="wrong-usb-port">
+      <summary><h3 class="acc-h2">No pasa nada cuando conectas la memoria</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Puede que estés en el puerto de
+        computadora. El reproductor tiene un puerto USB-A y dos USB-C, y solo uno
+        de los USB-C acepta almacenamiento: el otro es para computadora.</p>
+        <p><strong>Por qué pasa esto.</strong> Dos puertos USB-C idénticos, uno al
+        lado del otro, en un booth oscuro, y uno de ellos es para laptop. Nada
+        está roto y no aparece ningún error, porque desde el punto de vista del
+        reproductor no conectaste ninguna memoria.</p>
+        <p><strong>Resuélvelo ahora.</strong> Pasa la memoria al otro puerto USB-C,
+        o usa el puerto USB-A, que no deja dudas.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Encuentra el puerto de
+        almacenamiento en la prueba de sonido, con luz, y acuérdate de qué lado
+        está. Si tu memoria es USB-A, la duda nunca aparece.</p>
+        <p class="acc-related">Relacionados: <a href="/es/fix/usb-not-recognized-cdj">USB no reconocido</a> <a href="/es/checklist">Checklist pre-gig</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj1500x-acc" id="cloud-failed">
+      <summary><h3 class="acc-h2">La nube o el streaming se cortó a mitad del set</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Pásate a la memoria. Todo lo que llega
+        por {CDJ_1500X.cloudPlay[0]} o por un servicio de streaming depende de la
+        red del lugar, y la red del lugar no es tuya para arreglarla a la una de la
+        mañana.</p>
+        <p><strong>Por qué pasa esto.</strong> El Wi-Fi del booth compite con una
+        sala llena de celulares, vive atado a lo que permite el contrato del lugar,
+        y con frecuencia es el equipo menos mantenido del edificio. Nada de eso es
+        una falla del reproductor.</p>
+        <p><strong>Resuélvelo ahora.</strong> Toca desde la memoria USB que
+        trajiste. Ese es el motivo entero de seguir trayendo una.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Trata el acceso a la nube como
+        una comodidad para encontrar un track que no planeaste, nunca como la forma
+        de entregar tu set. Una copia local del set en una memoria que este
+        reproductor pueda leer no cuesta nada y saca al lugar de tu cadena de
+        señal.</p>
+        <p class="acc-related">Relacionados: <a href="/es/prepare">El sistema de prevención completo</a> <a href="/es/fix/dj-usb-backup-strategy">Estrategia de backup</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conocidos" />
+
+    <details class="acc-sec" name="cdj1500x-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Correcciones documentadas, por versión de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta. Todavía no hay ninguna, y esa es la respuesta
+        honesta.</strong> El CDJ-1500X fue anunciado el {ANNOUNCED}. AlphaTheta no
+        publicó un historial de cambios de firmware para él, así que no hay
+        problema documentado que reportar ni versión mínima por encima de la cual
+        quedarse.</p>
+        <p><strong>Por qué lo decimos en lugar de sacar la sección.</strong> Cada
+        una de las otras páginas de reproductor y de mixer de acá lista
+        correcciones reales tomadas de los propios historiales de cambios de
+        AlphaTheta, con número de versión. Una sección vacía en un modelo nuevo es
+        información: te dice que nadie publicó un problema conocido, y te dice que
+        esta página no está adivinando. Si algún día escribimos una entrada de
+        firmware acá, va a ser porque AlphaTheta la documentó.</p>
+        <p><strong>Qué hacer mientras tanto.</strong> Anota la versión que muestra
+        el deck cuando toques uno, y revisa la página oficial de soporte antes de
+        un show que importa. Un reproductor tan nuevo va a acumular historial de
+        cambios, y las primeras entradas suelen llegar dentro del primer año.</p>
+        <p style="margin-top:1rem">
+          <strong>Descargas de firmware.</strong> <a href={CDJ_1500X.source} target="_blank" rel="noopener">Página oficial del producto de AlphaTheta →</a><br />
+          <span class="dim" style="font-size:0.85rem">¿Encontraste un historial de cambios que nos falta? <a href="/es/feedback">Avísanos</a> y lo agregamos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/firmware">Cada modelo, por versión de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Funciones explicadas" />
+
+    <details class="acc-sec" name="cdj1500x-acc" id="formats">
+      <summary><h3 class="acc-h2">Qué lee, y qué rechaza</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Sistemas de archivos: {FS}. Audio:
+        {CDJ_1500X.formats.join(', ')}.</p>
+        <p><strong>Por qué importa.</strong> El sistema de archivos decide si la
+        memoria se puede leer siquiera. El formato de audio decide si un track
+        individual carga. Son dos fallas distintas y los DJs las mezclan seguido
+        mientras diagnostican, lo que los manda a buscar en el lugar equivocado.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> exFAT para memorias
+        de más de 32GB y para archivos grandes, FAT32 cuando necesitas la
+        compatibilidad más amplia con reproductores viejos en booths desconocidos.
+        FLAC y Apple Lossless funcionan acá, lo que no era cierto en las
+        generaciones anteriores, así que una biblioteca lossless es viable si todo
+        el booth es moderno.</p>
+        <p><strong>Errores comunes.</strong> Suponer que NTFS está bien porque la
+        laptop lo lee. Suponer que una biblioteca lossless va a cargar en cada deck
+        de un booth mezclado.</p>
+        <p class="acc-related">Relacionados: <a href="/es/fix/exfat-vs-fat32-cdj">exFAT o FAT32</a> <a href="/es/fix/best-usb-size-for-djing">Tamaño de la memoria</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj1500x-acc" id="cloud-features">
+      <summary><h3 class="acc-h2">CloudDirectPlay, streaming y login por NFC</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> El Wi-Fi integrado te da tu biblioteca
+        de rekordbox en la nube y streaming de
+        {CDJ_1500X.streamingServices.join(', ')}. Acercar tu celular al deck te
+        inicia sesión y carga tus configuraciones.</p>
+        <p><strong>Por qué importa.</strong> La ganancia real es el track que no
+        planeaste: un pedido, una lectura de la sala, algo que tienes pero no
+        exportaste. Antes eso era un no. El costo real es que las dos funciones
+        ponen la red del lugar en tu ruta crítica.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> Como segunda opción
+        al lado de una memoria, no en lugar de una. Para encontrar el track
+        inesperado, no para entregar el set planeado.</p>
+        <p><strong>Errores comunes.</strong> Llegar sin memoria porque la
+        biblioteca está en la nube. Suponer que el lugar tiene Wi-Fi usable dentro
+        del booth en concreto, que suele ser una respuesta distinta de si el bar
+        tiene Wi-Fi.</p>
+        <p class="acc-related">Relacionados: <a href="#cloud-failed">La nube se cortó a mitad del set</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj1500x-acc" id="compact">
+      <summary><h3 class="acc-h2">El formato compacto, en la práctica</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> {CDJ_1500X.dimensions} y
+        {CDJ_1500X.weight}, con pantalla táctil capacitiva a color de 10,1
+        pulgadas y {CDJ_1500X.hotCues} botones de hot cue.</p>
+        <p><strong>Por qué importa.</strong> Los booths chicos son la norma, no la
+        excepción, y un reproductor que entra cambia lo que un lugar puede
+        instalar. También significa que el layout es más apretado que el de un
+        CDJ-3000, así que los controles que encuentras por tacto no están donde tus
+        manos los esperan.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> Bares, clubes chicos,
+        equipos móviles y cualquier booth cuya mesa fue diseñada para dos
+        tornamesas.</p>
+        <p><strong>Errores comunes.</strong> Tratar el layout más apretado como
+        idéntico al de un 3000. Recorre el deck antes de que abran las puertas,
+        igual que harías con un mixer desconocido.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/cdj-3000x">CDJ-3000X</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Consejos profesionales" />
+
+    <details class="acc-sec" name="cdj1500x-acc" id="one-drive-rule">
+      <summary><h3 class="acc-h2">Lleva una memoria que este reproductor sí pueda leer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Una memoria, exFAT o FAT32, exportada
+        desde rekordbox {CDJ_1500X.rekordboxMin} o más reciente, probada en un
+        reproductor antes del gig y no solo en la laptop.</p>
+        <p><strong>Por qué importa.</strong> Los dos rechazos más probables de este
+        reproductor, el sistema de archivos y el formato de biblioteca, se deciden
+        en casa y no se arreglan en el booth. Diez minutos en tu escritorio
+        eliminan los dos.</p>
+        <p><strong>Hazlo así.</strong> Exporta, después expulsa, vuelve a conectar
+        la memoria y navégala, para revisar el resultado terminado en lugar de la
+        opinión del software sobre él. Si puedes conseguir diez minutos en un
+        reproductor de verdad, mejor todavía.</p>
+        <p class="acc-related">Relacionados: <a href="/es/checklist">Checklist pre-gig</a> <a href="/es/gear">Memorias en las que confiamos</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Mantenimiento preventivo" />
+
+    <details class="acc-sec" name="cdj1500x-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Mantener el deck confiable</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Trata los puertos USB como la pieza de
+        desgaste, mantén la pantalla limpia, y revisa el firmware entre una fecha y
+        otra en lugar de antes de una.</p>
+        <p><strong>Por qué importa.</strong> Este deck no tiene slot de tarjeta SD,
+        así que cada memoria que tocas pasa por un puerto USB, y un puerto que fue
+        palanqueado de lado mil veces se convierte en una falla intermitente que se
+        ve igual que una memoria mala. La pantalla es capacitiva, así que una capa
+        de condensación o de trago derramado es un problema de control, no
+        cosmético.</p>
+        <p><strong>Hazlo así.</strong> Saca las memorias derecho, tomándolas del
+        conector, nunca en ángulo y nunca del cable. Seca la pantalla antes del set
+        en lugar de durante.</p>
+        <p class="acc-related">Relacionados: <a href="/es/prepare">El sistema de prevención completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidad" />
+
+    <details class="acc-sec" name="cdj1500x-acc" id="compatibility">
+      <summary><h3 class="acc-h2">Reproductores, mixers, software y Pro DJ Link</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Hasta {CDJ_1500X.maxLinkedUnits}
+        unidades conectadas usando un hub de switching, por el puerto LAN o por el
+        wireless integrado. Software: {CDJ_1500X.software.join(', ')}.</p>
+        <p><strong>El número que hay que recordar es
+        {CDJ_1500X.maxLinkedUnits}.</strong> Un rig todo de CDJ-3000 enlaza seis
+        reproductores. Este se topa en {CDJ_1500X.maxLinkedUnits}. Si estás
+        planeando un set de cuatro decks, o un escenario con cambios que se
+        superponen, ese techo es una restricción de planificación y no un detalle,
+        y es mejor saberlo ahora que en medio de un pase de deck.</p>
+        <p><strong>Hazlo así.</strong> En un booth mezclado, confirma qué son los
+        otros decks antes de suponer que el Link va a cargar con todo. El formato
+        de biblioteca es una cuestión de cada reproductor, así que un booth con
+        este y un CDJ-2000NXS2 necesita una estrategia de memorias, no una
+        suposición.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla de compatibilidad por modelo</a> <a href="/es/knowledge/pioneer-dj/djm-v10">DJM-V10</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Preguntas frecuentes" />
+
+    <details class="acc-sec" name="cdj1500x-acc" id="faq">
+      <summary><h3 class="acc-h2">Respuestas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>¿Lee una memoria en NTFS?</dt><dd>No. AlphaTheta declara que NTFS no es compatible. Usa exFAT o FAT32.</dd>
+          <dt>¿Qué sistemas de archivos lee?</dt><dd>{FS}.</dd>
+          <dt>¿Necesito una versión específica de rekordbox?</dt><dd>Sí, {CDJ_1500X.rekordboxMin} o más reciente, porque este es un reproductor {CDJ_1500X.library}. Un export viejo de Device Library hay que convertirlo primero.</dd>
+          <dt>¿Por qué mi memoria funciona en un CDJ-2000NXS2 y no en este?</dt><dd>Casi siempre el formato de biblioteca. Los reproductores viejos leen Device Library, este quiere OneLibrary.</dd>
+          <dt>¿Cuántos reproductores puedo enlazar?</dt><dd>{CDJ_1500X.maxLinkedUnits}, usando un hub de switching.</dd>
+          <dt>¿Tiene slot de tarjeta SD?</dt><dd>No. Solo USB, y solo dos de los tres puertos aceptan almacenamiento.</dd>
+          <dt>¿Reproduce FLAC?</dt><dd>Sí. {CDJ_1500X.formats.join(', ')}.</dd>
+          <dt>¿Puedo tocar un set entero desde la nube?</dt><dd>Técnicamente sí, y nosotros no lo haríamos. Pone el Wi-Fi del lugar en tu cadena de señal. Lleva una memoria.</dd>
+          <dt>¿Hay bugs de firmware conocidos?</dt><dd>Ninguno publicado. El reproductor fue anunciado el {ANNOUNCED} y AlphaTheta todavía no publicó un historial de cambios.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guías relacionadas</h2>
+      <p class="dim" style="margin:0">
+        <a href="/es/knowledge/pioneer-dj/cdj-3000x">CDJ-3000X</a> ·
+        <a href="/es/knowledge/pioneer-dj/cdj-3000">CDJ-3000</a> ·
+        <a href="/es/knowledge/pioneer-dj/djm-v10">DJM-V10</a> ·
+        <a href="/es/knowledge/pioneer-dj/rekordbox">Referencia de rekordbox</a> ·
+        <a href="/es/checklist">Checklist de setup de club</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">¿Vas a tocar pronto y no funciona?</h2>
+      <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_cdj1500x"><Icon name="siren" /> Abrir Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_cdj1500x" lang="es" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fuentes: la <a href={CDJ_1500X.source} target="_blank" rel="noopener">página
+      oficial del CDJ-1500X</a> de AlphaTheta y su
+      <a href={CDJ_1500X.sourceAnnounce} target="_blank" rel="noopener">anuncio de
+      lanzamiento</a>, revisadas el {UPDATED}. No se publicó ningún historial de
+      cambios de firmware para este modelo todavía, así que no se cita ninguno.
+      Los pasos generales de diagnóstico reflejan la práctica estándar de booth.
+      Las especificaciones y el comportamiento cambian sin aviso, vuelve a revisar
+      antes de un show grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* Same anchoring as every other hardware page: the photo is pinned to
+     hw-head's own bottom edge rather than sized by a flex row, so it touches
+     the briefing panel at every width regardless of how the headline wraps.
+     See the long note in djm-v10.astro for why a flex row was wrong. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

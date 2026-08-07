@@ -1,0 +1,398 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { CDJ_900NXS } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
+
+// CDJ-900NXS, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors and CSS: src/pages/knowledge/pioneer-dj/cdj-900nxs.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(CDJ_900NXS.checked);
+const FLOOR = CDJ_900NXS.newestKnown;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/cdj-900nxs#article',
+  headline: 'CDJ-900NXS: a referência operacional',
+  description: 'O que todo DJ precisa saber antes de trabalhar num CDJ-900NXS: o histórico de firmware terminou em 2017, o que a 1.31 corrigiu, a falha do BEAT DIVIDE que parava o áudio, e por que esta geração é só FAT32.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/cdj-900nxs#webpage' },
+  image: 'https://www.savemygig.com/images/cdj-900nxs-panel-full.webp',
+};
+---
+<Base
+  title="CDJ-900NXS: firmware parou na 1.31 e FAT32 | Save My Gig"
+  description="Manual de campo do CDJ-900NXS: o firmware parou em 2017, o que a 1.31 corrigiu, a falha do BEAT DIVIDE que parava o áudio, e o limite do FAT32."
+  path="/knowledge/pioneer-dj/cdj-900nxs"
+  crumbName="CDJ-900NXS"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>CDJ-900NXS</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">CDJ-900NXS</div>
+        <h1 class="rb-h1">CDJ-900NXS, <span class="accent">o manual de campo</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#cdj-900nxs-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do CDJ-900NXS"
+      >
+        <img
+          src="/images/cdj-900nxs-panel-thumb.webp"
+          alt="Painel de controle do media player Pioneer DJ CDJ-900NXS, visto de cima"
+          width="405"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="cdj-900nxs-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/cdj-900nxs-panel-full.webp"
+        srcset="/images/cdj-900nxs-panel-800.webp 800w, /images/cdj-900nxs-panel-full.webp 1134w"
+        sizes="92vw"
+        alt="Painel de controle do media player Pioneer DJ CDJ-900NXS, visto de cima"
+        width="1134"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth. Este deck está encerrado, e isso muda o
+        conselho.</strong> O firmware {FLOOR} chegou em outubro de 2017 e nada foi
+        publicado depois, então, diferente de um CDJ-2000NXS, não existe atualização
+        esperando para corrigir nada. Ou a falha foi curada, ou ela é permanente.
+        Saiba qual: <strong>a reprodução parava quando o BEAT DIVIDE era
+        usado</strong> abaixo da {CDJ_900NXS.beatDivideFix}, um <strong>AIFF em
+        24bit/48kHz não carregava de jeito nenhum</strong> abaixo da
+        {CDJ_900NXS.aiffLoadFix}, e o Link com players mais novos só funcionou
+        direito a partir da {CDJ_900NXS.nxs2LinkFix}. E <strong>só FAT32</strong>,
+        permanentemente.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="beat-divide-silence">
+      <summary><h3 class="acc-h2">O deck ficou mudo quando eu usei o BEAT DIVIDE</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Documentado, e corrigido na
+        {CDJ_900NXS.beatDivideFix}: o som da reprodução parava enquanto o BEAT
+        DIVIDE estava ativo. Se o deck está abaixo dessa versão, o recurso pode te
+        deixar mudo.</p>
+        <p><strong>Por que isso acontece.</strong> É uma falha de firmware num
+        recurso de performance, que é o pior lugar possível para uma. Ninguém faz
+        passagem de som com o BEAT DIVIDE, então isso é descoberto ao vivo, na
+        primeira vez que um DJ vai usar ele na frente de uma sala.</p>
+        <p><strong>Resolva agora.</strong> Desligue o BEAT DIVIDE e o som volta. Não
+        gaste o próximo minuto decidindo se você imaginou aquilo: deixe o recurso em
+        paz pelo resto do set e siga.</p>
+        <p><strong>Evite da próxima vez.</strong> Confira a versão na chegada.
+        Abaixo da {CDJ_900NXS.beatDivideFix}, trate o BEAT DIVIDE como
+        indisponível em vez de ferramenta, e se o deck é seu, leve ele para a
+        {FLOOR}.</p>
+        <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas por versão</a> <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="usb-not-read">
+      <summary><h3 class="acc-h2">O player não lê o meu drive</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Quase sempre é o sistema de arquivos.
+        Esta geração é <strong>só FAT32</strong>, sem exFAT, e nenhuma versão de
+        firmware vai adicionar, porque não existem mais versões de firmware.</p>
+        <p><strong>Por que isso acontece.</strong> exFAT é a escolha moderna
+        sensata e todo player novo lê, então um drive formatado para uma booth com
+        CDJ-3000 é invisível aqui. Nada está quebrado. O formato é mais novo que o
+        player e sempre vai ser.</p>
+        <p><strong>Resolva agora.</strong> Peça um drive FAT32 emprestado ou toque
+        pelo outro deck. Reformatar apaga tudo, então não é jogada de meio de set a
+        não ser que a música exista em outro lugar também.</p>
+        <p><strong>Evite da próxima vez.</strong> Um drive FAT32 que funciona em
+        todo lugar. Também existiam duas falhas documentadas de disco rígido, drives
+        não sendo reconhecidos de jeito nenhum ({CDJ_900NXS.hddRecognitionFix}) e
+        pastas não aparecendo num drive de 2TB ({CDJ_900NXS.hddFolderFix}), então um
+        pen drive é uma aposta melhor aqui do que um HD externo grande.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/exfat-vs-fat32-cdj">exFAT ou FAT32</a> <a href="/pt/fix/format-usb-for-cdj">Como formatar um drive</a> <a href="/pt/fix/usb-not-recognized-cdj">USB não reconhecido</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="track-will-not-load">
+      <summary><h3 class="acc-h2">Uma track não carrega, ou o ruído está errado</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Duas falhas de arquivo documentadas, as
+        duas curadas na {CDJ_900NXS.aiffLoadFix}: um AIFF em 24bit/48kHz parava de
+        tocar e não podia ser carregado num deck, e certos arquivos WAV produziam
+        ruído branco digitalmente distorcido. Também existe ruído quando o Master
+        Tempo é ativado, corrigido na {CDJ_900NXS.hddRecognitionFix}.</p>
+        <p><strong>Por que isso acontece.</strong> O decoder encontrando um arquivo
+        que ele não consegue interpretar, e isso parece exatamente uma track
+        corrompida ou um drive falhando de onde você está. É isso que a torna cara:
+        você investiga o drive enquanto a falha está no firmware.</p>
+        <p><strong>Resolva agora.</strong> Carregue outra track do mesmo drive. Se
+        funcionar, o drive está bem e o problema é aquele arquivo neste firmware.
+        Toque outra coisa.</p>
+        <p><strong>Evite da próxima vez.</strong> Num deck abaixo da
+        {CDJ_900NXS.aiffLoadFix}, evite AIFF lossless em 24bit/48kHz e desconfie de
+        WAV de fontes incomuns. MP3 e AAC nunca foram afetados.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/rekordbox-file-is-missing">Arquivo do rekordbox não encontrado</a> <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs#stuck-loading">As mesmas falhas no 2000NXS</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="link-trouble">
+      <summary><h3 class="acc-h2">O Link está estranho com os decks mais novos</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Documentado. A compatibilidade de PRO DJ
+        LINK com o CDJ-2000NXS2 e com o XDJ-1000MK2 foi corrigida na
+        {CDJ_900NXS.nxs2LinkFix}. Abaixo dessa versão, um 900NXS do lado de um
+        player mais novo é uma causa conhecida em vez de um mistério.</p>
+        <p><strong>Por que isso acontece.</strong> Uma booth misturada é o caso
+        normal numa casa que atualizou aos poucos, e o deck antigo é o que ninguém
+        pensou em atualizar porque ele ainda toca música.</p>
+        <p><strong>Resolva agora.</strong> O áudio não precisa da rede. Tire o cabo
+        de Link e cada player continua tocando pela própria saída, então você perde
+        o sync e a navegação compartilhada, mas não perde o set.</p>
+        <p><strong>Evite da próxima vez.</strong> Numa booth misturada, quando falta
+        um recurso no deck NOVO, confira a versão do ANTIGO. É contraintuitivo e é
+        onde a resposta costuma estar.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a> <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs#compatibility">A mesma pegadinha no 2000NXS</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Correções documentadas, por versão de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O histórico vai de 2014 até outubro de
+        2017 e para. <strong>A {FLOOR} é ao mesmo tempo a versão mínima e o
+        teto.</strong> Cada entrada abaixo é a redação da própria AlphaTheta,
+        condensada.</p>
+        <dl class="rb-errors">
+          <dt>{CDJ_900NXS.beatDivideFix}</dt><dd>O som da reprodução parava enquanto o BEAT DIVIDE estava ativado. Adicionada a análise de tags de MP3 e AIFF para o serviço KUVO.</dd>
+          <dt>{CDJ_900NXS.hddFolderFix}</dt><dd>Navegação de pastas em discos rígidos de 2TB. Navegação lenta na lista de tracks no modo Serato DJ HID. Um problema de disponibilidade da busca alfabética.</dd>
+          <dt>{CDJ_900NXS.hddRecognitionFix}</dt><dd>Um problema de reconhecimento de disco rígido. Dava para ouvir ruído quando o Master Tempo era ativado.</dd>
+          <dt>{CDJ_900NXS.aiffLoadFix}</dt><dd>A reprodução de um arquivo AIFF em 24bit/48kHz parava e as tracks não podiam ser carregadas. Ruído branco digitalmente distorcido em certos arquivos WAV. Um loop ativo podia ativar um loop muito curto. Compatibilidade de PRO DJ LINK com o CDJ-2000NXS2 e o XDJ-1000MK2. Reconhecimento de dispositivo de áudio no macOS 10.12. Problemas no Control Mode. Adicionados o MASTER PLAYER SELECT (AUTO) e a busca por várias palavras.</dd>
+          <dt>{FLOOR}</dt><dd>A velocidade de reprodução às vezes não voltava ao BPM mostrado na tela com o Sync ligado, mais problemas durante a reprodução e a seleção de tracks. Publicada em 5 de outubro de 2017, e nada veio depois dela.</dd>
+        </dl>
+        <p style="margin-top:1rem"><strong>Faça assim.</strong> Num deck que você
+        controla, leve ele para a {FLOOR} uma vez e está resolvido de forma
+        permanente. Num deck que você não controla, leia a versão e trate esta lista
+        como o que ainda pode acontecer hoje à noite.</p>
+        <p style="margin-top:1rem">
+          <strong>Downloads de firmware.</strong> <a href={CDJ_900NXS.source} target="_blank" rel="noopener">Página oficial de suporte da AlphaTheta →</a><br />
+          <a href={CDJ_900NXS.sourceHistory} target="_blank" rel="noopener">Histórico completo de alterações, PDF →</a><br />
+          <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="finished-firmware">
+      <summary><h3 class="acc-h2">Um deck sem mais atualizações a caminho</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A {FLOOR} é onde o software deste player
+        termina. Isso não é uma crítica, é um fato de planejamento.</p>
+        <p><strong>Por que importa.</strong> Num modelo que ainda recebe suporte,
+        vale reportar um comportamento estranho e esperar. Aqui, o que não está na
+        lista acima ou é comportamento normal ou é algo que você contorna de forma
+        permanente. Também significa que uma atualização é toda a história de
+        manutenção: leve ele para a {FLOOR} e o lado de software está fechado para
+        sempre.</p>
+        <p><strong>Quando profissionais usam.</strong> Muita casa que trabalha ainda
+        roda esses decks, e um 900NXS na {FLOOR} é um deck confiável. O risco não é
+        o player, é supor que existe correção para alguma coisa.</p>
+        <p><strong>Erros comuns.</strong> Esperar uma atualização que não vem. Achar
+        que o suporte a exFAT talvez chegue.</p>
+        <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas por versão</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="library-and-media">
+      <summary><h3 class="acc-h2">Device Library, USB e o slot de cartão SD</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Formato {CDJ_900NXS.library}, e a mídia
+        é USB e cartão SD. Dois slots independentes.</p>
+        <p><strong>Por que importa.</strong> O slot de SD é o backup mais rápido
+        disponível em qualquer lugar desta booth, porque ele já está dentro da
+        máquina. Se o USB falhar no meio do set, um cartão com o mesmo set dentro
+        ganha de andar até a sua bag com folga.</p>
+        <p><strong>Quando profissionais usam.</strong> Set no USB, o mesmo set num
+        cartão SD, os dois no deck desde o começo da noite.</p>
+        <p><strong>Erros comuns.</strong> Deixar o slot de SD vazio porque ele
+        parece obsoleto. Exportar um drive OneLibrary que este deck não consegue
+        ler: ele quer {CDJ_900NXS.library}.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/dj-usb-backup-strategy">Estratégia de backup</a> <a href="/pt/gear">Drives em que confiamos</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas profissionais" />
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="read-the-version">
+      <summary><h3 class="acc-h2">Leia a versão, depois decida o que você não vai usar</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Dez segundos na passagem de som. Abaixo
+        da {CDJ_900NXS.beatDivideFix}, o BEAT DIVIDE está fora. Abaixo da
+        {CDJ_900NXS.aiffLoadFix}, também estão fora o AIFF lossless e qualquer
+        dependência do Link com decks mais novos.</p>
+        <p><strong>Por que importa.</strong> Num deck que ainda recebe suporte você
+        anota a versão e planeja uma atualização. Aqui a versão te diz quais
+        recursos deixar em paz pela noite, o que é uma decisão diferente e mais
+        imediata.</p>
+        <p><strong>Faça assim.</strong> Faça parte da mesma volta em que você
+        confere o roteamento do mixer, e seja específico com você mesmo sobre o que
+        está abrindo mão em vez de torcer.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/checklist">O checklist pré-gig</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção preventiva" />
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Manter um deck antigo confiável</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Uma atualização de firmware para a
+        {FLOOR}, e depois é puramente físico: slots limpos, drives com cuidado, e o
+        jog como a peça de desgaste num deck desta idade.</p>
+        <p><strong>Por que importa.</strong> Um player desta idade já levou uma
+        década de drives empurrados nele e uma década de poeira. Com a história do
+        software fechada de forma permanente, tudo o que der errado daqui para a
+        frente é mecânico.</p>
+        <p><strong>Faça assim.</strong> Atualize entre bookings, nunca em dia de
+        gig. Sopre os slots de USB e de SD em vez de empurrar a sujeira para dentro.
+        Puxe os drives retos, pelo conector.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/prepare">Por que dia de gig não se atualiza nada</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="compatibility">
+      <summary><h3 class="acc-h2">Booths misturadas, software e PRO DJ LINK</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Ele faz link com players mais novos a
+        partir da {CDJ_900NXS.nxs2LinkFix}, especificamente o CDJ-2000NXS2 e o
+        XDJ-1000MK2, que a AlphaTheta nomeou nessa correção. A navegação por Serato
+        DJ HID também melhorou na {CDJ_900NXS.hddFolderFix}.</p>
+        <p><strong>Faça assim.</strong> Numa booth que mistura gerações, confira a
+        versão deste deck quando algo está errado num mais novo. Formato de
+        biblioteca é do lado do player: este deck precisa de
+        {CDJ_900NXS.library}, então uma booth com este e um player OneLibrary
+        precisa de estratégia de drive em vez de suposição.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a> <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs">CDJ-2000NXS</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Perguntas frequentes" />
+
+    <details class="acc-sec" name="cdj900nxs-acc" id="faq">
+      <summary><h3 class="acc-h2">Respostas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>Em qual firmware ele deveria estar?</dt><dd>{FLOOR}, publicada em outubro de 2017. Nada veio depois dela, então essa é ao mesmo tempo a versão mínima e o teto.</dd>
+          <dt>Ele lê exFAT?</dt><dd>Não, e nunca vai ler. Só FAT32.</dd>
+          <dt>Por que o deck ficou mudo quando eu usei o BEAT DIVIDE?</dt><dd>Documentado, e corrigido na {CDJ_900NXS.beatDivideFix}. Abaixo dessa versão o recurso parava a reprodução.</dd>
+          <dt>Por que um AIFF não carrega?</dt><dd>AIFF em 24bit/48kHz não carregava nem tocava abaixo da {CDJ_900NXS.aiffLoadFix}.</dd>
+          <dt>Vai sair mais firmware?</dt><dd>Nada foi publicado desde outubro de 2017. Planeje contando que não.</dd>
+          <dt>Qual formato de biblioteca?</dt><dd>{CDJ_900NXS.library}. Não OneLibrary.</dd>
+          <dt>O slot de cartão SD é útil?</dt><dd>Sim. O mesmo set num cartão, já dentro do deck, é a recuperação mais rápida da booth.</dd>
+          <dt>Dá para usar um HD externo grande?</dt><dd>Dá, e existiam falhas documentadas de reconhecimento de drive e de pastas num drive de 2TB. Um pen drive é mais seguro aqui.</dd>
+          <dt>Ele faz link com um CDJ-2000NXS2?</dt><dd>Faz, e essa compatibilidade só foi corrigida na {CDJ_900NXS.nxs2LinkFix}, então confira a versão se o Link estiver estranho.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guias relacionados</h2>
+      <p class="dim" style="margin:0">
+        <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs">CDJ-2000NXS</a> ·
+        <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a> ·
+        <a href="/pt/knowledge/pioneer-dj/firmware">Firmware por versão</a> ·
+        <a href="/pt/knowledge/pioneer-dj/rekordbox">Referência do rekordbox</a> ·
+        <a href="/pt/checklist">Checklist de setup de clube</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_cdj900nxs"><Icon name="siren" /> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_cdj900nxs" lang="pt" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: a <a href={CDJ_900NXS.source} target="_blank" rel="noopener">página de firmware</a> oficial
+      do CDJ-900NXS da AlphaTheta e o seu <a href={CDJ_900NXS.sourceHistory} target="_blank" rel="noopener">PDF de histórico completo de alterações</a>,
+      lidos por inteiro e conferidos em {UPDATED}. Cada falha documentada acima é a
+      redação do próprio fabricante, condensada. Os passos gerais de diagnóstico
+      refletem a prática padrão de booth. Especificações e comportamento mudam sem
+      aviso, confira de novo antes de um show grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* Photo anchored to hw-head's own bottom edge, not sized by a flex row.
+     See the long note in djm-v10.astro for why a flex row was wrong. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

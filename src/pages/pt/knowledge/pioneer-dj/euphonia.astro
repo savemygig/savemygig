@@ -1,0 +1,424 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { EUPHONIA } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
+
+// euphonia, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors and CSS: src/pages/knowledge/pioneer-dj/euphonia.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(EUPHONIA.checked);
+const FX = EUPHONIA.sendEffects.join(', ');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/euphonia#article',
+  headline: 'euphonia: a referência operacional',
+  description: 'O que todo DJ precisa saber antes de trabalhar num AlphaTheta euphonia: faders rotativos e nenhum crossfader, o transformador de master da Rupert Neve, a diferença entre o Master Isolator e o EQ de canal, e o que não é documentado sobre PRO DJ LINK.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/euphonia#webpage' },
+  image: 'https://www.savemygig.com/images/euphonia-panel-full.webp',
+};
+---
+<Base
+  title="euphonia: faders rotativos e sem crossfader | Save My Gig"
+  description="Manual de campo do euphonia: faders rotativos e sem crossfader, o transformador de master Rupert Neve, o Master Isolator que não é EQ de canal e uma USB-C."
+  path="/knowledge/pioneer-dj/euphonia"
+  crumbName="euphonia"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>euphonia</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">euphonia</div>
+        <h1 class="rb-h1">euphonia, <span class="accent">o manual de campo</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#euphonia-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do euphonia"
+      >
+        <img
+          src="/images/euphonia-panel-thumb.webp"
+          alt="Painel de controle do mixer rotativo de quatro canais AlphaTheta euphonia, visto de cima"
+          width="647"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="euphonia-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/euphonia-panel-full.webp"
+        srcset="/images/euphonia-panel-800.webp 800w, /images/euphonia-panel-full.webp 1812w"
+        sizes="92vw"
+        alt="Painel de controle do mixer rotativo de quatro canais AlphaTheta euphonia, visto de cima"
+        width="1812"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth. Faders rotativos e, portanto, nenhum crossfader.</strong>
+        Se você corta, esta não é a sua mesa, e isso é uma pergunta para fazer antes
+        de aceitar o booking, não uma descoberta para fazer na hora de montar. Se
+        você faz mixagem longa, é um dos mixers que soam melhor já construídos:
+        {EUPHONIA.channels} canais, conversores A/D e D/A de 32 bits, e um
+        <strong>circuito de transformador de master desenvolvido em parceria com a
+        Rupert Neve Designs</strong> em cima de tudo o que sai do booth. Duas coisas
+        pegam as pessoas. <strong>O Master Isolator não é EQ de canal</strong>, ele
+        age na sala inteira. E existe <strong>uma única porta USB-C</strong>, então
+        passar o notebook para o próximo DJ é físico. Nenhum histórico de mudanças de
+        firmware foi publicado.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="euphonia-acc" id="no-crossfader">
+      <summary><h3 class="acc-h2">Não existe crossfader, e os faders são knobs</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Correto, e nada foi retirado. Este é um
+        mixer rotativo: o nível de cada canal é um knob, e não existe crossfader
+        nenhum.</p>
+        <p><strong>Por que isso acontece.</strong> Rotativo é uma filosofia de
+        mixagem mais antiga e diferente, feita para mixagens longas e para conduzir
+        níveis em vez de cortar. É a mesma família do DJM-V5 e do DJM-V10-LF no que
+        não deixa você fazer, e vai além: aqui não existe nem curva de fader de canal
+        para deixar mais abrupta, porque não existe fader de canal.</p>
+        <p><strong>Resolva agora.</strong> Misture com o que está ali. Nivele com os
+        knobs, molde com os controles de canal, use o filtro high-pass para tirar uma
+        track da frente, e deixe o Master Isolator carregar os movimentos grandes. Se
+        o seu set realmente não sobrevive sem cortar, essa conversa é com o gerente
+        técnico antes da sua primeira track, não durante a terceira.</p>
+        <p><strong>Evite da próxima vez.</strong> Pergunte qual mixer está instalado
+        quando você fechar o booking. Num rotativo a resposta muda como você se
+        prepara, não só o que você espera.</p>
+        <p class="acc-related">Relacionados: <a href="#rotary">Faders rotativos, na prática</a> <a href="/pt/knowledge/pioneer-dj/djm-v5">DJM-V5, também sem crossfader</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="euphonia-acc" id="isolator-mistake">
+      <summary><h3 class="acc-h2">A sala inteira mudou quando você mexeu num knob</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Você provavelmente está no Master
+        Isolator, que tem três bandas (low, mid e high) com Boost Send e Boost Level
+        de +12dB, +6dB ou 0dB. Ele age na saída de master inteira, e não num
+        canal.</p>
+        <p><strong>Por que isso acontece.</strong> Ele fica onde um DJ espera achar
+        EQ e se parece com EQ. Em qualquer DJM, três knobs naquela região pertencem a
+        um canal. Aqui eles pertencem à sala, então um movimento que teria trocado o
+        grave entre duas tracks tira o grave das duas e de tudo o mais que está
+        tocando.</p>
+        <p><strong>Resolva agora.</strong> Volte o isolator para o centro. Se você
+        não tem certeza de qual controle mexeu, centralize o isolator primeiro,
+        porque é o de maior consequência.</p>
+        <p><strong>Evite da próxima vez.</strong> Aprenda o isolator como efeito de
+        master e não como EQ, e ache ele pelo tato na passagem de som. Repare que o
+        Boost Send faz parte dele, com Boost Level de +12dB, +6dB ou 0dB, então ele
+        também soma, não só tira.</p>
+        <p class="acc-related">Relacionados: <a href="#isolator">O Master Isolator e o Boost</a> <a href="/pt/knowledge/pioneer-dj/djm-900nxs2#gain-staging">Ganho na ordem certa, primeiro</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="euphonia-acc" id="no-signal">
+      <summary><h3 class="acc-h2">Um canal está sem sinal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A ordem de sempre, com dois extras nesta
+        mesa: o caminho de send e return, e o Master Insert.</p>
+        <p><strong>Por que isso acontece.</strong> As entradas são digital (coaxial)
+        x4, line (RCA) x4, phono (RCA) x4 e mic x1 (XLR / TRS de 6,35 mm), então um
+        canal pode estar selecionado em phono enquanto você manda uma fonte de linha
+        para ele, ou na entrada digital enquanto você manda analógico. Além disso,
+        Send/Return mais um Master Insert significa que equipamento externo pode
+        estar no caminho de um único canal ou em cima do master inteiro. Um Master
+        Insert com nada retornando leva a saída inteira com ele, o que se lê como
+        mesa morta e não como canal morto.</p>
+        <p><strong>Resolva agora.</strong> Passe a fonte para outro canal para
+        isolar. Se tudo está em silêncio em vez de um canal só, suspeite do Master
+        Insert antes de suspeitar do mixer.</p>
+        <p><strong>Evite da próxima vez.</strong> Uma passada de roteamento antes de
+        abrir as portas, incluindo o que o DJ anterior deixou plugado em send, return
+        e insert.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/emergency">Abrir o Emergency Mode</a> <a href="#connections">Conexões e a única porta USB-C</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="euphonia-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Correções documentadas, por versão de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta. Não existe nenhuma publicada, e essa é a resposta
+        honesta.</strong> A AlphaTheta não lançou nenhum histórico de mudanças de
+        firmware para o euphonia, conferido em {UPDATED}, então não há falha
+        documentada para relatar nem versão mínima para ficar acima.</p>
+        <p><strong>Por que a gente diz isso em vez de tirar a seção.</strong> A
+        página do CDJ-2000NXS neste site lista onze versões de falhas documentadas
+        porque o fabricante publicou. Uma seção vazia aqui é informação: ela diz que
+        ninguém publicou um problema conhecido, e diz que esta página não está
+        preenchendo um template com chute.</p>
+        <p><strong>Uma coisa que esta página também não afirma.</strong>
+        <strong>PRO DJ LINK não é documentado para este mixer</strong> na página do
+        produto da AlphaTheta, em nenhuma das duas direções, e nenhum terminal LAN
+        aparece entre as conexões dele. A gente não vai afirmar que ele suporta nem
+        que não suporta. Se você está planejando um rig que depende do Link, confirme
+        com a AlphaTheta ou com a casa, e não com nenhum site, incluindo este.</p>
+        <p style="margin-top:1rem">
+          <strong>Documentação oficial.</strong> <a href={EUPHONIA.source} target="_blank" rel="noopener">Página do produto na AlphaTheta →</a><br />
+          <a href={EUPHONIA.sourceAnnounce} target="_blank" rel="noopener">Artigo de lançamento →</a><br />
+          <span class="dim" style="font-size:0.85rem">Achou um histórico de mudanças que a gente não viu? <a href="/pt/feedback">Avise a gente</a> e nós adicionamos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="euphonia-acc" id="rotary">
+      <summary><h3 class="acc-h2">Faders rotativos, na prática</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {EUPHONIA.channels} canais, cada um
+        nivelado por um knob com peso em vez de um fader de linha.</p>
+        <p><strong>Por que importa.</strong> Um fader de linha é um gesto único que
+        você faz sem olhar. Um fader rotativo é um ajuste contínuo que você segura, e
+        isso muda como você pensa uma transição: você conduz dois níveis um contra o
+        outro por toda a duração da mixagem em vez de viajar de um para o outro. DJs
+        que já trabalharam em rotativos descrevem o controle como mais lento e mais
+        musical. Quem nunca trabalhou costuma achar a primeira hora desengonçada.</p>
+        <p><strong>Quando profissionais usam.</strong> Formato longo, house, disco,
+        dub, qualquer coisa em que a mixagem é a performance e não o corte. É por
+        isso que mesas rotativas são instaladas em listening rooms e por isso que
+        elas são incomuns num palco de festival.</p>
+        <p><strong>Erros comuns.</strong> Tratar o seu primeiro set em rotativo como
+        um set normal em equipamento desconhecido. Reserve uma hora em um antes de
+        tocar em um, se for possível, e se não for, chegue cedo e treine a transição
+        de que você mais depende.</p>
+        <p class="acc-related">Relacionados: <a href="#no-crossfader">Não existe crossfader</a> <a href="/pt/checklist">O checklist pré-gig</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="euphonia-acc" id="transformer">
+      <summary><h3 class="acc-h2">O transformador de master Rupert Neve</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Um circuito de transformador de master
+        desenvolvido em conjunto pela AlphaTheta e pela Rupert Neve Designs, aplicado
+        a toda a saída de áudio de master. O processamento é mixagem a 96 kHz em
+        ponto flutuante de 64 bits no DSP, com conversores A/D e D/A de 32 bits.</p>
+        <p><strong>Por que importa.</strong> É a razão de o mixer existir e a razão
+        de ele custar o que custa. Na prática, quer dizer que o caminho de master tem
+        um caráter próprio que está sempre presente: você não ouve os seus canais
+        somados de forma neutra, ouve eles por um circuito escolhido pelo jeito que
+        ele os colore.</p>
+        <p><strong>Quando profissionais usam.</strong> Sempre, porque ele não é
+        chaveável como um efeito é. O que profissionais ajustam é o que mandam para
+        dentro dele, e o conselho honesto é chegar com os seus níveis conservadores e
+        deixar o master fazer o trabalho, em vez de empurrar para dentro dele e
+        torcer.</p>
+        <p><strong>Erros comuns.</strong> Achar que um estágio de master caro perdoa
+        um canal quente. Ele não corrige ganho na ordem errada, ele só faz ganho
+        errado soar caro.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/djm-900nxs2#gain-staging">Ganho na ordem certa, primeiro</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="euphonia-acc" id="isolator">
+      <summary><h3 class="acc-h2">O Master Isolator, o Boost e os efeitos de send</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O isolator tem três bandas (low, mid e
+        high) com Boost Send e Boost Level de +12dB, +6dB ou 0dB. Os efeitos de send
+        internos são {FX}, e existe também um filtro high-pass.</p>
+        <p><strong>Por que importa.</strong> Isolator mais Boost Send é o principal
+        gesto de performance do mixer: você consegue tirar uma faixa de frequência da
+        sala inteira e mandar essa mesma faixa para um efeito ao mesmo tempo. Esse é
+        um movimento muito grande, e num sistema grande é a diferença entre um
+        momento e um erro.</p>
+        <p><strong>Quando profissionais usam.</strong> Na transição, não
+        continuamente, e ensaiado. Os efeitos de send foram escolhidos para espaço e
+        tempo em vez de destruição, o que já diz o que a mesa espera de você.</p>
+        <p><strong>Erros comuns.</strong> Usar o isolator como EQ de canal, que é o
+        erro mais comum no euphonia. Deixar o Boost Level onde o DJ anterior deixou,
+        e descobrir isso no seu primeiro movimento grande.</p>
+        <p class="acc-related">Relacionados: <a href="#isolator-mistake">A sala inteira mudou</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="euphonia-acc" id="connections">
+      <summary><h3 class="acc-h2">Conexões, e a única porta USB-C</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Entradas: digital (coaxial) x4, line
+        (RCA) x4, phono (RCA) x4 e mic x1 (XLR / TRS de 6,35 mm). Saídas: master
+        (XLR), booth (TRS de 6,35 mm), REC (RCA) e fone (6,35 mm e 3,5 mm). Uma
+        porta USB Type-C. Software: {EUPHONIA.software.join(' e ')}, com DVS
+        suportado.</p>
+        <p><strong>Por que importa.</strong> Uma porta USB-C significa um computador.
+        Um back to back em que os dois DJs estão de notebook é uma troca física de
+        cabo entre os sets, não um chaveamento, e essa troca acontece ao vivo. Vale
+        combinar quem desconecta o que antes de começar, em vez de negociar isso em
+        cima de uma track.</p>
+        <p><strong>Quando profissionais usam.</strong> Booths de residência, onde o
+        equipamento externo é plugado uma vez e fica. Quatro entradas phono
+        significam que esta mesa espera toca-discos, no plural.</p>
+        <p><strong>Erros comuns.</strong> Planejar a passagem do notebook como se
+        houvesse duas placas de som. Chegar sem saber se a casa tem o cabo de que
+        você precisa.</p>
+        <p class="acc-related">Relacionados: <a href="#no-signal">Um canal está sem sinal</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas profissionais" />
+
+    <details class="acc-sec" name="euphonia-acc" id="get-time-on-one">
+      <summary><h3 class="acc-h2">Passe uma hora num rotativo antes de tocar em um</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Rotativo não é um ajuste, é um controle
+        que você nunca usou. Sessenta minutos de prática tiram quase todo o risco.</p>
+        <p><strong>Por que importa.</strong> Todo o resto desta mesa dá para aprender
+        numa passagem de som. O hábito físico de nivelar com um knob sob pressão não
+        dá, e o lugar onde a maioria dos DJs descobre isso é na frente de uma plateia
+        que veio para uma listening room.</p>
+        <p><strong>Faça assim.</strong> Pergunte qual mixer está instalado quando
+        você fechar o booking. Se for um rotativo, ache um: uma loja, um estúdio, o
+        setup de um amigo, ou chegue duas horas antes. Treine a transição de que você
+        mais depende, e depois treine se recuperar de errar ela.</p>
+        <p class="acc-related">Relacionados: <a href="#rotary">Faders rotativos, na prática</a> <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção preventiva" />
+
+    <details class="acc-sec" name="euphonia-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Manter a mesa confiável</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Os knobs rotativos são a peça de
+        desgaste, o painel traseiro é denso, e com {EUPHONIA.weight} este é um mixer
+        para levantar direito em vez de arrastar.</p>
+        <p><strong>Por que importa.</strong> Um rotativo que desenvolveu um ponto
+        arranhado no meio do curso é uma falha que você escuta em cada mixagem, e um
+        knob é mais difícil de trocar na correria do que um fader. A traseira carrega
+        entradas digital, line, phono e mic mais master, booth, record, fone, send,
+        return e insert, então são muitos conectores para forçar.</p>
+        <p><strong>Faça assim.</strong> Mantenha bebida longe da fileira de
+        rotativos, desconecte pelo conector, mantenha a mesa coberta, e se um knob de
+        canal começar a ficar áspero, mande para a assistência em vez de conviver com
+        ele.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Perguntas frequentes" />
+
+    <details class="acc-sec" name="euphonia-acc" id="faq">
+      <summary><h3 class="acc-h2">Respostas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>O euphonia tem crossfader?</dt><dd>Não. É um mixer rotativo, então os níveis de canal são knobs e não existe crossfader.</dd>
+          <dt>Dá para fazer scratch nele?</dt><dd>Não no sentido de sempre. Se cortar é central no seu set, pergunte qual mixer está instalado antes de aceitar o booking.</dd>
+          <dt>Quantos canais?</dt><dd>{EUPHONIA.channels}, com quatro entradas phono e quatro de linha.</dd>
+          <dt>Ele suporta PRO DJ LINK?</dt><dd>A AlphaTheta não afirma nem nega na página do produto, e nenhum terminal LAN aparece entre as conexões. A gente não vai chutar. Confirme com a AlphaTheta ou com a casa se o seu rig depende disso.</dd>
+          <dt>O que é o transformador?</dt><dd>Um circuito de transformador de master desenvolvido em conjunto pela AlphaTheta e pela Rupert Neve Designs, aplicado a toda a saída de áudio de master.</dd>
+          <dt>O Master Isolator é a mesma coisa que EQ de canal?</dt><dd>Não, e confundir os dois é o erro mais comum nesta mesa. O isolator age na saída de master inteira.</dd>
+          <dt>Quais efeitos são internos?</dt><dd>{FX}, mais um filtro high-pass, e Send/Return mais um Master Insert para equipamento externo.</dd>
+          <dt>Dois notebooks podem dividir ele?</dt><dd>Não ao mesmo tempo. Existe uma única porta USB Type-C, então passar o notebook é troca de cabo.</dd>
+          <dt>Funciona com rekordbox e Serato?</dt><dd>Funciona, {EUPHONIA.software.join(' e ')}, com DVS suportado.</dd>
+          <dt>Existem bugs de firmware conhecidos?</dt><dd>Nenhum publicado. A AlphaTheta não lançou histórico de mudanças para este mixer.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guias relacionados</h2>
+      <p class="dim" style="margin:0">
+        <a href="/pt/knowledge/pioneer-dj/djm-v5">DJM-V5</a> ·
+        <a href="/pt/knowledge/pioneer-dj/djm-v10">DJM-V10 / V10-LF</a> ·
+        <a href="/pt/knowledge/pioneer-dj/djm-a9">DJM-A9</a> ·
+        <a href="/pt/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
+        <a href="/pt/checklist">Checklist de setup de club</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_euphonia"><Icon name="siren" /> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_euphonia" lang="pt" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: a <a href={EUPHONIA.source} target="_blank" rel="noopener">página do produto</a>
+      oficial do euphonia da AlphaTheta e o <a href={EUPHONIA.sourceAnnounce} target="_blank" rel="noopener">artigo de lançamento</a>,
+      conferidos em {UPDATED}. Nenhum histórico de mudanças de firmware foi
+      publicado para este mixer, então nenhum é citado, e o suporte a PRO DJ LINK
+      não é documentado em nenhuma das duas direções, então não é afirmado. As
+      orientações gerais de mixagem refletem a prática padrão em mesas rotativas.
+      Especificações mudam sem aviso, confira de novo antes de um show grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* Photo anchored to hw-head's own bottom edge, not sized by a flex row.
+     See the long note in djm-v10.astro for why a flex row was wrong.
+     NOTE this photo is LANDSCAPE, unlike every other model shot on the site: a
+     rotary mixer is wider than it is deep. max-width and max-height both at 100%
+     inside the fixed 200px box means it letterboxes itself rather than
+     overflowing, so no per-page override is needed. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

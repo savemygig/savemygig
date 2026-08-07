@@ -1,0 +1,432 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { DJM_V5, DJM_REC } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
+
+// DJM-V5, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors and CSS: src/pages/knowledge/pioneer-dj/djm-v5.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(DJM_V5.checked);
+const RECOK = DJM_REC.compatibleMixers.includes('DJM-V5');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/djm-v5#article',
+  headline: 'DJM-V5: a referência operacional',
+  description: 'O que todo DJ precisa saber antes de trabalhar num DJM-V5: ele não tem crossfader, são três canais, o monitoramento sem fio SonicLink é embutido e o Pro DJ Link para em três players.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/djm-v5#webpage' },
+  image: 'https://www.savemygig.com/images/djm-v5-panel-full.webp',
+};
+---
+<Base
+  title="DJM-V5: sem crossfader, 3 canais, Pro DJ Link | Save My Gig"
+  description="Manual de campo do DJM-V5: sem crossfader, três canais, monitoramento sem fio SonicLink e teto de três players no Pro DJ Link."
+  path="/knowledge/pioneer-dj/djm-v5"
+  crumbName="DJM-V5"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>DJM-V5</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">DJM-V5</div>
+        <h1 class="rb-h1">DJM-V5, <span class="accent">o manual de campo</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#djm-v5-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do DJM-V5"
+      >
+        <img
+          src="/images/djm-v5-panel-thumb.webp"
+          alt="Painel de controle do mixer de três canais AlphaTheta DJM-V5, visto de cima"
+          width="345"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="djm-v5-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/djm-v5-panel-full.webp"
+        srcset="/images/djm-v5-panel-800.webp 800w, /images/djm-v5-panel-full.webp 967w"
+        sizes="92vw"
+        alt="Painel de controle do mixer de três canais AlphaTheta DJM-V5, visto de cima"
+        width="967"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth. Este mixer não tem crossfader.</strong> Essa é
+        a primeira coisa a saber e a única que você não resolve na hora: se o seu
+        set depende de cortes ou de scratch, pergunte qual mesa está instalada
+        antes de aceitar o booking. O que você tem em troca é um instrumento de
+        mixagem longa de {DJM_V5.channels} canais, {DJM_V5.samplingRate} com
+        conversores de 32 bits A/D e D/A, send e return, e
+        <strong>monitoramento sem fio SonicLink</strong> embutido. O Pro DJ Link
+        para em <strong>{DJM_V5.maxMultiPlayers} players</strong>, então um plano
+        de quatro decks não cabe. A AlphaTheta não publicou nenhum histórico de
+        alterações de firmware para esta mesa.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="djmv5-acc" id="no-crossfader">
+      <summary><h3 class="acc-h2">Esta mesa não tem crossfader</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Correto, e nada está quebrado nem foi
+        removido. O DJM-V5 é construído sem crossfader. Verificado no manual de
+        instruções da própria AlphaTheta, que documenta os faders de canal e as
+        três curvas deles e não traz crossfader nem fader assign em nenhum
+        ponto.</p>
+        <p><strong>Por que isso acontece.</strong> Esta mesa pertence à família de
+        mixagem longa, o mesmo pensamento do DJM-V10-LF. O projeto parte do
+        princípio de que você mixa com faders de canal, EQ e filtros, e não com
+        cortes. É uma escolha deliberada sobre como o mixer é tocado, não uma
+        economia de custo.</p>
+        <p><strong>Resolva agora.</strong> Não existe solução dentro da booth,
+        então adapte o set. Use o seletor de curva do fader de canal para deixar a
+        curva mais abrupta nos canais que você está trabalhando, o que chega mais
+        perto de um corte rápido do que uma curva suave chega. Filtros e cortes de
+        EQ sustentam as transições que um crossfader faria. Se o seu set realmente
+        não sobrevive sem cortar, e existe um segundo mixer no prédio, essa
+        conversa acontece antes da sua primeira track, não durante a terceira.</p>
+        <p><strong>Evite da próxima vez.</strong> Pergunte qual mixer está
+        instalado quando você fechar o booking. Essa é a pergunta mais útil que um
+        DJ que depende de cortar pode fazer para um promoter, e quase ninguém
+        faz.</p>
+        <p class="acc-related">Relacionados: <a href="#three-channels">Três canais, na prática</a> <a href="/pt/checklist">O checklist pré-gig</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djmv5-acc" id="no-signal">
+      <summary><h3 class="acc-h2">Um canal está sem sinal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A ordem de sempre, com um suspeito a
+        mais nesta mesa: o loop de send e return. Fader para cima, seletor de
+        entrada casado com a fonte, trim ajustado, e então tire send e return do
+        caminho.</p>
+        <p><strong>Por que isso acontece.</strong> As entradas são
+        {DJM_V5.inputs}, então um canal pode estar em phono enquanto você manda
+        uma fonte de linha para ele, ou o contrário. O loop {DJM_V5.sendReturn}
+        também pode mandar um canal para um equipamento externo que não está
+        devolvendo nada, e isso soa exatamente como um canal morto.</p>
+        <p><strong>Resolva agora.</strong> Passe a fonte para outro canal. Se
+        tocar, o defeito está no canal ou no roteamento dele. Se continuar em
+        silêncio, o defeito está antes do mixer, no player ou no cabo.</p>
+        <p><strong>Evite da próxima vez.</strong> Uma passada de roteamento antes
+        de abrir as portas, canal por canal, incluindo o estado de send e return
+        que você herdou do DJ anterior.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/djm-900nxs2#gain-staging">Gain staging primeiro</a> <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djmv5-acc" id="soniclink-silent">
+      <summary><h3 class="acc-h2">O monitoramento sem fio ficou em silêncio</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Volte para o fone com cabo. A mesa tem
+        {DJM_V5.outputs.includes('PHONES x2') ? 'duas saídas de fone com cabo' : 'uma saída de fone com cabo'}
+        e elas não dependem de nada estar pareado.</p>
+        <p><strong>Por que isso acontece.</strong> O SonicLink é um transmissor
+        embutido no mixer, então o monitoramento vira um link de rádio com uma
+        bateria do outro lado. Um link de rádio numa sala cheia, ao lado de todo
+        celular da casa, tem modos de falha que um cabo não tem, e um receptor tem
+        nível de carga.</p>
+        <p><strong>Resolva agora.</strong> Plugue o cabo. Faça o cue da próxima
+        track com fio, e resolva o sem fio entre tracks em vez de no meio de uma
+        mixagem.</p>
+        <p><strong>Evite da próxima vez.</strong> Carregue fone com cabo mesmo
+        quando você planeja trabalhar sem fio, e ponha a carga do receptor no fim
+        da gig em vez do começo da próxima. Um caminho de monitoramento que pode
+        acabar a bateria é um caminho que precisa de plano B na bag.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djmv5-acc" id="link-not-seeing">
+      <summary><h3 class="acc-h2">O mixer não está enxergando os players no Link</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Confira quantos aparelhos estão na
+        rede antes de conferir qualquer outra coisa. Esta mesa aceita até
+        {DJM_V5.maxMultiPlayers} multi players e até {DJM_V5.maxComputers}
+        computadores por um hub de rede.</p>
+        <p><strong>Por que isso acontece.</strong> Uma booth montada para quatro
+        decks passa do que este mixer carrega no Link, e o sintoma não é mensagem
+        de erro, é um aparelho que simplesmente nunca aparece. O mixer está
+        funcionando exatamente como especificado.</p>
+        <p><strong>Resolva agora.</strong> O áudio não precisa da rede. Tire o
+        cabo de Link e os players continuam tocando pelas saídas deles, então você
+        perde sync e browsing compartilhado, mas não perde o set. Depois reduza a
+        contagem de aparelhos para dentro do limite.</p>
+        <p><strong>Evite da próxima vez.</strong> Conte os aparelhos quando você
+        planeja o rig, não quando o terceiro player não aparece. Um hub não
+        levanta o teto.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/cdj-1500x#compatibility">Limites de Link do CDJ-1500X</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="djmv5-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Correções documentadas, por versão de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta. Não existe nenhuma publicada, e essa é a
+        resposta honesta.</strong> A AlphaTheta não liberou histórico de alterações
+        de firmware do DJM-V5, então não há problema documentado a relatar e não
+        há versão mínima para ficar acima.</p>
+        <p><strong>Por que dizemos isso em vez de deixar a seção de fora.</strong>
+        As páginas do DJM-V10, do DJM-A9 e do DJM-900NXS2 aqui listam correções
+        reais com números de versão reais, tirados dos históricos oficiais da
+        AlphaTheta. Uma seção vazia é informação: ela diz que ninguém publicou um
+        problema conhecido, e diz que esta página não está chutando para preencher
+        um template.</p>
+        <p><strong>O que fazer enquanto isso.</strong> Anote a versão de qualquer
+        mesa em que você tocar, e confira a página oficial de suporte antes de um
+        show que importa.</p>
+        <p style="margin-top:1rem">
+          <strong>Documentação oficial.</strong> <a href={DJM_V5.source} target="_blank" rel="noopener">Página do produto na AlphaTheta →</a><br />
+          <a href={DJM_V5.sourceManual} target="_blank" rel="noopener">Manual de instruções, PDF →</a><br />
+          <span class="dim" style="font-size:0.85rem">Achou um histórico de alterações que passou por nós? <a href="/pt/feedback">Avise a gente</a> e nós incluímos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="djmv5-acc" id="three-channels">
+      <summary><h3 class="acc-h2">Três canais, na prática</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {DJM_V5.channels} canais, e sem
+        crossfader os faders de canal são o instrumento inteiro.</p>
+        <p><strong>Por que importa.</strong> Dois players mais um microfone cabem.
+        Dois players mais uma drum machine cabem. Três players mais qualquer outra
+        coisa não cabem, e não existe um quarto canal para socorrer você. Numa
+        mesa de quatro canais você absorve uma fonte surpresa, aqui você não
+        absorve.</p>
+        <p><strong>Quando profissionais usam.</strong> Mixagens longas, em que
+        segurar dois ou três elementos um contra o outro com faders, EQ e filtros
+        é justamente o ponto. É o mesmo pensamento de projeto do V10-LF, que
+        também abre mão do crossfader.</p>
+        <p><strong>Erros comuns.</strong> Planejar um set híbrido com mais fontes
+        do que a mesa tem canais, e descobrir isso na hora de montar. Conte as
+        suas fontes contra três antes de fechar a bag.</p>
+        <p class="acc-related">Relacionados: <a href="#no-crossfader">Não existe crossfader</a> <a href="/pt/knowledge/pioneer-dj/djm-v10">DJM-V10 e V10-LF</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djmv5-acc" id="soniclink">
+      <summary><h3 class="acc-h2">Monitoramento sem fio SonicLink</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Um transmissor embutido no mixer para
+        monitoramento sem fio de baixa latência, então o cue do fone chega sem um
+        cabo subindo até a sua cabeça.</p>
+        <p><strong>Por que importa.</strong> O cabo do fone é uma das poucas
+        coisas na booth que amarram você fisicamente, e é causa comum de player
+        arrancado. Tirar esse cabo é um ganho real, e move o seu monitoramento
+        para um link de rádio com bateria.</p>
+        <p><strong>Quando profissionais usam.</strong> Onde movimento importa, e
+        onde um par com cabo está na bag como plano B.</p>
+        <p><strong>Erros comuns.</strong> Tratar isso como o único caminho de
+        monitoramento. Chegar com um receptor que não foi carregado desde a última
+        gig.</p>
+        <p class="acc-related">Relacionados: <a href="#soniclink-silent">O monitoramento sem fio ficou em silêncio</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="djmv5-acc" id="multi-io">
+      <summary><h3 class="acc-h2">MULTI I/O, send e return, e o som</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {DJM_V5.usbPorts}. Send e return é
+        {DJM_V5.sendReturn}. A conversão é {DJM_V5.samplingRate} com conversores
+        de 32 bits A/D e D/A.</p>
+        <p><strong>Por que importa.</strong> O MULTI I/O deixa um celular ou um
+        tablet entrar na mesa como fonte, o que é útil de verdade e também é uma
+        coisa nova que pode ser roteada errado. Send e return coloca efeitos
+        externos no caminho, e uma unidade de efeitos desligada leva o canal
+        junto.</p>
+        <p><strong>Quando profissionais usam.</strong> Send e return para efeitos
+        externos num rig residente. MULTI I/O para um convidado, um parceiro de
+        b2b no celular, ou uma fonte de última hora que você não planejou.</p>
+        <p><strong>Erros comuns.</strong> Deixar send e return ativo depois de a
+        unidade externa ter sido desplugada, e então investigar o canal.</p>
+        <p class="acc-related">Relacionados: <a href="#no-signal">Um canal está sem sinal</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas profissionais" />
+
+    <details class="acc-sec" name="djmv5-acc" id="ask-the-desk">
+      <summary><h3 class="acc-h2">Pergunte qual mixer está instalado</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Uma pergunta para o promoter ou para o
+        produtor técnico, antes de aceitar: qual mixer, e quantos players.</p>
+        <p><strong>Por que importa.</strong> Toda outra surpresa de booth se
+        resolve na passagem de som. Um crossfader que não existe e um teto de
+        {DJM_V5.maxMultiPlayers} players no Link não se resolvem. Os dois são
+        respondidos por uma mensagem semanas antes, e quase nenhum DJ manda essa
+        mensagem.</p>
+        <p><strong>Faça assim.</strong> Inclua o modelo do mixer no que você já
+        pede. Se a resposta for um V5 e você corta, planeje um set de fader e
+        filtro, ou leve a sua própria solução, e decida isso em casa.</p>
+        <p class="acc-related">Relacionados: <a href="#no-crossfader">Não existe crossfader</a> <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção preventiva" />
+
+    <details class="acc-sec" name="djmv5-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Manter a mesa confiável</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Cuidado com os conectores, transporte
+        coberto, e o receptor do SonicLink carregado como parte do fim da gig.</p>
+        <p><strong>Por que importa.</strong> O painel traseiro leva phono, linha,
+        mic, master, booth, gravação, send, return e LAN, e cada um deles é um mau
+        contato futuro se sofrer esforço. O monitoramento sem fio soma uma bateria
+        à lista de coisas que podem acabar com a sua capacidade de fazer cue.</p>
+        <p><strong>Faça assim.</strong> Desconecte pelo conector e não pelo cabo,
+        mantenha a mesa coberta entre uma gig e outra, e carregue depois da gig em
+        vez de antes da próxima.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="djmv5-acc" id="compatibility">
+      <summary><h3 class="acc-h2">Players, software e Pro DJ Link</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Até {DJM_V5.maxMultiPlayers} multi
+        players e até {DJM_V5.maxComputers} computadores por um hub de rede. A
+        AlphaTheta cita o {DJM_V5.linkNamedPlayers.join(' e o ')} para controle de
+        efeitos sincronizado. Software: {DJM_V5.software.join(', ')}, e DVS é
+        suportado.</p>
+        {RECOK && (
+          <p><strong>O DJM-REC funciona com este mixer.</strong> Ele está na lista
+          oficial de compatibilidade da AlphaTheta, então gravar um set ou
+          transmitir de um iPhone ou de um iPad fica disponível sem hardware
+          extra.</p>
+        )}
+        <p><strong>Faça assim.</strong> Confirme a contagem de players contra
+        {' '}{DJM_V5.maxMultiPlayers} quando você planejar o rig. O formato da
+        biblioteca num drive USB é uma questão do lado do player e nunca toca o
+        mixer, então uma booth mista precisa de uma estratégia de drive
+        independente desta mesa.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/cdj-1500x">CDJ-1500X</a> <a href="/pt/knowledge/pioneer-dj/djm-rec">DJM-REC</a> <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Perguntas frequentes" />
+
+    <details class="acc-sec" name="djmv5-acc" id="faq">
+      <summary><h3 class="acc-h2">Respostas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>O DJM-V5 tem crossfader?</dt><dd>Não. O manual de instruções da AlphaTheta documenta os faders de canal e as curvas deles, e não traz crossfader nem fader assign.</dd>
+          <dt>Dá para fazer scratch nele?</dt><dd>Não no sentido usual, porque não existe crossfader. Se cortar é central no seu set, pergunte qual mixer está instalado antes de aceitar o booking.</dd>
+          <dt>Quantos canais?</dt><dd>{DJM_V5.channels}.</dd>
+          <dt>Quantos players dá para ligar em Link?</dt><dd>Até {DJM_V5.maxMultiPlayers} multi players, e até {DJM_V5.maxComputers} computadores por um hub de rede.</dd>
+          <dt>É um DJM-A9 menor?</dt><dd>Não. Contagem de canais diferente, sem crossfader, e monitoramento sem fio SonicLink embutido. É uma mesa de mixagem longa, e não uma de quatro canais reduzida.</dd>
+          <dt>O que é o SonicLink?</dt><dd>Monitoramento sem fio embutido, então o cue do fone chega sem cabo. Mantenha um par com cabo como plano B.</dd>
+          <dt>Funciona com Serato e rekordbox?</dt><dd>Funciona. {DJM_V5.software.join(', ')}, com DVS suportado.</dd>
+          <dt>Dá para gravar com o DJM-REC?</dt><dd>{RECOK ? 'Dá, ele está na lista oficial de compatibilidade do DJM-REC da AlphaTheta.' : 'Confira a lista oficial de compatibilidade do DJM-REC.'}</dd>
+          <dt>Existem bugs de firmware conhecidos?</dt><dd>Nenhum publicado. A AlphaTheta não liberou histórico de alterações para esta mesa.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guias relacionados</h2>
+      <p class="dim" style="margin:0">
+        <a href="/pt/knowledge/pioneer-dj/djm-v10">DJM-V10 / V10-LF</a> ·
+        <a href="/pt/knowledge/pioneer-dj/djm-a9">DJM-A9</a> ·
+        <a href="/pt/knowledge/pioneer-dj/djm-900nxs2">DJM-900NXS2</a> ·
+        <a href="/pt/knowledge/pioneer-dj/cdj-1500x">CDJ-1500X</a> ·
+        <a href="/pt/checklist">Checklist de setup de clube</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_djmv5"><Icon name="siren" /> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_djmv5" lang="pt" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: a <a href={DJM_V5.source} target="_blank" rel="noopener">página do produto</a>
+      oficial do DJM-V5 da AlphaTheta e o <a href={DJM_V5.sourceManual} target="_blank" rel="noopener">manual de instruções</a>,
+      conferidos em {UPDATED}. A ausência de crossfader vem do manual, não de
+      dedução. Nenhum histórico de alterações de firmware foi publicado para esta
+      mesa, então nenhum é citado. Os passos gerais de diagnóstico refletem a
+      prática padrão de mixagem. Especificações mudam sem aviso, confira de novo
+      antes de um show grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* Photo anchored to hw-head's own bottom edge, not sized by a flex row.
+     See the long note in djm-v10.astro for why a flex row was wrong. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

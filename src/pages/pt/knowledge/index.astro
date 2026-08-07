@@ -125,66 +125,100 @@ const schema = {
       como impedir que ela estrague a sua gig.
     </p>
 
-    <h2 class="kb-h">Software</h2>
-    <div class="kb-grid">
-      {software.map(s => (
-        s.href ? (
-          <a class="kb-card kb-live" href={s.href}>
-            <span class="kb-name">{s.name}</span>
-            <span class="kb-blurb">{s.blurb}</span>
-            <span class="kb-go">Abrir o guia &rarr;</span>
-          </a>
-        ) : (
-          <div class="kb-card kb-soon">
-            <span class="kb-name">{s.name}</span>
-            <span class="kb-blurb">{s.blurb}</span>
-            <span class="kb-tag">Em breve</span>
-          </div>
-        )
-      ))}
-    </div>
+    <!-- COLLAPSIBLE ON PHONES ONLY (Antonio, 2026-08-07): "this part must
+         become a hamburger on mobile only, dont touch on desktop".
+         Same mechanism the Pioneer DJ hub already uses for its six category
+         headers: native details/summary, and an inline script that opens them
+         all before paint above 640px so desktop is byte-identical to before.
+         .kb-cat and .kb-chev are shared, the chevron and its open-state
+         rotation come from global.css, so this reuses the existing pattern
+         rather than adding a second collapsible of its own. -->
+    <details class="kb-cat">
+      <summary>
+        <h2 class="kb-h">Software</h2>
+        <span class="kb-chev" aria-hidden="true"></span>
+      </summary>
+      <div class="kb-grid">
+        {software.map(s => (
+          s.href ? (
+            <a class="kb-card kb-live" href={s.href}>
+              <span class="kb-name">{s.name}</span>
+              <span class="kb-blurb">{s.blurb}</span>
+              <span class="kb-go">Abrir o guia &rarr;</span>
+            </a>
+          ) : (
+            <div class="kb-card kb-soon">
+              <span class="kb-name">{s.name}</span>
+              <span class="kb-blurb">{s.blurb}</span>
+              <span class="kb-tag">Em breve</span>
+            </div>
+          )
+        ))}
+      </div>
+    </details>
 
-    <h2 class="kb-h" style="margin-top:2rem">Equipamento</h2>
-    <div class="kb-grid">
-      {equipment.map(s => (
-        s.href ? (
-          <a class="kb-card kb-live" href={s.href}>
-            <span class="kb-name">{s.name}</span>
-            <span class="kb-blurb">{s.blurb}</span>
-            <span class="kb-go">Abrir o guia &rarr;</span>
-          </a>
-        ) : (
-          <div class="kb-card kb-soon">
-            <span class="kb-name">{s.name}</span>
-            <span class="kb-blurb">{s.blurb}</span>
-            <span class="kb-tag">Em breve</span>
-          </div>
-        )
-      ))}
-    </div>
+    <details class="kb-cat">
+      <summary>
+        <h2 class="kb-h">Equipamento</h2>
+        <span class="kb-chev" aria-hidden="true"></span>
+      </summary>
+      <div class="kb-grid">
+        {equipment.map(s => (
+          s.href ? (
+            <a class="kb-card kb-live" href={s.href}>
+              <span class="kb-name">{s.name}</span>
+              <span class="kb-blurb">{s.blurb}</span>
+              <span class="kb-go">Abrir o guia &rarr;</span>
+            </a>
+          ) : (
+            <div class="kb-card kb-soon">
+              <span class="kb-name">{s.name}</span>
+              <span class="kb-blurb">{s.blurb}</span>
+              <span class="kb-tag">Em breve</span>
+            </div>
+          )
+        ))}
+      </div>
+    </details>
 
-    <h2 class="kb-h" style="margin-top:2rem">Hardware</h2>
-    <p class="dim kb-sub">
-      Procurando o que comprar em vez de como a coisa se comporta? Os drives em
-      que confiamos estão na <a href="/pt/gear">página de equipamento</a>.
-    </p>
-    <div class="kb-grid">
-      {hardware.map(s => (
-        s.href ? (
-          <a class="kb-card kb-live" href={s.href}>
-            <span class="kb-name">{s.name}</span>
-            <span class="kb-blurb">{s.blurb}</span>
-            <span class="kb-go">Abrir o guia &rarr;</span>
-          </a>
-        ) : (
-          <div class="kb-card kb-soon">
-            <span class="kb-name">{s.name}</span>
-            <span class="kb-blurb">{s.blurb}</span>
-            <span class="kb-tag">Em breve</span>
-          </div>
-        )
-      ))}
-    </div>
+    <details class="kb-cat">
+      <summary>
+        <h2 class="kb-h">Hardware</h2>
+        <span class="kb-chev" aria-hidden="true"></span>
+      </summary>
+      <p class="dim kb-sub">
+        Procurando o que comprar em vez de como a coisa se comporta? Os drives em
+        que confiamos estão na <a href="/pt/gear">página de equipamento</a>.
+      </p>
+      <div class="kb-grid">
+        {hardware.map(s => (
+          s.href ? (
+            <a class="kb-card kb-live" href={s.href}>
+              <span class="kb-name">{s.name}</span>
+              <span class="kb-blurb">{s.blurb}</span>
+              <span class="kb-go">Abrir o guia &rarr;</span>
+            </a>
+          ) : (
+            <div class="kb-card kb-soon">
+              <span class="kb-name">{s.name}</span>
+              <span class="kb-blurb">{s.blurb}</span>
+              <span class="kb-tag">Em breve</span>
+            </div>
+          )
+        ))}
+      </div>
+    </details>
+    <script is:inline>
+      // Desktop has room: open all three groups before first interaction, so
+      // nothing about the desktop page changes. Phones keep them collapsed and
+      // the three group names become the index.
+      (function () {
+        if (window.matchMedia('(min-width: 641px)').matches) {
+          var cats = document.querySelectorAll('.kb-cat');
+          for (var i = 0; i < cats.length; i++) cats[i].open = true;
+        }
+      })();
+    </script>
 
     <p class="dim" style="margin-top:1.6rem">
       Procurando uma falha específica? O <a href="/pt/faq">FAQ responde todas as
@@ -204,6 +238,35 @@ const schema = {
 </Base>
 
 <style>
+  /* Shared with the Pioneer DJ hub. The chevron itself and its open-state
+     rotation live in global.css with every other chevron on the site. */
+  .kb-cat { margin-top: 1.6rem; }
+  .kb-cat > summary {
+    display: flex; align-items: center; gap: 0.8rem;
+    border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+    cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
+  }
+  .kb-cat > summary::-webkit-details-marker { display: none; }
+  /* ONE HAIRLINE, NOT TWO. .kb-h already draws its own border-bottom and its
+     own padding, and the summary above now draws one too, so the heading was
+     sitting over a double rule. The summary keeps the border, because it is the
+     full-width row that must stay clickable, and the h2 drops its own.
+     Antonio has called out stacked hairlines before, on the search box. */
+  .kb-cat > summary .kb-h {
+    margin: 0; flex: 1 1 auto;
+    border-bottom: 0; padding-bottom: 0;
+  }
+  /* "DONT TOUCH ON DESKTOP", taken literally. Above 640px the groups are
+     already open before paint, so the chevron points at an interaction with
+     nothing to do and the pointer cursor promises one. Both are hidden, which
+     leaves the desktop page pixel-identical to before this change.
+     This is a deliberate divergence from the Pioneer DJ hub, which does show
+     its chevrons at every width. Same mechanism, different call, because that
+     hub was designed collapsible and this page was not. */
+  @media (min-width: 641px) {
+    .kb-cat > summary { cursor: default; }
+    .kb-cat > summary .kb-chev { display: none; }
+  }
   .kb-lead { max-width: 42rem; margin-bottom: 2rem; line-height: 1.6; }
   /* Sits between a section heading and its card grid. The Hardware section
      uses it to send buying-intent visitors to /gear, keeping the knowledge

@@ -1,0 +1,431 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import { CDJ_2000NXS } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
+
+// CDJ-2000NXS, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors and CSS: src/pages/knowledge/pioneer-dj/cdj-2000nxs.astro.
+// Only the human readable copy and the /pt hrefs differ.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(CDJ_2000NXS.checked);
+const FLOOR = CDJ_2000NXS.newestKnown;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/cdj-2000nxs#article',
+  headline: 'CDJ-2000NXS: a referência operacional',
+  description: 'O que todo DJ precisa saber antes de trabalhar num CDJ-2000NXS: os crashes, travamentos e quedas de áudio documentados, qual versão de firmware corrigiu cada um, e por que esta geração é só FAT32.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/cdj-2000nxs#webpage' },
+  image: 'https://www.savemygig.com/images/cdj-2000nxs-panel-full.webp',
+};
+---
+<Base
+  title="CDJ-2000NXS: travamentos, firmware e FAT32 | Save My Gig"
+  description="Manual de campo do CDJ-2000NXS: crashes, travamentos e quedas de áudio documentados, qual firmware corrigiu cada um, e por que esta geração é só FAT32."
+  path="/knowledge/pioneer-dj/cdj-2000nxs"
+  crumbName="CDJ-2000NXS"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>CDJ-2000NXS</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-desktop">CDJ-2000NXS</div>
+        <h1 class="rb-h1">CDJ-2000NXS, <span class="accent">o manual de campo</span></h1>
+        <p class="dim rb-updated">Revisado: {UPDATED}</p>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#cdj-2000nxs-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do CDJ-2000NXS"
+      >
+        <img
+          src="/images/cdj-2000nxs-panel-thumb.webp"
+          alt="Painel de controle do media player Pioneer DJ CDJ-2000NXS, visto de cima"
+          width="401"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="cdj-2000nxs-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/cdj-2000nxs-panel-full.webp"
+        srcset="/images/cdj-2000nxs-panel-800.webp 800w, /images/cdj-2000nxs-panel-full.webp 1123w"
+        sizes="92vw"
+        alt="Painel de controle do media player Pioneer DJ CDJ-2000NXS, visto de cima"
+        width="1123"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth. Olhe a versão de firmware.</strong> Este deck
+        está em mais booths do que quase qualquer outro equipamento, e quase
+        ninguém atualiza um deck de clube que funciona, então a unidade na sua
+        frente pode estar rodando software de 2013. Com firmware antigo, este
+        player tem documentado <strong>dar crash, travar, perder áudio no deck
+        slave com SYNC, recusar um AIFF e ficar preso em "Loading.."</strong> para
+        sempre. A AlphaTheta corrigiu tudo isso. A versão mínima é
+        <strong>{FLOOR}</strong>. Segunda coisa: <strong>só FAT32</strong>, esta
+        geração não tem exFAT, e é por isso que um drive moderno pode ser recusado
+        por uma booth antiga.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="frozen-or-crashed">
+      <summary><h3 class="acc-h2">O deck travou ou reiniciou sozinho</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Com firmware antigo isso é
+        comportamento documentado, não azar. Três travamentos distintos e um crash
+        direto foram corrigidos: um crash ao apertar HOT CUE repetidamente com o
+        Master Tempo ligado ({CDJ_2000NXS.crashHotCueFix}), um travamento ao editar
+        a TAG LIST ({CDJ_2000NXS.tagListFreezeFix}), e um travamento ao segurar o
+        HOT CUE por mais de um segundo durante o carregamento automático de hot
+        cue, mais uma tela de browse que fica lenta ou para depois de várias horas
+        de uso ({CDJ_2000NXS.browseSlowFix}).</p>
+        <p><strong>Por que isso acontece.</strong> Cada uma dessas falhas precisa
+        de uma combinação específica que um DJ trabalhando faz naturalmente: hot
+        cues disparados rápido, uma noite longa, uma tag list editada entre tracks.
+        É por isso que elas foram reportadas e corrigidas, e por isso que um deck
+        que nunca foi atualizado vai continuar fazendo todas elas.</p>
+        <p><strong>Resolva agora.</strong> Tire som do outro deck primeiro, depois
+        desligue e ligue este. Um CDJ-2000NXS inicia em bem menos de um minuto. Não
+        tente reproduzir a falha para entender ela com a sala esperando.</p>
+        <p><strong>Evite da próxima vez.</strong> Confira a versão na chegada. Se
+        estiver abaixo da {FLOOR}, evite os gatilhos específicos pela noite: nada
+        de editar TAG LIST, nada de metralhar hot cues com o Master Tempo ligado, e
+        espere a tela de browse degradar num set longo.</p>
+        <p class="acc-related">Relacionados: <a href="#known-issues">Correções documentadas por versão</a> <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="usb-not-read">
+      <summary><h3 class="acc-h2">O player não lê o meu drive</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Quase sempre é o sistema de arquivos.
+        Esta geração é <strong>só FAT32</strong>. Não existe suporte a exFAT num
+        CDJ-2000NXS, em nenhuma versão de firmware, e nenhuma atualização vai
+        adicionar.</p>
+        <p><strong>Por que isso acontece.</strong> exFAT é a escolha moderna
+        sensata para um drive grande e todo player novo lê, então um DJ que
+        formatou para uma booth com CDJ-3000 chega numa sala mais antiga com um
+        drive que este deck não consegue montar. Nada está com defeito. O formato
+        simplesmente é mais novo que o player.</p>
+        <p><strong>Resolva agora.</strong> Peça um drive FAT32 emprestado, ou toque
+        de outra fonte enquanto você resolve. Reformatar apaga tudo, então não é
+        jogada de meio de set a não ser que a música exista em outro lugar
+        também.</p>
+        <p><strong>Evite da próxima vez.</strong> Se você toca em booths de
+        gerações diferentes, ande com um drive FAT32 que funciona em todo lugar em
+        vez de um drive por tipo de casa. Com firmware antigo também existiam duas
+        falhas separadas de disco rígido, HDs não sendo reconhecidos de jeito nenhum
+        ({CDJ_2000NXS.hddRecognitionFix}) e pastas não aparecendo num drive de 2TB
+        ({CDJ_2000NXS.wavHeaderFix}), então um HD externo grande é uma aposta pior
+        aqui do que um pen drive.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/exfat-vs-fat32-cdj">exFAT ou FAT32</a> <a href="/pt/fix/format-usb-for-cdj">Como formatar um drive</a> <a href="/pt/fix/usb-not-recognized-cdj">USB não reconhecido</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="stuck-loading">
+      <summary><h3 class="acc-h2">Uma track fica presa em "Loading.." ou não carrega</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Duas falhas de arquivo documentadas, as
+        duas corrigidas. Um arquivo WAVE com header incompatível deixa "Loading.."
+        na tela indefinidamente ({CDJ_2000NXS.wavHeaderFix}), e um AIFF em
+        24bit/48kHz parava de tocar e não podia ser carregado num deck de jeito
+        nenhum ({CDJ_2000NXS.aiffLoadFix}).</p>
+        <p><strong>Por que isso acontece.</strong> As duas são o decoder do player
+        encontrando um arquivo que ele não consegue interpretar, e as duas parecem
+        idênticas a uma track corrompida ou a um drive falhando de onde você está.
+        É isso que as torna caras: você investiga o drive enquanto a falha está no
+        firmware.</p>
+        <p><strong>Resolva agora.</strong> Carregue outra track do mesmo drive. Se
+        funcionar, o drive está bem e o problema é aquele arquivo específico neste
+        firmware específico. Toque outra coisa e siga.</p>
+        <p><strong>Evite da próxima vez.</strong> Em decks abaixo da {FLOOR}, evite
+        AIFF lossless em 24bit/48kHz e desconfie de WAV de fontes incomuns. MP3 e
+        AAC nunca foram afetados por nenhuma das duas falhas.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/rekordbox-file-is-missing">Arquivo do rekordbox não encontrado</a> <a href="#known-issues">Correções documentadas por versão</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="sync-dropout">
+      <summary><h3 class="acc-h2">O áudio caiu ou o ruído está errado</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Quatro falhas de áudio documentadas em
+        firmware antigo. Queda de áudio no deck slave usando SYNC
+        ({CDJ_2000NXS.syncDropoutFix}). Ruído ao fazer scratch e ruído com o Master
+        Tempo ligado ({CDJ_2000NXS.aiffLoadFix} e
+        {CDJ_2000NXS.hddRecognitionFix}). Ruído branco digitalmente distorcido em
+        certos arquivos WAV ({CDJ_2000NXS.wavNoiseFix}). Um estalo dentro de um loop
+        com QUANTIZE e MASTER TEMPO ligados ao mesmo tempo
+        ({CDJ_2000NXS.syncBpmFix}).</p>
+        <p><strong>Por que isso acontece.</strong> São falhas de firmware em
+        combinações específicas de recursos, e é por isso que elas sobrevivem no
+        campo: uma casa testa se o deck toca uma track, não se SYNC mais Master
+        Tempo mais um loop se comportam.</p>
+        <p><strong>Resolva agora.</strong> Desligue o recurso envolvido. SYNC
+        desligado, Master Tempo desligado, e mixe na mão. Cada uma dessas falhas
+        precisa de um recurso ligado, então desligar remove o sintoma na hora.</p>
+        <p><strong>Evite da próxima vez.</strong> Num deck abaixo da {FLOOR}, trate
+        SYNC e Master Tempo como suspeitos em vez de ferramentas, e mixe sem
+        eles.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/cdj-error-e-8302">E-8302</a> <a href="/pt/prepare">O sistema de prevenção completo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="known-issues">
+      <summary><h3 class="acc-h2">Correções documentadas, por versão de firmware</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Esta é a lista documentada mais longa de
+        qualquer player deste site, e o motivo pelo qual a versão importa mais aqui
+        do que em qualquer outro lugar. Cada entrada abaixo é a redação da própria
+        AlphaTheta, condensada. A versão mínima é <strong>{FLOOR}</strong>.</p>
+        <dl class="rb-errors">
+          <dt>{CDJ_2000NXS.crashHotCueFix}</dt><dd>O player deu crash quando o botão HOT CUE era apertado repetidamente com o Master Tempo ligado. Também corrigiu o comportamento do back cue depois de chamar um memory cue num MP3.</dd>
+          <dt>{CDJ_2000NXS.syncDropoutFix}</dt><dd>Queda de áudio no deck slave usando SYNC, e troca inesperada entre player master e slave durante slip scratch ou slip pause.</dd>
+          <dt>{CDJ_2000NXS.tagListFreezeFix}</dt><dd>Podia ocorrer um travamento ao editar a TAG LIST.</dd>
+          <dt>{CDJ_2000NXS.browseSlowFix}</dt><dd>A tela de browse ficava lenta ou parava depois de a unidade ser usada por várias horas. Um travamento ao segurar o HOT CUE por mais de um segundo durante o carregamento automático de hot cue. A reprodução não iniciando, não parando ou não sendo selecionada depois de desconectar um dispositivo USB grande, com cerca de 20.000 tracks.</dd>
+          <dt>{CDJ_2000NXS.wavHeaderFix}</dt><dd>Um arquivo WAVE com header incompatível não carregava, mas "Loading.." ficava na tela indefinidamente. Tracks em algumas pastas de um HD de 2TB não eram exibidas ao navegar.</dd>
+          <dt>{CDJ_2000NXS.hddRecognitionFix}</dt><dd>Alguns discos rígidos não eram reconhecidos ao serem conectados. Dava para ouvir ruído quando o Master Tempo era ativado.</dd>
+          <dt>{CDJ_2000NXS.aiffLoadFix}</dt><dd>A reprodução de um arquivo AIFF em 24bit/48kHz parava e as tracks não podiam ser carregadas num deck. Ocorria ruído de áudio durante o scratch.</dd>
+          <dt>{CDJ_2000NXS.nxs2FeatureFix}</dt><dd>Com um CDJ-2000NXS2 conectado por PRO DJ LINK a um CDJ-2000NXS, alguns recursos do NXS2 ficavam desativados.</dd>
+          <dt>{CDJ_2000NXS.wavNoiseFix}</dt><dd>Ruído branco digitalmente distorcido ao tocar certos arquivos WAV. Um loop ativo podia ativar um loop muito curto. A needle search saltava de onde o dedo era solto.</dd>
+          <dt>{CDJ_2000NXS.slipHotCueFix}</dt><dd>Problemas durante a reprodução e a seleção de tracks, e problemas usando o SLIP HOT CUE.</dd>
+          <dt>{CDJ_2000NXS.syncBpmFix}</dt><dd>A velocidade de reprodução às vezes não voltava ao BPM mostrado na tela com o Sync ligado. Um estalo durante um loop com QUANTIZE e MASTER TEMPO ligados.</dd>
+          <dt>{FLOOR}</dt><dd>Bugs menores corrigidos. Esta é a versão para se estar.</dd>
+        </dl>
+        <p style="margin-top:1rem"><strong>Faça assim.</strong> Num deck que é seu
+        ou que você controla, fique na {FLOOR}, atualizada entre bookings e nunca
+        na véspera de um. Num deck que você não controla, leia a versão na chegada e
+        trate esta lista como o que ainda pode acontecer hoje à noite.</p>
+        <p style="margin-top:1rem">
+          <strong>Downloads de firmware.</strong> <a href={CDJ_2000NXS.source} target="_blank" rel="noopener">Página oficial de suporte da AlphaTheta →</a><br />
+          <a href={CDJ_2000NXS.sourceHistory} target="_blank" rel="noopener">Histórico completo de alterações, PDF →</a><br />
+          <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="fat32-only">
+      <summary><h3 class="acc-h2">Só FAT32, e o que isso custa para você</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Sem exFAT, em nenhuma versão de
+        firmware. O FAT32 também limita qualquer arquivo único a 4GB, o que quase
+        nunca importa para música e importa muito para um set longo gravado.</p>
+        <p><strong>Por que importa.</strong> Esta é a linha de falha entre booths
+        antigas e novas. Um drive formatado em exFAT funciona em todo player novo e
+        é invisível para este. Se o seu calendário de gigs inclui os
+        dois, o drive que funciona nos dois é FAT32, ou seja, FAT32 é o formato para
+        um DJ que trabalha, não o tecnicamente melhor.</p>
+        <p><strong>Quando profissionais usam.</strong> Sempre, se eles tocam em
+        salas que nunca viram. Um drive FAT32 remove uma categoria inteira de
+        problema.</p>
+        <p><strong>Erros comuns.</strong> Formatar pensando na booth mais moderna
+        em que você tocou em vez da mais antiga em que você pode tocar. Achar que
+        uma atualização de firmware poderia adicionar exFAT nesta geração. Não
+        pode.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/exfat-vs-fat32-cdj">exFAT ou FAT32</a> <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="library-and-media">
+      <summary><h3 class="acc-h2">Device Library, USB e o slot de cartão SD</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Formato {CDJ_2000NXS.library}, e a
+        mídia é USB e cartão SD. O slot de SD é uma segunda fonte de verdade, não
+        uma porta de legado.</p>
+        <p><strong>Por que importa.</strong> Dois slots independentes num deck só
+        significam um backup que já está dentro da máquina. Se o seu USB falhar no
+        meio do set, um cartão SD com o mesmo set dentro é a recuperação mais rápida
+        disponível em qualquer lugar desta booth, mais rápida que andar até a sua
+        bag.</p>
+        <p><strong>Quando profissionais usam.</strong> Set no USB, o mesmo set num
+        cartão SD, os dois no deck desde o começo da noite. Custa um cartão e remove
+        a pior falha comum.</p>
+        <p><strong>Erros comuns.</strong> Deixar o slot de SD vazio porque ele
+        parece obsoleto. Exportar para um formato OneLibrary que este player não
+        consegue ler: esta geração quer {CDJ_2000NXS.library}.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/fix/dj-usb-backup-strategy">Estratégia de backup</a> <a href="/pt/gear">Drives em que confiamos</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas profissionais" />
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="read-the-version">
+      <summary><h3 class="acc-h2">Leia a versão de firmware na chegada</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Dez segundos na passagem de som. Se
+        estiver abaixo da {FLOOR}, você já sabe quais das falhas acima podem
+        acontecer com você hoje à noite.</p>
+        <p><strong>Por que importa.</strong> Esta é a única página deste site em que
+        um número te diz tanta coisa. Todo outro modelo tem duas ou três falhas
+        documentadas. Este tem onze versões delas, e o deck é antigo o suficiente
+        para uma fatia grande das unidades instaladas ser anterior à maioria das
+        correções.</p>
+        <p><strong>Faça assim.</strong> Faça parte da mesma volta em que você
+        confere o roteamento do mixer. Versão abaixo da {FLOOR} significa nada de
+        editar TAG LIST, nada de depender do SYNC, Master Tempo tratado como
+        suspeito, e a expectativa de que o browse degrade numa noite longa.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/checklist">O checklist pré-gig</a> <a href="#known-issues">Correções documentadas por versão</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção preventiva" />
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="maintenance">
+      <summary><h3 class="acc-h2">Manter um deck antigo confiável</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Leve ele para a {FLOOR} uma vez, depois
+        deixe em paz. Limpe os slots, e trate o rolamento do jog como a peça de
+        desgaste num deck desta idade.</p>
+        <p><strong>Por que importa.</strong> Um player desta idade já levou uma
+        década de drives enfiados nele e uma década de poeira. O firmware é um
+        trabalho de uma vez só com retorno permanente, e é a ação de manutenção de
+        maior valor disponível neste modelo.</p>
+        <p><strong>Faça assim.</strong> Atualize entre bookings, nunca em dia de
+        gig. Sopre os slots de USB e de SD em vez de empurrar a sujeira mais para
+        dentro. Puxe os drives retos, pelo conector.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/prepare">Por que dia de gig não se atualiza nada</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="compatibility">
+      <summary><h3 class="acc-h2">Booths de gerações misturadas e PRO DJ LINK</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Ele faz link com players mais novos, e
+        existe uma pegadinha documentada: com um CDJ-2000NXS2 conectado por PRO DJ
+        LINK a um CDJ-2000NXS, <strong>alguns recursos do NXS2 ficavam
+        desativados</strong>, corrigido na {CDJ_2000NXS.nxs2FeatureFix}.</p>
+        <p><strong>Por que essa importa.</strong> É a surpresa clássica de booth
+        misturada: o deck mais novo perde capacidade por causa do mais antigo do
+        lado, sem erro nenhum e sem explicação nenhuma. O DJ culpa o player mais
+        novo, ou culpa a si mesmo.</p>
+        <p><strong>Faça assim.</strong> Numa booth que mistura gerações, confira a
+        versão do deck ANTIGO quando falta um recurso no novo. Formato de biblioteca
+        é uma questão separada e é do lado do player: este deck precisa de
+        {CDJ_2000NXS.library}, então uma booth com este e um player OneLibrary
+        precisa de estratégia de drive em vez de suposição.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a> <a href="/pt/knowledge/pioneer-dj/rekordbox#which-player">Tabela de compatibilidade de players</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Perguntas frequentes" />
+
+    <details class="acc-sec" name="cdj2000nxs-acc" id="faq">
+      <summary><h3 class="acc-h2">Respostas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>Ele lê exFAT?</dt><dd>Não, e nenhuma versão de firmware adiciona. Só FAT32.</dd>
+          <dt>Em qual firmware ele deveria estar?</dt><dd>{FLOOR}. Conferido em {UPDATED}.</dd>
+          <dt>Por que o deck travou?</dt><dd>Com firmware antigo existem três travamentos documentados e um crash. Veja a lista de versões acima.</dd>
+          <dt>Por que um AIFF não carrega?</dt><dd>AIFF em 24bit/48kHz não carregava nem tocava abaixo da {CDJ_2000NXS.aiffLoadFix}.</dd>
+          <dt>Por que uma track fica presa em "Loading.."?</dt><dd>Um arquivo WAVE com header incompatível fazia exatamente isso abaixo da {CDJ_2000NXS.wavHeaderFix}.</dd>
+          <dt>O slot de cartão SD é útil?</dt><dd>Sim. É o backup mais rápido da booth: o mesmo set num cartão, já dentro do deck.</dd>
+          <dt>Qual formato de biblioteca?</dt><dd>{CDJ_2000NXS.library}. Não OneLibrary.</dd>
+          <dt>Dá para usar um HD externo grande?</dt><dd>Dá, e com firmware antigo existiam falhas documentadas de reconhecimento de drive e de pastas não aparecendo num drive de 2TB. Um pen drive é a aposta mais segura aqui.</dd>
+          <dt>Meu CDJ-2000NXS2 novo perdeu recursos nesta booth. Por quê?</dt><dd>Documentado: ligado por Link a um CDJ-2000NXS abaixo da {CDJ_2000NXS.nxs2FeatureFix}, alguns recursos do NXS2 ficavam desativados.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Guias relacionados</h2>
+      <p class="dim" style="margin:0">
+        <a href="/pt/knowledge/pioneer-dj/cdj-2000nxs2">CDJ-2000NXS2</a> ·
+        <a href="/pt/knowledge/pioneer-dj/cdj-3000">CDJ-3000</a> ·
+        <a href="/pt/knowledge/pioneer-dj/firmware">Firmware por versão</a> ·
+        <a href="/pt/knowledge/pioneer-dj/rekordbox">Referência do rekordbox</a> ·
+        <a href="/pt/checklist">Checklist de setup de clube</a>
+      </p>
+    </div>
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_cdj2000nxs"><Icon name="siren" /> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_cdj2000nxs" lang="pt" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: a <a href={CDJ_2000NXS.source} target="_blank" rel="noopener">página de firmware</a> oficial
+      do CDJ-2000NXS da AlphaTheta e o seu <a href={CDJ_2000NXS.sourceHistory} target="_blank" rel="noopener">PDF de histórico completo de alterações</a>,
+      lidos por inteiro e conferidos em {UPDATED}. Cada falha documentada acima é a
+      redação do próprio fabricante, condensada. Os passos gerais de diagnóstico
+      refletem a prática padrão de booth. Firmware e comportamento mudam sem aviso,
+      confira de novo antes de um show grande.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* Photo anchored to hw-head's own bottom edge, not sized by a flex row.
+     See the long note in djm-v10.astro for why a flex row was wrong. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>
