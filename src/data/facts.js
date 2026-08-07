@@ -451,6 +451,40 @@ export const FIRMWARE_ISSUES = [
     ],
   },
   {
+    // Its history ENDED at 1.31 in October 2017, so the floor and the ceiling are
+    // the same number and no fix is coming for anything not listed here.
+    model: 'CDJ-900NXS',
+    href: '/knowledge/pioneer-dj/cdj-900nxs',
+    source: CDJ_900NXS.sourceHistory,
+    issues: [
+      { fixedIn: CDJ_900NXS.beatDivideFix, area: 'Audio', midSet: true, symptom: 'Playback sound stopped while BEAT DIVIDE was activated.' },
+      { fixedIn: CDJ_900NXS.hddFolderFix, area: 'Browse', midSet: true, symptom: 'Folder browsing failed on 2TB hard drives. Slow track list browsing in Serato DJ HID mode.' },
+      { fixedIn: CDJ_900NXS.hddRecognitionFix, area: 'USB', midSet: true, symptom: 'Some hard drives were not recognized. Noise when Master Tempo was activated.' },
+      { fixedIn: CDJ_900NXS.aiffLoadFix, area: 'Playback', midSet: true, symptom: 'AIFF at 24bit/48kHz stopped playing and could not be loaded. Digitally distorted white noise on certain WAV files.' },
+      { fixedIn: CDJ_900NXS.nxs2LinkFix, area: 'Link', midSet: true, symptom: 'PRO DJ LINK compatibility with the CDJ-2000NXS2 and XDJ-1000MK2.' },
+      { fixedIn: CDJ_900NXS.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync enabled.' },
+    ],
+  },
+  {
+    // The Ecodesign entry is a BEHAVIOUR, not a defect, so it rides as a warning
+    // rather than an issue: a deck that switched itself off is obeying a setting,
+    // and calling it a fault would send a DJ looking for a repair.
+    model: 'XDJ-700',
+    href: '/knowledge/pioneer-dj/xdj-700',
+    source: XDJ_700.sourceHistory,
+    warning: {
+      version: XDJ_700.ecoStandbyIntro,
+      text: 'Not a defect. From this version the unit automatically switches off after 20 minutes of no use when Power Management is on, following the EU Ecodesign Directive. A deck that powered down during a long changeover is obeying that setting, not failing.',
+      sourceUrl: XDJ_700.sourceHistory,
+    },
+    issues: [
+      { fixedIn: XDJ_700.browserManyTracksFix, area: 'Browse', midSet: true, symptom: 'Categories and tracks were not shown in the browser when a database had many tracks. Search results did not appear when moving the cursor.' },
+      { fixedIn: XDJ_700.searchFix, area: 'Browse', midSet: true, symptom: 'SEARCH worked incorrectly under certain conditions.' },
+      { fixedIn: XDJ_700.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync on. Popping noise in a loop with QUANTIZE and MASTER TEMPO enabled.' },
+      { fixedIn: XDJ_700.usbAudioControlFix, area: 'Audio', midSet: true, symptom: 'The USB audio function did not work in DJ Software Control mode.' },
+    ],
+  },
+  {
     model: 'DJM-V10 / V10-LF',
     href: '/knowledge/pioneer-dj/djm-v10',
     source: DJM_V10.source,
