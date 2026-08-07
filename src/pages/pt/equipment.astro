@@ -7,16 +7,32 @@ import { EQUIPMENT } from '../../data/facts.js';
 // o texto legível por humanos e os hrefs com prefixo /pt. Se a página em inglês
 // mudar, mude esta no mesmo commit.
 
-// Players first, then mixers, each ordered the way the manufacturer hub orders
-// them: family first, then descending model number. That is Antonio's rule from
-// earlier today and this page must not disagree with the page it feeds.
+// Players first, then mixers. This page must not disagree with the manufacturer
+// hub it feeds, so it uses the hub's rule.
+//
+// ANTONIO'S ORDERING RULE: model family first, then DESCENDING model number.
+// So every CDJ high to low, then every XDJ high to low, and the same for the
+// mixers. Insert a new model by its number, inside its family.
+//
+// THIS ARRAY IS THE ONE PLACE THAT CAN ROT, and it just did: adding three models
+// to EQUIPMENT without adding them here sent all three to the end of their
+// section, so the XDJ-1000MK2 sat after the XDJ-700 and the DJM-900NXS after the
+// euphonia. A slug missing from this list still RENDERS, it just renders last,
+// which is exactly the kind of failure nobody notices in a build log.
+// So `rank` no longer silently tolerates an unlisted slug: see below.
 const ORDER = [
-  'cdj-3000x', 'cdj-3000', 'cdj-2000nxs2', 'cdj-2000nxs', 'cdj-1500x', 'cdj-900nxs', 'xdj-700',
-  'djm-v10', 'djm-v5', 'djm-a9', 'djm-900nxs2', 'euphonia',
+  'cdj-3000x', 'cdj-3000', 'cdj-2000nxs2', 'cdj-2000nxs', 'cdj-1500x', 'cdj-900nxs',
+  'xdj-1000mk2', 'xdj-700',
+  'djm-v10', 'djm-v5', 'djm-a9', 'djm-900nxs2', 'djm-900nxs', 'djm-750mk2', 'euphonia',
 ];
 const rank = (slug: string) => {
   const i = ORDER.indexOf(slug);
-  return i === -1 ? ORDER.length : i;
+  // A slug in EQUIPMENT but not in ORDER is a mistake rather than a default, so
+  // fail the build instead of quietly sorting it last. The build is the only
+  // place this can be caught: the page still looks fine with a model out of
+  // order, and a wrong order is what Antonio spots first.
+  if (i === -1) throw new Error(`equipment.astro: "${slug}" is in EQUIPMENT but missing from ORDER. Add it to ORDER, by model number inside its family.`);
+  return i;
 };
 const sorted = [...EQUIPMENT].sort((a, b) => rank(a.slug) - rank(b.slug));
 const players = sorted.filter((e) => e.kind === 'player');
