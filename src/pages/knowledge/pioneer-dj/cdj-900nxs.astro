@@ -237,7 +237,7 @@ const schema = {
           <dt>{CDJ_900NXS.hddFolderFix}</dt><dd>Folder browsing on 2TB hard drives. Slow track list browsing in Serato DJ HID mode. An alphabetical search availability issue.</dd>
           <dt>{CDJ_900NXS.hddRecognitionFix}</dt><dd>A hard-drive recognition issue. Noise could be heard when Master Tempo was activated.</dd>
           <dt>{CDJ_900NXS.aiffLoadFix}</dt><dd>Playback of an AIFF file at 24bit/48kHz stopped and tracks could not be loaded. Digitally distorted white noise on certain WAV files. An active loop could activate a very short loop. PRO DJ LINK compatibility with the CDJ-2000NXS2 and XDJ-1000MK2. macOS 10.12 audio device recognition. Problems in Control Mode. Added MASTER PLAYER SELECT (AUTO) and multi-word search.</dd>
-          <dt>{FLOOR}</dt><dd>Playback speed sometimes did not return to the BPM shown on screen with Sync enabled, plus issues during playback and track selection. Published 5 October 2017, and nothing has followed it.</dd>
+          <dt>{CDJ_900NXS.syncBpmFix}</dt><dd>Playback speed sometimes did not return to the BPM shown on screen with Sync enabled, plus issues during playback and track selection. Published 5 October 2017, and nothing has followed it.</dd>
         </dl>
         <p style="margin-top:1rem"><strong>Do this.</strong> On a deck you control,
         get it to {FLOOR} once and it is done permanently. On a deck you do not
@@ -390,7 +390,9 @@ const schema = {
     <p class="rb-sources dim">
       Sources: AlphaTheta's official CDJ-900NXS <a href={CDJ_900NXS.source} target="_blank" rel="noopener">firmware page</a>
       and its <a href={CDJ_900NXS.sourceHistory} target="_blank" rel="noopener">full change history PDF</a>,
-      read in full and checked {UPDATED}. Every documented fault above is the
+      read in full and checked {UPDATED}. The supported file systems come from
+      AlphaTheta's <a href={CDJ_900NXS.sourceFileSystems} target="_blank" rel="noopener">support article on CDJ-900NXS file systems →</a>.
+      Every documented fault above is the
       manufacturer's own wording, condensed. General troubleshooting steps reflect
       standard booth practice. Specifications and behaviour change without notice,
       re-check before a big show.

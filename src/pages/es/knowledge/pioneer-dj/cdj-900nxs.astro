@@ -209,7 +209,7 @@ const schema = {
           <dt>{CDJ_900NXS.hddFolderFix}</dt><dd>Navegación de carpetas en discos duros de 2TB. Navegación lenta de la lista de tracks en modo Serato DJ HID. Un problema de disponibilidad de la búsqueda alfabética.</dd>
           <dt>{CDJ_900NXS.hddRecognitionFix}</dt><dd>Un problema de reconocimiento de disco duro. Se podía escuchar ruido cuando se activaba Master Tempo.</dd>
           <dt>{CDJ_900NXS.aiffLoadFix}</dt><dd>La reproducción de un archivo AIFF a 24bit/48kHz se detenía y los tracks no se podían cargar. Ruido blanco digitalmente distorsionado en ciertos archivos WAV. Un loop activo podía activar un loop muy corto. Compatibilidad de PRO DJ LINK con el CDJ-2000NXS2 y el XDJ-1000MK2. Reconocimiento de dispositivos de audio en macOS 10.12. Problemas en Control Mode. Se agregaron MASTER PLAYER SELECT (AUTO) y la búsqueda por varias palabras.</dd>
-          <dt>{FLOOR}</dt><dd>La velocidad de reproducción a veces no volvía al BPM mostrado en pantalla con Sync activado, más problemas durante la reproducción y la selección de tracks. Publicada el 5 de octubre de 2017, y nada la siguió.</dd>
+          <dt>{CDJ_900NXS.syncBpmFix}</dt><dd>La velocidad de reproducción a veces no volvía al BPM mostrado en pantalla con Sync activado, más problemas durante la reproducción y la selección de tracks. Publicada el 5 de octubre de 2017, y nada la siguió.</dd>
         </dl>
         <p style="margin-top:1rem"><strong>Hazlo así.</strong> En un deck que
         controlas, llévalo a {FLOOR} una vez y queda resuelto de forma permanente. En
@@ -369,7 +369,9 @@ const schema = {
     <p class="rb-sources dim">
       Fuentes: la <a href={CDJ_900NXS.source} target="_blank" rel="noopener">página de firmware</a> oficial
       del CDJ-900NXS de AlphaTheta y su <a href={CDJ_900NXS.sourceHistory} target="_blank" rel="noopener">PDF de historial completo de cambios</a>,
-      leídos completos y revisados el {UPDATED}. Cada falla documentada de arriba es
+      leídos completos y revisados el {UPDATED}. Los sistemas de archivos
+      soportados vienen del <a href={CDJ_900NXS.sourceFileSystems} target="_blank" rel="noopener">artículo de soporte de AlphaTheta sobre los sistemas de archivos del CDJ-900NXS →</a>.
+      Cada falla documentada de arriba es
       la redacción del propio fabricante, condensada. Los pasos generales de
       diagnóstico reflejan la práctica estándar de booth. Las especificaciones y el
       comportamiento cambian sin aviso, revisa de nuevo antes de un show grande.
