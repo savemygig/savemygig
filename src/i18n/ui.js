@@ -41,7 +41,12 @@ export const UI = {
       pairedPlayers: 'Commonly paired players',
       pairedNote: 'What you usually find beside it in working booths, from club, festival and rental installs rather than from a manufacturer document.',
       guides: 'Related guides',
-      browseAll: 'All Pioneer DJ and AlphaTheta equipment',
+      // {brand} is filled in with the MODEL'S OWN manufacturer name. It used to
+      // read "All Pioneer DJ and AlphaTheta equipment", which was fine while there
+      // was one brand and became a wrong label pointing at a right link the day
+      // Allen & Heath arrived: the Xone:92 page rendered the Pioneer sentence over
+      // a link to /knowledge/allen-heath.
+      browseAll: 'All {brand} equipment',
       guideLabels: {
         rekordbox: 'rekordbox reference',
         onelibrary: 'OneLibrary vs Device Library',
@@ -367,7 +372,8 @@ export const UI = {
       pairedPlayers: 'Players usados junto',
       pairedNote: 'O que você normalmente encontra ao lado dele em booths de verdade, a partir de instalações de clube, festival e rental, e não de um documento do fabricante.',
       guides: 'Guias relacionados',
-      browseAll: 'Todo o equipamento Pioneer DJ e AlphaTheta',
+      // {brand} recebe o nome do fabricante do próprio modelo.
+      browseAll: 'Todo o equipamento {brand}',
       guideLabels: {
         rekordbox: 'Referência do rekordbox',
         onelibrary: 'OneLibrary e Device Library',
@@ -606,7 +612,8 @@ export const UI = {
       pairedPlayers: 'Reproductores que se usan junto',
       pairedNote: 'Lo que normalmente encuentras al lado en booths reales, a partir de instalaciones de club, festival y rental, y no de un documento del fabricante.',
       guides: 'Guías relacionadas',
-      browseAll: 'Todo el equipo Pioneer DJ y AlphaTheta',
+      // {brand} recibe el nombre del fabricante del propio modelo.
+      browseAll: 'Todo el equipo {brand}',
       guideLabels: {
         rekordbox: 'Referencia de rekordbox',
         onelibrary: 'OneLibrary y Device Library',

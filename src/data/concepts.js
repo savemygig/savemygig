@@ -68,6 +68,13 @@ export const CONCEPTS = [
   // euphonia is lower case in AlphaTheta's own branding and on our page, and the
   // capitalised form appears in copy too, so both are carried.
   { key: 'euphonia', kind: 'product', label: 'euphonia', page: '/knowledge/pioneer-dj/euphonia', aliases: ['Euphonia', 'EUPHONIA'] },
+  // ALLEN & HEATH, added 2026-08-08 with the brand's first two pages. Without
+  // these, "Xone:92" was named across the site and never linked, which is the
+  // exact gap that left nine Pioneer models unlinked until yesterday.
+  // Allen & Heath write the name with a colon. The spaced and colon-less forms
+  // are carried as aliases because copy and search queries use all three.
+  { key: 'xone-96', kind: 'product', label: 'Xone:96', page: '/knowledge/allen-heath/xone-96', aliases: ['Xone 96', 'Xone96'] },
+  { key: 'xone-92', kind: 'product', label: 'Xone:92', page: '/knowledge/allen-heath/xone-92', aliases: ['Xone 92', 'Xone92'] },
   { key: 'rekordbox', kind: 'product', label: 'rekordbox', page: '/knowledge/pioneer-dj/rekordbox', aliases: ['Rekordbox'] },
   { key: 'djm-rec', kind: 'product', label: 'DJM-REC', page: '/knowledge/pioneer-dj/djm-rec', aliases: ['DJM REC'] },
   { key: 'firmware-matrix', kind: 'product', label: 'firmware issues by version', page: '/knowledge/pioneer-dj/firmware' },
@@ -96,6 +103,12 @@ export const CONCEPTS = [
   { key: 'family-cdj', kind: 'product', label: 'CDJ', page: '/knowledge/pioneer-dj/cdj-3000x', aliases: ['CDJs'] },
   { key: 'family-djm', kind: 'product', label: 'DJM', page: '/knowledge/pioneer-dj/djm-a9', aliases: ['DJMs'] },
   { key: 'family-xdj', kind: 'product', label: 'XDJ', page: '/knowledge/pioneer-dj/xdj-1000mk2', aliases: ['XDJs'] },
+  // A bare "Xone" goes to the Xone:96, which is the one Allen & Heath present as
+  // the range's headline and the one a reader who says "a Xone" most likely means
+  // in a modern booth. Same rule as the CDJ, DJM and XDJ families above, and the
+  // same open question recorded there about whether a family word is better
+  // pointed at /equipment than at one model.
+  { key: 'family-xone', kind: 'product', label: 'Xone', page: '/knowledge/allen-heath/xone-96', aliases: ['Xones'] },
 
   // ---------------------------------------------------------------- CONCEPTS
   // WITH a fuller article: the article wins over the dictionary line.

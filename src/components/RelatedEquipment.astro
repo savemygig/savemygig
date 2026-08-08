@@ -40,7 +40,7 @@
  * page, because the resolvers in facts.js drop unknown slugs. So this component
  * cannot ship a broken link even if someone edits the graph carelessly.
  */
-import { relatedModels, pairedModels, relatedGuides, equipmentFor } from '../data/facts.js';
+import { relatedModels, pairedModels, relatedGuides, equipmentFor, modelPath, brandFor } from '../data/facts.js';
 import { UI } from '../i18n/ui.js';
 
 interface Props {
@@ -57,7 +57,17 @@ const isPlayer = me?.kind === 'player';
 // English paths once, exactly like the nav does, so a new model needs no
 // per-language href.
 const lp = (p: string) => (lang === 'en' ? p : `/${lang}${p}`);
-const modelHref = (s: string) => lp(`/knowledge/pioneer-dj/${s}`);
+
+// THE MODEL PATH COMES FROM THE MODEL'S OWN BRAND (2026-08-07). This used to be
+// a hardcoded `/knowledge/pioneer-dj/${slug}`, which was invisible as an
+// assumption until Allen & Heath arrived: a Xone:92 in a `paired` list would
+// have rendered as /knowledge/pioneer-dj/xone-92 and 404ed. It matters here more
+// than anywhere else on the site, because `paired` deliberately reaches ACROSS
+// brands: a Xone links to the CDJs it sits beside, and a CDJ links back.
+const modelHref = (m) => lp(modelPath(m));
+
+// The browse-all link goes to THIS model's manufacturer hub, not to Pioneer's.
+const myBrand = brandFor(equipmentFor(slug)?.brand);
 
 const related = relatedModels(slug);
 const paired = pairedModels(slug);
@@ -74,7 +84,7 @@ const pairedTitle = isPlayer ? S.pairedMixers : S.pairedPlayers;
           <h2 class="rel-h">{relatedTitle}</h2>
           <ul class="rel-list">
             {related.map((m) => (
-              <li><a href={modelHref(m.slug)}>{m.name}</a></li>
+              <li><a href={modelHref(m)}>{m.name}</a></li>
             ))}
           </ul>
         </div>
@@ -85,7 +95,7 @@ const pairedTitle = isPlayer ? S.pairedMixers : S.pairedPlayers;
           <h2 class="rel-h">{pairedTitle}</h2>
           <ul class="rel-list">
             {paired.map((m) => (
-              <li><a href={modelHref(m.slug)}>{m.name}</a></li>
+              <li><a href={modelHref(m)}>{m.name}</a></li>
             ))}
           </ul>
           <p class="rel-note dim">{S.pairedNote}</p>
@@ -107,9 +117,11 @@ const pairedTitle = isPlayer ? S.pairedMixers : S.pairedPlayers;
       </div>
     )}
 
-    <p class="rel-all">
-      <a href={lp('/knowledge/pioneer-dj')}>{S.browseAll} →</a>
-    </p>
+    {myBrand && (
+      <p class="rel-all">
+        <a href={lp(myBrand.hub)}>{S.browseAll.replace('{brand}', myBrand.name)} →</a>
+      </p>
+    )}
   </div>
 )}
 

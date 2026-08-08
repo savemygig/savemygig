@@ -1,0 +1,198 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { modelsOfBrand, modelPath } from '../../../data/facts.js';
+
+// ALLEN & HEATH HARDWARE HUB. The full catalogue for the second manufacturer:
+// every Xone model a DJ meets in a professional booth, each one either a live
+// reference page or visibly labelled "Coming soon". Built on the reusable
+// pattern set by src/pages/knowledge/pioneer-dj/index.astro, so the cards, the
+// collapsible categories and the CollectionPage contract are the same ones.
+//
+// THE LIVE LIST IS READ FROM THE EQUIPMENT GRAPH, not written out here.
+// modelsOfBrand('allen-heath', 'mixer') returns the models in facts.js in
+// canonical order and modelPath() builds each URL from the brand's own hub, so
+// a new Xone appears on this page the moment it is added to facts.js and
+// nobody has to remember this file. It is the same idiom /equipment uses.
+//
+// WHY THIS HUB IS NOT A COPY OF THE PIONEER ONE. These are ANALOGUE mixers
+// built around the Xone VCF filter and the failures are different failures.
+// The Xone:92 has no firmware at all, so the question this site asks every
+// Pioneer owner, "what version is it on", does not exist on that mixer.
+// Neither user guide has a troubleshooting section, which is most of why the
+// model pages are worth writing.
+//
+// ORDER: MODEL FAMILY FIRST, THEN DESCENDING MODEL NUMBER (Antonio,
+// 2026-08-07), the same standing rule as the players on the Pioneer hub. So
+// the 96 sits above the 92, and a new Xone is inserted by its number rather
+// than by anybody's judgement about which generation is still current.
+//
+// The "coming soon" entries stay as local literals because they have no pages
+// and no researched facts. They are not in the graph and they must not be: the
+// graph is the set of models this site can actually answer questions about.
+const mixers = [
+  ...modelsOfBrand('allen-heath', 'mixer').map((m) => ({ name: m.name, href: modelPath(m) })),
+  { name: 'Xone:PX5', href: null },
+  { name: 'Xone:43', href: null },
+  { name: 'Xone:23', href: null },
+];
+const controllers = [
+  { name: 'Xone:K2', href: null },
+  { name: 'Xone:K3', href: null },
+];
+
+const categories = [
+  { label: 'Mixers', items: mixers },
+  { label: 'Controllers', items: controllers, note: 'The K series is a controller with a Xone filter on it, which is why DJs treat it as part of the mixer rather than as a separate box.' },
+];
+
+// COLLECTIONPAGE. Same shape and the same three repairs as the Pioneer hub: a
+// real @id so this is not an anonymous second page entity beside the WebPage
+// node Base.astro emits for this URL, `about` pointing at the equipment rather
+// than at the Organization, and a mainEntity so a crawler can tell what this
+// page collects without parsing the HTML.
+//
+// The ItemList carries ONLY the models with a live reference page. Every other
+// model here is visibly labelled "Coming soon" and a machine-readable list has
+// no way to carry that label: an entry would read as a page that exists.
+//
+// NOTHING IS APPENDED AFTER THE MODELS. The Pioneer list ends with its
+// cross-model firmware matrix; this brand has no such reference, and one of
+// these two mixers has no firmware at all, so there is nothing to append.
+const listed = [...mixers, ...controllers].filter((x) => x.href);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': 'https://www.savemygig.com/knowledge/allen-heath#webpage',
+  url: 'https://www.savemygig.com/knowledge/allen-heath',
+  name: 'Allen & Heath Xone equipment reference',
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  inLanguage: 'en',
+  about: [
+    { '@type': 'Thing', name: 'Allen & Heath' },
+    { '@type': 'Thing', name: 'Xone series' },
+    { '@type': 'Thing', name: 'Analogue DJ mixers' },
+  ],
+  mainEntity: {
+    '@type': 'ItemList',
+    '@id': 'https://www.savemygig.com/knowledge/allen-heath#list',
+    name: 'Allen & Heath model references',
+    numberOfItems: listed.length,
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    itemListElement: listed.map((x, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: x.name,
+      url: `https://www.savemygig.com${x.href}`,
+    })),
+  },
+};
+---
+<Base
+  title="Allen & Heath Xone Mixer Reference | Save My Gig"
+  description="Xone:96 and Xone:92: analogue mixers built around the Xone filter. What goes wrong, what the user guide leaves out, and the one with no firmware."
+  path="/knowledge/allen-heath"
+  crumbName="Allen & Heath"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span> <span>Allen &amp; Heath</span>
+    </nav>
+
+    <div class="status-line">ALLEN_HEATH</div>
+    <h1 style="margin-bottom:0.8rem">Allen &amp; <span class="accent">Heath</span></h1>
+    <p class="dim kb-lead">
+      Analogue mixers built around the Xone filter, so the rules are not the
+      rules of a CDJ booth. The Xone:92 has no firmware at all, which means the
+      question this site asks every Pioneer owner, what version is it on, does
+      not exist on that mixer. And neither user guide has a troubleshooting
+      section, which is most of why these pages exist.
+    </p>
+
+    <!-- NO FIRMWARE MATRIX PROMO HERE, and that is the point rather than an
+         omission. The Pioneer hub promotes a cross-model firmware reference
+         above its categories; this brand has none, and one of these two mixers
+         has no firmware to have a version of, so the same green box would be
+         a decorative lie. The honest equivalent is the way back out to the
+         other manufacturers, which /equipment already links inward to. -->
+    <p class="ah-out">
+      <a href="/equipment">Every manufacturer, every model with a page today &rarr;</a>
+    </p>
+
+    <!-- Collapsible categories (Antonio): on a phone the category headers ARE
+         the index, tap one to expand it. On desktop there is room, so the
+         inline script below opens everything before paint and the page reads
+         as before. Native details/summary, no framework. -->
+    {categories.map(cat => (
+      <details class="kb-cat">
+        <summary>
+          <h2 class="kb-h">{cat.label}</h2>
+          <span class="kb-chev" aria-hidden="true"></span>
+        </summary>
+        {cat.note && <p class="dim" style="margin-bottom:0.9rem;font-size:0.85rem">{cat.note}</p>}
+        <div class="kb-grid">
+          {cat.items.map(m => (
+            m.href ? (
+              <a class="kb-card kb-live" href={m.href}>
+                <span class="kb-name">{m.name}</span>
+                <span class="kb-go">Open the guide &rarr;</span>
+              </a>
+            ) : (
+              <div class="kb-card kb-soon">
+                <span class="kb-name">{m.name}</span>
+                <span class="kb-tag">Coming soon</span>
+              </div>
+            )
+          ))}
+        </div>
+      </details>
+    ))}
+    <script is:inline>
+      // Desktop has room: open every category before first interaction.
+      // Phones keep them collapsed so the category list is the index.
+      (function () {
+        if (window.matchMedia('(min-width: 641px)').matches) {
+          var cats = document.querySelectorAll('.kb-cat');
+          for (var i = 0; i < cats.length; i++) cats[i].open = true;
+        }
+      })();
+    </script>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">Which tool is missing from this list?</h2>
+      <p class="dim" style="margin-bottom:1rem">We build what DJs actually ask for. Tell us what you run and it moves up the list.</p>
+      <a href="/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Tell us what you use</a>
+    </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">
+      Playing on Pioneer gear instead? <a href="/knowledge/pioneer-dj">The Pioneer DJ / AlphaTheta reference</a> covers that.
+    </p>
+  </main>
+</Base>
+
+<style>
+  /* The card, the grid, the accordion chevron and the focus ring all come from
+     global.css, exactly as on the Pioneer hub, so the two manufacturer hubs
+     cannot drift apart. This block is that page's block with the .pdj-matrix
+     rules removed, because this page does not draw one, and dead CSS for a
+     component a page cannot render is how a stylesheet starts lying. */
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .kb-lead { max-width: 42rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  /* Holds the same vertical rhythm the firmware matrix promo holds on the
+     Pioneer hub, without pretending to be a promo. */
+  .ah-out { margin: 0 0 1.8rem; font-size: 0.9rem; }
+  .kb-h {
+    font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
+    margin: 0; flex: 1;
+  }
+  .kb-cat { margin-top: 1.6rem; }
+  .kb-cat > summary {
+    display: flex; align-items: center; gap: 0.8rem;
+    border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+    cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
+  }
+</style>

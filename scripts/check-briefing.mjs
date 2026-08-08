@@ -47,9 +47,20 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { BRANDS } from '../src/data/facts.js';
 
 const DIST = process.argv[2] || 'dist';
-const DIR = path.join(DIST, 'knowledge', 'pioneer-dj');
+
+/*
+ * EVERY BRAND HUB, NOT JUST PIONEER'S (fixed 2026-08-08). The first version of
+ * this script hardcoded dist/knowledge/pioneer-dj, so the day Allen & Heath
+ * landed it silently measured 15 of 17 model pages and reported PASS. A check
+ * that quietly stops covering new work is worse than no check, because it also
+ * removes the suspicion that would make someone look.
+ * The directory list now comes from BRANDS, so a manufacturer added to the data
+ * layer is measured the day its first page ships.
+ */
+const DIRS = BRANDS.map((b) => path.join(DIST, b.hub.replace(/^\//, '')));
 
 // The page Antonio named as the right size ratio.
 const REFERENCE = 'djm-900nxs2';
@@ -61,8 +72,9 @@ const HI = 1.45;
 // matrix, the rekordbox reference and the DJM-REC app page.
 const NOT_A_MODEL = new Set(['index', 'firmware', 'rekordbox', 'djm-rec']);
 
-if (!fs.existsSync(DIR)) {
-  console.error(`Booth briefing check: ${DIR} does not exist. Run the build first.`);
+const liveDirs = DIRS.filter((d) => fs.existsSync(d));
+if (liveDirs.length === 0) {
+  console.error(`Booth briefing check: none of ${DIRS.join(', ')} exist. Run the build first.`);
   process.exit(1);
 }
 
@@ -74,15 +86,16 @@ function briefing(file) {
   return m[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 }
 
-const pages = fs.readdirSync(DIR)
-  .filter((f) => f.endsWith('.html'))
-  .map((f) => f.replace(/\.html$/, ''))
-  .filter((slug) => !NOT_A_MODEL.has(slug))
-  .sort();
+const pages = liveDirs.flatMap((dir) =>
+  fs.readdirSync(dir)
+    .filter((f) => f.endsWith('.html'))
+    .map((f) => ({ slug: f.replace(/\.html$/, ''), file: path.join(dir, f) }))
+    .filter((x) => !NOT_A_MODEL.has(x.slug))
+).sort((a, b) => a.slug.localeCompare(b.slug));
 
 const measured = [];
-for (const slug of pages) {
-  const text = briefing(path.join(DIR, `${slug}.html`));
+for (const { slug, file } of pages) {
+  const text = briefing(file);
   if (text === null) {
     console.error(`FAIL  ${slug}: no .sv-text booth briefing found`);
     console.error('\nEvery equipment page carries a booth briefing. If this page is');
@@ -94,7 +107,7 @@ for (const slug of pages) {
 
 const ref = measured.find((m) => m.slug === REFERENCE);
 if (!ref) {
-  console.error(`FAIL  the reference page ${REFERENCE} was not found in ${DIR}`);
+  console.error(`FAIL  the reference page ${REFERENCE} was not found in ${liveDirs.join(', ')}`);
   console.error('The band is anchored to the page Antonio named. If that page was');
   console.error('renamed or removed, pick a new reference here deliberately.');
   process.exit(1);
@@ -123,5 +136,5 @@ if (bad.length) {
 
 const min = Math.min(...measured.map((m) => m.chars));
 const max = Math.max(...measured.map((m) => m.chars));
-console.log(`\nBooth briefing check PASS (${measured.length} model pages, ${min} to ${max} chars, `
-  + `${(min / ref.chars).toFixed(2)}x to ${(max / ref.chars).toFixed(2)}x of ${REFERENCE})`);
+console.log(`\nBooth briefing check PASS (${measured.length} model pages across ${liveDirs.length} brand hub(s), `
+  + `${min} to ${max} chars, ${(min / ref.chars).toFixed(2)}x to ${(max / ref.chars).toFixed(2)}x of ${REFERENCE})`);

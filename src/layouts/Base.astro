@@ -561,13 +561,20 @@ const entityGraph = {
              up there, because a reader on a model page IS inside the equipment
              section however they arrived. -->
         <a href={lp("/equipment")} class:list={['nav-more', { 'nav-on': path.startsWith('/equipment') || path.startsWith('/knowledge/pioneer-dj') }]}>{S.nav.equipment}</a>
-        <!-- Gear keeps `nav-more` (secondary: drawer on mobile, footer on
-             desktop) but LOSES `nav-gear-hide-mobile`, which had hidden it at
-             EVERY width and left it unreachable from the nav entirely. That
-             class existed because the label "Gear" read as equipment when the
-             page is a USB drive shortlist. The label now says what it is, so the
-             ambiguity that justified hiding it is gone. -->
-        <a href={lp("/gear")} class:list={['nav-more', { 'nav-on': path.startsWith('/gear') }]}>{S.nav.gear}</a>
+        <!-- GEAR IS OUT OF THE NAV AGAIN (Antonio, 2026-08-07, second ruling).
+             Earlier today I removed `nav-gear-hide-mobile` on the reasoning that
+             the item was hidden at every width by accident and that the label was
+             the real problem. The label WAS a real problem and the better label
+             stays. But the hiding was not an accident, and he has now said so
+             directly: he does not want a USB drive shortlist in the drawer beside
+             Emergency and Recovery, and he named the condition under which it
+             would belong there, which is affiliate partnerships that do not exist
+             yet. That is a business decision and it is his.
+             So both classes are back and the item is nav-unreachable by intent:
+             `nav-more` hides it at 901px and up, `nav-gear-hide-mobile` at 900px
+             and down. /gear stays reachable from the footer, from /equipment and
+             from in-page links, and nothing else about the page changes. -->
+        <a href={lp("/gear")} class:list={['nav-more', 'nav-gear-hide-mobile', { 'nav-on': path.startsWith('/gear') }]}>{S.nav.gear}</a>
         <!-- "About us", not "About" (Antonio, 2026-08-03): in the drawer the
              one word sat short against CHECKLIST and KNOWLEDGE and the column
              read ragged. Nav label only; the footer column keeps the short
@@ -1098,6 +1105,40 @@ const entityGraph = {
       max-width: calc(50% - 0.6rem);
       object-fit: contain; object-position: left center;
     }
+    /* --- narrow-phone override, MUST come after the base rule above --- */
+    @media (max-width: 414px) {
+        /* THE SEAL STANDS BACK ON NARROW PHONES (Antonio, 2026-08-07). He read the
+           brand block as cramped and blamed the social row's alignment; measuring
+           the ink at 360, 390 and 414 showed the wordmark, the rings and the coffee
+           link all sharing one left edge at 19 to 20px, so alignment was not it. He
+           confirmed the cause: the shield beside them.
+           It was never stealing WIDTH, because it is absolutely positioned and
+           deliberately out of flow so it cannot touch the stack's geometry. What it
+           was doing is dominating: at 92% of the stack height it left about 15px of
+           air beside a four-icon row, so the eye read one crowded column rather
+           than a brand block with a mark beside it.
+           So it keeps its place and gives up weight and a little ground: smaller,
+           and further right, which buys real air without moving anything in flow.
+           428px AND UP IS DELIBERATELY UNTOUCHED. Antonio's own words about that
+           width were "on 15 Pro Max looks awesome", and a fix for a crowded 390
+           has no business changing a layout he already signed off. */
+        .foot-seal {
+          /* ANCHORED TO THE RIGHT GUTTER, not to a percentage from the left, and
+             that is the actual fix. A left percentage put the seal 190px in at
+             360px wide, where the four-icon row already ends at 196px, so at the
+             narrowest common phone the icons and the shield were TOUCHING: air
+             measured -0.4px. That is what Antonio was looking at.
+             Anchoring right makes the gap a function of screen width instead of a
+             guess: the icon row is a fixed 176px from the left gutter, the seal is
+             a fixed size against the right gutter, so every pixel the screen gains
+             becomes air between them. Measured after: 29px at 360, 59px at 390. */
+          height: 68%;
+          left: auto;
+          right: 0;
+          max-width: 40%;
+          object-position: right center;
+        }
+    }
     .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
     .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
     .foot-col:last-child a { display: block; margin-bottom: 0.7rem; }
@@ -1339,16 +1380,17 @@ const entityGraph = {
     .nav-links.open { display: flex; box-shadow: var(--shadow-overlay); }
     .nav-links a { padding: 0.8rem 0; border-bottom: var(--stroke) solid var(--edge-soft); font-size: 0.95rem; }
     .nav-links a:last-child { border-bottom: none; }
-    /* .nav-gear-hide-mobile REMOVED 2026-08-07, and the rule it enforced is
-       worth keeping on the record because it was a symptom, not a fix.
-       Antonio's complaint on 2026-07-31 was correct: on a phone, "Gear" next to
-       Checklist and Emergency reads like it is about DJ equipment, when the page
-       is a USB drive shortlist. Hiding it on mobile answered that, but desktop
-       already hid it via .nav-more, so between the two rules the item was hidden
-       at EVERY width and /gear became unreachable from the nav altogether,
-       footer only, which nobody decided.
-       The real problem was the label. It now says "USB drives", so the item is
-       visible in the drawer again and the word Equipment belongs to equipment. */
+    /* GEAR OUT OF THE NAV AT EVERY WIDTH (Antonio, 2026-07-31, reaffirmed
+       2026-08-07 after I briefly removed it). Together with `nav-more`, which
+       hides at 901px and up, this rule hides the item at 900px and down, so it
+       is deliberately unreachable from the nav in both layouts.
+       His reasoning, and it is a business call rather than a layout one: a USB
+       drive shortlist does not belong in a drawer beside Emergency and Recovery
+       until there is an affiliate relationship behind it, and there is not one
+       yet. Reachable from the footer, from /equipment and from in-page links.
+       The label was ALSO wrong when this rule was first written, and that half is
+       fixed separately: the item now says "USB drives" rather than "Gear". */
+    .nav-gear-hide-mobile { display: none; }
   }
 
   /* Narrowest phones: with both header buttons pinned at 44px, the brand must

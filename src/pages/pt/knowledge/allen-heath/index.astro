@@ -1,0 +1,168 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import { modelsOfBrand, modelPath } from '../../../../data/facts.js';
+
+// HUB ALLEN & HEATH, PORTUGUÊS DO BRASIL. A fonte de verdade da estrutura, do
+// catálogo, das categorias, do contrato CollectionPage, do script e do CSS é
+// src/pages/knowledge/allen-heath/index.astro. Aqui muda só o texto que uma
+// pessoa lê e os hrefs com /pt. Se a página em inglês mudar, mude esta no
+// mesmo commit.
+//
+// A lista de modelos com página vem do grafo de equipamentos, igual à página
+// em inglês: modelPath() devolve o caminho canônico em inglês e o prefixo /pt
+// entra aqui, no ponto onde o link é montado.
+const mixers = [
+  ...modelsOfBrand('allen-heath', 'mixer').map((m) => ({ name: m.name, href: `/pt${modelPath(m)}` })),
+  { name: 'Xone:PX5', href: null },
+  { name: 'Xone:43', href: null },
+  { name: 'Xone:23', href: null },
+];
+const controllers = [
+  { name: 'Xone:K2', href: null },
+  { name: 'Xone:K3', href: null },
+];
+
+const categories = [
+  { label: 'Mixers', items: mixers },
+  { label: 'Controladoras', items: controllers, note: 'A série K é uma controladora com filtro Xone em cima, e é por isso que o DJ trata ela como parte do mixer e não como uma caixa separada.' },
+];
+
+// O ItemList carrega SÓ os modelos com página de referência no ar, igual ao
+// arquivo em inglês. Todo o resto está marcado como "Em breve" e uma lista
+// legível por máquina não tem como carregar esse aviso. Nada é acrescentado
+// depois dos modelos: esta marca não tem matriz de firmware, e um dos dois
+// mixers não tem firmware nenhum.
+const listed = [...mixers, ...controllers].filter((x) => x.href);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': 'https://www.savemygig.com/pt/knowledge/allen-heath#webpage',
+  url: 'https://www.savemygig.com/pt/knowledge/allen-heath',
+  name: 'Referência de equipamentos Allen & Heath Xone',
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  inLanguage: 'pt-BR',
+  about: [
+    { '@type': 'Thing', name: 'Allen & Heath' },
+    { '@type': 'Thing', name: 'Série Xone' },
+    { '@type': 'Thing', name: 'Mixers de DJ analógicos' },
+  ],
+  mainEntity: {
+    '@type': 'ItemList',
+    '@id': 'https://www.savemygig.com/pt/knowledge/allen-heath#list',
+    name: 'Referências de modelos Allen & Heath',
+    numberOfItems: listed.length,
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    itemListElement: listed.map((x, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: x.name,
+      url: `https://www.savemygig.com${x.href}`,
+    })),
+  },
+};
+---
+<Base
+  title="Allen & Heath: guia dos mixers Xone | Save My Gig"
+  description="Xone:96 e Xone:92: mixers analógicos em volta do filtro Xone. O que dá errado, o que o manual não conta, e o que não tem firmware nenhum."
+  path="/knowledge/allen-heath"
+  crumbName="Allen & Heath"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span> <span>Allen &amp; Heath</span>
+    </nav>
+
+    <div class="status-line">ALLEN_HEATH</div>
+    <h1 style="margin-bottom:0.8rem">Allen &amp; <span class="accent">Heath</span></h1>
+    <p class="dim kb-lead">
+      Mixers analógicos construídos em volta do filtro Xone, então as regras
+      não são as regras de uma booth de CDJ. O Xone:92 não tem firmware nenhum,
+      o que significa que a pergunta que este site faz a todo dono de Pioneer,
+      em qual versão ele está, não existe nesse mixer. E nenhum dos dois manuais
+      tem seção de troubleshooting, que é a maior razão para estas páginas
+      existirem.
+    </p>
+
+    <!-- No firmware matrix promo here: this brand has none, and one of these
+         two mixers has no firmware to have a version of. The honest
+         equivalent is the way back out to the other manufacturers. -->
+    <p class="ah-out">
+      <a href="/pt/equipment">Todo fabricante, todo modelo que já tem página &rarr;</a>
+    </p>
+
+    <!-- Collapsible categories: on a phone the category headers ARE the index.
+         On desktop the inline script below opens everything before paint.
+         Native details/summary, no framework. -->
+    {categories.map(cat => (
+      <details class="kb-cat">
+        <summary>
+          <h2 class="kb-h">{cat.label}</h2>
+          <span class="kb-chev" aria-hidden="true"></span>
+        </summary>
+        {cat.note && <p class="dim" style="margin-bottom:0.9rem;font-size:0.85rem">{cat.note}</p>}
+        <div class="kb-grid">
+          {cat.items.map(m => (
+            m.href ? (
+              <a class="kb-card kb-live" href={m.href}>
+                <span class="kb-name">{m.name}</span>
+                <span class="kb-go">Abrir o guia &rarr;</span>
+              </a>
+            ) : (
+              <div class="kb-card kb-soon">
+                <span class="kb-name">{m.name}</span>
+                <span class="kb-tag">Em breve</span>
+              </div>
+            )
+          ))}
+        </div>
+      </details>
+    ))}
+    <script is:inline>
+      // Desktop has room: open every category before first interaction.
+      // Phones keep them collapsed so the category list is the index.
+      (function () {
+        if (window.matchMedia('(min-width: 641px)').matches) {
+          var cats = document.querySelectorAll('.kb-cat');
+          for (var i = 0; i < cats.length; i++) cats[i].open = true;
+        }
+      })();
+    </script>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">Qual ferramenta está faltando nesta lista?</h2>
+      <p class="dim" style="margin-bottom:1rem">A gente constrói o que os DJs pedem de verdade. Diga o que você usa e isso sobe na fila.</p>
+      <a href="/pt/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Conte o que você usa</a>
+    </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">
+      Vai tocar em equipamento Pioneer? <a href="/pt/knowledge/pioneer-dj">A referência Pioneer DJ / AlphaTheta</a> cobre isso.
+    </p>
+  </main>
+</Base>
+
+<style>
+  /* The card, the grid, the accordion chevron and the focus ring all come from
+     global.css, exactly as on the Pioneer hub. This block is that page's block
+     with the .pdj-matrix rules removed, because this page does not draw one. */
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .kb-lead { max-width: 42rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  /* Holds the same vertical rhythm the firmware matrix promo holds on the
+     Pioneer hub, without pretending to be a promo. */
+  .ah-out { margin: 0 0 1.8rem; font-size: 0.9rem; }
+  .kb-h {
+    font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
+    margin: 0; flex: 1;
+  }
+  .kb-cat { margin-top: 1.6rem; }
+  .kb-cat > summary {
+    display: flex; align-items: center; gap: 0.8rem;
+    border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+    cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
+  }
+</style>

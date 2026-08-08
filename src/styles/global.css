@@ -444,6 +444,19 @@ a { color: var(--red); }
   background: var(--tone);
   flex-shrink: 0;
 }
+/* THE DATE VARIANT (Antonio, 2026-08-07). The status line is an EYEBROW LABEL,
+   so uppercase and wide letter-spacing are right for "EQUIPMENT" or "FIRMWARE
+   MATRIX". They are wrong for a date: "REVIEWED: 7 AUGUST 2026" shouts, and a
+   month name in caps with 0.18em tracking reads as a label rather than as a
+   fact. He asked for "Reviewed: 7 August 2026" and he is right.
+   Only the transform and the tracking are dropped. The dot, the size, the
+   weight and the colour stay, so the line still belongs to the same family as
+   every other eyebrow on the site. */
+.status-line.sl-date {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
 /* Desktop-only status tag (Antonio, first used on /checklist): the eyebrow
    earns its line on a wide screen but not above a phone H1. */
 @media (max-width: 640px) { .sl-desktop { display: none; } }

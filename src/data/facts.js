@@ -816,6 +816,166 @@ export const DJM_900NXS = {
   sourcePeakLimiter: 'https://downloads.support.alphatheta.com/firmwares/dj-mixers/DJM-900NXS/PEAK_LIMITER_DJM-900NXS_E.pdf',
 };
 
+// ===========================================================================
+// ALLEN & HEATH. The second manufacturer, added 2026-08-07.
+//
+// READ THIS BEFORE ADDING A XONE FACT. These mixers break three assumptions the
+// Pioneer half of this file is built on, and each one was verified independently
+// for each model rather than carried across from the sibling:
+//
+//   1. THE XONE:92 HAS NO FIRMWARE. Not "none published", none. Allen & Heath
+//      offer no firmware, no drivers and no release notes for it, and there is
+//      no USB audio to need any. So the question this whole site asks a Pioneer
+//      owner, "what version is the deck on", DOES NOT EXIST on that mixer. It is
+//      deliberately not tagged `firmware` in the graph, because putting the
+//      firmware matrix in its related guides would be actively misleading.
+//   2. NEITHER USER GUIDE HAS A TROUBLESHOOTING SECTION. Checked in both. That
+//      is itself a fact worth publishing: a DJ holding the manual in a booth has
+//      nothing to work from, which is most of why these pages should exist.
+//   3. ALLEN & HEATH CONTRADICT THEMSELVES ON THE XONE:92 CHANNEL COUNT. The
+//      product page says 4+2, their own technical specification sheet says 6+2.
+//      Both are official. The page publishes both and attributes each.
+//
+// AND THREE XONE:92 TRAITS THAT DO NOT CARRY TO THE XONE:96, each of which would
+// have been an error: the 96 has NO LFO, phono shorting plugs are absent from its
+// documentation and its box contents, and it has no documented internal option to
+// disable the filters. Verified by their absence from the 96's own guide.
+// ===========================================================================
+
+export const XONE_92 = {
+  checked: '7 August 2026',
+  // TWO OFFICIAL CHANNEL COUNTS THAT DISAGREE. Do not pick one silently.
+  channelsProductPage: '4 + 2',
+  channelsSpecSheet: '6 + 2',
+  channelsDetail: 'four stereo music channels with switchable phono or line, plus two mic and return channels',
+  analogue: true,
+  analogueClaim: '100% analogue circuitry and mix bus summing',
+  // NO firmware, NO drivers, NO USB audio, NO soundcard. The absence is the fact.
+  firmware: false,
+  soundcard: false,
+  usbAudio: false,
+  digitalIo: 'MIDI out only, one 5-pin DIN',
+  faderType: 'linear channel faders, with a global 3-position curve switch on the Mk2',
+  crossfader: true,
+  crossfaderModel: 'mini innoFADER Pro, 45mm linear VCA',
+  crossfaderUserReplaceable: true,
+  crossfaderPart: 'AI11470',
+  // THE FILTERS ARE THE REASON THIS MIXER EXISTS.
+  filters: 2,
+  filterTypes: ['HPF', 'BPF', 'LPF'],
+  filterResonance: 'a resonance control labelled MILD to WILD, which feeds the filter output back to its input',
+  lfos: 2,                          // two independent LFOs, with tap tempo and an x2 speed
+  filterAssignable: true,           // either filter to any of the four stereo channels
+  // THE BOOTH TRAPS, all documented by Allen & Heath.
+  micsToRecord: false,              // mics never reach Record
+  micsToBoothByDefault: false,      // and not Booth either until a REAR PANEL switch is flipped
+  sourceMicRouting: 'https://support.allen-heath.com/hc/en-gb/articles/4403303538449-Xone-92-No-mic-signals-getting-to-Record-Outputs',
+  crossfaderAssignCentreIsOff: true, // centre takes the channel OUT of the crossfader
+  filterAssignCentreIsDry: true,
+  returnsThroughCrossfader: false,  // "sources which do not need to route through the crossfader"
+  phonoShortingPlugs: true,
+  phonoShortingPlugPart: 'AL4396',
+  // Installer options that make a working mixer look broken.
+  internalFilterDisable: true,
+  internalResonanceLimit: true,
+  // Master output is NOT unity at maximum.
+  masterUnityPosition: 'around 3 o\'clock, which is 8 on the dial',
+  masterAtMax: '+4dBu on the balanced XLR output',
+  sourceMasterLevels: 'https://support.allen-heath.com/hc/en-gb/articles/24248474651153-Xone-PD-series-master-level-settings',
+  // SAFETY, and it contradicts a common booth "fix" for hum.
+  neverLiftMainsEarth: true,
+  sourceEarth: 'https://support.allen-heath.com/hc/en-gb/articles/4403382371217-Xone-Laptop-hum-through-mixer',
+  troubleshootingSection: false,
+  micInputs: 2,
+  auxSends: 2,                      // switchable pre or post fader
+  mains: '100 to 240V, 30W, internal switch mode supply, no voltage selector and no fuse change',
+  dimensions: '320mm wide, 106mm high',   // from the Limited Edition guide, NOT the Mk2 spec sheet
+  weight: '7 kg',
+  // Mk1 and Mk2 are documented as distinct, with different internals.
+  revisions: 'Mk1 and Mk2, plus a Limited Edition run of 920 units for the twentieth anniversary',
+  // DVS is NOT documented for this mixer by Allen & Heath. Do not claim it either
+  // way, and do NOT carry the Xone:96's Traktor Scratch certification across.
+  dvsDocumented: false,
+  serviceManualPublished: false,
+  blockDiagramPublished: true,
+  source: 'https://www.allen-heath.com/hardware/xone-series/xone92/',
+  sourceManual: 'https://www.allen-heath.com/content/uploads/2024/10/Xone92-Mk2-User-Guide.pdf',
+  sourceSpecs: 'https://www.allen-heath.com/content/uploads/2024/10/Xone92-Mk2-Technical-Specifications.pdf',
+  sourceBlockDiagram: 'https://www.allen-heath.com/content/uploads/2024/10/Xone92-Mk2-Block-Diagram.pdf',
+};
+
+export const XONE_96 = {
+  checked: '7 August 2026',
+  channels: '6 + 2',                // consistent everywhere, unlike the Xone:92
+  channelsDetail: 'four stereo channels with 4-band EQ, two stereo channels with 3-band parametric EQ, and two auxiliary stereo returns',
+  analogue: true,
+  analogueClaim: 'an analogue mixer with an interface, feeding what Allen & Heath call the analogue engine',
+  // Allen & Heath never state that SUMMING is analogue for this model, only for
+  // the Xone:92. Do not upgrade "analogue mixer" into "analogue summing".
+  analogueSummingClaimed: false,
+  soundcard: true,
+  soundcards: 2,
+  soundcardSpec: 'two independent interfaces, each 6 stereo in and 6 stereo out at 32-bit / 96 kHz',
+  macClassCompliant: true,          // no driver needed on macOS
+  windowsDriverNeeded: true,
+  // ALLEN & HEATH PRINT THIS VERSION TWO DIFFERENT WAYS for the same download.
+  windowsDriver: 'v4.67.0 on the resources page, v4.6.70 in the release note itself',
+  windowsDriverDate: 'December 2021',
+  // NO firmware change history is published. The mixer HAS firmware, the guide
+  // says so in boilerplate, but no version, date or change text exists publicly,
+  // and the old v1.0.2 audio firmware pages now 404 on their own site.
+  firmwarePublished: false,
+  filters: 2,
+  filterTypes: ['HPF', 'BPF', 'LPF'],
+  filterRange: '20 Hz to 20 kHz',
+  filterCrunch: true,               // harmonic distortion, inserted PRE-filter
+  lfos: 0,                          // NO LFO. Absent from the guide entirely.
+  filterAssignable: 'all six main channels to either filter, post gain, post EQ and post fader',
+  // THE WORST DOCUMENTED TRAP ON THIS MIXER.
+  masterInsertBreaksThru: true,
+  sourceMasterInsert: 'https://support.allen-heath.com/hc/en-gb/articles/25826873884049-Xone-96-connecting-RMX1000-to-master-insert',
+  insertLevel: '-2 dBu in and out',
+  // The second way audio and meters can disagree here.
+  masterControlsDoNotMoveMeters: true,
+  meterTarget: 'between -6 and +6 with the average around 0, and the loudest peaks around +6',
+  micsToBoothOrRecordByDefault: false,   // internal jumpers only, A&H will help
+  micPhantomPower: false,                // dynamic low impedance mics only
+  micsThroughMasterInsert: false,
+  crossfader: true,
+  crossfaderModel: 'mini innoFADER, with fader cut adjustment',
+  crossfaderAssignCentreIsOff: true,
+  // Documented limits on the aux returns and sends.
+  returnsCdNoEqFilterOrCrossfader: true,
+  sends: 'SND 1 switchable pre or post fader, SND 2 fixed post fader',
+  headphoneSystems: 2,              // two independent cue systems, each TRS plus mini jack
+  cueModeToggle: 'auto cancelling by default, switchable to latching by holding all three filter type buttons on both filters',
+  sourceCueMode: 'https://support.allen-heath.com/hc/en-gb/articles/24944524347665-Xone-96-Cue-system-configuration',
+  // X:LINK IS PROPRIETARY AND CAN DAMAGE HARDWARE. The only physical-damage
+  // warning on either Xone page.
+  xLink: true,
+  xLinkThirdPartyWarning: true,
+  sourceXLink: 'https://support.allen-heath.com/hc/en-gb/articles/24249679937297-Xone-96-X-link-with-K-series',
+  midiOutOnly: true,                // 5-pin DIN is OUT only; MIDI in arrives over USB
+  midiClockPassthroughOnly: true,   // the mixer does not generate a clock
+  midiControls: 31,
+  // DVS. Keep Allen & Heath's own two words apart: Traktor Scratch is CERTIFIED,
+  // the wider list is SUPPORTED. Serato is not mentioned by them at all.
+  dvsCertified: ['Traktor Scratch'],
+  dvsSupported: ['Traktor Pro', 'djay Pro', 'Virtual DJ Pro', 'rekordbox'],
+  seratoDocumented: false,
+  troubleshootingSection: false,
+  specSheetPublished: false,         // no technical specification document exists at all
+  micInputs: 2,
+  dimensions: '336mm wide, 410mm deep, 109mm high',
+  weight: '7 kg',
+  serviceManualPublished: false,
+  source: 'https://www.allen-heath.com/hardware/xone-series/xone96/',
+  sourceManual: 'https://support.allen-heath.com/hc/en-gb/articles/43053562464017-Xone-96-User-Guide',
+  sourceResources: 'https://www.allen-heath.com/hardware/xone-series/xone96/resources/',
+  sourceRouting: 'https://support.allen-heath.com/hc/en-gb/articles/24741954249233-Xone-96-Dual-Sound-Card-Routing',
+  sourceMidi: 'https://support.allen-heath.com/hc/en-gb/articles/43084536824849-Xone-96-MIDI-Implementation',
+};
+
 // ---------------------------------------------------------------------------
 // THE EQUIPMENT GRAPH (2026-08-07)
 //
@@ -869,9 +1029,9 @@ export const DJM_900NXS = {
 // The renderer resolves every slug against EQUIPMENT and drops anything unknown,
 // so this file can never emit a broken link.
 export const EQUIPMENT = [
-  // ------------------------------------------------------------- PLAYERS
+  // ------------------------------------------- PIONEER DJ / ALPHATHETA
   {
-    slug: 'cdj-3000x', name: 'CDJ-3000X', kind: 'player', released: 2026,
+    slug: 'cdj-3000x', name: 'CDJ-3000X', kind: 'player', brand: 'pioneer-dj', released: 2026,
     newer: null,                       // top of the CDJ line
     older: 'cdj-3000',
     paired: ['djm-a9', 'djm-v10'],     // flagship deck, flagship desks
@@ -879,7 +1039,7 @@ export const EQUIPMENT = [
     tags: ['onelibrary', 'exfat', 'prodjlink', 'firmware', 'usb-prep', 'cloud'],
   },
   {
-    slug: 'cdj-3000', name: 'CDJ-3000', kind: 'player', released: 2020,
+    slug: 'cdj-3000', name: 'CDJ-3000', kind: 'player', brand: 'pioneer-dj', released: 2020,
     newer: 'cdj-3000x',
     older: 'cdj-2000nxs2',
     paired: ['djm-a9', 'djm-v10', 'djm-900nxs2'],
@@ -890,7 +1050,7 @@ export const EQUIPMENT = [
     tags: ['devicelibrary', 'exfat', 'prodjlink', 'firmware', 'usb-prep', 'ecodesign'],
   },
   {
-    slug: 'cdj-2000nxs2', name: 'CDJ-2000NXS2', kind: 'player', released: 2016,
+    slug: 'cdj-2000nxs2', name: 'CDJ-2000NXS2', kind: 'player', brand: 'pioneer-dj', released: 2016,
     newer: 'cdj-3000',
     older: 'cdj-2000nxs',
     paired: ['djm-900nxs2'],           // the definitive booth pairing of its era
@@ -898,7 +1058,7 @@ export const EQUIPMENT = [
     tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep'],
   },
   {
-    slug: 'cdj-2000nxs', name: 'CDJ-2000NXS', kind: 'player', released: 2012,
+    slug: 'cdj-2000nxs', name: 'CDJ-2000NXS', kind: 'player', brand: 'pioneer-dj', released: 2012,
     newer: 'cdj-2000nxs2',
     older: null,                       // the CDJ-2000 has no page here
     paired: ['djm-900nxs2'],
@@ -906,7 +1066,7 @@ export const EQUIPMENT = [
     tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep'],
   },
   {
-    slug: 'cdj-1500x', name: 'CDJ-1500X', kind: 'player', released: 2026,
+    slug: 'cdj-1500x', name: 'CDJ-1500X', kind: 'player', brand: 'pioneer-dj', released: 2026,
     newer: null,                       // opens its own tier, nothing above it
     older: null,                       // and nothing below it yet
     paired: ['djm-v5', 'djm-a9'],
@@ -916,7 +1076,7 @@ export const EQUIPMENT = [
     tags: ['onelibrary', 'exfat', 'prodjlink', 'firmware', 'usb-prep', 'cloud'],
   },
   {
-    slug: 'cdj-900nxs', name: 'CDJ-900NXS', kind: 'player', released: 2012,
+    slug: 'cdj-900nxs', name: 'CDJ-900NXS', kind: 'player', brand: 'pioneer-dj', released: 2012,
     newer: null,                       // the 900 line ended here
     older: null,
     paired: ['djm-900nxs2'],
@@ -924,15 +1084,7 @@ export const EQUIPMENT = [
     tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep'],
   },
   {
-    slug: 'xdj-700', name: 'XDJ-700', kind: 'player', released: 2015,
-    newer: null,                       // the XDJ-1000MK2 has no page here
-    older: null,
-    paired: ['djm-900nxs2'],
-    siblings: ['cdj-900nxs', 'cdj-2000nxs'],
-    tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep', 'ecodesign'],
-  },
-  {
-    slug: 'xdj-1000mk2', name: 'XDJ-1000MK2', kind: 'player', released: 2015,
+    slug: 'xdj-1000mk2', name: 'XDJ-1000MK2', kind: 'player', brand: 'pioneer-dj', released: 2015,
     newer: null,                       // nothing officially named as its successor
     older: null,                       // the XDJ-1000 has no page here
     paired: ['djm-900nxs2', 'djm-900nxs'],
@@ -941,23 +1093,15 @@ export const EQUIPMENT = [
   },
   // ------------------------------------------------------------- MIXERS
   {
-    slug: 'djm-a9', name: 'DJM-A9', kind: 'mixer', released: 2022,
-    newer: null,                       // current top of the DJM-900 lineage
-    older: 'djm-900nxs2',
-    paired: ['cdj-3000', 'cdj-3000x'],
-    siblings: ['djm-v10'],
-    tags: ['prodjlink', 'firmware', 'dvs', 'link-network'],
+    slug: 'xdj-700', name: 'XDJ-700', kind: 'player', brand: 'pioneer-dj', released: 2015,
+    newer: null,                       // the XDJ-1000MK2 has no page here
+    older: null,
+    paired: ['djm-900nxs2'],
+    siblings: ['cdj-900nxs', 'cdj-2000nxs'],
+    tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep', 'ecodesign'],
   },
   {
-    slug: 'djm-900nxs2', name: 'DJM-900NXS2', kind: 'mixer', released: 2016,
-    newer: 'djm-a9',
-    older: null,                       // the DJM-900NXS has no page here
-    paired: ['cdj-2000nxs2', 'cdj-3000'],
-    siblings: ['djm-v10'],
-    tags: ['prodjlink', 'firmware', 'dvs', 'link-network'],
-  },
-  {
-    slug: 'djm-v10', name: 'DJM-V10 / V10-LF', kind: 'mixer', released: 2019,
+    slug: 'djm-v10', name: 'DJM-V10 / V10-LF', kind: 'mixer', brand: 'pioneer-dj', released: 2019,
     newer: null,
     older: null,                       // the V series starts here, six channels
     paired: ['cdj-3000', 'cdj-3000x'],
@@ -965,7 +1109,7 @@ export const EQUIPMENT = [
     tags: ['prodjlink', 'firmware', 'dvs', 'link-network', 'long-blend'],
   },
   {
-    slug: 'djm-v5', name: 'DJM-V5', kind: 'mixer', released: 2024,
+    slug: 'djm-v5', name: 'DJM-V5', kind: 'mixer', brand: 'pioneer-dj', released: 2024,
     newer: null,
     older: null,                       // four-channel V series, its own tier
     paired: ['cdj-3000', 'cdj-1500x'],
@@ -973,15 +1117,23 @@ export const EQUIPMENT = [
     tags: ['prodjlink', 'firmware', 'dvs', 'link-network', 'long-blend', 'no-crossfader'],
   },
   {
-    slug: 'euphonia', name: 'euphonia', kind: 'mixer', released: 2024,
-    newer: null,
-    older: null,                       // rotary, outside the DJM lineage entirely
+    slug: 'djm-a9', name: 'DJM-A9', kind: 'mixer', brand: 'pioneer-dj', released: 2022,
+    newer: null,                       // current top of the DJM-900 lineage
+    older: 'djm-900nxs2',
     paired: ['cdj-3000', 'cdj-3000x'],
-    siblings: ['djm-v10', 'djm-a9'],
-    tags: ['firmware', 'dvs', 'long-blend', 'no-crossfader', 'rotary'],
+    siblings: ['djm-v10'],
+    tags: ['prodjlink', 'firmware', 'dvs', 'link-network'],
   },
   {
-    slug: 'djm-900nxs', name: 'DJM-900NXS', kind: 'mixer', released: 2011,
+    slug: 'djm-900nxs2', name: 'DJM-900NXS2', kind: 'mixer', brand: 'pioneer-dj', released: 2016,
+    newer: 'djm-a9',
+    older: null,                       // the DJM-900NXS has no page here
+    paired: ['cdj-2000nxs2', 'cdj-3000'],
+    siblings: ['djm-v10'],
+    tags: ['prodjlink', 'firmware', 'dvs', 'link-network'],
+  },
+  {
+    slug: 'djm-900nxs', name: 'DJM-900NXS', kind: 'mixer', brand: 'pioneer-dj', released: 2011,
     newer: 'djm-900nxs2',              // the next nexus generation, though AlphaTheta
                                        // never called it a replacement
     older: null,
@@ -990,7 +1142,7 @@ export const EQUIPMENT = [
     tags: ['prodjlink', 'firmware', 'dvs', 'link-network'],
   },
   {
-    slug: 'djm-750mk2', name: 'DJM-750MK2', kind: 'mixer', released: 2017,
+    slug: 'djm-750mk2', name: 'DJM-750MK2', kind: 'mixer', brand: 'pioneer-dj', released: 2017,
     newer: null,
     older: null,                       // the DJM-750 original has no page here
     paired: ['cdj-2000nxs2', 'xdj-700'],
@@ -999,7 +1151,103 @@ export const EQUIPMENT = [
     siblings: ['djm-900nxs2', 'djm-v5'],
     tags: ['firmware', 'dvs', 'ecodesign'],
   },
+  {
+    slug: 'euphonia', name: 'euphonia', kind: 'mixer', brand: 'pioneer-dj', released: 2024,
+    newer: null,
+    older: null,                       // rotary, outside the DJM lineage entirely
+    paired: ['cdj-3000', 'cdj-3000x'],
+    siblings: ['djm-v10', 'djm-a9'],
+    tags: ['firmware', 'dvs', 'long-blend', 'no-crossfader', 'rotary'],
+  },
+  // -------------------------------------------------------- ALLEN & HEATH
+  // Added 2026-08-07, the second manufacturer, and the reason `brand` exists.
+  //
+  // These two are MIXERS ONLY and they are not in the DJM lineage, so `paired`
+  // reaches across brands to the players a Xone actually sits beside. That is
+  // the point of a booth: a Xone:92 with two CDJ-2000NXS2s on it is one of the
+  // most common professional setups there is, and a graph that could not express
+  // it would be modelling a catalogue rather than a booth.
+  {
+    slug: 'xone-96', name: 'Xone:96', kind: 'mixer', brand: 'allen-heath', released: 2018,
+    newer: null,                       // top of the Xone line
+    older: 'xone-92',
+    // Allen & Heath say the Xone:96 "takes the legendary soul of the acclaimed
+    // Xone:92 and redelivers it, enhanced". They never say REPLACES, and both
+    // are sold concurrently, so lineage here means "the one before it" and not
+    // "the one it killed".
+    paired: ['cdj-3000', 'cdj-2000nxs2'],
+    siblings: ['djm-a9', 'djm-v10'],
+    tags: ['dvs', 'link-network', 'long-blend'],
+  },
+  {
+    slug: 'xone-92', name: 'Xone:92', kind: 'mixer', brand: 'allen-heath', released: 2004,
+    newer: 'xone-96',
+    older: null,
+    paired: ['cdj-2000nxs2', 'cdj-2000nxs'],
+    siblings: ['djm-900nxs2', 'djm-750mk2'],
+    // NO `firmware` TAG, and that is deliberate rather than an omission. This
+    // mixer has no firmware at all: Allen & Heath publish no firmware, no
+    // drivers and no release notes for it, and there is no USB audio to need
+    // any. Tagging it `firmware` would put the firmware matrix in its related
+    // guides, which would be actively misleading on the one mixer here where
+    // the version question does not exist.
+    tags: ['dvs', 'long-blend'],
+  },
 ];
+
+// THE MANUFACTURERS. Added 2026-08-07 with Allen & Heath, and it exists because
+// EVERY path in this system used to be hardcoded as /knowledge/pioneer-dj/<slug>:
+// in the RelatedEquipment component, in the /equipment landing page, and in the
+// schema. One manufacturer looks like no assumption at all right up to the moment
+// a second one arrives.
+//
+// A model now says which brand it belongs to and the brand says where it lives,
+// so `modelPath()` is the ONLY place that knows how a model URL is built. Adding
+// Denon DJ or RANE means one entry here and one hub page, and nothing else.
+//
+// `hub` is the ENGLISH canonical path. Language prefixing happens at the render
+// site, exactly as it already does for every other internal link.
+export const BRANDS = [
+  {
+    key: 'pioneer-dj',
+    name: 'Pioneer DJ / AlphaTheta',
+    hub: '/knowledge/pioneer-dj',
+  },
+  {
+    key: 'allen-heath',
+    // The ampersand is Allen & Heath's own styling of their name and it is what
+    // their site uses, so it is what we use. It needs escaping in markup, not
+    // replacing with "and".
+    name: 'Allen & Heath',
+    hub: '/knowledge/allen-heath',
+  },
+];
+
+const BY_SLUG = new Map(EQUIPMENT.map((e) => [e.slug, e]));
+const BY_BRAND = new Map(BRANDS.map((b) => [b.key, b]));
+
+/** The manufacturer record for a brand key, or null. */
+export function brandFor(key) {
+  return BY_BRAND.get(key) ?? null;
+}
+
+/**
+ * The canonical English path of a model page, built from its brand's hub.
+ * Every caller uses this instead of concatenating a hub prefix itself, so a
+ * manufacturer whose hub moves cannot leave a broken link behind.
+ */
+export function modelPath(slugOrModel) {
+  const m = typeof slugOrModel === 'string' ? BY_SLUG.get(slugOrModel) : slugOrModel;
+  if (!m) return null;
+  const brand = BY_BRAND.get(m.brand);
+  if (!brand) throw new Error(`facts.js: model "${m.slug}" has brand "${m.brand}", which is not in BRANDS.`);
+  return `${brand.hub}/${m.slug}`;
+}
+
+/** Every model of one brand, in canonical order, optionally filtered by kind. */
+export function modelsOfBrand(brandKey, kind = null) {
+  return EQUIPMENT.filter((e) => e.brand === brandKey && (kind === null || e.kind === kind));
+}
 
 // GUIDE INDEX. Every guide worth reaching from an equipment page, tagged with
 // the topics it answers. Related guides are the INTERSECTION of a model's tags
@@ -1052,7 +1300,6 @@ export const GUIDE_INDEX = [
 
 // Resolve helpers. Pages call these instead of reasoning about the graph, so
 // the rules live in one place and every page and language behaves identically.
-const BY_SLUG = new Map(EQUIPMENT.map((e) => [e.slug, e]));
 
 export function equipmentFor(slug) {
   return BY_SLUG.get(slug) ?? null;

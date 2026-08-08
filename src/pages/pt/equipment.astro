@@ -1,60 +1,42 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { EQUIPMENT } from '../../data/facts.js';
+import { BRANDS, modelsOfBrand, modelPath } from '../../data/facts.js';
 
 // /equipment EM PORTUGUÊS DO BRASIL. A fonte de verdade da estrutura, dos
 // componentes, das classes e do CSS é src/pages/equipment.astro. Aqui só mudam
 // o texto legível por humanos e os hrefs com prefixo /pt. Se a página em inglês
 // mudar, mude esta no mesmo commit.
 
-// Players first, then mixers. This page must not disagree with the manufacturer
-// hub it feeds, so it uses the hub's rule.
+// BRANDS COME FROM THE REGISTRY NOW, and EQUIPMENT is already in canonical
+// display order, so the ORDER array and its rank() function are GONE.
 //
-// ANTONIO'S ORDERING RULE: model family first, then DESCENDING model number.
-// So every CDJ high to low, then every XDJ high to low, and the same for the
-// mixers. Insert a new model by its number, inside its family.
+// That array was a second copy of an ordering that facts.js already knew, and it
+// rotted within one commit of being written: three new models were added to
+// EQUIPMENT and sorted last here because nobody remembered the duplicate. The fix
+// was a thrown error; the better fix is not having the duplicate. EQUIPMENT is
+// ordered brand, then category, then family, then descending model number, and
+// this page simply preserves that order.
 //
-// THIS ARRAY IS THE ONE PLACE THAT CAN ROT, and it just did: adding three models
-// to EQUIPMENT without adding them here sent all three to the end of their
-// section, so the XDJ-1000MK2 sat after the XDJ-700 and the DJM-900NXS after the
-// euphonia. A slug missing from this list still RENDERS, it just renders last,
-// which is exactly the kind of failure nobody notices in a build log.
-// So `rank` no longer silently tolerates an unlisted slug: see below.
-const ORDER = [
-  'cdj-3000x', 'cdj-3000', 'cdj-2000nxs2', 'cdj-2000nxs', 'cdj-1500x', 'cdj-900nxs',
-  'xdj-1000mk2', 'xdj-700',
-  'djm-v10', 'djm-v5', 'djm-a9', 'djm-900nxs2', 'djm-900nxs', 'djm-750mk2', 'euphonia',
-];
-const rank = (slug: string) => {
-  const i = ORDER.indexOf(slug);
-  // A slug in EQUIPMENT but not in ORDER is a mistake rather than a default, so
-  // fail the build instead of quietly sorting it last. The build is the only
-  // place this can be caught: the page still looks fine with a model out of
-  // order, and a wrong order is what Antonio spots first.
-  if (i === -1) throw new Error(`equipment.astro: "${slug}" is in EQUIPMENT but missing from ORDER. Add it to ORDER, by model number inside its family.`);
-  return i;
+// One lead sentence per brand lives here because it is COPY, and copy belongs in
+// the page that renders it rather than in the data layer, which is language
+// neutral. A brand with no lead still renders.
+const LEADS = {
+  'pioneer-dj': 'O equipamento que está na maioria das booths profissionais. Falhas documentadas, a versão de firmware que corrigiu cada uma, e o que fazer quando acontece com você no meio do set.',
+  'allen-heath': 'O lado analógico da booth profissional, construído em volta do filtro Xone. As regras são outras: um deles não tem firmware nenhum para conferir, e as armadilhas ficam no painel de trás.',
 };
-const sorted = [...EQUIPMENT].sort((a, b) => rank(a.slug) - rank(b.slug));
-const players = sorted.filter((e) => e.kind === 'player');
-const mixers = sorted.filter((e) => e.kind === 'mixer');
 
-// One brand today. The shape is a list so adding a manufacturer is data rather
-// than a rewrite of the markup, exactly like the manufacturer hub was built to
-// be reusable.
-const brands = [
-  {
-    key: 'pioneer-dj',
-    name: 'Pioneer DJ / AlphaTheta',
-    hub: '/pt/knowledge/pioneer-dj',
-    lead: 'O equipamento que está na maioria das booths profissionais. Falhas documentadas, a versão de firmware que resolveu cada uma, e o que fazer quando acontece com você no meio do set.',
-    groups: [
-      { label: 'Players', items: players },
-      { label: 'Mixers', items: mixers },
-    ],
-  },
-];
+const brands = BRANDS.map((b) => ({
+  ...b,
+  lead: LEADS[b.key],
+  groups: [
+    { label: 'Players', items: modelsOfBrand(b.key, 'player') },
+    { label: 'Mixers', items: modelsOfBrand(b.key, 'mixer') },
+  ].filter((g) => g.items.length > 0),
+}));
 
-const liveCount = players.length + mixers.length;
+const allModels = brands.flatMap((b) => b.groups.flatMap((g) => g.items));
+
+const liveCount = allModels.length;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -72,11 +54,11 @@ const schema = {
     '@type': 'ItemList',
     name: 'Referências de equipamentos de DJ por modelo',
     numberOfItems: liveCount,
-    itemListElement: sorted.map((m, i) => ({
+    itemListElement: allModels.map((m, i) => ({
       '@type': 'ListItem',
       position: i + 1,
       name: m.name,
-      url: `https://www.savemygig.com/pt/knowledge/pioneer-dj/${m.slug}`,
+      url: `https://www.savemygig.com/pt${modelPath(m)}`,
     })),
   },
 };
@@ -101,30 +83,58 @@ const schema = {
       quando acontece com a pista olhando.
     </p>
 
+    <!-- TWO LEVELS OF ACCORDION (Antonio, 2026-08-07): "you click on equipment,
+         you have to have an accordion with the brands. You click expands, and then
+         you have players, mixers. But it has to be accordion and accordion and
+         accordion. Otherwise, starts to become too big."
+         He is right, and he is solving a problem that does not exist yet: with two
+         brands and seventeen cards this page is already long on a phone, and every
+         manufacturer added makes it worse linearly. Nesting makes the phone view a
+         list of BRANDS, which stays one screen however many brands arrive.
+         Desktop opens everything before paint, so nothing is hidden where there is
+         room, exactly as the knowledge hub already does at the same 641px
+         breakpoint. Native details and summary, no framework, works with no JS. -->
     {brands.map((b) => (
-      <section class="eq-brand">
-        <h2 class="kb-h">{b.name}</h2>
+      <details class="kb-cat eq-brand-cat">
+        <summary>
+          <h2 class="kb-h">{b.name}</h2>
+          <span class="kb-chev" aria-hidden="true"></span>
+        </summary>
         <p class="dim eq-lead">{b.lead}</p>
 
         {b.groups.map((g) => (
-          <>
-            <h3 class="eq-group">{g.label}</h3>
+          <details class="kb-cat eq-group-cat">
+            <summary>
+              <h3 class="kb-h eq-group-h">{g.label}</h3>
+              <span class="kb-chev" aria-hidden="true"></span>
+            </summary>
             <div class="kb-grid">
               {g.items.map((m) => (
-                <a class="kb-card kb-live" href={`/pt/knowledge/pioneer-dj/${m.slug}`}>
+                <a class="kb-card kb-live" href={`/pt${modelPath(m)}`}>
                   <span class="kb-name">{m.name}</span>
                   <span class="kb-go">Abrir o guia &rarr;</span>
                 </a>
               ))}
             </div>
-          </>
+          </details>
         ))}
 
         <p class="eq-more">
-          <a href={b.hub}>Todos os modelos {b.name}, incluindo o que ainda está por vir &rarr;</a>
+          <a href={`/pt${b.hub}`}>Todos os modelos {b.name}, incluindo o que ainda está por vir</a>
         </p>
-      </section>
+      </details>
     ))}
+    <script is:inline>
+      // Desktop has room: open every brand AND every category before first
+      // interaction, so a wide screen reads exactly as it did before nesting.
+      // Phones keep them collapsed, which is the whole point.
+      (function () {
+        if (window.matchMedia('(min-width: 641px)').matches) {
+          var cats = document.querySelectorAll('.eq-brand-cat, .eq-group-cat');
+          for (var i = 0; i < cats.length; i++) cats[i].open = true;
+        }
+      })();
+    </script>
 
     <!-- Cross-model entry point, the same one the manufacturer hub promotes.
          It belongs here too: "what is broken on this deck" is a question that
@@ -167,4 +177,27 @@ const schema = {
     color: var(--ink-dim);
   }
   .eq-more { margin: 1.25rem 0 0; font-size: 0.9rem; }
+
+  /* The brand level reuses .kb-cat wholesale so it behaves and looks like the
+     knowledge hub's categories. The group level nests inside it and needs to be
+     visibly subordinate: smaller heading, indented, and no top border of its own
+     so two hairlines never stack. */
+  .eq-group-cat { margin-left: 0.75rem; }
+  .eq-group-h {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    margin: 0;
+    border-bottom: 0;
+    padding-bottom: 0;
+    flex: 1 1 auto;
+  }
+  @media (min-width: 641px) {
+    /* Open on desktop, so the chevrons would be decoration and the summary
+       should not look clickable. Same treatment the knowledge hub uses. */
+    .eq-brand-cat > summary, .eq-group-cat > summary { cursor: default; }
+    .eq-brand-cat > summary .kb-chev, .eq-group-cat > summary .kb-chev { display: none; }
+    .eq-group-cat { margin-left: 0; }
+  }
 </style>

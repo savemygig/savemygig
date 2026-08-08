@@ -1,0 +1,925 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import { XONE_96, XONE_92 } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
+
+// XONE:96, PORTUGUÊS DO BRASIL. A fonte de verdade da estrutura, dos
+// componentes, das classes, das âncoras e do CSS é
+// src/pages/knowledge/allen-heath/xone-96.astro. Aqui muda só o texto que uma
+// pessoa lê e os hrefs com /pt. Se a página em inglês mudar, mude esta no
+// mesmo commit.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(XONE_96.checked);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/allen-heath/xone-96#article',
+  headline: 'Xone:96: a referência operacional',
+  description: 'O que todo DJ precisa saber antes de trabalhar num Allen & Heath Xone:96: por que um plugue esquecido no master insert return mata o master e os medidores, por que os controles de master não movem os medidores, os dois filtros, e as duas placas de som.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/allen-heath/xone-96#webpage' },
+  image: 'https://www.savemygig.com/images/xone-96-panel-full.webp',
+};
+---
+<Base
+  title="Xone:96: master mudo e duas placas de som | Save My Gig"
+  description="Manual de campo do Xone:96: por que um plugue no master insert return mata o master e os medidores, por que o nível de master não os move, e os filtros."
+  path="/knowledge/allen-heath/xone-96"
+  crumbName="Xone:96"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/allen-heath">Allen &amp; Heath</a> <span aria-hidden="true">/</span>
+      <span>Xone:96</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <h1 class="rb-h1">Xone:96, <span class="accent">o manual de campo</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#xone-96-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do Xone:96"
+      >
+        <img
+          src="/images/xone-96-panel-thumb.webp"
+          alt="Painel de controle do mixer de DJ analógico Allen &amp; Heath Xone:96, visto de cima"
+          width="418"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="xone-96-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/xone-96-panel-full.webp"
+        srcset="/images/xone-96-panel-800.webp 800w, /images/xone-96-panel-full.webp 1170w"
+        sizes="92vw"
+        alt="Painel de controle do mixer de DJ analógico Allen &amp; Heath Xone:96, visto de cima"
+        width="1170"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> Um mixer analógico de
+        {XONE_96.channels} canais com duas placas de som:
+        {XONE_96.soundcardSpec}. Dois comportamentos documentados fazem ele
+        parecer quebrado. Um plugue no MASTER INSERT RETURN corta a ligação direta
+        com o barramento de master, então o master e os medidores morrem juntos. E
+        MASTER 1 e MASTER 2 não movem os medidores, então sala muda com medidores
+        saudáveis é normal. Sabendo os dois, você diagnostica em segundos. O mic
+        não chega no Booth nem no Record sem jumpers internos, e este mixer tem
+        {XONE_96.lfos} LFO onde o Xone:92 tem {XONE_92.lfos}.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="xone96-acc" id="master-insert-return"><summary><h3 class="acc-h2">A saída de master está morta e os medidores morreram com ela</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Procure um plugue no MASTER INSERT
+        RETURN antes de olhar qualquer outra coisa. A palavra da própria Allen
+        &amp; Heath, e vale ler duas vezes: quando conectores jack de 1/4" são
+        ligados no soquete 'return' do Master insert, isso corta a ligação direta
+        com o barramento de master. Se não houver sinal indo para o send, ou se o
+        aparelho estiver desligado ou não estiver passando áudio, não haverá sinal
+        no barramento de master nem nos medidores.</p>
+        <p><strong>Por que isso acontece.</strong> Um insert é um corte
+        deliberado no caminho do sinal, e o soquete de return é o que fecha esse
+        corte de novo. Coloque um plugue nesse soquete e o barramento de master
+        passa a atravessar o que estiver na outra ponta do cabo. Se essa caixa
+        está desligada, em standby, num modo de bypass que não passa áudio ou
+        simplesmente sem ligação na outra ponta, nada volta. Os medidores leem o
+        barramento de master, então eles apagam junto, e o mixer se apresenta como
+        um mixer que morreu no meio do set. Ele não morreu. Está fazendo
+        exatamente o que o manual diz que faz.</p>
+        <p><strong>Resolva agora.</strong> Tire o plugue do MASTER INSERT RETURN.
+        A ligação direta se restabelece sozinha e o master volta com os medidores.
+        Se o aparelho externo pertence à corrente, ligue ele e confirme que passa
+        áudio antes de confiar o barramento de master a ele. O insert trabalha em
+        {XONE_96.insertLevel}, e a Allen &amp; Heath orienta ajustar o aparelho
+        externo para esperar +4dB e compensar a diferença.</p>
+        <p><strong>Evite da próxima vez.</strong> Trate o master insert como uma
+        ligação com a qual você se compromete, não uma que fica pendurada. Se nada
+        alimenta o send, nada deve estar ligado no return, e um cabo perdido
+        enrolado atrás de uma booth é a versão disso que pega as pessoas.</p>
+        <p class="acc-related">Relacionados: <a href="#silent-pa-healthy-meters">A sala está muda e os medidores parecem saudáveis</a> <a href={XONE_96.sourceMasterInsert} rel="noopener">A Allen &amp; Heath sobre ligar um aparelho no master insert</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="silent-pa-healthy-meters"><summary><h3 class="acc-h2">A sala está muda e os medidores parecem saudáveis</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Este mixer tem dois jeitos
+        documentados de os medidores discordarem do que a sala escuta, e este é o
+        segundo. A Allen &amp; Heath afirma que o ajuste de MASTER 1 e MASTER 2 não
+        afeta o display do medidor de LR MIX. Então um controle de nível de master
+        no zero te dá uma imagem de medidor perfeitamente normal e um PA mudo, e
+        isso é o mixer funcionando como foi projetado.</p>
+        <p><strong>Por que isso acontece.</strong> Os medidores leem o barramento
+        LR MIX, que fica antes dos dois controles independentes de nível de master.
+        Isso é o espelho da armadilha do insert acima, onde o barramento em si está
+        cortado e os medidores apagam enquanto tudo que você vê no painel de cima
+        está correto. Entre os dois, eles cobrem as duas metades da mesma pergunta:
+        medidor mexendo e sem som, som esperado e sem medidor. Um DJ que conhece os
+        dois confere a coisa certa primeiro.</p>
+        <p><strong>Resolva agora.</strong> Leia os medidores, depois decida.
+        Medidores saudáveis e sala muda: confira os níveis de MST 1 e MST 2, e
+        confirme em qual das duas saídas de master o sistema da casa está de fato.
+        Medidores mortos e sala muda: vá para o master insert return. Com o áudio
+        de volta, ajuste os níveis para o alvo publicado pela própria Allen &amp;
+        Heath, {XONE_96.meterTarget}, com o ganho de canal ajustado para o medidor
+        ficar em média perto de 0 e não de ouvido.</p>
+        <p><strong>Evite da próxima vez.</strong> Na passagem de som, anote qual
+        saída de master alimenta a casa e deixe a outra onde você encontrou. Duas
+        saídas de master com níveis independentes é um recurso até alguém encostar
+        na que está no ar.</p>
+        <p class="acc-related">Relacionados: <a href="#master-insert-return">A saída de master está morta</a> <a href="#headphones">Fone, cue e os medidores</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="mic-not-in-booth-or-record"><summary><h3 class="acc-h2">O mic está alto na pista, ausente na booth e ausente na gravação</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> É o mixer funcionando como foi
+        projetado, e neste modelo você não muda isso por fora. A Allen &amp; Heath
+        roteia os mics num barramento de clean feed, e por padrão as entradas de
+        mic não chegam nas saídas BOOTH nem RECORD. No Xone:92 uma chave do painel
+        traseiro muda isso. Aqui é definido por jumpers internos, e a oferta da
+        Allen &amp; Heath está nas palavras deles: "se você quiser ajuda com a
+        configuração dos jumpers, fale com a gente."</p>
+        <p><strong>Por que isso acontece.</strong> Um clean feed mantém um MC fora
+        da gravação do set e fora do retorno da booth, que é o padrão certo para um
+        clube e o errado para a noite em que você está gravando um show ao vivo. O
+        efeito colateral na sala é exatamente o que parece: a voz está alta na
+        pista, o DJ não escuta ela na booth, e a gravação volta com a música e
+        nenhuma fala. Nada no painel de cima dá pista disso. Os mics também ficam
+        fora do master insert, então qualquer processamento externo que você ligou
+        ali nunca toca no microfone.</p>
+        <p><strong>Resolva agora.</strong> Não tem nada no painel para virar. A
+        Allen &amp; Heath não documenta chave frontal, chave traseira nem caminho
+        por software para isso, só os jumpers internos e a oferta de ajudar com
+        eles. Então, para hoje à noite, planeje em volta: se uma voz precisa estar
+        na gravação, capture a sala de outro jeito, e avise quem está com o mic que
+        ela não vai se escutar na booth.</p>
+        <p><strong>Evite da próxima vez.</strong> Se o mixer é seu e MCs fazem
+        parte do seu trabalho, resolva a configuração dos jumpers com a Allen &amp;
+        Heath enquanto não tem gig no caminho. Se o mixer é da casa, pergunte como
+        os jumpers estão na passagem de som em vez de descobrir durante o set.</p>
+        <p class="acc-related">Relacionados: <a href="#mic-inputs">As entradas de mic, e o que elas não aceitam</a> <a href="#master-insert-return">A saída de master está morta</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="crossfader-does-nothing"><summary><h3 class="acc-h2">O crossfader não faz nada num canal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Olhe a chave de assign do crossfader
+        daquele canal. A posição central tira o canal do crossfader por completo e
+        manda ele direto para o LR MIX, então o fader varre e nada muda.</p>
+        <p><strong>Por que isso acontece.</strong> Uma posição central ou thru quer
+        dizer "sempre no ar, ignore o crossfader", o que é realmente útil e também
+        é a mesma chave que você usa para colocar um canal de um lado ou do outro.
+        Um DJ anterior que queria um canal sempre ligado deixou ela no centro, e a
+        pessoa seguinte lê um crossfader morto. O crossfader em si é um
+        {XONE_96.crossfaderModel}, então não é a peça que costuma falhar em
+        silêncio.</p>
+        <p><strong>Resolva agora.</strong> Coloque a chave de assign no lado em que
+        você quer o canal, depois confira os outros canais enquanto a mão está ali,
+        e não um por um durante o set. Confirme que o crossfader está fazendo
+        alguma coisa num canal que você escuta antes de confiar nele.</p>
+        <p><strong>Evite da próxima vez.</strong> A fileira de assign do crossfader
+        pertence à mesma conferência antes do set que o ganho, o assign de filtro e
+        o painel traseiro, em todos os canais e não só nos dois com que você
+        pretende abrir.</p>
+        <p class="acc-related">Relacionados: <a href="#crossfader-part">O crossfader, e o que não é publicado sobre ele</a> <a href="#returns-cd">RTN C e RTN D não têm EQ nem crossfader</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="cue-mode"><summary><h3 class="acc-h2">Os botões de cue se comportam diferente dos que você aprendeu</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O sistema de cue tem um modo, e ele não
+        está escrito em lugar nenhum do painel. A Allen &amp; Heath entrega ele
+        {XONE_96.cueModeToggle}. Os dois botões de MIDI active piscam para
+        confirmar a mudança. Um mixer no modo que você não esperava não é um mixer
+        com defeito.</p>
+        <p><strong>Por que isso acontece.</strong> Auto cancelling quer dizer que
+        um novo aperto de cue derruba o anterior, então você sempre monitora uma
+        fonte. Latching quer dizer que as seleções de cue se acumulam, então você
+        escuta duas ao mesmo tempo. Os dois são jeitos normais de trabalhar e os
+        DJs são muito apegados àquele em que treinaram. O modo é uma combinação de
+        botões segurados e não uma chave, então nada na superfície diz em qual
+        estado a mesa está e um usuário anterior pode ter mudado isso meses
+        atrás.</p>
+        <p><strong>Resolva agora.</strong> Se os cues se acumulam quando você quer
+        um por vez, ou caem quando você quer que acumulem, aperte e segure os três
+        botões de tipo de filtro nos dois filtros, espere os dois botões de MIDI
+        active piscarem, e teste os botões de cue de novo. Tem dois sistemas de
+        fone independentes neste mixer, então confira o que você está de fato
+        escutando.</p>
+        <p><strong>Evite da próxima vez.</strong> Teste um botão de cue contra o
+        outro na passagem de som. Leva quatro segundos e é a diferença entre uma
+        primeira transição limpa e uma confusa.</p>
+        <p class="acc-related">Relacionados: <a href={XONE_96.sourceCueMode} rel="noopener">A Allen &amp; Heath sobre a configuração do sistema de cue do Xone:96</a> <a href="#headphones">Fone, cue e os medidores</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="midi-appears-dead"><summary><h3 class="acc-h2">O MIDI parece morto, e o X:Link com ele</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Confira as chaves de MIDI 1 e MIDI 2
+        active. São a causa mais comum, e fazem mais do que parecem: elas também
+        controlam a passagem de dados e de clock do X:Link, então uma chave
+        desligada derruba uma controladora da série K na mesma porta.</p>
+        <p><strong>Por que isso acontece.</strong> O mixer manda
+        {XONE_96.midiControls} controles como MIDI, então ele é uma superfície de
+        controle além de mixer, e a Allen &amp; Heath libera isso por porta e não de
+        forma global. Mais dois fatos documentados pegam gente aqui. O DIN de 5
+        pinos é só saída, então qualquer coisa que precise controlar o mixer chega
+        por USB e não naquele soquete. E o clock é só de passagem: o mixer não gera
+        clock.</p>
+        <p><strong>Resolva agora.</strong> Ligue a chave MIDI active da porta que
+        você está usando e teste de novo. Se você está esperando o mixer produzir
+        um clock de andamento, pare de esperar: gere ele no software, mande por
+        USB, e ajuste qualquer hardware de terceiros para seguir clock
+        externo.</p>
+        <p><strong>Evite da próxima vez.</strong> Coloque as chaves de MIDI active
+        na mesma conferência antes do set que as chaves de assign. Nada numa
+        controladora avisa que o mixer parou de escutar.</p>
+        <p class="acc-related">Relacionados: <a href="#midi-and-xlink">MIDI, X:Link e o ecossistema Xone</a> <a href="#x-link-damage">O X:Link pode danificar hardware de terceiros</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="dvs-rear-switch"><summary><h3 class="acc-h2">O timecode não trava, e a chave que decide isso fica atrás</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Cada canal tem uma chave no painel
+        traseiro, LN ou PH, e ela define o que a placa de som vê. Erre nela e o seu
+        software está recebendo o tipo errado de sinal, não importa o que o painel
+        de cima diga.</p>
+        <p><strong>Por que isso acontece.</strong> Os primeiros oito canais da
+        placa de som vêm direto dos conectores de entrada dos canais estéreo, então
+        essa chave traseira é a primeira decisão de toda a corrente de DVS, antes
+        do ganho, antes da EQ, antes de qualquer coisa que você alcance pela
+        frente. Um toca discos rodando vinil de timecode num canal ajustado em LN,
+        ou uma fonte de linha num canal ajustado em PH, produz um sinal em que o
+        software não consegue travar, e o sintoma parece problema de licença ou de
+        calibração em vez de chave.</p>
+        <p><strong>Resolva agora.</strong> Combine a chave com a fonte em cada
+        canal que você usa para timecode, depois calibre no software. A Allen &amp;
+        Heath não publica versão mínima de software nem de firmware para DVS, então
+        não tem versão nenhuma para perseguir se ainda não travar.</p>
+        <p><strong>Evite da próxima vez.</strong> Confira o painel traseiro antes
+        de o mixer entrar numa booth. Esta chave, o master insert e o soquete do
+        X:Link estão todos atrás e todos fora de alcance com a mesa encaixada.</p>
+        <p class="acc-related">Relacionados: <a href="#dvs">Timecode e DVS, nas duas palavras da Allen &amp; Heath</a> <a href="#rear-panel-first">Confira o painel traseiro primeiro</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="returns-cd"><summary><h3 class="acc-h2">RTN C e RTN D não têm EQ, não filtram e não passam pelo crossfader</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Correto, e para sempre. RTN C e RTN D
+        não têm EQ, não têm assign de filtro e não têm assign de crossfader. Eles
+        te dão nível, on e off, e cue, direto no mix, e são jacks mono
+        desbalanceados.</p>
+        <p><strong>Por que isso acontece.</strong> São returns auxiliares e não
+        canais, feitos para uma unidade de efeito voltando para o mix. É por isso
+        que têm poucos controles, e não tem nada para ligar.</p>
+        <p><strong>Resolva agora.</strong> Se a fonte precisa de EQ, de filtro ou
+        do crossfader, leve ela para um dos seis canais principais. Todos os seis
+        vão para qualquer um dos filtros, e os dois canais de return auxiliar A e B
+        são canais completos com EQ, que RTN C e RTN D não são.</p>
+        <p><strong>Evite da próxima vez.</strong> Planeje a ligação em volta disso.
+        Qualquer fonte que você pretende moldar ou cortar pertence a um canal
+        principal desde o começo.</p>
+        <p class="acc-related">Relacionados: <a href="#sends">Os dois aux sends, e onde eles terminam</a> <a href="#channels">O que o 6 mais 2 te dá de fato</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Segurança" />
+
+    <details class="acc-sec" name="xone96-acc" id="mains-earth"><summary><h3 class="acc-h2">Nunca tire o terra da rede elétrica</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A instrução da Allen &amp; Heath,
+        citada porque parafrasear amaciaria: "NÃO remova a conexão de terra do
+        plugue de alimentação do console." Não faça isso, e não aceite como solução
+        de outra pessoa para zumbido.</p>
+        <p><strong>Por que importa.</strong> Tirar o terra é um hábito comum de
+        booth porque muitas vezes silencia um loop de terra, e funciona removendo a
+        proteção que mantém o metal que você está tocando num potencial seguro.
+        Este mixer fica entre duas mãos, um microfone e, na maioria dos palcos, um
+        toca discos. É o único item desta página que não é sobre um set dando
+        errado.</p>
+        <p><strong>Faça assim.</strong> Se você encontrar um mixer com o terra
+        removido, o pino de terra cortado ou um adaptador de dois pinos, pare e
+        avise a casa. Resolva zumbido no cabeamento de áudio, que é o que a Allen
+        &amp; Heath manda fazer e o que a próxima seção descreve.</p>
+        <p class="acc-related">Relacionados: <a href="#hum-and-ground-loops">Zumbido e loops de terra, o procedimento publicado</a> <a href="#x-link-damage">O X:Link pode danificar hardware de terceiros</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="hum-and-ground-loops"><summary><h3 class="acc-h2">Zumbido e loops de terra, o procedimento publicado</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A cura pertence ao cabeamento de áudio
+        e aos outros equipamentos, nunca ao terra deste mixer.</p>
+        <p><strong>Por que isso acontece.</strong> Um loop é um segundo caminho
+        para o terra entre dois equipamentos que já estão aterrados corretamente. O
+        terra do mixer não é o problema a remover, é a proteção a manter, então o
+        loop tem que ser quebrado em algum lugar que não seja um terra de
+        segurança.</p>
+        <p><strong>Resolva agora.</strong> A Allen &amp; Heath dá três caminhos.
+        Use uma chave de ground lift nos OUTROS equipamentos da corrente, onde
+        exista uma. Desconecte a malha do cabo em uma das pontas para que o cabo de
+        áudio deixe de ser um segundo caminho de terra. Ou, se o zumbido sobreviver
+        aos dois, mande verificar a rede elétrica por um eletricista qualificado,
+        que é a resposta honesta quando o problema é o prédio e não a rig.</p>
+        <p><strong>Evite da próxima vez.</strong> Leve um isolador de loop de terra
+        e um conjunto curto de cabos desbalanceados. Os dois são mais baratos e
+        mais seguros que a solução que alguém vai sugerir com um alicate na
+        mão.</p>
+        <p class="acc-related">Relacionados: <a href="#mains-earth">Nunca tire o terra da rede elétrica</a> <a href="#rear-panel-first">Confira o painel traseiro primeiro</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="x-link-damage"><summary><h3 class="acc-h2">O X:Link pode danificar hardware de terceiros</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O soquete X:Link é um RJ45 e não é uma
+        porta de rede. O aviso da Allen &amp; Heath, por inteiro: "o X:link é um
+        protocolo exclusivo de controle MIDI e POE da A&amp;H, e deve ser usado
+        somente com outros dispositivos Xone com X:link. Conectar este protocolo a
+        qualquer dispositivo de terceiros pode danificar o seu hardware."</p>
+        <p><strong>Por que importa.</strong> Ele é igual a uma porta Ethernet,
+        aceita exatamente o mesmo cabo Cat-5, e carrega energia além de dados.
+        Então o erro é fácil de cometer numa booth escura com um cabo na mão, e a
+        consequência que a Allen &amp; Heath nomeia é hardware danificado e não um
+        link que simplesmente não sobe. Este é o único aviso das nossas páginas
+        Xone sobre danificar equipamento fisicamente.</p>
+        <p><strong>Faça assim.</strong> Conecte o X:Link somente a outros
+        dispositivos Xone com X:Link, o que na prática quer dizer as controladoras
+        da série K. Não ligue ele num switch, num roteador, numa rede Pro DJ Link,
+        num notebook nem em qualquer outro soquete RJ45 da booth, e identifique o
+        cabo se ele mora na instalação, para que a pessoa seguinte não precise
+        adivinhar.</p>
+        <p class="acc-related">Relacionados: <a href={XONE_96.sourceXLink} rel="noopener">A Allen &amp; Heath sobre X:Link com a série K</a> <a href="#midi-and-xlink">MIDI, X:Link e o ecossistema Xone</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="xone96-acc" id="firmware-history"><summary><h3 class="acc-h2">O mixer tem firmware, e não existe lista de versões para comparar</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Este mixer tem firmware. A Allen &amp;
+        Heath não publica o histórico dele, então não existe versão, data nem texto
+        de mudanças para um DJ comparar com uma mesa. O guia deles traz um texto
+        padrão dizendo que o firmware é atualizado com regularidade, não existe
+        download de firmware no site ativo deles, e as antigas páginas do firmware
+        de áudio v1.0.2 em allen-heath.com agora devolvem erro de página não
+        encontrada. Conferido em {UPDATED}.</p>
+        <p><strong>Por que a gente escolhe as palavras com esse cuidado.</strong>
+        O Xone:92 não tem firmware nenhum, o que é uma afirmação completamente
+        diferente, e juntar as duas estaria errado nos dois mixers. Aqui o firmware
+        existe e a documentação não. Então a pergunta que este site faz a todo dono
+        de Pioneer, em qual versão ele está, não tem resposta que você possa
+        consultar, o que é diferente de não fazer sentido.</p>
+        <p><strong>O que isso significa numa booth.</strong> Não tem nada com que
+        comparar uma mesa e nada para atualizar antes de uma gig, então trate o
+        comportamento do mixer como o comportamento do mixer. Se dois Xone:96 em
+        duas casas se comportam de forma diferente em algum aspecto documentado,
+        você não tem lista de mudanças publicada para explicar, e a resposta é o
+        suporte da Allen &amp; Heath e não uma release note.</p>
+        <p><strong>Faça assim.</strong> Gaste o tempo que você gastaria conferindo
+        uma versão no painel traseiro e nas chaves de assign. É ali que moram as
+        surpresas desta mesa.</p>
+        <p class="acc-related">Relacionados: <a href="#no-troubleshooting-section">O manual do usuário não tem seção de troubleshooting</a> <a href="#computers-and-drivers">Computadores, drivers e uma versão impressa de dois jeitos</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="no-troubleshooting-section"><summary><h3 class="acc-h2">O manual do usuário não tem seção de troubleshooting</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Ele não tem. O manual do usuário
+        documenta controles e conexões, e não tem capítulo de troubleshooting, nem
+        lista de sintomas, nem tabela de defeitos em lugar nenhum. Um DJ com o
+        manual na mão numa booth com problema não tem de onde partir.</p>
+        <p><strong>Por que a gente diz isso sem rodeio.</strong> É uma afirmação
+        conferível sobre um documento, não uma alfinetada num mixer, e é a maior
+        razão desta página existir. Todo comportamento que um DJ lê como defeito
+        nesta mesa está no guia em algum lugar, o return do insert cortando o
+        barramento de master, os controles de master não movendo os medidores, os
+        mics ficando fora do Record, mas estão escritos como descrição de controles
+        e não como resposta a sintomas. Ninguém lendo um manual sob pressão acha
+        eles assim.</p>
+        <p><strong>O que está publicado e o que não está.</strong> A Allen &amp;
+        Heath mantém material de suporte ativo para este mixer, e os artigos
+        linkados nas seções acima são deles. O que eles não publicam é manual de
+        serviço, diagrama de blocos ou qualquer número de peça de reposição, então
+        também não existe documentação de nível técnico para se apoiar.</p>
+        <p><strong>Faça assim.</strong> Guarde o manual do usuário para nome de
+        conector e layout de controle, e use as seções de emergência acima para
+        sintomas. Se você bater num comportamento repetível que não está coberto
+        aqui, <a href="/pt/feedback">conte o que aconteceu</a> e a gente confere
+        contra os próprios documentos da Allen &amp; Heath antes de ir para a
+        página.</p>
+        <p style="margin-top:1rem">
+          <strong>Documentação oficial.</strong> <a href={XONE_96.sourceManual} target="_blank" rel="noopener">Manual do usuário do Xone:96 →</a><br />
+          <a href={XONE_96.sourceResources} target="_blank" rel="noopener">Recursos e downloads do Xone:96 →</a><br />
+          <a href={XONE_96.sourceRouting} target="_blank" rel="noopener">Roteamento das duas placas de som →</a><br />
+          <a href={XONE_96.sourceMidi} target="_blank" rel="noopener">Implementação de MIDI →</a><br />
+          <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="#no-specifications">Não existe documento de especificação nenhum</a> <a href={XONE_96.source} rel="noopener">Página do produto Xone:96 na Allen &amp; Heath</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="no-specifications"><summary><h3 class="acc-h2">Não existe documento de especificação nenhum, então não existem números</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A Allen &amp; Heath não publica
+        documento de especificação técnica para este mixer. Nem a página do produto
+        nem o manual do usuário trazem tabela de especificações, então não existe
+        resposta de frequência publicada, nem THD, nem piso de ruído, nem número de
+        crosstalk, nem impedância de entrada ou saída, nem número de headroom, nem
+        faixa de EQ em decibéis, nem inclinação de filtro.</p>
+        <p><strong>Por que importa.</strong> Esses números são como você encerra
+        uma discussão sobre uma sala, e aqui você não consegue. Se um promoter, um
+        técnico de sistema ou uma locadora perguntar qual é o headroom ou a
+        impedância de saída do mixer, a resposta honesta é que a Allen &amp; Heath
+        não disse. O Xone:92 tem ficha de especificação técnica, então um DJ
+        acostumado a consultar números daquele mixer chega aqui e não encontra
+        nada, e essa ausência é o achado, não uma falha da nossa pesquisa.</p>
+        <p><strong>Faça assim.</strong> Onde um número importa, meça ou teste na
+        sala em vez de citar um. Varra os filtros antes de a sala encher para saber
+        onde eles mordem, e ajuste ganho contra os medidores usando o alvo publicado
+        pela Allen &amp; Heath em vez de um número de headroom que não existe.</p>
+        <p><strong>O que a gente não vai fazer.</strong> Preencher. Números para
+        este mixer circulam em lugares que não são a Allen &amp; Heath, e nenhum
+        deles está nesta página. O que está publicado é
+        {XONE_96.dimensions} e {XONE_96.weight}, e é só isso.</p>
+        <p class="acc-related">Relacionados: <a href="#no-troubleshooting-section">O manual do usuário não tem seção de troubleshooting</a> <a href="#filters">Os dois filtros, e o CRUNCH</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="xone96-acc" id="soundcards"><summary><h3 class="acc-h2">As duas placas de som, e o mapa de roteamento que responde "por que nada está gravando"</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Esta é a diferença principal em relação
+        ao Xone:92, que não tem placa de som nenhuma. A palavra da Allen &amp;
+        Heath é que o mixer traz duas conexões USB Hi-Speed, cada uma com seis
+        entradas e seis saídas estéreo, o que é {XONE_96.soundcardSpec}.</p>
+        <p><strong>O roteamento, que é a parte que salva um set.</strong> A Allen
+        &amp; Heath documenta de onde cada canal de USB é alimentado. Os canais de
+        USB 1 a 8 vêm direto dos conectores de entrada dos canais estéreo, então
+        eles carregam a fonte antes de o strip de canal encostar nela. Os canais 9 e
+        10 vêm do aux send 1, pós fader. Os canais 11 e 12 vêm do aux send 2 pós
+        fader ou do barramento de master. Então uma gravação que chega muda, ou que
+        ignora todo movimento de fader que você fez, é normalmente uma gravação
+        tirada dos canais que você não quis, e a correção está na seleção de
+        entrada do seu software e não no mixer.</p>
+        <p><strong>Por que são duas.</strong> A Allen &amp; Heath diz que as duas
+        portas operam de forma independente, evitando dor de cabeça para DJs que
+        usam plataformas, sistemas operacionais ou projetos diferentes. Essa é a
+        afirmação deles sobre plataformas e projetos, e vale ser exato sobre o que
+        ela não diz.</p>
+        <p><strong>O que não está documentado.</strong> Se dois computadores
+        separados podem ser ligados nas duas portas ao mesmo tempo. O único exemplo
+        de configuração USB da Allen &amp; Heath mostra um notebook nas duas portas,
+        e a documentação de MIDI deles menciona um "Partner mode" que eles nunca
+        definem em lugar nenhum. Então a gente diz que não está documentado em vez
+        de ler uma resposta ali. Se a sua gig depende de uma troca em back to back
+        entre dois notebooks, teste você mesmo antes.</p>
+        <p class="acc-related">Relacionados: <a href={XONE_96.sourceRouting} rel="noopener">A Allen &amp; Heath sobre o roteamento das duas placas de som</a> <a href="#computers-and-drivers">Computadores, drivers e uma versão impressa de dois jeitos</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="filters"><summary><h3 class="acc-h2">Os dois filtros, e o CRUNCH</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {XONE_96.filters} seções Xone:VCF,
+        FILTER 1 e FILTER 2. Os controles são CRUNCH, RES, a seleção de tipo entre
+        {XONE_96.filterTypes.join(', ')}, FREQ e uma chave de on e off, e essa é a
+        lista completa. O FREQ define o corte no ponto de 3dB de queda,
+        {XONE_96.filterRange} ao longo da varredura.</p>
+        <p><strong>Por que importa.</strong> {XONE_96.filterAssignable}, então
+        qualquer filtro aceita qualquer canal e o assign acontece depois de o strip
+        de canal ter feito o trabalho dele. O RES produz o som do Xone:VCF
+        realimentando parte da saída do filtro na entrada dele, e a Allen &amp;
+        Heath rotula o controle de MILD a WILD. O CRUNCH é o que surpreende as
+        pessoas: é distorção harmônica e a Allen &amp; Heath coloca ele ANTES do
+        filtro, com a palavra deles sendo girar no sentido horário para adicionar
+        distorção harmônica no caminho de sinal pré-FILTER. Então o CRUNCH muda o
+        que o filtro recebe para trabalhar, e é por isso que soa diferente de
+        distorção adicionada depois de uma varredura.</p>
+        <p><strong>Não existe LFO neste mixer.</strong> Vale dizer com clareza,
+        porque o Xone:92 tem {XONE_92.lfos} e um DJ que anda entre as duas mesas vai
+        procurar. Nada no guia do Xone:96 da Allen &amp; Heath descreve um oscilador
+        de baixa frequência, então movimento de filtro aqui é a sua mão ou uma
+        controladora MIDI, não o mixer.</p>
+        <p><strong>Erros comuns.</strong> Tratar um filtro desligado como canal
+        morto. Filtro em off passa o sinal sem afetar, então um canal roteado para
+        um filtro que está desligado não está mudo, está apenas seco. E esperar
+        filtrar um microfone: o barramento de clean feed do mic passa por fora do
+        roteamento de filtro, então mics não podem ser filtrados por padrão.</p>
+        <p class="acc-related">Relacionados: <a href="#channels">O que o 6 mais 2 te dá de fato</a> <a href="#no-specifications">Não existe documento de especificação nenhum</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="channels"><summary><h3 class="acc-h2">O que o {XONE_96.channels} te dá de fato</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A Allen &amp; Heath chama ele de mixer
+        analógico de {XONE_96.channels} canais com interface, e, diferente do
+        Xone:92, onde dois documentos deles discordam da contagem, esse número é
+        consistente em todo lugar. O layout é {XONE_96.channelsDetail}.</p>
+        <p><strong>O que isso significa na hora de ligar.</strong> Os canais 1 a 4
+        selecionam entre USB 1, PHONO, LINE e USB 2, e trazem uma EQ assimétrica de
+        quatro bandas em 180Hz, 350Hz, 1.1kHz e 3kHz. Os canais A e B selecionam
+        entre USB 1, MIC, RTN e USB 2, e trazem uma EQ de três bandas com médio
+        paramétrico varrendo de 190Hz a 2.75kHz. Os faders são VCA lineares estéreo
+        de 60mm e o topo é unidade, então um fader de canal todo para cima não está
+        somando ganho.</p>
+        <p><strong>Por que importa.</strong> O seletor de fonte é a coisa mais
+        rápida de errar neste mixer, porque um canal com o cabo certo no soquete
+        certo e a fonte errada selecionada fica mudo e parece ligado. É também onde
+        as duas placas de som encontram o lado analógico: USB 1 e USB 2 são fontes
+        selecionáveis em cada um dos seis canais.</p>
+        <p><strong>O caminho de sinal.</strong> A Allen &amp; Heath descreve ele
+        como {XONE_96.analogueClaim}. Eles não fazem afirmação de soma analógica
+        para este modelo, então a gente também não, mesmo que eles façam para o
+        Xone:92.</p>
+        <p class="acc-related">Relacionados: <a href="#soundcards">As duas placas de som</a> <a href="#returns-cd">RTN C e RTN D não têm EQ nem crossfader</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="sends"><summary><h3 class="acc-h2">Os dois aux sends, e onde eles terminam</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {XONE_96.sends}. Essa assimetria é
+        documentada e não é um ajuste que você muda.</p>
+        <p><strong>Por que importa.</strong> Um send pré fader continua alimentando
+        o efeito depois de você puxar o fader do canal para baixo, que é como a
+        cauda de um delay sobrevive a um corte. Um send pós fader morre com o
+        fader, que é o que você quer quando o send alimenta uma sala ou uma
+        gravação. O SND 2 é fixo em pós fader, então, se você precisa de uma cauda
+        que sobreviva ao fader, ela tem que estar no SND 1 com o SND 1 em pré.</p>
+        <p><strong>Para onde eles vão além dos soquetes.</strong> Direto para as
+        placas de som. O aux send 1 pós fader alimenta os canais de USB 9 e 10, e os
+        canais de USB 11 e 12 pegam o aux send 2 pós fader ou o barramento de
+        master. Então os sends também são como você manda um feed específico para um
+        computador sem gravar o master.</p>
+        <p><strong>Erros comuns.</strong> Gravar o que você pensava ser um return
+        de efeito e receber um send pós fader, e esperar que RTN C ou RTN D se
+        comportem como canal quando o efeito volta.</p>
+        <p class="acc-related">Relacionados: <a href="#soundcards">As duas placas de som</a> <a href="#returns-cd">RTN C e RTN D não têm EQ nem crossfader</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="mic-inputs"><summary><h3 class="acc-h2">As entradas de mic, e o que elas não aceitam</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {XONE_96.micInputs} entradas de mic,
+        MIC A e MIC B, em XLR balanceado, cada uma aparecendo como uma das quatro
+        fontes selecionáveis nos canais A e B. Somente microfones dinâmicos. A
+        palavra da Allen &amp; Heath: "NÃO use mics de alta impedância ou
+        desbalanceados, nem mics condensadores que precisem de phantom power." Não
+        existe phantom power neste mixer.</p>
+        <p><strong>Por que importa.</strong> Um mic condensador que precisa de
+        phantom power não vai funcionar aqui, e chegar com um é um problema que você
+        não resolve na mesa. Você precisa de um mic dinâmico ou da sua própria
+        fonte de phantom power antes do mixer.</p>
+        <p><strong>O que mais é diferente nelas.</strong> Duas coisas
+        documentadas, as duas cobertas acima. Os mics não chegam no BOOTH nem no
+        RECORD por padrão e só jumpers internos mudam isso. E o barramento de clean
+        feed do mic fica fora do roteamento de filtro e do master insert, então nem
+        um filtro Xone nem um processador externo no insert vão tocar numa
+        voz.</p>
+        <p><strong>Erros comuns.</strong> Selecionar MIC no canal A, não escutar
+        nada e trocar o cabo. Confira o seletor de fonte e confirme que o mic é
+        dinâmico antes de começar a trocar cabos.</p>
+        <p class="acc-related">Relacionados: <a href="#mic-not-in-booth-or-record">O mic está ausente na booth e na gravação</a> <a href="#channels">O que o 6 mais 2 te dá de fato</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="headphones"><summary><h3 class="acc-h2">Fone, cue e os medidores</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {XONE_96.headphoneSystems} sistemas de
+        cue de fone independentes, o MONITOR como PHONES 1 e um segundo como PHONES
+        2. Cada um tem um soquete TRS de tamanho grande e um mini jack de 3.5mm na
+        frente, e existe um modo split cue.</p>
+        <p><strong>Por que importa.</strong> Dois sistemas independentes não são
+        dois soquetes no mesmo circuito. Um convidado escuta o cue no PHONES 2
+        enquanto você fica no PHONES 1, então uma passagem em back to back acontece
+        sem nenhum dos dois desconectar nada nem dividir seleção de cue. O split
+        cue põe a fonte em cue num ouvido e o mix no outro, que é como você bate BPM
+        num palco alto onde o monitor está brigando com você.</p>
+        <p><strong>Os medidores são a referência, com uma ressalva.</strong> O alvo
+        da própria Allen &amp; Heath é {XONE_96.meterTarget}. A ressalva já apareceu
+        duas vezes nesta página: os medidores de LR MIX não seguem os dois controles
+        de nível de master, e um plugue no master insert return leva junto o áudio e
+        os medidores. Então os medidores são a coisa certa para ajustar ganho e a
+        coisa errada para julgar a sala.</p>
+        <p><strong>Erros comuns.</strong> Supor que os botões de cue funcionam como
+        funcionavam na última mesa. O sistema de cue tem um modo e ele não está
+        marcado no painel.</p>
+        <p class="acc-related">Relacionados: <a href="#cue-mode">Os botões de cue se comportam diferente</a> <a href="#silent-pa-healthy-meters">A sala está muda e os medidores parecem saudáveis</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="midi-and-xlink"><summary><h3 class="acc-h2">MIDI, X:Link e o ecossistema Xone</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> {XONE_96.midiControls} controles deste
+        mixer mandam MIDI. O soquete DIN de 5 pinos é só saída, MIDI entrando no
+        mixer chega por USB, e o clock é só de passagem.</p>
+        <p><strong>O que só de passagem quer dizer.</strong> O mixer não gera clock
+        de andamento próprio. O clock tem que ser gerado em software e mandado por
+        USB, e o mixer repassa, que é por que qualquer hardware de terceiros na
+        corrente tem que estar ajustado para seguir clock externo. Se você está
+        acostumado a uma mesa com tap tempo que dá clock para a rig, esta não é
+        essa mesa.</p>
+        <p><strong>X:Link.</strong> Um RJ45 em Cat-5, e um protocolo proprietário de
+        MIDI e de energia da própria Allen &amp; Heath, não uma rede. É o que faz
+        deste mixer o hub de uma rig Xone com as controladoras da série K, e o
+        Xone:92 não tem equivalente disso. Leia a seção de segurança sobre ele antes
+        de ligar qualquer coisa naquele soquete, porque conectar equipamento de
+        terceiros ali pode danificar hardware.</p>
+        <p><strong>Erros comuns.</strong> Supor que as chaves de MIDI 1 e MIDI 2
+        active só afetam MIDI. Elas também controlam a passagem de dados e de clock
+        do X:Link, então uma controladora pode emudecer por um motivo que não parece
+        nada com a chave que causou isso.</p>
+        <p class="acc-related">Relacionados: <a href="#midi-appears-dead">O MIDI parece morto</a> <a href={XONE_96.sourceMidi} rel="noopener">Implementação de MIDI do Xone:96 na Allen &amp; Heath</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Dicas profissionais" />
+
+    <details class="acc-sec" name="xone96-acc" id="rear-panel-first"><summary><h3 class="acc-h2">Confira o painel traseiro antes de a mesa entrar na booth</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Mais do comportamento deste mixer é
+        decidido atrás dele do que na frente, e depois de a mesa estar instalada
+        você não alcança nada disso.</p>
+        <p><strong>O que tem lá atrás.</strong> As chaves LN e PH por canal que
+        decidem o que a placa de som vê, e portanto se o DVS funciona. O send e o
+        return do master insert, que é o único soquete deste mixer capaz de calar a
+        sala inteira. O RJ45 do X:Link, que só pode ver outros dispositivos Xone com
+        X:Link. Um Audio Sync Out de 3.5mm, que é uma segunda saída de gravação,
+        antes do master como a saída RECORD em RCA. E as saídas que decidem qual
+        sistema recebe qual feed: MST 1 em XLR balanceado e MST 2 em TRS, cada uma
+        com controle de nível próprio, mais uma saída BOOTH balanceada dedicada com
+        EQ de três bandas própria e chave de estéreo ou mono, independente do
+        master.</p>
+        <p><strong>Faça assim.</strong> Antes de a mesa ser encaixada, ajuste as
+        chaves LN e PH para as fontes de hoje, confirme que o master insert return
+        está vazio a não ser que você esteja usando ele de propósito, confirme em
+        qual saída de master o sistema da casa está, e ajuste a saída de booth e a
+        EQ dela para o retorno que você vai escutar de fato.</p>
+        <p><strong>Erros comuns.</strong> Descobrir durante um set que a booth tem
+        EQ própria, ou que a gravação saiu de uma saída anterior ao master a noite
+        inteira e não tem nenhum dos seus movimentos de nível de master.</p>
+        <p class="acc-related">Relacionados: <a href="#dvs-rear-switch">O timecode não trava</a> <a href="#master-insert-return">A saída de master está morta</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção preventiva" />
+
+    <details class="acc-sec" name="xone96-acc" id="crossfader-part"><summary><h3 class="acc-h2">O crossfader, e o que não é publicado sobre ele</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O crossfader é um
+        {XONE_96.crossfaderModel}, de série. A Allen &amp; Heath não publica número
+        de peça para ele, e nenhum número de peça de reposição para este mixer, mas
+        publica um procedimento de calibração de fader, que é um procedimento que só
+        faz sentido se o fader é para ser substituível.</p>
+        <p><strong>Por que importa.</strong> Um crossfader é o controle com mais
+        chance de se desgastar em qualquer mixer usado com força, e este tem ajuste
+        de corte de fader. O que você não consegue é pedir uma peça por número nos
+        documentos publicados pela Allen &amp; Heath, porque não existe número
+        neles.</p>
+        <p><strong>Faça assim.</strong> Se o crossfader corta de forma irregular,
+        passe primeiro pelo ajuste de corte de fader e pelo procedimento de
+        calibração, porque os dois são documentados e nenhum precisa de peça. Se ele
+        estiver realmente gasto, vá à Allen &amp; Heath ou a um revendedor buscar a
+        peça em vez de adivinhar por fórum, já que não existe número publicado para
+        conferir uma compra.</p>
+        <p><strong>Erros comuns.</strong> Supor que um mini innoFADER significa uma
+        peça publicada específica, e tratar um corte mal calibrado como fader
+        gasto.</p>
+        <p class="acc-related">Relacionados: <a href="#crossfader-does-nothing">O crossfader não faz nada num canal</a> <a href="#maintenance">Manter ele confiável por anos de bookings</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="maintenance"><summary><h3 class="acc-h2">Manter ele confiável por anos de bookings</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Conectores, cabos e as chaves do painel
+        traseiro levam o desgaste de verdade, e não existe log nem histórico de
+        versões para consultar quando alguma coisa começa a se comportar
+        estranho.</p>
+        <p><strong>Por que importa.</strong> Conectores XLR, RCA, TRS e USB são o
+        que a vida de estrada castiga, e um pino torto ou um soquete USB cansado
+        produz o defeito intermitente mais difícil de diagnosticar numa sala ao
+        vivo. Sem histórico de firmware publicado e sem documento de especificação,
+        você não tem números nem lista de mudanças para comparar com uma mesa
+        suspeita, então prevenção é a estratégia inteira.</p>
+        <p><strong>Faça assim.</strong> Inspecione cabos antes de eles entrarem na
+        bag, e não quando um defeito aparece, desconecte pelo conector e nunca pelo
+        cabo, mantenha os dois soquetes USB limpos e sem esforço, e mantenha a mesa
+        coberta no transporte. Ele tem {XONE_96.dimensions} e {XONE_96.weight},
+        então é levantamento com as duas mãos e um case que vale comprar. A Allen
+        &amp; Heath lista o conteúdo da caixa como o mixer, uma folha de segurança,
+        um cabo de força e knobs e botões de reposição, e vale guardar essas peças
+        em vez de perder elas numa mudança.</p>
+        <p><strong>Uma coisa para não trazer do Xone:92.</strong> Plugues de curto
+        phono. Eles são documentados para o Xone:92 e não fazem parte da
+        documentação nem do conteúdo da caixa deste mixer, então não saia caçando
+        plugues que nunca vieram com ele.</p>
+        <p class="acc-related">Relacionados: <a href="#crossfader-part">O crossfader, e o que não é publicado sobre ele</a> <a href="#no-specifications">Não existe documento de especificação nenhum</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="xone96-acc" id="computers-and-drivers"><summary><h3 class="acc-h2">Computadores, drivers e uma versão impressa de dois jeitos</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> No macOS não tem nada para instalar. A
+        palavra da Allen &amp; Heath: "você não precisa instalar Device Drivers para
+        uso com macOS ou plataformas OS X." No Windows você precisa do driver
+        deles.</p>
+        <p><strong>A versão é impressa de dois jeitos, então a gente publica os
+        dois.</strong> Para o mesmo download único, a Allen &amp; Heath dá
+        {XONE_96.windowsDriver}. Ele é datado de {XONE_96.windowsDriverDate}, e a
+        release note dele é uma entrada única sem nenhuma versão anterior listada,
+        então também não existe histórico de driver para percorrer. A gente não
+        escolhe um dos dois números, porque os dois são deles.</p>
+        <p><strong>Por que importa numa booth.</strong> Se você confere uma máquina
+        Windows contra um número de versão antes de uma gig, espere que o número da
+        página de download e o número da release note pareçam dois lançamentos
+        diferentes. É um download só. No Mac, class compliant quer dizer que o mixer
+        aparece como dispositivo de áudio sem instalador e sem versão nenhuma para
+        conferir.</p>
+        <p><strong>Erros comuns.</strong> Caçar um driver de macOS que não existe, e
+        supor que um driver de Windows desencontrado explica um problema que na
+        verdade são as chaves LN e PH do painel traseiro.</p>
+        <p class="acc-related">Relacionados: <a href="#soundcards">As duas placas de som</a> <a href="#firmware-history">O mixer tem firmware, e não existe lista de versões</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="dvs"><summary><h3 class="acc-h2">Timecode e DVS, nas duas palavras da própria Allen &amp; Heath</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta, e as duas palavras importam.</strong> A Allen
+        &amp; Heath diz que {XONE_96.dvsCertified.join(', ')} é CERTIFICADO,
+        nomeando o Traktor Scratch Pro 3 e descrevendo o mixer como já saindo de
+        fábrica com essa certificação. Separado disso, eles dizem que as placas de
+        som internas trazem SUPORTE PARA CONTROLE DVS para
+        {XONE_96.dvsSupported.join(', ')}. Certificação e suporte não são a mesma
+        afirmação e a gente mantém as duas separadas porque a Allen &amp; Heath
+        mantém.</p>
+        <p><strong>O Serato não está documentado.</strong> A Allen &amp; Heath não
+        menciona ele na página do produto, no manual do usuário nem em nenhum
+        artigo de suporte do Xone:96. Então a gente diz que não está documentado em
+        vez de sugerir que funciona ou que não funciona. Se você toca no Serato,
+        trate como algo para testar você mesmo, sem nada publicado para se apoiar
+        se der problema.</p>
+        <p><strong>O lado do hardware, que é onde isso dá errado de
+        verdade.</strong> O ajuste de que o DVS depende é a chave do painel traseiro
+        por canal, LN ou PH, que define o que a placa de som vê. A Allen &amp; Heath
+        não indica versão mínima de software nem de firmware para DVS, então não
+        existe versão a cumprir nem lista de versões a conferir.</p>
+        <p><strong>Faça assim.</strong> Confirme sua licença e seu software antes
+        da gig, ajuste as chaves LN e PH para combinar com os seus decks, e calibre
+        na sala. Se o seu software está na lista de suporte e não na de
+        certificação, isso continua sendo afirmação da própria Allen &amp; Heath, só
+        mais fraca.</p>
+        <p class="acc-related">Relacionados: <a href="#dvs-rear-switch">O timecode não trava</a> <a href="/pt/knowledge/dictionary">Dicionário de DJ</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone96-acc" id="moving-from-the-92"><summary><h3 class="acc-h2">Trocando entre este e o Xone:92</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> A Allen &amp; Heath chama o Xone:96 de
+        sucessor de um clássico de clube de verdade, e diz que ele pega a alma
+        lendária do aclamado Xone:92 e entrega ela de novo, melhorada, e que quem
+        usa Xone:92 vai se sentir em casa na hora com o layout do Xone:96. O que
+        eles nunca dizem é que ele substitui o Xone:92, e os dois mixers são
+        vendidos lado a lado, então uma casa rodando um 92 não está rodando uma mesa
+        obsoleta.</p>
+        <p><strong>O que você vai procurar e não vai achar.</strong> Os LFOs. O
+        Xone:92 tem {XONE_92.lfos} e este mixer tem {XONE_96.lfos}, então um
+        movimento de filtro que você entregava a um LFO aqui é a sua mão ou uma
+        controladora. Os plugues de curto phono são o outro: documentados no 92, e
+        não fazem parte da documentação nem do conteúdo da caixa deste mixer.</p>
+        <p><strong>O que tem aqui e não tem lá.</strong> Duas placas de som, onde o
+        92 não tem nenhuma, que é por que DVS é documentado neste mixer e não
+        naquele. O X:Link, que faz desta mesa o hub de uma rig Xone com a série K e
+        não tem equivalente no 92. Um segundo sistema de cue de fone independente.
+        O CRUNCH nos filtros. E dois returns auxiliares, RTN C e RTN D, com os
+        limites documentados descritos acima.</p>
+        <p><strong>O que muda no jeito de diagnosticar.</strong> No 92 a primeira
+        pergunta são as chaves do painel traseiro. Aqui continua sendo o painel
+        traseiro, mais o master insert return, mais qual das quatro fontes o canal
+        está selecionando. E onde o 92 não tem firmware nenhum, este mixer tem
+        firmware sem histórico publicado, que é uma resposta diferente para a mesma
+        pergunta.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/allen-heath/xone-92">O manual de campo do Xone:92</a> <a href="#filters">Os dois filtros, e o CRUNCH</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Perguntas frequentes" />
+
+    <details class="acc-sec" name="xone96-acc" id="faq"><summary><h3 class="acc-h2">Respostas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>O master está morto. O que eu confiro primeiro?</dt><dd>O MASTER INSERT RETURN. Um plugue nesse soquete corta a ligação direta com o barramento de master, e a Allen &amp; Heath diz que, se o aparelho externo estiver desligado ou não estiver passando áudio, não haverá sinal no barramento de master nem nos medidores.</dd>
+          <dt>Por que o PA está mudo se os medidores parecem certos?</dt><dd>Porque os medidores não seguem os controles de nível de master. A Allen &amp; Heath afirma que o ajuste de MASTER 1 e MASTER 2 não afeta o display do medidor de LR MIX.</dd>
+          <dt>Em qual firmware ele deve estar?</dt><dd>Não tem como responder isso. O mixer tem firmware, a Allen &amp; Heath não publica o histórico dele, e as antigas páginas do firmware de áudio v1.0.2 agora devolvem erro de página não encontrada, então não existe lista de versões para comparar com uma mesa.</dd>
+          <dt>Por que o mic não está na minha gravação?</dt><dd>Por projeto. As entradas de mic não chegam no BOOTH nem no RECORD por padrão, e neste modelo só jumpers internos mudam isso. A Allen &amp; Heath oferece ajuda com a configuração dos jumpers.</dd>
+          <dt>Dá para usar um mic condensador?</dt><dd>Não um que precise de phantom power. Não existe phantom power neste mixer, e a instrução da Allen &amp; Heath é não usar mics de alta impedância ou desbalanceados, nem condensadores que precisem de phantom power.</dd>
+          <dt>Ele faz Serato?</dt><dd>A Allen &amp; Heath não menciona o Serato em nenhum lugar para este mixer, então não está documentado. {XONE_96.dvsCertified.join(', ')} é certificado, e eles indicam suporte para controle DVS com {XONE_96.dvsSupported.join(', ')}.</dd>
+          <dt>Ele tem LFOs como o Xone:92?</dt><dd>Não. {XONE_96.lfos} neste mixer. O Xone:92 tem {XONE_92.lfos}.</dd>
+          <dt>Dá para ligar dois notebooks nas duas portas USB?</dt><dd>Não está documentado. A Allen &amp; Heath diz que as portas operam de forma independente entre plataformas e projetos, e o único exemplo de configuração deles mostra um notebook nas duas portas, então a gente não lê uma resposta ali.</dd>
+          <dt>Eu preciso de driver?</dt><dd>No macOS não, ele é class compliant. No Windows sim, e a Allen &amp; Heath imprime a versão desse download único como {XONE_96.windowsDriver}.</dd>
+          <dt>Dá para ligar um cabo de rede no soquete do X:Link?</dt><dd>Não. É um protocolo proprietário de MIDI e de energia da Allen &amp; Heath, e eles avisam que conectar ele a qualquer dispositivo de terceiros pode danificar o seu hardware.</dd>
+          <dt>Onde estão as especificações?</dt><dd>Não existem. A Allen &amp; Heath não publica documento de especificação técnica para este mixer, então não existem números de resposta de frequência, THD, piso de ruído, impedância, headroom, faixa de EQ nem inclinação de filtro.</dd>
+          <dt>O Xone:96 substituiu o Xone:92?</dt><dd>A Allen &amp; Heath nunca diz isso. Eles dizem que ele pega a alma do Xone:92 e entrega ela de novo, melhorada, e os dois mixers são vendidos lado a lado.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="xone-96" lang="pt" />
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">Vai tocar logo e não está funcionando?</h2>
+      <a href="/pt/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_xone96"><Icon name="siren" /> Abrir o Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_xone96" lang="pt" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fontes: a página do produto Xone:96, o manual do usuário, a página de
+      recursos, o artigo de roteamento das duas placas de som, o documento de
+      implementação de MIDI e os artigos de suporte da própria Allen &amp; Heath,
+      conferidos em {UPDATED}. As citações são deles. Onde eles imprimem a mesma
+      versão de driver de dois jeitos diferentes, os dois estão publicados acima em
+      vez de um ser escolhido. Fatos que eles não publicam estão nomeados como não
+      publicados em vez de preenchidos: não existe documento de especificação
+      técnica nenhum para este mixer, então não existem números de resposta de
+      frequência, THD, piso de ruído, impedância, headroom, faixa de EQ nem
+      inclinação de filtro, não existe manual de serviço nem diagrama de blocos
+      publicado, não existe número de peça de reposição publicado, incluindo o
+      crossfader, não existe histórico de firmware publicado, e se dois
+      computadores separados podem usar as duas placas de som ao mesmo tempo não
+      está documentado.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning, the same rule the sibling and the Pioneer hardware pages use.
+     See djm-900nxs2.astro for the full rationale (Antonio, 2026-07-31: a
+     flex-row approach races text height against photo height and breaks the
+     flush touch at in-between widths). flow-root on the parent stops margin
+     collapse from throwing off the anchor. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>

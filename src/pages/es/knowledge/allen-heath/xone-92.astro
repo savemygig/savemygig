@@ -1,0 +1,747 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import { XONE_92 } from '../../../../data/facts.js';
+import Icon from '../../../../components/Icon.astro';
+
+// XONE:92, ESPAÑOL LATINOAMERICANO NEUTRO. La fuente de verdad de la
+// estructura, de los componentes, de las clases, de las anclas y del CSS es
+// src/pages/knowledge/allen-heath/xone-92.astro. Aquí solo cambian el texto que
+// lee una persona y los hrefs con /es. Si cambia la página en inglés, cambia
+// esta en el mismo commit.
+
+const MESES = {
+  January: 'enero', February: 'febrero', March: 'marzo', April: 'abril',
+  May: 'mayo', June: 'junio', July: 'julio', August: 'agosto',
+  September: 'septiembre', October: 'octubre', November: 'noviembre', December: 'diciembre',
+};
+const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = esDate(XONE_92.checked);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/es/knowledge/allen-heath/xone-92#article',
+  headline: 'Xone:92: la referencia operativa',
+  description: 'Lo que todo DJ necesita saber antes de trabajar un Allen & Heath Xone:92: por qué el mic nunca llega a la salida de grabación, por qué la posición central de la asignación del crossfader parece un crossfader muerto, los dos filtros, y un mixer analógico que no tiene firmware.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-07',
+  dateModified: '2026-08-07',
+  inLanguage: 'es',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/es/knowledge/allen-heath/xone-92#webpage' },
+  image: 'https://www.savemygig.com/images/xone-92-panel-full.webp',
+};
+---
+<Base
+  title="Xone:92: filtros, mic y cero firmware | Save My Gig"
+  description="Manual de campo del Xone:92: por qué el mic nunca llega a Record, por qué el crossfader parece muerto, los dos filtros, y un mixer sin firmware."
+  path="/knowledge/allen-heath/xone-92"
+  crumbName="Xone:92"
+  lang="es"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Ruta de navegación">
+      <a href="/es/knowledge">Base de conocimiento</a> <span aria-hidden="true">/</span>
+      <a href="/es/knowledge/allen-heath">Allen &amp; Heath</a> <span aria-hidden="true">/</span>
+      <span>Xone:92</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <h1 class="rb-h1">Xone:92, <span class="accent">el manual de campo</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#xone-92-lightbox"
+        aria-label="Abrir una foto más grande del panel de control del Xone:92"
+      >
+        <img
+          src="/images/xone-92-panel-thumb.webp"
+          alt="Panel de control del mixer de DJ analógico Allen &amp; Heath Xone:92, visto desde arriba"
+          width="430"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="xone-92-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Cerrar"></a>
+      <a href="#" class="lightbox-close" aria-label="Cerrar">&times;</a>
+      <img
+        src="/images/xone-92-panel-full.webp"
+        srcset="/images/xone-92-panel-800.webp 800w, /images/xone-92-panel-full.webp 1204w"
+        sizes="92vw"
+        alt="Panel de control del mixer de DJ analógico Allen &amp; Heath Xone:92, visto desde arriba"
+        width="1204"
+        height="1400"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> Un mixer analógico cuya propia
+        documentación se contradice: la página del producto dice
+        {XONE_92.channelsProductPage} canales, la ficha técnica dice
+        {XONE_92.channelsSpecSheet}. Los {XONE_92.filters} filtros estéreo, uno a
+        cada lado del crossfader, son la razón de que exista. No tiene firmware,
+        ni drivers, ni placa de sonido, así que no hay nada que actualizar. Antes
+        de tocarlo: el mic no llega al Booth ni al Record hasta que un switch del
+        panel trasero lo permita, y la unidad del master queda
+        {XONE_92.masterUnityPosition}, no todo a la derecha.
+      </p>
+      <label for="sv-toggle" class="sv-more">Leer más…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Leer menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluciones de emergencia" />
+
+    <details class="acc-sec" name="xone92-acc" id="mic-not-in-record"><summary><h3 class="acc-h2">El mic suena fuerte afuera, ausente en el booth y ausente en la grabación</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Así está diseñado el mixer. Allen
+        &amp; Heath rutea las entradas de mic por un circuito de clean feed, y su
+        propia redacción dice que, por defecto, MIC 1 y 2 no van a las salidas
+        BOOTH ni RECORD. Los switches que cambian eso están en el panel
+        trasero.</p>
+        <p><strong>Por qué pasa esto.</strong> El clean feed existe para que un MC
+        no termine en la grabación y no realimente el retorno del booth. El efecto
+        secundario en una sala en vivo es exactamente lo que suena: el MC se
+        escucha fuerte en la sala, el DJ no lo escucha en el booth, y la grabación
+        del set vuelve con la música y sin nada de la voz. Nada en el panel
+        superior te avisa que está pasando.</p>
+        <p><strong>Resuélvelo ahora.</strong> Ve detrás del mixer. Los switches de
+        clean feed del mic están en el panel trasero, listados por Allen &amp;
+        Heath como función del Mk2, así que llega a ellos antes de que la mesa
+        quede encajada en el booth. Si el mic tiene que estar en la grabación, ese
+        switch es lo único que lo pone ahí. Si la mesa es Mk1, o los switches no
+        se alcanzan, lleva el mic a un canal de música libre, que sí alimenta
+        Booth y Record como cualquier otra fuente.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Decide antes de que abran
+        puertas si el mic pertenece al booth y a la grabación, y deja el panel
+        trasero acorde. Es un trabajo de dos minutos con la mesa afuera e
+        imposible con la mesa adentro.</p>
+        <p class="acc-related">Relacionados: <a href="#rear-panel-first">Recorre el panel trasero primero</a> <a href={XONE_92.sourceMicRouting} rel="noopener">Allen &amp; Heath sobre las señales de mic y la salida de grabación</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="crossfader-does-nothing"><summary><h3 class="acc-h2">El crossfader no hace nada</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Mira el switch de asignación del
+        crossfader de ese canal. Tiene tres posiciones y la del medio saca al canal
+        del crossfader por completo. Allen &amp; Heath lo dice sin vueltas: en la
+        posición central el nivel de la señal de música no queda afectado por el
+        crossfader.</p>
+        <p><strong>Por qué pasa esto.</strong> En los mixers donde aprende la
+        mayoría de los DJs, una posición central o THRU significa "siempre
+        encendido, ignora el crossfader", y acá significa lo mismo. La trampa es
+        que es el mismo switch con el que asignas un canal al lado A o al lado B,
+        así que un DJ anterior que quería un canal siempre al aire lo dejó
+        centrado, y la persona siguiente barre el crossfader y no escucha ningún
+        cambio.</p>
+        <p><strong>Resuélvelo ahora.</strong> Pon el switch de asignación en el
+        lado donde quieres el canal, A o B, y revisa los otros tres canales
+        mientras tienes la mano ahí. Después confirma que el crossfader está
+        haciendo algo en un canal que puedas escuchar.</p>
+        <p><strong>Evítalo la próxima vez.</strong> La fila de asignación del
+        crossfader es parte del mismo chequeo previo al set que la ganancia y la
+        asignación de filtro, en los cuatro canales de música y no solo en los dos
+        que piensas usar.</p>
+        <p class="acc-related">Relacionados: <a href="#returns-and-crossfader">Un return no pasa por el crossfader</a> <a href="#crossfader-part">El crossfader es una pieza reemplazable</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="filter-does-nothing"><summary><h3 class="acc-h2">Un filtro no hace nada en un canal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> El switch de asignación de filtro
+        también tiene posición central, y está seca. La redacción de Allen &amp;
+        Heath: en la posición central la señal de música no queda afectada por el
+        filtro.</p>
+        <p><strong>Por qué pasa esto.</strong> Cualquiera de los dos filtros se
+        puede asignar a cualquiera de los cuatro canales estéreo, así que el switch
+        de asignación decide si el canal va al filtro 1, al filtro 2 o a ninguno.
+        Centro es ninguno. Un DJ que gira frecuencia y resonancia a fondo con el
+        canal en la posición central escucha un filtro que parece roto, y el estado
+        del LED del propio filtro no da ninguna pista, porque el filtro está
+        funcionando bien y simplemente no tiene nada ruteado hacia adentro.</p>
+        <p><strong>Resuélvelo ahora.</strong> Mueve el switch de asignación de
+        filtro del canal hacia el filtro que de verdad tienes en la mano, y después
+        revisa el switch ON del propio filtro y la selección de tipo, HPF, BPF o
+        LPF. Si sigue sin hacer nada en ningún canal, lee la sección siguiente
+        antes de darlo por falla.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Ajusta la asignación de filtro
+        canal por canal como parte del chequeo previo al set, y ten claro cuál de
+        los dos filtros es el tuyo antes de la transición, no durante.</p>
+        <p class="acc-related">Relacionados: <a href="#filters">Los dos filtros, explicados</a> <a href="#filters-disabled">Los filtros no hacen nada</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="filters-disabled"><summary><h3 class="acc-h2">Los filtros no hacen nada en ningún canal, o no gritan</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Esta mesa se puede modificar. Las
+        opciones internas que documenta Allen &amp; Heath incluyen Filter Disable y
+        un Maximum Resonance Limit, así que un Xone:92 que no filtra, o que no se
+        va al extremo, puede estar configurado así a propósito en vez de
+        roto.</p>
+        <p><strong>Por qué pasa esto.</strong> Son opciones de instalador, y
+        existen para los venues: un ingeniero de instalación que ya escuchó un
+        barrido resonante de más a todo volumen dentro de un sistema caro puede
+        limitar la resonancia, o sacar los filtros del camino de la señal por
+        completo. Nada en el panel superior lo indica. Los controles siguen
+        girando, los LEDs siguen prendiendo, y el sonido no cambia como
+        esperas.</p>
+        <p><strong>Resuélvelo ahora.</strong> Descarta primero las causas
+        comunes, el switch de asignación de filtro del canal en el centro y el
+        switch ON del filtro apagado. Si todos los canales se comportan igual en
+        los dos filtros, trátalo como una mesa configurada y pregúntale al
+        ingeniero del venue en vez de forzar los controles. No es un ajuste que
+        alcances desde el frente.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Si el Xone de un venue está
+        limitado de filtros, ya lo sabes para la próxima, y un set armado sobre un
+        barrido resonante necesita un plan B en esa sala.</p>
+        <p class="acc-related">Relacionados: <a href="#filter-does-nothing">Un filtro no hace nada en un canal</a> <a href="#filters">Los dos filtros, explicados</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="master-level"><summary><h3 class="acc-h2">El sistema de la casa está clipeando, o el master parece sin nivel</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> El control de master no es unidad al
+        máximo. Allen &amp; Heath pone la unidad, 0dBu,
+        {XONE_92.masterUnityPosition}. Todo a la derecha da
+        {XONE_92.masterAtMax}.</p>
+        <p><strong>Por qué pasa esto.</strong> Una perilla de master que sigue
+        subiendo más allá de la unidad es normal en una mesa profesional e
+        invisible para un DJ al que le enseñaron que el máximo es la referencia.
+        Clavada del todo a la derecha dentro de un sistema de casa ya ajustado a
+        unidad, la salida de sobra tiene que ir a algún lado, y va a la etapa de
+        entrada del sistema.</p>
+        <p><strong>Resuélvelo ahora.</strong> Vuelve el master a
+        {XONE_92.masterUnityPosition}, y después ajusta el volumen de la sala desde
+        el sistema de la casa, no desde el mixer. Usa los medidores de canal, de
+        -20dBu a +10dBu, para ver dónde está de verdad la señal en vez de juzgar
+        por la perilla.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Deja el master en unidad en la
+        prueba de sonido y no lo muevas el resto de la noche. El volumen es el
+        control del ingeniero, no el tuyo.</p>
+        <p class="acc-related">Relacionados: <a href={XONE_92.sourceMasterLevels} rel="noopener">Allen &amp; Heath sobre el ajuste de nivel de master en los Xone</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="returns-and-crossfader"><summary><h3 class="acc-h2">Un return no pasa por el crossfader</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Y nunca va a pasar. Las entradas de
+        return no pasan por el crossfader. Allen &amp; Heath las describe como
+        fuentes que no necesitan rutearse por el crossfader, que es una decisión de
+        diseño y no una limitación que puedas desactivar.</p>
+        <p><strong>Por qué pasa esto.</strong> Los returns comparten canal con las
+        dos entradas de mic, como MIC / RTN 1 y 2, y esos canales existen para
+        unidades de efectos, un envío a una segunda sala, una fuente de anuncios y
+        cualquier otra cosa que deba quedarse al aire sin importar dónde está el
+        crossfader.</p>
+        <p><strong>Resuélvelo ahora.</strong> Si la fuente tiene que pasar por el
+        crossfader, llévala a uno de los cuatro canales estéreo de música en línea,
+        y asigna ese canal a un lado del crossfader. Deja los returns para lo que
+        hacen bien.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Arma el patch pensando en eso.
+        Cualquier fuente que pienses cortar con el crossfader pertenece a un canal
+        de música desde el principio.</p>
+        <p class="acc-related">Relacionados: <a href="#crossfader-does-nothing">El crossfader no hace nada</a> <a href="#channels">Cantidad de canales, y dos respuestas oficiales</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="phono-shorting-plugs"><summary><h3 class="acc-h2">Ruido en una entrada phono sin uso, y el plug en el conector equivocado</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Las entradas phono sin uso piden
+        plugs de cortocircuito puestos, pieza {XONE_92.phonoShortingPlugPart} de
+        Allen &amp; Heath. Cuando sacas uno para conectar una tornamesa, guárdalo
+        en un lugar seguro. Su propia advertencia: al quitar los plugs de
+        cortocircuito para conectar tornamesas, no los pongas en otras entradas o
+        salidas RCA, porque eso da un audio muy malo.</p>
+        <p><strong>Por qué pasa esto.</strong> Una entrada phono es una etapa de
+        ganancia alta esperando una aguja, y una entrada abierta es una antena. El
+        plug de cortocircuito la deja callada. La segunda mitad de la advertencia
+        es la que cuesta un set: un plug de sobra estacionado en una entrada de
+        línea o, peor, en una salida, cortocircuita una señal que funciona, y el
+        síntoma se lee como un canal muerto o una mezcla arruinada y no como un
+        plug en el agujero equivocado.</p>
+        <p><strong>Resuélvelo ahora.</strong> Cuenta los plugs de cortocircuito
+        contra las entradas phono que no estás usando, y revisa que ninguno haya
+        terminado en una entrada de línea, en la salida de grabación o en las
+        salidas de mezcla. Esto está documentado como guía general para la serie
+        Xone y no como una nota específica del Xone:92, así que aplica a cualquier
+        Xone frente al que estés.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Guarda los plugs que sacaste en
+        tu bolso o pegados atrás de la mesa, nunca en otro conector.</p>
+        <p class="acc-related">Relacionados: <a href="#rear-panel-first">Recorre el panel trasero primero</a> <a href="#hum-and-ground-loops">Zumbido y loops de tierra</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Seguridad" />
+
+    <details class="acc-sec" name="xone92-acc" id="mains-earth"><summary><h3 class="acc-h2">Nunca levantes la tierra de la red eléctrica</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> No quites la tierra del plug de
+        alimentación del mixer, y no aceptes una tierra levantada como la solución
+        de otra persona para el zumbido. La redacción de Allen &amp; Heath, citada
+        completa porque parafrasearla la ablandaría: "como el mixer Xone tiene
+        chasis de metal, y no de plástico, es esencial que el mixer quede aterrado
+        a través del cable de alimentación. Bajo ninguna circunstancia debes
+        considerar quitar el cable verde y amarillo de tierra de la red entre el
+        plug y el Xone, porque, si lo haces, en caso de que aparezca una falla en
+        la fuente de alimentación del mixer existe el riesgo de que el chasis del
+        mixer quede energizado; una falla potencialmente letal."</p>
+        <p><strong>Por qué importa.</strong> Levantar la tierra es una costumbre
+        común de booth, porque muchas veces sí silencia un loop de tierra, y
+        funciona quitando la protección que mantiene el metal que estás tocando en
+        un potencial seguro. El mixer queda entre dos manos, un micrófono y una
+        tornamesa. Es el único punto de esta página que no trata de un set que sale
+        mal.</p>
+        <p><strong>Hazlo así.</strong> Si encuentras un Xone con la tierra
+        levantada, la pata de tierra cortada o un adaptador de dos patas, párate y
+        avísale al venue. Resuelve el zumbido en el cableado de audio, que es lo
+        que Allen &amp; Heath te dice que hagas y lo que describe la sección
+        siguiente.</p>
+        <p class="acc-related">Relacionados: <a href="#hum-and-ground-loops">Zumbido y loops de tierra, el procedimiento publicado</a> <a href={XONE_92.sourceEarth} rel="noopener">Allen &amp; Heath sobre el zumbido de una computadora en un mixer Xone</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="hum-and-ground-loops"><summary><h3 class="acc-h2">Zumbido y loops de tierra, el procedimiento publicado</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Confirma que es un loop de tierra
+        corriendo la computadora con batería y su fuente desconectada. Si el
+        zumbido se va, es un loop, y la cura pertenece al cableado de audio.</p>
+        <p><strong>Por qué pasa esto.</strong> Un loop es un segundo camino a
+        tierra entre dos equipos que ya están aterrados. La tierra del mixer no es
+        el problema a quitar, es la protección a conservar.</p>
+        <p><strong>Resuélvelo ahora.</strong> El procedimiento de Allen &amp;
+        Heath, en su orden: prueba con batería para confirmar el loop, mantén
+        cortos los cables no balanceados, no enrolles el cable de sobra, ellos
+        sugieren un sistema en forma de ocho para no convertir el cable en un
+        transformador, mantén separado el cableado de audio del de red eléctrica y
+        crúzalos en ángulo recto, y, si el zumbido sobrevive a todo eso, aísla la
+        tierra en el cableado de audio o instala un aislador de loop de tierra. Las
+        tornamesas se aterran en el terminal de tierra de chasis en la parte de
+        atrás del mixer, y el Mk2 viene con un adaptador de tierra doble para que
+        dos decks queden aterrados de forma independiente.</p>
+        <p><strong>Evítalo la próxima vez.</strong> Carga un aislador de loop de
+        tierra y un juego corto de cables no balanceados. Los dos salen más
+        baratos que el arreglo que alguien va a sugerir con una pinza en la
+        mano.</p>
+        <p class="acc-related">Relacionados: <a href="#mains-earth">Nunca levantes la tierra de la red eléctrica</a> <a href="#phono-shorting-plugs">Ruido en una entrada phono sin uso</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conocidos" />
+
+    <details class="acc-sec" name="xone92-acc" id="no-firmware"><summary><h3 class="acc-h2">No existe firmware, y lo que eso significa de los dos lados</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Allen &amp; Heath no publica
+        firmware, ni drivers, ni notas de versión para este mixer, y no hay audio
+        por USB que los necesite. El único conector digital que tiene es
+        {XONE_92.digitalIo}. Así que la pregunta que este sitio le hace a todo
+        dueño de Pioneer, en qué versión está, no existe en un Xone:92. Revisado el
+        {UPDATED}.</p>
+        <p><strong>Qué te da eso.</strong> No hay nada que actualizar antes de un
+        gig, nada que pueda quedar desactualizado, ninguna nota de versión que
+        leer, ningún instalador que correr, y ningún comportamiento que cambie solo
+        entre la mesa de un venue y la del siguiente. Un Xone:92 con el que
+        aprendiste en 2010 se comporta igual esta noche.</p>
+        <p><strong>Qué te cuesta.</strong> Tampoco se puede arreglar nada por
+        software. Si una decisión de ruteo de este mixer no es la que habrías
+        tomado tú, es el mixer, para siempre: el mic se queda afuera de Record
+        hasta que se mueva el switch del panel trasero, las posiciones centrales de
+        asignación siguen como están, y no viene ninguna actualización a cambiar
+        nada de eso. Allen &amp; Heath describe el camino de señal como
+        {XONE_92.analogueClaim}, y eso corta de los dos lados.</p>
+        <p><strong>Hazlo así.</strong> Gasta el tiempo que habrías gastado
+        revisando una versión en el panel trasero y en los switches de asignación.
+        Ahí viven las sorpresas de esta mesa.</p>
+        <p class="acc-related">Relacionados: <a href="#no-troubleshooting-section">El manual de usuario no tiene sección de troubleshooting</a> <a href="#mic-not-in-record">El mic está ausente en la grabación</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="no-troubleshooting-section"><summary><h3 class="acc-h2">El manual de usuario no tiene sección de troubleshooting</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> No la tiene. El manual de usuario del
+        Xone:92 documenta controles, conexiones y especificaciones, y no tiene
+        capítulo de troubleshooting, ni lista de síntomas, ni tabla de fallas en
+        ninguna parte. Un DJ con el manual en la mano en un booth con un problema
+        no tiene de dónde empezar.</p>
+        <p><strong>Por qué lo decimos sin rodeos.</strong> Es una afirmación
+        verificable sobre un documento y no un reclamo sobre un mixer, y es la
+        mayor razón por la que existe esta página. Los comportamientos que un DJ
+        lee como fallas en esta mesa, el mic que falta en la grabación, el
+        crossfader muerto, el filtro seco, están todos documentados en el manual,
+        solo que como descripciones de controles y no como respuestas a síntomas.
+        Nadie que lea un manual bajo presión los encuentra así.</p>
+        <p><strong>Qué está publicado y qué no.</strong> Allen &amp; Heath no
+        publica manual de servicio para este mixer. Sí publica un diagrama de
+        bloques, y para un técnico o un dueño curioso eso es lo más parecido a
+        documentación de servicio que hay disponible: muestra dónde está cada etapa
+        en el camino de la señal, incluyendo en qué puntos entran el crossfader y
+        los filtros.</p>
+        <p><strong>Hazlo así.</strong> Guarda el manual de usuario para el pinout
+        de los conectores y los nombres de los controles, y usa las secciones de
+        emergencia de arriba para los síntomas. Si te topas con un comportamiento
+        repetible que no está cubierto acá,
+        <a href="/es/feedback">cuéntanos qué pasó</a> y lo verificamos contra los
+        propios documentos de Allen &amp; Heath antes de que llegue a la
+        página.</p>
+        <p style="margin-top:1rem">
+          <strong>Documentación oficial.</strong> <a href={XONE_92.sourceManual} target="_blank" rel="noopener">Manual de usuario del Mk2 (PDF) →</a><br />
+          <a href={XONE_92.sourceSpecs} target="_blank" rel="noopener">Especificación técnica del Mk2 (PDF) →</a><br />
+          <a href={XONE_92.sourceBlockDiagram} target="_blank" rel="noopener">Diagrama de bloques del Mk2 (PDF) →</a><br />
+          <span class="dim" style="font-size:0.85rem">¿Link roto? <a href="/es/feedback">Avísanos</a> y lo corregimos.</span>
+        </p>
+        <p class="acc-related">Relacionados: <a href="#no-firmware">No existe firmware</a> <a href={XONE_92.source} rel="noopener">Página de producto del Xone:92 en Allen &amp; Heath</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Funciones explicadas" />
+
+    <details class="acc-sec" name="xone92-acc" id="filters"><summary><h3 class="acc-h2">Los dos filtros, y por qué existe el mixer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> La descripción de Allen &amp; Heath:
+        {XONE_92.filters} VCF estéreo, uno a cada lado del crossfader. Cada uno se
+        conmuta entre {XONE_92.filterTypes.join(', ')}, tiene switch ON y OFF, y
+        lleva su propio barrido de frecuencia y su propia resonancia. Cualquiera de
+        los dos filtros se puede asignar a cualquiera de los cuatro canales
+        estéreo.</p>
+        <p><strong>Por qué importa.</strong> Es el control por el que se compra
+        este mixer. Cada filtro lleva {XONE_92.filterResonance}, y en el extremo
+        salvaje Allen &amp; Heath describe el resultado como refuerzo de
+        realimentación resonante, que es el sonido al que la gente se refiere
+        cuando habla de un filtro Xone. Como son dos y están uno a cada lado del
+        crossfader, puedes filtrar lo que sale y lo que entra como movimientos
+        separados dentro de una misma transición.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> Barriendo el track
+        que sale por un pasa altos mientras el que entra se abre por debajo, o
+        sosteniendo una banda resonante sobre un loop para armar un breakdown sin
+        ninguna unidad de efectos en la cadena.</p>
+        <p><strong>Errores comunes.</strong> Dejar la asignación de filtro del
+        canal en la posición central y culpar al filtro, y empujar la resonancia al
+        extremo en un sistema grande, donde el refuerzo de realimentación es mucho
+        más fuerte de lo que suena en los auriculares. Allen &amp; Heath no publica
+        rango de frecuencia, pendiente ni cifra de resonancia para este filtro, así
+        que la única forma de saber dónde muerde es barrerlo antes de que la sala
+        esté llena.</p>
+        <p class="acc-related">Relacionados: <a href="#lfos">Los dos LFOs</a> <a href="#filter-does-nothing">Un filtro no hace nada en un canal</a> <a href="#filters-disabled">Los filtros no hacen nada</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="lfos"><summary><h3 class="acc-h2">Los dos LFOs</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> {XONE_92.lfos} osciladores de baja
+        frecuencia independientes modulan los filtros, con tap tempo y un ajuste de
+        velocidad x2.</p>
+        <p><strong>Por qué importa.</strong> Un LFO mueve un filtro por ti, en
+        tiempo, así que un barrido puede correr debajo de un track mientras tus dos
+        manos están en otra cosa. El tap tempo es lo que lo vuelve musical en una
+        mesa analógica sin reloj propio entrando: tú le das el tempo, ella lo
+        sostiene.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> Un pulso lento en una
+        mezcla larga, o el ajuste x2 para doblar la velocidad en una subida sin
+        volver a marcar el tap.</p>
+        <p><strong>Errores comunes.</strong> Marcar el tempo una vez y confiar en
+        él a través de un cambio de tempo, y dejar un LFO corriendo en un canal
+        después de la transición, que la sala lee como una mezcla que no se
+        resuelve. El tap tempo del LFO 2 también manda MIDI clock con start y stop,
+        así que un tap dado para el filtro puede mover cualquier cosa que tengas
+        esclavizada al mixer.</p>
+        <p class="acc-related">Relacionados: <a href="#filters">Los dos filtros</a> <a href="#midi">Salida MIDI</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="channels"><summary><h3 class="acc-h2">Cantidad de canales, y dos respuestas oficiales</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Los dos números son de Allen &amp;
+        Heath. Su página de producto lo llama un mixer analógico de
+        {XONE_92.channelsProductPage} canales. Su ficha de especificación técnica
+        del mismo mixer dice canales {XONE_92.channelsSpecSheet}. Publicamos los
+        dos en vez de elegir uno, porque los dos son oficiales.</p>
+        <p><strong>Qué tienes de verdad enfrente.</strong> El layout es
+        {XONE_92.channelsDetail}. Cuenta los dos canales de mic y return como
+        canales de música y te da un número, cuéntalos aparte y te da el otro, que
+        es la razón más probable de que dos documentos de la misma empresa no
+        coincidan.</p>
+        <p><strong>Por qué importa.</strong> Decide qué puedes conectar. Cuatro
+        canales estéreo toman tornamesas o fuentes de línea y pasan por la EQ, por
+        los filtros y por el crossfader. Los canales de mic y return,
+        {XONE_92.micInputs} de ellos, toman un micrófono en XLR o un return de
+        línea, y no pasan por el crossfader. También hay {XONE_92.auxSends} aux
+        sends, conmutables pre o post fader y alimentados por los seis
+        canales.</p>
+        <p><strong>Errores comunes.</strong> Leer 6 + 2 y planear seis tornamesas,
+        o leer 4 + 2 y no darse cuenta de que los canales de return son canales
+        completos con su propio fader.</p>
+        <p class="acc-related">Relacionados: <a href="#returns-and-crossfader">Un return no pasa por el crossfader</a> <a href="#mic-not-in-record">El mic está ausente en la grabación</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="midi"><summary><h3 class="acc-h2">Salida MIDI</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> {XONE_92.digitalIo}, y esa es la única
+        conexión digital del mixer. Es asignable, manda mensajes de CC y de note on
+        y off, y sale de fábrica en el canal MIDI 16 con un switch al 15.</p>
+        <p><strong>Por qué importa.</strong> El mixer puede manejar software o
+        hardware desde sus propios controles sin volverse una controladora. Las
+        asignaciones publicadas incluyen FILTER 1 FREQ en CC12, FILTER 2 FREQ en
+        CC13 y el crossfader en CC92, y el tap tempo del LFO 2 manda MIDI clock
+        junto con start y stop.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> Mandando el barrido
+        del filtro o la posición del crossfader a un instrumento en software, o
+        clockeando una máquina externa desde el tap tempo para que todo el rig siga
+        el mismo pulso.</p>
+        <p><strong>Errores comunes.</strong> Esperar MIDI in. Hay un DIN y es una
+        salida, así que cualquier cosa con la que quieras controlar el mixer no
+        tiene dónde conectarse. Y esperar audio por ese conector también: no hay
+        ninguna placa de sonido en este mixer.</p>
+        <p class="acc-related">Relacionados: <a href="#lfos">Los dos LFOs</a> <a href="#compatibility">Con qué funciona</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="headphones"><summary><h3 class="acc-h2">Auriculares, cue y los medidores</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Dos conectores de auriculares, uno TRS
+        de tamaño grande y un mini jack, con mezcla entre cue y mix y un modo split
+        cue. Allen &amp; Heath recomienda auriculares cerrados de
+        35 a 300 ohms.</p>
+        <p><strong>Por qué importa.</strong> El split cue pone la fuente en cue en
+        un oído y la mezcla en el otro, que es como emparejas BPM en un escenario
+        fuerte donde el retorno te está peleando. El control de mezcla causa más
+        problemas de auriculares que el conector: todo hacia un lado y estás
+        escuchando solo el master, lo que parece un cue que dejó de
+        funcionar.</p>
+        <p><strong>Cuándo lo usan los profesionales.</strong> Split cue en
+        cualquier escenario donde el monitor no sea confiable, y el segundo
+        conector para un invitado o un relevo back to back sin desconectar
+        nada.</p>
+        <p><strong>Errores comunes.</strong> Juzgar el nivel solo de oído. Los
+        medidores son de nueve LEDs y cubren de -20dBu a +10dBu, en los canales y
+        en el master, y son la referencia contra la que ajustas la ganancia.</p>
+        <p class="acc-related">Relacionados: <a href="#master-level">El sistema de la casa está clipeando</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="bulb" title="Consejos profesionales" />
+
+    <details class="acc-sec" name="xone92-acc" id="rear-panel-first"><summary><h3 class="acc-h2">Recorre el panel trasero antes de que la mesa entre al booth</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> En este mixer se decide atrás más
+        ruteo del que esperas, y una vez que la mesa está instalada no alcanzas
+        nada de eso.</p>
+        <p><strong>Por qué importa.</strong> Los switches de clean feed del mic que
+        deciden si un MC llega a Booth y a Record están en el panel trasero. También
+        están las entradas phono y de línea compartiendo conector con los plugs de
+        cortocircuito puestos, el terminal de tierra de chasis que necesita cada
+        tornamesa, y las salidas que deciden qué sistema recibe qué envío: MIX 1 en XLR balanceado, MIX 2 en TRS no balanceado, BOOTH en TRS no balanceado y RECORD en RCA.</p>
+        <p><strong>Hazlo así.</strong> Antes de que la mesa quede encajada, ajusta
+        los switches de clean feed para la noche, confirma que los plugs de
+        cortocircuito están en entradas phono y en ningún otro lugar, aterra las
+        tornamesas al terminal de chasis, y confirma que el sistema de la casa está
+        saliendo de la salida que crees.</p>
+        <p><strong>Errores comunes.</strong> Descubrir que el switch de clean feed
+        existe durante el set, cuando está a un palmo de tus dedos y a un panel de
+        booth de distancia.</p>
+        <p class="acc-related">Relacionados: <a href="#mic-not-in-record">El mic está ausente en la grabación</a> <a href="#phono-shorting-plugs">Ruido en una entrada phono sin uso</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Mantenimiento preventivo" />
+
+    <details class="acc-sec" name="xone92-acc" id="crossfader-part"><summary><h3 class="acc-h2">El crossfader es una pieza reemplazable, y eso importa en una mesa de vida tan larga</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> El crossfader es un
+        {XONE_92.crossfaderModel}, de serie en el Mk2, totalmente asignable desde
+        cada canal de música y reemplazable por el usuario. El número de pieza de
+        Allen &amp; Heath es {XONE_92.crossfaderPart}, y su redacción dice que se
+        accede a él con facilidad en caso de que haga falta reemplazarlo.</p>
+        <p><strong>Por qué importa.</strong> Un mixer construido alrededor de un
+        filtro que apareció en 2004 sobrevive a sus propios faders varias veces. En
+        una mesa donde el crossfader no es una pieza de servicio, el desgaste
+        termina la vida útil del mixer. Acá es un número de pieza y una tarde.</p>
+        <p><strong>Hazlo así.</strong> Si el crossfader se siente áspero o corta de
+        forma irregular, pide el {XONE_92.crossfaderPart} en vez de trabajar
+        esquivándolo, y guarda uno en el case si la mesa es tuya y viaja. Allen
+        &amp; Heath no publica vida útil ni cifra de ciclos para él, así que el
+        reemplazo se decide por tacto y no por un número.</p>
+        <p><strong>Errores comunes.</strong> Tratar un crossfader gastado como el
+        final del mixer, y suponer que los faders de canal son el mismo trabajo:
+        son otra pieza y Allen &amp; Heath no publica número para ellos.</p>
+        <p class="acc-related">Relacionados: <a href="#crossfader-does-nothing">El crossfader no hace nada</a> <a href="#revisions">Mk1, Mk2 y la Limited Edition</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="maintenance"><summary><h3 class="acc-h2">Mantener confiable una mesa analógica por años de fechas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Los conectores, los cables y los plugs
+        de cortocircuito phono se llevan el desgaste real en este mixer. No hay
+        estado de software que resetear, así que lo que estás protegiendo es
+        completamente físico.</p>
+        <p><strong>Por qué importa.</strong> Los conectores RCA y XLR y los
+        switches del panel trasero son lo que castiga una vida de gira, y un pin
+        flojo o doblado causa la falla intermitente más difícil de diagnosticar en
+        una sala en vivo. Nada de eso va a aparecer en un log, porque no hay
+        log.</p>
+        <p><strong>Hazlo así.</strong> Revisa los cables antes de que entren al
+        bolso y no cuando aparece una falla, desconecta desde el conector y no
+        desde el cable, mantén contados los plugs de cortocircuito, y mantén la
+        mesa cubierta en el transporte. La alimentación es {XONE_92.mains}, así que
+        el mismo mixer viaja entre países sin nada que conmutar y sin fusible que
+        cambiar. Mide {XONE_92.dimensions} y pesa {XONE_92.weight}, y esos dos
+        datos vienen de la guía de la Limited Edition de Allen &amp; Heath y no de
+        la ficha de especificación del Mk2, que los deja afuera.</p>
+        <p><strong>Evítalo la próxima vez.</strong> No enrolles los cables apretados
+        alrededor de los conectores, que es donde empieza el daño por tensión, y no
+        enrolles cable de audio en un lazo al lado de un tendido de red
+        eléctrica.</p>
+        <p class="acc-related">Relacionados: <a href="#hum-and-ground-loops">Zumbido y loops de tierra</a> <a href="#crossfader-part">El crossfader es una pieza reemplazable</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidad" />
+
+    <details class="acc-sec" name="xone92-acc" id="compatibility"><summary><h3 class="acc-h2">Con qué funciona, y qué no documenta Allen &amp; Heath</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> Cualquier cosa con salida a nivel de
+        línea o phono, en cualquiera de los cuatro canales estéreo de música, más
+        micrófonos y returns de línea en los dos canales MIC / RTN. No hay placa de
+        sonido, no hay audio por USB y no hay drivers, así que nada de la versión
+        del sistema operativo de una computadora afecta a este mixer.</p>
+        <p><strong>Sistemas de vinilo digital.</strong> Allen &amp; Heath no
+        documenta DVS ni timecode para el Xone:92. Ningún documento suyo para este
+        modelo menciona timecode, Serato o Traktor, y no hay placa de sonido
+        adentro, así que decimos que no está documentado en vez de afirmar que
+        funciona o que no funciona. Los DJs sí corren timecode por mixers
+        analógicos usando una interfaz aparte, y ese arreglo es entre tú, tu
+        interfaz y tu software, sin nada de Allen &amp; Heath en lo que apoyarte si
+        se porta mal. Lo que está publicado para el Xone:96 es otro mixer, con otro
+        camino de señal, y no se traslada.</p>
+        <p><strong>Hazlo así.</strong> Si toca en timecode, confirma tu propia
+        interfaz y tu licencia antes del gig, y trata el mixer como cuatro entradas
+        de línea. Si toca desde reproductores, esta mesa combina con los CD de la
+        misma época que están más abajo.</p>
+        <p><strong>Errores comunes.</strong> Llegar esperando conectar una
+        computadora directo al mixer. El único cable entre una computadora y este
+        mixer es un cable de audio que sale de tu propia interfaz.</p>
+        <p class="acc-related">Relacionados: <a href="#midi">Salida MIDI</a> <a href="/es/knowledge/dictionary">Diccionario de DJ</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xone92-acc" id="revisions"><summary><h3 class="acc-h2">Mk1, Mk2 y la Limited Edition</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Respuesta corta.</strong> {XONE_92.revisions}. Allen &amp; Heath
+        documenta el Mk1 y el Mk2 como mixers distintos, con internos diferentes y
+        números de página de manual diferentes, así que un Mk1 en un venue no es
+        simplemente un Mk2 de aspecto más viejo. Allen &amp; Heath sigue listando
+        el Xone:92 en la serie Xone y sigue publicando sus documentos de soporte,
+        así que las dos revisiones son mesas que te van a tocar y no piezas de
+        museo.</p>
+        <p><strong>Las diferencias que ellos listan.</strong> Corre
+        {XONE_92.faderType}. En un Mk1, cambiar esa curva necesita en cambio una
+        modificación de hardware adentro del mixer. Las orejas de rack venían con
+        el Mk1 y no vienen con el Mk2. Las adiciones del Mk2 que lista Allen &amp;
+        Heath son el crossfader mini innoFADER Pro, un color storm grey, ese switch
+        de curva de fader, mejor nivel de entrada de canal y mejor calce de
+        fuentes, tapers de VCF refinados, preamps RIAA optimizados, un adaptador de
+        tierra doble removible y los switches de clean feed de mic en el panel
+        trasero. El Mk2 también declara una conmutación suave analógica
+        rediseñada, para que meter un canal en un filtro en caliente no ponga
+        artefactos audibles en el master.</p>
+        <p><strong>Por qué importa en el booth.</strong> Dos de esos cambios son la
+        diferencia entre un arreglo que puedes hacer y uno que no: la curva de
+        fader y el clean feed del mic. Si el mic tiene que llegar a la grabación y
+        la mesa es un Mk1, el switch del panel trasero no está ahí para
+        moverlo.</p>
+        <p><strong>Errores comunes.</strong> Leer un número de página del Mk2 o un
+        diagrama de panel trasero del Mk2 estando parado frente a un Mk1. Revisa
+        cuál tienes antes de seguir un diagrama.</p>
+        <p class="acc-related">Relacionados: <a href="#mic-not-in-record">El mic está ausente en la grabación</a> <a href="#crossfader-part">El crossfader es una pieza reemplazable</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Preguntas frecuentes" />
+
+    <details class="acc-sec" name="xone92-acc" id="faq"><summary><h3 class="acc-h2">Respuestas rápidas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <dl class="rb-errors">
+          <dt>¿En qué firmware debería estar?</dt><dd>La pregunta no aplica. Allen &amp; Heath no publica firmware, ni drivers, ni notas de versión para este mixer, y no hay audio por USB que los necesite.</dd>
+          <dt>¿Es un mixer de cuatro canales o de seis?</dt><dd>Allen &amp; Heath dice las dos cosas. Su página de producto dice {XONE_92.channelsProductPage}, su ficha de especificación técnica dice {XONE_92.channelsSpecSheet}. Físicamente: {XONE_92.channelsDetail}.</dd>
+          <dt>¿Por qué el mic no está en mi grabación?</dt><dd>Por diseño. Las entradas de mic no van a las salidas BOOTH ni RECORD hasta que los switches de clean feed del panel trasero digan lo contrario.</dd>
+          <dt>¿Hace DVS?</dt><dd>Allen &amp; Heath no documenta DVS ni timecode para este mixer, y no tiene placa de sonido. Lo que funcione, funciona a través de tu propia interfaz, sin nada publicado en lo que apoyarte.</dd>
+          <dt>¿Puedo usarlo como placa de sonido de mi computadora?</dt><dd>No. No hay audio por USB en este mixer. {XONE_92.digitalIo}.</dd>
+          <dt>¿Dónde queda la unidad en el master?</dt><dd>La unidad queda {XONE_92.masterUnityPosition}. Todo a la derecha da {XONE_92.masterAtMax}.</dd>
+          <dt>¿Puedo cambiar el crossfader yo mismo?</dt><dd>Sí. Es un {XONE_92.crossfaderModel}, pieza {XONE_92.crossfaderPart} de Allen &amp; Heath, y ellos describen el acceso como fácil en caso de que haga falta reemplazarlo.</dd>
+          <dt>¿Hay manual de servicio?</dt><dd>No. Allen &amp; Heath publica un diagrama de bloques, que es lo más parecido a documentación de servicio que hay disponible para este mixer.</dd>
+          <dt>¿Puedo levantar la tierra de la red para matar un zumbido?</dt><dd>No. Allen &amp; Heath lo llama un riesgo de falla potencialmente letal en un mixer de chasis de metal. Aísla la tierra en el cableado de audio.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="xone-92" lang="es" />
+
+    <div class="panel cta-exit" style="margin-top:1.5rem">
+      <h2 style="margin-bottom:0.75rem;font-size:1.15rem">¿Vas a tocar pronto y no funciona?</h2>
+      <a href="/es/emergency" class="btn btn-quiet-danger" data-event="begin_checkout" data-placement="knowledge_xone92"><Icon name="siren" /> Abrir Emergency Mode</a>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <EmailCapture source="knowledge_xone92" lang="es" />
+    </div>
+
+    <p class="rb-sources dim">
+      Fuentes: la página de producto del Xone:92, el manual de usuario del Mk2, la
+      especificación técnica del Mk2, el diagrama de bloques del Mk2 y los
+      artículos de soporte de Allen &amp; Heath, revisados el {UPDATED}. Las citas
+      son suyas. Donde dos de sus documentos no coinciden, los dos números están
+      publicados arriba y atribuidos. Los datos que no publican, incluyendo rango
+      de frecuencia del filtro, pendiente del filtro, cifras de resonancia, vida
+      útil del crossfader y potencia de la salida de auriculares, están nombrados
+      como no publicados en vez de rellenados. Las dimensiones y el peso están
+      citados de la guía de la Limited Edition, porque la ficha de especificación
+      del Mk2 los omite.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .rb-h1 { /* size comes from the global h1 scale, 2026-08-03 */ margin-bottom: 0.4rem; }
+  .rb-h1 .accent { font-size: 96%; }
+  .rb-updated { font-size: 0.82rem; margin-bottom: 1.6rem; }
+  /* hw-thumb is pinned to the BOTTOM-RIGHT of hw-head via absolute
+     positioning, the same rule the Pioneer hardware pages use. See
+     djm-900nxs2.astro for the full rationale (Antonio, 2026-07-31: a flex-row
+     approach races text height against photo height and breaks the flush touch
+     at in-between widths). flow-root on the parent stops margin collapse from
+     throwing off the anchor. */
+  .hw-head { position: relative; padding-right: 216px; display: flow-root; }
+  .hw-thumb {
+    position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+    display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+  }
+  .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+  @media (max-width: 640px) {
+    .hw-head { padding-right: 0; }
+    .hw-thumb {
+      position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+      align-items: center; justify-content: center;
+    }
+  }
+  main p { color: var(--text-dim); line-height: 1.65; }
+  main p strong { color: var(--text); }
+  .rb-errors { margin-bottom: 0; }
+  .rb-errors dt { font-weight: 700; color: var(--text); margin-top: 0.9rem; }
+  .rb-errors dd { margin: 0.25rem 0 0; color: var(--text-dim); line-height: 1.6; }
+  .rb-sources { font-size: 0.78rem; line-height: 1.6; margin-top: 2rem; padding-top: 1rem; border-top: var(--stroke) solid var(--edge-soft); }
+  [id] { scroll-margin-top: 1.5rem; }
+</style>
