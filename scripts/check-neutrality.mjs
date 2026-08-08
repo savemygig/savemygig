@@ -62,6 +62,37 @@ const ALLOW_IN_PROSE = {
   'pioneer-dj': [],
 };
 
+/*
+ * CROSS-BRAND DEPENDENCY AND COMPARISON FRAMING, ON EVERY PAGE. Added 2026-08-08,
+ * because the first version of this check had a hole and Antonio found what was
+ * in it: "why does Denon publicly depend on AlphaTheta being ready first? This
+ * puts us in a ridiculous and fragile position."
+ *
+ * The /knowledge landing page said, on the Denon DJ card, "SC players and Prime
+ * hardware, once the AlphaTheta reference is complete." The Engine DJ card sold
+ * itself as "the crossover to Pioneer booths". The Allen & Heath card explained
+ * itself as "Different rules to a CDJ booth". All three survived the neutrality
+ * pass because rule 1 only inspects pages UNDER a brand hub, and /knowledge is a
+ * survey page that is ALLOWED to name every manufacturer. It is allowed to name
+ * them. It is not allowed to rank them, sequence them, or make one contingent on
+ * another, and that distinction is what these patterns test.
+ *
+ * Two harms, and the second is the worse one. It reads as a Pioneer site with a
+ * waiting list. And it publishes a sequencing promise, so any change of plan turns
+ * an ordinary reprioritisation into a broken commitment on a public page.
+ */
+const DEPENDENCY = [
+  /once the [A-Z][\w& ]+ reference is (?:complete|done|finished)/i,
+  /(?:after|when|as soon as|apenas|assim que) (?:the )?[A-Z][\w& ]{2,20} (?:reference|coverage) (?:is|est[aá])/i,
+  /crossover to [A-Z][\w& ]+ booths?/i,
+  /(?:different|other) rules to a [A-Z][\w-]+ booth/i,
+  /\bis not our core\b/i,
+  /n[aã]o é o nosso foco/i,
+  /no es nuestro foco/i,
+  /refer[eê]ncia d[ae] AlphaTheta estiver/i,
+  /referencia de AlphaTheta est[eé]/i,
+];
+
 const CORRECTION = [
   /this (?:page|site) previously/i, /previously (?:said|stated|claimed)/i,
   /used to (?:say|read|claim)/i, /we (?:originally|corrected)/i,
@@ -163,6 +194,50 @@ for (const file of walk(DIST)) {
   }
 }
 if (!corrFails) console.log(`PASS  no corrections ${total} pages, reader copy never narrates the site's own history`);
+
+// --- 3. no manufacturer's coverage described in terms of another's, anywhere.
+let depFails = 0;
+for (const file of walk(DIST)) {
+  const text = mainText(fs.readFileSync(file, 'utf8')).replace(/<[^>]+>/g, ' ');
+  for (const re of DEPENDENCY) {
+    const m = text.match(re);
+    if (m) {
+      depFails++; failed++;
+      const i = text.search(re);
+      fail(`${file}: one manufacturer's coverage framed in terms of another ("${m[0].trim()}")`,
+        `...${text.slice(Math.max(0, i - 90), i + 120).replace(/\s+/g, ' ').trim()}...`,
+        'Say what the coverage is ABOUT. Never sequence it behind another brand,',
+        'and never publish a roadmap promise a change of plan would break.');
+    }
+  }
+}
+if (!depFails) console.log(`PASS  no dependency ${total} pages, no brand's coverage sequenced behind another's`);
+
+/*
+ * --- 4. A BRAND WITH A BUILT HUB IS NOT LABELLED "COMING SOON".
+ * The Technics card on /knowledge sat at href: null with a Coming soon label for
+ * hours after its hub and both model pages shipped. That is the SECOND time on
+ * that page: the Allen & Heath card did the same thing the day before, and the
+ * code comment written to prevent a repeat did not prevent it. A live hub that the
+ * landing page says does not exist is a page telling a reader their equipment is
+ * uncovered while the coverage sits one click away.
+ */
+for (const lang of ['', 'pt/', 'es/']) {
+  const idx = path.join(DIST, lang, 'knowledge.html');
+  if (!fs.existsSync(idx)) continue;
+  const html = fs.readFileSync(idx, 'utf8');
+  for (const b of BRANDS) {
+    const hubBase = path.join(DIST, lang, b.hub.replace(/^\//, ''));
+    const built = fs.existsSync(`${hubBase}.html`) || fs.existsSync(path.join(hubBase, 'index.html'));
+    if (!built) continue;
+    const href = `${lang ? `/${lang.replace(/\/$/, '')}` : ''}${b.hub}`;
+    if (!html.includes(`href="${href}"`)) {
+      fail(`${idx}: ${b.name} has a built hub but /knowledge does not link it`,
+        `expected a card linking ${href}`,
+        'The card is showing "Coming soon" for coverage that is already live.');
+    }
+  }
+}
 
 if (failed) {
   console.error(`\nNeutrality check FAIL: ${failed} problem(s).`);

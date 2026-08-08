@@ -33,7 +33,7 @@ const software = [
   {
     name: 'Engine DJ',
     href: null,
-    blurb: 'Engine library prep, SC Live and Prime players, and the crossover to Pioneer booths.',
+    blurb: 'Engine library prep, SC Live and Prime players, and playing a club booth you did not prepare for.',
   },
 ];
 const equipment = [
@@ -45,7 +45,13 @@ const equipment = [
   {
     name: 'Denon DJ',
     href: null,
-    blurb: 'SC players and Prime hardware, once the AlphaTheta reference is complete.',
+    // NEVER DESCRIBE ONE MANUFACTURER'S COVERAGE AS WAITING ON ANOTHER'S
+    // (Antonio, 2026-08-08): "why does Denon publicly depend on AlphaTheta being
+    // ready first? This puts us in a ridiculous and fragile position." He is
+    // right on both counts. It made this site's roadmap read as a Pioneer
+    // roadmap, and it published a sequencing promise that any change of plan
+    // turns into a broken one. A blurb says what the coverage IS about.
+    blurb: 'SC players and Prime hardware: Engine library prep, the standalone workflow, and what fails on a night that has no laptop in it.',
   },
   {
     name: 'Allen & Heath',
@@ -56,12 +62,21 @@ const equipment = [
     // finished Xone:96 page INSIDE the blurb, so one card both said "coming soon"
     // and linked to the guide.
     href: '/knowledge/allen-heath',
-    blurb: 'Analogue Xone mixers built around the VCF filter. Different rules to a CDJ booth: one of them has no firmware at all, and neither manual has a troubleshooting section.',
+    blurb: 'Analogue Xone mixers built around the VCF filter. One of them has no firmware at all, and neither manual has a troubleshooting section.',
   },
   {
     name: 'Technics',
-    href: null,
-    blurb: 'The turntables that never left. Vinyl is not our core, but the booth standard earns its place here.',
+    // LIVE since 2026-08-08. This card sat at href: null with a "Coming soon"
+    // label for hours after the hub and both SL-1200 pages shipped, which is the
+    // SECOND time that has happened on this page: the comment on the Allen &
+    // Heath card above records the first. A note did not prevent the repeat, so
+    // check-neutrality now asserts that every brand with a built hub is linked
+    // from here rather than labelled as not existing yet.
+    href: '/knowledge/technics',
+    // "Vinyl is not our core" also went, on the same instruction. A brand with
+    // two full model pages is not a footnote, and hedging about our own coverage
+    // reads as a reason not to trust it.
+    blurb: 'The SL-1200MK7 and SL-1200MK2: hum and grounding, a dead channel, pitch, and the arm setup that stops a needle jumping.',
   },
 ];
 // Hardware lists BRANDS, not categories, exactly like Equipment above
