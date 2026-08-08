@@ -239,6 +239,69 @@ for (const lang of ['', 'pt/', 'es/']) {
   }
 }
 
+/*
+ * --- 5. THE BANNED CONSTRUCTIONS MUST NOT SURVIVE IN SOURCE EITHER.
+ *
+ * Rules 1 to 4 read the BUILT page, which is correct: what a reader sees is what
+ * matters. But the build strips comments, so a construction removed from the copy
+ * can sit on happily in the comment that explains the page, and that is the more
+ * durable place for a bad idea to live. It is the file the next person reads to
+ * learn HOW TO THINK ABOUT THIS PAGE.
+ *
+ * That is not hypothetical. Antonio removed "the question this site asks every
+ * Pioneer owner, what version is it on" from the reader-facing copy on 2026-08-08,
+ * and it survived in the Technics hub's header comment as reason number one for why
+ * that hub exists. No reader ever saw it. The next session to open that file would
+ * have absorbed it as the house explanation and written it back.
+ *
+ * DELIBERATELY NARROW. This matches only the exact constructions Antonio named, and
+ * not the general idea of mentioning a manufacturer, because comments SHOULD be free
+ * to discuss brands, cross-brand bugs and the reasons behind a decision. The purpose
+ * is to stop a specific rejected framing from reproducing, not to police prose.
+ */
+const BANNED_IN_SOURCE = [
+  /question this site asks (?:every|a) [A-Z]/,
+  /(?:different|other) rules to a [A-Z][\w-]+ booth/i,
+  /once the [A-Z][\w& ]+ reference is (?:complete|done)/i,
+  /crossover to [A-Z][\w& ]+ booths?/i,
+  /\bis not our core\b/i,
+];
+const srcFiles = [];
+(function walkSrc(dir) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const f = path.join(dir, e.name);
+    if (e.isDirectory()) walkSrc(f);
+    else if (/\.(astro|js|mjs|ts)$/.test(f)) srcFiles.push(f);
+  }
+})('src');
+
+let srcFails = 0;
+for (const f of srcFiles) {
+  const raw = fs.readFileSync(f, 'utf8');
+  for (const re of BANNED_IN_SOURCE) {
+    for (const line of raw.split('\n')) {
+      /*
+       * A COMMENT THAT QUOTES A REJECTED FRAMING IN ORDER TO EXPLAIN WHY IT WENT is
+       * the most valuable comment in the file, so it needs a way to say so. The
+       * marker is an explicit token rather than a heuristic, because the first
+       * version of this check tried to guess from nearby words and flagged two
+       * legitimate notes. A token is greppable, cannot drift, and makes the
+       * exemption a deliberate act rather than an accident of phrasing.
+       */
+      if (line.includes('voice-ok')) continue;
+      const m = line.match(re);
+      if (m) {
+        srcFails++; failed++;
+        fail(`${f}: a rejected framing survives in source ("${m[0].trim()}")`,
+          line.trim().slice(0, 130),
+          'Comments may discuss brands freely. They may not define one brand by',
+          'what another has, because the next person reads this to learn the house voice.');
+      }
+    }
+  }
+}
+if (!srcFails) console.log(`PASS  source voice  ${srcFiles.length} source files, no rejected framing`);
+
 if (failed) {
   console.error(`\nNeutrality check FAIL: ${failed} problem(s).`);
   process.exit(1);
