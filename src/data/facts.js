@@ -717,6 +717,32 @@ export const DJM_900NXS = {
  */
 const NO_HISTORY_PUBLISHED =
   'AlphaTheta has published no firmware change history for this unit, so there is no documented fix to report. This section stays empty until one exists.';
+/*
+ * WARNING KIND: 'withdrawn' OR 'behaviour', AND IT IS NOT COSMETIC.
+ *
+ * A warning was a single shape until 2026-08-08, because the only one was the
+ * CDJ-3000's firmware 3.30, which AlphaTheta genuinely pulled. The page raises
+ * the safe floor around it and prints "except 3.30 (withdrawn)", correctly: an
+ * open-ended "3.20 or later" would otherwise recommend a release you must not
+ * install.
+ *
+ * Then the Ecodesign standby warnings arrived, and the XDJ-1000MK2's sits at
+ * 1.45, ABOVE its 1.42 floor. The page did what it was built to do and told
+ * every reader that the XDJ-1000MK2's current, recommended, only firmware had
+ * been WITHDRAWN. That is worse than the omission it replaced: it sends a DJ
+ * away from the release they should be running. It shipped live and an audit of
+ * the rendered page caught it within the hour.
+ *
+ * The XDJ-700 and DJM-750MK2 escaped only by luck, their Ecodesign versions
+ * happen to sit below their floors. So the fix is the mechanism, not the
+ * instance: only a 'withdrawn' warning moves the floor or earns that word.
+ * 'behaviour' means the version changed how the unit acts and there is nothing
+ * to avoid.
+ *
+ * This is the same lesson as rank() returning ORDER.length and FLOOR =
+ * newestKnown. A generalisation that keeps working on new input while quietly
+ * changing what it MEANS is more dangerous than one that throws.
+ */
 const ECODESIGN_STANDBY =
   'Not a defect. From this version the unit automatically switches off after 20 minutes of no use when Power Management is on, following the EU Ecodesign Directive. A deck that powered down during a long changeover is obeying that setting, not failing.';
 
@@ -733,6 +759,9 @@ export const FIRMWARE_ISSUES = [
     href: '/knowledge/pioneer-dj/cdj-3000',
     source: CDJ_3000.source,
     warning: {
+      // See the WARNING KIND note above ECODESIGN_STANDBY. This one really was
+      // pulled, so it is the only kind that raises the safe floor.
+      kind: 'withdrawn',
       version: CDJ_3000.onelibraryWithdrawn,
       text: 'Withdrawn by AlphaTheta. It added OneLibrary, then playlists failed to display for people exporting from older rekordbox. No music or data was deleted, and the player reverted to Device Library. Do not install this version.',
       sourceUrl: CDJ_3000.sourceWithdrawal,
@@ -829,6 +858,7 @@ export const FIRMWARE_ISSUES = [
     href: '/knowledge/pioneer-dj/xdj-1000mk2',
     source: XDJ_1000MK2.source,
     warning: {
+      kind: 'behaviour',
       version: XDJ_1000MK2.ecoStandbyIntro,
       text: ECODESIGN_STANDBY,
       sourceUrl: XDJ_1000MK2.source,
@@ -858,6 +888,7 @@ export const FIRMWARE_ISSUES = [
     href: '/knowledge/pioneer-dj/xdj-700',
     source: XDJ_700.sourceHistory,
     warning: {
+      kind: 'behaviour',
       version: XDJ_700.ecoStandbyIntro,
       text: ECODESIGN_STANDBY,
       sourceUrl: XDJ_700.sourceHistory,
@@ -944,6 +975,7 @@ export const FIRMWARE_ISSUES = [
     href: '/knowledge/pioneer-dj/djm-750mk2',
     source: DJM_750MK2.source,
     warning: {
+      kind: 'behaviour',
       version: DJM_750MK2.ecoStandbyIntro,
       text: ECODESIGN_STANDBY,
       sourceUrl: DJM_750MK2.source,

@@ -109,7 +109,33 @@ function hasKey(body, key) {
 const covered = new Set(FIRMWARE_ISSUES.map((m) => m.href.replace(/.*\//, '')));
 const owed = EQUIPMENT.filter((m) => m.brand === 'pioneer-dj' && !covered.has(m.slug));
 
+/*
+ * EVERY WARNING DECLARES ITS KIND. Added 2026-08-08, an hour after the reason
+ * for it shipped live. The firmware page raises a model's safe floor around a
+ * warning and prints "except X (withdrawn)". That was correct while the only
+ * warning on the site was the CDJ-3000's genuinely pulled 3.30. The Ecodesign
+ * standby warnings are not withdrawals, and the XDJ-1000MK2's sits above its
+ * floor, so the page announced that the player's current firmware had been
+ * withdrawn: it steered a DJ AWAY from the release they should be running,
+ * which is worse than the missing row it replaced.
+ * An untyped warning now fails rather than defaulting to the dangerous reading.
+ */
+const KINDS = new Set(['withdrawn', 'behaviour']);
+const untyped = FIRMWARE_ISSUES.filter((m) => m.warning && !KINDS.has(m.warning.kind));
+
 let failed = 0;
+if (untyped.length) {
+  failed += untyped.length;
+  console.error(`FAIL  warning kind: ${untyped.length} warning(s) do not declare a kind`);
+  for (const m of untyped) console.error(`        ${m.model} (kind: ${JSON.stringify(m.warning.kind)})`);
+  console.error('\nUse kind: \'withdrawn\' for a release AlphaTheta pulled, which raises the');
+  console.error("safe floor, or kind: 'behaviour' for one that changed how the unit acts.");
+  console.error('There is no safe default: guessing withdrawn scares a DJ off good firmware,');
+  console.error('and guessing behaviour recommends a release that must not be installed.');
+} else {
+  console.log(`PASS  warning kind ${FIRMWARE_ISSUES.filter((m) => m.warning).length} warnings, each typed`);
+}
+
 if (owed.length) {
   failed += owed.length;
   console.error(`FAIL  coverage: ${owed.length} AlphaTheta model(s) missing from FIRMWARE_ISSUES`);

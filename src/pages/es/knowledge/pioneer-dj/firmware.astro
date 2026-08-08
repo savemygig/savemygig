@@ -217,8 +217,15 @@ function cmpVersion(a, b) {
 const models = FIRMWARE_ISSUES.map(m => {
   const issues = [...m.issues].sort((a, b) => cmpVersion(b.fixedIn, a.fixedIn));
   const safeFloor = issues.length ? issues[0].fixedIn : null;
+  // ONLY A WITHDRAWN VERSION IS AN EXCEPTION TO THE FLOOR (2026-08-08). This
+  // used to test any warning, which was right while the only warning was the
+  // CDJ-3000's pulled 3.30, and became a live falsehood the moment the
+  // XDJ-1000MK2's Ecodesign warning landed at 1.45 above its 1.42 floor: the
+  // header told every reader the player's current firmware was withdrawn. A
+  // behaviour change is not something to avoid, so it does not move the floor.
   const floorException =
-    m.warning && safeFloor && cmpVersion(m.warning.version, safeFloor) > 0
+    m.warning?.kind === 'withdrawn' && safeFloor
+      && cmpVersion(m.warning.version, safeFloor) > 0
       ? m.warning.version
       : null;
   return { ...m, issues, safeFloor, floorException };
