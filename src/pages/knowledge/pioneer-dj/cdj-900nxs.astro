@@ -164,12 +164,10 @@ const schema = {
       <summary><h3 class="acc-h2">The player will not read my drive</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Almost always the file system. This
-        generation reads <strong>{FS}</strong> and <strong>no exFAT</strong>, and no
-        firmware version will add it because there are no more firmware versions.</p>
+        generation reads <strong>{FS}</strong> and <strong>no exFAT</strong>, and no firmware version has added it. AlphaTheta have published nothing since {FLOOR}, so treat that as settled rather than as promised.</p>
         <p><strong>Why this happens.</strong> exFAT is the sensible modern choice
         and every current player reads it, so a drive formatted for a CDJ-3000 booth
-        is invisible here. Nothing is broken. The format postdates the player and
-        always will.</p>
+        is invisible here. Nothing is broken. The format postdates the player, and nothing published since suggests that changing.</p>
         <p><strong>Fix it now.</strong> Borrow a FAT32 drive or play from the other
         deck. Reformatting erases everything, so it is not a mid-set move unless the
         music exists elsewhere too.</p>
@@ -354,7 +352,7 @@ const schema = {
       <summary><h3 class="acc-h2">Quick answers</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <dl class="rb-errors">
-          <dt>What firmware should it be on?</dt><dd>{FLOOR}, published October 2017. Nothing has followed it, so that is both the floor and the ceiling.</dd>
+          <dt>What firmware should it be on?</dt><dd>{FLOOR}, published October 2017. Nothing has followed it, so it is both the floor and the highest version published. No end-of-support statement exists, so that is an observation rather than a promise.</dd>
           <dt>Does it read exFAT?</dt><dd>No. It reads {FS}.</dd>
           <dt>Why did the deck go silent when I used BEAT DIVIDE?</dt><dd>Documented, and fixed in {CDJ_900NXS.beatDivideFix}. Below that version the feature stopped playback.</dd>
           <dt>Why will one AIFF not load?</dt><dd>AIFF at 24bit/48kHz would not load or play below {CDJ_900NXS.aiffLoadFix}.</dd>

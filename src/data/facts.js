@@ -298,6 +298,13 @@ export const CDJ_2000NXS = {
 // been nothing since, so the floor is simply "be at 1.31".
 // Source: downloads.support.alphatheta.com/firmwares/dj-players/CDJ-900NXS/CDJ-900NXS-Firmware-Change-History-Ver131-en.pdf
 export const CDJ_900NXS = {
+  // "ENDED" IS AN INFERENCE HERE TOO (added 2026-08-08 by an audit). The DJM-900NXS
+  // and XDJ-1000MK2 constants carry this flag and this one did not, so its page was
+  // the only one of the three that stated "there are no more firmware versions" as
+  // FACT, and then refuted itself seventy lines later by citing the CDJ-2000NXS
+  // shipping a version six years after its previous one. AlphaTheta publish no
+  // end-of-support statement for this player either.
+  firmwareEndedIsInference: true,
   checked: '7 August 2026',
   newestKnown: '1.31',           // 5 Oct 2017. Nothing published since.
   beatDivideFix: '1.20',         // 1 Apr 2014: playback sound STOPS while BEAT DIVIDE is active.
@@ -457,7 +464,7 @@ export const PLAYERS = [
   // the table rather than repeated on every row.
   { m: 'CDJ-2000NXS2',   lib: 'Device Library', exfat: 'No',                 note: 'The workhorse in most club booths. FAT32, FAT16 or HFS+.' },
   { m: 'CDJ-2000 / NXS', lib: 'Device Library', exfat: 'No',                 note: 'Still everywhere. FAT32, FAT or HFS+.' },
-  { m: 'CDJ-900NXS',     lib: 'Device Library', exfat: 'No',                 note: 'FAT32, FAT or HFS+. Firmware ended at 1.31 in 2017.' },
+  { m: 'CDJ-900NXS',     lib: 'Device Library', exfat: 'No',                 note: 'FAT32, FAT or HFS+. Nothing published since 1.31 in 2017.' },
   { m: 'CDJ-900 / 850',  lib: 'Device Library', exfat: 'No',                 note: 'FAT32, FAT16 or HFS+.' },
   { m: 'XDJ-AZ',         lib: 'OneLibrary',     exfat: 'Yes',                note: '' },
   // XDJ-AN: added to rekordbox in 7.2.16 alongside the CDJ-1500X. Filesystems

@@ -42,7 +42,17 @@ import Icon from '../../../components/Icon.astro';
  * from a forum or a review.
  */
 const UPDATED = CDJ_2000NXS.checked;
-const FLOOR = CDJ_2000NXS.newestKnown;
+// THE FLOOR IS THE LAST DOCUMENTED FAULT FIX, NOT THE HIGHEST VERSION PUBLISHED
+// (corrected 2026-08-08 by an independent audit). This read `newestKnown`, so the
+// page told a DJ the floor was 1.44 while the computed firmware matrix said
+// "clear at 1.43 or later". Two numbers for one deck, and the page's own list
+// describes 1.44 as "minor bugs fixed" with no named fault.
+// facts.js says newestKnown is for internal reference and must never be rendered
+// as current or latest in copy. Rendering it as the REQUIRED FLOOR is that same
+// forbidden snapshot with the banned word removed: it would read wrong the day
+// 1.45 ships, and nothing would catch it. syncBpmFix is 1.43, the last version
+// that fixed something a DJ would notice.
+const FLOOR = CDJ_2000NXS.syncBpmFix;
 // It reads FAT32, FAT and HFS+. "FAT32 only" shipped bold and was WRONG:
 // AlphaTheta's support article says the player "does not support file systems
 // other than FAT32, FAT or HFS+", so a Mac DJ with an HFS+ drive was being told
@@ -255,7 +265,7 @@ const schema = {
           <dt>{CDJ_2000NXS.wavNoiseFix}</dt><dd>Digitally distorted white noise when playing certain WAV files. An active loop could activate a very short loop. Needle search jumped from where the finger was released.</dd>
           <dt>{CDJ_2000NXS.slipHotCueFix}</dt><dd>Issues during playback and track selection, and issues using SLIP HOT CUE.</dd>
           <dt>{CDJ_2000NXS.syncBpmFix}</dt><dd>Playback speed sometimes did not return to the BPM shown on screen with Sync enabled. A popping noise during a loop with QUANTIZE and MASTER TEMPO enabled.</dd>
-          <dt>{FLOOR}</dt><dd>Minor bugs fixed. This is the version to be at.</dd>
+          <dt>{FLOOR}</dt><dd>Minor bugs fixed. The highest version published, with no named fault behind it.</dd>
         </dl>
         <p style="margin-top:1rem"><strong>Do this.</strong> On a deck you own or
         control, sit at {FLOOR}, updated between bookings and never before one. On
@@ -321,9 +331,7 @@ const schema = {
         <p><strong>Short answer.</strong> Ten seconds at soundcheck. If it is below
         {FLOOR}, you now know which of the faults above can happen to you
         tonight.</p>
-        <p><strong>Why it matters.</strong> This is the only page on this site where
-        one number tells you that much. Every other model has two or three
-        documented faults. This one has a change history in double figures, and the
+        <p><strong>Why it matters.</strong> One number tells you a lot here, as it does on the DJM-900NXS. This one has a change history in double figures, and the
         deck is old enough that a large share of installed units predate most of
         the fixes.</p>
         <p><strong>Do this.</strong> Make it part of the same walk as checking the

@@ -18,7 +18,17 @@ const MESES = {
 };
 const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = esDate(CDJ_2000NXS.checked);
-const FLOOR = CDJ_2000NXS.newestKnown;
+// THE FLOOR IS THE LAST DOCUMENTED FAULT FIX, NOT THE HIGHEST VERSION PUBLISHED
+// (corrected 2026-08-08 by an independent audit). This read `newestKnown`, so the
+// page told a DJ the floor was 1.44 while the computed firmware matrix said
+// "clear at 1.43 or later". Two numbers for one deck, and the page's own list
+// describes 1.44 as "minor bugs fixed" with no named fault.
+// facts.js says newestKnown is for internal reference and must never be rendered
+// as current or latest in copy. Rendering it as the REQUIRED FLOOR is that same
+// forbidden snapshot with the banned word removed: it would read wrong the day
+// 1.45 ships, and nothing would catch it. syncBpmFix is 1.43, the last version
+// that fixed something a DJ would notice.
+const FLOOR = CDJ_2000NXS.syncBpmFix;
 // Lee FAT32, FAT y HFS+. Decir "solo FAT32" estaba MAL: AlphaTheta dice que el
 // reproductor "no soporta sistemas de archivos distintos de FAT32, FAT o HFS+",
 // así que a un DJ de Mac con una unidad HFS+ se le estaba diciendo que su unidad
@@ -245,7 +255,7 @@ const schema = {
           <dt>{CDJ_2000NXS.wavNoiseFix}</dt><dd>Ruido blanco digitalmente distorsionado al reproducir ciertos archivos WAV. Un loop activo podía activar un loop muy corto. La needle search saltaba desde donde se soltaba el dedo.</dd>
           <dt>{CDJ_2000NXS.slipHotCueFix}</dt><dd>Problemas durante la reproducción y la selección de tracks, y problemas al usar SLIP HOT CUE.</dd>
           <dt>{CDJ_2000NXS.syncBpmFix}</dt><dd>La velocidad de reproducción a veces no volvía al BPM mostrado en pantalla con Sync activado. Un chasquido durante un loop con QUANTIZE y MASTER TEMPO activados.</dd>
-          <dt>{FLOOR}</dt><dd>Bugs menores corregidos. Esta es la versión en la que hay que estar.</dd>
+          <dt>{FLOOR}</dt><dd>Bugs menores corregidos. La versión más alta publicada, sin ninguna falla nombrada detrás.</dd>
         </dl>
         <p style="margin-top:1rem"><strong>Hazlo así.</strong> En un deck que es
         tuyo o que tú controlas, quédate en {FLOOR}, actualizada entre fechas y
@@ -313,9 +323,7 @@ const schema = {
         <p><strong>Respuesta corta.</strong> Diez segundos en la prueba de sonido. Si
         está por debajo de {FLOOR}, ya sabes cuáles de las fallas de arriba te pueden
         pasar esta noche.</p>
-        <p><strong>Por qué importa.</strong> Esta es la única página de este sitio
-        donde un número te dice tanto. Todo otro modelo tiene dos o tres fallas
-        documentadas. Este tiene un historial de cambios que pasa de diez versiones,
+        <p><strong>Por qué importa.</strong> Esta es la página donde un número te dice mucho, igual que en la del DJM-900NXS. Este tiene un historial de cambios que pasa de diez versiones,
         y el deck es lo bastante viejo como para que una porción grande de las
         unidades instaladas sea anterior a la mayoría de las correcciones.</p>
         <p><strong>Hazlo así.</strong> Hazlo parte de la misma vuelta en la que

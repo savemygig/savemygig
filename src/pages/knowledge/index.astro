@@ -49,8 +49,14 @@ const equipment = [
   },
   {
     name: 'Allen & Heath',
-    href: null,
-    blurb: 'The Xone mixers DJs are loyal to: filters, known quirks, and pairing them with CDJ booths and turntables.',
+    // LIVE since 2026-08-08. This card said "Coming soon" with href: null for a day
+    // after the hub and both Xone pages shipped, so the knowledge base landing page
+    // was telling a Xone owner the coverage did not exist while llms.txt said two
+    // manufacturers were covered. Worse, the autolinker had injected a link to the
+    // finished Xone:96 page INSIDE the blurb, so one card both said "coming soon"
+    // and linked to the guide.
+    href: '/knowledge/allen-heath',
+    blurb: 'Analogue Xone mixers built around the VCF filter. Different rules to a CDJ booth: one of them has no firmware at all, and neither manual has a troubleshooting section.',
   },
   {
     name: 'Technics',

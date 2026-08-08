@@ -351,7 +351,7 @@ const schema = {
         is why they are short of controls, and there is nothing to switch on.</p>
         <p><strong>Fix it now.</strong> If the source needs EQ, a filter or the
         crossfader, take it into one of the six main channels instead. All six of
-        those route to either filter, and both auxiliary return channels A and B
+        those route to either filter, and channels A and B
         are full channels with EQ, which RTN C and RTN D are not.</p>
         <p><strong>Avoid it next time.</strong> Plan the patch around it. Any
         source you intend to shape or cut belongs on a main channel from the
@@ -558,8 +558,8 @@ const schema = {
         FILTER 1 and FILTER 2. The controls are CRUNCH, RES, the type selection
         between {XONE_96.filterTypes.join(', ')}, FREQ and an on and off switch,
         and that is the complete list. FREQ sets the cut off at the 3dB down
-        point, {XONE_96.filterRange} across the sweep.</p>
-        <p><strong>Why it matters.</strong> {XONE_96.filterAssignable}, so
+        point, 20 Hz to 20 kHz across the sweep.</p>
+        <p><strong>Why it matters.</strong> Either filter takes any of the six main channels, post gain, post EQ and post fader, so
         either filter can take any channel and the assign happens after the
         channel strip has done its work. RES produces the Xone:VCF sound by
         feeding some of the filter output back into its input, and Allen &amp;
