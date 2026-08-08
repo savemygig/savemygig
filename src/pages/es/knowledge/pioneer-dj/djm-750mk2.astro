@@ -3,7 +3,9 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../../components/ModelStatus.astro';
 import { DJM_750MK2, DJM_REC } from '../../../../data/facts.js';
+import { prose } from '../../../../i18n/prose.js';
 import Icon from '../../../../components/Icon.astro';
 
 // DJM-750MK2, NEUTRAL LATIN AMERICAN SPANISH. Source of truth for structure,
@@ -18,6 +20,8 @@ const MESES = {
 };
 const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = esDate(DJM_750MK2.checked);
+// Translate the prose fields facts.js holds in English. See src/i18n/prose.js.
+const P = (v) => prose('es', v);
 const RECOK = DJM_REC.compatibleMixers.includes('DJM-750MK2');
 
 const FX = DJM_750MK2.beatFx.join(', ');
@@ -37,7 +41,7 @@ const schema = {
   '@type': 'TechArticle',
   '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/djm-750mk2#article',
   headline: 'DJM-750MK2: la referencia operativa',
-  description: `Lo que todo DJ necesita saber antes de trabajar un DJM-750MK2: no tiene Pro DJ Link, ${AUX_SILENT_N} efectos nunca llegan al canal RETURN AUX, los Beat FX no se pre-escuchan en los canales 1 a 4, y el power management apaga la mesa después de ${DJM_750MK2.ecoStandbyMinutes} minutos desde el firmware ${DJM_750MK2.ecoStandbyIntro}.`,
+  description: `Lo que todo DJ necesita saber antes de trabajar un DJM-750MK2: no tiene Pro DJ Link, ${AUX_SILENT_N} efectos nunca llegan al canal RETURN AUX, los Beat FX no se pre-escuchan en los canales 1 a 4, y el power management apaga la mesa después de ${P(DJM_750MK2.ecoStandbyMinutes)} minutos desde el firmware ${P(DJM_750MK2.ecoStandbyIntro)}.`,
   author: { '@id': 'https://www.savemygig.com/#org' },
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   datePublished: '2026-08-07',
@@ -49,7 +53,7 @@ const schema = {
 ---
 <Base
   title="DJM-750MK2: sin Pro DJ Link y límites de FX | Save My Gig"
-  description={`Manual de campo del DJM-750MK2: sin Pro DJ Link, ${AUX_SILENT_N} efectos que nunca llegan al canal RETURN AUX y apagado automático en ${DJM_750MK2.ecoStandbyMinutes} minutos en el firmware ${DJM_750MK2.ecoStandbyIntro}.`}
+  description={`Manual de campo del DJM-750MK2: sin Pro DJ Link, ${AUX_SILENT_N} efectos que nunca llegan al canal RETURN AUX y apagado automático en ${P(DJM_750MK2.ecoStandbyMinutes)} minutos en el firmware ${P(DJM_750MK2.ecoStandbyIntro)}.`}
   path="/knowledge/pioneer-dj/djm-750mk2"
   crumbName="DJM-750MK2"
   lang="es"
@@ -65,7 +69,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <ModelStatus slug="djm-750mk2" checked={UPDATED} lang="es" />
         <h1 class="rb-h1">DJM-750MK2, <span class="accent">el manual de campo</span></h1>
       </div>
       <a
@@ -208,18 +212,18 @@ const schema = {
         UP)]. AlphaTheta: "Presionar el botón [UTILITY (WAKE UP)] cancela el estado
         de modo Off." La mesa está dormida, no muerta.</p>
         <p><strong>Por qué pasa esto.</strong> Desde el firmware
-        {' '}{DJM_750MK2.ecoStandbyIntro} el tiempo del power management sigue el
+        {' '}{P(DJM_750MK2.ecoStandbyIntro)} el tiempo del power management sigue el
         Ecodesign de la Unión Europea, y la función se renombró de auto standby a
         POWER MANAGEMENT en el mismo momento. La condición de AlphaTheta, textual:
         la unidad entra automáticamente en el modo Off si pasan
-        {DJM_750MK2.ecoStandbyMinutes}
+        {P(DJM_750MK2.ecoStandbyMinutes)}
         {' '}minutos con todas las siguientes condiciones cumplidas, ningún botón
         ni control de esta unidad se opera, y no entra señal de audio a ningún
         canal de esta unidad. Una prueba de sonido que termina temprano, un
         intervalo entre sets, o un DJ de apertura que toca entero con su propio
         equipo cumplen eso. La mesa también sale de fábrica así: AlphaTheta indica
         que la unidad se envía con la función Power Management activada.</p>
-        <p><strong>Debajo de {DJM_750MK2.ecoStandbyIntro} el tiempo es otro, y el
+        <p><strong>Debajo de {P(DJM_750MK2.ecoStandbyIntro)} el tiempo es otro, y el
         valor viejo no está publicado.</strong> Así que en una mesa más vieja,
         espera el mismo comportamiento en un plazo que nadie te puede decir.</p>
         <p><strong>Resuélvelo ahora.</strong> [UTILITY (WAKE UP)], y después revisa
@@ -332,23 +336,23 @@ const schema = {
       <div class="acc-body">
         <p><strong>Dónde empieza el registro.</strong> El historial de cambios que
         AlphaTheta publica para este mixer empieza en
-        {' '}{DJM_750MK2.historyStartsAt}. Las versiones 1.00 a 1.02 no aparecen
+        {' '}{P(DJM_750MK2.historyStartsAt)}. Las versiones 1.00 a 1.02 no aparecen
         listadas en ninguna parte, así que lo que cambiaron no es público y esta
         página no finge lo contrario.</p>
         <p><strong>Qué hay en él.</strong> Corregido en
-        {' '}{DJM_750MK2.fxAssignPopFix}: un chasquido por el audio USB en el
+        {' '}{P(DJM_750MK2.fxAssignPopFix)}: un chasquido por el audio USB en el
         camino de send y return de los FX cuando se cambiaba el FX assign en
         rekordbox con los Beat FX activos. Corregido en
-        {' '}{DJM_750MK2.recHaltFix}: la grabación o la transmisión en vivo con
-        DJM-REC deteniéndose a veces. La {DJM_750MK2.minorFix} se publica como
+        {' '}{P(DJM_750MK2.recHaltFix)}: la grabación o la transmisión en vivo con
+        DJM-REC deteniéndose a veces. La {P(DJM_750MK2.minorFix)} se publica como
         problemas menores, sin detalle. Corregido en
-        {' '}{DJM_750MK2.iosAudioFix}, que salió en junio de 2026: un problema en la
+        {' '}{P(DJM_750MK2.iosAudioFix)}, que salió en junio de 2026: un problema en la
         comunicación de audio con equipos iOS y iPadOS, así que cualquier mesa por
         debajo de esa versión queda expuesta en el momento en que se usa un iPhone
         o un iPad para DJM-REC o para efectos.</p>
         <p><strong>Un cambio de comportamiento, no un bug.</strong>
-        {' '}{DJM_750MK2.ecoStandbyIntro} movió el apagado automático a
-        {' '}{DJM_750MK2.ecoStandbyMinutes} minutos bajo el Ecodesign de la Unión
+        {' '}{P(DJM_750MK2.ecoStandbyIntro)} movió el apagado automático a
+        {' '}{P(DJM_750MK2.ecoStandbyMinutes)} minutos bajo el Ecodesign de la Unión
         Europea y renombró la función POWER MANAGEMENT. Una mesa que se apagó entre
         la prueba de sonido y la apertura de puertas está obedeciendo eso, no
         fallando.</p>
@@ -359,11 +363,11 @@ const schema = {
         chasquido, una grabación que se detiene y una falla de audio con iOS es un
         registro genuinamente tranquilizador.</p>
         <p><strong>Hazlo así.</strong> Anota la versión de cualquier mesa en la que
-        toques. En una que controlas, quédate en {DJM_750MK2.iosAudioFix} si algo
+        toques. En una que controlas, quédate en {P(DJM_750MK2.iosAudioFix)} si algo
         de tu armado es un iPhone o un iPad.</p>
         <p style="margin-top:1rem">
-          <strong>Documentación oficial.</strong> <a href={DJM_750MK2.source} target="_blank" rel="noopener">Historial de cambios de firmware, PDF →</a><br />
-          <a href={DJM_750MK2.sourceManual} target="_blank" rel="noopener">Manual de instrucciones, PDF →</a><br />
+          <strong>Documentación oficial.</strong> <a href={P(DJM_750MK2.source)} target="_blank" rel="noopener">Historial de cambios de firmware, PDF →</a><br />
+          <a href={P(DJM_750MK2.sourceManual)} target="_blank" rel="noopener">Manual de instrucciones, PDF →</a><br />
           <span class="dim" style="font-size:0.85rem">¿Encontraste una entrada que se nos pasó? <a href="/es/feedback">Avísanos</a> y la agregamos.</span>
         </p>
         <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/firmware">Cada modelo, por versión de firmware</a> <a href="#mixer-switched-off">El mixer se apagó solo</a></p>
@@ -375,7 +379,7 @@ const schema = {
     <details class="acc-sec" name="djm750mk2-acc" id="beat-fx">
       <summary><h3 class="acc-h2">Beat FX, Sound Color FX y FX FREQUENCY</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Respuesta corta.</strong> {DJM_750MK2.beatFxCount} Beat FX,
+        <p><strong>Respuesta corta.</strong> {P(DJM_750MK2.beatFxCount)} Beat FX,
         {' '}{FX}. {DJM_750MK2.soundColorFx.length} Sound Color FX, {COLOR_FX}, un
         knob por canal. Dos unidades de efecto, y los Beat FX llevan un control de
         banda FX FREQUENCY.</p>
@@ -422,23 +426,23 @@ const schema = {
     <details class="acc-sec" name="djm750mk2-acc" id="io-and-headphones">
       <summary><h3 class="acc-h2">Las entradas y salidas, los plugs de audífonos y la única entrada de mic</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Respuesta corta.</strong> {DJM_750MK2.channels} canales con
+        <p><strong>Respuesta corta.</strong> {P(DJM_750MK2.channels)} canales con
         cuatro pares de PHONO y cuatro pares de LINE en RCA, un RETURN y un SEND en
         6,35 mm, MASTER1 en XLR, MASTER2 en RCA y BOOTH en TRS de 6,35 mm. El
-        muestreo es de 48 kHz. La mesa mide {DJM_750MK2.dimensions} y pesa
-        {' '}{DJM_750MK2.weight}.</p>
+        muestreo es de 48 kHz. La mesa mide {P(DJM_750MK2.dimensions)} y pesa
+        {' '}{P(DJM_750MK2.weight)}.</p>
         <p><strong>Audífonos: una salida, dos tamaños de conector.</strong> La
-        especificación es {DJM_750MK2.headphoneOutputs}, que es una sola sección de
+        especificación es {P(DJM_750MK2.headphoneOutputs)}, que es una sola sección de
         audífonos en la que puedes conectar con un conector o con el otro, y no dos
         salidas independientes con su propio nivel y su propia mezcla. AlphaTheta
         sí lo vende como que dos DJs hacen cue al mismo tiempo, y esa lectura es de
         ellos. Si estás planeando un back to back donde los dos necesitan su propia
         mezcla de cue, lee la especificación y no la línea de marketing.</p>
-        <p><strong>Una entrada de micrófono.</strong> {DJM_750MK2.micInputs}, un
+        <p><strong>Una entrada de micrófono.</strong> {P(DJM_750MK2.micInputs)}, un
         combo XLR y TRS de 6,35 mm. Un show con presentador y vocalista necesita un
         mixer chico adelante, y eso es algo que descubrir antes de cargar el
         equipo.</p>
-        <p><strong>USB.</strong> {DJM_750MK2.usbPorts}. El puerto de celular
+        <p><strong>USB.</strong> {P(DJM_750MK2.usbPorts)}. El puerto de celular
         entrega 5 V a 2,1 A o menos. Los hubs USB no se pueden usar, en ninguno de
         los dos puertos.</p>
         <p class="acc-related">Relacionados: <a href="#compatibility">Reproductores, software y DVS</a> <a href="/es/knowledge/pioneer-dj/djm-rec">DJM-REC</a></p>
@@ -551,8 +555,8 @@ const schema = {
           <p><strong>DJM-REC funciona con este mixer.</strong> Está en la lista
           oficial de compatibilidad de AlphaTheta, así que grabar un set o
           transmitir desde un iPhone o un iPad no pide hardware extra. Quédate en
-          {' '}{DJM_750MK2.recHaltFix} o arriba para la corrección de la grabación
-          que se detiene, y en {DJM_750MK2.iosAudioFix} para la corrección de audio
+          {' '}{P(DJM_750MK2.recHaltFix)} o arriba para la corrección de la grabación
+          que se detiene, y en {P(DJM_750MK2.iosAudioFix)} para la corrección de audio
           con iOS.</p>
         )}
         <p><strong>Hazlo así.</strong> Confirma qué espera hacer el booth por red
@@ -593,13 +597,13 @@ const schema = {
           <dt>¿El DJM-750MK2 tiene Pro DJ Link?</dt><dd>No. No hay terminal LAN en él, y AlphaTheta define Pro DJ Link como una función de reproductores y un mixer conectados por cables LAN. No se construyó con eso, así que en un booth con CDJs es un mixer independiente.</dd>
           <dt>¿Por qué mi efecto de iOS o externo está en silencio en el return?</dt><dd>Porque {AUX_SILENT_N} de los efectos de esta mesa están documentados como que nunca llegan al canal RETURN AUX, por especificación. Pasa el return a INSERT, o usa un efecto que AlphaTheta no lista. Los listados son {AUX_SILENT}.</dd>
           <dt>¿Puedo hacer cue de los Beat FX en mis audífonos?</dt><dd>No con los canales 1 a 4 seleccionados en el selector de canal del efecto. AlphaTheta documenta que el sonido del efecto no se puede monitorear ni con el CUE del canal presionado, para {CUE_SILENT}.</dd>
-          <dt>El mixer se apagó solo. ¿Está roto?</dt><dd>No. Presiona [UTILITY (WAKE UP)]. Desde el firmware {DJM_750MK2.ecoStandbyIntro} se apaga después de {DJM_750MK2.ecoStandbyMinutes} minutos sin ningún control tocado y sin audio en ningún canal, y sale de fábrica con eso activado. Debajo de {DJM_750MK2.ecoStandbyIntro} el tiempo es otro valor que AlphaTheta no publica.</dd>
-          <dt>¿Hay bugs de firmware conocidos?</dt><dd>El historial publicado empieza en {DJM_750MK2.historyStartsAt} y trae un chasquido en el audio USB corregido en {DJM_750MK2.fxAssignPopFix}, la grabación o transmisión de DJM-REC deteniéndose corregida en {DJM_750MK2.recHaltFix}, problemas menores en {DJM_750MK2.minorFix}, el tiempo del power management en {DJM_750MK2.ecoStandbyIntro} y una corrección de audio con iOS en {DJM_750MK2.iosAudioFix}. No hay ningún crash, congelamiento ni caída de audio documentado.</dd>
-          <dt>¿Cuántos canales y cuántos Beat FX?</dt><dd>{DJM_750MK2.channels} canales y {DJM_750MK2.beatFxCount} Beat FX: {FX}.</dd>
+          <dt>El mixer se apagó solo. ¿Está roto?</dt><dd>No. Presiona [UTILITY (WAKE UP)]. Desde el firmware {P(DJM_750MK2.ecoStandbyIntro)} se apaga después de {P(DJM_750MK2.ecoStandbyMinutes)} minutos sin ningún control tocado y sin audio en ningún canal, y sale de fábrica con eso activado. Debajo de {P(DJM_750MK2.ecoStandbyIntro)} el tiempo es otro valor que AlphaTheta no publica.</dd>
+          <dt>¿Hay bugs de firmware conocidos?</dt><dd>El historial publicado empieza en {P(DJM_750MK2.historyStartsAt)} y trae un chasquido en el audio USB corregido en {P(DJM_750MK2.fxAssignPopFix)}, la grabación o transmisión de DJM-REC deteniéndose corregida en {P(DJM_750MK2.recHaltFix)}, problemas menores en {P(DJM_750MK2.minorFix)}, el tiempo del power management en {P(DJM_750MK2.ecoStandbyIntro)} y una corrección de audio con iOS en {P(DJM_750MK2.iosAudioFix)}. No hay ningún crash, congelamiento ni caída de audio documentado.</dd>
+          <dt>¿Cuántos canales y cuántos Beat FX?</dt><dd>{P(DJM_750MK2.channels)} canales y {P(DJM_750MK2.beatFxCount)} Beat FX: {FX}.</dd>
           <dt>¿Tiene crossfader?</dt><dd>Sí, un crossfader Magvel, con un interruptor CROSS FADER ASSIGN por canal. Un canal asignado al lado que no estás empujando queda en silencio.</dd>
           <dt>¿Funciona con Serato DJ?</dt><dd>No está certificado. AlphaTheta dice que Serato DJ puede no funcionar normalmente con el DJM-750MK2 porque la aplicación no ha sido certificada en el Pioneer DJ Certification Program. rekordbox dvs y TRAKTOR PRO 3 son compatibles.</dd>
           <dt>¿Necesito una suscripción de rekordbox?</dt><dd>No. Es un equipo de unlock de hardware de rekordbox, así que el modo PERFORMANCE y DVS funcionan sin plan pago.</dd>
-          <dt>¿Cuántas salidas de audífonos hay?</dt><dd>Una, en dos tamaños de conector: {DJM_750MK2.headphoneOutputs}. AlphaTheta lo vende como que dos DJs hacen cue al mismo tiempo, y esa lectura es de ellos, no una segunda salida independiente.</dd>
+          <dt>¿Cuántas salidas de audífonos hay?</dt><dd>Una, en dos tamaños de conector: {P(DJM_750MK2.headphoneOutputs)}. AlphaTheta lo vende como que dos DJs hacen cue al mismo tiempo, y esa lectura es de ellos, no una segunda salida independiente.</dd>
           <dt>¿Puedo grabar a una memoria USB?</dt><dd>No. La ranura de memoria existe para actualizar firmware, en una memoria {UPDATE_FS}. La grabación es DJM-REC en un iPhone o un iPad.</dd>
           <dt>¿Reemplazó al DJM-750?</dt><dd>AlphaTheta lo presenta como un mixer de cuatro canales que entra a la línea heredando funciones y elementos de diseño del DJM-900NXS2, y no nombra antecesor ni sucesor para él. Así que esta página tampoco nombra ninguno.</dd>
         </dl>
@@ -618,15 +622,15 @@ const schema = {
     </div>
 
     <p class="rb-sources dim">
-      Fuentes: el <a href={DJM_750MK2.source} target="_blank" rel="noopener">historial de cambios de firmware</a> oficial
-      del DJM-750MK2 de AlphaTheta, el <a href={DJM_750MK2.sourceManual} target="_blank" rel="noopener">manual de instrucciones</a>,
-      el <a href={DJM_750MK2.sourceSpecs} target="_blank" rel="noopener">quick start manual</a>,
-      el artículo de soporte sobre <a href={DJM_750MK2.sourceAuxReturn} target="_blank" rel="noopener">los efectos y el canal RETURN AUX</a>
-      y las <a href={DJM_750MK2.sourceUpdate} target="_blank" rel="noopener">instrucciones de actualización de firmware</a>,
+      Fuentes: el <a href={P(DJM_750MK2.source)} target="_blank" rel="noopener">historial de cambios de firmware</a> oficial
+      del DJM-750MK2 de AlphaTheta, el <a href={P(DJM_750MK2.sourceManual)} target="_blank" rel="noopener">manual de instrucciones</a>,
+      el <a href={P(DJM_750MK2.sourceSpecs)} target="_blank" rel="noopener">quick start manual</a>,
+      el artículo de soporte sobre <a href={P(DJM_750MK2.sourceAuxReturn)} target="_blank" rel="noopener">los efectos y el canal RETURN AUX</a>
+      y las <a href={P(DJM_750MK2.sourceUpdate)} target="_blank" rel="noopener">instrucciones de actualización de firmware</a>,
       revisados el {UPDATED}. La ausencia de Pro DJ Link sale de la lista del panel
       trasero del manual de instrucciones y de la definición que AlphaTheta da a la
       función, no de una deducción a partir de material de marketing. El historial
-      de firmware publicado empieza en {DJM_750MK2.historyStartsAt}, así que las
+      de firmware publicado empieza en {P(DJM_750MK2.historyStartsAt)}, así que las
       versiones anteriores a esa no se describen. Las versiones de driver salen de
       las páginas oficiales de descarga. Los pasos generales de diagnóstico
       reflejan la práctica estándar de mezcla. Las especificaciones cambian sin

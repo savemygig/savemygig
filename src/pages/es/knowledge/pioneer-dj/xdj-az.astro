@@ -3,7 +3,9 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
-import { XDJ_AZ } from '../../../../data/facts.js';
+import ModelStatus from '../../../../components/ModelStatus.astro';
+import { XDJ_AZ, REKORDBOX } from '../../../../data/facts.js';
+import { prose } from '../../../../i18n/prose.js';
 
 // XDJ-AZ, NEUTRAL LATIN AMERICAN SPANISH. Source of truth for structure,
 // components, classes, anchors, section order and CSS:
@@ -18,6 +20,8 @@ const MESES = {
 };
 const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = esDate(XDJ_AZ.checked);
+// Translate the prose fields facts.js holds in English. See src/i18n/prose.js.
+const P = (v) => prose('es', v);
 const FLOOR = XDJ_AZ.newestKnown;
 const FS = XDJ_AZ.fileSystems.join(', ');
 
@@ -26,7 +30,7 @@ const schema = {
   '@type': 'TechArticle',
   '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/xdj-az#article',
   headline: 'XDJ-AZ: la referencia operativa',
-  description: `Lo que todo DJ necesita saber antes de trabajar con un XDJ-AZ: lee solo OneLibrary, así que una exportación vieja no carga, lee ${FS} pero nunca NTFS, y la falla de audio, pantalla negra y congelamiento corregida en el firmware ${XDJ_AZ.audioBlackoutFreezeFix}.`,
+  description: `Lo que todo DJ necesita saber antes de trabajar con un XDJ-AZ: lee solo OneLibrary, así que una exportación vieja no carga, lee ${FS} pero nunca NTFS, y la falla de audio, pantalla negra y congelamiento corregida en el firmware ${P(XDJ_AZ.audioBlackoutFreezeFix)}.`,
   author: { '@id': 'https://www.savemygig.com/#org' },
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   datePublished: '2026-08-08',
@@ -38,7 +42,7 @@ const schema = {
 ---
 <Base
   title="XDJ-AZ: OneLibrary, exFAT, audio | Save My Gig"
-  description={`Manual de campo del XDJ-AZ: por qué una exportación vieja de USB no carga, los sistemas de archivos que lee, y la falla de audio corregida en la ${XDJ_AZ.audioBlackoutFreezeFix}.`}
+  description={`Manual de campo del XDJ-AZ: por qué una exportación vieja de USB no carga, los sistemas de archivos que lee, y la falla de audio corregida en la ${P(XDJ_AZ.audioBlackoutFreezeFix)}.`}
   path="/knowledge/pioneer-dj/xdj-az"
   crumbName="XDJ-AZ"
   lang="es"
@@ -54,7 +58,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <ModelStatus slug="xdj-az" checked={UPDATED} lang="es" />
         <h1 class="rb-h1">XDJ-AZ, <span class="accent">el manual de campo</span></h1>
       </div>
       <a
@@ -93,11 +97,11 @@ const schema = {
         que una falla tumba la booth completa de una vez y no un solo deck. Lee
         <strong>solo OneLibrary</strong>: una USB exportada a la vieja usanza no
         carga nada y la pantalla avisa que no encontró la base de datos, así que
-        exporta desde rekordbox 7.2.11 o posterior, que escribe los dos formatos.
+        exporta desde rekordbox {P(REKORDBOX.dualFormatFloor)} o posterior, que escribe los dos formatos.
         Los sistemas de archivos son <strong>{FS}</strong>, nunca NTFS. Si una
         unidad temprana pierde el audio, deja la pantalla en negro o se congela,
         eso es un defecto documentado con reparación gratuita, y el firmware
-        {XDJ_AZ.audioBlackoutFreezeFix} atiende los mismos síntomas. La versión
+        {P(XDJ_AZ.audioBlackoutFreezeFix)} atiende los mismos síntomas. La versión
         más alta publicada es <strong>{FLOOR}</strong>.
       </p>
       <label for="sv-toggle" class="sv-more">Leer más…</label>
@@ -113,7 +117,7 @@ const schema = {
         usanza. El XDJ-AZ lee <strong>OneLibrary</strong> y nada más, y una USB
         que solo lleva la Device Library más antigua no tiene nada que esta unidad
         pueda leer, así que reporta que no encontró la base de datos de rekordbox.
-        Vuelve a exportar la memoria desde rekordbox 7.2.11 o posterior, que
+        Vuelve a exportar la memoria desde rekordbox {P(REKORDBOX.dualFormatFloor)} o posterior, que
         escribe los dos formatos de biblioteca a la vez.</p>
         <p><strong>Por qué pasa.</strong> AlphaTheta movió las unidades más
         nuevas, esta entre ellas, a OneLibrary, mientras la mayoría de los players
@@ -127,7 +131,7 @@ const schema = {
         persona ya exportó desde un rekordbox reciente, o tocar desde un player
         conectado por PRO DJ LINK.</p>
         <p><strong>Evítalo la próxima vez.</strong> Exporta desde rekordbox
-        7.2.11 o posterior como hábito, no solo para este gig. Una memoria escrita
+        {P(REKORDBOX.dualFormatFloor)} o posterior como hábito, no solo para este gig. Una memoria escrita
         así toca en las unidades OneLibrary y en las de Device Library, que es el
         punto entero del cambio, y elimina la adivinanza sobre qué generación
         tiene cada lugar.</p>
@@ -142,7 +146,7 @@ const schema = {
         algo que hiciste tú. AlphaTheta reportó que un defecto de componente
         interno en ciertas unidades tempranas causaba ausencia de salida de audio,
         pantalla en negro y congelamiento del sistema, y el firmware
-        {XDJ_AZ.audioBlackoutFreezeFix} atiende el mismo conjunto de síntomas.
+        {P(XDJ_AZ.audioBlackoutFreezeFix)} atiende el mismo conjunto de síntomas.
         Hay un programa gratuito de inspección y reparación para las unidades
         afectadas.</p>
         <p><strong>Por qué pasa.</strong> En un CDJ con mixer aparte, una sola
@@ -215,9 +219,9 @@ const schema = {
         <p><strong>Qué hacer.</strong> Si tienes o alquilas un AZ temprano,
         contacta al soporte de AlphaTheta y pregunta directamente por el programa
         de inspección y reparación. Actualiza al firmware más alto publicado de
-        todos modos, ya que la {XDJ_AZ.audioBlackoutFreezeFix} atiende el mismo
+        todos modos, ya que la {P(XDJ_AZ.audioBlackoutFreezeFix)} atiende el mismo
         conjunto de síntomas por software.</p>
-        <p class="acc-related">Relacionados: <a href="#no-audio">Sin audio, pantalla en negro o congelamiento</a> <a href={XDJ_AZ.sourceDefectNotice} rel="noopener">El aviso de AlphaTheta</a></p>
+        <p class="acc-related">Relacionados: <a href="#no-audio">Sin audio, pantalla en negro o congelamiento</a> <a href={P(XDJ_AZ.sourceDefectNotice)} rel="noopener">El aviso de AlphaTheta</a></p>
       </div>
     </details>
 
@@ -226,7 +230,7 @@ const schema = {
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> Un firmware temprano tenía una falla
         donde apretar el botón Rec durante una grabación no hacía nada y la
-        grabación no se podía detener. El firmware {XDJ_AZ.recStopFix} lo
+        grabación no se podía detener. El firmware {P(XDJ_AZ.recStopFix)} lo
         corrigió, así que la respuesta es actualizar a la versión más alta
         publicada.</p>
         <p><strong>Por qué importa.</strong> Una grabación que no se detiene
@@ -247,7 +251,7 @@ const schema = {
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> Una falla donde ese mensaje seguía
         apareciendo se corrigió en el firmware
-        {XDJ_AZ.libraryUnresponsiveFix}. Si lo estás viendo, la unidad tiene
+        {P(XDJ_AZ.libraryUnresponsiveFix)}. Si lo estás viendo, la unidad tiene
         firmware viejo y la solución es actualizar.</p>
         <p><strong>Por qué importa.</strong> Una biblioteca que se declara sin
         respuesta te impide navegar y cargar, que en un all-in-one es el
@@ -268,14 +272,14 @@ const schema = {
       <summary><h3 class="acc-h2">Qué es el AZ, y cómo está distribuido</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Su forma.</strong> Cuatro canales, cuatro decks de
-        reproducción interna, una pantalla del tipo {XDJ_AZ.screen}, dos puertos
+        reproducción interna, una pantalla del tipo {P(XDJ_AZ.screen)}, dos puertos
         USB superiores y un USB Type-C hacia una computadora. Es una booth entera
         en una sola unidad, construida para sentirse como un par de CDJs al lado
         de un DJM y no como un controlador.</p>
         <p><strong>Software.</strong> Corre standalone desde una memoria sin
         computadora, y también libera rekordbox en performance mode y Serato DJ
         Pro gratis cuando se conecta a una computadora por USB, con el soporte de
-        Serato agregado en el firmware {XDJ_AZ.seratoFrom}. La reproducción por
+        Serato agregado en el firmware {P(XDJ_AZ.seratoFrom)}. La reproducción por
         streaming de servicios se agregó a lo largo de firmwares posteriores.</p>
         <p><strong>Qué no es.</strong> No tiene loop de send y return para un
         procesador externo, que el XDJ-XZ más viejo sí tiene. Si tu set depende de
@@ -290,8 +294,8 @@ const schema = {
     <details class="acc-sec" name="xdjaz-acc" id="connections">
       <summary><h3 class="acc-h2">Conexiones, y grabación</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Entradas.</strong> {XDJ_AZ.micInputs} entradas de mic en XLR o
-        TRS, y {XDJ_AZ.phonoInputs} entradas conmutables entre LINE y PHONO en
+        <p><strong>Entradas.</strong> {P(XDJ_AZ.micInputs)} entradas de mic en XLR o
+        TRS, y {P(XDJ_AZ.phonoInputs)} entradas conmutables entre LINE y PHONO en
         RCA con terminal de tierra, así que un par de tornamesas entra directo.
         No hay send y return dedicado.</p>
         <p><strong>Salidas y computadora.</strong> Master balanceado en XLR y en
@@ -337,35 +341,35 @@ const schema = {
       <summary><h3 class="acc-h2">Firmware, y qué corrigió cada versión</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Las correcciones que importan.</strong> El firmware
-        {XDJ_AZ.recStopFix} corrigió una grabación que no se podía detener. La
-        {XDJ_AZ.audioBlackoutFreezeFix} atendió ausencia de audio, pantalla en
+        {P(XDJ_AZ.recStopFix)} corrigió una grabación que no se podía detener. La
+        {P(XDJ_AZ.audioBlackoutFreezeFix)} atendió ausencia de audio, pantalla en
         negro y congelamiento del sistema en algunas unidades. La
-        {XDJ_AZ.seratoFrom} agregó Serato DJ Pro. La
-        {XDJ_AZ.libraryUnresponsiveFix} corrigió una biblioteca que seguía
+        {P(XDJ_AZ.seratoFrom)} agregó Serato DJ Pro. La
+        {P(XDJ_AZ.libraryUnresponsiveFix)} corrigió una biblioteca que seguía
         declarándose sin respuesta. La versión más alta publicada es
         {FLOOR}.</p>
         <p><strong>Leerlo en la booth.</strong> La tabla completa de modelo por
         versión vive en la referencia de firmware, así que puedes leer la versión
         en la unidad y ver cuáles fallas documentadas siguen vivas en ella.</p>
         <p><strong>Standby.</strong> La gestión de energía viene activada de
-        fábrica con un valor de {XDJ_AZ.standbyMinutesDefault} minutos, que apaga
+        fábrica con un valor de {P(XDJ_AZ.standbyMinutesDefault)} minutos, que apaga
         la unidad después de ese tiempo sin actividad. Una unidad que se apagó
         sola durante un cambio largo está obedeciendo ese ajuste.</p>
-        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/firmware">Todos los modelos, por versión de firmware</a> <a href={XDJ_AZ.sourceFirmware} rel="noopener">Página de firmware de AlphaTheta</a></p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/firmware">Todos los modelos, por versión de firmware</a> <a href={P(XDJ_AZ.sourceFirmware)} rel="noopener">Página de firmware de AlphaTheta</a></p>
       </div>
     </details>
 
     <details class="acc-sec" name="xdjaz-acc" id="specs">
       <summary><h3 class="acc-h2">Los números de referencia</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Las cifras publicadas.</strong> {XDJ_AZ.channels} canales,
-        {XDJ_AZ.decks} decks, una pantalla del tipo {XDJ_AZ.screen}. Dimensiones:
-        {XDJ_AZ.dimensions}. Peso: {XDJ_AZ.weight}. Anunciado en
-        {' '}{XDJ_AZ.announced}. Nombres de modelo: {XDJ_AZ.variants}.</p>
+        <p><strong>Las cifras publicadas.</strong> {P(XDJ_AZ.channels)} canales,
+        {P(XDJ_AZ.decks)} decks, una pantalla del tipo {P(XDJ_AZ.screen)}. Dimensiones:
+        {P(XDJ_AZ.dimensions)}. Peso: {P(XDJ_AZ.weight)}. Anunciado en
+        {' '}{P(XDJ_AZ.announced)}. Nombres de modelo: {P(XDJ_AZ.variants)}.</p>
         <p><strong>Linaje.</strong> AlphaTheta nombra al
-        {' '}{XDJ_AZ.predecessorNamed} como su antecesor, y describe al AZ como
+        {' '}{P(XDJ_AZ.predecessorNamed)} como su antecesor, y describe al AZ como
         una evolución de ese modelo. Los dos están cubiertos aquí.</p>
-        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/xdj-xz">El XDJ-XZ</a> <a href={XDJ_AZ.source} rel="noopener">Página del producto en AlphaTheta</a></p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/xdj-xz">El XDJ-XZ</a> <a href={P(XDJ_AZ.source)} rel="noopener">Página del producto en AlphaTheta</a></p>
       </div>
     </details>
 

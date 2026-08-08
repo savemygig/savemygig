@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../components/ModelStatus.astro';
 import { CHECKED, DJM_A9 } from '../../../data/facts.js';
 import Icon from '../../../components/Icon.astro';
 
@@ -51,7 +52,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <ModelStatus slug="djm-a9" checked={UPDATED} />
         <h1 class="rb-h1">DJM-A9, <span class="accent">the field manual</span></h1>
       </div>
       <a
@@ -154,7 +155,7 @@ const schema = {
         quality drives ship with, exactly the drives a professional
         carries.</p>
         <p><strong>Fix it now.</strong> Try an older or cheaper stick for the
-        mixer-side job (recordings), and get the desk updated to
+        mixer-side job, which is the firmware update itself, and get the desk updated to
         {DJM_A9.uaspFix} or later after the gig.</p>
         <p><strong>Avoid it next time.</strong> Keep one plain, non-UASP stick in
         the bag for mixer duties; it is also the stick you can lend without pain.</p>

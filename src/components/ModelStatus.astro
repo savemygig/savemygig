@@ -1,0 +1,54 @@
+---
+/**
+ * THE MODEL PAGE STATUS LINE: reviewed date, and the launch year.
+ *
+ * WHY IT IS A COMPONENT. Antonio asked for the launch year on every equipment
+ * page, so DJs can tell how old a unit is and whether they are looking at a
+ * current model or something they will only meet in a rental inventory. That is
+ * one sentence on 21 models in 3 languages, which is 63 places. Written by hand
+ * that is 63 chances to forget one, and today alone produced three separate bugs
+ * of exactly that shape: the photo box copied into 57 pages and omitted on the
+ * 58th, the h1 rules omitted on six, and a "coming soon" card left on a brand that
+ * had gone live. So it is a component and there is nothing to remember.
+ *
+ * THE YEAR COMES FROM THE EQUIPMENT GRAPH, never from prose. Every model in
+ * facts.js carries `released`, so no page can state a year the data layer does not
+ * hold, and there is nothing here to invent. A model with no year renders the
+ * reviewed date alone rather than an empty label.
+ *
+ * WHY THE YEAR AND NOT THE FULL DATE. Several constants carry a precise
+ * announcement date, and a few of those are announcement rather than availability,
+ * which are different events and not comparable across 21 models. A year is the
+ * claim that is true for all of them and is what actually answers the reader's
+ * question, which is "how old is this".
+ */
+import { equipmentFor } from '../data/facts.js';
+import { UI } from '../i18n/ui.js';
+
+interface Props {
+  slug: string;
+  checked: string;
+  lang?: 'en' | 'pt' | 'es';
+}
+const { slug, checked, lang = 'en' } = Astro.props;
+const S = UI[lang].modelStatus;
+const released = equipmentFor(slug)?.released ?? null;
+---
+<div class="status-line sl-date">
+  {S.reviewed}: {checked}
+  {released && (
+    <>
+      <span class="ms-sep" aria-hidden="true">·</span>
+      <span class="ms-launch">{S.launched} {released}</span>
+    </>
+  )}
+</div>
+
+<style>
+  /* Inherits .status-line and .sl-date from global.css, so the reviewed date
+     renders exactly as it did before this component existed. Only the separator
+     and the launch span are new, and both are deliberately quiet: this is
+     context, not a headline. */
+  .ms-sep { margin: 0 0.45rem; opacity: 0.5; }
+  .ms-launch { white-space: nowrap; }
+</style>

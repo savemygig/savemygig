@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../components/ModelStatus.astro';
 import { SL_1200MK7, SL_1200MK2 } from '../../../data/facts.js';
 
 // FIRST TECHNICS MODEL PAGE, and the first page on this site about a product with
@@ -82,7 +83,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <ModelStatus slug="sl-1200mk7" checked={UPDATED} />
         <h1 class="rb-h1">SL-1200MK7, <span class="accent">the field manual</span></h1>
       </div>
       <a
@@ -258,8 +259,8 @@ const schema = {
         <p><strong>Fix it now.</strong> Set the range you want, then reset, then
         beatmatch from a known zero. If the deck holds a tempo but the tempo is
         wrong, confirm the speed selector is on the right value. This model runs
-        {SL_1200MK7.speeds}, and a third speed behind a switch is a genuinely new
-        way to be playing a record at the wrong speed.</p>
+        {SL_1200MK7.speeds}, and a third speed reached by a button combination is a
+        genuinely new way to be playing a record at the wrong speed.</p>
         <p><strong>Avoid it next time.</strong> Make the pitch range part of your
         setup check, the same way you would check a mixer's gain. It takes a
         second and it is the difference between a fader that behaves and a fader
@@ -435,9 +436,9 @@ const schema = {
         own failure that pressed records do not have: a worn timecode record
         degrades tracking long before it sounds obviously bad, and the symptom is
         software that stutters or loses position rather than audible damage.</p>
-        <p><strong>Speeds.</strong> {SL_1200MK7.speeds}. The third speed is behind
-        a switch rather than on the main selector, which is deliberate and also
-        the reason it is easy to be in it without noticing.</p>
+        <p><strong>Speeds.</strong> {SL_1200MK7.speeds}. There is no separate 78
+        control to find, which is deliberate, and it is also the reason a deck can be
+        in 78 without anything obvious saying so.</p>
         <p><strong>Cartridges.</strong> Supported cartridge weight is
         {' '}{SL_1200MK7.cartridgeWeightRange}. Panasonic specify the headshell
         terminal as a {SL_1200MK7.headshellTerminal} and, notably, never attach a

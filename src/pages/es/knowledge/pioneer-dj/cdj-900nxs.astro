@@ -3,6 +3,7 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../../components/ModelStatus.astro';
 import { CDJ_900NXS } from '../../../../data/facts.js';
 import Icon from '../../../../components/Icon.astro';
 
@@ -56,7 +57,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <ModelStatus slug="cdj-900nxs" checked={UPDATED} lang="es" />
         <h1 class="rb-h1">CDJ-900NXS, <span class="accent">el manual de campo</span></h1>
       </div>
       <a

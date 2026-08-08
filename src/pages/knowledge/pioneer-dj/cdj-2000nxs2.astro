@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../components/ModelStatus.astro';
 import { CHECKED, CDJ_2000NXS2, REKORDBOX } from '../../../data/facts.js';
 import Icon from '../../../components/Icon.astro';
 
@@ -66,7 +67,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <ModelStatus slug="cdj-2000nxs2" checked={UPDATED} />
         <h1 class="rb-h1">CDJ-2000NXS2, <span class="accent">the field manual</span></h1>
       </div>
       <a
@@ -208,16 +209,23 @@ const schema = {
     <details class="acc-sec" name="cdj2knxs2-acc" id="firmware-history">
       <summary><h3 class="acc-h2">The firmware fixes worth knowing about</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Short answer.</strong> Three firmware updates fixed real,
-        documented problems on this deck. If a unit you are using has never been
-        updated, these are worth checking for.</p>
-        <p><strong>Why this matters.</strong> Fixed in firmware {CDJ_2000NXS2.controlModeDropoutFix}: audio
-        dropouts during Control Mode playback. Fixed in firmware {CDJ_2000NXS2.waveformColorFix}:
-        waveform colour selection, which had briefly gone missing, was restored.
-        Fixed in firmware {CDJ_2000NXS2.slipHotCueFix}: a startup issue affecting SLIP HOT CUE
-        behaviour. Introduced in firmware {CDJ_2000NXS2.beatJumpIntro}: Beat Jump in 2, 4, 8 and
-        16-beat increments, not a fix, but the update that added the feature most
-        people assume has always been there.</p>
+        <p><strong>Short answer.</strong> AlphaTheta document fault fixes across
+        thirteen versions of this player's firmware. If a unit you are using has
+        never been updated, that is a long list of live faults, and the full set is
+        on the firmware matrix.</p>
+        <p><strong>The ones most likely to reach the room.</strong> Apple Lossless
+        files that would not play, and macOS Catalina unable to see the unit as an
+        audio device, both fixed in {CDJ_2000NXS2.alacCatalinaFix}. Audio dropouts
+        during Control Mode playback, fixed in
+        {CDJ_2000NXS2.controlModeDropoutFix}. A popping noise during loop
+        operations and a HOT CUE disappearing after a search, fixed in
+        {CDJ_2000NXS2.loopPopHotCueFix}. Speed not returning to the displayed BPM
+        with Sync on, fixed in {CDJ_2000NXS2.syncBpmFix}. SEARCH working
+        incorrectly, fixed in {CDJ_2000NXS2.searchFix}. And PRO DJ LINK faults with
+        audio distortion, fixed in {CDJ_2000NXS2.linkDistortionFix}.</p>
+        <p><strong>One that is not a fix.</strong> Beat Jump in 2, 4, 8 and 16 beat
+        increments arrived in {CDJ_2000NXS2.beatJumpIntro}, which is the update that
+        added the feature most people assume was always there.</p>
         <p><strong>Do this.</strong> Check the firmware version in the utility menu
         before you rely on a rental or venue unit for anything beat-jump or
         control-mode related.</p>

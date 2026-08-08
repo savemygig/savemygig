@@ -460,9 +460,11 @@ const schema = {
         do ar pela AlphaTheta porque tracks exportadas por aquela versão podiam não
         carregar no hardware da própria empresa. Isso foi corrigido na
         {REKORDBOX.dualFormatFloor}. Para gravar Device Library e OneLibrary no mesmo
-        drive, a AlphaTheta indica a {REKORDBOX.withdrawn} ou mais recente como piso,
-        e como aquela versão foi retirada do ar, a {REKORDBOX.dualFormatFloor} é a
-        primeira que vale instalar. O formato duplo não é automático num drive que já
+        drive, a AlphaTheta indica a {REKORDBOX.dualFormatDocumentedFrom} como a
+        versão a partir da qual o rekordbox faz isso. A {REKORDBOX.withdrawn} fica
+        entre ela e a {REKORDBOX.dualFormatFloor} e foi retirada do ar, então quem já
+        está na {REKORDBOX.dualFormatDocumentedFrom} está bem, e quem for atualizar
+        deve parar na {REKORDBOX.dualFormatFloor} ou mais recente. O formato duplo não é automático num drive que já
         existe: o guia OneLibrary Compatible USB Device Export da AlphaTheta manda
         clicar com o botão direito em <strong>OneLibrary</strong> no dispositivo, uma
         vez, e escolher <strong>Convert from Device Library</strong>. O OneLibrary em

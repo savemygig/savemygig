@@ -46,6 +46,13 @@ export const UI = {
     equipment: {
       kinds: { player: 'Players', mixer: 'Mixers', turntable: 'Turntables', 'all-in-one': 'All-in-one systems' },
     },
+    /*
+     * THE MODEL PAGE STATUS LINE. "Launched" rather than "Released" because a
+     * DJ reads it as when the unit appeared in the world, and several of these
+     * models have an announcement date and an availability date that differ by
+     * months. The year is the claim that holds for all 21 models.
+     */
+    modelStatus: { reviewed: 'Reviewed', launched: 'Launched' },
     related: {
       players: 'Related players',
       // TURNTABLES, THE THIRD KIND (2026-08-08). The component used to pick
@@ -394,6 +401,7 @@ export const UI = {
       // "Toca-discos" e não "tocadiscos": a grafia brasileira leva hífen.
       kinds: { player: 'Players', mixer: 'Mixers', turntable: 'Toca-discos', 'all-in-one': 'Sistemas all-in-one' },
     },
+    modelStatus: { reviewed: 'Revisado', launched: 'Lançado em' },
     related: {
       players: 'Players relacionados',
       turntables: 'Toca-discos relacionados',
@@ -643,6 +651,7 @@ export const UI = {
       // herramienta de booth.
       kinds: { player: 'Reproductores', mixer: 'Mixers', turntable: 'Tornamesas', 'all-in-one': 'Sistemas all-in-one' },
     },
+    modelStatus: { reviewed: 'Revisado', launched: 'Lanzado en' },
     related: {
       players: 'Reproductores relacionados',
       turntables: 'Tornamesas relacionadas',

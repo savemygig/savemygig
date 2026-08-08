@@ -34,7 +34,17 @@
  */
 
 import fs from 'node:fs';
+import path from 'node:path';
 import { FIRMWARE_ISSUES, EQUIPMENT } from '../src/data/facts.js';
+
+/*
+ * This script reads SOURCE for the translation maps, deliberately, because a
+ * missing key renders valid HTML that simply says the wrong thing. The fault-count
+ * assertion below is the one part that needs the BUILT page, because a hand-written
+ * count reaches the reader through prose rather than through a data file, so it
+ * takes dist as an optional argument and skips if it is not there.
+ */
+const DIST = process.argv[2] || 'dist';
 
 const PAGES = [
   { lang: 'pt', file: 'src/pages/pt/knowledge/pioneer-dj/firmware.astro' },
@@ -123,7 +133,71 @@ const owed = EQUIPMENT.filter((m) => m.brand === 'pioneer-dj' && !covered.has(m.
 const KINDS = new Set(['withdrawn', 'behaviour']);
 const untyped = FIRMWARE_ISSUES.filter((m) => m.warning && !KINDS.has(m.warning.kind));
 
+/*
+ * NO PAGE MAY HAND-COUNT ITS OWN FIRMWARE FAULTS.
+ *
+ * Added 2026-08-08, and it is the mechanical fix for the only class of real error
+ * a full technical audit found in this section. Both offending pages asserted how
+ * COMPLETE their firmware history was rather than what a fault is:
+ *
+ *   DJM-900NXS2   "the rest of its change history is feature work"  -> ten fixes
+ *   CDJ-2000NXS2  "three firmware updates fixed real problems"      -> thirteen
+ *
+ * Those two are the most installed professional mixer and player in the world, so
+ * they were the worst two pages to be wrong about, and both were wrong in the same
+ * direction: understating risk on an un-updated unit. facts.js already records
+ * catching this exact shape four times on 7 August, when pages claimed a change
+ * history had been "read in full" while versions were missing.
+ *
+ * A COUNT IS A CLAIM ABOUT EVERY VERSION YOU DID NOT READ. So a number-word next
+ * to "firmware update" or "fix" in reader-facing copy has to match what
+ * FIRMWARE_ISSUES actually holds for that model. Anything spelled out by hand
+ * fails, which pushes the number back to the array where it can be counted.
+ */
+const NUMBER_WORDS = {
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8,
+  nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
+  fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20,
+};
+/*
+ * NARROWED after a false positive on its first run, which is the only way these
+ * get found. The CDJ-900NXS page says "One firmware update to 1.31, then it is
+ * essentially physical", and the first pattern flagged it as claiming one fault
+ * when the page holds six. That sentence is an INSTRUCTION, not a count: do one
+ * update, to that version. So the pattern now requires either a fixing verb after
+ * a plural, or the explicit "versions of this" construction that only ever
+ * appears when a page is summing up a history.
+ */
+const COUNT_RE = new RegExp(
+  `\\b(${Object.keys(NUMBER_WORDS).join('|')}|\\d{1,2})\\s+`
+  + `(?:firmware\\s+(?:updates|versions)\\s+(?:fixed|fix|address|addressed|carry|contain)`
+  + `|versions?\\s+of\\s+this)`, 'gi');
+
 let failed = 0;
+if (fs.existsSync(DIST)) {
+  for (const m of FIRMWARE_ISSUES) {
+    const slug = m.href.replace(/.*\//, '');
+    const file = path.join(DIST, m.href.replace(/^\//, '') + '.html');
+    if (!fs.existsSync(file)) continue;
+    const html = fs.readFileSync(file, 'utf8');
+    const main = html.match(/<main[^>]*>([\s\S]*?)<\/main>/);
+    const text = (main ? main[1] : html).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    const real = m.issues.length;
+    for (const hit of text.matchAll(COUNT_RE)) {
+      const raw = hit[1].toLowerCase();
+      const stated = NUMBER_WORDS[raw] ?? Number(raw);
+      if (stated !== real) {
+        failed++;
+        console.error(`FAIL  ${slug}: page states "${hit[0].trim()}" but FIRMWARE_ISSUES holds ${real}`);
+        console.error(`        ...${text.slice(Math.max(0, hit.index - 80), hit.index + 120).trim()}...`);
+        console.error('        A count is a claim about every version you did not read. Compute it,');
+        console.error('        or describe the faults without counting them.');
+      }
+    }
+  }
+  if (!failed) console.log(`PASS  fault counts  no page hand-counts its own firmware history`);
+}
+
 if (untyped.length) {
   failed += untyped.length;
   console.error(`FAIL  warning kind: ${untyped.length} warning(s) do not declare a kind`);

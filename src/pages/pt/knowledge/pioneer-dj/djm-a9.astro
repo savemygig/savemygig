@@ -3,6 +3,7 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../../components/ModelStatus.astro';
 import { CHECKED, DJM_A9 } from '../../../../data/facts.js';
 import Icon from '../../../../components/Icon.astro';
 
@@ -51,7 +52,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <ModelStatus slug="djm-a9" checked={UPDATED} lang="pt" />
         <h1 class="rb-h1">DJM-A9, <span class="accent">o manual de campo</span></h1>
       </div>
       <a
@@ -158,7 +159,8 @@ const schema = {
         que a maioria dos drives de qualidade já traz de fábrica, exatamente os
         drives que um profissional carrega.</p>
         <p><strong>Resolva agora.</strong> Use um pen drive mais antigo ou mais
-        simples para o trabalho do lado do mixer (as gravações), e atualize a mesa
+        simples para o trabalho do lado do mixer, que é a própria atualização de
+        firmware, e atualize a mesa
         para {DJM_A9.uaspFix} ou mais recente depois da gig.</p>
         <p><strong>Evite da próxima vez.</strong> Mantenha na bag um pen drive
         simples, sem UASP, para as funções do mixer. É também aquele que você pode

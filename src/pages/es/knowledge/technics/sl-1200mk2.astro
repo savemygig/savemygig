@@ -3,7 +3,9 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../../components/ModelStatus.astro';
 import { SL_1200MK2, SL_1200MK7 } from '../../../../data/facts.js';
+import { prose } from '../../../../i18n/prose.js';
 
 // SL-1200MK2, ESPAÑOL LATINOAMERICANO NEUTRO. La fuente de verdad de la
 // estructura, de los componentes, de las clases, de las anclas, de los datos y
@@ -21,6 +23,8 @@ const MESES = {
 };
 const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = esDate(SL_1200MK2.checked);
+// Translate the prose fields facts.js holds in English. See src/i18n/prose.js.
+const P = (v) => prose('es', v);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -55,7 +59,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <ModelStatus slug="sl-1200mk2" checked={UPDATED} lang="es" />
         <h1 class="rb-h1">SL-1200MK2, <span class="accent">el manual de campo</span></h1>
       </div>
       <a
@@ -92,12 +96,12 @@ const schema = {
       <p class="sv-text" style="margin:0">
         <strong>Briefing de booth.</strong> La tornamesa con más probabilidad de
         estar ya atornillada en el booth, en producción desde
-        {' '}{SL_1200MK2.released}, y su manual no tiene sección de
+        {' '}{P(SL_1200MK2.released)}, y su manual no tiene sección de
         troubleshooting alguna. El zumbido es el cable de tierra, y Panasonic
         escribe HUM en mayúsculas para advertirte. Un canal mudo son cuatro cables
         del headshell o la cápsula, y en esta tornamesa los cables phono no se
         desconectan, así que un cable dañado es una reparación y no un cambio. El
-        pitch es {SL_1200MK2.pitchRange} con quartz lock y sin botón de reset, así
+        pitch es {P(SL_1200MK2.pitchRange)} con quartz lock y sin botón de reset, así
         que el cero se encuentra a ojo, contra las marcas del plato.
       </p>
       <label for="sv-toggle" class="sv-more">Leer más…</label>
@@ -111,7 +115,7 @@ const schema = {
         <p><strong>Respuesta corta.</strong> El cable de tierra. Panasonic
         consideró esto lo bastante importante para escribir la palabra HUM en
         mayúsculas y entre comillas, en 1979, en un manual de diez páginas sin
-        sección de troubleshooting: {SL_1200MK2.earthWarning} Ese es el
+        sección de troubleshooting: {P(SL_1200MK2.earthWarning)} Ese es el
         diagnóstico completo y es lo primero que se revisa cada vez.</p>
         <p><strong>Por qué pasa esto.</strong> Una cápsula phono entrega unos
         pocos milivoltios, y el mixer aplica algo del orden de sesenta decibeles
@@ -137,7 +141,7 @@ const schema = {
         Revisa que exista durante el montaje. Si se fue, eso es una reparación
         para agendar y no algo que rodear, porque no hay otra salida para el
         ruido.</p>
-        <p class="acc-related">Relacionados: <a href="#dead-channel">Un canal quedó mudo</a> <a href="#connections">Conexiones, y qué no se desconecta</a> <a href={SL_1200MK2.source} rel="noopener">Manual de instrucciones del SL-1200MK2 de Panasonic</a></p>
+        <p class="acc-related">Relacionados: <a href="#dead-channel">Un canal quedó mudo</a> <a href="#connections">Conexiones, y qué no se desconecta</a> <a href={P(SL_1200MK2.source)} rel="noopener">Manual de instrucciones del SL-1200MK2 de Panasonic</a></p>
       </div>
     </details>
 
@@ -147,7 +151,7 @@ const schema = {
         después la cápsula. En esta tornamesa esa es toda la lista sobre la que
         puedes actuar dentro de un booth, porque los cables phono no salen.
         Panasonic imprime el código de colores para que veas qué lado perdiste:
-        {' '}{SL_1200MK2.headshellWiring}.</p>
+        {' '}{P(SL_1200MK2.headshellWiring)}.</p>
         <p><strong>Por qué pasa esto.</strong> Esos cuatro cables son la conexión
         más delgada de la cadena y se trabajan cada vez que alguien cambia una
         cápsula o deja caer un headshell. Un cable fuera de su pin, o un pin que
@@ -174,7 +178,7 @@ const schema = {
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> Esto es la sala, no la tornamesa, y
         las instrucciones de instalación de Panasonic son la solución:
-        {' '}{SL_1200MK2.placementSpeakers} {SL_1200MK2.placementLevel} Después
+        {' '}{P(SL_1200MK2.placementSpeakers)} {P(SL_1200MK2.placementLevel)} Después
         revisa el contrapeso y el anti-skating, y solo entonces empieza a
         sospechar de la tornamesa.</p>
         <p><strong>Por qué pasa esto.</strong> Una aguja dentro del surco es un
@@ -192,7 +196,7 @@ const schema = {
         nivelada, porque una tornamesa desnivelada suma una fuerza lateral
         constante y salta siempre hacia el mismo lado. Revisa que el contrapeso no
         se haya corrido, y ajusta el anti-skating por la instrucción de Panasonic
-        misma: {SL_1200MK2.antiSkatingInstruction} Subir la presión de aguja es el
+        misma: {P(SL_1200MK2.antiSkatingInstruction)} Subir la presión de aguja es el
         último recurso y tiene que quedar dentro de lo que especifique el
         fabricante de tu cápsula.</p>
         <p><strong>Evítalo la próxima vez.</strong> Criterio de trabajar booths y
@@ -208,9 +212,9 @@ const schema = {
     <details class="acc-sec" name="mk2-acc" id="pitch"><summary><h3 class="acc-h2">Encontrar el cero en un fader sin botón de reset</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> No existe reset en esta tornamesa. El
-        fader corre {SL_1200MK2.pitchRange} y la velocidad nominal se encuentra a
+        fader corre {P(SL_1200MK2.pitchRange)} y la velocidad nominal se encuentra a
         ojo, contra las marcas que Panasonic grabó en el borde del plato:
-        {' '}{SL_1200MK2.platterMarkings}. El estroboscopio no es adorno, es el
+        {' '}{P(SL_1200MK2.platterMarkings)}. El estroboscopio no es adorno, es el
         instrumento.</p>
         <p><strong>Por qué importa.</strong> El quartz lock es la función de
         portada de esta tornamesa y se lee mal con frecuencia. Significa que la
@@ -223,9 +227,9 @@ const schema = {
         y usa los puntos del estrobo para confirmar que el plato está trabado y no
         derivando. Si un disco está tocando a la velocidad equivocada, revisa el
         selector de velocidad antes que el fader: esta tornamesa corre
-        {' '}{SL_1200MK2.speeds} y nada más, así que un 45 tocado en 33 es el error
+        {' '}{P(SL_1200MK2.speeds)} y nada más, así que un 45 tocado en 33 es el error
         más probable aquí que en una tornamesa con una tercera velocidad escondida
-        detrás de un switch.</p>
+        que tiene una tercera velocidad.</p>
         <p><strong>Evítalo la próxima vez.</strong> Haz de la revisión del cero
         parte del montaje en vez de algo que notas en la primera mezcla. Toma un
         segundo, y en una tornamesa sin reset es la única vez que consigues una
@@ -245,7 +249,7 @@ const schema = {
         sí tiene uno.</p>
         <p><strong>Qué sí contiene el manual.</strong> La única frase de
         diagnóstico de todo el documento es la advertencia del cable de tierra, y
-        es precisa: {SL_1200MK2.earthWarning} Todo lo demás que sirve está en las
+        es precisa: {P(SL_1200MK2.earthWarning)} Todo lo demás que sirve está en las
         instrucciones de instalación y de conexión, y no bajo un título de fallas,
         que es exactamente por lo que nadie lo encuentra.</p>
         <p><strong>Qué significa eso en un booth.</strong> El conocimiento sobre
@@ -261,7 +265,7 @@ const schema = {
         tiempo de herencia va de la era del MK5 al regreso de 2015 sin fecha de
         cierre en medio. El año que todo el mundo repite bien puede ser el
         correcto, y no está en un documento, así que no está en esta página.</p>
-        <p class="acc-related">Relacionados: <a href="#specs">Qué publica Panasonic, y qué no</a> <a href={SL_1200MK2.sourceHeritage} rel="noopener">La línea de tiempo de herencia de Technics</a></p>
+        <p class="acc-related">Relacionados: <a href="#specs">Qué publica Panasonic, y qué no</a> <a href={P(SL_1200MK2.sourceHeritage)} rel="noopener">La línea de tiempo de herencia de Technics</a></p>
       </div>
     </details>
 
@@ -279,10 +283,10 @@ const schema = {
         garantiza la primera.</p>
         <p><strong>Por qué vale leer bien los números.</strong> El wow and flutter
         de esta tornamesa está publicado tres veces, con tres normas distintas:
-        {' '}{SL_1200MK2.wowFlutter}. Citar el menor de esos al lado de un valor
+        {' '}{P(SL_1200MK2.wowFlutter)}. Citar el menor de esos al lado de un valor
         único moderno compara dos mediciones distintas, y así es como suelen
         empezar las discusiones de especificaciones sobre esta tornamesa. El rumble
-        está publicado como {SL_1200MK2.rumble}, y vale notar que el MK7 no publica
+        está publicado como {P(SL_1200MK2.rumble)}, y vale notar que el MK7 no publica
         valor de rumble alguno.</p>
         <p><strong>La versión práctica.</strong> Ajústala contra el estrobo, confía
         en que sostiene, y revísala otra vez si la tornamesa fue transportada. Lo
@@ -297,11 +301,11 @@ const schema = {
     <details class="acc-sec" name="mk2-acc" id="features"><summary><h3 class="acc-h2">Qué tiene esta tornamesa, y qué deliberadamente no tiene</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Lo que tiene.</strong> Panasonic la describe así:
-        {' '}{SL_1200MK2.type}. El freno es {SL_1200MK2.braking.toLowerCase()}.
-        Pitch trabado a cuarzo en {SL_1200MK2.pitchRange}, con marcas en el plato
-        en {SL_1200MK2.platterMarkings}. Torque de arranque:
-        {' '}{SL_1200MK2.startingTorque}, y un arranque de
-        {' '}{SL_1200MK2.startUpTime}, que es el número que convirtió esta
+        {' '}{P(SL_1200MK2.type)}. El freno es {SL_1200MK2.braking.toLowerCase()}.
+        Pitch trabado a cuarzo en {P(SL_1200MK2.pitchRange)}, con marcas en el plato
+        en {P(SL_1200MK2.platterMarkings)}. Torque de arranque:
+        {' '}{P(SL_1200MK2.startingTorque)}, y un arranque de
+        {' '}{P(SL_1200MK2.startUpTime)}, que es el número que convirtió esta
         tornamesa en una herramienta de DJ en vez de una tornamesa de hi-fi.</p>
         <p><strong>Lo que no tiene, y el MK7 sí.</strong> Ningún botón de reset de
         pitch. Un rango de pitch en vez de dos. Nada de tocar al revés. Ningún
@@ -313,7 +317,7 @@ const schema = {
         lanzamiento dice que sigue a la generación anterior en dimensiones, layout
         de botones y masa inercial del plato. Casi todo lo que hace que una SL-1200
         se sienta como una SL-1200 quedó definido aquí, en
-        {' '}{SL_1200MK2.released}, y no ha cambiado desde entonces.</p>
+        {' '}{P(SL_1200MK2.released)}, y no ha cambiado desde entonces.</p>
         <p><strong>El aislamiento, que es una afirmación real de diseño.</strong>
         El manual describe la base de aluminio fundido, el caucho pesado de abajo,
         el plato amortiguado y cuatro patas aislantes grandes, y afirma que el
@@ -330,23 +334,23 @@ const schema = {
       <div class="acc-body">
         <p><strong>Los números que Panasonic publica.</strong> El brazo es
         {' '}{SL_1200MK2.tonearm.toLowerCase()}, longitud efectiva
-        {' '}{SL_1200MK2.tonearmEffectiveLength}, masa efectiva
-        {' '}{SL_1200MK2.tonearmEffectiveMass}, overhang
-        {' '}{SL_1200MK2.overhang}, ángulo de offset
-        {' '}{SL_1200MK2.offsetAngle}. La altura del brazo ajusta en
-        {' '}{SL_1200MK2.armHeightRange}. La presión de aguja marca
-        {' '}{SL_1200MK2.stylusPressureRange}. El peso de cápsula soportado es
-        {' '}{SL_1200MK2.cartridgeWeightRange}, y el headshell pesa
-        {' '}{SL_1200MK2.headshellWeight}.</p>
+        {' '}{P(SL_1200MK2.tonearmEffectiveLength)}, masa efectiva
+        {' '}{P(SL_1200MK2.tonearmEffectiveMass)}, overhang
+        {' '}{P(SL_1200MK2.overhang)}, ángulo de offset
+        {' '}{P(SL_1200MK2.offsetAngle)}. La altura del brazo ajusta en
+        {' '}{P(SL_1200MK2.armHeightRange)}. La presión de aguja marca
+        {' '}{P(SL_1200MK2.stylusPressureRange)}. El peso de cápsula soportado es
+        {' '}{P(SL_1200MK2.cartridgeWeightRange)}, y el headshell pesa
+        {' '}{P(SL_1200MK2.headshellWeight)}.</p>
         <p><strong>El rango de presión más estrecho merece atención.</strong> Este
-        brazo marca {SL_1200MK2.stylusPressureRange}. El del MK7 marca
-        {' '}{SL_1200MK7.stylusPressureRange}. Si usas una cápsula que pide una
+        brazo marca {P(SL_1200MK2.stylusPressureRange)}. El del MK7 marca
+        {' '}{P(SL_1200MK7.stylusPressureRange)}. Si usas una cápsula que pide una
         presión de aguja mayor de la que este brazo alcanza directo, eso es una
         limitación real de esta tornamesa y no un error de ajuste, y Panasonic
         entrega un peso auxiliar y un peso de concha justamente para desplazar el
         rango utilizable.</p>
         <p><strong>Anti-skating.</strong> La instrucción de Panasonic es una
-        línea: {SL_1200MK2.antiSkatingInstruction} Así que, cualquiera que sea la
+        línea: {P(SL_1200MK2.antiSkatingInstruction)} Así que, cualquiera que sea la
         presión de aguja que pida tu cápsula, el control de anti-skating va al
         valor correspondiente. Es el paso que la gente se salta, y aparece como una
         tornamesa que salta siempre hacia el mismo lado en vez de saltar al
@@ -365,7 +369,7 @@ const schema = {
 
     <details class="acc-sec" name="mk2-acc" id="connections"><summary><h3 class="acc-h2">Conexiones, y qué no se desconecta</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Qué sale de la tornamesa.</strong> {SL_1200MK2.output}. El
+        <p><strong>Qué sale de la tornamesa.</strong> {P(SL_1200MK2.output)}. El
         cable de tierra es un cable aparte con terminal de horquilla que se
         atornilla al mixer, y es el mismo descrito en la advertencia de zumbido de
         arriba.</p>
@@ -384,9 +388,9 @@ const schema = {
         la mayor diferencia práctica entre las dos, y es por lo que el MK7 listando
         su cable phono como número de parte de repuesto importa más de lo que
         parece.</p>
-        <p><strong>Corriente.</strong> {SL_1200MK2.voltage}, jalando
-        {' '}{SL_1200MK2.powerConsumption}. La tornamesa pesa
-        {' '}{SL_1200MK2.weight} y mide {SL_1200MK2.dimensions}, que conviene saber
+        <p><strong>Corriente.</strong> {P(SL_1200MK2.voltage)}, jalando
+        {' '}{P(SL_1200MK2.powerConsumption)}. La tornamesa pesa
+        {' '}{P(SL_1200MK2.weight)} y mide {P(SL_1200MK2.dimensions)}, que conviene saber
         antes de aceptar cargar un par por unas escaleras.</p>
         <p class="acc-related">Relacionados: <a href="#hum">Hay un zumbido en el sistema</a> <a href="/es/knowledge/technics/sl-1200mk7">El MK7, donde estos cables se desconectan</a></p>
       </div>
@@ -408,13 +412,13 @@ const schema = {
         timecode gastado empeora el seguimiento bastante antes de sonar claramente
         mal, y el síntoma es software que se traba o pierde posición en vez de daño
         audible.</p>
-        <p><strong>Velocidades.</strong> {SL_1200MK2.speeds}. Ninguna tercera
+        <p><strong>Velocidades.</strong> {P(SL_1200MK2.speeds)}. Ninguna tercera
         velocidad en esta generación.</p>
         <p><strong>Cápsulas.</strong> El peso soportado es
-        {' '}{SL_1200MK2.cartridgeWeightRange} de serie, y Panasonic entrega un
+        {' '}{P(SL_1200MK2.cartridgeWeightRange)} de serie, y Panasonic entrega un
         peso auxiliar y un peso de concha para desplazar ese rango en los dos
         sentidos. El código de colores de los cables es
-        {' '}{SL_1200MK2.headshellWiring}.</p>
+        {' '}{P(SL_1200MK2.headshellWiring)}.</p>
         <p class="acc-related">Relacionados: <a href="#dead-channel">Un canal quedó mudo</a> <a href="/es/knowledge/dictionary">El diccionario técnico de DJ</a></p>
       </div>
     </details>
@@ -440,7 +444,7 @@ const schema = {
         directa. No hay firmware que degradarse. El motor es
         {' '}{SL_1200MK2.motor.toLowerCase()}, un diseño sin carbones que cambiar,
         y es la mayor razón por la que tornamesas de
-        {' '}{SL_1200MK2.released} siguen trabajando cada noche.</p>
+        {' '}{P(SL_1200MK2.released)} siguen trabajando cada noche.</p>
         <p><strong>Entre sets.</strong> Mantén la aguja limpia, mantén el cable de
         tierra conectado, y mantén la traba del descanso del brazo realmente
         trabada cuando la tornamesa se mueve. La mayor parte del daño en brazos
@@ -454,12 +458,12 @@ const schema = {
     <details class="acc-sec" name="mk2-acc" id="specs"><summary><h3 class="acc-h2">Qué publica Panasonic, y qué no</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Los números publicados.</strong> Tipo:
-        {' '}{SL_1200MK2.type}. Motor: {SL_1200MK2.motor.toLowerCase()}. Plato:
-        {' '}{SL_1200MK2.platter}. Velocidades: {SL_1200MK2.speeds}. Torque de
-        arranque: {SL_1200MK2.startingTorque}. Arranque:
-        {' '}{SL_1200MK2.startUpTime}. Wow and flutter:
-        {' '}{SL_1200MK2.wowFlutter}. Rumble: {SL_1200MK2.rumble}. Peso:
-        {' '}{SL_1200MK2.weight}. Lanzada en {SL_1200MK2.released}.</p>
+        {' '}{P(SL_1200MK2.type)}. Motor: {SL_1200MK2.motor.toLowerCase()}. Plato:
+        {' '}{P(SL_1200MK2.platter)}. Velocidades: {P(SL_1200MK2.speeds)}. Torque de
+        arranque: {P(SL_1200MK2.startingTorque)}. Arranque:
+        {' '}{P(SL_1200MK2.startUpTime)}. Wow and flutter:
+        {' '}{P(SL_1200MK2.wowFlutter)}. Rumble: {P(SL_1200MK2.rumble)}. Peso:
+        {' '}{P(SL_1200MK2.weight)}. Lanzada en {P(SL_1200MK2.released)}.</p>
         <p><strong>No existe fecha de fin de producción.</strong> Panasonic y
         Technics nunca publicaron una. Su propia línea de tiempo de herencia va de
         la era del MK5 al regreso de 2015 sin nada en medio, así que el año que se
@@ -477,7 +481,7 @@ const schema = {
         que se leyó página por página en vez de buscarse. Por eso parte de esta
         página es más delgada que su equivalente del MK7: el documento dice
         menos.</p>
-        <p class="acc-related">Relacionados: <a href={SL_1200MK2.source} rel="noopener">El manual de instrucciones</a> <a href={SL_1200MK2.sourceHistory} rel="noopener">Technics sobre la historia de la SL-1200</a></p>
+        <p class="acc-related">Relacionados: <a href={P(SL_1200MK2.source)} rel="noopener">El manual de instrucciones</a> <a href={P(SL_1200MK2.sourceHistory)} rel="noopener">Technics sobre la historia de la SL-1200</a></p>
       </div>
     </details>
 

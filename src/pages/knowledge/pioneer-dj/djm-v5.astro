@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../components/ModelStatus.astro';
 import { DJM_V5, DJM_REC } from '../../../data/facts.js';
 import Icon from '../../../components/Icon.astro';
 
@@ -73,7 +74,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <ModelStatus slug="djm-v5" checked={UPDATED} />
         <h1 class="rb-h1">DJM-V5, <span class="accent">the field manual</span></h1>
       </div>
       <a

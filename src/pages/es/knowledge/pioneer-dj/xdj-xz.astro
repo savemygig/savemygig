@@ -3,7 +3,9 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../../components/ModelStatus.astro';
 import { XDJ_XZ } from '../../../../data/facts.js';
+import { prose } from '../../../../i18n/prose.js';
 
 // XDJ-XZ, NEUTRAL LATIN AMERICAN SPANISH. Source of truth for structure,
 // components, classes, anchors, section order and CSS:
@@ -18,6 +20,8 @@ const MESES = {
 };
 const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = esDate(XDJ_XZ.checked);
+// Translate the prose fields facts.js holds in English. See src/i18n/prose.js.
+const P = (v) => prose('es', v);
 const FLOOR = XDJ_XZ.newestKnown;
 const FS = XDJ_XZ.fileSystems.join(', ');
 
@@ -26,7 +30,7 @@ const schema = {
   '@type': 'TechArticle',
   '@id': 'https://www.savemygig.com/es/knowledge/pioneer-dj/xdj-xz#article',
   headline: 'XDJ-XZ: la referencia operativa',
-  description: `Lo que todo DJ necesita saber antes de trabajar con un XDJ-XZ: lee ${FS} pero nunca NTFS, las fallas de PRO DJ LINK y de jog corregidas en el firmware ${XDJ_XZ.proDjLinkFix}, la salida SEND que no daba sonido antes de la ${XDJ_XZ.sendOutputFix}, y la grabación que solo escribe en el slot ${XDJ_XZ.masterRecUsbSlot}.`,
+  description: `Lo que todo DJ necesita saber antes de trabajar con un XDJ-XZ: lee ${FS} pero nunca NTFS, las fallas de PRO DJ LINK y de jog corregidas en el firmware ${P(XDJ_XZ.proDjLinkFix)}, la salida SEND que no daba sonido antes de la ${P(XDJ_XZ.sendOutputFix)}, y la grabación que solo escribe en el slot ${P(XDJ_XZ.masterRecUsbSlot)}.`,
   author: { '@id': 'https://www.savemygig.com/#org' },
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   datePublished: '2026-08-08',
@@ -38,7 +42,7 @@ const schema = {
 ---
 <Base
   title="XDJ-XZ: exFAT, SEND y PRO DJ LINK | Save My Gig"
-  description={`Manual de campo del XDJ-XZ: los formatos que lee, la salida SEND que no daba sonido antes del firmware ${XDJ_XZ.sendOutputFix}, y la grabación que escribe en un solo slot.`}
+  description={`Manual de campo del XDJ-XZ: los formatos que lee, la salida SEND que no daba sonido antes del firmware ${P(XDJ_XZ.sendOutputFix)}, y la grabación que escribe en un solo slot.`}
   path="/knowledge/pioneer-dj/xdj-xz"
   crumbName="XDJ-XZ"
   lang="es"
@@ -54,7 +58,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <ModelStatus slug="xdj-xz" checked={UPDATED} lang="es" />
         <h1 class="rb-h1">XDJ-XZ, <span class="accent">el manual de campo</span></h1>
       </div>
       <a
@@ -90,13 +94,13 @@ const schema = {
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
         <strong>Briefing de booth.</strong> Un all-in-one de cuatro canales con
-        {XDJ_XZ.decks} decks internos, y los canales 3 y 4 aceptando LINE o PHONO
+        {P(XDJ_XZ.decks)} decks internos, y los canales 3 y 4 aceptando LINE o PHONO
         externo, así que tornamesas y CDJs entran directo. Lee
         <strong>{FS}</strong>, nunca NTFS, sobre la Device Library original. Dos
         trampas documentadas que conviene saber antes del set: el MASTER REC graba
         solo en una memoria en el <strong>slot
-        {XDJ_XZ.masterRecUsbSlot}</strong> y parte el archivo cada
-        {XDJ_XZ.recSplitHours} horas, y el nivel de master y el EQ de master no
+        {P(XDJ_XZ.masterRecUsbSlot)}</strong> y parte el archivo cada
+        {P(XDJ_XZ.recSplitHours)} horas, y el nivel de master y el EQ de master no
         cambian lo que se graba. La versión más alta publicada es
         <strong>{FLOOR}</strong>.
       </p>
@@ -135,7 +139,7 @@ const schema = {
       <summary><h3 class="acc-h2">Los players conectados se portan mal, o el jog y el beat sync se sienten raros</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> Revisa la versión de firmware antes
-        de recablear la booth. El firmware {XDJ_XZ.proDjLinkFix} corrigió que PRO
+        de recablear la booth. El firmware {P(XDJ_XZ.proDjLinkFix)} corrigió que PRO
         DJ LINK no funcionara correctamente, junto con la inconsistencia del jog
         wheel y fallas de beat sync. Una unidad por debajo de esa versión tiene
         fallas documentadas justo en esos tres lugares.</p>
@@ -162,7 +166,7 @@ const schema = {
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> En firmware temprano esto era una
         falla documentada: no salía ningún sonido del terminal de salida SEND. Se
-        corrigió en la {XDJ_XZ.sendOutputFix}, la primera actualización que
+        corrigió en la {P(XDJ_XZ.sendOutputFix)}, la primera actualización que
         recibió esta unidad.</p>
         <p><strong>Por qué importa.</strong> Si conectas un procesador externo al
         SEND y no te vuelve nada, el instinto es sospechar del cable o del
@@ -170,7 +174,7 @@ const schema = {
         mudo. Esta es una de las pocas fallas de este modelo donde la solución es
         una actualización de firmware y nada más ayuda.</p>
         <p><strong>Resuélvelo ahora.</strong> Revisa la versión. Si está por
-        debajo de la {XDJ_XZ.sendOutputFix}, actualiza, y el send empieza a
+        debajo de la {P(XDJ_XZ.sendOutputFix)}, actualiza, y el send empieza a
         funcionar. Si está por encima y el send sigue mudo, entonces vale revisar
         el cable y el procesador externo, en ese orden.</p>
         <p><strong>Vale saberlo.</strong> El XDJ-AZ, el modelo que reemplazó a
@@ -187,8 +191,8 @@ const schema = {
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> Tres reglas documentadas agarran a la
         gente. El MASTER REC escribe solo en una memoria en el <strong>slot
-        {XDJ_XZ.masterRecUsbSlot}</strong>, así que una memoria en el otro slot no
-        graba nada. El archivo se <strong>parte cada {XDJ_XZ.recSplitHours}
+        {P(XDJ_XZ.masterRecUsbSlot)}</strong>, así que una memoria en el otro slot no
+        graba nada. El archivo se <strong>parte cada {P(XDJ_XZ.recSplitHours)}
         horas</strong>, así que un set largo llega como más de un archivo y ninguno
         está truncado. Y las perillas de nivel de master y de EQ de master no
         afectan la grabación.</p>
@@ -197,7 +201,7 @@ const schema = {
         trabaja el master para moldear el lugar y espera ese moldeo en la grabación
         no lo obtiene, porque la grabación se toma antes de esos controles.</p>
         <p><strong>Resuélvelo ahora.</strong> Pon la memoria de grabación en el
-        slot {XDJ_XZ.masterRecUsbSlot} antes de empezar, y usa los gains y el EQ de
+        slot {P(XDJ_XZ.masterRecUsbSlot)} antes de empezar, y usa los gains y el EQ de
         canal en lugar del master para definir lo que escucha la grabación. Las
         grabaciones caen en una carpeta dedicada de la memoria, y hay un límite de
         cuántos archivos guarda, así que limpia las viejas de una memoria en la que
@@ -214,7 +218,7 @@ const schema = {
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> No es una falla. Tiene una función de
         standby que apaga la unidad como medida de ahorro de energía, ajustada de
-        fábrica en {XDJ_XZ.standbyMinutesDefault} minutos, y seleccionable en 20,
+        fábrica en {P(XDJ_XZ.standbyMinutesDefault)} minutos, y seleccionable en 20,
         40 o 60 minutos o desactivada por completo en los ajustes de
         utilidad.</p>
         <p><strong>Por qué importa.</strong> Un cambio largo, una prueba de sonido
@@ -233,14 +237,14 @@ const schema = {
     <details class="acc-sec" name="xdjxz-acc" id="layout">
       <summary><h3 class="acc-h2">Qué es, y cómo se usan los cuatro canales</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Su forma.</strong> {XDJ_XZ.channels} canales de mixer con
-        {XDJ_XZ.decks} decks internos. Los canales 1 y 2 son los decks. Los canales
-        3 y 4 aceptan fuentes externas en {XDJ_XZ.lineInputs} entradas LINE y
-        {XDJ_XZ.phonoInputs} entradas PHONO, que es lo que hace que esta unidad
+        <p><strong>Su forma.</strong> {P(XDJ_XZ.channels)} canales de mixer con
+        {P(XDJ_XZ.decks)} decks internos. Los canales 1 y 2 son los decks. Los canales
+        3 y 4 aceptan fuentes externas en {P(XDJ_XZ.lineInputs)} entradas LINE y
+        {P(XDJ_XZ.phonoInputs)} entradas PHONO, que es lo que hace que esta unidad
         calce en una booth que además tiene tornamesas o un par de CDJs.</p>
         <p><strong>Software.</strong> Corre standalone desde una memoria, soporta
         rekordbox en export y link mode, y Serato DJ Pro se agregó en el firmware
-        {XDJ_XZ.seratoFrom} y es gratis de usar con esta unidad. Soporta DVS por
+        {P(XDJ_XZ.seratoFrom)} y es gratis de usar con esta unidad. Soporta DVS por
         rekordbox y por Serato, licencias aparte.</p>
         <p><strong>El argumento del layout.</strong> AlphaTheta la construyó para
         que tocar en ella se sienta como usar CDJs al lado de un DJM y no como usar
@@ -255,8 +259,8 @@ const schema = {
     <details class="acc-sec" name="xdjxz-acc" id="connections">
       <summary><h3 class="acc-h2">Conexiones, y grabación</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Entradas.</strong> {XDJ_XZ.micInputs} entradas de mic en XLR o
-        TRS, {XDJ_XZ.phonoInputs} entradas PHONO y {XDJ_XZ.lineInputs} entradas
+        <p><strong>Entradas.</strong> {P(XDJ_XZ.micInputs)} entradas de mic en XLR o
+        TRS, {P(XDJ_XZ.phonoInputs)} entradas PHONO y {P(XDJ_XZ.lineInputs)} entradas
         LINE en RCA, más una entrada AUX.</p>
         <p><strong>Salidas.</strong> Master balanceado en XLR y en RCA, una BOOTH
         en TRS, dos entradas de audífono, y una salida SEND en jack TS para un
@@ -266,8 +270,8 @@ const schema = {
         el driver del sistema en macOS, así que la unidad es la soundcard de
         rekordbox o Serato.</p>
         <p><strong>Grabación.</strong> A una memoria en el slot
-        {XDJ_XZ.masterRecUsbSlot} y en ningún otro, partida cada
-        {XDJ_XZ.recSplitHours} horas, sin verse afectada por el nivel de master ni
+        {P(XDJ_XZ.masterRecUsbSlot)} y en ningún otro, partida cada
+        {P(XDJ_XZ.recSplitHours)} horas, sin verse afectada por el nivel de master ni
         por el EQ de master. Mira el problema conocido de arriba, porque esas tres
         cosas sorprenden a la gente.</p>
         <p class="acc-related">Relacionados: <a href="#send-silent">Sin sonido en la salida SEND</a> <a href="#recording">La grabación falta o quedó cortada en dos</a></p>
@@ -280,7 +284,7 @@ const schema = {
       <summary><h3 class="acc-h2">Qué biblioteca lee, y booths mixtas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> Esta unidad lee la original
-        <strong>{XDJ_XZ.library}</strong>, la misma generación que el CDJ-3000 y el
+        <strong>{P(XDJ_XZ.library)}</strong>, la misma generación que el CDJ-3000 y el
         CDJ-2000NXS2. No lee OneLibrary, que es lo que usan las unidades más
         nuevas.</p>
         <p><strong>Qué significa eso en una booth mixta.</strong> Exporta desde un
@@ -303,13 +307,13 @@ const schema = {
       <summary><h3 class="acc-h2">Firmware, y qué corrigió cada versión</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Las correcciones que importan.</strong> La
-        {XDJ_XZ.sendOutputFix} corrigió la falta de sonido en la salida SEND y
-        agregó Serato DJ Pro. La {XDJ_XZ.proDjLinkFix} corrigió que PRO DJ LINK no
+        {P(XDJ_XZ.sendOutputFix)} corrigió la falta de sonido en la salida SEND y
+        agregó Serato DJ Pro. La {P(XDJ_XZ.proDjLinkFix)} corrigió que PRO DJ LINK no
         funcionara correctamente, la inconsistencia del jog wheel y fallas de beat
-        sync. La {XDJ_XZ.slipSyncWavFix} corrigió el sync perdido después de
+        sync. La {P(XDJ_XZ.slipSyncWavFix)} corrigió el sync perdido después de
         scratch en modo Slip y algunos archivos WAV que no sonaban, y mejoró la
-        lectura de HFS+. La {XDJ_XZ.beatFxFix} corrigió fallas al usar Beat FX. La
-        {XDJ_XZ.masterTempoFix} corrigió fallas con Master Tempo activado. La
+        lectura de HFS+. La {P(XDJ_XZ.beatFxFix)} corrigió fallas al usar Beat FX. La
+        {P(XDJ_XZ.masterTempoFix)} corrigió fallas con Master Tempo activado. La
         versión más alta publicada es {FLOOR}.</p>
         <p><strong>Leerlo en la booth.</strong> La tabla completa de modelo por
         versión vive en la referencia de firmware, así que puedes leer la versión
@@ -319,22 +323,22 @@ const schema = {
         los números intermedios, así que esta página no adivina. Ninguna versión
         del firmware de esta unidad fue retirada, según todo lo que muestra
         cualquier documento publicado.</p>
-        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/firmware">Todos los modelos, por versión de firmware</a> <a href={XDJ_XZ.sourceFirmware} rel="noopener">Página de firmware de AlphaTheta</a></p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/firmware">Todos los modelos, por versión de firmware</a> <a href={P(XDJ_XZ.sourceFirmware)} rel="noopener">Página de firmware de AlphaTheta</a></p>
       </div>
     </details>
 
     <details class="acc-sec" name="xdjxz-acc" id="specs">
       <summary><h3 class="acc-h2">Los números de referencia</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Las cifras publicadas.</strong> {XDJ_XZ.channels} canales,
-        {XDJ_XZ.decks} decks internos. Dimensiones: {XDJ_XZ.dimensions}. Peso:
-        {XDJ_XZ.weight}. Anunciado en {XDJ_XZ.announced}. Nombres de modelo:
-        {XDJ_XZ.variants}.</p>
+        <p><strong>Las cifras publicadas.</strong> {P(XDJ_XZ.channels)} canales,
+        {P(XDJ_XZ.decks)} decks internos. Dimensiones: {P(XDJ_XZ.dimensions)}. Peso:
+        {P(XDJ_XZ.weight)}. Anunciado en {P(XDJ_XZ.announced)}. Nombres de modelo:
+        {P(XDJ_XZ.variants)}.</p>
         <p><strong>Linaje.</strong> AlphaTheta describe al XDJ-AZ como sucesor de
         esta unidad y llama a esta su antecesora con sus propias palabras. Las dos
         están cubiertas aquí, y las diferencias que importan en una booth son la
         generación de biblioteca y el send y return.</p>
-        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/xdj-az">El XDJ-AZ</a> <a href={XDJ_XZ.source} rel="noopener">Página del producto en Pioneer DJ</a></p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/xdj-az">El XDJ-AZ</a> <a href={P(XDJ_XZ.source)} rel="noopener">Página del producto en Pioneer DJ</a></p>
       </div>
     </details>
 

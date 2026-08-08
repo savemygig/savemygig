@@ -3,7 +3,9 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../../components/ModelStatus.astro';
 import { XONE_96, XONE_92 } from '../../../../data/facts.js';
+import { prose } from '../../../../i18n/prose.js';
 import Icon from '../../../../components/Icon.astro';
 
 // XONE:96, PORTUGUÊS DO BRASIL. A fonte de verdade da estrutura, dos
@@ -19,6 +21,8 @@ const MESES = {
 };
 const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = ptDate(XONE_96.checked);
+// Translate the prose fields facts.js holds in English. See src/i18n/prose.js.
+const P = (v) => prose('pt', v);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -53,7 +57,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <ModelStatus slug="xone-96" checked={UPDATED} lang="pt" />
         <h1 class="rb-h1">Xone:96, <span class="accent">o manual de campo</span></h1>
       </div>
       <a
@@ -89,14 +93,14 @@ const schema = {
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
         <strong>Briefing de booth.</strong> Um mixer analógico de
-        {XONE_96.channels} canais com duas placas de som:
-        {XONE_96.soundcardSpec}. Dois comportamentos documentados fazem ele
+        {P(XONE_96.channels)} canais com duas placas de som:
+        {P(XONE_96.soundcardSpec)}. Dois comportamentos documentados fazem ele
         parecer quebrado. Um plugue no MASTER INSERT RETURN corta a ligação direta
         com o barramento de master, então o master e os medidores morrem juntos. E
         MASTER 1 e MASTER 2 não movem os medidores, então sala muda com medidores
         saudáveis é normal. Sabendo os dois, você diagnostica em segundos. O mic
         não chega no Booth nem no Record sem jumpers internos, e este mixer tem
-        {XONE_96.lfos} LFO onde o Xone:92 tem {XONE_92.lfos}.
+        {P(XONE_96.lfos)} LFO onde o Xone:92 tem {P(XONE_92.lfos)}.
       </p>
       <label for="sv-toggle" class="sv-more">Ler mais…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
@@ -126,13 +130,13 @@ const schema = {
         A ligação direta se restabelece sozinha e o master volta com os medidores.
         Se o aparelho externo pertence à corrente, ligue ele e confirme que passa
         áudio antes de confiar o barramento de master a ele. O insert trabalha em
-        {XONE_96.insertLevel}, e a Allen &amp; Heath orienta ajustar o aparelho
+        {P(XONE_96.insertLevel)}, e a Allen &amp; Heath orienta ajustar o aparelho
         externo para esperar +4dB e compensar a diferença.</p>
         <p><strong>Evite da próxima vez.</strong> Trate o master insert como uma
         ligação com a qual você se compromete, não uma que fica pendurada. Se nada
         alimenta o send, nada deve estar ligado no return, e um cabo perdido
         enrolado atrás de uma booth é a versão disso que pega as pessoas.</p>
-        <p class="acc-related">Relacionados: <a href="#silent-pa-healthy-meters">A sala está muda e os medidores parecem saudáveis</a> <a href={XONE_96.sourceMasterInsert} rel="noopener">A Allen &amp; Heath sobre ligar um aparelho no master insert</a></p>
+        <p class="acc-related">Relacionados: <a href="#silent-pa-healthy-meters">A sala está muda e os medidores parecem saudáveis</a> <a href={P(XONE_96.sourceMasterInsert)} rel="noopener">A Allen &amp; Heath sobre ligar um aparelho no master insert</a></p>
       </div>
     </details>
 
@@ -156,7 +160,7 @@ const schema = {
         confirme em qual das duas saídas de master o sistema da casa está de fato.
         Medidores mortos e sala muda: vá para o master insert return. Com o áudio
         de volta, ajuste os níveis para o alvo publicado pela própria Allen &amp;
-        Heath, {XONE_96.meterTarget}, com o ganho de canal ajustado para o medidor
+        Heath, {P(XONE_96.meterTarget)}, com o ganho de canal ajustado para o medidor
         ficar em média perto de 0 e não de ouvido.</p>
         <p><strong>Evite da próxima vez.</strong> Na passagem de som, anote qual
         saída de master alimenta a casa e deixe a outra onde você encontrou. Duas
@@ -207,7 +211,7 @@ const schema = {
         é a mesma chave que você usa para colocar um canal de um lado ou do outro.
         Um DJ anterior que queria um canal sempre ligado deixou ela no centro, e a
         pessoa seguinte lê um crossfader morto. O crossfader em si é um
-        {XONE_96.crossfaderModel}, então não é a peça que costuma falhar em
+        {P(XONE_96.crossfaderModel)}, então não é a peça que costuma falhar em
         silêncio.</p>
         <p><strong>Resolva agora.</strong> Coloque a chave de assign no lado em que
         você quer o canal, depois confira os outros canais enquanto a mão está ali,
@@ -225,7 +229,7 @@ const schema = {
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> O sistema de cue tem um modo, e ele não
         está escrito em lugar nenhum do painel. A Allen &amp; Heath entrega ele
-        {XONE_96.cueModeToggle}. Os dois botões de MIDI active piscam para
+        {P(XONE_96.cueModeToggle)}. Os dois botões de MIDI active piscam para
         confirmar a mudança. Um mixer no modo que você não esperava não é um mixer
         com defeito.</p>
         <p><strong>Por que isso acontece.</strong> Auto cancelling quer dizer que
@@ -245,7 +249,7 @@ const schema = {
         <p><strong>Evite da próxima vez.</strong> Teste um botão de cue contra o
         outro na passagem de som. Leva quatro segundos e é a diferença entre uma
         primeira transição limpa e uma confusa.</p>
-        <p class="acc-related">Relacionados: <a href={XONE_96.sourceCueMode} rel="noopener">A Allen &amp; Heath sobre a configuração do sistema de cue do Xone:96</a> <a href="#headphones">Fone, cue e os medidores</a></p>
+        <p class="acc-related">Relacionados: <a href={P(XONE_96.sourceCueMode)} rel="noopener">A Allen &amp; Heath sobre a configuração do sistema de cue do Xone:96</a> <a href="#headphones">Fone, cue e os medidores</a></p>
       </div>
     </details>
 
@@ -256,7 +260,7 @@ const schema = {
         controlam a passagem de dados e de clock do X:Link, então uma chave
         desligada derruba uma controladora da série K na mesma porta.</p>
         <p><strong>Por que isso acontece.</strong> O mixer manda
-        {XONE_96.midiControls} controles como MIDI, então ele é uma superfície de
+        {P(XONE_96.midiControls)} controles como MIDI, então ele é uma superfície de
         controle além de mixer, e a Allen &amp; Heath libera isso por porta e não de
         forma global. Mais dois fatos documentados pegam gente aqui. O DIN de 5
         pinos é só saída, então qualquer coisa que precise controlar o mixer chega
@@ -383,7 +387,7 @@ const schema = {
         num notebook nem em qualquer outro soquete RJ45 da booth, e identifique o
         cabo se ele mora na instalação, para que a pessoa seguinte não precise
         adivinhar.</p>
-        <p class="acc-related">Relacionados: <a href={XONE_96.sourceXLink} rel="noopener">A Allen &amp; Heath sobre X:Link com a série K</a> <a href="#midi-and-xlink">MIDI, X:Link e o ecossistema Xone</a></p>
+        <p class="acc-related">Relacionados: <a href={P(XONE_96.sourceXLink)} rel="noopener">A Allen &amp; Heath sobre X:Link com a série K</a> <a href="#midi-and-xlink">MIDI, X:Link e o ecossistema Xone</a></p>
       </div>
     </details>
 
@@ -443,13 +447,13 @@ const schema = {
         contra os próprios documentos da Allen &amp; Heath antes de ir para a
         página.</p>
         <p style="margin-top:1rem">
-          <strong>Documentação oficial.</strong> <a href={XONE_96.sourceManual} target="_blank" rel="noopener">Manual do usuário do Xone:96 →</a><br />
-          <a href={XONE_96.sourceResources} target="_blank" rel="noopener">Recursos e downloads do Xone:96 →</a><br />
-          <a href={XONE_96.sourceRouting} target="_blank" rel="noopener">Roteamento das duas placas de som →</a><br />
-          <a href={XONE_96.sourceMidi} target="_blank" rel="noopener">Implementação de MIDI →</a><br />
+          <strong>Documentação oficial.</strong> <a href={P(XONE_96.sourceManual)} target="_blank" rel="noopener">Manual do usuário do Xone:96 →</a><br />
+          <a href={P(XONE_96.sourceResources)} target="_blank" rel="noopener">Recursos e downloads do Xone:96 →</a><br />
+          <a href={P(XONE_96.sourceRouting)} target="_blank" rel="noopener">Roteamento das duas placas de som →</a><br />
+          <a href={P(XONE_96.sourceMidi)} target="_blank" rel="noopener">Implementação de MIDI →</a><br />
           <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
         </p>
-        <p class="acc-related">Relacionados: <a href="#no-specifications">Não existe documento de especificação nenhum</a> <a href={XONE_96.source} rel="noopener">Página do produto Xone:96 na Allen &amp; Heath</a></p>
+        <p class="acc-related">Relacionados: <a href="#no-specifications">Não existe documento de especificação nenhum</a> <a href={P(XONE_96.source)} rel="noopener">Página do produto Xone:96 na Allen &amp; Heath</a></p>
       </div>
     </details>
 
@@ -475,7 +479,7 @@ const schema = {
         <p><strong>O que a gente não vai fazer.</strong> Preencher. Números para
         este mixer circulam em lugares que não são a Allen &amp; Heath, e nenhum
         deles está nesta página. O que está publicado é
-        {XONE_96.dimensions} e {XONE_96.weight}, e é só isso.</p>
+        {P(XONE_96.dimensions)} e {P(XONE_96.weight)}, e é só isso.</p>
         <p class="acc-related">Relacionados: <a href="#no-troubleshooting-section">O manual do usuário não tem seção de troubleshooting</a> <a href="#filters">Os dois filtros, e o CRUNCH</a></p>
       </div>
     </details>
@@ -487,7 +491,7 @@ const schema = {
         <p><strong>Resposta curta.</strong> Esta é a diferença principal em relação
         ao Xone:92, que não tem placa de som nenhuma. A palavra da Allen &amp;
         Heath é que o mixer traz duas conexões USB Hi-Speed, cada uma com seis
-        entradas e seis saídas estéreo, o que é {XONE_96.soundcardSpec}.</p>
+        entradas e seis saídas estéreo, o que é {P(XONE_96.soundcardSpec)}.</p>
         <p><strong>O roteamento, que é a parte que salva um set.</strong> A Allen
         &amp; Heath documenta de onde cada canal de USB é alimentado. Os canais de
         USB 1 a 8 vêm direto dos conectores de entrada dos canais estéreo, então
@@ -509,13 +513,13 @@ const schema = {
         definem em lugar nenhum. Então a gente diz que não está documentado em vez
         de ler uma resposta ali. Se a sua gig depende de uma troca em back to back
         entre dois notebooks, teste você mesmo antes.</p>
-        <p class="acc-related">Relacionados: <a href={XONE_96.sourceRouting} rel="noopener">A Allen &amp; Heath sobre o roteamento das duas placas de som</a> <a href="#computers-and-drivers">Computadores, drivers e uma versão impressa de dois jeitos</a></p>
+        <p class="acc-related">Relacionados: <a href={P(XONE_96.sourceRouting)} rel="noopener">A Allen &amp; Heath sobre o roteamento das duas placas de som</a> <a href="#computers-and-drivers">Computadores, drivers e uma versão impressa de dois jeitos</a></p>
       </div>
     </details>
 
     <details class="acc-sec" name="xone96-acc" id="filters"><summary><h3 class="acc-h2">Os dois filtros, e o CRUNCH</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> {XONE_96.filters} seções Xone:VCF,
+        <p><strong>Resposta curta.</strong> {P(XONE_96.filters)} seções Xone:VCF,
         FILTER 1 e FILTER 2. Os controles são CRUNCH, RES, a seleção de tipo entre
         {XONE_96.filterTypes.join(', ')}, FREQ e uma chave de on e off, e essa é a
         lista completa. O FREQ define o corte no ponto de 3dB de queda,
@@ -531,7 +535,7 @@ const schema = {
         que o filtro recebe para trabalhar, e é por isso que soa diferente de
         distorção adicionada depois de uma varredura.</p>
         <p><strong>Não existe LFO neste mixer.</strong> Vale dizer com clareza,
-        porque o Xone:92 tem {XONE_92.lfos} e um DJ que anda entre as duas mesas vai
+        porque o Xone:92 tem {P(XONE_92.lfos)} e um DJ que anda entre as duas mesas vai
         procurar. Nada no guia do Xone:96 da Allen &amp; Heath descreve um oscilador
         de baixa frequência, então movimento de filtro aqui é a sua mão ou uma
         controladora MIDI, não o mixer.</p>
@@ -544,12 +548,12 @@ const schema = {
       </div>
     </details>
 
-    <details class="acc-sec" name="xone96-acc" id="channels"><summary><h3 class="acc-h2">O que o {XONE_96.channels} te dá de fato</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+    <details class="acc-sec" name="xone96-acc" id="channels"><summary><h3 class="acc-h2">O que o {P(XONE_96.channels)} te dá de fato</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> A Allen &amp; Heath chama ele de mixer
-        analógico de {XONE_96.channels} canais com interface, e, diferente do
+        analógico de {P(XONE_96.channels)} canais com interface, e, diferente do
         Xone:92, onde dois documentos deles discordam da contagem, esse número é
-        consistente em todo lugar. O layout é {XONE_96.channelsDetail}.</p>
+        consistente em todo lugar. O layout é {P(XONE_96.channelsDetail)}.</p>
         <p><strong>O que isso significa na hora de ligar.</strong> Os canais 1 a 4
         selecionam entre USB 1, PHONO, LINE e USB 2, e trazem uma EQ assimétrica de
         quatro bandas em 180Hz, 350Hz, 1.1kHz e 3kHz. Os canais A e B selecionam
@@ -563,7 +567,7 @@ const schema = {
         as duas placas de som encontram o lado analógico: USB 1 e USB 2 são fontes
         selecionáveis em cada um dos seis canais.</p>
         <p><strong>O caminho de sinal.</strong> A Allen &amp; Heath descreve ele
-        como {XONE_96.analogueClaim}. Eles não fazem afirmação de soma analógica
+        como {P(XONE_96.analogueClaim)}. Eles não fazem afirmação de soma analógica
         para este modelo, então a gente também não, mesmo que eles façam para o
         Xone:92.</p>
         <p class="acc-related">Relacionados: <a href="#soundcards">As duas placas de som</a> <a href="#returns-cd">RTN C e RTN D não têm EQ nem crossfader</a></p>
@@ -572,7 +576,7 @@ const schema = {
 
     <details class="acc-sec" name="xone96-acc" id="sends"><summary><h3 class="acc-h2">Os dois aux sends, e onde eles terminam</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> {XONE_96.sends}. Essa assimetria é
+        <p><strong>Resposta curta.</strong> {P(XONE_96.sends)}. Essa assimetria é
         documentada e não é um ajuste que você muda.</p>
         <p><strong>Por que importa.</strong> Um send pré fader continua alimentando
         o efeito depois de você puxar o fader do canal para baixo, que é como a
@@ -594,7 +598,7 @@ const schema = {
 
     <details class="acc-sec" name="xone96-acc" id="mic-inputs"><summary><h3 class="acc-h2">As entradas de mic, e o que elas não aceitam</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> {XONE_96.micInputs} entradas de mic,
+        <p><strong>Resposta curta.</strong> {P(XONE_96.micInputs)} entradas de mic,
         MIC A e MIC B, em XLR balanceado, cada uma aparecendo como uma das quatro
         fontes selecionáveis nos canais A e B. Somente microfones dinâmicos. A
         palavra da Allen &amp; Heath: "NÃO use mics de alta impedância ou
@@ -619,7 +623,7 @@ const schema = {
 
     <details class="acc-sec" name="xone96-acc" id="headphones"><summary><h3 class="acc-h2">Fone, cue e os medidores</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> {XONE_96.headphoneSystems} sistemas de
+        <p><strong>Resposta curta.</strong> {P(XONE_96.headphoneSystems)} sistemas de
         cue de fone independentes, o MONITOR como PHONES 1 e um segundo como PHONES
         2. Cada um tem um soquete TRS de tamanho grande e um mini jack de 3.5mm na
         frente, e existe um modo split cue.</p>
@@ -630,7 +634,7 @@ const schema = {
         cue põe a fonte em cue num ouvido e o mix no outro, que é como você bate BPM
         num palco alto onde o monitor está brigando com você.</p>
         <p><strong>Os medidores são a referência, com uma ressalva.</strong> O alvo
-        da própria Allen &amp; Heath é {XONE_96.meterTarget}. A ressalva já apareceu
+        da própria Allen &amp; Heath é {P(XONE_96.meterTarget)}. A ressalva já apareceu
         duas vezes nesta página: os medidores de LR MIX não seguem os dois controles
         de nível de master, e um plugue no master insert return leva junto o áudio e
         os medidores. Então os medidores são a coisa certa para ajustar ganho e a
@@ -644,7 +648,7 @@ const schema = {
 
     <details class="acc-sec" name="xone96-acc" id="midi-and-xlink"><summary><h3 class="acc-h2">MIDI, X:Link e o ecossistema Xone</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> {XONE_96.midiControls} controles deste
+        <p><strong>Resposta curta.</strong> {P(XONE_96.midiControls)} controles deste
         mixer mandam MIDI. O soquete DIN de 5 pinos é só saída, MIDI entrando no
         mixer chega por USB, e o clock é só de passagem.</p>
         <p><strong>O que só de passagem quer dizer.</strong> O mixer não gera clock
@@ -663,7 +667,7 @@ const schema = {
         active só afetam MIDI. Elas também controlam a passagem de dados e de clock
         do X:Link, então uma controladora pode emudecer por um motivo que não parece
         nada com a chave que causou isso.</p>
-        <p class="acc-related">Relacionados: <a href="#midi-appears-dead">O MIDI parece morto</a> <a href={XONE_96.sourceMidi} rel="noopener">Implementação de MIDI do Xone:96 na Allen &amp; Heath</a></p>
+        <p class="acc-related">Relacionados: <a href="#midi-appears-dead">O MIDI parece morto</a> <a href={P(XONE_96.sourceMidi)} rel="noopener">Implementação de MIDI do Xone:96 na Allen &amp; Heath</a></p>
       </div>
     </details>
 
@@ -701,7 +705,7 @@ const schema = {
     <details class="acc-sec" name="xone96-acc" id="crossfader-part"><summary><h3 class="acc-h2">O crossfader, e o que não é publicado sobre ele</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> O crossfader é um
-        {XONE_96.crossfaderModel}, de série. A Allen &amp; Heath não publica número
+        {P(XONE_96.crossfaderModel)}, de série. A Allen &amp; Heath não publica número
         de peça para ele, e nenhum número de peça de reposição para este mixer, mas
         publica um procedimento de calibração de fader, que é um procedimento que só
         faz sentido se o fader é para ser substituível.</p>
@@ -738,7 +742,7 @@ const schema = {
         <p><strong>Faça assim.</strong> Inspecione cabos antes de eles entrarem na
         bag, e não quando um defeito aparece, desconecte pelo conector e nunca pelo
         cabo, mantenha os dois soquetes USB limpos e sem esforço, e mantenha a mesa
-        coberta no transporte. Ele tem {XONE_96.dimensions} e {XONE_96.weight},
+        coberta no transporte. Ele tem {P(XONE_96.dimensions)} e {P(XONE_96.weight)},
         então é levantamento com as duas mãos e um case que vale comprar. A Allen
         &amp; Heath lista o conteúdo da caixa como o mixer, uma folha de segurança,
         um cabo de força e knobs e botões de reposição, e vale guardar essas peças
@@ -761,7 +765,7 @@ const schema = {
         deles.</p>
         <p><strong>A versão é impressa de dois jeitos, então a gente publica os
         dois.</strong> Para o mesmo download único, a Allen &amp; Heath dá
-        {XONE_96.windowsDriver}. Ele é datado de {XONE_96.windowsDriverDate}, e a
+        {P(XONE_96.windowsDriver)}. Ele é datado de {P(XONE_96.windowsDriverDate)}, e a
         release note dele é uma entrada única sem nenhuma versão anterior listada,
         então também não existe histórico de driver para percorrer. A gente não
         escolhe um dos dois números, porque os dois são deles.</p>
@@ -818,7 +822,7 @@ const schema = {
         vendidos lado a lado, então uma casa rodando um 92 não está rodando uma mesa
         obsoleta.</p>
         <p><strong>O que você vai procurar e não vai achar.</strong> Os LFOs. O
-        Xone:92 tem {XONE_92.lfos} e este mixer tem {XONE_96.lfos}, então um
+        Xone:92 tem {P(XONE_92.lfos)} e este mixer tem {P(XONE_96.lfos)}, então um
         movimento de filtro que você entregava a um LFO aqui é a sua mão ou uma
         controladora. Os plugues de curto phono são o outro: documentados no 92, e
         não fazem parte da documentação nem do conteúdo da caixa deste mixer.</p>
@@ -849,9 +853,9 @@ const schema = {
           <dt>Por que o mic não está na minha gravação?</dt><dd>Por projeto. As entradas de mic não chegam no BOOTH nem no RECORD por padrão, e neste modelo só jumpers internos mudam isso. A Allen &amp; Heath oferece ajuda com a configuração dos jumpers.</dd>
           <dt>Dá para usar um mic condensador?</dt><dd>Não um que precise de phantom power. Não existe phantom power neste mixer, e a instrução da Allen &amp; Heath é não usar mics de alta impedância ou desbalanceados, nem condensadores que precisem de phantom power.</dd>
           <dt>Ele faz Serato?</dt><dd>A Allen &amp; Heath não menciona o Serato em nenhum lugar para este mixer, então não está documentado. {XONE_96.dvsCertified.join(', ')} é certificado, e eles indicam suporte para controle DVS com {XONE_96.dvsSupported.join(', ')}.</dd>
-          <dt>Ele tem LFOs como o Xone:92?</dt><dd>Não. {XONE_96.lfos} neste mixer. O Xone:92 tem {XONE_92.lfos}.</dd>
+          <dt>Ele tem LFOs como o Xone:92?</dt><dd>Não. {P(XONE_96.lfos)} neste mixer. O Xone:92 tem {P(XONE_92.lfos)}.</dd>
           <dt>Dá para ligar dois notebooks nas duas portas USB?</dt><dd>Não está documentado. A Allen &amp; Heath diz que as portas operam de forma independente entre plataformas e projetos, e o único exemplo de configuração deles mostra um notebook nas duas portas, então a gente não lê uma resposta ali.</dd>
-          <dt>Eu preciso de driver?</dt><dd>No macOS não, ele é class compliant. No Windows sim, e a Allen &amp; Heath imprime a versão desse download único como {XONE_96.windowsDriver}.</dd>
+          <dt>Eu preciso de driver?</dt><dd>No macOS não, ele é class compliant. No Windows sim, e a Allen &amp; Heath imprime a versão desse download único como {P(XONE_96.windowsDriver)}.</dd>
           <dt>Dá para ligar um cabo de rede no soquete do X:Link?</dt><dd>Não. É um protocolo proprietário de MIDI e de energia da Allen &amp; Heath, e eles avisam que conectar ele a qualquer dispositivo de terceiros pode danificar o seu hardware.</dd>
           <dt>Onde estão as especificações?</dt><dd>Não existem. A Allen &amp; Heath não publica documento de especificação técnica para este mixer, então não existem números de resposta de frequência, THD, piso de ruído, impedância, headroom, faixa de EQ nem inclinação de filtro.</dd>
           <dt>O Xone:96 substituiu o Xone:92?</dt><dd>A Allen &amp; Heath nunca diz isso. Eles dizem que ele pega a alma do Xone:92 e entrega ela de novo, melhorada, e os dois mixers são vendidos lado a lado.</dd>

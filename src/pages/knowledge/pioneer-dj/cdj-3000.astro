@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../components/ModelStatus.astro';
 import { CHECKED, CDJ_3000, REKORDBOX } from '../../../data/facts.js';
 import Icon from '../../../components/Icon.astro';
 
@@ -52,7 +53,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <ModelStatus slug="cdj-3000" checked={UPDATED} />
         <h1 class="rb-h1">CDJ-3000, <span class="accent">the field manual</span></h1>
       </div>
       <a
@@ -328,7 +329,7 @@ const schema = {
         <p><strong>Short answer.</strong> Device Library. FAT32 always; exFAT from
         firmware {CDJ_3000.exfatIntro}. Pro DJ Link across AlphaTheta / Pioneer DJ
         generations (keep firmware fresh: the DJM-2000NXS link bug below was one of
-        the rare exceptions), up to six players since firmware
+        the rare exceptions), and up to six CDJ-3000 or DJS-1000 units since firmware
         {CDJ_3000.sixPlayersIntro}.</p>
         <p><strong>Why it matters.</strong> Library format decides whether your
         playlists appear; Link compatibility decides whether decks share tempo and
@@ -350,7 +351,7 @@ const schema = {
           <dt>Can this player read exFAT?</dt><dd>Yes, from firmware {CDJ_3000.exfatIntro}. FAT32 works on every firmware.</dd>
           <dt>Does it support OneLibrary?</dt><dd>No. Firmware {CDJ_3000.onelibraryWithdrawn} briefly added it and was withdrawn; the player reads Device Library. A unit still running {CDJ_3000.onelibraryWithdrawn} reads OneLibrary, which is why dual-format exports are the safe habit.</dd>
           <dt>Can I link with a CDJ-2000NXS2 or a CDJ-3000X?</dt><dd>Yes, Pro DJ Link works across generations. Playlists showing up on each deck depends on your USB's library formats, not on Link.</dd>
-          <dt>How many players can share one Link chain?</dt><dd>Up to six since firmware {CDJ_3000.sixPlayersIntro}.</dd>
+          <dt>How many players can share one Link chain?</dt><dd>Up to six CDJ-3000 or DJS-1000 units since firmware {CDJ_3000.sixPlayersIntro}. A chain mixing in older players caps lower.</dd>
           <dt>What does E-8302 mean on this player?</dt><dd>The player cannot read the track data, usually a corrupt export or wrong file system. <a href="/fix/cdj-error-e-8302">Full fix</a>.</dd>
         </dl>
       </div>

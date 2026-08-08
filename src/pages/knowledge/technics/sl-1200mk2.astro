@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../components/ModelStatus.astro';
 import { SL_1200MK2, SL_1200MK7 } from '../../../data/facts.js';
 
 // SECOND TECHNICS MODEL PAGE, and the oldest product this site documents by
@@ -81,7 +82,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <ModelStatus slug="sl-1200mk2" checked={UPDATED} />
         <h1 class="rb-h1">SL-1200MK2, <span class="accent">the field manual</span></h1>
       </div>
       <a
@@ -243,8 +244,8 @@ const schema = {
         use the strobe dots to confirm the platter is locked rather than drifting.
         If a record is playing at the wrong speed, check the speed selector before
         the fader: this deck runs {SL_1200MK2.speeds} and nothing else, so a 45
-        played at 33 is the more likely mistake here than on a deck with a third
-        speed hidden behind a switch.</p>
+        played at 33 is the more likely mistake here than on a deck that has a third
+        speed at all.</p>
         <p><strong>Avoid it next time.</strong> Make the zero check part of setup
         rather than something you notice in the first mix. It takes a second, and on
         a deck with no reset it is the only time you will get a clean reference

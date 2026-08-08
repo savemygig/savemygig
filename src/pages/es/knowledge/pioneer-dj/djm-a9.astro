@@ -3,6 +3,7 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../../components/ModelStatus.astro';
 import { CHECKED, DJM_A9 } from '../../../../data/facts.js';
 import Icon from '../../../../components/Icon.astro';
 
@@ -52,7 +53,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <ModelStatus slug="djm-a9" checked={UPDATED} lang="es" />
         <h1 class="rb-h1">DJM-A9, <span class="accent">el manual de campo</span></h1>
       </div>
       <a
@@ -160,7 +161,8 @@ const schema = {
         que vienen la mayoría de los USB de calidad, exactamente los que lleva un
         profesional.</p>
         <p><strong>Resuélvelo ahora.</strong> Prueba un USB más viejo o más barato
-        para el trabajo del lado del mixer (las grabaciones), y actualiza la mesa a
+        para el trabajo del lado del mixer, que es la propia actualización de
+        firmware, y actualiza la mesa a
         {DJM_A9.uaspFix} o más reciente después del gig.</p>
         <p><strong>Evítalo la próxima vez.</strong> Mantén un USB simple, sin UASP,
         en el bolso para las tareas del mixer; también es el USB que puedes prestar

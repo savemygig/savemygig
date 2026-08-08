@@ -3,7 +3,9 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../../components/ModelStatus.astro';
 import { XONE_92 } from '../../../../data/facts.js';
+import { prose } from '../../../../i18n/prose.js';
 import Icon from '../../../../components/Icon.astro';
 
 // XONE:92, PORTUGUÊS DO BRASIL. A fonte de verdade da estrutura, dos
@@ -19,6 +21,8 @@ const MESES = {
 };
 const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = ptDate(XONE_92.checked);
+// Translate the prose fields facts.js holds in English. See src/i18n/prose.js.
+const P = (v) => prose('pt', v);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -53,7 +57,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <ModelStatus slug="xone-92" checked={UPDATED} lang="pt" />
         <h1 class="rb-h1">Xone:92, <span class="accent">o manual de campo</span></h1>
       </div>
       <a
@@ -90,13 +94,13 @@ const schema = {
       <p class="sv-text" style="margin:0">
         <strong>Briefing de booth.</strong> Um mixer analógico cuja própria
         papelada se contradiz: a página do produto diz
-        {XONE_92.channelsProductPage} canais, a ficha técnica diz
-        {XONE_92.channelsSpecSheet}. Os {XONE_92.filters} filtros estéreo, um de
+        {P(XONE_92.channelsProductPage)} canais, a ficha técnica diz
+        {P(XONE_92.channelsSpecSheet)}. Os {P(XONE_92.filters)} filtros estéreo, um de
         cada lado do crossfader, são a razão de ele existir. Não tem firmware,
         driver nem placa de som, então não tem nada para atualizar. Antes de
         encostar nele: o mic não chega no Booth nem no Record até uma chave no
         painel traseiro liberar, e a unidade do master fica
-        {XONE_92.masterUnityPosition}, não todo no sentido horário.
+        {P(XONE_92.masterUnityPosition)}, não todo no sentido horário.
       </p>
       <label for="sv-toggle" class="sv-more">Ler mais…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
@@ -128,7 +132,7 @@ const schema = {
         se o mic pertence à booth e à gravação, e deixe o painel traseiro
         combinando. É um trabalho de dois minutos com a mesa para fora e
         impossível com a mesa dentro.</p>
-        <p class="acc-related">Relacionados: <a href="#rear-panel-first">Confira o painel traseiro primeiro</a> <a href={XONE_92.sourceMicRouting} rel="noopener">A Allen &amp; Heath sobre sinais de mic e a saída de gravação</a></p>
+        <p class="acc-related">Relacionados: <a href="#rear-panel-first">Confira o painel traseiro primeiro</a> <a href={P(XONE_92.sourceMicRouting)} rel="noopener">A Allen &amp; Heath sobre sinais de mic e a saída de gravação</a></p>
       </div>
     </details>
 
@@ -212,8 +216,8 @@ const schema = {
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> O controle de master não é unidade no
         máximo. A Allen &amp; Heath coloca a unidade, 0dBu,
-        {XONE_92.masterUnityPosition}. Todo no sentido horário dá
-        {XONE_92.masterAtMax}.</p>
+        {P(XONE_92.masterUnityPosition)}. Todo no sentido horário dá
+        {P(XONE_92.masterAtMax)}.</p>
         <p><strong>Por que isso acontece.</strong> Um knob de master que continua
         passando da unidade é normal numa mesa profissional e invisível para um DJ
         que aprendeu que o máximo é a referência. Cravado todo no sentido horário
@@ -221,13 +225,13 @@ const schema = {
         tem que ir para algum lugar, e vai para o estágio de entrada do
         sistema.</p>
         <p><strong>Resolva agora.</strong> Traga o master de volta para
-        {XONE_92.masterUnityPosition}, depois ajuste o volume da sala pelo sistema
+        {P(XONE_92.masterUnityPosition)}, depois ajuste o volume da sala pelo sistema
         da casa, não pelo mixer. Use os medidores de canal, de -20dBu a +10dBu,
         para ver onde o sinal está de fato em vez de julgar pelo knob.</p>
         <p><strong>Evite da próxima vez.</strong> Deixe o master na unidade na
         passagem de som e não mexa nele pelo resto da noite. Volume é controle do
         engenheiro, não seu.</p>
-        <p class="acc-related">Relacionados: <a href={XONE_92.sourceMasterLevels} rel="noopener">A Allen &amp; Heath sobre ajuste de nível de master nos Xone</a></p>
+        <p class="acc-related">Relacionados: <a href={P(XONE_92.sourceMasterLevels)} rel="noopener">A Allen &amp; Heath sobre ajuste de nível de master nos Xone</a></p>
       </div>
     </details>
 
@@ -256,7 +260,7 @@ const schema = {
     <details class="acc-sec" name="xone92-acc" id="phono-shorting-plugs"><summary><h3 class="acc-h2">Ruído numa entrada phono sem uso, e o plugue no soquete errado</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> As entradas phono sem uso pedem
-        plugues de curto dentro delas, peça {XONE_92.phonoShortingPlugPart} da
+        plugues de curto dentro delas, peça {P(XONE_92.phonoShortingPlugPart)} da
         Allen &amp; Heath. Quando você tira um para ligar um toca discos, guarde
         num lugar seguro. O aviso deles: ao remover plugues de curto para conectar
         toca discos, não coloque eles em outras entradas ou saídas RCA, isso
@@ -302,7 +306,7 @@ const schema = {
         removido, o pino de terra cortado ou um adaptador de dois pinos, pare e
         avise a casa. Resolva zumbido no cabeamento de áudio, que é o que a Allen
         &amp; Heath manda fazer e o que a próxima seção descreve.</p>
-        <p class="acc-related">Relacionados: <a href="#hum-and-ground-loops">Zumbido e loops de terra, o procedimento publicado</a> <a href={XONE_92.sourceEarth} rel="noopener">A Allen &amp; Heath sobre zumbido de notebook num mixer Xone</a></p>
+        <p class="acc-related">Relacionados: <a href="#hum-and-ground-loops">Zumbido e loops de terra, o procedimento publicado</a> <a href={P(XONE_92.sourceEarth)} rel="noopener">A Allen &amp; Heath sobre zumbido de notebook num mixer Xone</a></p>
       </div>
     </details>
 
@@ -338,7 +342,7 @@ const schema = {
         <p><strong>Resposta curta.</strong> A Allen &amp; Heath não publica
         firmware, driver nem release note para este mixer, e não existe áudio por
         USB que precise de algum. O único conector digital nele é
-        {XONE_92.digitalIo}. Então não existe número de versão neste mixer para
+        {P(XONE_92.digitalIo)}. Então não existe número de versão neste mixer para
         conferir, e nada nele que possa estar desatualizado. Conferido em
         {UPDATED}.</p>
         <p><strong>O que isso te dá.</strong> Não tem nada para atualizar antes de
@@ -351,7 +355,7 @@ const schema = {
         teria tomado, é o mixer, para sempre: o mic fica fora do Record até a
         chave do painel traseiro ser virada, as posições centrais de assign ficam
         como estão, e nenhuma atualização vem mudar nada disso. A Allen &amp;
-        Heath descreve o caminho de sinal como {XONE_92.analogueClaim}, e isso
+        Heath descreve o caminho de sinal como {P(XONE_92.analogueClaim)}, e isso
         corta dos dois lados.</p>
         <p><strong>Faça assim.</strong> Gaste o tempo que você gastaria
         conferindo uma versão no painel traseiro e nas chaves de assign. É ali que
@@ -387,12 +391,12 @@ const schema = {
         contra os próprios documentos da Allen &amp; Heath antes de ir para a
         página.</p>
         <p style="margin-top:1rem">
-          <strong>Documentação oficial.</strong> <a href={XONE_92.sourceManual} target="_blank" rel="noopener">Manual do usuário do Mk2 (PDF) →</a><br />
-          <a href={XONE_92.sourceSpecs} target="_blank" rel="noopener">Especificação técnica do Mk2 (PDF) →</a><br />
-          <a href={XONE_92.sourceBlockDiagram} target="_blank" rel="noopener">Diagrama de blocos do Mk2 (PDF) →</a><br />
+          <strong>Documentação oficial.</strong> <a href={P(XONE_92.sourceManual)} target="_blank" rel="noopener">Manual do usuário do Mk2 (PDF) →</a><br />
+          <a href={P(XONE_92.sourceSpecs)} target="_blank" rel="noopener">Especificação técnica do Mk2 (PDF) →</a><br />
+          <a href={P(XONE_92.sourceBlockDiagram)} target="_blank" rel="noopener">Diagrama de blocos do Mk2 (PDF) →</a><br />
           <span class="dim" style="font-size:0.85rem">Link quebrado? <a href="/pt/feedback">Avise a gente</a> e nós corrigimos.</span>
         </p>
-        <p class="acc-related">Relacionados: <a href="#no-firmware">Não existe firmware</a> <a href={XONE_92.source} rel="noopener">Página do produto Xone:92 na Allen &amp; Heath</a></p>
+        <p class="acc-related">Relacionados: <a href="#no-firmware">Não existe firmware</a> <a href={P(XONE_92.source)} rel="noopener">Página do produto Xone:92 na Allen &amp; Heath</a></p>
       </div>
     </details>
 
@@ -401,13 +405,13 @@ const schema = {
     <details class="acc-sec" name="xone92-acc" id="filters"><summary><h3 class="acc-h2">Os dois filtros, e por que o mixer existe</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> A descrição da própria Allen &amp;
-        Heath: {XONE_92.filters} VCFs estéreo, um de cada lado do crossfader. Cada
+        Heath: {P(XONE_92.filters)} VCFs estéreo, um de cada lado do crossfader. Cada
         um é comutável entre {XONE_92.filterTypes.join(', ')}, tem chave ON e OFF,
         e carrega a própria varredura de frequência e a própria ressonância.
         Qualquer um dos dois filtros pode ser atribuído a qualquer um dos quatro
         canais estéreo.</p>
         <p><strong>Por que importa.</strong> É o controle pelo qual o mixer é
-        comprado. Cada filtro traz {XONE_92.filterResonance}, e no extremo mais
+        comprado. Cada filtro traz {P(XONE_92.filterResonance)}, e no extremo mais
         selvagem a Allen &amp; Heath descreve o resultado como reforço de
         realimentação ressonante, que é o som que as pessoas querem dizer quando
         falam de um filtro Xone. Como são dois e ficam um de cada lado do
@@ -429,7 +433,7 @@ const schema = {
 
     <details class="acc-sec" name="xone92-acc" id="lfos"><summary><h3 class="acc-h2">Os dois LFOs</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> {XONE_92.lfos} osciladores de baixa
+        <p><strong>Resposta curta.</strong> {P(XONE_92.lfos)} osciladores de baixa
         frequência independentes modulam os filtros, com tap tempo e um ajuste de
         velocidade x2.</p>
         <p><strong>Por que importa.</strong> Um LFO move um filtro por você, no
@@ -454,19 +458,19 @@ const schema = {
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> Os dois números são da própria Allen
         &amp; Heath. A página do produto chama ele de mixer analógico de
-        {XONE_92.channelsProductPage} canais. A ficha de especificação técnica do
-        mesmo mixer diz canais {XONE_92.channelsSpecSheet}. A gente publica os
+        {P(XONE_92.channelsProductPage)} canais. A ficha de especificação técnica do
+        mesmo mixer diz canais {P(XONE_92.channelsSpecSheet)}. A gente publica os
         dois em vez de escolher um, porque os dois são oficiais.</p>
         <p><strong>O que está de fato na sua frente.</strong> O layout é
-        {XONE_92.channelsDetail}. Conte os dois canais de mic e return como canais
+        {P(XONE_92.channelsDetail)}. Conte os dois canais de mic e return como canais
         de música e você chega num número, conte separado e você chega no outro,
         que é a razão mais provável para dois documentos da mesma empresa
         discordarem.</p>
         <p><strong>Por que importa.</strong> Isso decide o que você pode ligar.
         Quatro canais estéreo aceitam toca discos ou fontes de linha e passam pela
         EQ, pelos filtros e pelo crossfader. Os canais de mic e return,
-        {XONE_92.micInputs} deles, aceitam um microfone em XLR ou um return de
-        linha, e não passam pelo crossfader. Também tem {XONE_92.auxSends} aux
+        {P(XONE_92.micInputs)} deles, aceitam um microfone em XLR ou um return de
+        linha, e não passam pelo crossfader. Também tem {P(XONE_92.auxSends)} aux
         sends, comutáveis pré ou pós fader e alimentados pelos seis canais.</p>
         <p><strong>Erros comuns.</strong> Ler 6 + 2 e planejar seis toca discos,
         ou ler 4 + 2 e não perceber que os canais de return são canais completos
@@ -477,7 +481,7 @@ const schema = {
 
     <details class="acc-sec" name="xone92-acc" id="midi"><summary><h3 class="acc-h2">Saída MIDI</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> {XONE_92.digitalIo}, e essa é a única
+        <p><strong>Resposta curta.</strong> {P(XONE_92.digitalIo)}, e essa é a única
         conexão digital do mixer. Ela é atribuível, manda mensagens de CC e de
         note on e off, e vem no canal MIDI 16 com uma chave para 15.</p>
         <p><strong>Por que importa.</strong> O mixer consegue comandar software ou
@@ -548,16 +552,16 @@ const schema = {
     <details class="acc-sec" name="xone92-acc" id="crossfader-part"><summary><h3 class="acc-h2">O crossfader é uma peça substituível, e isso importa numa mesa de vida tão longa</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> O crossfader é um
-        {XONE_92.crossfaderModel}, de série no Mk2, totalmente atribuível a partir
+        {P(XONE_92.crossfaderModel)}, de série no Mk2, totalmente atribuível a partir
         de cada canal de música e substituível pelo usuário. O número de peça da
-        Allen &amp; Heath é {XONE_92.crossfaderPart}, e a palavra deles é que o
+        Allen &amp; Heath é {P(XONE_92.crossfaderPart)}, e a palavra deles é que o
         acesso a ele é fácil caso a troca seja necessária.</p>
         <p><strong>Por que importa.</strong> Um mixer construído em volta de um
         filtro que estreou em 2004 sobrevive aos próprios faders várias vezes.
         Numa mesa em que o crossfader não é peça de reposição, o desgaste encerra
         a vida útil do mixer. Aqui ele é um número de peça e uma tarde.</p>
         <p><strong>Faça assim.</strong> Se o crossfader ficar áspero ou cortar de
-        forma irregular, peça o {XONE_92.crossfaderPart} em vez de contornar o
+        forma irregular, peça o {P(XONE_92.crossfaderPart)} em vez de contornar o
         problema, e mantenha um no case se a mesa é sua e viaja. A Allen &amp;
         Heath não publica vida útil nem número de ciclos para ele, então a troca é
         guiada pelo tato e não por um número.</p>
@@ -581,9 +585,9 @@ const schema = {
         <p><strong>Faça assim.</strong> Inspecione cabos antes de eles entrarem na
         bag, e não quando um defeito aparece, desconecte pelo conector e não pelo
         cabo, mantenha os plugues de curto todos contados, e mantenha a mesa
-        coberta no transporte. A alimentação é {XONE_92.mains}, então o mesmo
+        coberta no transporte. A alimentação é {P(XONE_92.mains)}, então o mesmo
         mixer viaja entre países sem nada para comutar e sem fusível para trocar.
-        Ele tem {XONE_92.dimensions} e {XONE_92.weight}, e os dois vêm do guia da
+        Ele tem {P(XONE_92.dimensions)} e {P(XONE_92.weight)}, e os dois vêm do guia da
         Limited Edition da Allen &amp; Heath e não da ficha de especificação do
         Mk2, que deixa isso de fora.</p>
         <p><strong>Evite da próxima vez.</strong> Não enrole cabos apertado em
@@ -624,7 +628,7 @@ const schema = {
 
     <details class="acc-sec" name="xone92-acc" id="revisions"><summary><h3 class="acc-h2">Mk1, Mk2 e a Limited Edition</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> {XONE_92.revisions}. A Allen &amp;
+        <p><strong>Resposta curta.</strong> {P(XONE_92.revisions)}. A Allen &amp;
         Heath documenta o Mk1 e o Mk2 como mixers distintos, com internos
         diferentes e números de página de manual diferentes, então um Mk1 numa
         casa não é simplesmente um Mk2 mais velho de aparência. A Allen &amp;
@@ -632,7 +636,7 @@ const schema = {
         suporte dele, então as duas revisões são mesas que você vai receber para
         tocar e não peças de museu.</p>
         <p><strong>As diferenças que eles listam.</strong> Ele roda
-        {XONE_92.faderType}. Num Mk1, mudar essa curva exige em vez disso uma
+        {P(XONE_92.faderType)}. Num Mk1, mudar essa curva exige em vez disso uma
         modificação de hardware dentro do mixer. As orelhas de rack vinham com o
         Mk1 e não vêm com o Mk2. As adições do Mk2 que a Allen &amp; Heath lista
         são o crossfader mini innoFADER Pro, uma cor storm grey, aquela chave de
@@ -658,12 +662,12 @@ const schema = {
       <div class="acc-body">
         <dl class="rb-errors">
           <dt>Em qual firmware ele deve estar?</dt><dd>A pergunta não se aplica. A Allen &amp; Heath não publica firmware, driver nem release note para este mixer, e não existe áudio por USB que precise de algum.</dd>
-          <dt>É um mixer de quatro canais ou de seis?</dt><dd>A Allen &amp; Heath diz os dois. A página do produto diz {XONE_92.channelsProductPage}, a ficha de especificação técnica diz {XONE_92.channelsSpecSheet}. Fisicamente: {XONE_92.channelsDetail}.</dd>
+          <dt>É um mixer de quatro canais ou de seis?</dt><dd>A Allen &amp; Heath diz os dois. A página do produto diz {P(XONE_92.channelsProductPage)}, a ficha de especificação técnica diz {P(XONE_92.channelsSpecSheet)}. Fisicamente: {P(XONE_92.channelsDetail)}.</dd>
           <dt>Por que o mic não está na minha gravação?</dt><dd>Por projeto. As entradas de mic não vão para as saídas BOOTH nem RECORD até as chaves de clean feed do painel traseiro dizerem o contrário.</dd>
           <dt>Ele faz DVS?</dt><dd>A Allen &amp; Heath não documenta DVS nem timecode para este mixer, e ele não tem placa de som. O que funcionar, funciona pela sua própria interface, sem nada publicado para se apoiar.</dd>
-          <dt>Dá para usar como placa de som do meu notebook?</dt><dd>Não. Não existe áudio por USB neste mixer. {XONE_92.digitalIo}.</dd>
-          <dt>Onde fica a unidade no master?</dt><dd>A unidade fica {XONE_92.masterUnityPosition}. Todo no sentido horário dá {XONE_92.masterAtMax}.</dd>
-          <dt>Dá para trocar o crossfader sozinho?</dt><dd>Dá. É um {XONE_92.crossfaderModel}, peça {XONE_92.crossfaderPart} da Allen &amp; Heath, e eles descrevem o acesso como fácil caso a troca seja necessária.</dd>
+          <dt>Dá para usar como placa de som do meu notebook?</dt><dd>Não. Não existe áudio por USB neste mixer. {P(XONE_92.digitalIo)}.</dd>
+          <dt>Onde fica a unidade no master?</dt><dd>A unidade fica {P(XONE_92.masterUnityPosition)}. Todo no sentido horário dá {P(XONE_92.masterAtMax)}.</dd>
+          <dt>Dá para trocar o crossfader sozinho?</dt><dd>Dá. É um {P(XONE_92.crossfaderModel)}, peça {P(XONE_92.crossfaderPart)} da Allen &amp; Heath, e eles descrevem o acesso como fácil caso a troca seja necessária.</dd>
           <dt>Existe manual de serviço?</dt><dd>Não. A Allen &amp; Heath publica um diagrama de blocos, que é a coisa mais próxima de documentação de serviço disponível para este mixer.</dd>
           <dt>Dá para tirar o terra da rede para matar um zumbido?</dt><dd>Não. A Allen &amp; Heath chama isso de risco de defeito potencialmente letal num mixer de chassi de metal. Isole o terra no cabeamento de áudio.</dd>
         </dl>

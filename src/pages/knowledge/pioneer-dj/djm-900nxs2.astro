@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../components/ModelStatus.astro';
 import { CHECKED, DJM_900NXS2 } from '../../../data/facts.js';
 import Icon from '../../../components/Icon.astro';
 
@@ -54,7 +55,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <ModelStatus slug="djm-900nxs2" checked={UPDATED} />
         <h1 class="rb-h1">DJM-900NXS2, <span class="accent">the field manual</span></h1>
       </div>
       <a
@@ -211,16 +212,30 @@ const schema = {
 
     <details class="acc-sec" name="djm900-acc" id="known-issues"><summary><h3 class="acc-h2">Firmware and known issues</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Short answer.</strong> We do not have a verified, documented
-        hardware defect to report for this mixer. The one documented software-side
-        issue: DJM-REC recordings could halt part-way through a set, fixed in mixer
-        firmware 2.06 and again in 2.08 for iOS/iPadOS audio, so old venue firmware
-        still bites recording. This section was last checked
-        against official sources on {UPDATED}.</p>
-        <p><strong>Why we are saying that plainly.</strong> This site's rule is to
-        state a fact only once it is verified against a primary source. AlphaTheta
-        does publish firmware updates for this mixer; check the official firmware
-        page for your unit's current state before a major show.</p>
+        <p><strong>Short answer.</strong> AlphaTheta document fault fixes across
+        ten versions of this mixer's firmware, and most of them are audio faults
+        rather than cosmetic ones. On a desk this widely installed, an un-updated
+        unit is a real risk rather than a theoretical one. The full list is on the
+        firmware matrix; the highest published version is
+        {DJM_900NXS2.newestKnown}. This section was last checked against official
+        sources on {UPDATED}.</p>
+        <p><strong>The ones most likely to reach the room.</strong> Audio dropouts
+        with DIGITAL selected, fixed in {DJM_900NXS2.digitalDropoutFix}. SOUND
+        COLOR FX behaving incorrectly, fixed in {DJM_900NXS2.soundColorFxFix}. A
+        clicking noise on the FILTER and a pop from DIGITAL MASTER OUT at power on,
+        fixed in {DJM_900NXS2.filterClickFix}. Incorrect output when changing Beat
+        FX or the FX channel, fixed in {DJM_900NXS2.beatFxOutputFix}. A pop from
+        the EQ or ISO knob with ISOLATOR selected, and a linked player's display
+        freezing during HID control, fixed in
+        {DJM_900NXS2.crossfaderHidEqFix}. And PRO DJ LINK network faults, fixed in
+        {DJM_900NXS2.linkSoundColorFix}.</p>
+        <p><strong>Recording specifically.</strong> DJM-REC recording or live
+        streaming could stop part way through, fixed in
+        {DJM_900NXS2.recHaltFix}, and iOS and iPadOS audio again in
+        {DJM_900NXS2.iosAudioFix}. Old venue firmware still bites recording.</p>
+        <p><strong>No hardware defect notice.</strong> AlphaTheta have published no
+        inspection or repair programme for this mixer, which is a different and
+        better situation from the firmware list above.</p>
         <p><strong>Do this.</strong> If you hit a genuine, repeatable fault on a
         specific firmware version, <a href="/feedback">tell us what happened</a> and
         we will verify and document it properly, the same way this page documents

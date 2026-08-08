@@ -3,6 +3,7 @@ import Base from '../../../../layouts/Base.astro';
 import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import ModelStatus from '../../../../components/ModelStatus.astro';
 import { CHECKED, CDJ_3000, REKORDBOX } from '../../../../data/facts.js';
 import Icon from '../../../../components/Icon.astro';
 
@@ -55,7 +56,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <ModelStatus slug="cdj-3000" checked={UPDATED} lang="es" />
         <h1 class="rb-h1">CDJ-3000, <span class="accent">el manual de campo</span></h1>
       </div>
       <a
@@ -349,8 +350,9 @@ const schema = {
         <p><strong>Respuesta corta.</strong> Device Library. FAT32 siempre, exFAT
         desde el firmware {CDJ_3000.exfatIntro}. Pro DJ Link entre generaciones
         AlphaTheta / Pioneer DJ (mantén el firmware al día: el bug de link con el
-        DJM-2000NXS descrito en esta página fue una de las raras excepciones), hasta
-        seis reproductores desde el firmware {CDJ_3000.sixPlayersIntro}.</p>
+        DJM-2000NXS descrito en esta página fue una de las raras excepciones), y
+        hasta seis unidades CDJ-3000 o DJS-1000 desde el firmware
+        {CDJ_3000.sixPlayersIntro}.</p>
         <p><strong>Por qué importa.</strong> El formato de biblioteca decide si tus
         playlists aparecen. La compatibilidad de Link decide si los decks comparten
         tempo y datos de track. Son preguntas independientes, y este deck las
@@ -371,7 +373,7 @@ const schema = {
           <dt>¿Este reproductor lee exFAT?</dt><dd>Sí, desde el firmware {CDJ_3000.exfatIntro}. FAT32 funciona con cualquier firmware.</dd>
           <dt>¿Soporta OneLibrary?</dt><dd>No. El firmware {CDJ_3000.onelibraryWithdrawn} lo agregó por poco tiempo y fue retirado, y el reproductor lee Device Library. Una unidad que todavía corre {CDJ_3000.onelibraryWithdrawn} lee OneLibrary, y por eso exportar en los dos formatos es el hábito seguro.</dd>
           <dt>¿Puedo hacer link con un CDJ-2000NXS2 o un CDJ-3000X?</dt><dd>Sí, el Pro DJ Link funciona entre generaciones. Que las playlists aparezcan en cada deck depende de los formatos de biblioteca de tu USB, no del Link.</dd>
-          <dt>¿Cuántos reproductores caben en una misma cadena de Link?</dt><dd>Hasta seis, desde el firmware {CDJ_3000.sixPlayersIntro}.</dd>
+          <dt>¿Cuántos reproductores caben en una misma cadena de Link?</dt><dd>Hasta seis unidades CDJ-3000 o DJS-1000, desde el firmware {CDJ_3000.sixPlayersIntro}. Una cadena con reproductores más viejos en el medio soporta menos.</dd>
           <dt>¿Qué significa E-8302 en este reproductor?</dt><dd>El reproductor no puede leer los datos del track, casi siempre un export corrupto o el sistema de archivos equivocado. <a href="/es/fix/cdj-error-e-8302">Solución completa</a>.</dd>
         </dl>
       </div>

@@ -167,6 +167,40 @@ if (fs.existsSync(DIST)) {
   console.log(`note  ${DIST} not built, skipped the page-existence checks`);
 }
 
+/*
+ * EVERY MODEL PAGE STATES ITS LAUNCH YEAR. Antonio, 2026-08-08: a DJ should be able
+ * to tell how old a unit is, whether it is a current model or a previous
+ * generation, and whether it is something they will only meet in a rental
+ * inventory. The year lives on the EQUIPMENT entry, so no page can state one the
+ * data layer does not hold, and ModelStatus.astro renders it so there is nothing
+ * to copy. This asserts the result on the built page in all three languages,
+ * because the failure mode is a page that renders the reviewed date alone and looks
+ * completely fine.
+ */
+if (fs.existsSync(DIST)) {
+  let withYear = 0;
+  const expect = EQUIPMENT.length * LANGS.length;
+  for (const lang of ['', 'pt/', 'es/']) {
+    for (const m of EQUIPMENT) {
+      const brand = BRANDS.find((b) => b.key === m.brand);
+      if (!brand) continue;
+      const file = path.join(DIST, lang, brand.hub.replace(/^\//, ''), `${m.slug}.html`);
+      if (!fs.existsSync(file)) continue;
+      const html = fs.readFileSync(file, 'utf8');
+      const line = html.match(/class="status-line sl-date"[^>]*>([\s\S]*?)<\/div>/);
+      const text = line ? line[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+      if (m.released && text.includes(String(m.released))) {
+        withYear++;
+      } else {
+        fail(`${file}: model page does not state its launch year`,
+          `EQUIPMENT says released ${m.released}, the status line reads "${text}"`,
+          'Render it with <ModelStatus slug=... checked={UPDATED} lang=... />.');
+      }
+    }
+  }
+  if (withYear === expect) console.log(`PASS  launch years  ${withYear} model pages state one`);
+}
+
 if (failed) {
   console.error(`\nKinds and brands check FAIL: ${failed} problem(s).`);
   process.exit(1);

@@ -447,9 +447,12 @@ const schema = {
         <p><strong>Why this matters.</strong> {REKORDBOX.withdrawn} was withdrawn by
         AlphaTheta because tracks exported with that version could fail to load on
         their own hardware. It was fixed in {REKORDBOX.dualFormatFloor}. For writing both
-        Device Library and OneLibrary to the same drive AlphaTheta names
-        {REKORDBOX.withdrawn} or later as the floor, and because that version was
-        withdrawn, {REKORDBOX.dualFormatFloor} is the first one worth installing. The
+        Device Library and OneLibrary to the same drive AlphaTheta name
+        {REKORDBOX.dualFormatDocumentedFrom} as the version from which rekordbox
+        does it. {REKORDBOX.withdrawn} sits between that and
+        {REKORDBOX.dualFormatFloor} and was pulled, so anyone already on
+        {REKORDBOX.dualFormatDocumentedFrom} is fine and anyone updating should
+        land on {REKORDBOX.dualFormatFloor} or later. The
         dual format is not automatic on an existing drive: AlphaTheta's OneLibrary
         Compatible USB Device Export guide has you right-click <strong>OneLibrary</strong>
         on the device once and choose <strong>Convert from Device Library</strong>.

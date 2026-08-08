@@ -19,7 +19,26 @@
 export const CHECKED = '26 July 2026';
 
 export const REKORDBOX = {
-  dualFormatFloor: '7.2.13',        // first safe version that writes BOTH DB formats. Permanent.
+  /*
+   * TWO NUMBERS, TWO DIFFERENT CLAIMS, and conflating them put three different
+   * answers on this site to one question. An audit found the XDJ pages saying
+   * 7.2.11, the CDJ pages and the dictionary saying 7.2.13, and the rekordbox page
+   * attributing 7.2.12 to AlphaTheta, which no AlphaTheta page says.
+   *
+   *   dualFormatDocumentedFrom  the version AlphaTheta actually name as the one
+   *                             from which rekordbox writes BOTH library formats
+   *                             when exporting. This is the sourced fact.
+   *   dualFormatFloor           the version to actually INSTALL, which is not the
+   *                             same number, because 7.2.12 sits in between and
+   *                             was withdrawn. Someone already on 7.2.11 is fine;
+   *                             someone updating should land on 7.2.13 or later.
+   *
+   * Both are thresholds rather than snapshots, so both stay true forever, and every
+   * page renders them from here rather than writing a version into prose.
+   */
+  dualFormatDocumentedFrom: '7.2.11',
+  sourceDualFormat: 'https://alphatheta.com/en/information/important-notice-for-customers-using-usb-devices-with-our-dj-equipment/',
+  dualFormatFloor: '7.2.13',        // first SAFE version at or above the floor. Permanent.
   withdrawn: '7.2.12',              // withdrawn, exports could fail to load. Never use. Permanent.
   deviceLibraryPlusIntro: '6.6.11', // OneLibrary (then "Device Library Plus"), March 2023.
   newestKnown: '7.2.16',            // reference only. DO NOT render as "current" or "latest".
@@ -43,8 +62,28 @@ export const VENDOR_LINKS = [
 export const CDJ_2000NXS2 = {
   newestKnown: '1.86',                 // 27 Feb 2024, "minor bugs fixed". Reference only.
   beatJumpIntro: '1.70',               // 2/4/8/16-beat Beat Jump added, 21 Sep 2017.
+  /*
+   * THE REST OF THE CHANGE HISTORY, ADDED after an audit found this page claiming
+   * "three firmware updates fixed real, documented problems on this deck".
+   * AlphaTheta document fixes in THIRTEEN versions. The sharpest omission was
+   * 1.85: Apple Lossless files would not play and macOS Catalina could not see the
+   * unit as an audio device, which is the exact pair this site already documents
+   * on the XDJ-1000MK2 page as its 1.42. So the site knew the fault and had it on
+   * one page and not the other.
+   */
+  alacCatalinaFix: '1.85',             // 4 Feb 2020: Apple Lossless would not play; macOS Catalina 10.15 could not see it as an audio device.
+  matchingFix: '1.84',                 // inconsistencies using the matching function.
+  rekordboxIosFix: '1.83',             // connection issue with rekordbox on iOS 11.2.6.
+  showKontrolFix: '1.82',              // ShowKontrol software connection failure.
+  loopPopHotCueFix: '1.80',            // popping noise during loop operations, and a HOT CUE disappearing after a search.
+  syncBpmFix: '1.72',                  // playback speed did not return to the displayed BPM with Sync enabled.
+  searchFix: '1.71',                   // SEARCH worked incorrectly under certain conditions.
+  apeTagLoopFix: '1.70',               // emergency loop on certain MP3 files, plus search related faults.
   slipHotCueFix: '1.60',               // startup and SLIP HOT CUE issue fixed, 11 Jan 2017.
   waveformColorFix: '1.55',            // waveform colour selection, briefly broken, restored, 13 Dec 2016.
+  loadTimeHotLoopFix: '1.50',          // track loading delays, HOT LOOP length changing, colour selection faults.
+  linkDistortionFix: '1.40',           // PRO DJ LINK faults, audio distortion, screen transition faults.
+  trackFilterFix: '1.30',              // TRACK FILTER worked incorrectly.
   controlModeDropoutFix: '1.51',       // audio dropouts in Control Mode eliminated, 20 Oct 2016.
   // "FAT32 ONLY" WAS WRONG AND SHIPPED BOLD (corrected 2026-08-07, same error as
   // the CDJ-2000NXS and CDJ-900NXS pages). AlphaTheta's Operating Instructions,
@@ -97,6 +136,30 @@ export const DJM_900NXS2 = {
   sendReturn: true,          // independent send/return, internal + external FX at once
   beatFxCount: 14,
   soundColorFx: ['Sweep', 'Filter', 'Crush', 'Dub Echo', 'Noise', 'Space'],
+  /*
+   * THE CHANGE HISTORY, READ IN FULL. Until now this constant held no firmware at
+   * all, and both this mixer's page and the firmware matrix said its history was
+   * "feature work" beyond the DJM-REC recording halts. That was false: AlphaTheta
+   * document fault fixes across TEN versions, several of them mid-set class.
+   *
+   * This is the most installed professional mixer in the world, so it was also the
+   * worst page on the site to be wrong about. The failure is a familiar one here,
+   * recorded four times on 7 August: a page asserting how COMPLETE a history is,
+   * rather than asserting what a fault is. A count of faults is a claim about every
+   * version you did not read.
+   */
+  newestKnown: '2.08',              // 23 Jun 2026. Reference only.
+  iosAudioFix: '2.08',              // 23 Jun 2026: audio communication with iOS/iPadOS devices.
+  recHaltFix: '2.06',               // 14 Jan 2020: DJM-REC recording or live streaming sometimes stopped.
+  iosSignalFix: '2.05',             // 19 Dec 2017: incorrect audio in/out to an iOS device, and the effect channel selector not working with it.
+  fxAssignPopFix: '2.02',           // 8 Aug 2017: popping noise via USB audio (FX SEND/RETURN) when switching FX assign in rekordbox.
+  crossfaderHidEqFix: '2.01',       // 14 Feb 2017: crossfader cut lag precision, CDJ display freezing during HID control, popping from the EQ/ISO knob with ISOLATOR selected.
+  beatFxOutputFix: '2.00',          // 25 Oct 2016: incorrect audio output when changing Beat FX or FX channel, channel level indicator lit at launch, switching noise on USB output level.
+  filterClickFix: '1.20',           // 2 Aug 2016: clicking noise using FILTER of SOUND COLOR FX, and a pop from DIGITAL MASTER OUT at launch.
+  soundColorFxFix: '1.10',          // 23 May 2016: SOUND COLOR FX worked incorrectly, with flanger volume issues.
+  digitalDropoutFix: '1.09',        // 10 Feb 2016: audio dropouts in certain conditions with DIGITAL selected.
+  linkSoundColorFix: '1.07',        // 28 Jan 2016: PRO DJ LINK network issues, SOUND COLOR FX signal chain problems, sampling rate switching noise.
+  sourceHistory: 'https://downloads.support.alphatheta.com/firmwares/dj-mixers/DJM-900NXS2/DJM-900NXS2-Firmware-Change-History-Ver208-en.pdf',
   source: 'https://www.pioneerdj.com/en-us/product/mixer/archive/djm-900nxs2/black/specifications/',
 };
 
@@ -891,9 +954,19 @@ export const FIRMWARE_ISSUES = [
     href: '/knowledge/pioneer-dj/cdj-2000nxs2',
     source: CDJ_2000NXS2.source,
     issues: [
+      { fixedIn: CDJ_2000NXS2.alacCatalinaFix, area: 'Playback', midSet: true, symptom: 'Some Apple Lossless files would not play, and macOS Catalina 10.15 could not see the unit as an audio device.' },
+      { fixedIn: CDJ_2000NXS2.matchingFix, area: 'Browse', midSet: false, symptom: 'Inconsistencies in the matching function.' },
+      { fixedIn: CDJ_2000NXS2.rekordboxIosFix, area: 'Link', midSet: false, symptom: 'A connection fault with rekordbox on iOS.' },
+      { fixedIn: CDJ_2000NXS2.loopPopHotCueFix, area: 'Audio', midSet: true, symptom: 'Popping noise during loop operations, and a HOT CUE disappearing after a search.' },
+      { fixedIn: CDJ_2000NXS2.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync enabled.' },
+      { fixedIn: CDJ_2000NXS2.searchFix, area: 'Browse', midSet: true, symptom: 'SEARCH worked incorrectly under certain conditions.' },
+      { fixedIn: CDJ_2000NXS2.apeTagLoopFix, area: 'Playback', midSet: true, symptom: 'Emergency loop triggering on certain MP3 files carrying APE tag data.' },
       { fixedIn: CDJ_2000NXS2.slipHotCueFix, area: 'Playback', midSet: false, symptom: 'A startup issue affecting SLIP HOT CUE behaviour.' },
       { fixedIn: CDJ_2000NXS2.waveformColorFix, area: 'Display', midSet: false, symptom: 'Waveform colour selection went missing, then was restored.' },
+      { fixedIn: CDJ_2000NXS2.loadTimeHotLoopFix, area: 'Browse', midSet: true, symptom: 'Track load delays, a HOT LOOP changing length, and colour selection faults.' },
       { fixedIn: CDJ_2000NXS2.controlModeDropoutFix, area: 'Audio', midSet: true, symptom: 'Audio dropouts during Control Mode playback.' },
+      { fixedIn: CDJ_2000NXS2.linkDistortionFix, area: 'Link', midSet: true, symptom: 'PRO DJ LINK faults, audio distortion, and screen transition faults.' },
+      { fixedIn: CDJ_2000NXS2.trackFilterFix, area: 'Browse', midSet: false, symptom: 'TRACK FILTER worked incorrectly.' },
     ],
   },
   {
@@ -1050,10 +1123,17 @@ export const FIRMWARE_ISSUES = [
     // Points at AlphaTheta's own DJM-900NXS2 support article instead.
     source: 'https://support.alphatheta.com/en-US/articles/4404624354969',
     issues: [
-      { fixedIn: DJM_REC.nxs2RecHaltFixes[1], area: 'Recording', midSet: false, symptom: 'DJM-REC recording halts affecting iOS and iPadOS audio.' },
-      { fixedIn: DJM_REC.nxs2RecHaltFixes[0], area: 'Recording', midSet: false, symptom: 'DJM-REC recording could halt part-way through a set.' },
+      { fixedIn: DJM_900NXS2.iosAudioFix, area: 'Audio', midSet: false, symptom: 'Audio communication with iOS and iPadOS devices.' },
+      { fixedIn: DJM_900NXS2.recHaltFix, area: 'Recording', midSet: false, symptom: 'DJM-REC recording or live streaming sometimes stopped.' },
+      { fixedIn: DJM_900NXS2.iosSignalFix, area: 'Audio', midSet: true, symptom: 'Incorrect audio in and out when connected to an iOS device, and the effect channel selector not working with it.' },
+      { fixedIn: DJM_900NXS2.fxAssignPopFix, area: 'Audio', midSet: true, symptom: 'Popping noise through USB audio when switching FX ASSIGN with BEAT FX on.' },
+      { fixedIn: DJM_900NXS2.crossfaderHidEqFix, area: 'Audio', midSet: true, symptom: 'Crossfader cut lag precision, a linked player display freezing during HID control, and a pop from the EQ or ISO knob with ISOLATOR selected.' },
+      { fixedIn: DJM_900NXS2.beatFxOutputFix, area: 'Audio', midSet: true, symptom: 'Incorrect audio output when changing Beat FX or the FX channel, a channel level indicator lit at power on, and switching noise on the USB output level.' },
+      { fixedIn: DJM_900NXS2.filterClickFix, area: 'Audio', midSet: true, symptom: 'Clicking noise using the FILTER of SOUND COLOR FX, and a pop from DIGITAL MASTER OUT at power on.' },
+      { fixedIn: DJM_900NXS2.soundColorFxFix, area: 'Audio', midSet: true, symptom: 'SOUND COLOR FX worked incorrectly, with flanger volume faults.' },
+      { fixedIn: DJM_900NXS2.digitalDropoutFix, area: 'Audio', midSet: true, symptom: 'Audio dropouts under certain conditions with DIGITAL selected.' },
+      { fixedIn: DJM_900NXS2.linkSoundColorFix, area: 'Link', midSet: true, symptom: 'PRO DJ LINK network faults, SOUND COLOR FX signal chain faults, and sampling rate switching noise.' },
     ],
-    note: 'AlphaTheta has published no hardware defect fix for this mixer beyond the DJM-REC recording halts. The rest of its change history is feature work.',
   },
 
   {
@@ -1258,7 +1338,7 @@ export const SL_1200MK7 = {
   motorPressReleaseTerm: 'newly developed coreless direct drive motor',
   type: 'Direct drive manual turntable',
   platter: 'Aluminium diecast, 332 mm diameter, approximately 1.8 kg including the slipmat and slip sheet',
-  speeds: '33-1/3 and 45 rpm, and 78 rpm with a switch',
+  speeds: '33-1/3 and 45 rpm, and 78 rpm by pressing the [33] and [45] buttons together',
   startingTorque: '0.18 N-m, which is 1.8 kg-cm',
   startUpTime: '0.7 seconds from standstill to 33-1/3 rpm',
   wowFlutter: '0.025 % WRMS',
@@ -1548,7 +1628,7 @@ export const XONE_96 = {
 export const EQUIPMENT = [
   // ------------------------------------------- PIONEER DJ / ALPHATHETA
   {
-    slug: 'cdj-3000x', name: 'CDJ-3000X', kind: 'player', brand: 'pioneer-dj', released: 2026,
+    slug: 'cdj-3000x', name: 'CDJ-3000X', kind: 'player', brand: 'pioneer-dj', released: 2025,
     newer: null,                       // top of the CDJ line
     older: 'cdj-3000',
     paired: ['djm-a9', 'djm-v10'],     // flagship deck, flagship desks
@@ -1601,7 +1681,7 @@ export const EQUIPMENT = [
     tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep'],
   },
   {
-    slug: 'xdj-1000mk2', name: 'XDJ-1000MK2', kind: 'player', brand: 'pioneer-dj', released: 2015,
+    slug: 'xdj-1000mk2', name: 'XDJ-1000MK2', kind: 'player', brand: 'pioneer-dj', released: 2016,
     newer: null,                       // nothing officially named as its successor
     older: null,                       // the XDJ-1000 has no page here
     paired: ['djm-900nxs2', 'djm-900nxs'],

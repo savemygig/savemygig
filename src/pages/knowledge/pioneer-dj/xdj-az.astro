@@ -3,7 +3,8 @@ import Base from '../../../layouts/Base.astro';
 import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../components/RelatedEquipment.astro';
-import { XDJ_AZ } from '../../../data/facts.js';
+import ModelStatus from '../../../components/ModelStatus.astro';
+import { XDJ_AZ, REKORDBOX } from '../../../data/facts.js';
 
 /**
  * XDJ-AZ, the four channel all-in-one and the fourth equipment kind on this
@@ -67,7 +68,7 @@ const schema = {
 
     <div class="hw-head">
       <div class="hw-head-text">
-        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <ModelStatus slug="xdj-az" checked={UPDATED} />
         <h1 class="rb-h1">XDJ-AZ, <span class="accent">the field manual</span></h1>
       </div>
       <a
@@ -106,7 +107,7 @@ const schema = {
         takes the whole booth down at once rather than one deck. It reads
         <strong>OneLibrary only</strong>: a USB exported the old way loads
         nothing and the screen reports the database was not found, so export from
-        rekordbox 7.2.11 or later, which writes both formats. File systems are
+        rekordbox {REKORDBOX.dualFormatFloor} or later, which writes both formats. File systems are
         <strong>{FS}</strong>, never NTFS. If an early unit drops audio, blacks
         out or freezes, that is a documented defect with a free repair, and
         firmware {XDJ_AZ.audioBlackoutFreezeFix} addresses the same symptoms.
@@ -124,8 +125,7 @@ const schema = {
         <p><strong>Short answer.</strong> The drive was exported the old way. The
         XDJ-AZ reads <strong>OneLibrary</strong> only, and a USB carrying only the
         older Device Library has nothing on it this unit can read, so it reports
-        the rekordbox database as not found. Re-export the drive from rekordbox
-        version 7.2.11 or later, which writes both library formats at once.</p>
+        the rekordbox database as not found. Re-export the drive from rekordbox {REKORDBOX.dualFormatFloor} or later, which writes both library formats at once.</p>
         <p><strong>Why this happens.</strong> AlphaTheta moved this unit and the
         others in its generation to OneLibrary, while most players in circulation
         still read the original Device Library. A drive built for an older player
@@ -136,8 +136,7 @@ const schema = {
         stick then works here and on an older CDJ. With no laptop in the booth,
         the fastest route is a drive somebody else already exported from a recent
         rekordbox, or playing from a linked player over PRO DJ LINK.</p>
-        <p><strong>Avoid it next time.</strong> Export from rekordbox 7.2.11 or
-        later as a habit, not just for this gig. One drive written that way plays
+        <p><strong>Avoid it next time.</strong> Export from rekordbox {REKORDBOX.dualFormatFloor} or later as a habit, not just for this gig. One drive written that way plays
         on the OneLibrary units and on the Device Library units, which is the
         whole point of the change, and it removes the guesswork about which venue
         has which generation.</p>
