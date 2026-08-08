@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import { BRANDS, modelsOfBrand, modelPath } from '../data/facts.js';
+import { BRANDS, KINDS, modelsOfBrand, modelPath } from '../data/facts.js';
+import { UI } from '../i18n/ui.js';
 
 /**
  * /equipment. THE TOP-LEVEL EQUIPMENT ENTRY POINT.
@@ -45,19 +46,34 @@ import { BRANDS, modelsOfBrand, modelPath } from '../data/facts.js';
 //
 // One lead sentence per brand lives here because it is COPY, and copy belongs in
 // the page that renders it rather than in the data layer, which is language
-// neutral. A brand with no lead still renders.
+// neutral.
+//
+// A BRAND WITH NO LEAD STILL RENDERS, and that turned out to be the wrong
+// tradeoff (2026-08-08). Technics shipped and this map had no entry for it, so
+// the brand appeared with its models and no lead sentence while the other two
+// had one. Nothing failed, nothing looked broken, and it was only visible by
+// reading the rendered page beside the other brands. check-kinds now asserts a
+// lead exists for every brand in every language, so the graceful degradation
+// stays as a runtime safety net and stops being a way to ship a half-built
+// brand.
 const LEADS = {
   'pioneer-dj': 'The gear in most professional booths. Documented faults, the firmware version that fixed each one, and what to do when it happens to you mid-set.',
   'allen-heath': 'The analogue side of the professional booth, built around the Xone filter. Different rules to a CDJ booth: no firmware to check on one of them, and traps that live on the back panel.',
+  'technics': 'Turntables, so most of this site does not apply. No firmware, no storage, nothing to format. What goes wrong lives in the earth lead, the cartridge, the pitch and the floor under the booth.',
 };
+
+// Group headings by kind, in this page's language.
+const K = UI['en'].equipment.kinds;
 
 const brands = BRANDS.map((b) => ({
   ...b,
   lead: LEADS[b.key],
-  groups: [
-    { label: 'Players', items: modelsOfBrand(b.key, 'player') },
-    { label: 'Mixers', items: modelsOfBrand(b.key, 'mixer') },
-  ].filter((g) => g.items.length > 0),
+  // GROUPS COME FROM THE KINDS REGISTRY, not from a list written out here. Until
+  // 2026-08-08 these two lines were hand-written in this file and in both
+  // translations, so a third kind meant finding three places nothing connected.
+  // Labels stay per language, in ui.js, where reader-facing text belongs.
+  groups: KINDS.map((k) => ({ label: K[k], items: modelsOfBrand(b.key, k) }))
+    .filter((g) => g.items.length > 0),
 }));
 
 const allModels = brands.flatMap((b) => b.groups.flatMap((g) => g.items));

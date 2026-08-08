@@ -2,55 +2,56 @@
 import Base from '../../../../layouts/Base.astro';
 import { modelsOfBrand, modelPath } from '../../../../data/facts.js';
 
-// HUB ALLEN & HEATH, ESPAÑOL LATINOAMERICANO NEUTRO. La fuente de verdad de la
+// HUB TECHNICS, ESPAÑOL LATINOAMERICANO NEUTRO. La fuente de verdad de la
 // estructura, del catálogo, de las categorías, del contrato CollectionPage, del
-// script y del CSS es src/pages/knowledge/allen-heath/index.astro. Aquí solo
-// cambian el texto que lee una persona y los hrefs con /es. Si cambia la página
-// en inglés, cambia esta en el mismo commit.
+// script y del CSS es src/pages/knowledge/technics/index.astro. Aquí solo
+// cambian el texto que lee una persona y los hrefs con /es. Si cambia la
+// página en inglés, cambia esta en el mismo commit.
 //
 // La lista de modelos con página viene del grafo de equipos, igual que en la
 // página en inglés: modelPath() devuelve la ruta canónica en inglés y el
-// prefijo /es entra aquí, en el punto donde se arma el enlace.
-const mixers = [
-  ...modelsOfBrand('allen-heath', 'mixer').map((m) => ({ name: m.name, href: `/es${modelPath(m)}` })),
-  { name: 'Xone:PX5', href: null },
-  { name: 'Xone:43', href: null },
-];
-const controllers = [
-  { name: 'Xone:K2', href: null },
-  { name: 'Xone:K3', href: null },
+// prefijo /es entra aquí, en el punto donde se arma el enlace. Las entradas
+// "Muy pronto" siguen siendo literales locales porque no están en el grafo y
+// no deben estar.
+const turntables = [
+  ...modelsOfBrand('technics', 'turntable').map((m) => ({ name: m.name, href: `/es${modelPath(m)}` })),
+  { name: 'SL-1200MK5', href: null },
+  { name: 'SL-1200GR', href: null },
+  { name: 'SL-1200G', href: null },
 ];
 
 const categories = [
-  { label: 'Mixers', items: mixers },
-  { label: 'Controladoras', items: controllers, note: 'La serie K es una controladora con filtro Xone arriba, y por eso el DJ la trata como parte del mixer y no como una caja aparte.' },
+  {
+    label: 'Tornamesas',
+    items: turntables,
+    note: 'El MK7 es la tornamesa que puedes comprar. El MK2 es la que tienes muchas más probabilidades de encontrar ya atornillada en el booth, y salió de producción hace bastante más de una década.',
+  },
 ];
 
 // El ItemList lleva SOLO los modelos con página de referencia publicada, igual
-// que el archivo en inglés. Todo lo demás está marcado como "Muy pronto" y una
-// lista legible por máquina no tiene forma de cargar ese aviso. Nada se agrega
-// después de los modelos: esta marca no tiene matriz de firmware, y uno de los
-// dos mixers no tiene firmware en absoluto.
-const listed = [...mixers, ...controllers].filter((x) => x.href);
+// que el archivo en inglés. Nada de matriz de firmware arriba de las
+// categorías: ninguna de estas dos tornamesas tiene firmware del que tener
+// versión.
+const listed = turntables.filter((x) => x.href);
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  '@id': 'https://www.savemygig.com/es/knowledge/allen-heath#webpage',
-  url: 'https://www.savemygig.com/es/knowledge/allen-heath',
-  name: 'Referencia de equipos Allen & Heath Xone',
+  '@id': 'https://www.savemygig.com/es/knowledge/technics#webpage',
+  url: 'https://www.savemygig.com/es/knowledge/technics',
+  name: 'Referencia de las tornamesas Technics SL-1200',
   isPartOf: { '@id': 'https://www.savemygig.com/#website' },
   publisher: { '@id': 'https://www.savemygig.com/#org' },
   inLanguage: 'es',
   about: [
-    { '@type': 'Thing', name: 'Allen & Heath' },
-    { '@type': 'Thing', name: 'Serie Xone' },
-    { '@type': 'Thing', name: 'Mixers de DJ analógicos' },
+    { '@type': 'Thing', name: 'Technics' },
+    { '@type': 'Thing', name: 'Serie SL-1200' },
+    { '@type': 'Thing', name: 'Tornamesas de DJ de tracción directa' },
   ],
   mainEntity: {
     '@type': 'ItemList',
-    '@id': 'https://www.savemygig.com/es/knowledge/allen-heath#list',
-    name: 'Referencias de modelos Allen & Heath',
+    '@id': 'https://www.savemygig.com/es/knowledge/technics#list',
+    name: 'Referencias de modelos Technics',
     numberOfItems: listed.length,
     itemListOrder: 'https://schema.org/ItemListUnordered',
     itemListElement: listed.map((x, i) => ({
@@ -63,32 +64,36 @@ const schema = {
 };
 ---
 <Base
-  title="Allen & Heath: guía de los mixers Xone | Save My Gig"
-  description="Xone:96 y Xone:92: mixers analógicos alrededor del filtro Xone. Qué sale mal, lo que el manual no dice, y el que no tiene firmware."
-  path="/knowledge/allen-heath"
-  crumbName="Allen & Heath"
+  title="Technics SL-1200: guía de las tornamesas | Save My Gig"
+  description="SL-1200MK7 y SL-1200MK2: sin firmware, sin USB y con otro tipo de falla. Zumbido y cable de tierra, pitch y torque, y un canal que queda mudo."
+  path="/knowledge/technics"
+  crumbName="Technics"
   lang="es"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
   <main class="wrap">
     <nav class="crumb" aria-label="Ruta de navegación">
-      <a href="/es/knowledge">Base de conocimiento</a> <span aria-hidden="true">/</span> <span>Allen &amp; Heath</span>
+      <a href="/es/knowledge">Base de conocimiento</a> <span aria-hidden="true">/</span> <span>Technics</span>
     </nav>
 
-    <div class="status-line">ALLEN_HEATH</div>
-    <h1 style="margin-bottom:0.8rem">Allen &amp; <span class="accent">Heath</span></h1>
+    <div class="status-line">TECHNICS</div>
+    <h1 style="margin-bottom:0.8rem">Tech<span class="accent">nics</span></h1>
     <p class="dim kb-lead">
-      Mixers analógicos construidos alrededor del filtro Xone, así que las
-      reglas no son las de un booth de CDJ. El Xone:92 no tiene firmware en
-      absoluto, o sea que la pregunta que este sitio le hace a todo dueño de
-      Pioneer, en qué versión está, no existe en ese mixer. Y ninguno de los dos
-      manuales tiene sección de troubleshooting, que es la mayor razón por la
-      que existen estas páginas.
+      Ninguna de estas dos tornamesas tiene firmware, así que la pregunta que
+      este sitio le hace a todo dueño de Pioneer, en qué versión está, no existe
+      aquí. Ninguna de las dos tiene almacenamiento, así que no hay nada que
+      formatear ni nada que exportar. Lo que sale mal en una tornamesa sale mal
+      en otro lugar: en el cable de tierra, en la cápsula, en el pitch y en el
+      piso debajo del booth. Y el manual del modelo que con más probabilidad te
+      van a entregar no tiene sección de troubleshooting alguna, que es la mayor
+      razón por la que existen estas páginas.
     </p>
 
-    <!-- No firmware matrix promo here: this brand has none, and one of these
-         two mixers has no firmware to have a version of. The honest
-         equivalent is the way back out to the other manufacturers. -->
+    <!-- No firmware matrix promo here, and the reason is stronger than on the
+         Allen & Heath hub. There, one mixer has firmware nobody documents.
+         Here neither deck has firmware to have a version of, so the same green
+         box would be a category error. The honest equivalent is the way back
+         out to the other manufacturers. -->
     <p class="ah-out">
       <a href="/es/equipment">Cada fabricante, cada modelo que ya tiene página &rarr;</a>
     </p>
@@ -132,27 +137,26 @@ const schema = {
     </script>
 
     <div class="panel" style="margin-top:2rem">
-      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">¿Qué herramienta falta en esta lista?</h2>
+      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">¿Qué tornamesa falta en esta lista?</h2>
       <p class="dim" style="margin-bottom:1rem">Construimos lo que los DJs piden de verdad. Dinos qué usas y sube en la fila.</p>
       <a href="/es/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Cuéntanos qué usas</a>
     </div>
 
     <p class="dim" style="margin-top:2rem;font-size:0.85rem">
-      ¿Vas a tocar en equipo Pioneer? <a href="/es/knowledge/pioneer-dj">La referencia Pioneer DJ / AlphaTheta</a> cubre eso.
+      ¿Vas a tocar en players y mixers hoy? <a href="/es/knowledge/pioneer-dj">La referencia Pioneer DJ / AlphaTheta</a> y
+      <a href="/es/knowledge/allen-heath">la referencia Allen &amp; Heath</a> cubren eso.
     </p>
   </main>
 </Base>
 
 <style>
   /* The card, the grid, the accordion chevron and the focus ring all come from
-     global.css, exactly as on the Pioneer hub. This block is that page's block
-     with the .pdj-matrix rules removed, because this page does not draw one. */
+     global.css, exactly as on the other two hubs, so the three manufacturer
+     hubs cannot drift apart. This block is the Allen & Heath block unchanged. */
   .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
   .crumb a { color: var(--text-dim); text-decoration: none; }
   .crumb a:hover { color: var(--red); }
   .kb-lead { max-width: 42rem; margin-bottom: 1.5rem; line-height: 1.6; }
-  /* Holds the same vertical rhythm the firmware matrix promo holds on the
-     Pioneer hub, without pretending to be a promo. */
   .ah-out { margin: 0 0 1.8rem; font-size: 0.9rem; }
   .kb-h {
     font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;

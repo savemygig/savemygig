@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { BRANDS, modelsOfBrand, modelPath } from '../../data/facts.js';
+import { BRANDS, KINDS, modelsOfBrand, modelPath } from '../../data/facts.js';
+import { UI } from '../../i18n/ui.js';
 
 // /equipment EM PORTUGUÊS DO BRASIL. A fonte de verdade da estrutura, dos
 // componentes, das classes e do CSS é src/pages/equipment.astro. Aqui só mudam
@@ -23,15 +24,21 @@ import { BRANDS, modelsOfBrand, modelPath } from '../../data/facts.js';
 const LEADS = {
   'pioneer-dj': 'O equipamento que está na maioria das booths profissionais. Falhas documentadas, a versão de firmware que corrigiu cada uma, e o que fazer quando acontece com você no meio do set.',
   'allen-heath': 'O lado analógico da booth profissional, construído em volta do filtro Xone. As regras são outras: um deles não tem firmware nenhum para conferir, e as armadilhas ficam no painel de trás.',
+  'technics': 'Toca-discos, então a maior parte deste site não se aplica. Sem firmware, sem armazenamento, nada para formatar. O que dá errado está no cabo de terra, na cápsula, no pitch e no piso embaixo da booth.',
 };
+
+// Group headings by kind, in this page's language.
+const K = UI['pt'].equipment.kinds;
 
 const brands = BRANDS.map((b) => ({
   ...b,
   lead: LEADS[b.key],
-  groups: [
-    { label: 'Players', items: modelsOfBrand(b.key, 'player') },
-    { label: 'Mixers', items: modelsOfBrand(b.key, 'mixer') },
-  ].filter((g) => g.items.length > 0),
+  // GROUPS COME FROM THE KINDS REGISTRY, not from a list written out here. Until
+  // 2026-08-08 these two lines were hand-written in this file and in both
+  // translations, so a third kind meant finding three places nothing connected.
+  // Labels stay per language, in ui.js, where reader-facing text belongs.
+  groups: KINDS.map((k) => ({ label: K[k], items: modelsOfBrand(b.key, k) }))
+    .filter((g) => g.items.length > 0),
 }));
 
 const allModels = brands.flatMap((b) => b.groups.flatMap((g) => g.items));

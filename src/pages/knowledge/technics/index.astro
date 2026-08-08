@@ -1,0 +1,203 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { modelsOfBrand, modelPath } from '../../../data/facts.js';
+
+// TECHNICS HARDWARE HUB, the third manufacturer, and the first one that is not
+// digital. Built on the reusable pattern set by the Pioneer and Allen & Heath
+// hubs, so the cards, the collapsible categories and the CollectionPage contract
+// are the same ones and the three hubs cannot drift apart.
+//
+// THE LIVE LIST IS READ FROM THE EQUIPMENT GRAPH, not written out here.
+// modelsOfBrand('technics', 'turntable') returns the models in facts.js in
+// canonical order and modelPath() builds each URL from the brand's own hub, so a
+// new deck appears here the moment it is added to facts.js and nobody has to
+// remember this file.
+//
+// WHY THIS HUB READS DIFFERENTLY FROM THE OTHER TWO, and each reason is a fact
+// about the equipment rather than a house style choice.
+//
+// 1. THERE IS NO FIRMWARE ON EITHER OF THESE DECKS. Not "no published history"
+//    the way the Xone:96 has firmware nobody documents. None. So the question
+//    this site asks every Pioneer owner, what version is it on, has no meaning
+//    here, and there is no firmware matrix to promote above the categories.
+//
+// 2. THERE IS NO STORAGE, so there is no file system, no library, no export and
+//    nothing to format. Roughly half of what this site knows does not apply.
+//
+// 3. WHAT REPLACES ALL OF IT is a fault domain the site had never covered until
+//    2026-08-08: mains hum and grounding, pitch and torque, skipping and
+//    acoustic feedback, and a cartridge and phono lead that can silence one
+//    channel while everything on the top panel looks right.
+//
+// 4. ONE OF THESE DECKS IS FROM 1979 AND ITS MANUAL HAS NO TROUBLESHOOTING
+//    SECTION AT ALL. Ten pages, read end to end. That is most of why the MK2
+//    page is worth writing, and it is the same argument the Allen & Heath pages
+//    rest on.
+//
+// ORDER: DESCENDING MODEL GENERATION, so the MK7 sits above the MK2. That is the
+// standing rule from the other two hubs, family then number, and it deliberately
+// does not encode anybody's opinion about which deck matters more. The MK2 is in
+// far more booths; the MK7 is the one you can buy.
+//
+// The "coming soon" entries stay as local literals because they have no pages and
+// no researched facts. They are not in the graph and they must not be: the graph
+// is the set of models this site can actually answer questions about.
+const turntables = [
+  ...modelsOfBrand('technics', 'turntable').map((m) => ({ name: m.name, href: modelPath(m) })),
+  { name: 'SL-1200MK5', href: null },
+  { name: 'SL-1200GR', href: null },
+  { name: 'SL-1200G', href: null },
+];
+
+const categories = [
+  {
+    label: 'Turntables',
+    items: turntables,
+    note: 'The MK7 is the deck you can buy. The MK2 is the deck you are far more likely to find already bolted into a booth, and it has been out of production for well over a decade.',
+  },
+];
+
+// COLLECTIONPAGE. Same shape as the other two hubs: a real @id so this is not an
+// anonymous second page entity beside the WebPage node Base.astro emits for this
+// URL, `about` pointing at the equipment rather than at the Organization, and a
+// mainEntity so a crawler can tell what this page collects without parsing HTML.
+//
+// The ItemList carries ONLY the models with a live reference page, because a
+// machine-readable list has no way to carry the "Coming soon" label and an entry
+// would read as a page that exists.
+const listed = turntables.filter((x) => x.href);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': 'https://www.savemygig.com/knowledge/technics#webpage',
+  url: 'https://www.savemygig.com/knowledge/technics',
+  name: 'Technics SL-1200 turntable reference',
+  isPartOf: { '@id': 'https://www.savemygig.com/#website' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  inLanguage: 'en',
+  about: [
+    { '@type': 'Thing', name: 'Technics' },
+    { '@type': 'Thing', name: 'SL-1200 series' },
+    { '@type': 'Thing', name: 'Direct drive DJ turntables' },
+  ],
+  mainEntity: {
+    '@type': 'ItemList',
+    '@id': 'https://www.savemygig.com/knowledge/technics#list',
+    name: 'Technics model references',
+    numberOfItems: listed.length,
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    itemListElement: listed.map((x, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: x.name,
+      url: `https://www.savemygig.com${x.href}`,
+    })),
+  },
+};
+---
+<Base
+  title="Technics SL-1200 Turntable Reference | Save My Gig"
+  description="SL-1200MK7 and SL-1200MK2: no firmware, no USB, and a different set of faults. Hum and grounding, pitch and torque, and a dead channel."
+  path="/knowledge/technics"
+  crumbName="Technics"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <main class="wrap">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span> <span>Technics</span>
+    </nav>
+
+    <div class="status-line">TECHNICS</div>
+    <h1 style="margin-bottom:0.8rem">Tech<span class="accent">nics</span></h1>
+    <p class="dim kb-lead">
+      Neither of these decks has firmware, so the question this site asks every
+      Pioneer owner, what version is it on, does not exist here. Neither has
+      storage either, so nothing to format and nothing to export. What goes wrong
+      on a turntable goes wrong somewhere else entirely: in the earth lead, in the
+      cartridge, in the pitch, and in the floor under the booth. And the manual
+      for the deck you are most likely to be handed has no troubleshooting section
+      at all, which is most of why these pages exist.
+    </p>
+
+    <!-- NO FIRMWARE MATRIX PROMO, and for a stronger reason than on the Allen &
+         Heath hub. There, one mixer has firmware nobody documents. Here there is
+         no firmware on either deck to have a version of, so the same green box
+         would not be a thin claim, it would be a category error. The honest
+         equivalent is the way back out to the other manufacturers. -->
+    <p class="ah-out">
+      <a href="/equipment">Every manufacturer, every model with a page today &rarr;</a>
+    </p>
+
+    <!-- Collapsible categories (Antonio): on a phone the category headers ARE
+         the index, tap one to expand it. On desktop there is room, so the inline
+         script below opens everything before paint. -->
+    {categories.map(cat => (
+      <details class="kb-cat">
+        <summary>
+          <h2 class="kb-h">{cat.label}</h2>
+          <span class="kb-chev" aria-hidden="true"></span>
+        </summary>
+        {cat.note && <p class="dim" style="margin-bottom:0.9rem;font-size:0.85rem">{cat.note}</p>}
+        <div class="kb-grid">
+          {cat.items.map(m => (
+            m.href ? (
+              <a class="kb-card kb-live" href={m.href}>
+                <span class="kb-name">{m.name}</span>
+                <span class="kb-go">Open the guide &rarr;</span>
+              </a>
+            ) : (
+              <div class="kb-card kb-soon">
+                <span class="kb-name">{m.name}</span>
+                <span class="kb-tag">Coming soon</span>
+              </div>
+            )
+          ))}
+        </div>
+      </details>
+    ))}
+    <script is:inline>
+      // Desktop has room: open every category before first interaction.
+      // Phones keep them collapsed so the category list is the index.
+      (function () {
+        if (window.matchMedia('(min-width: 641px)').matches) {
+          var cats = document.querySelectorAll('.kb-cat');
+          for (var i = 0; i < cats.length; i++) cats[i].open = true;
+        }
+      })();
+    </script>
+
+    <div class="panel" style="margin-top:2rem">
+      <h2 style="font-size:1.05rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:-0.01em">Which deck is missing from this list?</h2>
+      <p class="dim" style="margin-bottom:1rem">We build what DJs actually ask for. Tell us what you run and it moves up the list.</p>
+      <a href="/feedback" class="btn btn-neutral" style="width:auto;padding:0.6rem 1.4rem">Tell us what you use</a>
+    </div>
+
+    <p class="dim" style="margin-top:2rem;font-size:0.85rem">
+      Playing on players and mixers tonight? <a href="/knowledge/pioneer-dj">The Pioneer DJ / AlphaTheta reference</a> and
+      <a href="/knowledge/allen-heath">the Allen &amp; Heath reference</a> cover those.
+    </p>
+  </main>
+</Base>
+
+<style>
+  /* The card, the grid, the accordion chevron and the focus ring all come from
+     global.css, exactly as on the other two hubs, so the three manufacturer hubs
+     cannot drift apart. This block is the Allen & Heath block unchanged: same
+     rules, same reason, and no rules for a component this page does not draw. */
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+  .kb-lead { max-width: 42rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  .ah-out { margin: 0 0 1.8rem; font-size: 0.9rem; }
+  .kb-h {
+    font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;
+    margin: 0; flex: 1;
+  }
+  .kb-cat { margin-top: 1.6rem; }
+  .kb-cat > summary {
+    display: flex; align-items: center; gap: 0.8rem;
+    border-bottom: var(--stroke) solid var(--edge); padding-bottom: 0.5rem; margin-bottom: 1rem;
+    cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent;
+  }
+</style>

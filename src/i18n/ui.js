@@ -34,8 +34,27 @@ export const UI = {
     // relationships themselves are data in facts.js and the same for every
     // language. `pairedNote` is load bearing: it is the sentence that keeps a
     // field judgement from being read as a vendor specification.
+    /*
+     * /equipment GROUP HEADINGS, one per kind in KINDS.
+     *
+     * They lived as hand-written literals inside equipment.astro and inside both
+     * of its translations until 2026-08-08, which meant a third kind had to be
+     * found in three unconnected files. Reader-facing text belongs here with the
+     * rest of it, and check-kinds now fails the gate if KINDS gains a value that
+     * any language cannot label.
+     */
+    equipment: {
+      kinds: { player: 'Players', mixer: 'Mixers', turntable: 'Turntables' },
+    },
     related: {
       players: 'Related players',
+      // TURNTABLES, THE THIRD KIND (2026-08-08). The component used to pick
+      // between `players` and `mixers` with a boolean, so a Technics page would
+      // have headed its own lineage "Related mixers". Note that `pairedMixers` is
+      // reused for a turntable rather than a new string: what a deck is paired
+      // with really is a mixer, and inventing a second sentence that means the
+      // same thing is how two labels drift apart in three languages.
+      turntables: 'Related turntables',
       mixers: 'Related mixers',
       pairedMixers: 'Commonly paired mixers',
       pairedPlayers: 'Commonly paired players',
@@ -365,8 +384,13 @@ export const UI = {
     crumbs: { fixes: 'Soluções' },
     // EQUIPAMENTO RELACIONADO E GUIAS (2026-08-07). Só rótulos; as relações
     // são dados em facts.js e iguais para os três idiomas.
+    equipment: {
+      // "Toca-discos" e não "tocadiscos": a grafia brasileira leva hífen.
+      kinds: { player: 'Players', mixer: 'Mixers', turntable: 'Toca-discos' },
+    },
     related: {
       players: 'Players relacionados',
+      turntables: 'Toca-discos relacionados',
       mixers: 'Mixers relacionados',
       pairedMixers: 'Mixers usados junto',
       pairedPlayers: 'Players usados junto',
@@ -605,8 +629,15 @@ export const UI = {
     crumbs: { fixes: 'Soluciones' },
     // EQUIPO RELACIONADO Y GUÍAS (2026-08-07). Solo etiquetas; las relaciones
     // son datos en facts.js e iguales para los tres idiomas.
+    equipment: {
+      // "Tornamesa" es la forma neutra más reconocible en la región. "Giradiscos"
+      // se lee como España y "tocadiscos" sugiere un equipo doméstico, no una
+      // herramienta de booth.
+      kinds: { player: 'Reproductores', mixer: 'Mixers', turntable: 'Tornamesas' },
+    },
     related: {
       players: 'Reproductores relacionados',
+      turntables: 'Tornamesas relacionadas',
       mixers: 'Mixers relacionados',
       pairedMixers: 'Mixers que se usan junto',
       pairedPlayers: 'Reproductores que se usan junto',

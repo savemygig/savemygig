@@ -29,11 +29,17 @@ import { modelsOfBrand, modelPath } from '../../../data/facts.js';
 // The "coming soon" entries stay as local literals because they have no pages
 // and no researched facts. They are not in the graph and they must not be: the
 // graph is the set of models this site can actually answer questions about.
+//
+// XONE:23 REMOVED 2026-08-08, on Antonio's call. A "coming soon" card is a
+// promise, and this list should only carry promises worth keeping. The 23 is the
+// entry level two channel mixer, and it is not what a DJ walking into a
+// professional booth is standing in front of, which is the whole scope of this
+// site. Removing it is not a gap to fill later: it is a decision about which
+// mixers belong here at all.
 const mixers = [
   ...modelsOfBrand('allen-heath', 'mixer').map((m) => ({ name: m.name, href: modelPath(m) })),
   { name: 'Xone:PX5', href: null },
   { name: 'Xone:43', href: null },
-  { name: 'Xone:23', href: null },
 ];
 const controllers = [
   { name: 'Xone:K2', href: null },

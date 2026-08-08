@@ -1,0 +1,526 @@
+---
+import Base from '../../../layouts/Base.astro';
+import EmailCapture from '../../../components/EmailCapture.astro';
+import AccGroup from '../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import { SL_1200MK7, SL_1200MK2 } from '../../../data/facts.js';
+
+// FIRST TECHNICS MODEL PAGE, and the first page on this site about a product with
+// no firmware, no storage and no library. Structure, section order, class names
+// and the style block are lifted from the Xone pages so the hardware pages stay
+// one family. Facts come from SL_1200MK7 in src/data/facts.js and from nowhere
+// else.
+//
+// WHY THE FAULT DOMAIN IS COMPLETELY DIFFERENT, and why that had to be built
+// rather than adapted. Every other hardware page here answers versions of one
+// question: the deck cannot read the drive, or the library is wrong, or the
+// firmware is old. None of that exists on a turntable. What exists instead:
+//
+//   MAINS HUM       an earth lead that is missing or loose. Panasonic say this
+//                   themselves, in the manual, in one sentence.
+//   A DEAD CHANNEL  four headshell wires, a cartridge, and a phono lead. Three
+//                   places, all mechanical, none of them on the top panel.
+//   SKIPPING        acoustic feedback and vibration, which is a room problem
+//                   pretending to be a deck problem.
+//   PITCH           a fader with no detent, running against a stroboscope
+//                   nobody looks at.
+//
+// THE PLATTER WEIGHTS OF THE TWO DECKS MUST NEVER BE COMPARED ON THIS SITE, and
+// the temptation is strong because the numbers are right there. Panasonic give
+// the MK2 platter as 2 kg and the MK7 platter as approximately 1.8 kg INCLUDING
+// the slipmat and slip sheet. Those are not the same measurement. The press
+// release also says the MK7 follows the MK6 "inertial mass of the platter". So
+// any sentence claiming the MK7 platter is lighter would be built on a units
+// mismatch, and the feel of the deck is exactly what a DJ would act on.
+//
+// THE ONE PLACE THIS PAGE GIVES NO NUMBER ON PURPOSE is stylus pressure for DJ
+// use. Panasonic publish the RANGE the arm can dial, 0 to 4 g, and no
+// recommendation. Cartridge makers publish a tracking force for their own
+// cartridge. So the page sends the reader to the cartridge's own figure instead
+// of inventing a booth number, because a made-up tracking force wears records
+// and mistracks, and it would be this site's own invention presented beside
+// Panasonic's real specifications.
+// TWO FACTS ON THIS PAGE COME FROM THE MK2 MANUAL AND SAY SO. The headshell wire
+// colour code and Panasonic's placement instructions are printed in the 1979
+// document and not in the MK7 one. The first draft of this page reached for them
+// as SL_1200MK7 fields with `?? 'a sentence of my own'` behind them, which is the
+// exact pattern this repo has now been burned by three times: a fallback that
+// keeps the page rendering while quietly replacing a sourced fact with an
+// unsourced one, and nothing failing. There is no fallback here now. The fields
+// are read from SL_1200MK2 and the prose names the document, so the reader knows
+// which deck Panasonic were describing.
+const UPDATED = SL_1200MK7.checked;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/knowledge/technics/sl-1200mk7#article',
+  headline: 'SL-1200MK7: the operational reference',
+  description: 'What every DJ should know before working a Technics SL-1200MK7: why the earth lead is the first thing to check on a hum, what silences one channel, the rear panel switches that change how the deck starts and stops, and the pitch range nobody documents on the spec page.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-08',
+  dateModified: '2026-08-08',
+  inLanguage: 'en',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/knowledge/technics/sl-1200mk7#webpage' },
+  image: 'https://www.savemygig.com/images/sl-1200mk7-panel-full.webp',
+};
+---
+<Base
+  title="Technics SL-1200MK7: Hum, Pitch, Torque | Save My Gig"
+  description="The SL-1200MK7 field manual: the earth lead that stops a hum, what silences one channel, and the rear switches that change torque and brake."
+  path="/knowledge/technics/sl-1200mk7"
+  crumbName="SL-1200MK7"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span>
+      <a href="/knowledge/technics">Technics</a> <span aria-hidden="true">/</span>
+      <span>SL-1200MK7</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <h1 class="rb-h1">SL-1200MK7, <span class="accent">the field manual</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#sl-1200mk7-lightbox"
+        aria-label="Open a larger photo of the Technics SL-1200MK7 control surface"
+      >
+        <img
+          src="/images/sl-1200mk7-panel-thumb.webp"
+          alt="Technics SL-1200MK7 direct drive DJ turntable, top view"
+          width="634"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="sl-1200mk7-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/sl-1200mk7-panel-full.webp"
+        srcset="/images/sl-1200mk7-panel-800.webp 800w, /images/sl-1200mk7-panel-full.webp 1400w"
+        sizes="92vw"
+        alt="Technics SL-1200MK7 direct drive DJ turntable, top view"
+        width="1400"
+        height="1105"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> A {SL_1200MK7.type.toLowerCase()} with no
+        firmware, no storage and nothing to format, so the whole checklist is
+        different. Hum is the earth lead, and Panasonic say so themselves. A dead
+        channel is a headshell wire, a cartridge or the phono lead, none of which
+        are on the top panel. Skipping is the floor, not the deck. Pitch runs
+        {SL_1200MK7.pitchRange}, and there is a reset button beside the fader that
+        the MK2 never had. Before you touch it: check the rear switches, because
+        torque, brake and reverse all live back there and the last DJ may have
+        moved them.
+      </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
+    </div>
+
+    <AccGroup icon="zap" title="Emergency fixes" />
+
+    <details class="acc-sec" name="mk7-acc" id="hum"><summary><h3 class="acc-h2">There is a hum in the system and it will not go away</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> The earth lead. Check it before you
+        check anything else, and check it before you start swapping cables.
+        Panasonic put it in one sentence in the manual: {SL_1200MK7.earthWarning}
+        On this deck the earth lead is a separate part that screws to a terminal,
+        which means it is a part that can be missing entirely, and a booth deck
+        that has been moved a few times often is.</p>
+        <p><strong>Why this happens.</strong> A phono cartridge puts out a few
+        millivolts. Your mixer then applies something in the region of sixty
+        decibels of gain to make that into a usable signal, and it applies that
+        gain to everything on the input, including any mains-frequency noise the
+        turntable chassis has picked up. The earth lead gives that noise a path
+        out. Without it the chassis floats and the hum you hear is the mains being
+        amplified alongside the record. It is not a fault in the deck, and no
+        amount of turning things down will fix it, because the hum is being
+        amplified by the same gain stage as the music.</p>
+        <p><strong>Fix it now.</strong> Find the spade or ring terminal on the
+        earth lead and get it onto the mixer's ground post, tightened properly
+        rather than pushed on. Panasonic specify a Phillips screwdriver for the
+        terminal on the deck itself, so if the hum survives, check that end too:
+        a loose screw at the turntable is the same fault as a missing lead at the
+        mixer. If the earth is definitely good and the hum is still there,
+        Panasonic's second line is about proximity:
+        {SL_1200MK7.humTroubleshooting} A power brick or an IEC cable lying
+        across a phono lead is a real cause, and it is free to fix.</p>
+        <p><strong>Avoid it next time.</strong> Treat the earth lead as part of
+        the deck, not as an optional extra, and check it during setup rather than
+        during a set. Panasonic part number the lead separately,
+        {SL_1200MK7.earthLeadPartNumber}, which means it can be replaced when it
+        goes missing, and in a rental or club context it is worth knowing that
+        before the night rather than after.</p>
+        <p class="acc-related">Related: <a href="#dead-channel">One channel has gone silent</a> <a href="#connections">Connections, and what unplugs on this deck</a> <a href={SL_1200MK7.source} rel="noopener">Panasonic's SL-1200MK7 owner's manual</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk7-acc" id="dead-channel"><summary><h3 class="acc-h2">One channel has gone silent and the other one is fine</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Work backwards along the signal in the
+        order that things actually fail: the headshell wires first, then the
+        cartridge, then the phono lead. Three places, all mechanical, and none of
+        them are anywhere on the top panel. This is the fault that sends DJs into
+        a mixer's routing menu when the problem is four tiny wires the width of a
+        hair.</p>
+        <p><strong>Why this happens.</strong> The four headshell wires are the
+        thinnest connection in the entire chain and they are worked every time
+        somebody changes a cartridge or drops a headshell. Panasonic publish the
+        colour code, so you can see which side you have lost, and this wording is
+        from the MK2 manual because that is the document that prints it:
+        {SL_1200MK2.headshellWiring}. A wire that has pulled off its pin, or a pin that is no longer gripping,
+        silences exactly one channel and leaves the other one perfect. The
+        cartridge itself can also lose one coil, which presents identically. And
+        because this deck has a detachable phono lead, a lead that is not fully
+        seated at the back of the deck is now on the list too, which was not true
+        of an MK2.</p>
+        <p><strong>Fix it now.</strong> Swap the headshell for a known good one if
+        you have a spare, because that single move tests the wires and the
+        cartridge in one go and takes ten seconds. If the fault follows the
+        headshell, it is the wires or the cartridge. If the fault stays with the
+        deck, reseat the phono lead at the back, then move the whole lead to a
+        different channel on the mixer to find out whether you are chasing a deck
+        or chasing a mixer input. Nothing here needs tools.</p>
+        <p><strong>Avoid it next time.</strong> Carry a second headshell, already
+        wired, already balanced. It is the single most useful spare for a vinyl
+        set and it turns this fault from a set-ending problem into a ten second
+        changeover. The phono lead is a part number,
+        {SL_1200MK7.phonoCablePartNumber}, so a spare is a real option on this
+        model in a way it is not on the older decks.</p>
+        <p class="acc-related">Related: <a href="#hum">There is a hum in the system</a> <a href="#tonearm">Setting the arm up so it tracks</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk7-acc" id="skipping"><summary><h3 class="acc-h2">The needle jumps every time the bass drops</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Nine times out of ten this is the room
+        and not the deck. Panasonic's own placement instructions are the fix, and
+        they are two sentences, quoted from the MK2 manual because that is where
+        Panasonic wrote them down: {SL_1200MK2.placementSpeakers}
+        {' '}{SL_1200MK2.placementLevel} Only then start touching the arm.</p>
+        <p><strong>Why this happens.</strong> A stylus in a groove is a
+        microphone, and it cannot tell the difference between the vibration coming
+        up through the plinth from a subwoofer and the vibration cut into the
+        record. Below a certain frequency the deck, the mat, the platter and the
+        arm start moving together with the room, and the stylus climbs out. That
+        is acoustic feedback, and the giveaway is that it happens on the loud
+        parts and stops when you pull the fader down. A deck that is not level
+        adds a constant sideways pull on top of it, which is why an unlevel deck
+        skips in one direction.</p>
+        <p><strong>Fix it now.</strong> Get the deck off whatever is resonating.
+        Anything that decouples the plinth from the booth surface helps, and
+        moving the deck away from the front of a bass bin helps more. Confirm the
+        deck sits level. Check the counterweight has not crept and that the
+        anti-skating matches the stylus pressure, which is Panasonic's own
+        instruction: {SL_1200MK7.antiSkatingInstruction} Raising tracking force
+        is the last resort, not the first, and it must stay inside whatever your
+        cartridge maker specifies.</p>
+        <p><strong>Avoid it next time.</strong> Decide where the decks go before
+        the room fills up, because after that nothing can be moved. This is
+        judgement from working booths rather than a Panasonic specification, and
+        it is worth saying plainly: booths built with the turntables directly on
+        top of, or bolted to, the same structure as the bass cabinets will always
+        fight you, and no arm setup fixes a structural problem.</p>
+        <p class="acc-related">Related: <a href="#tonearm">Setting the arm up so it tracks</a> <a href="#pitch">The pitch will not sit where you put it</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk7-acc" id="pitch"><summary><h3 class="acc-h2">The pitch will not sit where you put it</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Check which pitch range the deck is in
+        before you blame the fader. This deck runs {SL_1200MK7.pitchRange}, and
+        the same physical fader movement means twice as much tempo change in the
+        wider setting. Then press the reset button beside the fader, which
+        returns the deck to its rated speed regardless of where the fader is
+        sitting.</p>
+        <p><strong>Why this happens.</strong> A DJ arriving on this deck from an
+        older SL-1200 has muscle memory calibrated to one range and one behaviour.
+        On an MK2 the range is fixed at {SL_1200MK2.pitchRange} and there is no
+        reset at all, so you find zero by eye against the platter markings. Here
+        the range is switchable and there is a reset, so a deck that feels
+        impossibly twitchy is usually a deck somebody left in the wide setting,
+        and a deck that will not return to zero is usually a reset button nobody
+        knew was there.</p>
+        <p><strong>Fix it now.</strong> Set the range you want, then reset, then
+        beatmatch from a known zero. If the deck holds a tempo but the tempo is
+        wrong, confirm the speed selector is on the right value. This model runs
+        {SL_1200MK7.speeds}, and a third speed behind a switch is a genuinely new
+        way to be playing a record at the wrong speed.</p>
+        <p><strong>Avoid it next time.</strong> Make the pitch range part of your
+        setup check, the same way you would check a mixer's gain. It takes a
+        second and it is the difference between a fader that behaves and a fader
+        that fights you all night.</p>
+        <p class="acc-related">Related: <a href="#rear-switches">The rear panel switches, and why the deck feels wrong</a> <a href="#specs">What Panasonic publishes, and what they do not</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Known issues" />
+
+    <details class="acc-sec" name="mk7-acc" id="rear-switches"><summary><h3 class="acc-h2">The deck starts, stops or plays backwards in a way you did not ask for</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Look at the back of the deck. Three
+        behaviours that used to be fixed in the hardware are now switches:
+        {' '}{SL_1200MK7.torqueBrakeSetting}, plus a REV switch for reverse play.
+        Nothing on the top panel tells you where any of them are set.</p>
+        <p><strong>Why this happens.</strong> Panasonic gave this model
+        {SL_1200MK7.torqueLevels} levels of starting torque and
+        {' '}{SL_1200MK7.brakeLevels} levels of brake, which is a real
+        improvement and also a real trap in a shared booth. Starting torque
+        changes how fast the platter reaches speed, so it changes the sound of
+        every single start. Brake strength changes how the record dies when you
+        hit stop. A DJ who set them for their own style and left them there hands
+        the next person a deck that behaves differently from every other
+        SL-1200 they have ever touched, and there is no indicator anywhere on the
+        top surface.</p>
+        <p><strong>Fix it now.</strong> Reverse is the one that panics people, so
+        take it first: Panasonic's own sequence is {SL_1200MK7.reversePlaySetting}.
+        If a deck is playing backwards, the switch is enabled and the combination
+        has been triggered, so trigger it again to come out. For torque and brake,
+        set them where you want them during setup and note that you changed them,
+        because the next DJ has no way to see it.</p>
+        <p><strong>Avoid it next time.</strong> Check the rear panel as part of
+        arriving on an unfamiliar pair of decks, in the same breath as checking
+        the pitch range. It is the single biggest difference between working an
+        MK7 and working any deck that came before it.</p>
+        <p class="acc-related">Related: <a href="#pitch">The pitch will not sit where you put it</a> <a href="#features">What the MK7 added</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk7-acc" id="no-firmware"><summary><h3 class="acc-h2">There is no firmware, no storage and nothing to update</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Correct, and it is worth stating rather
+        than leaving as an absence. This deck has no firmware to be on an old
+        version of, no USB port, no file system, no library and no export. Every
+        question this site asks a CDJ owner before a gig has no meaning here.</p>
+        <p><strong>Why this matters.</strong> It cuts both ways. Nothing on this
+        deck can be bricked by a bad update, nothing rejects a drive it does not
+        like, and a deck from the first production run behaves exactly like one
+        bought today. Against that, nothing can be fixed in software either. A
+        mechanical fault is a mechanical repair, and the parts that wear are
+        parts you replace: a stylus, a cartridge, a lead.</p>
+        <p><strong>What to check instead.</strong> The three things that actually
+        determine whether the deck works tonight are the earth lead, the headshell
+        and the arm setup. That is the pre-gig checklist for a turntable, and it
+        is shorter than the digital one but it is not optional.</p>
+        <p><strong>What this site will not tell you.</strong> There is no firmware
+        matrix for this deck and there never will be, because there is no
+        firmware. Any page or forum post offering an SL-1200MK7 firmware version
+        is describing something that does not exist.</p>
+        <p class="acc-related">Related: <a href="#specs">What Panasonic publishes, and what they do not</a> <a href="/knowledge/pioneer-dj/firmware">Every AlphaTheta model, by firmware version</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Features explained" />
+
+    <details class="acc-sec" name="mk7-acc" id="features"><summary><h3 class="acc-h2">What the MK7 added, and what it left exactly where it was</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The additions.</strong> A second pitch range, so the fader
+        covers {SL_1200MK7.pitchRange}. A pitch reset button. Reverse play. Four
+        levels of starting torque and four of brake. A third speed,
+        {' '}{SL_1200MK7.speeds}. A detachable phono lead and a detachable power
+        cord. And {SL_1200MK7.stylusLight} that rises to light the stylus.</p>
+        <p><strong>What stayed.</strong> Panasonic are explicit that this deck was
+        built to feel like the ones before it, {SL_1200MK7.mk6Continuity}. That is
+        their wording, and it is the reason an MK7 reads as familiar under the
+        hands even though the electronics inside are new.</p>
+        <p><strong>The motor, and two Panasonic documents that disagree.</strong>
+        The owner's manual specification table calls it a
+        {' '}{SL_1200MK7.motor.toLowerCase()}. The press release announcing the
+        deck calls it a {SL_1200MK7.motorPressReleaseTerm}. Both are Panasonic,
+        both are current, and they are almost certainly describing one part. This
+        page gives the manual's wording because a specification table is where a
+        specification lives, and names the other so you are not surprised when you
+        see it quoted elsewhere.</p>
+        <p><strong>What it is not.</strong> There is no quartz lock claim on this
+        model in the way there is on the MK2, where quartz-locked pitch was the
+        headline feature of the deck. Do not carry that language across.</p>
+        <p class="acc-related">Related: <a href="#rear-switches">The rear panel switches</a> <a href={SL_1200MK7.sourceFeatures} rel="noopener">Technics on the SL-1200 features</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="star" title="Setup and calibration" />
+
+    <details class="acc-sec" name="mk7-acc" id="tonearm"><summary><h3 class="acc-h2">Setting the arm up so it tracks</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The numbers Panasonic publish.</strong> The arm is
+        {' '}{SL_1200MK7.tonearm.toLowerCase()}, effective length
+        {' '}{SL_1200MK7.tonearmEffectiveLength}, overhang
+        {' '}{SL_1200MK7.overhang}, offset angle {SL_1200MK7.offsetAngle}. Arm
+        height adjusts across {SL_1200MK7.armHeightRange}. Stylus pressure dials
+        {' '}{SL_1200MK7.stylusPressureRange}. Tracking error is specified
+        {' '}{SL_1200MK7.trackingError}. Cartridge weight supported is
+        {' '}{SL_1200MK7.cartridgeWeightRange}, and the headshell itself weighs
+        {' '}{SL_1200MK7.headshellWeight}.</p>
+        <p><strong>The number this page will not give you.</strong> Panasonic
+        publish the range the arm can dial and no recommendation for what to set
+        it to. Your cartridge maker publishes a tracking force for your specific
+        cartridge, and that is the number to use. Anyone quoting a single figure
+        for all DJ use is guessing on your behalf: too light mistracks and skips,
+        too heavy wears records faster, and the correct answer genuinely depends
+        on the cartridge hanging off the front of the arm.</p>
+        <p><strong>Anti-skating.</strong> Panasonic's instruction is one line:
+        {' '}{SL_1200MK7.antiSkatingInstruction} So whatever tracking force your
+        cartridge calls for, the anti-skating control goes to the matching value.
+        It is the step people skip, and it shows up as a deck that skips in one
+        direction rather than randomly.</p>
+        <p><strong>Arm height.</strong> The helicoid adjustment exists so the arm
+        sits parallel to the record with your cartridge on it, and cartridges have
+        different heights. Setting it once for the cartridge you actually use is
+        worth more than any other five minutes you will spend on this deck.</p>
+        <p class="acc-related">Related: <a href="#skipping">The needle jumps when the bass drops</a> <a href="#maintenance">What wears out</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="usb" title="Connections" />
+
+    <details class="acc-sec" name="mk7-acc" id="connections"><summary><h3 class="acc-h2">Connections, and what unplugs on this deck</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>What is on the back.</strong> {SL_1200MK7.output}. And the
+        thing that separates this deck from the classics: on the MK7 the phono
+        lead, the earth lead and the power cord are all detachable, and Panasonic
+        list each one as its own part. The phono lead is
+        {' '}{SL_1200MK7.phonoCablePartNumber}, the earth lead is
+        {' '}{SL_1200MK7.earthLeadPartNumber}, the power cord is
+        {' '}{SL_1200MK7.powerCordPartNumber}.</p>
+        <p><strong>Why that is the single most practical change.</strong> On an
+        SL-1200MK2 the phono leads read as fixed to the chassis, so a damaged
+        lead is a repair job. Here it is a cable you carry a spare of. In a rental
+        or club context that turns one of the most common physical failures on a
+        turntable, a lead crushed by a road case or a plug pulled sideways one too
+        many times, into a thirty second swap.</p>
+        <p><strong>The trap that comes with it.</strong> A connector that can be
+        unplugged is a connector that can be half plugged in, so a detachable
+        phono lead joins the list of things that silence a channel. Seat it
+        properly, and if a channel drops out mid set, reseat it before you go
+        looking for a cartridge fault.</p>
+        <p><strong>Power.</strong> {SL_1200MK7.voltage}. Consumption is
+        {' '}{SL_1200MK7.powerConsumption}, which is worth knowing only because a
+        deck drawing almost nothing when switched off still needs to be switched
+        off if the booth is on a limited supply.</p>
+        <p class="acc-related">Related: <a href="#hum">There is a hum in the system</a> <a href="#dead-channel">One channel has gone silent</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibility" />
+
+    <details class="acc-sec" name="mk7-acc" id="compatibility"><summary><h3 class="acc-h2">What it works with, and what it needs from the mixer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The mixer has to have a phono input.</strong> That is the whole
+        requirement and it is the one people get caught by. A cartridge output
+        needs a phono stage, meaning both a large amount of gain and RIAA
+        equalisation. Plug this deck into a line input and you get a thin, quiet
+        signal with no bass, which sounds like a broken deck and is a routing
+        mistake. Every mixer this site documents beside it has switchable phono
+        inputs.</p>
+        <p><strong>Timecode and DVS.</strong> This deck is a normal turntable, so
+        timecode vinyl works on it the way it works on any turntable, and the
+        software is the part that decides what is supported. Timecode brings its
+        own failure that pressed records do not have: a worn timecode record
+        degrades tracking long before it sounds obviously bad, and the symptom is
+        software that stutters or loses position rather than audible damage.</p>
+        <p><strong>Speeds.</strong> {SL_1200MK7.speeds}. The third speed is behind
+        a switch rather than on the main selector, which is deliberate and also
+        the reason it is easy to be in it without noticing.</p>
+        <p><strong>Cartridges.</strong> Supported cartridge weight is
+        {' '}{SL_1200MK7.cartridgeWeightRange}. Panasonic specify the headshell
+        terminal as a {SL_1200MK7.headshellTerminal} and, notably, never attach a
+        standard's name to it. This site gives the dimension they give and does
+        not invent the name, because the names in circulation for that fitting are
+        not Panasonic's.</p>
+        <p class="acc-related">Related: <a href="#dead-channel">One channel has gone silent</a> <a href="/knowledge/dictionary">The DJ technical dictionary</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Maintenance" />
+
+    <details class="acc-sec" name="mk7-acc" id="maintenance"><summary><h3 class="acc-h2">What wears out, and what does not</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The stylus is the consumable.</strong> It is the only part in
+        contact with the record and it wears from the first play. A worn stylus
+        does not announce itself: it mistracks, it makes records sound duller than
+        they are, and it damages the records it plays. Panasonic do not publish a
+        life figure because it belongs to the cartridge, so the cartridge maker's
+        number is the one to use.</p>
+        <p><strong>The mat and the platter.</strong> The platter is
+        {' '}{SL_1200MK7.platter}. Note that Panasonic's platter weight for this
+        deck INCLUDES the slipmat and slip sheet, which the MK2's figure does not,
+        so the two numbers are not comparable and nobody should conclude from them
+        that one platter is heavier than the other. The press release says this
+        deck follows the earlier generation's inertial mass, which is the claim
+        that actually describes how it feels.</p>
+        <p><strong>What does not wear.</strong> There is no belt, because it is
+        direct drive. There is no firmware to degrade. The motor is
+        {' '}{SL_1200MK7.motor.toLowerCase()}, which is a design with no brushes
+        to replace, and it is most of why these decks stay in service for
+        decades.</p>
+        <p><strong>Between sets.</strong> Keep the stylus clean, keep the earth
+        lead attached, and keep the arm rest clip actually clipped when the deck
+        is being moved. Most tonearm damage happens in transport rather than in
+        use.</p>
+        <p class="acc-related">Related: <a href="#tonearm">Setting the arm up so it tracks</a> <a href="#skipping">The needle jumps when the bass drops</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Understanding the deck" />
+
+    <details class="acc-sec" name="mk7-acc" id="specs"><summary><h3 class="acc-h2">What Panasonic publishes, and what they do not</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The published figures.</strong> Type
+        {' '}{SL_1200MK7.type.toLowerCase()}. Platter {SL_1200MK7.platter}.
+        Speeds {SL_1200MK7.speeds}. Starting torque
+        {' '}{SL_1200MK7.startingTorque}. Start-up
+        {' '}{SL_1200MK7.startUpTime}. Wow and flutter
+        {' '}{SL_1200MK7.wowFlutter}. Weight {SL_1200MK7.weight}. Announced
+        {' '}{SL_1200MK7.announced}.</p>
+        <p><strong>Rumble is not published anywhere.</strong> It is absent from
+        the specification page, from the North American specification PDF, from
+        the owner's manual and from Technics own turntable comparison chart, which
+        carries no rumble row for any model. The MK2 published both a weighted and
+        an unweighted figure in 1979. That is not a criticism of the deck, it is a
+        gap you should know about before you compare it to anything.</p>
+        <p><strong>The pitch range is missing from the spec pages.</strong> It is
+        in the owner's manual specification table as
+        {' '}{SL_1200MK7.pitchRange} and it appears on neither the UK product
+        specification page nor the North American specification PDF, both of which
+        list no pitch figure at all. Two Panasonic documents, one number, one of
+        them silent.</p>
+        <p><strong>Dimensions are deliberately not on this page.</strong> Only the
+        height and depth were found in a Panasonic document. The press release
+        says the deck follows the previous generation's dimensions, which makes
+        the width very likely the familiar one, but that is a chain of two
+        inferences about a number somebody might use to size a flight case. A
+        partial dimension is worse than none.</p>
+        <p><strong>Model names.</strong> {SL_1200MK7.variants}.</p>
+        <p class="acc-related">Related: <a href={SL_1200MK7.sourceSpecs} rel="noopener">Technics specification page</a> <a href={SL_1200MK7.sourceSpecsPdf} rel="noopener">North American specification PDF</a> <a href={SL_1200MK7.sourceAnnounce} rel="noopener">The announcement</a></p>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="sl-1200mk7" />
+
+    <EmailCapture source="knowledge_sl_1200mk7" />
+  </main>
+</Base>
+
+<style>
+  /* Every rule here comes from the Xone and Pioneer hardware pages so the
+     hardware pages stay one family. Nothing is added for this page: a turntable
+     needs a different fault domain, not a different layout. */
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+</style>

@@ -22,14 +22,39 @@ const EXTS = new Set(['.astro', '.js', '.mjs', '.cjs', '.ts', '.css', '.json', '
 // This file and the content lint both have to contain the characters in order
 // to test for them.
 const SKIP_FILES = new Set(['scripts/lint-content.mjs', 'scripts/check-source-dashes.mjs']);
-const SKIP_DIRS = ['node_modules', 'dist', '.astro', 'public/fonts', 'design-archive'];
+/*
+ * SKIPS ARE MATCHED AS PATH SEGMENTS, NOT AS SUBSTRINGS (fixed 2026-08-08).
+ *
+ * This list contained '.astro', meaning Astro's build cache directory, and the
+ * walker tested it with `p.includes(d)`. So the string '.astro' matched EVERY
+ * .astro FILE as well, and this check has never once looked inside one. It
+ * reported "79 files, no em or en dashes" and passed, while the ~200 .astro
+ * files, which is where essentially every code comment on this site lives, were
+ * invisible to it. The first entry in EXTS is '.astro'. It could never match.
+ *
+ * That makes this the worst instance yet of the pattern this repo keeps hitting:
+ * a check that quietly stops covering its own subject still prints PASS, and the
+ * PASS is what stops anyone looking. Antonio's dash rule is the one he states
+ * most often, and it was the one least enforced.
+ *
+ * Directories are now compared segment by segment, so '.astro' excludes the
+ * cache directory and nothing else. 'public/fonts' keeps its slash and is still
+ * matched as a prefix, deliberately.
+ */
+const SKIP_DIRS = ['node_modules', 'dist', '.astro', 'design-archive'];
+const SKIP_PREFIXES = ['public/fonts'];
+
+function skipped(p) {
+  if (SKIP_PREFIXES.some((d) => p === d || p.startsWith(`${d}/`))) return true;
+  return p.split('/').some((seg) => SKIP_DIRS.includes(seg));
+}
 
 async function walk(dir, out = []) {
   let entries;
   try { entries = await readdir(dir, { withFileTypes: true }); } catch { return out; }
   for (const e of entries) {
     const p = join(dir, e.name);
-    if (SKIP_DIRS.some((d) => p.includes(d))) continue;
+    if (skipped(p)) continue;
     if (e.isDirectory()) await walk(p, out);
     else if (EXTS.has(p.slice(p.lastIndexOf('.')))) out.push(p);
   }

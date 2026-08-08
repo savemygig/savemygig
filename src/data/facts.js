@@ -1001,6 +1001,195 @@ export const FIRMWARE_ISSUES = [
   },
 ];
 
+// ===========================================================================
+// TECHNICS. The third manufacturer, and the first one that is not digital.
+//
+// WHY THIS BRAND IS DIFFERENT FROM THE OTHER TWO, and why the pages read
+// differently. Every model on this site until now had firmware, storage, a file
+// system and a library. A turntable has none of those. It cannot be bricked by a
+// bad update, it cannot reject a drive, and there is no version number to check
+// before a gig. What it has instead is a fault domain this site has never
+// covered: mains hum and grounding, pitch and torque, skipping and acoustic
+// feedback, and a cartridge and a phono lead that can silence one channel.
+//
+// SO THE FACT DISCIPLINE HAS TO WORK HARDER HERE, not less. There is more folk
+// knowledge about the SL-1200 than about any other piece of DJ equipment ever
+// made, almost none of it sourced, and a great deal of it wrong. Panasonic
+// documents plenty. Where they do, it is quoted. Where they do not, the field is
+// null and a sibling flag says the silence is Panasonic's, not ours.
+//
+// THE MK2 MANUAL IS A SCAN WITH NO TEXT LAYER, read page by page as images. That
+// is worth recording because it explains why some fields here are thinner than
+// their MK7 equivalents: the document is 10 pages from 1979 and it simply says
+// less than a modern one. It also has NO troubleshooting section at all, which is
+// itself a fact about the deck rather than a gap in the research.
+// ===========================================================================
+
+export const SL_1200MK2 = {
+  checked: '8 August 2026',
+  released: 1979,
+  // END OF PRODUCTION IS NOT PUBLISHED BY PANASONIC. It is everywhere as 2010,
+  // and it is probably right, but it appears in no Panasonic or Technics
+  // document: their own heritage timeline steps from the MK5 era straight to the
+  // 2015 revival without naming an end date. So the site does not state a year.
+  // This is the same shape as DJM_900NXS.firmwareEndedIsInference: the honest
+  // answer to "when did it stop" is that the maker never said.
+  discontinued: null,
+  discontinuedNotPublished: true,
+  type: 'Quartz direct drive, manual turntable',
+  motor: 'Brushless DC motor',
+  platter: 'Aluminium diecast, 33.2 cm diameter, 2 kg',
+  speeds: '33-1/3 and 45 rpm',
+  startingTorque: '1.5 kg-cm',
+  startUpTime: '0.7 seconds from standstill to 33-1/3 rpm',
+  braking: 'Electronic brake',
+  // THREE FIGURES FOR ONE MEASUREMENT, all in the same table, because they are
+  // measured to different standards. Quoting one number without its standard is
+  // how "0.01%" ends up on forums as though it were comparable to a modern spec.
+  wowFlutter: '0.01 % WRMS for the turntable assembly alone, 0.025 % WRMS to JIS C5521, and 0.035 % peak to IEC 98A weighted',
+  rumble: 'minus 56 dB unweighted and minus 78 dB weighted, both to IEC 98A',
+  pitchRange: 'about plus or minus 8 per cent',
+  quartzLock: true,
+  // NO PITCH RESET BUTTON. The MK7 has one beside the fader. On an MK2 you find
+  // zero by eye against the platter markings, which is why a booth MK2 is so
+  // often running slightly off and nobody notices.
+  pitchReset: false,
+  platterMarkings: 'plus 6, plus 3.3, zero and minus 3.3 per cent',
+  tonearm: 'Universal, static balance',
+  tonearmEffectiveLength: '230 mm',
+  tonearmEffectiveMass: '12 g without cartridge',
+  overhang: '15 mm',
+  offsetAngle: '22 degrees',
+  armHeightRange: '0 to 6 mm',
+  stylusPressureRange: '0 to 2.5 g',
+  antiSkatingInstruction: 'Set the anti-skating control knob to the same value as the stylus pressure.',
+  headshellWeight: '7.5 g',
+  cartridgeWeightRange: '6 to 10 g, or 13.5 to 17.5 g including the headshell',
+  headshellWiring: 'White is left positive, blue is left negative, red is right positive, green is right negative',
+  output: 'Left and right leads plus a separate spade-lug ground wire',
+  // THE FIELD THAT MATTERS MOST IN A BOOTH, and the one place the manual does
+  // not answer in words. The phono leads are drawn in the connection figure as
+  // cables already coming out of the deck, and they are absent from the parts
+  // checklist that lists every other supplied item down to the 45 rpm adaptor.
+  // Both point the same way, and the manual never uses the word "hard-wired".
+  // Marked as an inference so the page can say "reads as" rather than "is".
+  phonoCableDetachable: false,
+  phonoCableDetachableIsInference: true,
+  earthLeadSupplied: true,
+  powerCordDetachable: false,
+  voltage: 'AC 120 V, 60 Hz on the North American model',
+  powerConsumption: '14 W',
+  dimensions: '45.3 cm wide, 36 cm deep, 16.2 cm high',
+  weight: '12.5 kg',
+  // QUOTED, because it is the single most useful sentence in the document and
+  // the manual puts HUM in capitals and quotation marks itself.
+  earthWarning: 'Be sure to connect the ground terminal firmly to the amplifier or receiver. If this connection is not made or is loose, a power source "HUM" will result.',
+  placementSpeakers: 'Locate the unit as far away from the speakers as possible and isolate the unit from sound radiation from them.',
+  placementLevel: 'Place the unit in a stable and horizontal position, where there is little or no vibration.',
+  // NO TROUBLESHOOTING SECTION EXISTS. All ten pages were read. This is a fact
+  // about the document, not a hole in the research, and it is the reason the
+  // fault sections on this page lean on the MK7 manual and on field practice
+  // with both clearly labelled.
+  troubleshootingSection: false,
+  // NO PANASONIC DOCUMENT FOR THE SL-1210MK2 COULD BE FOUND AT ALL. The black
+  // export twin certainly existed and was sold. Every specification and manual
+  // hit for it is a third-party archive. So this site does not state the
+  // silver-versus-black convention for this generation, even though Panasonic
+  // does document exactly that convention for the modern Grand Class line.
+  sl1210Documented: false,
+  source: 'https://www.help.na.panasonic.com/wp-content/uploads/2023/02/SL1200MK2_SFNU122M06_ENG.pdf',
+  sourceHeritage: 'https://www.technics.com/global/home/sl1200/heritage.html',
+  sourceHistory: 'https://www.technics.com/global/home/60th-anniversary/technics-brand-story/history-of-the-sl-1200.html',
+};
+
+export const SL_1200MK7 = {
+  checked: '8 August 2026',
+  announced: 'January 2019, at CES',
+  released: 2019,
+  // TWO PANASONIC DOCUMENTS DESCRIBE THE MOTOR DIFFERENTLY. The press release
+  // calls it a "newly developed coreless direct drive motor". The owner's manual
+  // specification table calls it a "Brushless DC motor". Both are Panasonic, both
+  // are current, and they are almost certainly describing the same part. The page
+  // gives the manual's wording, because a specification table is where a spec
+  // lives, and names the press release's term rather than choosing between them.
+  motor: 'Brushless DC motor',
+  motorPressReleaseTerm: 'newly developed coreless direct drive motor',
+  type: 'Direct drive manual turntable',
+  platter: 'Aluminium diecast, 332 mm diameter, approximately 1.8 kg including the slipmat and slip sheet',
+  speeds: '33-1/3 and 45 rpm, and 78 rpm with a switch',
+  startingTorque: '0.18 N-m, which is 1.8 kg-cm',
+  startUpTime: '0.7 seconds from standstill to 33-1/3 rpm',
+  wowFlutter: '0.025 % WRMS',
+  // NOT PUBLISHED. Absent from the specification page, the specification PDF, the
+  // owner's manual AND Technics own turntable comparison chart, which has no
+  // rumble row for any model. The MK2 published both figures in 1979. Saying so
+  // is more useful than leaving a blank the reader has to interpret.
+  rumble: null,
+  rumbleNotPublished: true,
+  pitchRange: 'plus or minus 8 or plus or minus 16 per cent, selectable',
+  // A REAL DISCREPANCY BETWEEN PANASONIC DOCUMENTS, recorded rather than
+  // smoothed over. The pitch range is in the owner's manual specification table
+  // and is missing entirely from both the UK product specification page and the
+  // North American specification PDF, which list no pitch figure at all.
+  pitchRangeSpecPageOmits: true,
+  pitchReset: true,
+  quartzLock: false,
+  tonearm: 'Universal, static balance',
+  tonearmEffectiveLength: '230 mm',
+  overhang: '15 mm',
+  offsetAngle: '22 degrees',
+  trackingError: 'within 2 degrees 32 minutes at the outer groove and 0 degrees 32 minutes at the inner groove of a 30 cm record',
+  armHeightRange: '0 to 6 mm',
+  stylusPressureRange: '0 to 4 g, direct reading',
+  antiSkatingInstruction: 'Turn the anti-skating control to adjust it to the same value as the stylus pressure control.',
+  headshellWeight: 'approximately 7.6 g',
+  headshellTerminal: '1.2 mm diameter four-pin terminal lug',
+  // PANASONIC NEVER NAMES A STANDARD for that terminal, only its dimensions. The
+  // internet calls it several things. This site gives the dimension Panasonic
+  // gives and does not attach a name they did not use.
+  headshellStandardNamed: false,
+  cartridgeWeightRange: '5.6 to 12.0 g, or 14.3 to 20.7 g including the headshell',
+  output: 'PHONO pin jacks and an earth terminal',
+  // THE SINGLE BIGGEST PRACTICAL DIFFERENCE FROM AN MK2 in a booth, and it is
+  // documented on both sides: Panasonic list the cable and the earth lead as
+  // separate part-numbered accessories that connect to back-panel terminals.
+  phonoCableDetachable: true,
+  phonoCablePartNumber: 'K4EY4YY00003',
+  earthLeadPartNumber: 'K4EY1YY00189',
+  earthLeadSupplied: true,
+  powerCordDetachable: true,
+  powerCordPartNumber: 'K2CG3YY00219',
+  voltage: 'AC 120 V, 60 Hz on the North American model, and AC 110 to 240 V, 50/60 Hz on the export model',
+  powerConsumption: '8.0 W switched on, and approximately 0.2 W switched off',
+  weight: 'approximately 9.6 kg',
+  // DIMENSIONS ARE DELIBERATELY NOT RENDERED. Only height and depth, 169 mm and
+  // 353 mm, were found in a Panasonic document. The press release says the MK7
+  // "follow[s] SL-1200MK6 specifications such as dimensions", which makes the
+  // width very likely the familiar 453 mm, but that is a chain of two inferences
+  // about a number a reader might use to size a flight case. A partial dimension
+  // is worse than none, so the page gives none.
+  dimensionsIncomplete: true,
+  reversePlay: true,
+  reversePlaySetting: 'a REV switch on the rear panel, then the speed button and START-STOP together while the platter is turning',
+  torqueLevels: 4,
+  brakeLevels: 4,
+  torqueBrakeSetting: 'rear panel switches, TQ1 and TQ2 for torque and BK1 and BK2 for brake',
+  stylusLight: 'a pop-up white LED',
+  earthWarning: 'Be sure to connect the PHONO earth lead. Otherwise mains hum may occur.',
+  humTroubleshooting: 'Are there other appliances or their AC power supply cord near the stereo connection cable? Separate the appliances and their AC power supply cord from this unit.',
+  troubleshootingSection: true,
+  mk6Continuity: 'following SL-1200MK6 specifications such as dimensions, button layout, and inertial mass of the platter',
+  variants: 'SL-1200MK7 and the SL-1210MK7 export name, an SL-1200MK7-S silver finish for North America, the SL-1200M7L 50th anniversary edition of 12,000 units, and the SL-1200M7ALD collaboration edition',
+  source: 'https://help.na.panasonic.com/wp-content/uploads/2023/02/SL1200MK7_TQBM0410_ENG_FRE.pdf',
+  sourceSpecs: 'https://www.technics.com/uk/products/dj-series/sl-1200mk7.specs.html',
+  sourceSpecsPdf: 'https://help.na.panasonic.com/wp-content/uploads/2024/11/SL1200MK7_Specifications_US_1.pdf',
+  sourceAnnounce: 'https://news.panasonic.com/global/press/data/2019/01/en190108-5/en190108-5.pdf',
+  sourceFeatures: 'https://technics.com/global/sl1200/features',
+  sourceHistory: 'https://www.technics.com/global/home/60th-anniversary/technics-brand-story/history-of-the-sl-1200.html',
+};
+
+
+
 
 // ===========================================================================
 // ALLEN & HEATH. The second manufacturer, added 2026-08-07.
@@ -1379,6 +1568,45 @@ export const EQUIPMENT = [
     // the version question does not exist.
     tags: ['dvs', 'long-blend'],
   },
+  /*
+   * TURNTABLES, THE THIRD KIND (2026-08-08). `kind` had two values for as long as
+   * every product here was digital, and two of the three things that consume it
+   * branched on a boolean: RelatedEquipment did `isPlayer ? players : mixers`, so
+   * a turntable would have been filed under "Related mixers" on its own page.
+   * Adding a value to this field is therefore never only a data change.
+   *
+   * LINEAGE, CAREFULLY. The MK7's actual predecessor is the SL-1200MK6, which
+   * this site does not cover. So `older` here means "the nearest model we
+   * document", which is also the framing Technics themselves use: their own
+   * history page calls the MK7 "a full revival of the feel of the SL-1200MK2".
+   * The component renders this as "Related turntables", which is true. No page
+   * says the MK7 replaced the MK2, because it did not.
+   */
+  {
+    slug: 'sl-1200mk7', name: 'SL-1200MK7', kind: 'turntable', brand: 'technics', released: 2019,
+    newer: null,
+    older: 'sl-1200mk2',
+    // A turntable is paired with a mixer that has phono inputs. The Xone:92 first
+    // on purpose: it is the mixer this deck is most often found beside, and the
+    // pairing is the reason the Xone:92 exists in the shape it does.
+    paired: ['xone-92', 'djm-900nxs2'],
+    siblings: ['sl-1200mk2'],
+    // NO `firmware` TAG, and unlike the Xone entries this is not even a judgement
+    // call: there is no firmware. There is also deliberately no `usb-prep`,
+    // `filesystems` or `onelibrary` tag, because a deck with no storage would
+    // otherwise pull in six guides about drives it cannot read.
+    // `dvs` IS correct here, and for a better reason than it was on the Xone:92:
+    // timecode vinyl runs on this deck, and rekordbox documents DVS.
+    tags: ['dvs'],
+  },
+  {
+    slug: 'sl-1200mk2', name: 'SL-1200MK2', kind: 'turntable', brand: 'technics', released: 1979,
+    newer: 'sl-1200mk7',
+    older: null,
+    paired: ['xone-92', 'djm-900nxs2'],
+    siblings: ['sl-1200mk7'],
+    tags: ['dvs'],
+  },
 ];
 
 // THE MANUFACTURERS. Added 2026-08-07 with Allen & Heath, and it exists because
@@ -1407,7 +1635,32 @@ export const BRANDS = [
     name: 'Allen & Heath',
     hub: '/knowledge/allen-heath',
   },
+  {
+    key: 'technics',
+    // Technics is a Panasonic brand, and Panasonic's own pages carry both names.
+    // The brand on the deck is the one a DJ searches for, so the label is
+    // Technics and the pages name Panasonic where a document is Panasonic's.
+    name: 'Technics',
+    hub: '/knowledge/technics',
+  },
 ];
+
+/*
+ * THE KINDS REGISTRY. Added 2026-08-08 with the third kind, and it exists because
+ * of what the second brand taught: 'player' and 'mixer' were written out by hand
+ * in the /equipment page and both of its translations, so a third kind meant
+ * editing three files that nothing connected, and a fourth would have meant the
+ * same again. That is the /equipment ORDER array all over, and it rotted in one
+ * commit last time.
+ *
+ * Order is the order the groups appear under a brand. Labels are NOT here: they
+ * are per language and live in ui.js under equipment.kinds, where every other
+ * piece of reader-facing text lives. check-kinds asserts that this list, the
+ * `kind` values actually used in EQUIPMENT, and the label sets in all three
+ * languages agree, so adding a fourth kind fails the gate until it is complete
+ * everywhere rather than shipping half done.
+ */
+export const KINDS = ['player', 'mixer', 'turntable'];
 
 const BY_SLUG = new Map(EQUIPMENT.map((e) => [e.slug, e]));
 const BY_BRAND = new Map(BRANDS.map((b) => [b.key, b]));

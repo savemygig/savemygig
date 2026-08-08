@@ -1,0 +1,492 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import { SL_1200MK2, SL_1200MK7 } from '../../../../data/facts.js';
+
+// SL-1200MK2, PORTUGUÊS DO BRASIL. A fonte de verdade da estrutura, dos
+// componentes, das classes, das âncoras, dos fatos e do CSS é
+// src/pages/knowledge/technics/sl-1200mk2.astro. Aqui muda só o texto que uma
+// pessoa lê e os hrefs com /pt. Nenhum número é escrito à mão: tudo sai de
+// SL_1200MK2 e de SL_1200MK7 em src/data/facts.js, sem fallback. Onde a
+// Panasonic é calada, esta página diz que ela é calada, igual à inglesa. Se a
+// página em inglês mudar, mude esta no mesmo commit.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(SL_1200MK2.checked);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/technics/sl-1200mk2#article',
+  headline: 'SL-1200MK2: a referência operacional',
+  description: 'O que todo DJ precisa saber antes de trabalhar num Technics SL-1200MK2: o cabo de terra que a Panasonic avisa em letra maiúscula, o que deixa um canal mudo num aparelho cujos cabos não desconectam, como achar o zero num pitch sem reset, e a seção de troubleshooting que o manual nunca teve.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-08',
+  dateModified: '2026-08-08',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/technics/sl-1200mk2#webpage' },
+  image: 'https://www.savemygig.com/images/sl-1200mk2-panel-full.webp',
+};
+---
+<Base
+  title="Technics SL-1200MK2: zumbido, pitch, fiação | Save My Gig"
+  description="Manual de campo do SL-1200MK2: o cabo de terra que a Panasonic avisa, o que deixa um canal mudo, e como achar o zero num fader sem reset."
+  path="/knowledge/technics/sl-1200mk2"
+  crumbName="SL-1200MK2"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/technics">Technics</a> <span aria-hidden="true">/</span>
+      <span>SL-1200MK2</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <h1 class="rb-h1">SL-1200MK2, <span class="accent">o manual de campo</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#sl-1200mk2-lightbox"
+        aria-label="Abrir uma foto maior da superfície de controle do Technics SL-1200MK2"
+      >
+        <img
+          src="/images/sl-1200mk2-panel-thumb.webp"
+          alt="Toca-discos de DJ Technics SL-1200MK2 com quartz e tração direta, visto de cima"
+          width="606"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="sl-1200mk2-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/sl-1200mk2-panel-full.webp"
+        srcset="/images/sl-1200mk2-panel-800.webp 800w, /images/sl-1200mk2-panel-full.webp 1400w"
+        sizes="92vw"
+        alt="Toca-discos de DJ Technics SL-1200MK2 com quartz e tração direta, visto de cima"
+        width="1400"
+        height="1155"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> O toca-discos com mais chance de já
+        estar parafusado na booth, em produção desde
+        {' '}{SL_1200MK2.released}, e o manual dele não tem seção de
+        troubleshooting nenhuma. Zumbido é o cabo de terra, e a Panasonic
+        escreve HUM em maiúscula para avisar você. Canal mudo são quatro fios de
+        headshell ou a cápsula, e neste aparelho os cabos phono não
+        desconectam, então cabo danificado é reparo e não troca. O pitch é
+        {' '}{SL_1200MK2.pitchRange} com quartz lock e sem botão de reset, então
+        o zero se acha no olho, contra as marcações do prato.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="mk2-acc" id="hum"><summary><h3 class="acc-h2">Tem um zumbido no sistema e ele não vai embora</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O cabo de terra. A Panasonic achou
+        isso importante o suficiente para escrever a palavra HUM em letra
+        maiúscula e entre aspas, em 1979, num manual de dez páginas sem seção de
+        troubleshooting: {SL_1200MK2.earthWarning} Esse é o diagnóstico inteiro e
+        é a primeira coisa a conferir toda vez.</p>
+        <p><strong>Por que isso acontece.</strong> Uma cápsula phono entrega
+        alguns milivolts, e o mixer aplica algo na casa de sessenta decibéis de
+        ganho para tornar isso utilizável. Ele aplica esse ganho em tudo que
+        entra, incluindo o ruído na frequência da rede elétrica que o chassi
+        captou. O cabo de terra dá a esse ruído um caminho de saída. Sem ele o
+        chassi fica flutuando e você está ouvindo a rede sendo amplificada junto
+        com o disco, e é por isso que abaixar as coisas não ajuda: o zumbido e a
+        música passam pelo mesmo estágio de ganho.</p>
+        <p><strong>Resolva agora.</strong> Ache o terminal tipo forquilha do
+        cabo de terra e coloque ele no poste de terra do mixer, parafusado e não
+        apenas encostado. A palavra da própria Panasonic é que uma conexão que
+        está ausente OU SOLTA produz o zumbido, então um terminal que só encosta
+        é uma falha. Se o terra está bom com certeza, afaste o toca-discos e os
+        cabos dele de outros equipamentos e de cabos de força antes de começar a
+        suspeitar do aparelho: o manual do MK7, que tem seção de
+        troubleshooting, aponta a proximidade de outros aparelhos e dos cabos de
+        força deles como a segunda causa, e a física é idêntica neste
+        toca-discos.</p>
+        <p><strong>Evite na próxima.</strong> Num aparelho que está numa booth
+        há vinte anos, o cabo de terra é a peça com mais chance de ter sido
+        cortada, enrolada em fita ou simplesmente perdida. Confira se ele existe
+        na montagem. Se ele foi embora, isso é um reparo para agendar e não algo
+        para contornar, porque não existe outro caminho para o ruído.</p>
+        <p class="acc-related">Relacionados: <a href="#dead-channel">Um canal ficou mudo</a> <a href="#connections">Conexões, e o que não desconecta</a> <a href={SL_1200MK2.source} rel="noopener">Manual de instruções do SL-1200MK2 da Panasonic</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk2-acc" id="dead-channel"><summary><h3 class="acc-h2">Um canal ficou mudo e o outro está normal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Os fios do headshell primeiro,
+        depois a cápsula. Neste aparelho essa é a lista inteira em que você pode
+        agir dentro de uma booth, porque os cabos phono não saem. A Panasonic
+        imprime o código de cores para você ver qual lado perdeu:
+        {' '}{SL_1200MK2.headshellWiring}.</p>
+        <p><strong>Por que isso acontece.</strong> Esses quatro fios são a
+        conexão mais fina da cadeia e são mexidos toda vez que alguém troca uma
+        cápsula ou derruba um headshell. Um fio fora do pino, ou um pino que não
+        segura mais, deixa exatamente um canal mudo e o outro perfeito. Uma
+        cápsula que perdeu uma bobina apresenta o mesmo sintoma. As duas coisas
+        são mecânicas e nenhuma aparece em qualquer ponto do painel de cima, que
+        é por isso que essa falha manda as pessoas para o menu de roteamento do
+        mixer.</p>
+        <p><strong>Resolva agora.</strong> Troque o headshell por um que você
+        sabe que está bom. Esse movimento único testa os fios e a cápsula juntos
+        e leva dez segundos. Se a falha acompanha o headshell, são os fios ou a
+        cápsula. Se a falha fica no toca-discos, passe os cabos dele para outro
+        canal do mixer para descobrir se você está atrás de um toca-discos ou de
+        uma entrada de mixer, e se continua sendo o aparelho, você entrou no
+        cabo em si, que neste modelo não é serviço de booth.</p>
+        <p><strong>Evite na próxima.</strong> Ande com um segundo headshell, já
+        cabeado e já balanceado. É a peça de reserva mais útil para um set de
+        vinil em qualquer toca-discos, e neste importa mais, porque a outra
+        ponta do caminho do sinal não é algo que você troca.</p>
+        <p class="acc-related">Relacionados: <a href="#hum">Tem um zumbido no sistema</a> <a href="#tonearm">Ajustando o braço para ele rastrear</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk2-acc" id="skipping"><summary><h3 class="acc-h2">A agulha pula toda vez que o grave entra</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Isso é a sala, não o toca-discos, e
+        as instruções de instalação da Panasonic são a solução:
+        {' '}{SL_1200MK2.placementSpeakers} {SL_1200MK2.placementLevel} Depois
+        confira o contrapeso e o anti-skating, e só então comece a suspeitar do
+        aparelho.</p>
+        <p><strong>Por que isso acontece.</strong> Uma agulha dentro do sulco é
+        um microfone e ela não distingue a vibração gravada no disco da vibração
+        que chega pela base a partir de um subwoofer. Passado certo nível, a
+        base, o prato e o braço se movem com a sala e a agulha sai do sulco. O
+        sinal é que acontece nas partes altas e para quando você abaixa o fader.
+        A Panasonic construiu isolamento real neste aparelho e disse isso: a base
+        de alumínio fundido, a borracha pesada embaixo e quatro pés isolantes
+        estão descritos no manual como o que o torna adequado a uso em níveis de
+        pressão sonora extra altos. Essa é uma alegação real de projeto, e
+        também não substitui manter o aparelho longe das caixas de grave.</p>
+        <p><strong>Resolva agora.</strong> Desacople o toca-discos do que está
+        ressoando e afaste ele da frente de uma caixa. Confirme que ele está
+        nivelado, porque um aparelho desnivelado soma uma força lateral
+        constante e pula sempre para o mesmo lado. Confira se o contrapeso não
+        andou, e ajuste o anti-skating pela instrução da própria Panasonic:
+        {' '}{SL_1200MK2.antiSkatingInstruction} Aumentar o peso de rastreamento
+        é o último recurso e tem que ficar dentro do que o fabricante da sua
+        cápsula especifica.</p>
+        <p><strong>Evite na próxima.</strong> Experiência de booth e não
+        especificação da Panasonic, dita com clareza: booth montada com os
+        toca-discos dividindo estrutura com as caixas de grave vai brigar com
+        você sempre, e nenhum ajuste de braço resolve problema estrutural.
+        Decida onde os aparelhos ficam antes de a sala encher, porque depois
+        disso nada se move.</p>
+        <p class="acc-related">Relacionados: <a href="#tonearm">Ajustando o braço para ele rastrear</a> <a href="#pitch">Achando o zero num fader sem reset</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk2-acc" id="pitch"><summary><h3 class="acc-h2">Achando o zero num fader sem botão de reset</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Não existe reset neste aparelho. O
+        fader roda {SL_1200MK2.pitchRange} e você acha a rotação nominal no olho,
+        contra as marcações que a Panasonic cravou na borda do prato:
+        {' '}{SL_1200MK2.platterMarkings}. O estroboscópio não é enfeite, é o
+        instrumento.</p>
+        <p><strong>Por que isso importa.</strong> O quartz lock é o recurso de
+        capa deste aparelho e ele é lido errado com frequência. Ele significa que
+        a rotação é referenciada a quartzo e precisa, não que o fader gruda no
+        zero. Então um aparelho parado em meio por cento acelerado segura esse
+        meio por cento perfeitamente a noite inteira, e nada no painel reclama.
+        Um DJ que chega de um MK7, que tem botão de reset do lado do fader, vai
+        procurar um aqui e não vai achar.</p>
+        <p><strong>Resolva agora.</strong> Ponha o fader na marcação de zero e
+        use os pontos do estrobo para confirmar que o prato está travado e não
+        derivando. Se um disco está tocando na velocidade errada, confira o
+        seletor de rotação antes do fader: este aparelho roda
+        {' '}{SL_1200MK2.speeds} e nada mais, então um 45 tocado em 33 é o erro
+        mais provável aqui do que num aparelho com uma terceira rotação
+        escondida atrás de uma chave.</p>
+        <p><strong>Evite na próxima.</strong> Coloque o check de zero na
+        montagem em vez de deixar para notar na primeira mixagem. Leva um
+        segundo, e num aparelho sem reset é a única hora em que você consegue uma
+        referência limpa sem disco andando.</p>
+        <p class="acc-related">Relacionados: <a href="#quartz">Quartz lock, e o que ele promete de verdade</a> <a href="/pt/knowledge/technics/sl-1200mk7">O que mudou no MK7</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="mk2-acc" id="no-troubleshooting"><summary><h3 class="acc-h2">O manual não tem seção de troubleshooting</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Correto, e isso é um fato sobre o
+        documento e não uma lacuna desta página. As dez páginas do manual de
+        instruções da Panasonic foram lidas de ponta a ponta. Não existe título
+        de troubleshooting em lugar nenhum ali. O manual do MK7, quarenta anos
+        depois, tem um.</p>
+        <p><strong>O que o manual tem.</strong> A única frase de diagnóstico do
+        documento inteiro é o aviso do cabo de terra, e ela é precisa:
+        {' '}{SL_1200MK2.earthWarning} Todo o resto que é útil está nas
+        instruções de instalação e de conexão, e não sob um título de falha, que
+        é exatamente por que ninguém acha.</p>
+        <p><strong>O que isso significa numa booth.</strong> O conhecimento
+        sobre este aparelho vive nas mãos de quem trabalhou nele, e quase nada
+        disso está escrito pelo fabricante. Existe mais folclore sem fonte sobre
+        o SL-1200 do que sobre qualquer outro equipamento de DJ já feito. Então
+        nesta página tudo que a Panasonic escreveu está citado, e tudo que é
+        prática de campo está marcado como prática de campo. Onde eles são
+        calados, esta página diz que eles são calados em vez de preencher o
+        espaço.</p>
+        <p><strong>O que não está escrito em lugar nenhum.</strong> A Panasonic
+        nunca publicou quando a produção deste aparelho terminou. A linha do
+        tempo de herança deles vai da era do MK5 até o retorno de 2015 sem data
+        de fim no meio. O ano que todo mundo repete pode muito bem estar certo, e
+        não está em documento, então não está nesta página.</p>
+        <p class="acc-related">Relacionados: <a href="#specs">O que a Panasonic publica, e o que não publica</a> <a href={SL_1200MK2.sourceHeritage} rel="noopener">A linha do tempo de herança da Technics</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk2-acc" id="quartz"><summary><h3 class="acc-h2">Quartz lock, e o que ele promete de verdade</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Ele promete rotação precisa e
+        estável, referenciada a um cristal de quartzo. Ele não promete que o seu
+        fader está no zero. As duas coisas são confundidas o tempo todo e a
+        diferença importa numa booth.</p>
+        <p><strong>O enquadramento da própria Panasonic.</strong> Eles descrevem
+        o pitch como variável em até aproximadamente oito por cento sob controle
+        total travado a quartzo. Ou seja, a referência de quartzo é o que segura
+        a velocidade que você escolheu, incluindo uma velocidade que não é a
+        nominal. Precisão e correção são duas propriedades diferentes e este
+        aparelho garante a primeira.</p>
+        <p><strong>Por que vale ler os números direito.</strong> Wow e flutter
+        neste aparelho é publicado três vezes, em três normas diferentes:
+        {' '}{SL_1200MK2.wowFlutter}. Citar o menor deles ao lado de um valor
+        único moderno compara duas medições diferentes, e é assim que as
+        discussões de especificação sobre este aparelho normalmente começam. O
+        rumble é publicado como {SL_1200MK2.rumble}, e vale notar que o MK7 não
+        publica valor de rumble nenhum.</p>
+        <p><strong>A versão prática.</strong> Ajuste contra o estrobo, confie
+        que ele segura, e confira de novo se o aparelho foi transportado. O que o
+        quartz lock te dá é que, uma vez certo, ele continua certo, o que não é
+        pouco num aparelho desta idade.</p>
+        <p class="acc-related">Relacionados: <a href="#pitch">Achando o zero num fader sem reset</a> <a href="#specs">O que a Panasonic publica</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="mk2-acc" id="features"><summary><h3 class="acc-h2">O que este toca-discos tem, e o que ele deliberadamente não tem</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>O que ele tem.</strong> {SL_1200MK2.type}, com
+        {' '}{SL_1200MK2.braking.toLowerCase()}. Pitch travado a quartzo em
+        {' '}{SL_1200MK2.pitchRange}, com marcações no prato em
+        {' '}{SL_1200MK2.platterMarkings}. Torque de partida
+        {' '}{SL_1200MK2.startingTorque} e uma partida de
+        {' '}{SL_1200MK2.startUpTime}, que é o número que fez deste aparelho uma
+        ferramenta de DJ em vez de um toca-discos de hi-fi.</p>
+        <p><strong>O que ele não tem, e o MK7 tem.</strong> Nenhum botão de reset
+        de pitch. Uma faixa de pitch em vez de duas. Nada de tocar ao contrário.
+        Nenhum torque de partida ou força de freio ajustáveis. Duas rotações em
+        vez de três. Nenhum cabo phono, cabo de terra ou cabo de força
+        destacável. E nenhuma luz de agulha do tipo pop-up que o MK7 carrega.</p>
+        <p><strong>Por que essa lista é curta de propósito.</strong> A própria
+        Technics descreve o MK7 como um retorno deste aparelho, e o comunicado de
+        lançamento dele diz que ele segue a geração anterior em dimensões, layout
+        de botões e massa inercial do prato. Quase tudo que faz um SL-1200
+        parecer um SL-1200 foi definido aqui, em {SL_1200MK2.released}, e não
+        mudou desde então.</p>
+        <p><strong>O isolamento, que é uma alegação real de projeto.</strong> O
+        manual descreve a base de alumínio fundido, a borracha pesada embaixo, o
+        prato amortecido e quatro pés isolantes grandes, e afirma que o resultado
+        é adequado a uso em níveis de pressão sonora extra altos. Essa é a
+        palavra da Panasonic de 1979 e é por isso que estes aparelhos sobrevivem
+        em clube.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/technics/sl-1200mk7">O SL-1200MK7</a> <a href="#skipping">A agulha pula quando o grave entra</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="star" title="Ajuste e calibração" />
+
+    <details class="acc-sec" name="mk2-acc" id="tonearm"><summary><h3 class="acc-h2">Ajustando o braço para ele rastrear</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Os números que a Panasonic publica.</strong> O braço é
+        {' '}{SL_1200MK2.tonearm.toLowerCase()}, comprimento efetivo
+        {' '}{SL_1200MK2.tonearmEffectiveLength}, massa efetiva
+        {' '}{SL_1200MK2.tonearmEffectiveMass}, overhang
+        {' '}{SL_1200MK2.overhang}, ângulo de offset
+        {' '}{SL_1200MK2.offsetAngle}. A altura do braço ajusta em
+        {' '}{SL_1200MK2.armHeightRange}. O peso da agulha disca
+        {' '}{SL_1200MK2.stylusPressureRange}. O peso de cápsula suportado é
+        {' '}{SL_1200MK2.cartridgeWeightRange}, e o headshell pesa
+        {' '}{SL_1200MK2.headshellWeight}.</p>
+        <p><strong>A faixa de peso mais estreita merece atenção.</strong> Este
+        braço disca {SL_1200MK2.stylusPressureRange}. O do MK7 disca
+        {' '}{SL_1200MK7.stylusPressureRange}. Se você usa uma cápsula que pede
+        um peso de rastreamento maior do que este braço alcança direto, isso é
+        uma limitação real deste aparelho e não um erro de ajuste, e a Panasonic
+        fornece um peso auxiliar e um peso de concha justamente para deslocar a
+        faixa utilizável.</p>
+        <p><strong>Anti-skating.</strong> A instrução da Panasonic é uma linha:
+        {' '}{SL_1200MK2.antiSkatingInstruction} Então, qualquer que seja o peso
+        de rastreamento que sua cápsula pede, o controle de anti-skating vai para
+        o valor correspondente. É o passo que as pessoas pulam, e ele aparece
+        como um toca-discos que pula sempre para o mesmo lado em vez de pular
+        aleatoriamente.</p>
+        <p><strong>O número que esta página não vai te dar.</strong> A Panasonic
+        publica a faixa que o braço consegue discar e nenhuma recomendação de
+        onde deixar. O fabricante da sua cápsula publica um peso de rastreamento
+        para aquela cápsula específica, e é esse o número a usar. Quem cita um
+        valor único para todo uso de DJ está chutando no seu lugar: leve demais
+        rastreia mal e pula, pesado demais gasta disco mais rápido.</p>
+        <p class="acc-related">Relacionados: <a href="#skipping">A agulha pula quando o grave entra</a> <a href="#maintenance">O que gasta</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="usb" title="Conexões" />
+
+    <details class="acc-sec" name="mk2-acc" id="connections"><summary><h3 class="acc-h2">Conexões, e o que não desconecta</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>O que sai do aparelho.</strong> {SL_1200MK2.output}. O cabo
+        de terra é um cabo separado com terminal tipo forquilha que parafusa no
+        mixer, e é o mesmo descrito no aviso de zumbido acima.</p>
+        <p><strong>Os cabos se leem como fixos no aparelho, e a evidência é
+        esta.</strong> A Panasonic nunca usa as palavras fixo de fábrica. O que
+        eles fazem é desenhar os cabos phono na figura de conexão como cabos já
+        saindo da unidade, e deixar eles fora de uma lista de peças que enumera
+        todo outro item fornecido até o adaptador de 45 rpm. Duas evidências
+        apontando para o mesmo lado, e nenhuma instrução em lugar nenhum para
+        destacar os cabos no aparelho. Então esta página diz que os cabos se leem
+        como fixos, em vez de afirmar isso como especificação citada, porque essa
+        é a força honesta da afirmação.</p>
+        <p><strong>Por que isso importa numa booth.</strong> Se é fixo, um cabo
+        prensado ou danificado é serviço de solda e não troca, então a falha que
+        leva trinta segundos num MK7 tira este aparelho de serviço. Essa é a
+        maior diferença prática entre os dois, e é por isso que o MK7 listar o
+        cabo phono como peça de reposição com número importa mais do que
+        parece.</p>
+        <p><strong>Energia.</strong> {SL_1200MK2.voltage}, puxando
+        {' '}{SL_1200MK2.powerConsumption}. O aparelho pesa
+        {' '}{SL_1200MK2.weight} e mede {SL_1200MK2.dimensions}, o que vale saber
+        antes de você aceitar carregar um par escada acima.</p>
+        <p class="acc-related">Relacionados: <a href="#hum">Tem um zumbido no sistema</a> <a href="/pt/knowledge/technics/sl-1200mk7">O MK7, onde estes cabos desconectam</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="mk2-acc" id="compatibility"><summary><h3 class="acc-h2">Com o que ele funciona, e o que ele exige do mixer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>O mixer tem que ter entrada PHONO.</strong> É esse o
+        requisito inteiro e é nele que as pessoas se enrolam. A saída de uma
+        cápsula precisa de um estágio phono, ou seja, muito ganho e equalização
+        RIAA. Numa entrada de linha você recebe um sinal fino, baixo e sem grave,
+        que soa como aparelho quebrado e é erro de roteamento. Todo mixer que
+        este site documenta ao lado dele tem entradas phono chaveáveis.</p>
+        <p><strong>Timecode e DVS.</strong> Este é um toca-discos normal, então
+        vinil de timecode funciona nele como funciona em qualquer toca-discos e o
+        software decide o que é suportado. Vale saber que um disco de timecode
+        gasto piora o rastreamento bem antes de soar claramente ruim, e o sintoma
+        é software gaguejando ou perdendo posição em vez de dano audível.</p>
+        <p><strong>Rotações.</strong> {SL_1200MK2.speeds}. Nenhuma terceira
+        rotação nesta geração.</p>
+        <p><strong>Cápsulas.</strong> O peso suportado é
+        {' '}{SL_1200MK2.cartridgeWeightRange} de série, e a Panasonic fornece um
+        peso auxiliar e um peso de concha para deslocar essa faixa nos dois
+        sentidos. O código de cores dos fios é {SL_1200MK2.headshellWiring}.</p>
+        <p class="acc-related">Relacionados: <a href="#dead-channel">Um canal ficou mudo</a> <a href="/pt/knowledge/dictionary">O dicionário técnico de DJ</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção" />
+
+    <details class="acc-sec" name="mk2-acc" id="maintenance"><summary><h3 class="acc-h2">O que gasta num aparelho desta idade</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>A agulha é o consumível.</strong> É a única peça em contato
+        com o disco e ela gasta desde a primeira execução. Uma agulha gasta não
+        se anuncia: ela rastreia mal, faz os discos soarem mais opacos do que
+        são, e danifica o que toca. A Panasonic não publica vida útil porque isso
+        pertence à cápsula, então use o número do fabricante da cápsula.</p>
+        <p><strong>O que envelhece neste aparelho especificamente.</strong> Tudo
+        que é borracha. O slipmat, os pés e o amortecimento embaixo do prato são
+        as peças que estão numa booth quente desde antes de a maioria das pessoas
+        que usam o aparelho ter nascido, e pés endurecidos são causa real da
+        agulha pulando que esta página tem uma seção inteira sobre. Isso é
+        observação de campo e não afirmação da Panasonic, e está marcado como
+        tal.</p>
+        <p><strong>O que não gasta.</strong> Não tem correia, porque é tração
+        direta. Não tem firmware para degradar. O motor é
+        {' '}{SL_1200MK2.motor.toLowerCase()}, um projeto sem escovas para
+        trocar, e é a maior razão pela qual aparelhos de
+        {' '}{SL_1200MK2.released} ainda trabalham todas as noites.</p>
+        <p><strong>Entre sets.</strong> Mantenha a agulha limpa, mantenha o cabo
+        de terra ligado, e mantenha a travinha do descanso do braço realmente
+        travada quando o aparelho é movido. A maior parte do dano em braço
+        acontece no transporte e não no uso.</p>
+        <p class="acc-related">Relacionados: <a href="#tonearm">Ajustando o braço para ele rastrear</a> <a href="#skipping">A agulha pula quando o grave entra</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Entendendo o toca-discos" />
+
+    <details class="acc-sec" name="mk2-acc" id="specs"><summary><h3 class="acc-h2">O que a Panasonic publica, e o que não publica</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Os números publicados.</strong> {SL_1200MK2.type}. Motor
+        {' '}{SL_1200MK2.motor.toLowerCase()}. Prato {SL_1200MK2.platter}.
+        Rotações {SL_1200MK2.speeds}. Torque de partida
+        {' '}{SL_1200MK2.startingTorque}. Partida {SL_1200MK2.startUpTime}. Wow
+        e flutter {SL_1200MK2.wowFlutter}. Rumble {SL_1200MK2.rumble}. Peso
+        {' '}{SL_1200MK2.weight}. Lançado em {SL_1200MK2.released}.</p>
+        <p><strong>Não existe data de fim de produção.</strong> A Panasonic e a
+        Technics nunca publicaram uma. A linha do tempo de herança deles vai da
+        era do MK5 até o retorno de 2015 sem nada no meio, então o ano que é
+        repetido em todo lugar não está em documento nenhum que este site
+        conseguiu achar. Pode muito bem estar certo. Não tem fonte, então não
+        está afirmado aqui, e essa é a mesma regra que este site aplica ao
+        DJM-900NXS, cujo fim de suporte de firmware é inferência a partir do
+        silêncio e não fato publicado.</p>
+        <p><strong>Não existe documento da Panasonic para o SL-1210MK2.</strong>
+        O gêmeo preto de exportação foi feito e vendido com certeza, e toda
+        especificação ou manual que aparece para ele é arquivo de terceiros. A
+        Panasonic DOCUMENTA a convenção de nomes prata e preto, mas só para a
+        linha Grand Class moderna, e esticar isso quarenta anos para trás seria
+        este site inventando um fato em vez de relatar um.</p>
+        <p><strong>A fonte é um scan.</strong> O PDF hospedado pela própria
+        Panasonic são imagens de página de um documento de 1979 sem camada de
+        texto, então ele foi lido página por página em vez de pesquisado. É por
+        isso que parte desta página é mais magra que a equivalente do MK7: o
+        documento diz menos.</p>
+        <p class="acc-related">Relacionados: <a href={SL_1200MK2.source} rel="noopener">O manual de instruções</a> <a href={SL_1200MK2.sourceHistory} rel="noopener">A Technics sobre a história do SL-1200</a></p>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="sl-1200mk2" lang="pt" />
+
+    <EmailCapture source="knowledge_sl_1200mk2" lang="pt" />
+  </main>
+</Base>
+
+<style>
+  /* Every rule here comes from the English sibling and from the Xone and
+     Pioneer hardware pages, so the hardware pages stay one family. */
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+</style>

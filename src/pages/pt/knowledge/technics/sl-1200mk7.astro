@@ -1,0 +1,510 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import { SL_1200MK7, SL_1200MK2 } from '../../../../data/facts.js';
+
+// SL-1200MK7, PORTUGUÊS DO BRASIL. A fonte de verdade da estrutura, dos
+// componentes, das classes, das âncoras, dos fatos e do CSS é
+// src/pages/knowledge/technics/sl-1200mk7.astro. Aqui muda só o texto que uma
+// pessoa lê e os hrefs com /pt. Nenhum número é escrito à mão: tudo sai de
+// SL_1200MK7 e de SL_1200MK2 em src/data/facts.js, sem fallback. Se a página
+// em inglês mudar, mude esta no mesmo commit.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(SL_1200MK7.checked);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/technics/sl-1200mk7#article',
+  headline: 'SL-1200MK7: a referência operacional',
+  description: 'O que todo DJ precisa saber antes de trabalhar num Technics SL-1200MK7: por que o cabo de terra é a primeira coisa a conferir num zumbido, o que deixa um canal mudo, as chaves do painel traseiro que mudam como o toca-discos parte e freia, e a faixa de pitch que a ficha técnica não mostra.',
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-08',
+  dateModified: '2026-08-08',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/technics/sl-1200mk7#webpage' },
+  image: 'https://www.savemygig.com/images/sl-1200mk7-panel-full.webp',
+};
+---
+<Base
+  title="Technics SL-1200MK7: zumbido, pitch, torque | Save My Gig"
+  description="Manual de campo do SL-1200MK7: o cabo de terra que mata o zumbido, o que deixa um canal mudo, e as chaves de trás que mudam torque e freio."
+  path="/knowledge/technics/sl-1200mk7"
+  crumbName="SL-1200MK7"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/technics">Technics</a> <span aria-hidden="true">/</span>
+      <span>SL-1200MK7</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <h1 class="rb-h1">SL-1200MK7, <span class="accent">o manual de campo</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#sl-1200mk7-lightbox"
+        aria-label="Abrir uma foto maior da superfície de controle do Technics SL-1200MK7"
+      >
+        <img
+          src="/images/sl-1200mk7-panel-thumb.webp"
+          alt="Toca-discos de DJ Technics SL-1200MK7 de tração direta, visto de cima"
+          width="634"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="sl-1200mk7-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/sl-1200mk7-panel-full.webp"
+        srcset="/images/sl-1200mk7-panel-800.webp 800w, /images/sl-1200mk7-panel-full.webp 1400w"
+        sizes="92vw"
+        alt="Toca-discos de DJ Technics SL-1200MK7 de tração direta, visto de cima"
+        width="1400"
+        height="1105"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> Um toca-discos sem firmware, sem
+        armazenamento e sem nada para formatar, então o checklist é outro. Na
+        ficha da Panasonic ele é {SL_1200MK7.type.toLowerCase()}. Zumbido é o
+        cabo de terra, e a Panasonic diz isso com essas palavras. Canal mudo é
+        fio de headshell, cápsula ou cabo phono, e nada disso fica no painel de
+        cima. Agulha pulando é o piso, não o toca-discos. O pitch roda
+        {' '}{SL_1200MK7.pitchRange}, e tem um botão de reset do lado do fader
+        que o MK2 nunca teve. Antes de tocar: confira as chaves de trás, porque
+        torque, freio e reverse ficam lá e o DJ anterior pode ter mexido.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="mk7-acc" id="hum"><summary><h3 class="acc-h2">Tem um zumbido no sistema e ele não vai embora</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> O cabo de terra. Confira ele antes
+        de qualquer outra coisa, e antes de sair trocando cabo. A Panasonic
+        resolve isso em uma frase no manual: {SL_1200MK7.earthWarning} Neste
+        toca-discos o cabo de terra é uma peça separada que aparafusa num
+        terminal, ou seja, é uma peça que pode estar simplesmente ausente, e um
+        aparelho de booth que já foi movido algumas vezes muitas vezes está
+        assim.</p>
+        <p><strong>Por que isso acontece.</strong> Uma cápsula phono entrega
+        alguns milivolts. Seu mixer aplica algo na casa de sessenta decibéis de
+        ganho para transformar isso num sinal utilizável, e aplica esse ganho em
+        tudo que entra, incluindo qualquer ruído na frequência da rede elétrica
+        que o chassi do toca-discos captou. O cabo de terra dá a esse ruído um
+        caminho de saída. Sem ele o chassi fica flutuando e o zumbido que você
+        ouve é a rede sendo amplificada junto com o disco. Não é defeito do
+        aparelho, e abaixar coisa nenhuma resolve, porque o zumbido está sendo
+        amplificado pelo mesmo estágio de ganho da música.</p>
+        <p><strong>Resolva agora.</strong> Ache o terminal tipo forquilha ou
+        anel na ponta do cabo de terra e coloque ele no poste de terra do mixer,
+        apertado de verdade e não só encostado. A Panasonic especifica uma chave
+        Phillips para o terminal do próprio toca-discos, então, se o zumbido
+        sobreviver, confira essa ponta também: um parafuso solto no toca-discos
+        é a mesma falha que um cabo ausente no mixer. Se o terra está bom e o
+        zumbido continua, a segunda linha da Panasonic é sobre proximidade:
+        {' '}{SL_1200MK7.humTroubleshooting} Uma fonte ou um cabo IEC deitado em
+        cima de um cabo phono é causa real, e resolver é de graça.</p>
+        <p><strong>Evite na próxima.</strong> Trate o cabo de terra como parte
+        do toca-discos e não como acessório opcional, e confira ele na
+        montagem, não durante o set. A Panasonic dá número de peça próprio para
+        esse cabo, {SL_1200MK7.earthLeadPartNumber}, ou seja, ele pode ser
+        reposto quando desaparece, e em locação ou em clube vale saber disso
+        antes da noite e não depois.</p>
+        <p class="acc-related">Relacionados: <a href="#dead-channel">Um canal ficou mudo</a> <a href="#connections">Conexões, e o que desconecta neste toca-discos</a> <a href={SL_1200MK7.source} rel="noopener">Manual do proprietário do SL-1200MK7 da Panasonic</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk7-acc" id="dead-channel"><summary><h3 class="acc-h2">Um canal ficou mudo e o outro está normal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Volte pelo caminho do sinal na ordem
+        em que as coisas falham de fato: os fios do headshell primeiro, depois a
+        cápsula, depois o cabo phono. Três lugares, todos mecânicos, e nenhum
+        deles em qualquer ponto do painel de cima. É a falha que joga o DJ no
+        menu de roteamento do mixer quando o problema são quatro fios da
+        espessura de um fio de cabelo.</p>
+        <p><strong>Por que isso acontece.</strong> Os quatro fios do headshell
+        são a conexão mais fina de toda a cadeia e são mexidos toda vez que
+        alguém troca uma cápsula ou derruba um headshell. A Panasonic publica o
+        código de cores, então você consegue ver qual lado perdeu, e esta frase
+        vem do manual do MK2 porque é o documento que imprime isso:
+        {' '}{SL_1200MK2.headshellWiring}. Um fio que saiu do pino, ou um pino
+        que não segura mais, deixa exatamente um canal mudo e o outro perfeito.
+        A cápsula também pode perder uma bobina, e o sintoma é idêntico. E como
+        este toca-discos tem cabo phono destacável, um cabo que não está
+        totalmente encaixado atrás entra na lista, o que não valia num MK2.</p>
+        <p><strong>Resolva agora.</strong> Troque o headshell por um que você
+        sabe que está bom, se tiver um reserva, porque esse movimento único
+        testa os fios e a cápsula de uma vez e leva dez segundos. Se a falha
+        acompanha o headshell, são os fios ou a cápsula. Se a falha fica no
+        toca-discos, reencaixe o cabo phono atrás e depois passe o cabo inteiro
+        para outro canal do mixer, para descobrir se você está atrás de um
+        toca-discos ou de uma entrada de mixer. Nada aqui precisa de
+        ferramenta.</p>
+        <p><strong>Evite na próxima.</strong> Ande com um segundo headshell, já
+        cabeado e já balanceado. É a peça de reserva mais útil para um set de
+        vinil e transforma essa falha, que acaba com o set, numa troca de dez
+        segundos. O cabo phono tem número de peça,
+        {' '}{SL_1200MK7.phonoCablePartNumber}, então um reserva é opção real
+        neste modelo de um jeito que não é nos toca-discos antigos.</p>
+        <p class="acc-related">Relacionados: <a href="#hum">Tem um zumbido no sistema</a> <a href="#tonearm">Ajustando o braço para ele rastrear</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk7-acc" id="skipping"><summary><h3 class="acc-h2">A agulha pula toda vez que o grave entra</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Nove de cada dez vezes isso é a sala
+        e não o toca-discos. As instruções de instalação da própria Panasonic
+        são a solução, e são duas frases, citadas do manual do MK2 porque foi lá
+        que a Panasonic escreveu: {SL_1200MK2.placementSpeakers}
+        {' '}{SL_1200MK2.placementLevel} Só depois disso comece a mexer no
+        braço.</p>
+        <p><strong>Por que isso acontece.</strong> Uma agulha dentro do sulco é
+        um microfone, e ela não distingue a vibração que sobe pela base a partir
+        de um subwoofer da vibração gravada no disco. Abaixo de certa frequência
+        o toca-discos, o slipmat, o prato e o braço passam a se mover junto com
+        a sala, e a agulha sai do sulco. Isso é realimentação acústica, e o sinal
+        é que acontece nas partes altas e para quando você abaixa o fader. Um
+        toca-discos que não está nivelado soma uma força lateral constante em
+        cima disso, e é por isso que um aparelho desnivelado pula sempre para o
+        mesmo lado.</p>
+        <p><strong>Resolva agora.</strong> Tire o toca-discos de cima do que
+        está ressoando. Qualquer coisa que desacople a base da superfície da
+        booth ajuda, e afastar o aparelho da frente de uma caixa de grave ajuda
+        mais. Confirme que ele está nivelado. Confira se o contrapeso não
+        andou e se o anti-skating está igual ao peso da agulha, que é a
+        instrução da própria Panasonic: {SL_1200MK7.antiSkatingInstruction}
+        {' '}Aumentar o peso de rastreamento é o último recurso, não o primeiro,
+        e tem que ficar dentro do que o fabricante da sua cápsula especifica.</p>
+        <p><strong>Evite na próxima.</strong> Decida onde os toca-discos ficam
+        antes de a sala encher, porque depois disso nada é movido. Isso é
+        experiência de booth e não especificação da Panasonic, e vale dizer com
+        clareza: booth montada com os toca-discos direto em cima, ou
+        parafusados na mesma estrutura das caixas de grave, vai brigar com você
+        sempre, e nenhum ajuste de braço resolve problema estrutural.</p>
+        <p class="acc-related">Relacionados: <a href="#tonearm">Ajustando o braço para ele rastrear</a> <a href="#pitch">O pitch não fica onde você põe</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk7-acc" id="pitch"><summary><h3 class="acc-h2">O pitch não fica onde você põe</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Veja em qual faixa de pitch o
+        toca-discos está antes de culpar o fader. Este modelo roda
+        {' '}{SL_1200MK7.pitchRange}, e o mesmo movimento físico do fader
+        significa o dobro de variação de tempo na faixa maior. Depois aperte o
+        botão de reset do lado do fader, que devolve o aparelho à rotação
+        nominal onde quer que o fader esteja.</p>
+        <p><strong>Por que isso acontece.</strong> Um DJ que chega neste
+        toca-discos vindo de um SL-1200 mais antigo tem memória muscular
+        calibrada para uma faixa e um comportamento. Num MK2 a faixa é fixa em
+        {' '}{SL_1200MK2.pitchRange} e não existe reset nenhum, então você acha
+        o zero no olho, contra as marcações do prato. Aqui a faixa é chaveada e
+        existe reset, então um aparelho que parece impossivelmente nervoso
+        normalmente é um aparelho que alguém deixou na faixa maior, e um
+        aparelho que não volta para o zero normalmente é um botão de reset que
+        ninguém sabia que existia.</p>
+        <p><strong>Resolva agora.</strong> Escolha a faixa que você quer, dê
+        reset e faça a mixagem a partir de um zero conhecido. Se o toca-discos
+        segura o tempo mas o tempo está errado, confirme que o seletor de
+        rotação está no valor certo. Este modelo roda {SL_1200MK7.speeds}, e uma
+        terceira rotação atrás de uma chave é um jeito genuinamente novo de
+        tocar um disco na velocidade errada.</p>
+        <p><strong>Evite na próxima.</strong> Coloque a faixa de pitch no seu
+        check de montagem, do mesmo jeito que você confere o gain de um mixer.
+        Leva um segundo e é a diferença entre um fader que obedece e um fader
+        que briga com você a noite inteira.</p>
+        <p class="acc-related">Relacionados: <a href="#rear-switches">As chaves do painel traseiro, e por que o aparelho parece errado</a> <a href="#specs">O que a Panasonic publica, e o que não publica</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="mk7-acc" id="rear-switches"><summary><h3 class="acc-h2">O toca-discos parte, para ou toca ao contrário sem você pedir</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Olhe atrás do aparelho. Três
+        comportamentos que antes eram fixos no hardware agora são chaves:
+        {' '}{SL_1200MK7.torqueBrakeSetting}, mais uma chave REV para tocar ao
+        contrário. Nada no painel de cima diz em que posição cada uma está.</p>
+        <p><strong>Por que isso acontece.</strong> A Panasonic deu a este modelo
+        {' '}{SL_1200MK7.torqueLevels} níveis de torque de partida e
+        {' '}{SL_1200MK7.brakeLevels} níveis de freio, o que é uma melhoria real
+        e também uma armadilha real numa booth compartilhada. O torque de
+        partida muda a velocidade com que o prato chega na rotação, então muda o
+        som de toda partida. A força do freio muda como o disco morre quando
+        você aperta stop. Um DJ que ajustou os dois para o estilo dele e deixou
+        assim entrega para o próximo um aparelho que se comporta diferente de
+        todo SL-1200 que essa pessoa já tocou, e não existe indicação nenhuma na
+        superfície de cima.</p>
+        <p><strong>Resolva agora.</strong> O reverse é o que assusta as
+        pessoas, então comece por ele: a sequência da própria Panasonic é
+        {' '}{SL_1200MK7.reversePlaySetting}. Se um aparelho está tocando ao
+        contrário, a chave está ativa e a combinação foi disparada, então
+        dispare de novo para sair. Para torque e freio, deixe onde você quer na
+        montagem e anote que você mudou, porque o próximo DJ não tem como
+        ver.</p>
+        <p><strong>Evite na próxima.</strong> Confira o painel traseiro como
+        parte de chegar num par de toca-discos desconhecido, no mesmo movimento
+        em que você confere a faixa de pitch. É a maior diferença entre
+        trabalhar num MK7 e trabalhar em qualquer aparelho anterior a ele.</p>
+        <p class="acc-related">Relacionados: <a href="#pitch">O pitch não fica onde você põe</a> <a href="#features">O que o MK7 acrescentou</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="mk7-acc" id="no-firmware"><summary><h3 class="acc-h2">Não existe firmware, não existe armazenamento e não tem nada para atualizar</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Correto, e vale dizer em voz alta em
+        vez de deixar como ausência. Este toca-discos não tem firmware para
+        estar numa versão velha, não tem porta USB, não tem sistema de arquivos,
+        não tem biblioteca e não tem exportação. Toda pergunta que este site faz
+        a um dono de CDJ antes de um gig não tem sentido aqui.</p>
+        <p><strong>Por que isso importa.</strong> Corta para os dois lados. Nada
+        neste aparelho pode ser brickado por uma atualização ruim, nada rejeita
+        um drive que não gostou, e um aparelho da primeira leva de produção se
+        comporta igual a um comprado hoje. Em troca, nada pode ser corrigido por
+        software também. Falha mecânica é reparo mecânico, e as peças que gastam
+        são peças que você troca: uma agulha, uma cápsula, um cabo.</p>
+        <p><strong>O que conferir no lugar.</strong> As três coisas que
+        realmente decidem se o aparelho funciona hoje são o cabo de terra, o
+        headshell e o ajuste do braço. Esse é o checklist de pré-gig de um
+        toca-discos, e ele é mais curto que o digital, mas não é opcional.</p>
+        <p><strong>O que este site não vai te dizer.</strong> Não existe matriz
+        de firmware para este toca-discos e nunca vai existir, porque não existe
+        firmware. Qualquer página ou post de fórum oferecendo uma versão de
+        firmware de SL-1200MK7 está descrevendo algo que não existe.</p>
+        <p class="acc-related">Relacionados: <a href="#specs">O que a Panasonic publica, e o que não publica</a> <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo AlphaTheta, por versão de firmware</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="mk7-acc" id="features"><summary><h3 class="acc-h2">O que o MK7 acrescentou, e o que ele deixou exatamente onde estava</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>O que entrou.</strong> Uma segunda faixa de pitch, então o
+        fader cobre {SL_1200MK7.pitchRange}. Um botão de reset de pitch. Tocar
+        ao contrário. Quatro níveis de torque de partida e quatro de freio. Uma
+        terceira rotação, {SL_1200MK7.speeds}. Cabo phono destacável e cabo de
+        força destacável. E {SL_1200MK7.stylusLight} que sobe para iluminar a
+        agulha.</p>
+        <p><strong>O que ficou.</strong> A Panasonic é explícita: este
+        toca-discos foi construído para ter a mesma sensação dos anteriores,
+        {' '}{SL_1200MK7.mk6Continuity}. Essa é a palavra deles, e é a razão
+        pela qual um MK7 parece familiar debaixo das mãos mesmo com eletrônica
+        nova por dentro.</p>
+        <p><strong>O motor, e dois documentos da Panasonic que discordam.</strong>
+        A tabela de especificações do manual do proprietário chama de
+        {' '}{SL_1200MK7.motor.toLowerCase()}. O comunicado de lançamento chama
+        de {SL_1200MK7.motorPressReleaseTerm}. Os dois são da Panasonic, os dois
+        são atuais, e quase certamente descrevem uma peça só. Esta página dá a
+        palavra do manual, porque tabela de especificação é onde especificação
+        mora, e nomeia a outra para você não se surpreender ao ver a segunda
+        citada em outro lugar.</p>
+        <p><strong>O que ele não é.</strong> Não existe alegação de quartz lock
+        neste modelo do jeito que existe no MK2, onde o pitch com quartz lock
+        era o recurso de capa do aparelho. Não carregue essa linguagem para
+        cá.</p>
+        <p class="acc-related">Relacionados: <a href="#rear-switches">As chaves do painel traseiro</a> <a href={SL_1200MK7.sourceFeatures} rel="noopener">A Technics sobre os recursos do SL-1200</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="star" title="Ajuste e calibração" />
+
+    <details class="acc-sec" name="mk7-acc" id="tonearm"><summary><h3 class="acc-h2">Ajustando o braço para ele rastrear</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Os números que a Panasonic publica.</strong> O braço é
+        {' '}{SL_1200MK7.tonearm.toLowerCase()}, comprimento efetivo
+        {' '}{SL_1200MK7.tonearmEffectiveLength}, overhang
+        {' '}{SL_1200MK7.overhang}, ângulo de offset
+        {' '}{SL_1200MK7.offsetAngle}. A altura do braço ajusta em
+        {' '}{SL_1200MK7.armHeightRange}. O peso da agulha disca
+        {' '}{SL_1200MK7.stylusPressureRange}. O erro de rastreamento é
+        especificado em {SL_1200MK7.trackingError}. O peso de cápsula suportado
+        é {SL_1200MK7.cartridgeWeightRange}, e o headshell em si pesa
+        {' '}{SL_1200MK7.headshellWeight}.</p>
+        <p><strong>O número que esta página não vai te dar.</strong> A Panasonic
+        publica a faixa que o braço consegue discar e nenhuma recomendação de
+        onde deixar. O fabricante da sua cápsula publica um peso de rastreamento
+        para aquela cápsula específica, e é esse o número a usar. Quem cita um
+        valor único para todo uso de DJ está chutando no seu lugar: leve demais
+        rastreia mal e pula, pesado demais gasta disco mais rápido, e a resposta
+        certa depende de verdade da cápsula que está pendurada na frente do
+        braço.</p>
+        <p><strong>Anti-skating.</strong> A instrução da Panasonic é uma linha:
+        {' '}{SL_1200MK7.antiSkatingInstruction} Então, qualquer que seja o peso
+        de rastreamento que sua cápsula pede, o controle de anti-skating vai
+        para o valor correspondente. É o passo que as pessoas pulam, e ele
+        aparece como um toca-discos que pula sempre para o mesmo lado em vez de
+        pular aleatoriamente.</p>
+        <p><strong>Altura do braço.</strong> O ajuste helicoidal existe para o
+        braço ficar paralelo ao disco com a sua cápsula montada, e cápsulas têm
+        alturas diferentes. Ajustar isso uma vez para a cápsula que você usa de
+        verdade vale mais que qualquer outro cinco minutos que você vai gastar
+        neste aparelho.</p>
+        <p class="acc-related">Relacionados: <a href="#skipping">A agulha pula quando o grave entra</a> <a href="#maintenance">O que gasta</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="usb" title="Conexões" />
+
+    <details class="acc-sec" name="mk7-acc" id="connections"><summary><h3 class="acc-h2">Conexões, e o que desconecta neste toca-discos</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>O que tem atrás.</strong> {SL_1200MK7.output}. E o que separa
+        este aparelho dos clássicos: no MK7 o cabo phono, o cabo de terra e o
+        cabo de força são todos destacáveis, e a Panasonic lista cada um como
+        peça própria. O cabo phono é {SL_1200MK7.phonoCablePartNumber}, o cabo
+        de terra é {SL_1200MK7.earthLeadPartNumber}, o cabo de força é
+        {' '}{SL_1200MK7.powerCordPartNumber}.</p>
+        <p><strong>Por que essa é a mudança mais prática de todas.</strong> Num
+        SL-1200MK2 os cabos phono se leem como fixos no chassi, então um cabo
+        danificado é serviço de oficina. Aqui é um cabo do qual você carrega um
+        reserva. Em locação ou em clube isso transforma uma das falhas físicas
+        mais comuns de um toca-discos, um cabo prensado por case ou um plugue
+        puxado de lado uma vez a mais, numa troca de trinta segundos.</p>
+        <p><strong>A armadilha que vem junto.</strong> Um conector que dá para
+        desconectar é um conector que dá para deixar meio conectado, então cabo
+        phono destacável entra na lista de coisas que deixam um canal mudo.
+        Encaixe direito, e se um canal cair no meio do set, reencaixe antes de
+        sair procurando defeito de cápsula.</p>
+        <p><strong>Energia.</strong> {SL_1200MK7.voltage}. O consumo é
+        {' '}{SL_1200MK7.powerConsumption}, o que só vale saber porque um
+        aparelho que puxa quase nada desligado ainda precisa ser desligado se a
+        booth está numa alimentação limitada.</p>
+        <p class="acc-related">Relacionados: <a href="#hum">Tem um zumbido no sistema</a> <a href="#dead-channel">Um canal ficou mudo</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="mk7-acc" id="compatibility"><summary><h3 class="acc-h2">Com o que ele funciona, e o que ele exige do mixer</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>O mixer tem que ter entrada PHONO.</strong> É esse o
+        requisito inteiro e é nele que as pessoas se enrolam. A saída de uma
+        cápsula precisa de um estágio phono, ou seja, muito ganho e equalização
+        RIAA. Ligue este toca-discos numa entrada de linha e você recebe um
+        sinal fino, baixo e sem grave, que soa como aparelho quebrado e é erro
+        de roteamento. Todo mixer que este site documenta ao lado dele tem
+        entradas phono chaveáveis.</p>
+        <p><strong>Timecode e DVS.</strong> Este é um toca-discos normal, então
+        vinil de timecode funciona nele como funciona em qualquer toca-discos, e
+        o software é a parte que decide o que é suportado. O timecode traz uma
+        falha própria que disco prensado não tem: um disco de timecode gasto
+        piora o rastreamento muito antes de soar claramente ruim, e o sintoma é
+        software gaguejando ou perdendo posição em vez de dano audível.</p>
+        <p><strong>Rotações.</strong> {SL_1200MK7.speeds}. A terceira rotação
+        fica atrás de uma chave em vez de no seletor principal, o que é
+        deliberado e também é a razão de ser fácil estar nela sem perceber.</p>
+        <p><strong>Cápsulas.</strong> O peso de cápsula suportado é
+        {' '}{SL_1200MK7.cartridgeWeightRange}. A Panasonic especifica o
+        terminal do headshell como {SL_1200MK7.headshellTerminal} e, o que chama
+        atenção, nunca dá nome de norma nenhuma a ele. Este site dá a dimensão
+        que eles dão e não inventa o nome, porque os nomes que circulam para
+        esse encaixe não são da Panasonic.</p>
+        <p class="acc-related">Relacionados: <a href="#dead-channel">Um canal ficou mudo</a> <a href="/pt/knowledge/dictionary">O dicionário técnico de DJ</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="shield" title="Manutenção" />
+
+    <details class="acc-sec" name="mk7-acc" id="maintenance"><summary><h3 class="acc-h2">O que gasta, e o que não gasta</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>A agulha é o consumível.</strong> É a única peça em contato
+        com o disco e ela gasta desde a primeira execução. Uma agulha gasta não
+        se anuncia: ela rastreia mal, faz os discos soarem mais opacos do que
+        são, e danifica os discos que toca. A Panasonic não publica vida útil
+        porque isso pertence à cápsula, então o número do fabricante da cápsula
+        é o que vale.</p>
+        <p><strong>O slipmat e o prato.</strong> O prato é
+        {' '}{SL_1200MK7.platter}. Repare que o peso de prato que a Panasonic dá
+        para este aparelho INCLUI o slipmat e a folha de deslize, e o número do
+        MK2 não inclui, então os dois valores não são comparáveis e ninguém deve
+        concluir dali que um prato é mais pesado que o outro. O comunicado de
+        lançamento diz que este aparelho segue a massa inercial da geração
+        anterior, e é essa a afirmação que realmente descreve como ele se
+        comporta.</p>
+        <p><strong>O que não gasta.</strong> Não tem correia, porque é tração
+        direta. Não tem firmware para degradar. O motor é
+        {' '}{SL_1200MK7.motor.toLowerCase()}, um projeto sem escovas para
+        trocar, e é a maior razão pela qual estes aparelhos ficam décadas em
+        serviço.</p>
+        <p><strong>Entre sets.</strong> Mantenha a agulha limpa, mantenha o cabo
+        de terra ligado, e mantenha a travinha do descanso do braço realmente
+        travada quando o aparelho é movido. A maior parte do dano em braço
+        acontece no transporte e não no uso.</p>
+        <p class="acc-related">Relacionados: <a href="#tonearm">Ajustando o braço para ele rastrear</a> <a href="#skipping">A agulha pula quando o grave entra</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Entendendo o toca-discos" />
+
+    <details class="acc-sec" name="mk7-acc" id="specs"><summary><h3 class="acc-h2">O que a Panasonic publica, e o que não publica</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Os números publicados.</strong> Tipo
+        {' '}{SL_1200MK7.type.toLowerCase()}. Prato {SL_1200MK7.platter}.
+        Rotações {SL_1200MK7.speeds}. Torque de partida
+        {' '}{SL_1200MK7.startingTorque}. Partida
+        {' '}{SL_1200MK7.startUpTime}. Wow e flutter
+        {' '}{SL_1200MK7.wowFlutter}. Peso {SL_1200MK7.weight}. Anunciado em
+        {' '}{SL_1200MK7.announced}.</p>
+        <p><strong>Rumble não é publicado em lugar nenhum.</strong> Falta na
+        página de especificações, no PDF de especificações da América do Norte,
+        no manual do proprietário e na própria tabela de comparação de
+        toca-discos da Technics, que não tem linha de rumble para modelo nenhum.
+        O MK2 publicou valor ponderado e não ponderado em 1979. Isso não é
+        crítica ao aparelho, é uma lacuna que você deve conhecer antes de
+        comparar ele com qualquer coisa.</p>
+        <p><strong>A faixa de pitch falta nas páginas de especificação.</strong>
+        Ela está na tabela de especificações do manual do proprietário como
+        {' '}{SL_1200MK7.pitchRange} e não aparece nem na página de
+        especificação do produto no Reino Unido nem no PDF de especificações da
+        América do Norte, e nenhum dos dois lista valor de pitch nenhum. Dois
+        documentos da Panasonic, um número, um deles calado.</p>
+        <p><strong>As dimensões estão de fora desta página de propósito.</strong>
+        Só a altura e a profundidade foram encontradas em documento da
+        Panasonic. O comunicado de lançamento diz que o aparelho segue as
+        dimensões da geração anterior, o que torna a largura muito provavelmente
+        a conhecida, mas isso é uma corrente de duas inferências sobre um número
+        que alguém pode usar para dimensionar um case. Dimensão parcial é pior
+        que nenhuma.</p>
+        <p><strong>Nomes de modelo.</strong> {SL_1200MK7.variants}.</p>
+        <p class="acc-related">Relacionados: <a href={SL_1200MK7.sourceSpecs} rel="noopener">Página de especificações da Technics</a> <a href={SL_1200MK7.sourceSpecsPdf} rel="noopener">PDF de especificações da América do Norte</a> <a href={SL_1200MK7.sourceAnnounce} rel="noopener">O anúncio</a></p>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="sl-1200mk7" lang="pt" />
+
+    <EmailCapture source="knowledge_sl_1200mk7" lang="pt" />
+  </main>
+</Base>
+
+<style>
+  /* Every rule here comes from the English sibling and from the Xone and
+     Pioneer hardware pages, so the hardware pages stay one family. */
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+</style>
