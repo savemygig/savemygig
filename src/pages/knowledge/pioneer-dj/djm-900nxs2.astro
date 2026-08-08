@@ -4,17 +4,36 @@ import EmailCapture from '../../../components/EmailCapture.astro';
 import AccGroup from '../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../components/RelatedEquipment.astro';
 import ModelStatus from '../../../components/ModelStatus.astro';
-import { CHECKED, DJM_900NXS2 } from '../../../data/facts.js';
+import { CHECKED, DJM_900NXS2, FIRMWARE_ISSUES } from '../../../data/facts.js';
 import Icon from '../../../components/Icon.astro';
 
 // Second pilot page for the Pioneer DJ / AlphaTheta hardware reference. Same
 // template as cdj-2000nxs2.astro: eight groups, same five-part accordion
 // voice, same shared .acc-* classes. Facts sourced from DJM_900NXS2 in
 // src/data/facts.js, which links the primary AlphaTheta specification page.
-// No firmware "known issue" is claimed here because none could be verified
-// against a primary source, see the Known Issues section for how that is
-// handled honestly instead of invented.
+//
+// FIRMWARE (corrected 2026-08-08). An earlier version of this comment said no
+// known issue was claimed here because none could be verified. That stopped
+// being true when the change history was read in full: AlphaTheta document
+// fault fixes across ten versions, most of them audio. The comment outlived
+// the fact it described, which is the failure this project keeps finding, so
+// the counts below are now COMPUTED from FIRMWARE_ISSUES and cannot drift
+// again. check-firmware-i18n asserts the rendered number against the same
+// array.
 const UPDATED = CHECKED;
+
+const NXS2_FIRMWARE = FIRMWARE_ISSUES.find(
+  (m) => m.href === '/knowledge/pioneer-dj/djm-900nxs2',
+);
+if (!NXS2_FIRMWARE) {
+  throw new Error(
+    'djm-900nxs2.astro: no FIRMWARE_ISSUES entry for this page. The briefing '
+    + 'counts are computed from it, so a missing entry must fail the build '
+    + 'rather than render a silent zero.',
+  );
+}
+const FW_VERSIONS = NXS2_FIRMWARE.issues.length;
+const FW_AUDIO = NXS2_FIRMWARE.issues.filter((i) => i.area === 'Audio').length;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -90,14 +109,14 @@ const schema = {
     <div class="panel panel-go">
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
-        <strong>Booth briefing.</strong> A {DJM_900NXS2.channels}-channel professional
-        mixer with <strong>{DJM_900NXS2.usbPorts} USB ports</strong> (built for back-to-back
-        DJs to hot-swap without cutting the music), {DJM_900NXS2.beatFxCount} Beat FX
-        types and {DJM_900NXS2.soundColorFx.length} Sound Color FX on every channel.
-        It is the standard pairing for the CDJ-2000NXS2 and still one of the most
-        common mixers in professional booths. Before you touch it: know where the
-        channel gain trim is before the set starts, not during it, clipping on this
-        desk is a gain-staging problem, not an effects problem.
+        <strong>Booth briefing.</strong> A {DJM_900NXS2.channels}-channel desk still
+        in more booths than almost any other, which is why its firmware matters:
+        AlphaTheta document fault fixes across {FW_VERSIONS} versions of this
+        mixer's firmware, {FW_AUDIO} of them audio. Dropouts with DIGITAL selected,
+        SOUND COLOR FX misbehaving, a pop from DIGITAL MASTER OUT, all fixed years
+        ago and all still live on a desk nobody updated. Its one invisible trap: a
+        jack left in the RETURN puts a dead outboard unit into the signal path, and
+        nothing on the top panel shows it.
       </p>
       <label for="sv-toggle" class="sv-more">Read more…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
@@ -213,8 +232,8 @@ const schema = {
     <details class="acc-sec" name="djm900-acc" id="known-issues"><summary><h3 class="acc-h2">Firmware and known issues</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> AlphaTheta document fault fixes across
-        ten versions of this mixer's firmware, and most of them are audio faults
-        rather than cosmetic ones. On a desk this widely installed, an un-updated
+        {FW_VERSIONS} versions of this mixer's firmware, and {FW_AUDIO} of them are
+        audio faults rather than cosmetic ones. On a desk this widely installed, an un-updated
         unit is a real risk rather than a theoretical one. The full list is on the
         firmware matrix; the highest published version is
         {DJM_900NXS2.newestKnown}. This section was last checked against official

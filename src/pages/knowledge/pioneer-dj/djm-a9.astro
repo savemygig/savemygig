@@ -87,14 +87,15 @@ const schema = {
     <div class="panel panel-go">
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
-        <strong>Booth briefing.</strong> The {DJM_A9.channels}-channel successor
-        to the DJM-900NXS2's spot in high-end booths: {DJM_A9.beatFxCount} Beat FX,
-        two independent headphone outputs, one USB-A port plus two USB-B/USB-C for
-        computers, Wi-Fi for the Stagehand monitoring app, and, worth knowing
-        before you ever need it, <strong>a built-in Bluetooth audio input</strong>.
-        Firmware history matters on this desk: a rare freeze under heavy Pro DJ
-        Link load was fixed in {DJM_A9.linkFreezeFix}, so check the version on
-        gear you do not control.
+        <strong>Booth briefing.</strong> Before you reach for your own USB stick: on
+        firmware older than {DJM_A9.uaspFix} this desk does not recognize UASP
+        drives, which are exactly the fast modern sticks a prepared DJ carries. A
+        plain stick gets you playing, and the desk gets updated after the gig, not
+        during it. The rest of it: {DJM_A9.channels} channels,
+        {DJM_A9.beatFxCount} Beat FX, two independent headphone outputs so a
+        handover never means sharing a pair, {DJM_A9.usbPorts} for computers, Wi-Fi
+        for the Stagehand monitoring app, and <strong>a built-in Bluetooth audio
+        input</strong> worth remembering when every other source has died.
       </p>
       <label for="sv-toggle" class="sv-more">Read more…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>

@@ -4,7 +4,7 @@ import EmailCapture from '../../../../components/EmailCapture.astro';
 import AccGroup from '../../../../components/AccGroup.astro';
 import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
 import ModelStatus from '../../../../components/ModelStatus.astro';
-import { CHECKED, DJM_900NXS2 } from '../../../../data/facts.js';
+import { CHECKED, DJM_900NXS2, FIRMWARE_ISSUES } from '../../../../data/facts.js';
 import Icon from '../../../../components/Icon.astro';
 
 // DJM-900NXS2, NEUTRAL LATIN AMERICAN SPANISH. Source of truth for structure,
@@ -19,6 +19,18 @@ const MESES = {
 };
 const esDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
 const UPDATED = esDate(CHECKED);
+
+// Conteos COMPUTADOS desde FIRMWARE_ISSUES, nunca escritos a mano. Un conteo
+// escrito a mano es una afirmacion sobre todas las versiones que nadie leyo, y
+// se pudre con la primera actualizacion de firmware que llega.
+const NXS2_FIRMWARE = FIRMWARE_ISSUES.find(
+  (m) => m.href === '/knowledge/pioneer-dj/djm-900nxs2',
+);
+if (!NXS2_FIRMWARE) {
+  throw new Error('es/djm-900nxs2.astro: no FIRMWARE_ISSUES entry for this page.');
+}
+const FW_VERSIONS = NXS2_FIRMWARE.issues.length;
+const FW_AUDIO = NXS2_FIRMWARE.issues.filter((i) => i.area === 'Audio').length;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -88,15 +100,15 @@ const schema = {
     <div class="panel panel-go">
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
-        <strong>Briefing de booth.</strong> Un mixer profesional de
-        {DJM_900NXS2.channels} canales con <strong>{DJM_900NXS2.usbPorts} puertos
-        USB</strong> (hecho para que los DJs en back to back cambien en caliente sin
-        cortar la música), {DJM_900NXS2.beatFxCount} tipos de Beat FX y
-        {DJM_900NXS2.soundColorFx.length} Sound Color FX en cada canal. Es la pareja
-        estándar del CDJ-2000NXS2 y sigue siendo uno de los mixers más comunes en
-        booths profesionales. Antes de tocarlo: aprende dónde está el trim de
-        ganancia del canal antes de que arranque el set, no durante, el clipping en
-        esta mesa es un problema de gain staging, no de efectos.
+        <strong>Briefing de booth.</strong> Una mesa de {DJM_900NXS2.channels}
+        canales que sigue en más booths que casi cualquier otra, y por eso su
+        firmware importa: AlphaTheta documenta correcciones de fallas en
+        {FW_VERSIONS} versiones del firmware de este mixer, {FW_AUDIO} de ellas de
+        audio. Cortes de audio con DIGITAL seleccionado, SOUND COLOR FX
+        funcionando mal, un pop en la DIGITAL MASTER OUT, todo corregido hace años
+        y todo todavía vivo en una mesa que nadie actualizó. Su trampa invisible:
+        un plug olvidado en el RETURN mete un equipo externo apagado en el camino
+        de señal, y nada en el panel lo muestra.
       </p>
       <label for="sv-toggle" class="sv-more">Leer más…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Leer menos</label>

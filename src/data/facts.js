@@ -1747,7 +1747,15 @@ export const EQUIPMENT = [
   {
     slug: 'djm-900nxs2', name: 'DJM-900NXS2', kind: 'mixer', brand: 'pioneer-dj', released: 2016,
     newer: 'djm-a9',
-    older: null,                       // the DJM-900NXS has no page here
+    // WAS `null`, with the comment "the DJM-900NXS has no page here". True the
+    // day it was written, false the day the DJM-900NXS page shipped, and nobody
+    // went back. The DJM-900NXS entry below has pointed `newer` at this model
+    // the whole time, so the lineage was HALF present: a reader on the older
+    // desk could walk forward to this one, and a reader on this one, the most
+    // installed mixer on the site, had no way back to the desk they are just as
+    // likely to meet in a older booth. check-lineage.mjs now asserts every
+    // newer/older pair points both ways, so this cannot happen again.
+    older: 'djm-900nxs',
     paired: ['cdj-2000nxs2', 'cdj-3000'],
     siblings: ['djm-v10'],
     tags: ['prodjlink', 'firmware', 'dvs', 'link-network'],

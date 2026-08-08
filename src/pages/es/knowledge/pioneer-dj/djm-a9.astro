@@ -88,15 +88,16 @@ const schema = {
     <div class="panel panel-go">
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
-        <strong>Briefing de booth.</strong> El sucesor de {DJM_A9.channels} canales
-        del lugar que ocupaba el DJM-900NXS2 en los booths de primer nivel:
-        {DJM_A9.beatFxCount} Beat FX, dos salidas de audífonos independientes, un
-        puerto USB-A más dos USB-B/USB-C para computadoras, Wi-Fi para la app de
-        monitoreo Stagehand y, algo que conviene saber antes de necesitarlo,
-        <strong>una entrada de audio Bluetooth integrada</strong>. El historial de
-        firmware importa en esta mesa: un congelamiento raro bajo carga alta de Pro
-        DJ Link se corrigió en {DJM_A9.linkFreezeFix}, así que revisa la versión en
-        el equipo que no controlas.
+        <strong>Briefing de booth.</strong> Antes de sacar tu propia memoria USB:
+        con firmware anterior a {DJM_A9.uaspFix} esta mesa no reconoce unidades
+        UASP, que son justamente las memorias rápidas y modernas que carga un DJ
+        preparado. Una memoria común te deja sonando, y la mesa se actualiza
+        después del show, no durante. El resto: {DJM_A9.channels} canales,
+        {DJM_A9.beatFxCount} Beat FX, dos salidas de audífonos independientes para
+        que un relevo nunca signifique compartir un par, un puerto USB-A más dos
+        USB-B/USB-C para computadoras, Wi-Fi para la app de monitoreo Stagehand y
+        <strong>una entrada de audio Bluetooth integrada</strong> que conviene
+        recordar cuando las demás fuentes ya murieron.
       </p>
       <label for="sv-toggle" class="sv-more">Leer más…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Leer menos</label>
