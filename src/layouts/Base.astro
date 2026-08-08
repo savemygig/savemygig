@@ -721,10 +721,13 @@ const entityGraph = {
       <div class="foot-cols">
         <div class="foot-brand">
           <!-- Mobile only (Antonio): the brand block spans the full width on
-               a phone and the right half sat empty, so the seal fills it,
-               CENTERED in that space both ways (a corner-pinned version
-               shipped for an hour and looked like a sticker). Desktop keeps
-               the clean four-column grid, no seal. -->
+               a phone, so the seal appears beside the text stack there (a
+               corner-pinned version shipped for an hour and looked like a
+               sticker). Desktop keeps the clean four-column grid, no seal.
+               2026-08-08: it now sits beside the stack in the DOM rather
+               than being centered/anchored against the full-width row by
+               percentage -- see the foot-brand-stack and foot-seal CSS
+               comments for why. -->
           {/* RESTORED 2026-08-03. It came out earlier the same day on "on the
               footer I just want SAVE MY GIG, and then the social media like
               it was before, no SHIELD", which we read as covering the round
@@ -745,31 +748,38 @@ const entityGraph = {
               ring, no words at all, therefore no tagline that can ever go
               stale again. Vector, so it is sharp at 104px and at 16px.
               A lettered seal for print or merch is a design job, not this. */}
-          <img class="foot-seal" src="/images/seal-footer.svg" alt="" width="104" height="104" loading="lazy" aria-hidden="true" />
-          <a href={lp("/")} class="foot-lockup" aria-label={S.aria.brandHome}>
-            <Brand variant="footer" />
-          </a>
-          <div class="foot-social">
-            <a class="soc-btn" href="https://www.instagram.com/savemygig/" target="_blank" rel="noopener" aria-label={S.aria.instagram}>
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12 2c2.7 0 3 0 4.1.1 1 .1 1.7.2 2.3.5.6.2 1.1.5 1.6 1 .5.5.8 1 1 1.6.3.6.4 1.3.5 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 1-.2 1.7-.5 2.3-.2.6-.5 1.1-1 1.6-.5.5-1 .8-1.6 1-.6.3-1.3.4-2.3.5-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1-.1-1.7-.2-2.3-.5-.6-.2-1.1-.5-1.6-1-.5-.5-.8-1-1-1.6-.3-.6-.4-1.3-.5-2.3C2 15 2 14.7 2 12s0-3 .1-4.1c.1-1 .2-1.7.5-2.3.2-.6.5-1.1 1-1.6.5-.5 1-.8 1.6-1 .6-.3 1.3-.4 2.3-.5C9 2 9.3 2 12 2zm0 1.8c-2.7 0-3 0-4 .1-.8 0-1.2.2-1.5.3-.4.1-.7.3-1 .6-.3.3-.5.6-.6 1-.1.3-.3.7-.3 1.5-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .8.2 1.2.3 1.5.1.4.3.7.6 1 .3.3.6.5 1 .6.3.1.7.3 1.5.3 1 .1 1.3.1 4 .1s3 0 4-.1c.8 0 1.2-.2 1.5-.3.4-.1.7-.3 1-.6.3-.3.5-.6.6-1 .1-.3.3-.7.3-1.5.1-1 .1-1.3.1-4s0-3-.1-4c0-.8-.2-1.2-.3-1.5-.1-.4-.3-.7-.6-1-.3-.3-.6-.5-1-.6-.3-.1-.7-.3-1.5-.3-1-.1-1.3-.1-4-.1zm0 3.1a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2zm0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6zm5.3-3.1a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>
+          <!-- foot-brand-stack: the actual content (wordmark, socials,
+               coffee link). Wrapped so the seal below can sit beside THIS
+               box specifically, not the far edge of a much wider container.
+               See the seal's own comment for why that distinction is the
+               whole fix. -->
+          <div class="foot-brand-stack">
+            <a href={lp("/")} class="foot-lockup" aria-label={S.aria.brandHome}>
+              <Brand variant="footer" />
             </a>
-            <a class="soc-btn" href="https://www.tiktok.com/@savemygig" target="_blank" rel="noopener" aria-label={S.aria.tiktok}>
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M16.6 5.8a4.3 4.3 0 0 1-1-2.8h-3v11.6a2.4 2.4 0 1 1-1.7-2.3V9.2a5.4 5.4 0 1 0 4.7 5.3V9a7.2 7.2 0 0 0 4 1.3V7.3a4.3 4.3 0 0 1-2-1.5z"/></svg>
-            </a>
-            <a class="soc-btn" href="https://x.com/savemygig" target="_blank" rel="noopener" aria-label={S.aria.x}>
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7 8 8.3 11H17l-5-6.6L6.3 21H3l7.6-8.7L2.5 2H10l4.5 6L18.9 2zm-1.1 17h1.7L7.3 3.8H5.5L17.8 19z"/></svg>
-            </a>
-            <a class="soc-btn" href="https://www.youtube.com/@savemygig" target="_blank" rel="noopener" aria-label={S.aria.youtube}>
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 4.9 12 4.9 12 4.9s-7 0-8.9.5A3 3 0 0 0 1 7.5 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.5zM9.8 15.3V8.7l5.7 3.3-5.7 3.3z"/></svg>
+            <div class="foot-social">
+              <a class="soc-btn" href="https://www.instagram.com/savemygig/" target="_blank" rel="noopener" aria-label={S.aria.instagram}>
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12 2c2.7 0 3 0 4.1.1 1 .1 1.7.2 2.3.5.6.2 1.1.5 1.6 1 .5.5.8 1 1 1.6.3.6.4 1.3.5 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 1-.2 1.7-.5 2.3-.2.6-.5 1.1-1 1.6-.5.5-1 .8-1.6 1-.6.3-1.3.4-2.3.5-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1-.1-1.7-.2-2.3-.5-.6-.2-1.1-.5-1.6-1-.5-.5-.8-1-1-1.6-.3-.6-.4-1.3-.5-2.3C2 15 2 14.7 2 12s0-3 .1-4.1c.1-1 .2-1.7.5-2.3.2-.6.5-1.1 1-1.6.5-.5 1-.8 1.6-1 .6-.3 1.3-.4 2.3-.5C9 2 9.3 2 12 2zm0 1.8c-2.7 0-3 0-4 .1-.8 0-1.2.2-1.5.3-.4.1-.7.3-1 .6-.3.3-.5.6-.6 1-.1.3-.3.7-.3 1.5-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .8.2 1.2.3 1.5.1.4.3.7.6 1 .3.3.6.5 1 .6.3.1.7.3 1.5.3 1 .1 1.3.1 4 .1s3 0 4-.1c.8 0 1.2-.2 1.5-.3.4-.1.7-.3 1-.6.3-.3.5-.6.6-1 .1-.3.3-.7.3-1.5.1-1 .1-1.3.1-4s0-3-.1-4c0-.8-.2-1.2-.3-1.5-.1-.4-.3-.7-.6-1-.3-.3-.6-.5-1-.6-.3-.1-.7-.3-1.5-.3-1-.1-1.3-.1-4-.1zm0 3.1a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2zm0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6zm5.3-3.1a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>
+              </a>
+              <a class="soc-btn" href="https://www.tiktok.com/@savemygig" target="_blank" rel="noopener" aria-label={S.aria.tiktok}>
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M16.6 5.8a4.3 4.3 0 0 1-1-2.8h-3v11.6a2.4 2.4 0 1 1-1.7-2.3V9.2a5.4 5.4 0 1 0 4.7 5.3V9a7.2 7.2 0 0 0 4 1.3V7.3a4.3 4.3 0 0 1-2-1.5z"/></svg>
+              </a>
+              <a class="soc-btn" href="https://x.com/savemygig" target="_blank" rel="noopener" aria-label={S.aria.x}>
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7 8 8.3 11H17l-5-6.6L6.3 21H3l7.6-8.7L2.5 2H10l4.5 6L18.9 2zm-1.1 17h1.7L7.3 3.8H5.5L17.8 19z"/></svg>
+              </a>
+              <a class="soc-btn" href="https://www.youtube.com/@savemygig" target="_blank" rel="noopener" aria-label={S.aria.youtube}>
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 4.9 12 4.9 12 4.9s-7 0-8.9.5A3 3 0 0 0 1 7.5 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.5zM9.8 15.3V8.7l5.7 3.3-5.7 3.3z"/></svg>
+              </a>
+            </div>
+            <!-- Minimal on purpose (Antonio): a small cup and a text link, not
+                 the official BMC image button, which shouted next to the quiet
+                 icon row. -->
+            <a class="foot-bmc" href="https://www.buymeacoffee.com/savemygig" target="_blank" rel="noopener" data-event="affiliate_click" data-program="bmc" data-placement="footer">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a3 3 0 0 1 0 6h-1"/><path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M7 2v2"/><path d="M11 2v2"/></svg>
+              <span>{S.footer.coffee}</span>
             </a>
           </div>
-          <!-- Minimal on purpose (Antonio): a small cup and a text link, not
-               the official BMC image button, which shouted next to the quiet
-               icon row. -->
-          <a class="foot-bmc" href="https://www.buymeacoffee.com/savemygig" target="_blank" rel="noopener" data-event="affiliate_click" data-program="bmc" data-placement="footer">
-            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a3 3 0 0 1 0 6h-1"/><path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M7 2v2"/><path d="M11 2v2"/></svg>
-            <span>{S.footer.coffee}</span>
-          </a>
+          <img class="foot-seal" src="/images/seal-footer.svg" alt="" width="104" height="104" loading="lazy" aria-hidden="true" />
         </div>
 
         <nav class="foot-col" aria-label={S.footer.colRescue}>
@@ -908,6 +918,12 @@ const entityGraph = {
     gap: 2rem; align-items: start;
   }
   .foot-brand { display: flex; flex-direction: column; align-items: flex-start; }
+  /* The actual wordmark/social/coffee stack. Split from .foot-brand so the
+     seal (mobile only) can sit beside THIS box's real width instead of
+     being positioned against .foot-brand, which spans the full-width grid
+     row on a phone -- see the seal comment below for why that gap is what
+     was reported as "lost in space". */
+  .foot-brand-stack { display: flex; flex-direction: column; align-items: flex-start; }
   /* Hidden on desktop (Antonio: the four-column distribution there is right
      as it is); the phone media block below reveals it. */
   .foot-seal { display: none; }
@@ -1049,14 +1065,19 @@ const entityGraph = {
        pair up; More spans the full width underneath and flows its own links in
        two columns, so there is no orphaned empty cell beside it. */
     .foot-cols { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; }
-    /* Antonio's mockup (2026-07-27, final): brand stack LEFT with its
-       original tight spacing, seal RIGHT. The seal is ABSOLUTE on purpose:
-       when it lived in the grid flow its image height inflated the rows and
-       spread the wordmark/socials/coffee apart (Antonio: "they look
-       terrible now"). Out of flow, it cannot touch the stack's geometry.
-       Left edge on the Prepare column (50% + half the 1.2rem column gap),
-       vertically centered, 80% of the stack height (his -20% call). */
-    .foot-brand { grid-column: 1 / -1; position: relative; }
+    /* Antonio's mockup (2026-07-27, final): brand stack LEFT, seal RIGHT.
+       REWORKED 2026-08-08: the seal used to be position:absolute against
+       .foot-brand, which spans the full grid row -- on any phone wider than
+       the 428px Antonio last eyeballed, that row is far wider than the
+       176px content stack, so a seal anchored by percentage of THAT box
+       landed well past the text with a stretch of bare black between them
+       ("the icon looks terrible as its lost in the space", 2026-08-08).
+       Fixed structurally instead of with another breakpoint: .foot-brand is
+       now a flex ROW of two real items, the stack and the seal, with a
+       fixed gap between them. The seal sits beside the stack because it IS
+       beside the stack in the DOM, not because a percentage happened to
+       land it there -- this holds at any width without re-measuring. */
+    .foot-brand { grid-column: 1 / -1; display: flex; flex-direction: row; align-items: center; gap: 1.1rem; }
     /* LEFT ON PHONES, which is Antonio's rule from 2026-07-30 and has never
        changed: "centered with the icons wins on desktop, LEFT wins on phones."
        Expressed as width:auto rather than as justify-content, because a
@@ -1094,50 +1115,27 @@ const entityGraph = {
       .fc-rest { display: block; }
       .foot-live { font-size: 0.74rem; }
     }
+    /* foot-brand-stack no longer needs to fight for room against an
+       absolutely positioned seal, but it still should not get squeezed by
+       flexbox's default shrink -- its own children (wordmark, tagline,
+       social row) already carry the sizing rules that keep it a tidy
+       rectangle. */
+    .foot-brand-stack { flex-shrink: 0; }
     .foot-seal {
-      display: block; position: absolute;
-      left: calc(50% + 0.6rem); top: 50%; transform: translateY(-50%);
-      /* 92% = his "+15% but never breaking anything": still inside the
-         stack's height (100% would touch the wordmark and coffee lines),
-         and the max-width guard stops it at the right half's edge on any
-         phone, letterboxing left instead of overflowing. */
-      height: 92%; width: auto;
-      max-width: calc(50% - 0.6rem);
-      object-fit: contain; object-position: left center;
+      display: block;
+      /* Flow item now, sized by height with width following the SVG's own
+         aspect ratio -- no more percentage-of-container math to re-derive
+         per breakpoint. Height is tuned against the stack's own height
+         (wordmark + tagline + social row + coffee link) so the mark reads
+         as a companion to the text, not as tall as it or dwarfing it. */
+      height: 76px; width: auto; flex-shrink: 0;
+      object-fit: contain;
     }
-    /* --- narrow-phone override, MUST come after the base rule above --- */
+    /* Narrow phones (<=414px): the stack itself shrinks under the rule
+       below, so the seal shrinks with it to hold the same proportion
+       instead of suddenly looming over a smaller block. */
     @media (max-width: 414px) {
-        /* THE SEAL STANDS BACK ON NARROW PHONES (Antonio, 2026-08-07). He read the
-           brand block as cramped and blamed the social row's alignment; measuring
-           the ink at 360, 390 and 414 showed the wordmark, the rings and the coffee
-           link all sharing one left edge at 19 to 20px, so alignment was not it. He
-           confirmed the cause: the shield beside them.
-           It was never stealing WIDTH, because it is absolutely positioned and
-           deliberately out of flow so it cannot touch the stack's geometry. What it
-           was doing is dominating: at 92% of the stack height it left about 15px of
-           air beside a four-icon row, so the eye read one crowded column rather
-           than a brand block with a mark beside it.
-           So it keeps its place and gives up weight and a little ground: smaller,
-           and further right, which buys real air without moving anything in flow.
-           428px AND UP IS DELIBERATELY UNTOUCHED. Antonio's own words about that
-           width were "on 15 Pro Max looks awesome", and a fix for a crowded 390
-           has no business changing a layout he already signed off. */
-        .foot-seal {
-          /* ANCHORED TO THE RIGHT GUTTER, not to a percentage from the left, and
-             that is the actual fix. A left percentage put the seal 190px in at
-             360px wide, where the four-icon row already ends at 196px, so at the
-             narrowest common phone the icons and the shield were TOUCHING: air
-             measured -0.4px. That is what Antonio was looking at.
-             Anchoring right makes the gap a function of screen width instead of a
-             guess: the icon row is a fixed 176px from the left gutter, the seal is
-             a fixed size against the right gutter, so every pixel the screen gains
-             becomes air between them. Measured after: 29px at 360, 59px at 390. */
-          height: 68%;
-          left: auto;
-          right: 0;
-          max-width: 40%;
-          object-position: right center;
-        }
+      .foot-seal { height: 62px; }
     }
     .foot-col:last-child { grid-column: 1 / -1; display: block; columns: 2; column-gap: 1.2rem; }
     .foot-col:last-child .foot-col-h { display: block; margin-bottom: 0.7rem; column-span: all; }
