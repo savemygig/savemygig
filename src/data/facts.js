@@ -1880,11 +1880,35 @@ export const EQUIPMENT = [
 //
 // `hub` is the ENGLISH canonical path. Language prefixing happens at the render
 // site, exactly as it already does for every other internal link.
+/*
+ * THE WORDMARK RULE (Antonio, 2026-08-08): "Single name brand its better a
+ * single color."
+ *
+ * Every brand hub prints its name as an h1 with one part in the accent red.
+ * That was hand-written per page, and on a two-word name it reads as designed:
+ * "Allen &" white, "Heath" red. On TECHNICS, one word, it had been split
+ * mid-word into "Tech" and "nics", which reads as a rendering fault rather
+ * than a decision.
+ *
+ * So the split is now DATA, not markup. `wordmarkAccent` is the part that
+ * takes the accent colour, and BrandWordmark.astro derives the white part by
+ * subtraction, which means the two halves can never drift apart or lose a
+ * character between them. A single-word brand sets its whole name, so it
+ * renders in one colour.
+ *
+ * Default when `wordmarkAccent` is absent: the last whitespace-separated word.
+ * That is right for most two-word names and wrong often enough to be worth
+ * stating on the record here, so set it explicitly whenever the default would
+ * accent a suffix rather than the name (Pioneer DJ / AlphaTheta being the case
+ * that proves it). check-wordmark.mjs asserts every hub renders its full brand
+ * name and that a single-word brand carries no unaccented remainder.
+ */
 export const BRANDS = [
   {
     key: 'pioneer-dj',
     name: 'Pioneer DJ / AlphaTheta',
     hub: '/knowledge/pioneer-dj',
+    wordmarkAccent: 'AlphaTheta',
   },
   {
     key: 'allen-heath',
@@ -1893,14 +1917,42 @@ export const BRANDS = [
     // replacing with "and".
     name: 'Allen & Heath',
     hub: '/knowledge/allen-heath',
+    wordmarkAccent: 'Heath',
   },
   {
     key: 'technics',
-    // Technics is a Panasonic brand, and Panasonic's own pages carry both names.
-    // The brand on the deck is the one a DJ searches for, so the label is
-    // Technics and the pages name Panasonic where a document is Panasonic's.
     name: 'Technics',
     hub: '/knowledge/technics',
+    // One word, so the whole word takes the accent. See the wordmark rule above.
+    wordmarkAccent: 'Technics',
+    /*
+     * THE CORPORATE RELATIONSHIP, AND THE LINE WE DO NOT CROSS (Antonio,
+     * 2026-08-08): "Technics should be treated as its own equipment brand, not
+     * as a Panasonic equipment page. The corporate relationship can be
+     * mentioned in the brand information, but the DJ-facing content should
+     * focus on Technics gear and what DJs actually encounter in booths."
+     *
+     * So ownership is a FIELD, printed once in the brand information, and it
+     * never becomes the subject of a model page. A DJ standing at a deck is
+     * looking at a Technics logo, not a Panasonic one.
+     *
+     * Verified against Panasonic's and Technics' own pages, 2026-08-08.
+     * Panasonic's own word for what Technics is, in every source, is "brand":
+     * "Technics is the brand name of hi-fi audio products owned by the
+     * Panasonic Corporation with main residence in Osaka, Japan."
+     * (na.panasonic.com). Founding: "Founded in 1965, Technics was born from
+     * the passion of engineers... In 1965, Technics launched the bookshelf-type
+     * speaker system, Technics 1. This marked the origin and starting point of
+     * the Technics brand." (technics.com 60th anniversary brand story).
+     *
+     * NO MONTH is published by Panasonic anywhere, and no model number is
+     * attached to "Technics 1". Both were checked and both are absent, so
+     * neither is stated here.
+     */
+    owner: 'Panasonic Corporation',
+    founded: 1965,
+    ownerSource: 'https://na.panasonic.com/news/technics-addresses-demands-requested-by-hi-fi-audio-market-with-release-of-two-new-products',
+    foundedSource: 'https://www.technics.com/global/home/60th-anniversary/technics-brand-story/the-60-year-history-of-technics-love-of-music.html',
   },
 ];
 

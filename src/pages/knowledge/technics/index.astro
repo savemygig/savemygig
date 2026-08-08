@@ -1,6 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import { modelsOfBrand, modelPath } from '../../../data/facts.js';
+import BrandWordmark from '../../../components/BrandWordmark.astro';
+import { modelsOfBrand, modelPath, brandFor } from '../../../data/facts.js';
 
 // TECHNICS HARDWARE HUB, the third manufacturer, and the first one that is not
 // digital. Built on the reusable pattern set by the Pioneer and Allen & Heath
@@ -50,14 +51,26 @@ import { modelsOfBrand, modelPath } from '../../../data/facts.js';
 // does not encode anybody's opinion about which deck matters more. The MK2 is in
 // far more booths; the MK7 is the one you can buy.
 //
-// The "coming soon" entries stay as local literals because they have no pages and
-// no researched facts. They are not in the graph and they must not be: the graph
-// is the set of models this site can actually answer questions about.
+// NO "COMING SOON" DECKS HERE ANY MORE (Antonio, 2026-08-08): "delete those 3
+// coming soon decks from technics, for now we will only keep one legacy model
+// and the latest model (which is still on sale)". The SL-1200MK5, SL-1200GR and
+// SL-1200G cards were removed on that instruction.
+//
+// The shape he asked for is deliberate and worth keeping: ONE legacy deck and
+// ONE current deck. The MK2 is what a DJ actually finds bolted into a booth,
+// the MK7 is what a DJ can buy. Three greyed-out cards promising pages that do
+// not exist added nothing a DJ could use and made a finished hub look unfinished.
+//
+// So this list is now nothing but the graph. Every card on this page is a page,
+// which is the same rule the ItemList below already followed.
+// The corporate relationship comes from the brand record so it is stated
+// once, in one place, in three languages. Antonio's rule: mention the owner
+// in the brand information, never let a model page become a page about the
+// parent company.
+const TECHNICS = brandFor('technics');
+
 const turntables = [
   ...modelsOfBrand('technics', 'turntable').map((m) => ({ name: m.name, href: modelPath(m) })),
-  { name: 'SL-1200MK5', href: null },
-  { name: 'SL-1200GR', href: null },
-  { name: 'SL-1200G', href: null },
 ];
 
 const categories = [
@@ -120,7 +133,7 @@ const schema = {
     </nav>
 
     <div class="status-line">TECHNICS</div>
-    <h1 style="margin-bottom:0.8rem">Tech<span class="accent">nics</span></h1>
+    <BrandWordmark brand="technics" />
     <p class="dim kb-lead">
       Direct drive turntables, where everything that fails is physical. The earth
       lead decides whether you get a hum. The headshell wires and the cartridge
@@ -129,6 +142,12 @@ const schema = {
       people assume, and the deck you are most likely to be handed came with a
       manual that has no troubleshooting section at all, which is most of why
       these pages exist.
+    </p>
+
+    <p class="brand-origin">
+      Technics is a Japanese audio brand owned by {TECHNICS.owner}, founded in
+      {TECHNICS.founded}. These pages are about the decks, not the parent
+      company: what a DJ finds in a booth carries a Technics badge.
     </p>
 
     <!-- NO FIRMWARE MATRIX PROMO, and for a stronger reason than on the Allen &
@@ -199,6 +218,12 @@ const schema = {
   .crumb a { color: var(--text-dim); text-decoration: none; }
   .crumb a:hover { color: var(--red); }
   .kb-lead { max-width: 42rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  /* Brand information, deliberately quieter than the lead: it is context a
+     reader may want once, not the reason they came. */
+  .brand-origin {
+    max-width: 42rem; margin: -0.6rem 0 1.5rem; line-height: 1.6;
+    font-size: 0.85rem; color: var(--dim);
+  }
   .ah-out { margin: 0 0 1.8rem; font-size: 0.9rem; }
   .kb-h {
     font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;

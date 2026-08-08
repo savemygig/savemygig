@@ -1,5 +1,6 @@
 ---
 import Base from '../../../../layouts/Base.astro';
+import BrandWordmark from '../../../../components/BrandWordmark.astro';
 import { modelsOfBrand, modelPath } from '../../../../data/facts.js';
 
 // HUB ALLEN & HEATH, PORTUGUÊS DO BRASIL. A fonte de verdade da estrutura, do
@@ -76,7 +77,7 @@ const schema = {
     </nav>
 
     <div class="status-line">ALLEN_HEATH</div>
-    <h1 style="margin-bottom:0.8rem">Allen &amp; <span class="accent">Heath</span></h1>
+    <BrandWordmark brand="allen-heath" />
     <p class="dim kb-lead">
       Mixers analógicos construídos em volta do filtro Xone, e o que importa
       nessas mesas é para onde o sinal vai de verdade. Microfones que não chegam

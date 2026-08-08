@@ -1,5 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
+import BrandWordmark from '../../../components/BrandWordmark.astro';
 
 // Pioneer DJ / AlphaTheta hardware hub. This is the reusable pattern for
 // every future manufacturer hub (Denon DJ, Allen & Heath, RANE...): a flat
@@ -149,7 +150,7 @@ const schema = {
     </nav>
 
     <div class="status-line">PIONEER_DJ</div>
-    <h1 style="margin-bottom:0.8rem">Pioneer DJ / <span class="accent">AlphaTheta</span></h1>
+    <BrandWordmark brand="pioneer-dj" />
     <p class="dim kb-lead">
       Not a rewritten product manual. This is the operational reference: what
       goes wrong, how to fix it fast, how experienced DJs actually run this

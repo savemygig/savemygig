@@ -1,0 +1,58 @@
+---
+/**
+ * THE BRAND WORDMARK. One component, every brand hub, three languages.
+ *
+ * Antonio, 2026-08-08: "Single name brand its better a single color."
+ *
+ * Each hub h1 prints the manufacturer's name with one part in the accent red.
+ * That split used to be hand-written markup on nine pages, three brands times
+ * three languages, and on TECHNICS it had been cut mid-word into "Tech" plus a
+ * red "nics". Two words make that look designed. One word makes it look like a
+ * bug.
+ *
+ * WHY THE WHITE PART IS DERIVED AND NOT WRITTEN. The obvious version of this
+ * component takes a lead string and an accent string. Then the two live in
+ * different places and nothing checks they still add up to the brand's name: a
+ * rename drops a character and the page renders "Allen Heath" forever. So this
+ * takes ONE field, `wordmarkAccent`, and SUBTRACTS it from `name` to get the
+ * rest. The two halves cannot disagree, because there is only one of them.
+ *
+ * The accent must appear at the END of the name. Every manufacturer wordmark
+ * on this site works that way, and a mid-name accent is what we just removed.
+ * If a future brand genuinely needs one, this throws rather than rendering
+ * something nobody chose.
+ */
+import { brandFor } from '../data/facts.js';
+
+interface Props {
+  brand: string;
+  style?: string;
+}
+const { brand, style = 'margin-bottom:0.8rem' } = Astro.props;
+
+const record = brandFor(brand);
+if (!record) {
+  throw new Error(
+    `BrandWordmark: "${brand}" is not a key in BRANDS. The wordmark is derived `
+    + 'from the brand record so a hub cannot print a name the data layer does '
+    + 'not know about.',
+  );
+}
+
+const name = record.name;
+// Default: the last whitespace-separated word. Stated explicitly on most
+// brands, because the default is wrong whenever the last word is a suffix
+// rather than the name.
+const accent = record.wordmarkAccent ?? name.slice(name.lastIndexOf(' ') + 1);
+
+if (!name.endsWith(accent)) {
+  throw new Error(
+    `BrandWordmark: ${brand} has wordmarkAccent "${accent}", which is not the `
+    + `end of its name "${name}". The accent is subtracted from the name to `
+    + 'derive the plain part, so it has to be a suffix of it.',
+  );
+}
+
+const lead = name.slice(0, name.length - accent.length);
+---
+<h1 style={style}>{lead}<span class="accent">{accent}</span></h1>

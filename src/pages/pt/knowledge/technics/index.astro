@@ -1,6 +1,7 @@
 ---
 import Base from '../../../../layouts/Base.astro';
-import { modelsOfBrand, modelPath } from '../../../../data/facts.js';
+import BrandWordmark from '../../../../components/BrandWordmark.astro';
+import { modelsOfBrand, modelPath, brandFor } from '../../../../data/facts.js';
 
 // HUB TECHNICS, PORTUGUÊS DO BRASIL. A fonte de verdade da estrutura, do
 // catálogo, das categorias, do contrato CollectionPage, do script e do CSS é
@@ -12,11 +13,14 @@ import { modelsOfBrand, modelPath } from '../../../../data/facts.js';
 // em inglês: modelPath() devolve o caminho canônico em inglês e o prefixo /pt
 // entra aqui, no ponto onde o link é montado. As entradas "Em breve" seguem
 // literais locais porque não estão no grafo e não devem estar.
+// The corporate relationship comes from the brand record so it is stated
+// once, in one place, in three languages. Antonio's rule: mention the owner
+// in the brand information, never let a model page become a page about the
+// parent company.
+const TECHNICS = brandFor('technics');
+
 const turntables = [
   ...modelsOfBrand('technics', 'turntable').map((m) => ({ name: m.name, href: `/pt${modelPath(m)}` })),
-  { name: 'SL-1200MK5', href: null },
-  { name: 'SL-1200GR', href: null },
-  { name: 'SL-1200G', href: null },
 ];
 
 const categories = [
@@ -75,7 +79,7 @@ const schema = {
     </nav>
 
     <div class="status-line">TECHNICS</div>
-    <h1 style="margin-bottom:0.8rem">Tech<span class="accent">nics</span></h1>
+    <BrandWordmark brand="technics" />
     <p class="dim kb-lead">
       Toca-discos de tração direta, onde tudo que falha é físico. O cabo de
       terra decide se você vai ter zumbido. Os fios do headshell e a cápsula
@@ -84,6 +88,12 @@ const schema = {
       imagina, e o modelo que você tem mais chance de receber veio com um manual
       sem nenhuma seção de troubleshooting, que é a maior razão para estas
       páginas existirem.
+    </p>
+
+    <p class="brand-origin">
+      A Technics e uma marca japonesa de audio da {TECHNICS.owner}, fundada em
+      {TECHNICS.founded}. Estas paginas falam dos toca-discos, nao da empresa
+      dona da marca: o que o DJ encontra na booth tem o simbolo da Technics.
     </p>
 
     <!-- No firmware matrix promo here, and the reason is stronger than on the
@@ -153,6 +163,12 @@ const schema = {
   .crumb a { color: var(--text-dim); text-decoration: none; }
   .crumb a:hover { color: var(--red); }
   .kb-lead { max-width: 42rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  /* Brand information, deliberately quieter than the lead: it is context a
+     reader may want once, not the reason they came. */
+  .brand-origin {
+    max-width: 42rem; margin: -0.6rem 0 1.5rem; line-height: 1.6;
+    font-size: 0.85rem; color: var(--dim);
+  }
   .ah-out { margin: 0 0 1.8rem; font-size: 0.9rem; }
   .kb-h {
     font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em;

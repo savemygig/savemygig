@@ -1,5 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
+import BrandWordmark from '../../../components/BrandWordmark.astro';
 import { modelsOfBrand, modelPath } from '../../../data/facts.js';
 
 // ALLEN & HEATH HARDWARE HUB. The full catalogue for the second manufacturer:
@@ -108,7 +109,7 @@ const schema = {
     </nav>
 
     <div class="status-line">ALLEN_HEATH</div>
-    <h1 style="margin-bottom:0.8rem">Allen &amp; <span class="accent">Heath</span></h1>
+    <BrandWordmark brand="allen-heath" />
     <p class="dim kb-lead">
       Analogue mixers built around the Xone filter, and what matters on these
       desks is where the signal actually goes. Mics that reach neither the booth
