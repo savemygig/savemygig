@@ -704,6 +704,118 @@ export const DJM_900NXS = {
 // interrupt a set in progress (audio, playback, browsing, link). It is our
 // read of the vendor's own wording, not a vendor severity rating, and the page
 // says so.
+// ===========================================================================
+// ALL-IN-ONE SYSTEMS. The fourth kind, and the first AlphaTheta gear on this
+// site that is a whole booth in one box: two decks, a four channel mixer, a
+// screen and the storage, with no separate player or mixer to link.
+//
+// SO THE FAULT DOMAIN IS THE DIGITAL ONE, in full. Unlike a turntable, an
+// all-in-one has firmware, storage, a file system and a library, so the USB
+// preparation, the library format and the firmware version all matter here in
+// exactly the way they matter on a CDJ. The difference is that everything is in
+// one unit, so a fault takes the entire booth down at once rather than one deck.
+// ===========================================================================
+
+export const XDJ_AZ = {
+  checked: '8 August 2026',
+  announced: 'October 2024',
+  released: 2024,
+  channels: 4,
+  decks: 4,
+  // THE LIBRARY TRAP THAT LEADS THE PAGE. AlphaTheta's 18 March 2026 USB notice
+  // places the XDJ-AZ in the OneLibrary-only group, alongside the CDJ-3000X,
+  // OPUS-QUAD and OMNIS-DUO. A USB exported the old way shows "rekordbox Database
+  // not found!" because there is no library on it the XDJ-AZ can read. Export
+  // from rekordbox 7.2.11 or later and both formats are written to the drive.
+  library: 'OneLibrary',
+  libraryOnly: true,
+  sourceLibrary: 'https://alphatheta.com/en/information/important-notice-for-customers-using-usb-devices-with-our-dj-equipment/',
+  sourceDatabaseNotFound: 'https://support.alphatheta.com/en-US/articles/38064285243673',
+  media: 'Two top-loading USB Type-A ports and no SD card slot',
+  usbPorts: 2,                        // plus one USB Type-C to a computer
+  // Support article 38064747422745: FAT, FAT32, exFAT and HFS+ supported, NTFS
+  // not. GUID Partition Map is not supported, and firmware updates require FAT or
+  // FAT32. exFAT support is the difference a DJ notices coming from older gear.
+  fileSystems: ['FAT', 'FAT32', 'exFAT', 'HFS+'],
+  exfat: true,
+  ntfsSupported: false,
+  firstPartitionOnly: true,           // unless a partition holds a rekordbox library, which takes precedence
+  sourceFileSystems: 'https://support.alphatheta.com/en-US/articles/38064747422745',
+  newestKnown: '1.30',                // 9 Apr 2026. Reference only.
+  audioBlackoutFreezeFix: '1.05',     // 26 Nov 2024: no audio, display blackouts, system freezes on some units.
+  recStopFix: '1.04',                 // 10 Oct 2024: recording could not be stopped.
+  libraryUnresponsiveFix: '1.24',     // 6 Nov 2025: "Library is not responding." kept appearing.
+  seratoFrom: '1.10',                 // 10 Dec 2024: Serato DJ Pro support added.
+  // THE HARDWARE DEFECT NOTICE, which is booth intelligence rather than a
+  // firmware fact. AlphaTheta, 11 Nov 2024: an internal component defect in
+  // certain early units caused no audio, display blackouts and system freezes,
+  // with a free inspection and repair offered. NO SERIAL RANGE was published, so
+  // the page tells an affected owner to contact support rather than guessing.
+  hardwareDefectNotice: true,
+  sourceDefectNotice: 'https://alphatheta.com/en/information/important-notice-xdj-az/',
+  standbyMinutesDefault: 20,
+  micInputs: 2,
+  phonoInputs: 2,
+  sendReturn: false,                  // a SEND exists on the older XDJ-XZ; the AZ terminal list shows none
+  dvs: true,                          // Serato DJ Pro unlocked on connection; rekordbox dvs supported
+  screen: '10.1 inch capacitive touch screen',
+  dimensions: '895 mm wide, 504 mm deep, 133 mm high',
+  weight: '13.5 kg',
+  variants: 'XDJ-AZ in black, and the XDJ-AZ-N in gold',
+  predecessorNamed: 'XDJ-XZ',         // AlphaTheta call it the predecessor, in those words
+  source: 'https://alphatheta.com/en/product/all-in-one-dj-system/xdj-az/black/',
+  sourceFirmware: 'https://support.alphatheta.com/en-US/articles/37072403941145',
+  sourceHistory: 'https://downloads.support.alphatheta.com/firmwares/all-in-one-dj-systems/XDJ-AZ/XDJ-AZ-Firmware-Change-History-Ver130-EN.pdf',
+  sourceManual: 'https://downloads.support.alphatheta.com/manuals/all-in-one-dj-systems/XDJ-AZ/XDJ-AZ_DRI1936C_manual_EN.pdf',
+  sourceAnnounce: 'https://alphatheta.com/en/information/meet-the-xdj-az-4-channel-professional-all-in-one-dj-system/',
+};
+
+export const XDJ_XZ = {
+  checked: '8 August 2026',
+  announced: 'November 2019',
+  released: 2019,
+  channels: 4,
+  decks: 2,                           // two onboard decks; channels 3 and 4 take external LINE or PHONO
+  // The XDJ-XZ reads the ORIGINAL Device Library, not OneLibrary. AlphaTheta's
+  // 18 March 2026 notice puts it in the Device Library column with the CDJ-3000
+  // and the CDJ-2000NXS2. A drive exported for a OneLibrary unit still plays here
+  // when rekordbox 7.2.11 or later wrote both formats to it.
+  library: 'Device Library',
+  libraryOnly: false,
+  sourceLibrary: 'https://alphatheta.com/en/information/important-notice-for-customers-using-usb-devices-with-our-dj-equipment/',
+  media: 'Two top-loading USB Type-A ports and no SD card slot',
+  usbPorts: 2,                        // plus one USB Type-B to a computer
+  // Support article 4408364513817: FAT, FAT32, exFAT and HFS+ supported, NTFS
+  // not. Firmware updates require FAT or FAT32. HFS+ reading was improved in 1.23.
+  fileSystems: ['FAT', 'FAT32', 'exFAT', 'HFS+'],
+  exfat: true,
+  ntfsSupported: false,
+  sourceFileSystems: 'https://support.alphatheta.com/en-US/articles/4408364513817',
+  newestKnown: '1.26',                // 11 Apr 2024. Reference only.
+  sendOutputFix: '1.10',              // 10 Mar 2020: no sound from the SEND output terminal.
+  proDjLinkFix: '1.22',               // 2 Mar 2021: PRO DJ LINK did not work properly, jog and beat sync faults.
+  slipSyncWavFix: '1.23',             // 1 Mar 2022: sync lost after scratching in Slip, some WAV files would not play.
+  beatFxFix: '1.24',                  // 12 Jul 2022: faults when using Beat FX.
+  masterTempoFix: '1.26',             // 11 Apr 2024: faults when Master Tempo was turned on.
+  seratoFrom: '1.10',                 // 10 Mar 2020: Serato DJ Pro support added.
+  standbyMinutesDefault: 20,          // selectable 20, 40, 60 minutes or off
+  masterRecUsbSlot: 'USB2',           // MASTER REC writes only to a drive in the USB2 slot
+  recSplitHours: 3,                   // the recording file is split every three hours
+  micInputs: 2,
+  phonoInputs: 2,
+  lineInputs: 2,
+  sendReturn: true,                   // a SEND output terminal, fixed in 1.10
+  dvs: true,                          // rekordbox dvs and Serato DVS, licences separate
+  dimensions: '878 mm wide, 466 mm deep, 118 mm high',
+  weight: '13.0 kg',
+  variants: 'XDJ-XZ in black, the XDJ-XZ-N in gold, and the XDJ-XZ-W in white',
+  source: 'https://www.pioneerdj.com/en/product/all-in-one-dj-systems/xdj-xz/',
+  sourceFirmware: 'https://support.alphatheta.com/en-US/articles/4405088760345',
+  sourceHistory: 'https://downloads.support.alphatheta.com/firmwares/all-in-one-dj-systems/XDJ-XZ/XDJ-XZ-Firmware-Change-History-ver126-en.pdf',
+  sourceManual: 'https://downloads.support.alphatheta.com/manuals/all-in-one-dj-systems/XDJ-XZ/XDJ-XZ_DRI1625B_manual.pdf',
+  sourceAnnounce: 'https://www.pioneerdj.com/en/news/2019/xdj-xz-professional-all-in-one-dj-system/',
+};
+
 /*
  * TWO STRINGS SHARED BY SEVERAL ENTRIES, named rather than repeated.
  *
@@ -998,6 +1110,36 @@ export const FIRMWARE_ISSUES = [
     source: EUPHONIA.source,
     issues: [],
     noneNote: NO_HISTORY_PUBLISHED,
+  },
+  {
+    /*
+     * THE XDJ-AZ, and its first row is the one people arrive looking for. An
+     * internal component defect in certain early units caused no audio, display
+     * blackouts and system freezes, and 1.05 addressed that symptom set in
+     * firmware. On a unit that IS the whole booth, any of those takes the room
+     * down at once, which is why they lead. The hardware side of that defect has
+     * a separate free inspection and repair programme, documented on the page.
+     */
+    model: 'XDJ-AZ',
+    href: '/knowledge/pioneer-dj/xdj-az',
+    source: XDJ_AZ.sourceHistory,
+    issues: [
+      { fixedIn: XDJ_AZ.audioBlackoutFreezeFix, area: 'Audio', midSet: true, symptom: 'No audio output, display blackouts and system freezes on some units.' },
+      { fixedIn: XDJ_AZ.recStopFix, area: 'Recording', midSet: false, symptom: 'Recording could not be stopped with the Rec button.' },
+      { fixedIn: XDJ_AZ.libraryUnresponsiveFix, area: 'Browse', midSet: true, symptom: 'A "Library is not responding." error kept appearing.' },
+    ],
+  },
+  {
+    model: 'XDJ-XZ',
+    href: '/knowledge/pioneer-dj/xdj-xz',
+    source: XDJ_XZ.sourceHistory,
+    issues: [
+      { fixedIn: XDJ_XZ.proDjLinkFix, area: 'Link', midSet: true, symptom: 'PRO DJ LINK did not work properly, with jog wheel and beat sync faults.' },
+      { fixedIn: XDJ_XZ.slipSyncWavFix, area: 'Playback', midSet: true, symptom: 'Sync was lost after scratching in Slip mode, and some WAV files would not play.' },
+      { fixedIn: XDJ_XZ.beatFxFix, area: 'Audio', midSet: true, symptom: 'Faults when using Beat FX.' },
+      { fixedIn: XDJ_XZ.masterTempoFix, area: 'Playback', midSet: true, symptom: 'Faults when Master Tempo was turned on.' },
+      { fixedIn: XDJ_XZ.sendOutputFix, area: 'Audio', midSet: true, symptom: 'No sound from the SEND output terminal.' },
+    ],
   },
 ];
 
@@ -1475,6 +1617,29 @@ export const EQUIPMENT = [
     siblings: ['cdj-900nxs', 'cdj-2000nxs'],
     tags: ['devicelibrary', 'no-exfat', 'filesystems', 'prodjlink', 'firmware', 'usb-prep', 'ecodesign'],
   },
+  /*
+   * ALL-IN-ONE SYSTEMS, the fourth kind (2026-08-08). An XDJ-AZ or XDJ-XZ is a
+   * player and a mixer in one box, so it is neither `player` nor `mixer`. Its
+   * `paired` list is the CDJs it is most often LINKED to over PRO DJ LINK, not a
+   * separate mixer, and RelatedEquipment titles that column "Commonly linked
+   * players" rather than forcing the pairing model onto a self-contained unit.
+   */
+  {
+    slug: 'xdj-az', name: 'XDJ-AZ', kind: 'all-in-one', brand: 'pioneer-dj', released: 2024,
+    newer: null,
+    older: 'xdj-xz',                  // AlphaTheta name the XDJ-XZ as its predecessor
+    paired: ['cdj-3000', 'cdj-3000x'],
+    siblings: ['xdj-xz'],
+    tags: ['onelibrary', 'usb-prep', 'filesystems', 'firmware', 'prodjlink', 'link-network', 'dvs', 'booth-prep'],
+  },
+  {
+    slug: 'xdj-xz', name: 'XDJ-XZ', kind: 'all-in-one', brand: 'pioneer-dj', released: 2019,
+    newer: 'xdj-az',
+    older: null,
+    paired: ['cdj-3000', 'cdj-2000nxs2'],
+    siblings: ['xdj-az'],
+    tags: ['devicelibrary', 'usb-prep', 'filesystems', 'firmware', 'prodjlink', 'link-network', 'dvs', 'booth-prep'],
+  },
   {
     slug: 'djm-v10', name: 'DJM-V10 / V10-LF', kind: 'mixer', brand: 'pioneer-dj', released: 2019,
     newer: null,
@@ -1666,7 +1831,7 @@ export const BRANDS = [
  * languages agree, so adding a fourth kind fails the gate until it is complete
  * everywhere rather than shipping half done.
  */
-export const KINDS = ['player', 'mixer', 'turntable'];
+export const KINDS = ['player', 'mixer', 'turntable', 'all-in-one'];
 
 const BY_SLUG = new Map(EQUIPMENT.map((e) => [e.slug, e]));
 const BY_BRAND = new Map(BRANDS.map((b) => [b.key, b]));

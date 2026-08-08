@@ -1,0 +1,357 @@
+---
+import Base from '../../../layouts/Base.astro';
+import EmailCapture from '../../../components/EmailCapture.astro';
+import AccGroup from '../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import { XDJ_XZ } from '../../../data/facts.js';
+
+/**
+ * XDJ-XZ, the four channel all-in-one that came before the XDJ-AZ and is in far
+ * more booths. Structure, section order and the style block match the other
+ * Pioneer model pages. Every version number, file system and source link is
+ * rendered from XDJ_XZ in facts.js.
+ *
+ * HOW THIS PAGE DIFFERS FROM THE XDJ-AZ, and each difference is a documented
+ * fact rather than a style choice.
+ *
+ * 1. LIBRARY. This unit reads the ORIGINAL Device Library, and the AZ reads
+ *    OneLibrary. That is the opposite trap: a drive prepared for one of the
+ *    OneLibrary units still works here as long as rekordbox wrote both formats, and
+ *    the failure people actually hit on this model is a drive exported for a
+ *    library generation the unit does not read.
+ *
+ * 2. IT HAS A SEND OUTPUT, which the AZ does not, and the very first firmware
+ *    fix in its history is that no sound came out of it.
+ *
+ * 3. TWO ONBOARD DECKS, not four. Channels 3 and 4 take external LINE or PHONO,
+ *    which is why this unit is the common choice for a booth that also has
+ *    turntables or CDJs in it.
+ *
+ * 4. RECORDING IS SLOT SPECIFIC. MASTER REC writes only to a drive in the USB2
+ *    slot, and the file is split every three hours. Both are documented and both
+ *    surprise people.
+ */
+const UPDATED = XDJ_XZ.checked;
+const FLOOR = XDJ_XZ.newestKnown;
+const FS = XDJ_XZ.fileSystems.join(', ');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/xdj-xz#article',
+  headline: 'XDJ-XZ: the operational reference',
+  description: `What every DJ should know before working an XDJ-XZ: it reads ${FS} but never NTFS, the PRO DJ LINK and jog faults fixed in firmware ${XDJ_XZ.proDjLinkFix}, the SEND output that produced no sound before ${XDJ_XZ.sendOutputFix}, and recording that only writes to the ${XDJ_XZ.masterRecUsbSlot} slot.`,
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-08',
+  dateModified: '2026-08-08',
+  inLanguage: 'en',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/xdj-xz#webpage' },
+  image: 'https://www.savemygig.com/images/xdj-xz-panel-full.webp',
+};
+---
+<Base
+  title="XDJ-XZ: exFAT, SEND, PRO DJ LINK Fixes | Save My Gig"
+  description="The XDJ-XZ field manual: the formats it reads, the SEND output that was silent before firmware 1.10, and recording that writes to one slot only."
+  path="/knowledge/pioneer-dj/xdj-xz"
+  crumbName="XDJ-XZ"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span>
+      <a href="/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>XDJ-XZ</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <h1 class="rb-h1">XDJ-XZ, <span class="accent">the field manual</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#xdj-xz-lightbox"
+        aria-label="Open a larger photo of the XDJ-XZ control surface"
+      >
+        <img
+          src="/images/xdj-xz-panel-thumb.webp"
+          alt="Pioneer DJ XDJ-XZ all-in-one DJ system, top view"
+          width="938"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="xdj-xz-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/xdj-xz-panel-full.webp"
+        srcset="/images/xdj-xz-panel-800.webp 800w, /images/xdj-xz-panel-full.webp 1400w"
+        sizes="92vw"
+        alt="Pioneer DJ XDJ-XZ all-in-one DJ system, top view"
+        width="1400"
+        height="746"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> A four channel all-in-one with
+        {XDJ_XZ.decks} onboard decks, and channels 3 and 4 taking external LINE or
+        PHONO, so turntables and CDJs go straight into it. It reads
+        <strong>{FS}</strong>, never NTFS, on the original
+        <strong>Device Library</strong>. Two documented traps worth knowing before
+        the set: MASTER REC records only to a drive in the
+        <strong>{XDJ_XZ.masterRecUsbSlot} slot</strong> and splits the file every
+        {XDJ_XZ.recSplitHours} hours, and the master level and master EQ do not
+        change what is recorded. Highest published version is
+        <strong>{FLOOR}</strong>.
+      </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
+    </div>
+
+    <AccGroup icon="zap" title="Emergency fixes" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="usb-not-read">
+      <summary><h3 class="acc-h2">The unit will not read my drive</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Check the format first. It reads
+        <strong>{FS}</strong> and NTFS is not supported. exFAT works here, so a
+        large drive is fine. Firmware updates specifically need FAT or FAT32, not
+        exFAT and not HFS+.</p>
+        <p><strong>Why this happens.</strong> NTFS is the Windows default for
+        large drives and is refused across this range. On macOS the GUID Partition
+        Map is not supported, and a Mac Extended case-sensitive volume may not
+        read reliably. Firmware 1.23 improved HFS+ reading, so a Mac formatted
+        drive behaves better from that version onward than it did before it.</p>
+        <p><strong>Fix it now.</strong> Borrow a FAT32 or exFAT drive, or play
+        from the other deck while you sort it. Plug into the unit directly. If the
+        drive is HFS+ and the unit is on old firmware, that combination alone can
+        be the problem, so try a FAT32 stick before concluding the drive is
+        dead.</p>
+        <p><strong>Avoid it next time.</strong> One exFAT or FAT32 partition,
+        exported from rekordbox at home, plus a small FAT32 stick kept aside for
+        firmware updates.</p>
+        <p class="acc-related">Related: <a href="#library">Which library it reads</a> <a href="/fix/exfat-vs-fat32-cdj">exFAT or FAT32</a> <a href="/fix/format-usb-for-cdj">How to format a drive</a> <a href="/fix/usb-not-recognized-cdj">USB not recognized</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjxz-acc" id="link-jog-sync">
+      <summary><h3 class="acc-h2">Linked players misbehave, or the jog and beat sync feel wrong</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Check the firmware version before you
+        rewire the booth. Firmware {XDJ_XZ.proDjLinkFix} fixed PRO DJ LINK not
+        working properly, together with jog wheel inconsistency and beat sync
+        faults. A unit below that version has documented faults in exactly those
+        three places.</p>
+        <p><strong>Why this matters.</strong> These are the symptoms that get
+        blamed on a bad LAN cable or a switch, and on an under-updated unit the
+        cable is innocent. Because this is an all-in-one, the link problem shows up
+        as the whole setup refusing to behave rather than as one deck dropping
+        out.</p>
+        <p><strong>Fix it now.</strong> Read the version off the unit and update
+        to the highest published version, currently {FLOOR}. If you cannot update
+        during the gig, run the linked players independently rather than fighting
+        sync, and treat the XZ as a standalone unit for the night.</p>
+        <p><strong>Avoid it next time.</strong> Make the firmware version part of
+        your arrival check on an unfamiliar XZ. Four of the versions in its history
+        are fault fixes rather than features, so an old unit is measurably worse,
+        not just older.</p>
+        <p class="acc-related">Related: <a href="#firmware">Firmware, and what each version fixed</a> <a href="/fix/cdj-error-e-8302">CDJ error E-8302</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjxz-acc" id="send-silent">
+      <summary><h3 class="acc-h2">No sound from the SEND output</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> On early firmware this was a documented
+        fault: no sound came out of the SEND output terminal at all. It was fixed
+        in {XDJ_XZ.sendOutputFix}, the first update this unit received.</p>
+        <p><strong>Why this matters.</strong> If you patch an outboard effector
+        into SEND and get nothing back, the instinct is to suspect the cable or the
+        effects unit. On a unit that has never been updated, the send itself was
+        silent. This is one of the few faults on this model where the fix is a
+        firmware update and nothing else will help.</p>
+        <p><strong>Fix it now.</strong> Check the version. If it is below
+        {XDJ_XZ.sendOutputFix}, update, and the send starts working. If it is
+        above and the send is still silent, then it is worth checking the cable
+        and the outboard unit, in that order.</p>
+        <p><strong>Worth knowing.</strong> The XDJ-AZ, the model that replaced
+        this one, has no send and return at all. So if an outboard effector is part
+        of your setup, this unit is the one that supports it.</p>
+        <p class="acc-related">Related: <a href="#connections">Connections and recording</a> <a href="/knowledge/pioneer-dj/xdj-az">The XDJ-AZ</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Known issues" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="recording">
+      <summary><h3 class="acc-h2">The recording is missing, in the wrong place, or cut in half</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Three documented rules catch people.
+        MASTER REC writes only to a drive in the
+        <strong>{XDJ_XZ.masterRecUsbSlot} slot</strong>, so a drive in the other
+        slot records nothing. The file is <strong>split every
+        {XDJ_XZ.recSplitHours} hours</strong>, so a long set arrives as more than
+        one file and neither is truncated. And the master level and master EQ knobs
+        do not affect the recording.</p>
+        <p><strong>Why this matters.</strong> A DJ who recorded a four hour set
+        and finds two files assumes something failed. Nothing failed. A DJ who
+        rides the master to shape the room and expects that shaping on the
+        recording does not get it, because the recording is taken before those
+        controls.</p>
+        <p><strong>Fix it now.</strong> Put the recording drive in the
+        {XDJ_XZ.masterRecUsbSlot} slot before you start, and use the channel gains
+        and EQ rather than the master to set what the recording hears. Recordings
+        land in a dedicated folder on the drive, and there is a cap on how many
+        files it holds, so clear old ones off a drive you plan to record onto.</p>
+        <p><strong>Avoid it next time.</strong> Decide which slot is the record
+        slot and which is the music slot, and keep it consistent across gigs so it
+        stops being a decision.</p>
+        <p class="acc-related">Related: <a href="#connections">Connections and recording</a> <a href="#usb-not-read">The unit will not read my drive</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjxz-acc" id="standby">
+      <summary><h3 class="acc-h2">The unit switched itself off</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> Not a fault. It has a standby function
+        that powers the unit down as an energy saving measure, set to
+        {XDJ_XZ.standbyMinutesDefault} minutes from the factory, and selectable at
+        20, 40 or 60 minutes or switched off entirely in the utility settings.</p>
+        <p><strong>Why this matters.</strong> A long changeover, a soundcheck that
+        pauses, or a support slot where the booth sits idle can all cross that
+        threshold, and a unit that powered down looks like a unit that died. On an
+        all-in-one it is the whole booth going dark rather than one deck.</p>
+        <p><strong>Fix it now.</strong> Power it back on. Then, if the venue leaves
+        the booth idle regularly, change the setting in the utility menu rather
+        than rediscovering it every week.</p>
+        <p class="acc-related">Related: <a href="#firmware">Firmware and settings</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Features explained" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="layout">
+      <summary><h3 class="acc-h2">What it is, and how the four channels are used</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The shape of it.</strong> {XDJ_XZ.channels} mixer channels with
+        {XDJ_XZ.decks} onboard decks. Channels 1 and 2 are the decks. Channels 3
+        and 4 take external sources on {XDJ_XZ.lineInputs} LINE and
+        {XDJ_XZ.phonoInputs} PHONO inputs, which is what makes this unit fit a
+        booth that also has turntables or a pair of CDJs.</p>
+        <p><strong>Software.</strong> It runs standalone from a drive, supports
+        rekordbox in export and link modes, and Serato DJ Pro was added in firmware
+        {XDJ_XZ.seratoFrom} and is free to use with this unit. It supports DVS
+        through both rekordbox and Serato, licences separate.</p>
+        <p><strong>The layout argument.</strong> AlphaTheta built it so playing on
+        it feels like using CDJs beside a DJM rather than like using a controller,
+        which is why a DJ who only ever plays CDJs can walk up to one and work.</p>
+        <p class="acc-related">Related: <a href="#connections">Connections and recording</a> <a href="#compatibility">What it works with</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="usb" title="Connections" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="connections">
+      <summary><h3 class="acc-h2">Connections, and recording</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Inputs.</strong> {XDJ_XZ.micInputs} mic inputs on XLR or TRS,
+        {XDJ_XZ.phonoInputs} PHONO and {XDJ_XZ.lineInputs} LINE inputs on RCA,
+        plus an AUX input.</p>
+        <p><strong>Outputs.</strong> Balanced XLR and RCA master, a TRS booth, two
+        headphone jacks, and a SEND output on a TS jack for an outboard effector.
+        Three LINK ports for PRO DJ LINK.</p>
+        <p><strong>Computer.</strong> Two top-loading USB Type-A ports for drives
+        and one USB Type-B to a laptop, with a driver for Windows and the system
+        driver on macOS, so the unit is the soundcard for rekordbox or Serato.</p>
+        <p><strong>Recording.</strong> To a drive in the
+        {XDJ_XZ.masterRecUsbSlot} slot only, split every {XDJ_XZ.recSplitHours}
+        hours, unaffected by the master level and master EQ. See the known issue
+        above, because all three of those surprise people.</p>
+        <p class="acc-related">Related: <a href="#send-silent">No sound from the SEND output</a> <a href="#recording">The recording is missing or cut in half</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibility" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="library">
+      <summary><h3 class="acc-h2">Which library it reads, and mixed booths</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> This unit reads the original
+        <strong>{XDJ_XZ.library}</strong>, the same generation as the CDJ-3000 and
+        the CDJ-2000NXS2. It does not read OneLibrary, which the later generation
+        uses.</p>
+        <p><strong>What that means in a mixed booth.</strong> Export from a
+        current rekordbox and it writes both library formats to the drive, so one
+        stick plays here and on a OneLibrary unit. A drive written only in the
+        newer format will not give this unit a library it can read.</p>
+        <p><strong>Linking players.</strong> PRO DJ LINK over a LAN cable, with a
+        drive in any linked unit browsable from the others, so a dead drive of your
+        own does not end the set if another unit has one in it.</p>
+        <p><strong>DVS.</strong> rekordbox dvs and Serato DVS, licences separate,
+        using the LINE and PHONO channels with turntables.</p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/rekordbox#onelibrary">OneLibrary vs Device Library</a> <a href="/knowledge/pioneer-dj/xdj-az">The XDJ-AZ, which reads OneLibrary</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Understanding the unit" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="firmware">
+      <summary><h3 class="acc-h2">Firmware, and what each version fixed</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The fixes that matter.</strong> {XDJ_XZ.sendOutputFix} fixed no
+        sound from the SEND output and added Serato DJ Pro.
+        {XDJ_XZ.proDjLinkFix} fixed PRO DJ LINK not working properly, jog wheel
+        inconsistency and beat sync faults. {XDJ_XZ.slipSyncWavFix} fixed sync
+        lost after scratching in Slip mode and some WAV files not playing, and
+        improved HFS+ reading. {XDJ_XZ.beatFxFix} fixed faults using Beat FX.
+        {XDJ_XZ.masterTempoFix} fixed faults with Master Tempo on. Highest
+        published version is {FLOOR}.</p>
+        <p><strong>Reading it in the booth.</strong> The full model to version
+        table lives on the firmware reference, so you can read the version off the
+        unit and see which documented faults are still live on it.</p>
+        <p><strong>What is not published.</strong> AlphaTheta's version list jumps
+        from 1.12 to 1.22, and nothing published says what the numbers in between
+        were, so this page does not guess. No version of this unit's firmware was
+        withdrawn as far as any published document shows.</p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/firmware">Every model, by firmware version</a> <a href={XDJ_XZ.sourceFirmware} rel="noopener">AlphaTheta firmware page</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjxz-acc" id="specs">
+      <summary><h3 class="acc-h2">The reference numbers</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The published figures.</strong> {XDJ_XZ.channels} channels,
+        {XDJ_XZ.decks} onboard decks. {XDJ_XZ.dimensions}, weight
+        {XDJ_XZ.weight}. Announced {XDJ_XZ.announced}. Model names:
+        {XDJ_XZ.variants}.</p>
+        <p><strong>Lineage.</strong> AlphaTheta describe the XDJ-AZ as this
+        unit's successor and call this one its predecessor in their own words.
+        Both are covered here, and the differences that matter in a booth are the
+        library generation and the send and return.</p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/xdj-az">The XDJ-AZ</a> <a href={XDJ_XZ.source} rel="noopener">Pioneer DJ product page</a></p>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="xdj-xz" />
+
+    <EmailCapture source="knowledge_xdj_xz" />
+  </main>
+</Base>
+
+<style>
+  /* Every rule here comes from the other Pioneer hardware pages so the hardware
+     pages stay one family. The .hw-head and .hw-thumb photo box rules are
+     defaults in global.css now, so a page cannot ship with an unsized photo. */
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+</style>

@@ -86,8 +86,11 @@ const guides = relatedGuides(slug);
  * than derived, because the derivation would have to encode that asymmetry
  * anyway and would hide it while doing so.
  */
-const OWN_TITLE = { player: S.players, mixer: S.mixers, turntable: S.turntables };
-const PAIRED_TITLE = { player: S.pairedMixers, mixer: S.pairedPlayers, turntable: S.pairedMixers };
+const OWN_TITLE = { player: S.players, mixer: S.mixers, turntable: S.turntables, 'all-in-one': S.allInOnes };
+// An all-in-one is not paired with a separate mixer or player, it IS both. What
+// it is found beside is additional CDJs linked over PRO DJ LINK, so its paired
+// column is titled for that relationship rather than reusing pairedMixers.
+const PAIRED_TITLE = { player: S.pairedMixers, mixer: S.pairedPlayers, turntable: S.pairedMixers, 'all-in-one': S.linkedPlayers };
 const relatedTitle = OWN_TITLE[me?.kind];
 const pairedTitle = PAIRED_TITLE[me?.kind];
 ---

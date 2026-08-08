@@ -44,7 +44,7 @@ export const UI = {
      * any language cannot label.
      */
     equipment: {
-      kinds: { player: 'Players', mixer: 'Mixers', turntable: 'Turntables' },
+      kinds: { player: 'Players', mixer: 'Mixers', turntable: 'Turntables', 'all-in-one': 'All-in-one systems' },
     },
     related: {
       players: 'Related players',
@@ -55,6 +55,12 @@ export const UI = {
       // with really is a mixer, and inventing a second sentence that means the
       // same thing is how two labels drift apart in three languages.
       turntables: 'Related turntables',
+      // ALL-IN-ONE, THE FOURTH KIND (2026-08-08). An all-in-one's lineage points
+      // at other all-in-ones, and what it is found beside is additional CDJs
+      // linked over PRO DJ LINK, not a separate mixer, so linkedPlayers is its
+      // own string rather than a reuse of pairedMixers.
+      allInOnes: 'Related all-in-ones',
+      linkedPlayers: 'Commonly linked players',
       mixers: 'Related mixers',
       pairedMixers: 'Commonly paired mixers',
       pairedPlayers: 'Commonly paired players',
@@ -386,11 +392,13 @@ export const UI = {
     // são dados em facts.js e iguais para os três idiomas.
     equipment: {
       // "Toca-discos" e não "tocadiscos": a grafia brasileira leva hífen.
-      kinds: { player: 'Players', mixer: 'Mixers', turntable: 'Toca-discos' },
+      kinds: { player: 'Players', mixer: 'Mixers', turntable: 'Toca-discos', 'all-in-one': 'Sistemas all-in-one' },
     },
     related: {
       players: 'Players relacionados',
       turntables: 'Toca-discos relacionados',
+      allInOnes: 'Sistemas all-in-one relacionados',
+      linkedPlayers: 'Players geralmente ligados junto',
       mixers: 'Mixers relacionados',
       pairedMixers: 'Mixers usados junto',
       pairedPlayers: 'Players usados junto',
@@ -633,11 +641,13 @@ export const UI = {
       // "Tornamesa" es la forma neutra más reconocible en la región. "Giradiscos"
       // se lee como España y "tocadiscos" sugiere un equipo doméstico, no una
       // herramienta de booth.
-      kinds: { player: 'Reproductores', mixer: 'Mixers', turntable: 'Tornamesas' },
+      kinds: { player: 'Reproductores', mixer: 'Mixers', turntable: 'Tornamesas', 'all-in-one': 'Sistemas all-in-one' },
     },
     related: {
       players: 'Reproductores relacionados',
       turntables: 'Tornamesas relacionadas',
+      allInOnes: 'Sistemas all-in-one relacionados',
+      linkedPlayers: 'Players que se suelen conectar',
       mixers: 'Mixers relacionados',
       pairedMixers: 'Mixers que se usan junto',
       pairedPlayers: 'Reproductores que se usan junto',

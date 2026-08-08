@@ -1,0 +1,377 @@
+---
+import Base from '../../../layouts/Base.astro';
+import EmailCapture from '../../../components/EmailCapture.astro';
+import AccGroup from '../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../components/RelatedEquipment.astro';
+import { XDJ_AZ } from '../../../data/facts.js';
+
+/**
+ * XDJ-AZ, the four channel all-in-one and the fourth equipment kind on this
+ * site. Structure, section order and the style block match the other Pioneer
+ * model pages so the hardware pages stay one family. Every version number, file
+ * system and source link is rendered from XDJ_AZ in facts.js.
+ *
+ * WHAT LEADS THE PAGE, and why in this order.
+ *
+ * 1. THE LIBRARY TRAP. This unit reads OneLibrary only. A USB exported the old
+ *    way carries no library it can read, so the screen reports the database was
+ *    not found and nothing loads. It is the single most likely way a prepared
+ *    DJ arrives and cannot play, and the fix is a rekordbox export setting.
+ *
+ * 2. NO AUDIO, BLACKOUTS, FREEZES. An internal component defect in certain early
+ *    units caused exactly that, and firmware 1.05 addresses the same symptom
+ *    set. On a unit that is the whole booth, any of the three takes the room
+ *    down at once, so it leads the emergency section. The hardware side has a
+ *    free inspection and repair programme, and AlphaTheta published no serial
+ *    range, so the honest instruction is to contact support rather than guess.
+ *
+ * 3. FILE SYSTEMS. FAT, FAT32, exFAT and HFS+, never NTFS, and exFAT is the one
+ *    a DJ coming from older gear does not expect to have.
+ *
+ * This is an AlphaTheta unit, so firmware, storage, library and rekordbox are
+ * its real subjects and the page treats them as such.
+ */
+const UPDATED = XDJ_AZ.checked;
+const FLOOR = XDJ_AZ.newestKnown;
+const FS = XDJ_AZ.fileSystems.join(', ');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/xdj-az#article',
+  headline: 'XDJ-AZ: the operational reference',
+  description: `What every DJ should know before working an XDJ-AZ: it reads OneLibrary only so an old USB export will not load, it reads ${FS} but never NTFS, and the audio, blackout and freeze fault fixed in firmware ${XDJ_AZ.audioBlackoutFreezeFix}.`,
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-08',
+  dateModified: '2026-08-08',
+  inLanguage: 'en',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/knowledge/pioneer-dj/xdj-az#webpage' },
+  image: 'https://www.savemygig.com/images/xdj-az-panel-full.webp',
+};
+---
+<Base
+  title="XDJ-AZ: OneLibrary, exFAT, the Audio Fix | Save My Gig"
+  description="The XDJ-AZ field manual: why an old USB export will not load, the file systems it reads, and the audio, blackout and freeze fault and its fix."
+  path="/knowledge/pioneer-dj/xdj-az"
+  crumbName="XDJ-AZ"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/knowledge">Knowledge base</a> <span aria-hidden="true">/</span>
+      <a href="/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>XDJ-AZ</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-date">Reviewed: {UPDATED}</div>
+        <h1 class="rb-h1">XDJ-AZ, <span class="accent">the field manual</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#xdj-az-lightbox"
+        aria-label="Open a larger photo of the XDJ-AZ control surface"
+      >
+        <img
+          src="/images/xdj-az-panel-thumb.webp"
+          alt="Pioneer DJ AlphaTheta XDJ-AZ all-in-one DJ system, top view"
+          width="887"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="xdj-az-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Close"></a>
+      <a href="#" class="lightbox-close" aria-label="Close">&times;</a>
+      <img
+        src="/images/xdj-az-panel-full.webp"
+        srcset="/images/xdj-az-panel-800.webp 800w, /images/xdj-az-panel-full.webp 1400w"
+        sizes="92vw"
+        alt="Pioneer DJ AlphaTheta XDJ-AZ all-in-one DJ system, top view"
+        width="1400"
+        height="789"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Booth briefing.</strong> A four channel all-in-one, so a fault
+        takes the whole booth down at once rather than one deck. It reads
+        <strong>OneLibrary only</strong>: a USB exported the old way loads
+        nothing and the screen reports the database was not found, so export from
+        rekordbox 7.2.11 or later, which writes both formats. File systems are
+        <strong>{FS}</strong>, never NTFS. If an early unit drops audio, blacks
+        out or freezes, that is a documented defect with a free repair, and
+        firmware {XDJ_AZ.audioBlackoutFreezeFix} addresses the same symptoms.
+        Highest published version is <strong>{FLOOR}</strong>.
+      </p>
+      <label for="sv-toggle" class="sv-more">Read more…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
+    </div>
+
+    <AccGroup icon="zap" title="Emergency fixes" />
+
+    <details class="acc-sec" name="xdjaz-acc" id="database-not-found">
+      <summary><h3 class="acc-h2">The USB will not load and the screen says the database was not found</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> The drive was exported the old way. The
+        XDJ-AZ reads <strong>OneLibrary</strong> only, and a USB carrying only the
+        older Device Library has nothing on it this unit can read, so it reports
+        the rekordbox database as not found. Re-export the drive from rekordbox
+        version 7.2.11 or later, which writes both library formats at once.</p>
+        <p><strong>Why this happens.</strong> AlphaTheta moved this unit and the
+        others in its generation to OneLibrary, while most players in circulation
+        still read the original Device Library. A drive built for an older player
+        is not corrupt and the AZ is not faulty, they are two library formats and
+        this unit reads only the newer one.</p>
+        <p><strong>Fix it now.</strong> If you have a laptop with a current
+        rekordbox, re-export the drive and both formats are written, so the same
+        stick then works here and on an older CDJ. With no laptop in the booth,
+        the fastest route is a drive somebody else already exported from a recent
+        rekordbox, or playing from a linked player over PRO DJ LINK.</p>
+        <p><strong>Avoid it next time.</strong> Export from rekordbox 7.2.11 or
+        later as a habit, not just for this gig. One drive written that way plays
+        on the OneLibrary units and on the Device Library units, which is the
+        whole point of the change, and it removes the guesswork about which venue
+        has which generation.</p>
+        <p class="acc-related">Related: <a href="#file-systems">The file systems it reads</a> <a href="/fix/playlists-not-showing-cdj">Playlists not showing</a> <a href="/knowledge/pioneer-dj/rekordbox#onelibrary">OneLibrary vs Device Library</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjaz-acc" id="no-audio">
+      <summary><h3 class="acc-h2">No audio, the screen blacks out, or the unit freezes</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> This is a documented fault, not
+        something you did. AlphaTheta reported that an internal component defect
+        in certain early units caused no audio output, display blackouts and
+        system freezes, and firmware {XDJ_AZ.audioBlackoutFreezeFix} addresses
+        the same symptom set. There is a free inspection and repair programme for
+        affected units.</p>
+        <p><strong>Why this happens.</strong> On a separate CDJ and mixer a
+        single failure takes one deck out. On an all-in-one the decks, the mixer
+        and the screen share one unit, so the same fault presents as the entire
+        booth going silent or dark at once, which reads as catastrophic and is a
+        known issue with a fix.</p>
+        <p><strong>Fix it now.</strong> Update the firmware to the highest
+        published version, currently {FLOOR}, which is the software half. For the
+        hardware side, AlphaTheta did not publish a serial number range, so do not
+        try to judge from the serial whether a unit is affected. Contact
+        AlphaTheta support and ask about the inspection and repair programme by
+        name. In the room tonight, if a unit is failing this way, the reliable
+        move is a different unit or a linked player, because a hardware defect
+        will not clear itself mid-set.</p>
+        <p><strong>Avoid it next time.</strong> Check the firmware version on any
+        AZ you are handed as part of setup, the same way you would check anything
+        else, and if you own one from the first production run, run it through the
+        programme before it lets you down at a gig rather than after.</p>
+        <p class="acc-related">Related: <a href="#defect-notice">The inspection and repair notice</a> <a href="#firmware">Firmware, and what each version fixed</a> <a href="/knowledge/pioneer-dj/firmware">Every model, by firmware version</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjaz-acc" id="file-systems">
+      <summary><h3 class="acc-h2">Which drives and formats it reads</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> It reads <strong>{FS}</strong>, and NTFS
+        is not supported. exFAT works here, which is the difference from older
+        units that a DJ does not expect. Firmware updates specifically need a
+        drive formatted FAT or FAT32.</p>
+        <p><strong>Why this matters.</strong> A large drive formatted exFAT, which
+        an older CDJ generation refuses, plays on this unit. NTFS, the Windows
+        default for big drives, is refused everywhere in this range including
+        here. On macOS the GUID Partition Map is not supported, and a Mac Extended
+        case-sensitive volume may not read reliably, so the safe Mac option is
+        HFS+ on the older partition scheme.</p>
+        <p><strong>Fix it now.</strong> If a drive is refused, check the format
+        before anything else. Only the first partition of a multi-partition drive
+        is used, unless one partition holds a rekordbox library, in which case
+        that one is used instead. A drive built around a flash card reader can
+        fail regardless of format.</p>
+        <p><strong>Avoid it next time.</strong> A single exFAT or FAT32 partition,
+        exported from a current rekordbox so the OneLibrary trap above does not
+        catch you as well. Keep a FAT or FAT32 stick for firmware updates, since
+        those will not run from exFAT or HFS+.</p>
+        <p class="acc-related">Related: <a href="#database-not-found">The database not found message</a> <a href="/fix/exfat-vs-fat32-cdj">exFAT or FAT32</a> <a href="/fix/format-usb-for-cdj">How to format a drive</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Known issues" />
+
+    <details class="acc-sec" name="xdjaz-acc" id="defect-notice">
+      <summary><h3 class="acc-h2">The inspection and repair notice for early units</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>What it is.</strong> AlphaTheta published a notice that an
+        internal component defect in certain units caused no audio output, display
+        blackouts and system freezes, and offered a free inspection and repair for
+        affected units. It concerns units from the first sales period.</p>
+        <p><strong>What is documented and what is not.</strong> The symptoms and
+        the offer of a free repair are documented. A serial number range is not,
+        and no follow-up notice naming affected serials or confirming the
+        programme is closed was published. So there is no way to read a serial and
+        know, and this page will not invent a range.</p>
+        <p><strong>What to do.</strong> If you own or rent an early AZ, contact
+        AlphaTheta support and ask about the inspection and repair programme
+        directly. Update to the highest published firmware regardless, since
+        {XDJ_AZ.audioBlackoutFreezeFix} addresses the same symptom set in
+        software.</p>
+        <p class="acc-related">Related: <a href="#no-audio">No audio, blackouts or freezes</a> <a href={XDJ_AZ.sourceDefectNotice} rel="noopener">AlphaTheta's notice</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjaz-acc" id="recording-stop">
+      <summary><h3 class="acc-h2">The recording will not stop</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> An early firmware had a fault where
+        pressing the Rec button during a recording did nothing and the recording
+        could not be stopped. Firmware {XDJ_AZ.recStopFix} fixed it, so the
+        answer is to update to the highest published version.</p>
+        <p><strong>Why this matters.</strong> A recording that will not stop keeps
+        writing to the drive, and the file grows until you find another way to end
+        it. It is not a drive fault and reformatting is not the fix, it is
+        firmware.</p>
+        <p><strong>Fix it now.</strong> Update the firmware. If you are mid-set on
+        an un-updated unit and the recording is stuck, ending the recording
+        cleanly may mean stopping playback and letting the unit finish writing
+        rather than pulling the drive, because a drive pulled while writing can
+        lose the file.</p>
+        <p class="acc-related">Related: <a href="#firmware">Firmware, and what each version fixed</a> <a href="#connections">Connections and recording</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjaz-acc" id="library-unresponsive">
+      <summary><h3 class="acc-h2">A "Library is not responding" message keeps appearing</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Short answer.</strong> A fault where that message kept
+        appearing was fixed in firmware {XDJ_AZ.libraryUnresponsiveFix}. If you
+        are seeing it, the unit is on older firmware and the fix is to update.</p>
+        <p><strong>Why this matters.</strong> A library that reports itself
+        unresponsive stops you browsing and loading, which on an all-in-one is the
+        whole instrument. It is a known firmware fault with a published fix rather
+        than a sign the drive or the library is damaged.</p>
+        <p><strong>Fix it now.</strong> Update to the highest published version.
+        In the room on an un-updated unit, reloading the drive or switching to a
+        different prepared drive is the workaround while the message persists.</p>
+        <p class="acc-related">Related: <a href="#firmware">Firmware, and what each version fixed</a> <a href="#database-not-found">The database not found message</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Features explained" />
+
+    <details class="acc-sec" name="xdjaz-acc" id="features">
+      <summary><h3 class="acc-h2">What the AZ is, and how it is laid out</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The shape of it.</strong> Four channels, four decks of onboard
+        playback, a {XDJ_AZ.screen}, two top-loading USB ports and one USB Type-C
+        to a computer. It is a whole booth in one unit, built to feel like a pair
+        of CDJs beside a DJM rather than like a controller.</p>
+        <p><strong>Software.</strong> It runs standalone from a drive with no
+        computer, and it also unlocks rekordbox performance mode and Serato DJ Pro
+        for free when connected to a laptop over USB, with Serato support added in
+        firmware {XDJ_AZ.seratoFrom}. Streaming play from services was added
+        across later firmware.</p>
+        <p><strong>What it is not.</strong> It has no send and return loop for an
+        outboard effector, which the older XDJ-XZ does have. If your set depends on
+        patching an external effects unit into the mixer, that is a booking-stage
+        fact about this model.</p>
+        <p class="acc-related">Related: <a href="#connections">Connections and recording</a> <a href="#compatibility">What it works with</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="usb" title="Connections" />
+
+    <details class="acc-sec" name="xdjaz-acc" id="connections">
+      <summary><h3 class="acc-h2">Connections, and recording</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Inputs.</strong> {XDJ_AZ.micInputs} mic inputs on XLR or TRS,
+        and {XDJ_AZ.phonoInputs} switchable LINE or PHONO inputs on RCA with a
+        ground terminal, so a pair of turntables goes straight in. There is no
+        dedicated send and return.</p>
+        <p><strong>Outputs and computer.</strong> Balanced XLR and RCA master,
+        a TRS booth, two headphone jacks, a LAN port for PRO DJ LINK, and a USB
+        Type-C to a computer. Windows needs the AZ audio driver, macOS uses its
+        own, so the unit doubles as the soundcard for rekordbox or Serato.</p>
+        <p><strong>Recording.</strong> It records to a connected USB drive. Master
+        level and master EQ do not change what is recorded, and there is a cap on
+        the number of files in the recording folder, so clear old recordings off a
+        drive you plan to record onto.</p>
+        <p class="acc-related">Related: <a href="#recording-stop">The recording will not stop</a> <a href="#compatibility">What it works with</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibility" />
+
+    <details class="acc-sec" name="xdjaz-acc" id="compatibility">
+      <summary><h3 class="acc-h2">What it works with, and linking more players</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Library and software.</strong> rekordbox for Mac, Windows, iOS
+        and Android in export and link modes, rekordbox performance mode unlocked
+        over USB, and Serato DJ Pro unlocked over USB. Read the drive from a
+        current rekordbox so it carries OneLibrary, per the emergency section
+        above.</p>
+        <p><strong>DVS.</strong> It supports DVS through rekordbox and through
+        Serato, licences separate, using the two LINE or PHONO inputs and a pair
+        of turntables. Timecode brings its own failure a pressed record does not:
+        a worn control record degrades tracking before it sounds obviously bad.</p>
+        <p><strong>Linking more players.</strong> It is PRO DJ LINK compatible, so
+        CDJs join the setup over a LAN cable and a drive in any linked unit is
+        browsable from the others. That link is also where the E-8302 family of
+        errors appears, exactly as on a CDJ booth.</p>
+        <p class="acc-related">Related: <a href="/fix/cdj-error-e-8302">CDJ error E-8302</a> <a href="/knowledge/pioneer-dj/rekordbox">The rekordbox reference</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Understanding the unit" />
+
+    <details class="acc-sec" name="xdjaz-acc" id="firmware">
+      <summary><h3 class="acc-h2">Firmware, and what each version fixed</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The fixes that matter.</strong> Firmware
+        {XDJ_AZ.recStopFix} fixed a recording that could not be stopped.
+        {XDJ_AZ.audioBlackoutFreezeFix} addressed no audio, display blackouts and
+        system freezes on some units. {XDJ_AZ.seratoFrom} added Serato DJ Pro.
+        {XDJ_AZ.libraryUnresponsiveFix} fixed a library that kept reporting itself
+        unresponsive. Highest published version is {FLOOR}.</p>
+        <p><strong>Reading it in the booth.</strong> The full model to version
+        table lives on the firmware reference, so you can read the version off the
+        unit and see which documented faults are still live on it.</p>
+        <p><strong>Standby.</strong> Power management ships enabled with a
+        {XDJ_AZ.standbyMinutesDefault} minute default, which powers the unit down
+        after that long with no activity. A unit that switched itself off during a
+        long changeover is obeying that setting.</p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/firmware">Every model, by firmware version</a> <a href={XDJ_AZ.sourceFirmware} rel="noopener">AlphaTheta firmware page</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjaz-acc" id="specs">
+      <summary><h3 class="acc-h2">The reference numbers</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>The published figures.</strong> {XDJ_AZ.channels} channels,
+        {XDJ_AZ.decks} decks, a {XDJ_AZ.screen}. {XDJ_AZ.dimensions}, weight
+        {XDJ_AZ.weight}. Announced {XDJ_AZ.announced}. Model names:
+        {XDJ_AZ.variants}.</p>
+        <p><strong>Lineage.</strong> AlphaTheta name the {XDJ_AZ.predecessorNamed}
+        as its predecessor, and describe the AZ as an evolution of it. Both are
+        covered here.</p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/xdj-xz">The XDJ-XZ</a> <a href={XDJ_AZ.source} rel="noopener">AlphaTheta product page</a></p>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="xdj-az" />
+
+    <EmailCapture source="knowledge_xdj_az" />
+  </main>
+</Base>
+
+<style>
+  /* Every rule here comes from the other Pioneer hardware pages so the hardware
+     pages stay one family. */
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+</style>

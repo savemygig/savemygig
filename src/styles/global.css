@@ -1608,3 +1608,32 @@ summary:focus-visible {
    change is visible: the label already centres its text. */
 .fbp-seg label { min-height: 44px; display: inline-flex; align-items: center; }
 .fbp-seg input[type="radio"] { width: 44px; height: 44px; }
+
+/* THE HARDWARE PAGE PHOTO BOX, PROMOTED TO GLOBAL (2026-08-08).
+   .lightbox has always lived here. .hw-head and .hw-thumb did not: they were
+   copied by hand into the <style> block of every hardware page, 57 of them, and
+   the copies are identical. Then the Technics pages shipped with a trimmed style
+   block that omitted them, so the image had no box to sit in and rendered at its
+   intrinsic size, filling the column and pushing the booth briefing off the
+   screen. Antonio saw it on the SL-1200MK7 and the SL-1200MK2.
+   A rule that has to be remembered 57 times will be forgotten the 58th. It is a
+   default here now, so a hardware page that defines nothing still lays out
+   correctly, and the per-page copies keep working because Astro's scoped styles
+   win over this for the pages that have them.
+   THE BOX IS SQUARE AND THE IMAGE IS CONSTRAINED ON BOTH AXES, which is what
+   makes a landscape product photo behave: an all-in-one or a turntable is wider
+   than it is tall, so max-width caps it at the box while max-height leaves it
+   short of the bottom, and align-items keeps it sitting on the baseline. */
+.hw-head { position: relative; padding-right: 216px; display: flow-root; }
+.hw-thumb {
+  position: absolute; bottom: 0; right: 0; width: 200px; height: 200px;
+  display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
+}
+.hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+@media (max-width: 640px) {
+  .hw-head { padding-right: 0; }
+  .hw-thumb {
+    position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
+    align-items: center; justify-content: center;
+  }
+}

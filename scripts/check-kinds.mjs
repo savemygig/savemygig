@@ -80,7 +80,7 @@ for (const lang of LANGS) {
   }
   // RelatedEquipment maps kind to its own heading. 'turntable' reuses the
   // pairedMixers string on purpose, so only the own-kind heading is required.
-  const OWN = { player: 'players', mixer: 'mixers', turntable: 'turntables' };
+  const OWN = { player: 'players', mixer: 'mixers', turntable: 'turntables', 'all-in-one': 'allInOnes' };
   const noHeading = KINDS.filter((k) => !OWN[k] || !UI[lang]?.related?.[OWN[k]]);
   if (noHeading.length) {
     fail(`${lang}: ${noHeading.length} kind(s) have no "Related X" heading`, ...noHeading,

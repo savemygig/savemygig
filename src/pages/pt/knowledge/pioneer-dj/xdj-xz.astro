@@ -1,0 +1,355 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import EmailCapture from '../../../../components/EmailCapture.astro';
+import AccGroup from '../../../../components/AccGroup.astro';
+import RelatedEquipment from '../../../../components/RelatedEquipment.astro';
+import { XDJ_XZ } from '../../../../data/facts.js';
+
+// XDJ-XZ, BRAZILIAN PORTUGUESE. Source of truth for structure, components,
+// classes, anchors, section order and CSS:
+// src/pages/knowledge/pioneer-dj/xdj-xz.astro. Only the human readable copy and
+// the /pt hrefs differ. If the English page changes, this one changes in the
+// same commit.
+
+const MESES = {
+  January: 'janeiro', February: 'fevereiro', March: 'março', April: 'abril',
+  May: 'maio', June: 'junho', July: 'julho', August: 'agosto',
+  September: 'setembro', October: 'outubro', November: 'novembro', December: 'dezembro',
+};
+const ptDate = (s) => s.replace(/^(\d+)\s+([A-Za-z]+)\s+(\d+)$/, (_m, d, mo, y) => `${d} de ${MESES[mo] ?? mo} de ${y}`);
+const UPDATED = ptDate(XDJ_XZ.checked);
+const FLOOR = XDJ_XZ.newestKnown;
+const FS = XDJ_XZ.fileSystems.join(', ');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/xdj-xz#article',
+  headline: 'XDJ-XZ: a referência operacional',
+  description: `O que todo DJ precisa saber antes de trabalhar num XDJ-XZ: ele lê ${FS} e nunca NTFS, as falhas de PRO DJ LINK e de jog corrigidas no firmware ${XDJ_XZ.proDjLinkFix}, a saída SEND que ficava muda antes da ${XDJ_XZ.sendOutputFix}, e a gravação que só grava no slot ${XDJ_XZ.masterRecUsbSlot}.`,
+  author: { '@id': 'https://www.savemygig.com/#org' },
+  publisher: { '@id': 'https://www.savemygig.com/#org' },
+  datePublished: '2026-08-08',
+  dateModified: '2026-08-08',
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: { '@id': 'https://www.savemygig.com/pt/knowledge/pioneer-dj/xdj-xz#webpage' },
+  image: 'https://www.savemygig.com/images/xdj-xz-panel-full.webp',
+};
+---
+<Base
+  title="XDJ-XZ: exFAT, SEND e PRO DJ LINK | Save My Gig"
+  description={`Manual de campo do XDJ-XZ: os formatos que ele lê, a saída SEND que ficava muda antes do firmware ${XDJ_XZ.sendOutputFix}, e a gravação que grava só em um slot.`}
+  path="/knowledge/pioneer-dj/xdj-xz"
+  crumbName="XDJ-XZ"
+  lang="pt"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="wrap wrap-wide">
+    <nav class="crumb" aria-label="Trilha de navegação">
+      <a href="/pt/knowledge">Base de conhecimento</a> <span aria-hidden="true">/</span>
+      <a href="/pt/knowledge/pioneer-dj">Pioneer DJ / AlphaTheta</a> <span aria-hidden="true">/</span>
+      <span>XDJ-XZ</span>
+    </nav>
+
+    <div class="hw-head">
+      <div class="hw-head-text">
+        <div class="status-line sl-date">Revisado: {UPDATED}</div>
+        <h1 class="rb-h1">XDJ-XZ, <span class="accent">o manual de campo</span></h1>
+      </div>
+      <a
+        class="hw-thumb"
+        href="#xdj-xz-lightbox"
+        aria-label="Abrir uma foto maior do painel de controle do XDJ-XZ"
+      >
+        <img
+          src="/images/xdj-xz-panel-thumb.webp"
+          alt="Sistema de DJ all-in-one Pioneer DJ XDJ-XZ, visto de cima"
+          width="938"
+          height="500"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="lightbox" id="xdj-xz-lightbox">
+      <a href="#" class="lightbox-backdrop" aria-label="Fechar"></a>
+      <a href="#" class="lightbox-close" aria-label="Fechar">&times;</a>
+      <img
+        src="/images/xdj-xz-panel-full.webp"
+        srcset="/images/xdj-xz-panel-800.webp 800w, /images/xdj-xz-panel-full.webp 1400w"
+        sizes="92vw"
+        alt="Sistema de DJ all-in-one Pioneer DJ XDJ-XZ, visto de cima"
+        width="1400"
+        height="746"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="panel panel-go">
+      <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
+      <p class="sv-text" style="margin:0">
+        <strong>Briefing de booth.</strong> Um all-in-one de quatro canais com
+        {XDJ_XZ.decks} decks internos, e os canais 3 e 4 aceitando LINE ou PHONO
+        externo, então toca-discos e CDJs entram direto nele. Ele lê
+        <strong>{FS}</strong>, nunca NTFS, na Device Library original. Duas
+        armadilhas documentadas que valem saber antes do set: o MASTER REC grava
+        só num drive no <strong>slot {XDJ_XZ.masterRecUsbSlot}</strong> e divide o
+        arquivo a cada {XDJ_XZ.recSplitHours} horas, e o nível de master e o EQ de
+        master não mudam o que é gravado. A versão mais alta publicada é
+        <strong>{FLOOR}</strong>.
+      </p>
+      <label for="sv-toggle" class="sv-more">Ler mais…</label>
+      <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
+    </div>
+
+    <AccGroup icon="zap" title="Soluções de emergência" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="usb-not-read">
+      <summary><h3 class="acc-h2">A unidade não lê o meu drive</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Confira o formato primeiro. Ela lê
+        <strong>{FS}</strong> e NTFS não é suportado. exFAT funciona aqui, então
+        um drive grande está tranquilo. Atualização de firmware precisa
+        especificamente de FAT ou FAT32, e não de exFAT nem de HFS+.</p>
+        <p><strong>Por que isso acontece.</strong> NTFS é o padrão do Windows
+        para drives grandes e é recusado em toda esta linha. No macOS o GUID
+        Partition Map não é suportado, e um volume Mac Extended com distinção de
+        maiúsculas pode não ler de forma confiável. O firmware 1.23 melhorou a
+        leitura de HFS+, então um drive formatado no Mac se comporta melhor no
+        firmware atual do que num firmware antigo.</p>
+        <p><strong>Resolva agora.</strong> Peça um drive FAT32 ou exFAT
+        emprestado, ou toque pelo outro deck enquanto resolve. Conecte direto na
+        unidade. Se o drive é HFS+ e a unidade está com firmware antigo, essa
+        combinação sozinha já pode ser o problema, então teste um pen drive FAT32
+        antes de concluir que o drive morreu.</p>
+        <p><strong>Evite da próxima vez.</strong> Uma partição em exFAT ou FAT32,
+        exportada do rekordbox em casa, mais um pen drive FAT32 pequeno guardado
+        só para atualização de firmware.</p>
+        <p class="acc-related">Relacionados: <a href="#library">Qual biblioteca ela lê</a> <a href="/pt/fix/exfat-vs-fat32-cdj">exFAT ou FAT32</a> <a href="/pt/fix/format-usb-for-cdj">Como formatar um drive</a> <a href="/pt/fix/usb-not-recognized-cdj">USB não reconhecido</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjxz-acc" id="link-jog-sync">
+      <summary><h3 class="acc-h2">Os players linkados se comportam mal, ou o jog e o beat sync parecem errados</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Confira a versão de firmware antes de
+        recabear a booth. O firmware {XDJ_XZ.proDjLinkFix} corrigiu o PRO DJ LINK
+        que não funcionava corretamente, junto com inconsistência do jog wheel e
+        falhas de beat sync. Uma unidade abaixo dessa versão tem falhas
+        documentadas exatamente nesses três lugares.</p>
+        <p><strong>Por que isso importa.</strong> Esses são os sintomas que
+        recebem a culpa de um cabo LAN ruim ou de um switch, e numa unidade sem
+        atualização o cabo é inocente. Como isso é um all-in-one, o problema de
+        link aparece como o setup inteiro se recusando a funcionar, e não como um
+        deck saindo do ar.</p>
+        <p><strong>Resolva agora.</strong> Leia a versão na unidade e atualize
+        para a versão mais alta publicada, hoje {FLOOR}. Se você não pode
+        atualizar durante o gig, rode os players linkados de forma independente em
+        vez de brigar com o sync, e trate o XZ como unidade standalone pela
+        noite.</p>
+        <p><strong>Evite da próxima vez.</strong> Coloque a versão de firmware na
+        sua checagem de chegada em qualquer XZ que você não conhece. Quatro das
+        versões do histórico dele são correções de falha, e não recursos, então
+        uma unidade antiga é mensuravelmente pior, e não só mais velha.</p>
+        <p class="acc-related">Relacionados: <a href="#firmware">Firmware, e o que cada versão corrigiu</a> <a href="/pt/fix/cdj-error-e-8302">Erro E-8302 do CDJ</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjxz-acc" id="send-silent">
+      <summary><h3 class="acc-h2">Sem som na saída SEND</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> No firmware antigo isso era uma falha
+        documentada: som nenhum saía do terminal de saída SEND. Foi corrigido na
+        {XDJ_XZ.sendOutputFix}, a primeira atualização que esta unidade
+        recebeu.</p>
+        <p><strong>Por que isso importa.</strong> Se você patcheia um processador
+        externo no SEND e não volta nada, o instinto é desconfiar do cabo ou do
+        processador. Numa unidade que nunca foi atualizada, o send em si estava
+        mudo. Essa é uma das poucas falhas deste modelo em que a solução é
+        atualizar o firmware e nada mais resolve.</p>
+        <p><strong>Resolva agora.</strong> Confira a versão. Se estiver abaixo da
+        {XDJ_XZ.sendOutputFix}, atualize, e o send passa a funcionar. Se estiver
+        acima e o send continua mudo, então vale checar o cabo e o processador
+        externo, nessa ordem.</p>
+        <p><strong>Vale saber.</strong> O XDJ-AZ, o modelo que substituiu este,
+        não tem send e return nenhum. Então se um processador externo faz parte do
+        seu setup, esta unidade é a que suporta isso.</p>
+        <p class="acc-related">Relacionados: <a href="#connections">Conexões e gravação</a> <a href="/pt/knowledge/pioneer-dj/xdj-az">O XDJ-AZ</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="warn" title="Problemas conhecidos" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="recording">
+      <summary><h3 class="acc-h2">A gravação sumiu, está no lugar errado, ou veio cortada em duas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Três regras documentadas pegam as
+        pessoas. O MASTER REC grava só num drive no <strong>slot
+        {XDJ_XZ.masterRecUsbSlot}</strong>, então um drive no outro slot não grava
+        nada. O arquivo é <strong>dividido a cada {XDJ_XZ.recSplitHours}
+        horas</strong>, então um set longo chega como mais de um arquivo e nenhum
+        deles está truncado. E os knobs de nível de master e de EQ de master não
+        afetam a gravação.</p>
+        <p><strong>Por que isso importa.</strong> Um DJ que gravou um set de
+        quatro horas e encontra dois arquivos assume que algo falhou. Nada falhou.
+        Um DJ que trabalha o master para moldar a sala e espera essa moldagem na
+        gravação não recebe isso, porque a gravação é tirada antes desses
+        controles.</p>
+        <p><strong>Resolva agora.</strong> Ponha o drive de gravação no slot
+        {XDJ_XZ.masterRecUsbSlot} antes de começar, e use os gains de canal e o EQ
+        de canal, em vez do master, para definir o que a gravação escuta. As
+        gravações caem numa pasta dedicada no drive, e existe um limite de quantos
+        arquivos ela guarda, então limpe as antigas de um drive em que você
+        pretende gravar.</p>
+        <p><strong>Evite da próxima vez.</strong> Decida qual slot é o slot de
+        gravação e qual é o slot de música, e mantenha isso igual em todos os
+        gigs, para que deixe de ser uma decisão.</p>
+        <p class="acc-related">Relacionados: <a href="#connections">Conexões e gravação</a> <a href="#usb-not-read">A unidade não lê o meu drive</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjxz-acc" id="standby">
+      <summary><h3 class="acc-h2">A unidade se desligou sozinha</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Não é falha. Ela tem uma função de
+        standby que desliga a unidade como medida de economia de energia, ajustada
+        de fábrica em {XDJ_XZ.standbyMinutesDefault} minutos, e selecionável em
+        20, 40 ou 60 minutos ou desligada por completo nas configurações de
+        utilitário.</p>
+        <p><strong>Por que isso importa.</strong> Uma virada longa, uma passagem
+        de som que dá uma pausa, ou um horário de abertura em que a booth fica
+        parada podem cruzar esse limite, e uma unidade que se desligou parece uma
+        unidade que morreu. Num all-in-one é a booth inteira apagando, e não um
+        deck.</p>
+        <p><strong>Resolva agora.</strong> Ligue de novo. Depois, se a casa deixa
+        a booth parada com frequência, mude a configuração no menu de utilitário
+        em vez de redescobrir isso toda semana.</p>
+        <p class="acc-related">Relacionados: <a href="#firmware">Firmware e configurações</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sliders" title="Recursos explicados" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="layout">
+      <summary><h3 class="acc-h2">O que ela é, e como os quatro canais são usados</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>O formato dela.</strong> {XDJ_XZ.channels} canais de mixer com
+        {XDJ_XZ.decks} decks internos. Os canais 1 e 2 são os decks. Os canais 3 e
+        4 aceitam fontes externas em {XDJ_XZ.lineInputs} entradas LINE e
+        {XDJ_XZ.phonoInputs} entradas PHONO, que é o que faz esta unidade caber
+        numa booth que também tem toca-discos ou um par de CDJs.</p>
+        <p><strong>Software.</strong> Ela roda standalone de um drive, suporta
+        rekordbox em export e link mode, e o Serato DJ Pro foi adicionado no
+        firmware {XDJ_XZ.seratoFrom} e é gratuito para usar com esta unidade. Ela
+        suporta DVS pelo rekordbox e pelo Serato, licenças separadas.</p>
+        <p><strong>O argumento do layout.</strong> A AlphaTheta construiu ela para
+        que tocar nela pareça usar CDJs ao lado de um DJM em vez de usar um
+        controlador, e é por isso que um DJ que só toca em CDJ chega numa e
+        trabalha.</p>
+        <p class="acc-related">Relacionados: <a href="#connections">Conexões e gravação</a> <a href="#compatibility">Com o que ela funciona</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="usb" title="Conexões" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="connections">
+      <summary><h3 class="acc-h2">Conexões, e gravação</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Entradas.</strong> {XDJ_XZ.micInputs} entradas de mic em XLR ou
+        TRS, {XDJ_XZ.phonoInputs} entradas PHONO e {XDJ_XZ.lineInputs} entradas
+        LINE em RCA, mais uma entrada AUX.</p>
+        <p><strong>Saídas.</strong> Master balanceado em XLR e em RCA, uma BOOTH
+        em TRS, duas entradas de fone, e uma saída SEND em jack TS para
+        processador externo. Três portas LINK para PRO DJ LINK.</p>
+        <p><strong>Computador.</strong> Duas portas USB Type-A de topo para drives
+        e uma USB Type-B para laptop, com driver para Windows e o driver do sistema
+        no macOS, então a unidade é a soundcard do rekordbox ou do Serato.</p>
+        <p><strong>Gravação.</strong> Para um drive no slot
+        {XDJ_XZ.masterRecUsbSlot} e em nenhum outro, dividida a cada
+        {XDJ_XZ.recSplitHours} horas, sem ser afetada pelo nível de master nem
+        pelo EQ de master. Veja o problema conhecido acima, porque essas três
+        coisas surpreendem as pessoas.</p>
+        <p class="acc-related">Relacionados: <a href="#send-silent">Sem som na saída SEND</a> <a href="#recording">A gravação sumiu ou veio cortada em duas</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="sync" title="Compatibilidade" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="library">
+      <summary><h3 class="acc-h2">Qual biblioteca ela lê, e booths mistas</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Resposta curta.</strong> Esta unidade lê a original
+        <strong>{XDJ_XZ.library}</strong>, a mesma geração do CDJ-3000 e do
+        CDJ-2000NXS2. Ela não lê OneLibrary, que é o que as unidades mais novas
+        usam.</p>
+        <p><strong>O que isso significa numa booth mista.</strong> Exporte de um
+        rekordbox atual e ele grava os dois formatos de biblioteca no drive, então
+        um pen drive só toca aqui e numa unidade OneLibrary. Um drive gravado
+        apenas no formato mais novo não entrega a esta unidade uma biblioteca que
+        ela consiga ler.</p>
+        <p><strong>Linkando players.</strong> PRO DJ LINK por cabo LAN, com um
+        drive em qualquer unidade linkada podendo ser navegado das outras, então
+        um drive seu que morreu não encerra o set se outra unidade tiver um.</p>
+        <p><strong>DVS.</strong> rekordbox dvs e Serato DVS, licenças separadas,
+        usando os canais LINE e PHONO com toca-discos.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/rekordbox#onelibrary">OneLibrary e Device Library</a> <a href="/pt/knowledge/pioneer-dj/xdj-az">O XDJ-AZ, que lê OneLibrary</a></p>
+      </div>
+    </details>
+
+    <AccGroup icon="book" title="Entendendo a unidade" />
+
+    <details class="acc-sec" name="xdjxz-acc" id="firmware">
+      <summary><h3 class="acc-h2">Firmware, e o que cada versão corrigiu</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>As correções que importam.</strong> A {XDJ_XZ.sendOutputFix}
+        corrigiu a ausência de som na saída SEND e adicionou o Serato DJ Pro. A
+        {XDJ_XZ.proDjLinkFix} corrigiu o PRO DJ LINK que não funcionava
+        corretamente, a inconsistência do jog wheel e falhas de beat sync. A
+        {XDJ_XZ.slipSyncWavFix} corrigiu o sync perdido depois de scratch em modo
+        Slip e alguns arquivos WAV que não tocavam, e melhorou a leitura de HFS+.
+        A {XDJ_XZ.beatFxFix} corrigiu falhas ao usar o Beat FX. A
+        {XDJ_XZ.masterTempoFix} corrigiu falhas com o Master Tempo ligado. A
+        versão mais alta publicada é {FLOOR}.</p>
+        <p><strong>Lendo isso na booth.</strong> A tabela completa de modelo por
+        versão fica na referência de firmware, então você lê a versão na unidade e
+        vê quais falhas documentadas ainda estão vivas nela.</p>
+        <p><strong>O que não é publicado.</strong> A lista de versões da
+        AlphaTheta salta da 1.12 para a 1.22, e nada publicado diz quais eram os
+        números no meio, então esta página não chuta. Nenhuma versão do firmware
+        desta unidade foi retirada, pelo que qualquer documento publicado
+        mostra.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/firmware">Todos os modelos, por versão de firmware</a> <a href={XDJ_XZ.sourceFirmware} rel="noopener">Página de firmware da AlphaTheta</a></p>
+      </div>
+    </details>
+
+    <details class="acc-sec" name="xdjxz-acc" id="specs">
+      <summary><h3 class="acc-h2">Os números de referência</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+      <div class="acc-body">
+        <p><strong>Os dados publicados.</strong> {XDJ_XZ.channels} canais,
+        {XDJ_XZ.decks} decks internos. Dimensões: {XDJ_XZ.dimensions}. Peso:
+        {XDJ_XZ.weight}. Anunciado em {XDJ_XZ.announced}. Nomes de modelo:
+        {XDJ_XZ.variants}.</p>
+        <p><strong>Linhagem.</strong> A AlphaTheta descreve o XDJ-AZ como sucessor
+        desta unidade e chama esta de antecessora com as próprias palavras. As
+        duas estão cobertas aqui, e as diferenças que importam numa booth são a
+        geração de biblioteca e o send e return.</p>
+        <p class="acc-related">Relacionados: <a href="/pt/knowledge/pioneer-dj/xdj-az">O XDJ-AZ</a> <a href={XDJ_XZ.source} rel="noopener">Página do produto na Pioneer DJ</a></p>
+      </div>
+    </details>
+
+    <RelatedEquipment slug="xdj-xz" lang="pt" />
+
+    <EmailCapture source="knowledge_xdj_xz" lang="pt" />
+  </main>
+</Base>
+
+<style>
+  /* Cada regra aqui vem das outras páginas de hardware da Pioneer, para que as
+     páginas de hardware continuem sendo uma família só. As regras de .hw-head e
+     da caixa de foto .hw-thumb já são padrão no global.css, então uma página não
+     pode subir com a foto sem tamanho. */
+  .crumb { font-size: 0.78rem; color: var(--text-faint); margin-bottom: 1.2rem; }
+  .crumb a { color: var(--text-dim); text-decoration: none; }
+  .crumb a:hover { color: var(--red); }
+</style>

@@ -59,6 +59,8 @@ export const CONCEPTS = [
   { key: 'cdj-900nxs', kind: 'product', label: 'CDJ-900NXS', page: '/knowledge/pioneer-dj/cdj-900nxs', aliases: ['CDJ 900NXS', 'CDJ-900 NXS'] },
   { key: 'xdj-1000mk2', kind: 'product', label: 'XDJ-1000MK2', page: '/knowledge/pioneer-dj/xdj-1000mk2', aliases: ['XDJ 1000MK2', 'XDJ-1000 MK2'] },
   { key: 'xdj-700', kind: 'product', label: 'XDJ-700', page: '/knowledge/pioneer-dj/xdj-700', aliases: ['XDJ 700'] },
+  { key: 'xdj-az', kind: 'product', label: 'XDJ-AZ', page: '/knowledge/pioneer-dj/xdj-az', aliases: ['XDJ AZ'] },
+  { key: 'xdj-xz', kind: 'product', label: 'XDJ-XZ', page: '/knowledge/pioneer-dj/xdj-xz', aliases: ['XDJ XZ'] },
   { key: 'djm-a9', kind: 'product', label: 'DJM-A9', page: '/knowledge/pioneer-dj/djm-a9', aliases: ['DJM A9'] },
   { key: 'djm-v10', kind: 'product', label: 'DJM-V10', page: '/knowledge/pioneer-dj/djm-v10', aliases: ['DJM V10', 'DJM-V10-LF'] },
   { key: 'djm-v5', kind: 'product', label: 'DJM-V5', page: '/knowledge/pioneer-dj/djm-v5', aliases: ['DJM V5'] },
