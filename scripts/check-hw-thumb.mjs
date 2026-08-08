@@ -183,6 +183,9 @@ for (const width of WIDTHS) {
       return {
         iw: Math.round(i.width), ih: Math.round(i.height),
         bw: Math.round(b.width), bh: Math.round(b.height),
+        // The DEAD SPACE UNDER THE PICTURE, which is the thing a reader sees and
+        // the thing this check used to be blind to. See the assertion below.
+        below: Math.round(b.bottom - i.bottom),
         overlapsH1: t ? !(i.right <= t.left || i.left >= t.right || i.bottom <= t.top || i.top >= t.bottom) : false,
         overflowX: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       };
@@ -198,6 +201,27 @@ for (const width of WIDTHS) {
       fail(`${label} @${width}: photo overlaps the headline`, `image ${r.iw}x${r.ih}`);
     } else if (r.overflowX > 0) {
       fail(`${label} @${width}: page scrolls sideways`, `${r.overflowX}px of horizontal overflow`);
+    } else if (r.below > 1) {
+      /*
+       * THE PHOTO MUST SIT ON THE BOTTOM OF ITS BOX (Antonio, 2026-08-08: "the
+       * sl 1200s are floating in the air in the mobile version").
+       *
+       * This check already measured the photo against its BOX and against the
+       * headline, and both passed while the SL-1200MK2 hovered 17.5px above the
+       * booth briefing at 390px and the MK7 hovered 21.1px. The box was flush
+       * with the panel; the picture inside it was not, because the mobile rule
+       * centred it and a LANDSCAPE photo does not fill a square box's height.
+       * Every portrait photo on the site fills that height exactly, so only the
+       * two turntables and the two XDJ all-in-ones showed it.
+       *
+       * Measuring the container and calling it the picture is the same blindness
+       * as measuring a comment and calling it the copy. So the gap between the
+       * image's bottom edge and the box's bottom edge is now the assertion.
+       */
+      fail(`${label} @${width}: photo floats ${r.below}px above the bottom of its box`,
+        `image ${r.iw}x${r.ih} inside a ${r.bw}x${r.bh} box`,
+        'A landscape photo does not fill a square box, so it has to sit on the',
+        'baseline or it hovers above the booth briefing. Use align-items: flex-end.');
     } else {
       ok++;
     }

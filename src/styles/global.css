@@ -1630,11 +1630,27 @@ summary:focus-visible {
   display: flex; align-items: flex-end; justify-content: flex-end; z-index: 3;
 }
 .hw-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; }
+/* THE MOBILE BOX BOTTOMS THE PHOTO OUT, IT DOES NOT CENTRE IT (Antonio,
+   2026-08-08: "the sl 1200s are floating in the air in the mobile version").
+   He was right, and the measurement said so exactly: at 390px the box is a
+   fixed 200x200 and a LANDSCAPE photo only fills the width, so the SL-1200MK2
+   rendered 200x165 and the MK7 200x158. Centred, that left 17.5px and 21.1px
+   of dead space between the picture and the booth briefing, and the deck
+   appeared to hover above the panel. Every portrait photo on the site fills the
+   200px height exactly, so nothing else showed the fault: only the two
+   turntables, which are the only landscape shots.
+   `align-items: center` was undoing on mobile the exact thing the desktop rule
+   three lines up exists to do, and its own comment explains: "align-items keeps
+   it sitting on the baseline". So mobile now uses flex-end too. The slack moves
+   ABOVE the photo, where it reads as spacing under the heading rather than as a
+   picture floating. Portrait photos are untouched: they already fill the box.
+   check-hw-thumb now measures the IMAGE against the box bottom, not the box
+   against the panel, which is why this shipped in the first place. */
 @media (max-width: 640px) {
   .hw-head { padding-right: 0; }
   .hw-thumb {
     position: relative; width: 200px; height: 200px; margin: 0.5rem auto 0;
-    align-items: center; justify-content: center;
+    align-items: flex-end; justify-content: center;
   }
 }
 
