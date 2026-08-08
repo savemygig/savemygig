@@ -40,7 +40,7 @@
  * page, because the resolvers in facts.js drop unknown slugs. So this component
  * cannot ship a broken link even if someone edits the graph carelessly.
  */
-import { relatedModels, pairedModels, relatedGuides, equipmentFor, modelPath, brandFor } from '../data/facts.js';
+import { lineageOf, siblingModels, pairedModels, relatedGuides, equipmentFor, modelPath, brandFor } from '../data/facts.js';
 import { UI } from '../i18n/ui.js';
 
 interface Props {
@@ -68,7 +68,22 @@ const modelHref = (m) => lp(modelPath(m));
 // The browse-all link goes to THIS model's manufacturer hub, not to Pioneer's.
 const myBrand = brandFor(equipmentFor(slug)?.brand);
 
-const related = relatedModels(slug);
+/*
+ * THE CHAIN AND THE SIBLINGS ARE NOW TWO DIFFERENT CLAIMS (2026-08-08), and
+ * they used to be one list. `relatedModels` merged newer, older and siblings
+ * under a single heading that said "Related mixers", so a reader could not tell
+ * the ancestor from the descendant, which is the question Antonio asked this
+ * block to answer: "where does this equipment fit in the history of the booth".
+ *
+ * Lineage is documented release order and is rendered as a directional chain
+ * with each end labelled. Siblings are an editorial judgement about comparable
+ * tier and keep the plain heading, because they have not earned a lineage
+ * label. Pulling them apart also means a page with a chain no longer spends its
+ * two related slots on the chain and hides its siblings.
+ */
+const lineage = lineageOf(slug);
+const hasChain = Boolean(lineage.older || lineage.newer || lineage.variants.length);
+const related = siblingModels(slug);
 const paired = pairedModels(slug);
 const guides = relatedGuides(slug);
 
@@ -96,6 +111,39 @@ const pairedTitle = PAIRED_TITLE[me?.kind];
 ---
 {me && (
   <div class="panel rel-block" style="margin-top:2rem">
+    {hasChain && (
+      <div class="rel-chain">
+        <h2 class="rel-h">{S.lineage}</h2>
+        <ol class="chain">
+          {lineage.older && (
+            <li class="chain-step">
+              <span class="chain-label">{S.earlierGeneration}</span>
+              <a class="chain-name" href={modelHref(lineage.older)}>{lineage.older.name}</a>
+            </li>
+          )}
+          <li class="chain-step chain-here" aria-current="true">
+            <span class="chain-label">{S.thisModel}</span>
+            <span class="chain-name">{me.name}</span>
+          </li>
+          {lineage.newer && (
+            <li class="chain-step">
+              <span class="chain-label">{S.laterGeneration}</span>
+              <a class="chain-name" href={modelHref(lineage.newer)}>{lineage.newer.name}</a>
+            </li>
+          )}
+        </ol>
+        {lineage.variants.length > 0 && (
+          <ul class="chain-variants">
+            {lineage.variants.map((v) => (
+              <li>
+                <span class="chain-label">{v.kind === 'motorized' ? S.variantMotorized : S.variantStatic}</span>
+                <a class="chain-name" href={modelHref(v.model)}>{v.model.name}</a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    )}
     <div class="rel-grid">
       {related.length > 0 && (
         <div class="rel-col">
@@ -148,6 +196,40 @@ const pairedTitle = PAIRED_TITLE[me?.kind];
      NOT equal-width cards: lineage is a short list and the paired block carries
      a sentence under it, so a grid that lets the second column breathe reads
      better than two boxes of forced equal height. */
+  /* THE LINEAGE CHAIN. A horizontal daisy chain on desktop, a vertical one on a
+     phone, because three cells side by side at 390px would either wrap badly or
+     shrink the model names below reading size. The arrows are CSS ::after on the
+     gaps rather than characters in the markup, so a screen reader hears an
+     ordered list of labelled steps and not a row of punctuation. */
+  .rel-chain { margin-bottom: 1.5rem; }
+  .chain {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.5rem 1.6rem;
+  }
+  .chain-step { position: relative; display: flex; flex-direction: column; gap: 0.15rem; }
+  .chain-step + .chain-step::before {
+    content: ''; position: absolute; left: -1.05rem; top: 50%;
+    width: 0.5rem; height: 0.5rem; margin-top: -0.28rem;
+    border-top: 1px solid var(--edge-strong); border-right: 1px solid var(--edge-strong);
+    transform: rotate(45deg);
+  }
+  .chain-label {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-dim);
+  }
+  .chain-name { font-size: 0.95rem; font-weight: 600; }
+  .chain-here .chain-name { color: var(--text-dim); font-weight: 500; }
+  .chain-variants {
+    list-style: none; margin: 0.9rem 0 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.6rem;
+  }
+  .chain-variants li { display: flex; flex-direction: column; gap: 0.15rem; }
+  @media (max-width: 560px) {
+    .chain { flex-direction: column; gap: 0.7rem; }
+    .chain-step + .chain-step::before {
+      left: 0; top: -0.5rem; margin-top: 0; transform: rotate(135deg);
+    }
+  }
   .rel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .rel-h {
     font-size: 0.95rem;

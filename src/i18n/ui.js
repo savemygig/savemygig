@@ -54,6 +54,25 @@ export const UI = {
      */
     modelStatus: { reviewed: 'Reviewed', launched: 'Launched' },
     related: {
+      /*
+       * THE LINEAGE CHAIN LABELS (2026-08-08). Antonio asked every equipment
+       * page to sit inside a visible product history rather than being an
+       * isolated endpoint. These name the two ends of that chain.
+       *
+       * They say EARLIER and LATER, not "replaced by" or "successor to",
+       * because release order is documented on every pair in the graph and a
+       * replacement claim is not. The DJM-900NXS record in facts.js notes that
+       * AlphaTheta never called the NXS2 its replacement, so a "Replaced by"
+       * label there would be this site putting words in a manufacturer's mouth.
+       */
+      lineage: 'Where this sits in the line',
+      earlierGeneration: 'Earlier generation',
+      laterGeneration: 'Later generation',
+      thisModel: 'You are here',
+      // A variant ships alongside its twin rather than after it, so it gets its
+      // own label and never appears on the generational chain.
+      variantMotorized: 'Motorised version',
+      variantStatic: 'Static-platter version',
       players: 'Related players',
       // TURNTABLES, THE THIRD KIND (2026-08-08). The component used to pick
       // between `players` and `mixers` with a boolean, so a Technics page would
@@ -403,6 +422,12 @@ export const UI = {
     },
     modelStatus: { reviewed: 'Revisado', launched: 'Lançado em' },
     related: {
+      lineage: 'Onde este fica na linha',
+      earlierGeneration: 'Geração anterior',
+      laterGeneration: 'Geração posterior',
+      thisModel: 'Você está aqui',
+      variantMotorized: 'Versão motorizada',
+      variantStatic: 'Versão de prato estático',
       players: 'Players relacionados',
       turntables: 'Toca-discos relacionados',
       allInOnes: 'Sistemas all-in-one relacionados',
@@ -653,6 +678,12 @@ export const UI = {
     },
     modelStatus: { reviewed: 'Revisado', launched: 'Lanzado en' },
     related: {
+      lineage: 'Dónde queda dentro de la línea',
+      earlierGeneration: 'Generación anterior',
+      laterGeneration: 'Generación posterior',
+      thisModel: 'Estás aquí',
+      variantMotorized: 'Versión motorizada',
+      variantStatic: 'Versión de plato estático',
       players: 'Reproductores relacionados',
       turntables: 'Tornamesas relacionadas',
       allInOnes: 'Sistemas all-in-one relacionados',

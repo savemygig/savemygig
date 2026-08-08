@@ -33,6 +33,15 @@
  *
  *   4. NO SELF EDGES. A model cannot be its own predecessor or successor.
  *
+ *   5. VARIANTS ARE SYMMETRIC. A motorised deck and its static-platter twin
+ *      ship together and neither succeeds the other, so a variant pair reads
+ *      the same from both sides or it is not a pair.
+ *
+ *   6. NO MODEL APPEARS TWICE ON ONE PAGE. Added after the rendered SL-1200MK2
+ *      page showed the MK7 in the chain AND in its siblings, two rows apart,
+ *      one labelled and one not. Seven pages had it. The code read fine; the
+ *      page did not, which is the whole argument for looking at the artifact.
+ *
  *   SIBLINGS AND PAIRED ARE NOT ASSERTED SYMMETRIC, ON PURPOSE. They are
  *   curated per page and asymmetry there is editorial judgement, not rot: the
  *   Xone:92 naming the DJM-900NXS2 as a comparable desk does not oblige the
@@ -46,7 +55,7 @@
  * gate and not in the build, per the standing build-parity doctrine.
  */
 
-import { EQUIPMENT, relatedModels } from '../src/data/facts.js';
+import { EQUIPMENT, lineageOf, siblingModels } from '../src/data/facts.js';
 
 const bySlug = new Map(EQUIPMENT.map((e) => [e.slug, e]));
 const errors = [];
@@ -82,7 +91,36 @@ for (const e of EQUIPMENT) {
     }
   }
 
-  const onward = relatedModels(e.slug) || [];
+  /*
+   * VARIANTS ARE SYMMETRIC TOO, and for a different reason than lineage. A
+   * motorised deck and its static-platter twin ship together and neither
+   * succeeds the other, so the pair reads identically from both sides or it is
+   * not a pair. This is the field the SC6000 and SC6000M will use.
+   */
+  for (const v of e.variants ?? []) {
+    const other = bySlug.get(v.of);
+    if (!other) {
+      errors.push(`${e.slug}.variants names "${v.of}", which has no EQUIPMENT entry.`);
+      continue;
+    }
+    if (!(other.variants ?? []).some((b) => b.of === e.slug)) {
+      errors.push(
+        `${e.slug} declares "${v.of}" as a variant, but ${other.slug} does not name it back.\n`
+        + '        A variant pair ships together and neither one succeeds the other, so\n'
+        + '        the relationship reads the same from both sides or it is not one.',
+      );
+    }
+  }
+
+  /*
+   * ISOLATION IS MEASURED AGAINST BOTH BLOCKS, not the merged list this
+   * originally read. The chain and the siblings render separately now, so a
+   * page is a dead end only when BOTH are empty. Reading just one of them would
+   * pass a page that shows a heading with nothing under it.
+   */
+  const chain = lineageOf(e.slug);
+  const onward = [chain.older, chain.newer, ...chain.variants.map((v) => v.model), ...siblingModels(e.slug)]
+    .filter(Boolean);
   if (onward.length === 0) {
     errors.push(
       `${e.slug} is an isolated endpoint: no related model to continue to.\n`
@@ -90,6 +128,31 @@ for (const e of EQUIPMENT) {
       + '        tier. An older model is not a dead end, it is what a DJ meets\n'
       + '        in an unfamiliar booth.',
     );
+  }
+
+  /*
+   * NO MODEL TWICE ON ONE PAGE. The SL-1200MK2 listed the MK7 as a sibling and
+   * also carried it as `newer`, so the block rendered SL-1200MK7 twice, two
+   * rows apart, one labelled "Later generation" and one not. Found by looking
+   * at the rendered page, which is why this assertion exists: the code read
+   * perfectly well, and the page did not.
+   */
+  const seen = new Map();
+  for (const [where, models] of [
+    ['chain', [chain.older, chain.newer, ...chain.variants.map((v) => v.model)].filter(Boolean)],
+    ['siblings', siblingModels(e.slug)],
+  ]) {
+    for (const m of models) {
+      if (seen.has(m.slug)) {
+        errors.push(
+          `${e.slug} links ${m.slug} twice, in ${seen.get(m.slug)} and in ${where}.\n`
+          + '        One model, one row. The chain is the labelled statement and\n'
+          + '        wins; drop the duplicate from the weaker block.',
+        );
+      } else {
+        seen.set(m.slug, where);
+      }
+    }
   }
 }
 

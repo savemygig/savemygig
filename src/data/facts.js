@@ -2086,6 +2086,83 @@ export function equipmentFor(slug) {
   return BY_SLUG.get(slug) ?? null;
 }
 
+/*
+ * THE LINEAGE CHAIN. Antonio, 2026-08-08:
+ *
+ *   "A product page should never become an isolated endpoint... This should
+ *    create a natural DAISY CHAIN through product history: Previous model,
+ *    Current model, Successor... The objective is to help a DJ understand
+ *    where does this equipment fit in the history of the booth."
+ *
+ * `relatedModels` already walked newer and older, but it flattened them into
+ * one undifferentiated list under a heading that said only "Related mixers".
+ * A reader could not tell which of the two links was the ancestor and which was
+ * the descendant, which is exactly the question this is meant to answer. So the
+ * chain is now returned SEPARATELY from the siblings, with its direction
+ * intact, and the component labels each end.
+ *
+ * WHY THE LABELS ARE "EARLIER" AND "LATER" AND NOT "REPLACED BY".
+ * Antonio's list of useful relationships includes "Replaced by" and "Successor
+ * to", and both are stronger claims than this graph can support for every pair.
+ * The DJM-900NXS entry in this file already records that AlphaTheta never
+ * called the DJM-900NXS2 its replacement. Printing "Replaced by" over that pair
+ * would be the site inventing a manufacturer's position, which is the one thing
+ * it does not do. Release order IS documented, on every pair, so the labels say
+ * what is documented and nothing more. A stronger label needs a stronger field.
+ *
+ * VARIANTS ARE A DIFFERENT AXIS AND MUST NOT BE FLATTENED INTO THIS ONE.
+ * A motorised deck and its static-platter twin ship at the same time and
+ * neither succeeds the other. Putting that pair on the generational chain would
+ * publish a false claim about release order. `variants` is its own field, with
+ * its own label, for exactly the case Antonio named: "Motorized version".
+ */
+export function lineageOf(slug) {
+  const e = BY_SLUG.get(slug);
+  if (!e) return { older: null, newer: null, variants: [] };
+  const get = (s) => (s ? BY_SLUG.get(s) ?? null : null);
+  return {
+    older: get(e.older),
+    newer: get(e.newer),
+    variants: (e.variants ?? [])
+      .map((v) => ({ model: get(v.of), kind: v.kind }))
+      .filter((v) => v.model),
+  };
+}
+
+/*
+ * Siblings only: same category, comparable tier, different line. These are what
+ * is left after the chain is pulled out, and they are a WEAKER relationship, so
+ * they keep the plain "Related mixers" heading rather than borrowing a
+ * lineage label they have not earned.
+ */
+export function siblingModels(slug, limit = 2) {
+  const e = BY_SLUG.get(slug);
+  if (!e) return [];
+  /*
+   * ANYTHING ALREADY ON THE CHAIN IS EXCLUDED, and this was caught by looking
+   * at the rendered page rather than by reading the code. The SL-1200MK2 lists
+   * the MK7 as a sibling AND has it as its `newer`, so the first version of
+   * this block printed SL-1200MK7 twice: once labelled "Later generation" and
+   * once under "Related turntables", two rows apart. Two links to one page,
+   * one of them unlabelled, on a block whose whole job is telling a DJ where
+   * things sit relative to each other.
+   *
+   * The chain is the stronger, labelled statement, so it wins and the sibling
+   * copy is dropped. check-lineage asserts no model can appear twice.
+   */
+  const onChain = new Set(
+    [e.newer, e.older, ...(e.variants ?? []).map((v) => v.of)].filter(Boolean),
+  );
+  const out = [];
+  for (const s of e.siblings ?? []) {
+    if (out.length >= limit) break;
+    if (onChain.has(s)) continue;
+    const m = BY_SLUG.get(s);
+    if (m && m.slug !== slug && !out.some((x) => x.slug === m.slug)) out.push(m);
+  }
+  return out;
+}
+
 // Lineage, nearest first, unknown slugs dropped so a broken link cannot ship.
 export function relatedModels(slug, limit = 2) {
   const e = BY_SLUG.get(slug);
