@@ -57,7 +57,7 @@ export const RUNLIST = [
     detail:
       'If the booth is linked over PRO DJ LINK, any player can browse and load ' +
       'from a drive that is physically in another one. Your own drive being dead ' +
-      'does not matter. In a club with a proper Pioneer setup this is often the ' +
+      'does not matter. In a club where the players are linked this is often the ' +
       'fastest fix available, and it is the one people forget when the room is ' +
       'looking at them.',
   },

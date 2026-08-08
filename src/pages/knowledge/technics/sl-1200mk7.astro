@@ -11,10 +11,9 @@ import { SL_1200MK7, SL_1200MK2 } from '../../../data/facts.js';
 // one family. Facts come from SL_1200MK7 in src/data/facts.js and from nowhere
 // else.
 //
-// WHY THE FAULT DOMAIN IS COMPLETELY DIFFERENT, and why that had to be built
-// rather than adapted. Every other hardware page here answers versions of one
-// question: the deck cannot read the drive, or the library is wrong, or the
-// firmware is old. None of that exists on a turntable. What exists instead:
+// WHAT ACTUALLY GOES WRONG ON THIS DECK, which is what the page is organised
+// around. Nothing here is derived from any other page's structure: the sections
+// exist because these are the faults, in roughly the order they end a night.
 //
 //   MAINS HUM       an earth lead that is missing or loose. Panasonic say this
 //                   themselves, in the manual, in one sentence.
@@ -118,15 +117,15 @@ const schema = {
     <div class="panel panel-go">
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
-        <strong>Booth briefing.</strong> A {SL_1200MK7.type.toLowerCase()} with no
-        firmware, no storage and nothing to format, so the whole checklist is
-        different. Hum is the earth lead, and Panasonic say so themselves. A dead
-        channel is a headshell wire, a cartridge or the phono lead, none of which
-        are on the top panel. Skipping is the floor, not the deck. Pitch runs
-        {SL_1200MK7.pitchRange}, and there is a reset button beside the fader that
-        the MK2 never had. Before you touch it: check the rear switches, because
-        torque, brake and reverse all live back there and the last DJ may have
-        moved them.
+        <strong>Booth briefing.</strong> A {SL_1200MK7.type.toLowerCase()} where
+        everything that fails is physical. Hum is the earth lead, and Panasonic say
+        so themselves in one sentence. A dead channel is a headshell wire, the
+        cartridge or the phono lead, none of which are anywhere on the top panel.
+        A needle that jumps on the loud parts is the floor, not the deck. Pitch
+        runs {SL_1200MK7.pitchRange} with a reset button beside the fader. Before
+        you touch it: look at the rear panel, because torque, brake and reverse are
+        all switches back there and nothing on top tells you where they are
+        set.
       </p>
       <label for="sv-toggle" class="sv-more">Read more…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Read less</label>
@@ -301,27 +300,30 @@ const schema = {
       </div>
     </details>
 
-    <details class="acc-sec" name="mk7-acc" id="no-firmware"><summary><h3 class="acc-h2">There is no firmware, no storage and nothing to update</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+    <details class="acc-sec" name="mk7-acc" id="pre-gig"><summary><h3 class="acc-h2">The pre-gig check on this deck, and all of it is physical</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Short answer.</strong> Correct, and it is worth stating rather
-        than leaving as an absence. This deck has no firmware to be on an old
-        version of, no USB port, no file system, no library and no export. Every
-        question this site asks a CDJ owner before a gig has no meaning here.</p>
-        <p><strong>Why this matters.</strong> It cuts both ways. Nothing on this
-        deck can be bricked by a bad update, nothing rejects a drive it does not
-        like, and a deck from the first production run behaves exactly like one
-        bought today. Against that, nothing can be fixed in software either. A
-        mechanical fault is a mechanical repair, and the parts that wear are
-        parts you replace: a stylus, a cartridge, a lead.</p>
-        <p><strong>What to check instead.</strong> The three things that actually
-        determine whether the deck works tonight are the earth lead, the headshell
-        and the arm setup. That is the pre-gig checklist for a turntable, and it
-        is shorter than the digital one but it is not optional.</p>
-        <p><strong>What this site will not tell you.</strong> There is no firmware
-        matrix for this deck and there never will be, because there is no
-        firmware. Any page or forum post offering an SL-1200MK7 firmware version
-        is describing something that does not exist.</p>
-        <p class="acc-related">Related: <a href="#specs">What Panasonic publishes, and what they do not</a> <a href="/knowledge/pioneer-dj/firmware">Every AlphaTheta model, by firmware version</a></p>
+        <p><strong>Short answer.</strong> Five things, in this order, and none of
+        them take more than a minute. Earth lead attached and screwed down. Phono
+        lead fully seated at the back. Headshell tight in the collar and the wires
+        on their pins. Counterweight and anti-skating where you left them. Deck
+        level and sitting on something that is not shaking.</p>
+        <p><strong>Why that order.</strong> It runs from the fault that ruins the
+        whole night to the fault that ruins one record. A missing earth hums
+        through everything you play and cannot be turned down. A half seated phono
+        lead loses a channel. A loose headshell mistracks and can take the stylus
+        with it. Counterweight and anti-skating drift in transport, and an unlevel
+        deck on a resonant surface skips on the loud parts and nowhere else.</p>
+        <p><strong>The rear panel goes on the list too.</strong> Starting torque,
+        brake strength and reverse are all rear switches on this model with no
+        indication on the top surface, so a deck that starts, stops or runs
+        backwards differently from what your hands expect is a switch somebody
+        else moved. Check them when you arrive rather than during the first
+        mix.</p>
+        <p><strong>What to carry.</strong> A spare headshell, already wired and
+        already balanced, and a spare phono lead. Between them they cover the two
+        faults most likely to silence a channel, and on this deck both are a
+        plug-in swap rather than a repair.</p>
+        <p class="acc-related">Related: <a href="#hum">There is a hum in the system</a> <a href="#tonearm">Setting the arm up so it tracks</a> <a href="#rear-switches">The rear panel switches</a></p>
       </div>
     </details>
 

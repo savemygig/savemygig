@@ -63,7 +63,7 @@ export const RUNLIST = [
     detail:
       'Se a booth está em rede pelo PRO DJ LINK, qualquer player pode navegar ' +
       'e carregar de um drive que está fisicamente em outro. O seu drive morto ' +
-      'deixa de importar. Numa booth Pioneer DJ montada direito, costuma ser a ' +
+      'deixa de importar. Numa booth com os players ligados em rede, costuma ser a ' +
       'solução mais rápida que existe, e é a que se esquece quando a pista ' +
       'inteira está olhando.',
   },

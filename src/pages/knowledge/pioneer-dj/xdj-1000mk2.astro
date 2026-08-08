@@ -122,10 +122,9 @@ const schema = {
     <div class="panel panel-go">
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
-        <strong>Booth briefing. This player reads more than this site used to
-        say.</strong> Its file systems are <strong>{FS}</strong>, published in
-        the specification table of its own manual, so an HFS+ drive from a Mac
-        works here. There is still <strong>no exFAT</strong> and NTFS is never
+        <strong>Booth briefing.</strong> Its file systems are
+        <strong>{FS}</strong>, published in the specification table of its own
+        manual, so an HFS+ drive from a Mac works here. There is still <strong>no exFAT</strong> and NTFS is never
         supported. Three more things: firmware
         {XDJ_1000MK2.controlModeDropoutFix} fixed
         <strong>audio dropouts in Control Mode</strong> and track load times
@@ -167,7 +166,7 @@ const schema = {
         <strong>firmware update</strong> specifically needs FAT or FAT32, not
         HFS+. AlphaTheta also notes that drives built around flash card readers
         may not operate at all.</p>
-        <p class="acc-related">Related: <a href="#correction">A correction on record</a> <a href="/fix/exfat-vs-fat32-cdj">exFAT or FAT32</a> <a href="/fix/format-usb-for-cdj">How to format a drive</a> <a href="/fix/usb-not-recognized-cdj">USB not recognized</a></p>
+        <p class="acc-related">Related: <a href="#filesystems-doc">Where the file systems are documented</a> <a href="/fix/exfat-vs-fat32-cdj">exFAT or FAT32</a> <a href="/fix/format-usb-for-cdj">How to format a drive</a> <a href="/fix/usb-not-recognized-cdj">USB not recognized</a></p>
       </div>
     </details>
 
@@ -314,36 +313,29 @@ const schema = {
 
     <AccGroup icon="warn" title="Known issues" />
 
-    <details class="acc-sec" name="xdj1000mk2-acc" id="correction">
-      <summary><h3 class="acc-h2">A correction on record: the file systems were published all along</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+        <details class="acc-sec" name="xdj1000mk2-acc" id="filesystems-doc">
+      <summary><h3 class="acc-h2">The file systems live in the manual, not in a support article</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Short answer.</strong> This site's player compatibility table
-        left this model out on purpose, and published the reason: there was no
-        official AlphaTheta filesystem article for it, and we would not guess.
-        The narrow claim was true, there is no support centre article. The
-        useful claim was wrong. The formats are published, as a specification
-        table row in the Operating Instructions and again in the Quick Start
-        Guide, in AlphaTheta's own words, "supported file systems FAT16, FAT32
-        and HFS+ (NTFS is not supported.)"</p>
-        <p><strong>What that cost a reader.</strong> A Mac DJ with a working
-        HFS+ drive was told by this site to treat the player as FAT32 only, and
-        anyone who wanted certainty was sent to ask AlphaTheta a question
-        AlphaTheta had already answered in the box the player shipped in. The
-        player reads {FS}. It is now in the table where it belongs.</p>
-        <p><strong>Why the correction is on the page and not only in a commit
-        message.</strong> This is the third instance of the same error in a
-        single day on this site, after refusing to answer whether the euphonia
-        supports PRO DJ LINK when the compatibility table said so plainly, and
-        after "FAT32 only" shipped on six models that all read HFS+ as well.
-        The pattern is one habit, not three mistakes: treating the support
-        centre as the only place a fact can live. Publishing "we do not know" is
-        honest only after looking properly. A manual counts. A specification
-        table counts. A quick start guide counts.</p>
-        <p><strong>What stays uncorrected, deliberately.</strong> The XDJ-RX2 is
-        still off that table, because that one really is undocumented as far as
-        we have looked, and the caveat now says so about that model alone. If
-        you find the row we have missed, tell us and we will publish it.</p>
-        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/rekordbox#which-player">Player compatibility table</a> <a href="/knowledge/pioneer-dj/euphonia">The euphonia correction</a> <a href="/feedback">Tell us what we have wrong</a></p>
+        <p><strong>Short answer.</strong> AlphaTheta publish no support centre
+        article on this player's file systems, and people searching for one
+        conclude the answer is undocumented. It is documented. It is a
+        specification table row in the Operating Instructions and again in the
+        Quick Start Guide, in AlphaTheta's own words: supported file systems
+        FAT16, FAT32 and HFS+ (NTFS is not supported.)</p>
+        <p><strong>What that means in practice.</strong> The player reads {FS}.
+        A working HFS+ drive from a Mac plays here, and treating this unit as
+        FAT32 only leaves a working option on the table. There is still no
+        exFAT on this model, and NTFS is never supported.</p>
+        <p><strong>Where to look when a support article does not exist.</strong>
+        The support centre is not the only place AlphaTheta document a fact. The
+        manual counts, a specification table counts, a quick start guide counts,
+        and for this player the specification table is the primary source this
+        page cites.</p>
+        <p><strong>The one nearby model that really is undocumented.</strong>
+        The XDJ-RX2 has no published file system row that we have found
+        anywhere, and the player compatibility table says so about that model
+        alone. If you find the document, tell us and we will publish it.</p>
+        <p class="acc-related">Related: <a href="/knowledge/pioneer-dj/rekordbox#which-player">Player compatibility table</a> <a href="/feedback">Tell us what we have wrong</a></p>
       </div>
     </details>
 
@@ -406,7 +398,7 @@ const schema = {
         touch screen has modern storage support. It does not. Assuming HFS+ is
         also fine for a firmware update: that step specifically wants FAT or
         FAT32.</p>
-        <p class="acc-related">Related: <a href="#correction">A correction on record</a> <a href="/knowledge/pioneer-dj/rekordbox#which-player">Player compatibility table</a> <a href="/fix/exfat-vs-fat32-cdj">exFAT or FAT32</a></p>
+        <p class="acc-related">Related: <a href="#filesystems-doc">Where the file systems are documented</a> <a href="/knowledge/pioneer-dj/rekordbox#which-player">Player compatibility table</a> <a href="/fix/exfat-vs-fat32-cdj">exFAT or FAT32</a></p>
       </div>
     </details>
 

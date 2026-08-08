@@ -88,15 +88,16 @@ const schema = {
     <div class="panel panel-go">
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
-        <strong>Briefing de booth.</strong> Um toca-discos sem firmware, sem
-        armazenamento e sem nada para formatar, então o checklist é outro. Na
-        ficha da Panasonic ele é {SL_1200MK7.type.toLowerCase()}. Zumbido é o
-        cabo de terra, e a Panasonic diz isso com essas palavras. Canal mudo é
-        fio de headshell, cápsula ou cabo phono, e nada disso fica no painel de
-        cima. Agulha pulando é o piso, não o toca-discos. O pitch roda
-        {' '}{SL_1200MK7.pitchRange}, e tem um botão de reset do lado do fader
-        que o MK2 nunca teve. Antes de tocar: confira as chaves de trás, porque
-        torque, freio e reverse ficam lá e o DJ anterior pode ter mexido.
+        <strong>Briefing de booth.</strong> Na ficha da Panasonic ele é
+        {SL_1200MK7.type.toLowerCase()}, e nele tudo que falha é físico. Zumbido
+        é o cabo de terra, e a Panasonic diz isso com essas palavras, em uma
+        frase. Canal mudo é fio de headshell, cápsula ou cabo phono, e nada
+        disso fica em lugar nenhum do painel de cima. Agulha que pula nas partes
+        altas é o piso, não o toca-discos. O pitch roda
+        {' '}{SL_1200MK7.pitchRange} com um botão de reset do lado do fader.
+        Antes de tocar: olhe o painel de trás, porque torque, freio e reverse
+        são todos chaves lá atrás e nada em cima te diz em que posição elas
+        estão.
       </p>
       <label for="sv-toggle" class="sv-more">Ler mais…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Ler menos</label>
@@ -276,28 +277,31 @@ const schema = {
       </div>
     </details>
 
-    <details class="acc-sec" name="mk7-acc" id="no-firmware"><summary><h3 class="acc-h2">Não existe firmware, não existe armazenamento e não tem nada para atualizar</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+    <details class="acc-sec" name="mk7-acc" id="pre-gig"><summary><h3 class="acc-h2">O check de pré-gig neste toca-discos, e ele é todo físico</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Resposta curta.</strong> Correto, e vale dizer em voz alta em
-        vez de deixar como ausência. Este toca-discos não tem firmware para
-        estar numa versão velha, não tem porta USB, não tem sistema de arquivos,
-        não tem biblioteca e não tem exportação. Toda pergunta que este site faz
-        a um dono de CDJ antes de um gig não tem sentido aqui.</p>
-        <p><strong>Por que isso importa.</strong> Corta para os dois lados. Nada
-        neste aparelho pode ser brickado por uma atualização ruim, nada rejeita
-        um drive que não gostou, e um aparelho da primeira leva de produção se
-        comporta igual a um comprado hoje. Em troca, nada pode ser corrigido por
-        software também. Falha mecânica é reparo mecânico, e as peças que gastam
-        são peças que você troca: uma agulha, uma cápsula, um cabo.</p>
-        <p><strong>O que conferir no lugar.</strong> As três coisas que
-        realmente decidem se o aparelho funciona hoje são o cabo de terra, o
-        headshell e o ajuste do braço. Esse é o checklist de pré-gig de um
-        toca-discos, e ele é mais curto que o digital, mas não é opcional.</p>
-        <p><strong>O que este site não vai te dizer.</strong> Não existe matriz
-        de firmware para este toca-discos e nunca vai existir, porque não existe
-        firmware. Qualquer página ou post de fórum oferecendo uma versão de
-        firmware de SL-1200MK7 está descrevendo algo que não existe.</p>
-        <p class="acc-related">Relacionados: <a href="#specs">O que a Panasonic publica, e o que não publica</a> <a href="/pt/knowledge/pioneer-dj/firmware">Todo modelo AlphaTheta, por versão de firmware</a></p>
+        <p><strong>Resposta curta.</strong> Cinco coisas, nesta ordem, e nenhuma
+        delas leva mais de um minuto. Cabo de terra ligado e aparafusado. Cabo
+        phono encaixado até o fim lá atrás. Headshell firme na trava e os fios
+        nos pinos. Contrapeso e anti-skating onde você deixou. Toca-discos
+        nivelado e apoiado em algo que não está tremendo.</p>
+        <p><strong>Por que nesta ordem.</strong> Ela vai da falha que estraga a
+        noite inteira até a falha que estraga um disco só. Um terra ausente
+        zumbe em tudo que você toca e não tem como abaixar. Um cabo phono
+        encaixado pela metade perde um canal. Um headshell solto rastreia errado
+        e pode levar a agulha junto. Contrapeso e anti-skating saem de lugar no
+        transporte, e um toca-discos desnivelado sobre uma superfície que ressoa
+        pula nas partes altas e em nenhuma outra.</p>
+        <p><strong>O painel de trás também entra na lista.</strong> Torque de
+        partida, força do freio e reverse são todos chaves de trás neste modelo,
+        sem nenhuma indicação na superfície de cima, então um toca-discos que
+        parte, para ou anda ao contrário diferente do que suas mãos esperam é
+        uma chave que outra pessoa mexeu. Confira elas na chegada, não durante a
+        primeira mixagem.</p>
+        <p><strong>O que levar na mala.</strong> Um headshell de reserva, já com
+        os fios ligados e já balanceado, e um cabo phono de reserva. Entre os
+        dois eles cobrem as duas falhas com mais chance de deixar um canal mudo,
+        e neste toca-discos os dois são troca de encaixe e não reparo.</p>
+        <p class="acc-related">Relacionados: <a href="#hum">Tem um zumbido no sistema</a> <a href="#tonearm">Ajustando o braço para ele rastrear</a> <a href="#rear-switches">As chaves do painel de trás</a></p>
       </div>
     </details>
 

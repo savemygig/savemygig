@@ -89,10 +89,9 @@ const schema = {
     <div class="panel panel-go">
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
-        <strong>Briefing de booth. Este reproductor lee más de lo que este sitio
-        decía.</strong> Sus sistemas de archivos son <strong>{FS}</strong>,
-        publicados en la tabla de especificaciones de su propio manual, así que
-        una memoria HFS+ traída de una Mac funciona aquí. Sigue
+        <strong>Briefing de booth.</strong> Sus sistemas de archivos son
+        <strong>{FS}</strong>, publicados en la tabla de especificaciones de su
+        propio manual, así que una memoria HFS+ traída de una Mac funciona aquí. Sigue
         <strong>sin exFAT</strong> y NTFS nunca es compatible. Tres cosas más: el
         firmware {XDJ_1000MK2.controlModeDropoutFix} corrigió
         <strong>cortes de audio en Control Mode</strong> y el tiempo de carga de
@@ -137,7 +136,7 @@ const schema = {
         <strong>actualización de firmware</strong> necesita específicamente FAT o
         FAT32, no HFS+. AlphaTheta también avisa que las memorias armadas sobre
         lectores de tarjetas pueden simplemente no funcionar.</p>
-        <p class="acc-related">Relacionados: <a href="#correction">Una corrección registrada</a> <a href="/es/fix/exfat-vs-fat32-cdj">exFAT o FAT32</a> <a href="/es/fix/format-usb-for-cdj">Cómo formatear una memoria</a> <a href="/es/fix/usb-not-recognized-cdj">USB no reconocido</a></p>
+        <p class="acc-related">Relacionados: <a href="#filesystems-doc">Dónde están documentados los sistemas de archivos</a> <a href="/es/fix/exfat-vs-fat32-cdj">exFAT o FAT32</a> <a href="/es/fix/format-usb-for-cdj">Cómo formatear una memoria</a> <a href="/es/fix/usb-not-recognized-cdj">USB no reconocido</a></p>
       </div>
     </details>
 
@@ -287,40 +286,31 @@ const schema = {
 
     <AccGroup icon="warn" title="Problemas conocidos" />
 
-    <details class="acc-sec" name="xdj1000mk2-acc" id="correction">
-      <summary><h3 class="acc-h2">Una corrección registrada: los sistemas de archivos estuvieron publicados todo este tiempo</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+        <details class="acc-sec" name="xdj1000mk2-acc" id="filesystems-doc">
+      <summary><h3 class="acc-h2">Los sistemas de archivos están en el manual, no en un artículo de soporte</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Respuesta corta.</strong> La tabla de compatibilidad de
-        reproductores de este sitio dejó fuera este modelo a propósito, y publicó
-        la razón: no había artículo oficial de AlphaTheta sobre sistemas de
-        archivos para él, y no íbamos a adivinar. La afirmación estrecha era
-        cierta, no hay artículo en el centro de soporte. La afirmación útil
-        estaba equivocada. Los formatos están publicados, como una fila de la
-        tabla de especificaciones en el manual de instrucciones y otra vez en la
-        guía de inicio rápido, en las palabras de AlphaTheta, "sistemas de
-        archivos compatibles FAT16, FAT32 y HFS+ (NTFS no es compatible.)"</p>
-        <p><strong>Lo que eso le costó a quien leyó.</strong> A un DJ de Mac con
-        una memoria HFS+ que funcionaba, este sitio le dijo que tratara el
-        reproductor como FAT32 y nada más, y a quien quería certeza lo mandamos a
-        preguntarle a AlphaTheta algo que AlphaTheta ya había respondido en la
-        caja en la que vino el reproductor. El reproductor lee {FS}. Ya está en la
-        tabla, donde corresponde.</p>
-        <p><strong>Por qué la corrección está en la página y no solo en un
-        mensaje de commit.</strong> Esta es la tercera vez que el mismo error pasa
-        en un solo día en este sitio, después de negarnos a responder si el
-        euphonia es compatible con PRO DJ LINK cuando la tabla de compatibilidad
-        lo decía con toda claridad, y después de que "solo FAT32" salió publicado
-        en seis modelos que también leen HFS+. El patrón es un hábito, no tres
-        errores: tratar al centro de soporte como el único lugar donde puede vivir
-        un dato. Publicar "no sabemos" es honesto solo después de haber buscado
-        bien. Un manual cuenta. Una tabla de especificaciones cuenta. Una guía de
-        inicio rápido cuenta.</p>
-        <p><strong>Lo que queda sin corregir, a propósito.</strong> El XDJ-RX2
-        sigue fuera de esa tabla, porque ese de verdad no está documentado hasta
-        donde buscamos, y la advertencia ahora lo dice sobre ese modelo
-        únicamente. Si encuentras la fila que se nos pasó, dinos y la
-        publicamos.</p>
-        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla de compatibilidad de reproductores</a> <a href="/es/knowledge/pioneer-dj/euphonia">La corrección del euphonia</a> <a href="/es/feedback">Dinos qué tenemos mal</a></p>
+        <p><strong>Respuesta corta.</strong> AlphaTheta no publica ningún
+        artículo en el centro de soporte sobre los sistemas de archivos de este
+        reproductor, y quien busca uno concluye que la respuesta no está
+        documentada. Está documentada. Es una fila de la tabla de
+        especificaciones en las Instrucciones de Operación y otra vez en la Guía
+        de Inicio Rápido, en palabras de la propia AlphaTheta: sistemas de
+        archivos soportados FAT16, FAT32 y HFS+ (NTFS no es compatible.)</p>
+        <p><strong>Qué significa en la práctica.</strong> El reproductor lee
+        {FS}. Una memoria HFS+ que funciona en Mac se reproduce aquí, y tratar
+        este equipo como si fuera solo FAT32 deja fuera una opción que funciona.
+        Sigue sin exFAT en este modelo, y NTFS nunca es compatible.</p>
+        <p><strong>Dónde buscar cuando no existe un artículo de soporte.</strong>
+        El centro de soporte no es el único lugar donde AlphaTheta documenta un
+        hecho. El manual cuenta, una tabla de especificaciones cuenta, una guía
+        de inicio rápido cuenta, y para este reproductor la tabla de
+        especificaciones es la fuente primaria que cita esta página.</p>
+        <p><strong>El modelo cercano que realmente no está documentado.</strong>
+        El XDJ-RX2 no tiene ninguna fila de sistema de archivos publicada que
+        hayamos encontrado en ningún lado, y la tabla de compatibilidad de
+        reproductores lo dice sobre ese modelo en particular. Si encuentras el
+        documento, avísanos y lo publicamos.</p>
+        <p class="acc-related">Relacionados: <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla de compatibilidad de reproductores</a> <a href="/es/feedback">Dinos qué tenemos mal</a></p>
       </div>
     </details>
 
@@ -385,7 +375,7 @@ const schema = {
         pantalla táctil de 7 pulgadas tiene soporte moderno de almacenamiento. No
         lo tiene. Suponer que HFS+ también sirve para actualizar el firmware: ese
         paso pide específicamente FAT o FAT32.</p>
-        <p class="acc-related">Relacionados: <a href="#correction">Una corrección registrada</a> <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla de compatibilidad de reproductores</a> <a href="/es/fix/exfat-vs-fat32-cdj">exFAT o FAT32</a></p>
+        <p class="acc-related">Relacionados: <a href="#filesystems-doc">Dónde están documentados los sistemas de archivos</a> <a href="/es/knowledge/pioneer-dj/rekordbox#which-player">Tabla de compatibilidad de reproductores</a> <a href="/es/fix/exfat-vs-fat32-cdj">exFAT o FAT32</a></p>
       </div>
     </details>
 

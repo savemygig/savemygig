@@ -88,16 +88,16 @@ const schema = {
     <div class="panel panel-go">
       <input type="checkbox" id="sv-toggle" class="sv-toggle sr-only" />
       <p class="sv-text" style="margin:0">
-        <strong>Briefing de booth.</strong> Una tornamesa sin firmware, sin
-        almacenamiento y sin nada que formatear, así que el checklist es otro. En
-        la ficha de Panasonic es {SL_1200MK7.type.toLowerCase()}. El zumbido es
-        el cable de tierra, y Panasonic lo dice con esas palabras. Un canal mudo
-        es un cable del headshell, la cápsula o el cable phono, y nada de eso
-        está en el panel de arriba. La aguja que salta es el piso, no la
-        tornamesa. El pitch corre {SL_1200MK7.pitchRange}, y hay un botón de
-        reset al lado del fader que el MK2 nunca tuvo. Antes de tocarla: revisa
-        los switches de atrás, porque torque, freno y reverse viven ahí y el DJ
-        anterior pudo haberlos movido.
+        <strong>Briefing de booth.</strong> En la ficha de Panasonic es
+        {SL_1200MK7.type.toLowerCase()}, y aquí todo lo que falla es físico. El
+        zumbido es el cable de tierra, y Panasonic lo dice con esas palabras, en
+        una sola frase. Un canal mudo es un cable del headshell, la cápsula o el
+        cable phono, y nada de eso está en ningún lugar del panel de arriba. Una
+        aguja que salta en las partes fuertes es el piso, no la tornamesa. El
+        pitch corre {SL_1200MK7.pitchRange} con un botón de reset al lado del
+        fader. Antes de tocarla: mira el panel trasero, porque torque, freno y
+        reverse son todos switches ahí atrás y nada arriba te dice en qué
+        posición están.
       </p>
       <label for="sv-toggle" class="sv-more">Leer más…</label>
       <label for="sv-toggle" class="sv-more sv-more-open">Leer menos</label>
@@ -281,30 +281,32 @@ const schema = {
       </div>
     </details>
 
-    <details class="acc-sec" name="mk7-acc" id="no-firmware"><summary><h3 class="acc-h2">No hay firmware, no hay almacenamiento y no hay nada que actualizar</h3><span class="acc-chev" aria-hidden="true"></span></summary>
+    <details class="acc-sec" name="mk7-acc" id="pre-gig"><summary><h3 class="acc-h2">El check previo al gig en esta tornamesa, y todo es físico</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
-        <p><strong>Respuesta corta.</strong> Correcto, y conviene decirlo en voz
-        alta en vez de dejarlo como una ausencia. Esta tornamesa no tiene firmware
-        que pueda estar en una versión vieja, no tiene puerto USB, no tiene
-        sistema de archivos, no tiene biblioteca y no tiene exportación. Toda
-        pregunta que este sitio le hace a un dueño de CDJ antes de un gig no tiene
-        sentido aquí.</p>
-        <p><strong>Por qué importa.</strong> Corta para los dos lados. Nada en
-        esta tornamesa puede quedar brickeado por una actualización mala, nada
-        rechaza una unidad que no le gustó, y una tornamesa de la primera corrida
-        de producción se comporta igual que una comprada hoy. En cambio, tampoco
-        se puede arreglar nada por software. Una falla mecánica es una reparación
-        mecánica, y las piezas que se desgastan son piezas que cambias: una aguja,
-        una cápsula, un cable.</p>
-        <p><strong>Qué revisar en su lugar.</strong> Las tres cosas que de verdad
-        deciden si la tornamesa funciona hoy son el cable de tierra, el headshell
-        y el ajuste del brazo. Ese es el checklist previo al gig de una tornamesa,
-        y es más corto que el digital, pero no es opcional.</p>
-        <p><strong>Qué no te va a decir este sitio.</strong> No existe matriz de
-        firmware para esta tornamesa y nunca va a existir, porque no existe
-        firmware. Cualquier página o post de foro que ofrezca una versión de
-        firmware de SL-1200MK7 está describiendo algo que no existe.</p>
-        <p class="acc-related">Relacionados: <a href="#specs">Qué publica Panasonic, y qué no</a> <a href="/es/knowledge/pioneer-dj/firmware">Cada modelo AlphaTheta, por versión de firmware</a></p>
+        <p><strong>Respuesta corta.</strong> Cinco cosas, en este orden, y
+        ninguna toma más de un minuto. Cable de tierra conectado y atornillado.
+        Cable phono encajado hasta el fondo atrás. Headshell firme en la rosca y
+        los cables en sus pines. Contrapeso y anti-skating donde los dejaste.
+        Tornamesa nivelada y apoyada sobre algo que no esté temblando.</p>
+        <p><strong>Por qué ese orden.</strong> Va de la falla que arruina la
+        noche entera a la falla que arruina un solo disco. Una tierra ausente
+        zumba en todo lo que tocas y no se puede bajar. Un cable phono encajado a
+        medias pierde un canal. Un headshell flojo rastrea mal y puede llevarse
+        la aguja consigo. El contrapeso y el anti-skating se mueven en el
+        transporte, y una tornamesa desnivelada sobre una superficie que resuena
+        salta en las partes fuertes y en ninguna otra.</p>
+        <p><strong>El panel trasero también entra en la lista.</strong> El torque
+        de arranque, la fuerza del freno y el reverse son todos switches traseros
+        en este modelo, sin ninguna indicación en la superficie de arriba, así
+        que una tornamesa que arranca, frena o corre al revés distinto de lo que
+        tus manos esperan es un switch que alguien más movió. Revísalos al llegar
+        y no durante la primera mezcla.</p>
+        <p><strong>Qué llevar contigo.</strong> Un headshell de repuesto, ya
+        cableado y ya balanceado, y un cable phono de repuesto. Entre los dos
+        cubren las dos fallas con más probabilidad de dejar un canal mudo, y en
+        esta tornamesa los dos se resuelven conectando el repuesto, no con una
+        reparación.</p>
+        <p class="acc-related">Relacionados: <a href="#hum">Hay un zumbido en el sistema</a> <a href="#tonearm">Ajustar el brazo para que siga el surco</a> <a href="#rear-switches">Los switches del panel trasero</a></p>
       </div>
     </details>
 

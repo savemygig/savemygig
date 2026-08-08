@@ -1552,7 +1552,10 @@ export const EQUIPMENT = [
     // "the one it killed".
     paired: ['cdj-3000', 'cdj-2000nxs2'],
     siblings: ['djm-a9', 'djm-v10'],
-    tags: ['dvs', 'link-network', 'long-blend'],
+    // `link-network` REMOVED 2026-08-08. It surfaced "CDJ error E-8302" in this
+    // mixer's related guides, and this mixer has no PRO DJ LINK. The tag was
+    // reaching for the X:LINK protocol, which is a different network entirely.
+    tags: ['dvs', 'long-blend', 'booth-prep'],
   },
   {
     slug: 'xone-92', name: 'Xone:92', kind: 'mixer', brand: 'allen-heath', released: 2004,
@@ -1566,7 +1569,10 @@ export const EQUIPMENT = [
     // any. Tagging it `firmware` would put the firmware matrix in its related
     // guides, which would be actively misleading on the one mixer here where
     // the version question does not exist.
-    tags: ['dvs', 'long-blend'],
+    // `dvs` REMOVED 2026-08-08. Allen & Heath do not document DVS for this
+    // mixer, which this page says in as many words, and the tag was pulling a
+    // rekordbox library document onto it.
+    tags: ['long-blend', 'booth-prep'],
   },
   /*
    * TURNTABLES, THE THIRD KIND (2026-08-08). `kind` had two values for as long as
@@ -1597,7 +1603,7 @@ export const EQUIPMENT = [
     // otherwise pull in six guides about drives it cannot read.
     // `dvs` IS correct here, and for a better reason than it was on the Xone:92:
     // timecode vinyl runs on this deck, and rekordbox documents DVS.
-    tags: ['dvs'],
+    tags: ['dvs', 'booth-prep'],
   },
   {
     slug: 'sl-1200mk2', name: 'SL-1200MK2', kind: 'turntable', brand: 'technics', released: 1979,
@@ -1605,7 +1611,7 @@ export const EQUIPMENT = [
     older: null,
     paired: ['xone-92', 'djm-900nxs2'],
     siblings: ['sl-1200mk7'],
-    tags: ['dvs'],
+    tags: ['dvs', 'booth-prep'],
   },
 ];
 
@@ -1715,26 +1721,57 @@ export function modelsOfBrand(brandKey, kind = null) {
 //   weight 2  reference they will need next
 //   weight 3  useful, take a slot if one is free
 //   weight 4  last
+/*
+ * GUIDE SCOPE: WHICH GUIDES MAY APPEAR BESIDE WHICH EQUIPMENT.
+ *
+ * Antonio, 2026-08-08: "Save My Gig is NOT a Pioneer DJ website. Never introduce
+ * Pioneer as the default comparison point simply because the current database
+ * contains many Pioneer products."
+ *
+ * He is right, and this array was one of the mechanisms producing exactly that.
+ * Almost every guide here is about a USB, a library or a firmware version, which
+ * are AlphaTheta subjects. Relevance was decided by tag intersection alone, so an
+ * Allen & Heath mixer page carrying the `link-network` tag surfaced "CDJ error
+ * E-8302", and a Technics turntable carrying `dvs` surfaced the rekordbox
+ * reference. A CDJ error code on a mixer page and a USB library document on a
+ * deck with no USB port are not helpful links. They are the site quietly telling
+ * every reader that Pioneer is the centre of it.
+ *
+ * `scope` fixes it structurally rather than page by page:
+ *
+ *   'universal'   applies to any gig on any equipment. The checklist, the
+ *                 prevention system, the dictionary, and the drive
+ *                 recommendations for anything that reads a drive.
+ *   'alphatheta'  names AlphaTheta products, software or error codes in its own
+ *                 title or subject. Only offered beside AlphaTheta equipment.
+ *
+ * This is the rule that has to keep working for Denon DJ, RANE, Reloop, Roland
+ * and anything else that arrives, so it is a property of the guide rather than a
+ * list of exceptions per brand. Tags still decide TOPICAL relevance: a turntable
+ * carries no `usb-prep` tag, so the drive guide cannot reach it even though the
+ * guide is universal. Scope and tags answer two different questions.
+ */
 export const GUIDE_INDEX = [
-  // `dvs` added 2026-08-07: rekordbox IS the DVS software, and without that tag
-  // this guide had ZERO intersection with all five mixer pages, so no mixer
-  // linked the rekordbox reference at all.
-  { key: 'rekordbox',   href: '/knowledge/pioneer-dj/rekordbox',        tags: ['onelibrary', 'devicelibrary', 'usb-prep', 'exfat', 'no-exfat', 'dvs'], weight: 2 },
-  { key: 'onelibrary',  href: '/knowledge/pioneer-dj/rekordbox#onelibrary', tags: ['onelibrary', 'devicelibrary'], weight: 3 },
-  { key: 'firmware',    href: '/knowledge/pioneer-dj/firmware',         tags: ['firmware'], weight: 1 },
-  { key: 'exfatVsFat',  href: '/fix/exfat-vs-fat32-cdj',                tags: ['exfat', 'no-exfat', 'filesystems'], weight: 1 },
-  { key: 'formatUsb',   href: '/fix/format-usb-for-cdj',                tags: ['filesystems', 'no-exfat', 'usb-prep'], weight: 1 },
-  { key: 'usbNotRead',  href: '/fix/usb-not-recognized-cdj',            tags: ['usb-prep', 'filesystems'], weight: 1 },
-  { key: 'playlists',   href: '/fix/playlists-not-showing-cdj',         tags: ['onelibrary', 'devicelibrary', 'usb-prep'], weight: 1 },
-  { key: 'waveforms',   href: '/fix/waveforms-not-loading-cdj',         tags: ['usb-prep'], weight: 3 },
-  { key: 'exportFail',  href: '/fix/rekordbox-export-failed',           tags: ['usb-prep'], weight: 3 },
-  { key: 'backup',      href: '/fix/dj-usb-backup-strategy',            tags: ['usb-prep'], weight: 3 },
-  { key: 'errorE8302',  href: '/fix/cdj-error-e-8302',                  tags: ['prodjlink', 'link-network'], weight: 2 },
-  { key: 'emergencyLoop', href: '/fix/emergency-loop-mode',             tags: ['ecodesign', 'firmware'], weight: 3 },
-  { key: 'checklist',   href: '/checklist',                             tags: ['usb-prep', 'prodjlink', 'link-network', 'firmware'], weight: 2 },
-  { key: 'prepare',     href: '/prepare',                               tags: ['usb-prep', 'firmware', 'ecodesign'], weight: 3 },
-  { key: 'dictionary',  href: '/knowledge/dictionary',                  tags: ['rotary', 'long-blend', 'no-crossfader', 'dvs', 'prodjlink'], weight: 3 },
-  { key: 'gear',        href: '/gear',                                  tags: ['usb-prep', 'filesystems'], weight: 4 },
+  { key: 'rekordbox',   href: '/knowledge/pioneer-dj/rekordbox',        tags: ['onelibrary', 'devicelibrary', 'usb-prep', 'exfat', 'no-exfat', 'dvs'], weight: 2, scope: 'alphatheta' },
+  { key: 'onelibrary',  href: '/knowledge/pioneer-dj/rekordbox#onelibrary', tags: ['onelibrary', 'devicelibrary'], weight: 3, scope: 'alphatheta' },
+  { key: 'firmware',    href: '/knowledge/pioneer-dj/firmware',         tags: ['firmware'], weight: 1, scope: 'alphatheta' },
+  { key: 'exfatVsFat',  href: '/fix/exfat-vs-fat32-cdj',                tags: ['exfat', 'no-exfat', 'filesystems'], weight: 1, scope: 'alphatheta' },
+  { key: 'formatUsb',   href: '/fix/format-usb-for-cdj',                tags: ['filesystems', 'no-exfat', 'usb-prep'], weight: 1, scope: 'alphatheta' },
+  { key: 'usbNotRead',  href: '/fix/usb-not-recognized-cdj',            tags: ['usb-prep', 'filesystems'], weight: 1, scope: 'alphatheta' },
+  { key: 'playlists',   href: '/fix/playlists-not-showing-cdj',         tags: ['onelibrary', 'devicelibrary', 'usb-prep'], weight: 1, scope: 'alphatheta' },
+  { key: 'waveforms',   href: '/fix/waveforms-not-loading-cdj',         tags: ['usb-prep'], weight: 3, scope: 'alphatheta' },
+  { key: 'exportFail',  href: '/fix/rekordbox-export-failed',           tags: ['usb-prep'], weight: 3, scope: 'alphatheta' },
+  { key: 'backup',      href: '/fix/dj-usb-backup-strategy',            tags: ['usb-prep'], weight: 3, scope: 'universal' },
+  { key: 'errorE8302',  href: '/fix/cdj-error-e-8302',                  tags: ['prodjlink', 'link-network'], weight: 2, scope: 'alphatheta' },
+  { key: 'emergencyLoop', href: '/fix/emergency-loop-mode',             tags: ['ecodesign', 'firmware'], weight: 3, scope: 'alphatheta' },
+  // `booth-prep` exists so the two guides that are true of every gig on every
+  // piece of equipment can reach equipment that has no drive and no firmware.
+  // Without it a turntable page had exactly one related guide, and the honest
+  // alternative to a wrong link is a right one, not an empty block.
+  { key: 'checklist',   href: '/checklist',                             tags: ['usb-prep', 'prodjlink', 'link-network', 'firmware', 'booth-prep'], weight: 2, scope: 'universal' },
+  { key: 'prepare',     href: '/prepare',                               tags: ['usb-prep', 'firmware', 'ecodesign', 'booth-prep'], weight: 3, scope: 'universal' },
+  { key: 'dictionary',  href: '/knowledge/dictionary',                  tags: ['rotary', 'long-blend', 'no-crossfader', 'dvs', 'prodjlink', 'booth-prep'], weight: 3, scope: 'universal' },
+  { key: 'gear',        href: '/gear',                                  tags: ['usb-prep', 'filesystems'], weight: 4, scope: 'universal' },
 ];
 
 // Resolve helpers. Pages call these instead of reasoning about the graph, so
@@ -1783,7 +1820,16 @@ export function relatedGuides(slug, limit = 6) {
   const e = BY_SLUG.get(slug);
   if (!e) return [];
   const tags = new Set(e.tags ?? []);
+  /*
+   * AN ALPHATHETA GUIDE IS ONLY OFFERED BESIDE ALPHATHETA EQUIPMENT.
+   * See the scope note above GUIDE_INDEX. Without this line the tag intersection
+   * put "CDJ error E-8302" on an Allen & Heath mixer page and the rekordbox
+   * library reference on a turntable with no USB port, which is how a site with
+   * one large brand starts reading as that brand's site.
+   */
+  const allowed = (g) => g.scope === 'universal' || e.brand === 'pioneer-dj';
   return GUIDE_INDEX
+    .filter(allowed)
     .map((g) => ({ g, hits: g.tags.filter((t) => tags.has(t)).length }))
     .filter((x) => x.hits > 0)
     // Weight first, hits second. See the note above GUIDE_INDEX: sorting by hits

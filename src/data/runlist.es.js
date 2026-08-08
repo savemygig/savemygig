@@ -69,7 +69,7 @@ export const RUNLIST = [
     detail:
       'Si el booth está enlazado por PRO DJ LINK, cualquier reproductor puede ' +
       'buscar y cargar desde un USB que está físicamente en otro. Que tu USB esté ' +
-      'muerto deja de importar. En un booth Pioneer DJ bien armado suele ser el ' +
+      'muerto deja de importar. En un booth con los players conectados en red suele ser el ' +
       'arreglo más rápido que hay, y es el que se olvida cuando toda la sala te ' +
       'está mirando.',
   },
