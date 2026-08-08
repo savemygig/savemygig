@@ -485,150 +485,6 @@ export const PLAYERS = [
   { m: 'OMNIS-DUO',      lib: 'OneLibrary',     exfat: 'Yes',                note: '' },
 ];
 
-// ---------------------------------------------------------------------------
-// FIRMWARE ISSUE MATRIX (2026-08-01)
-//
-// WHY THIS EXISTS: every fact below already lived in this file, but scattered
-// across six separate model pages and buried inside collapsed accordions, so
-// nobody could answer the one question a DJ actually has in a booth: "the deck
-// says version X, what is broken on it?" AlphaTheta publishes this only as one
-// change-history PDF per model. Nobody aggregates it. This array is the
-// aggregation, and /knowledge/pioneer-dj/firmware renders it.
-//
-// FACT DISCIPLINE, unchanged: every entry restates a fix already recorded and
-// sourced in the model constants above. Nothing new is invented here. If a
-// symptom is not in AlphaTheta's own change history, it does not go in.
-//
-// `midSet` is the one editorial field: true when the documented symptom can
-// interrupt a set in progress (audio, playback, browsing, link). It is our
-// read of the vendor's own wording, not a vendor severity rating, and the page
-// says so.
-export const FIRMWARE_ISSUES = [
-  {
-    model: 'CDJ-3000X',
-    href: '/knowledge/pioneer-dj/cdj-3000x',
-    source: CDJ_3000X.source,
-    issues: [],
-    noneNote: 'A young unit. AlphaTheta has published no defect fix for it, so there is nothing to report here. This section stays empty until a documented one exists.',
-  },
-  {
-    model: 'CDJ-3000',
-    href: '/knowledge/pioneer-dj/cdj-3000',
-    source: CDJ_3000.source,
-    warning: {
-      version: CDJ_3000.onelibraryWithdrawn,
-      text: 'Withdrawn by AlphaTheta. It added OneLibrary, then playlists failed to display for people exporting from older rekordbox. No music or data was deleted, and the player reverted to Device Library. Do not install this version.',
-      sourceUrl: CDJ_3000.sourceWithdrawal,
-    },
-    issues: [
-      { fixedIn: CDJ_3000.linkDjm2000nxsFix, area: 'Link', midSet: true, symptom: 'PRO DJ LINK connection with a DJM-2000NXS could fail.' },
-      { fixedIn: CDJ_3000.screenDeadFix, area: 'Display', midSet: true, symptom: 'Rare dead screen on power-on.' },
-      { fixedIn: CDJ_3000.stabilityFix, area: 'Audio', midSet: true, symptom: 'Occasional no-audio, display blackouts and system freezes on some units.' },
-      { fixedIn: CDJ_3000.browseWaitingFix, area: 'Browse', midSet: true, symptom: 'A "Waiting" popup could block the BROWSE screen entirely.' },
-      { fixedIn: CDJ_3000.emergencyLoopHotCueFix, area: 'Playback', midSet: true, symptom: 'Emergency Loop triggering wrongly during a Hot Cue pause.' },
-    ],
-  },
-  {
-    model: 'CDJ-2000NXS2',
-    href: '/knowledge/pioneer-dj/cdj-2000nxs2',
-    source: CDJ_2000NXS2.source,
-    issues: [
-      { fixedIn: CDJ_2000NXS2.slipHotCueFix, area: 'Playback', midSet: false, symptom: 'A startup issue affecting SLIP HOT CUE behaviour.' },
-      { fixedIn: CDJ_2000NXS2.waveformColorFix, area: 'Display', midSet: false, symptom: 'Waveform colour selection went missing, then was restored.' },
-      { fixedIn: CDJ_2000NXS2.controlModeDropoutFix, area: 'Audio', midSet: true, symptom: 'Audio dropouts during Control Mode playback.' },
-    ],
-  },
-  {
-    // THE LONGEST LIST HERE, and the reason this matrix exists. Eleven versions of
-    // documented faults on a player still installed in an enormous number of
-    // booths, most of which have never been updated. Every entry is AlphaTheta's
-    // own wording, condensed, from the change history PDF read in full.
-    model: 'CDJ-2000NXS',
-    href: '/knowledge/pioneer-dj/cdj-2000nxs',
-    source: CDJ_2000NXS.sourceHistory,
-    issues: [
-      { fixedIn: CDJ_2000NXS.crashHotCueFix, area: 'Playback', midSet: true, symptom: 'The player crashed on repeated HOT CUE presses with Master Tempo enabled.' },
-      { fixedIn: CDJ_2000NXS.syncDropoutFix, area: 'Audio', midSet: true, symptom: 'Audio dropout on the slave deck when using SYNC.' },
-      { fixedIn: CDJ_2000NXS.tagListFreezeFix, area: 'Browse', midSet: true, symptom: 'A freeze could occur while editing the TAG LIST.' },
-      { fixedIn: CDJ_2000NXS.browseSlowFix, area: 'Browse', midSet: true, symptom: 'The browse screen slowed or stopped after several hours of use, and a freeze occurred holding HOT CUE over a second during auto hot cue loading.' },
-      { fixedIn: CDJ_2000NXS.wavHeaderFix, area: 'Playback', midSet: true, symptom: 'A WAVE file with an incompatible header left "Loading.." on screen indefinitely. Folders did not list on a 2TB HDD.' },
-      { fixedIn: CDJ_2000NXS.hddRecognitionFix, area: 'USB', midSet: true, symptom: 'Some hard drives were not recognized. Noise when Master Tempo was activated.' },
-      { fixedIn: CDJ_2000NXS.aiffLoadFix, area: 'Playback', midSet: true, symptom: 'AIFF at 24bit/48kHz stopped playing and could not be loaded to a deck. Audio noise while scratching.' },
-      { fixedIn: CDJ_2000NXS.nxs2FeatureFix, area: 'Link', midSet: true, symptom: 'Linked to a CDJ-2000NXS, some CDJ-2000NXS2 features were disabled.' },
-      { fixedIn: CDJ_2000NXS.wavNoiseFix, area: 'Audio', midSet: true, symptom: 'Digitally distorted white noise on certain WAV files. An active loop could activate a very short loop.' },
-      { fixedIn: CDJ_2000NXS.slipHotCueFix, area: 'Playback', midSet: true, symptom: 'Issues during playback and track selection, and with SLIP HOT CUE.' },
-      { fixedIn: CDJ_2000NXS.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync on. Popping noise in a loop with QUANTIZE and MASTER TEMPO enabled.' },
-    ],
-  },
-  {
-    // Its history ENDED at 1.31 in October 2017, so the floor and the ceiling are
-    // the same number and no fix is coming for anything not listed here.
-    model: 'CDJ-900NXS',
-    href: '/knowledge/pioneer-dj/cdj-900nxs',
-    source: CDJ_900NXS.sourceHistory,
-    issues: [
-      { fixedIn: CDJ_900NXS.beatDivideFix, area: 'Audio', midSet: true, symptom: 'Playback sound stopped while BEAT DIVIDE was activated.' },
-      { fixedIn: CDJ_900NXS.hddFolderFix, area: 'Browse', midSet: true, symptom: 'Folder browsing failed on 2TB hard drives. Slow track list browsing in Serato DJ HID mode.' },
-      { fixedIn: CDJ_900NXS.hddRecognitionFix, area: 'USB', midSet: true, symptom: 'Some hard drives were not recognized. Noise when Master Tempo was activated.' },
-      { fixedIn: CDJ_900NXS.aiffLoadFix, area: 'Playback', midSet: true, symptom: 'AIFF at 24bit/48kHz stopped playing and could not be loaded. Digitally distorted white noise on certain WAV files.' },
-      { fixedIn: CDJ_900NXS.nxs2LinkFix, area: 'Link', midSet: true, symptom: 'PRO DJ LINK compatibility with the CDJ-2000NXS2 and XDJ-1000MK2.' },
-      { fixedIn: CDJ_900NXS.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync enabled.' },
-    ],
-  },
-  {
-    // The Ecodesign entry is a BEHAVIOUR, not a defect, so it rides as a warning
-    // rather than an issue: a deck that switched itself off is obeying a setting,
-    // and calling it a fault would send a DJ looking for a repair.
-    model: 'XDJ-700',
-    href: '/knowledge/pioneer-dj/xdj-700',
-    source: XDJ_700.sourceHistory,
-    warning: {
-      version: XDJ_700.ecoStandbyIntro,
-      text: 'Not a defect. From this version the unit automatically switches off after 20 minutes of no use when Power Management is on, following the EU Ecodesign Directive. A deck that powered down during a long changeover is obeying that setting, not failing.',
-      sourceUrl: XDJ_700.sourceHistory,
-    },
-    issues: [
-      { fixedIn: XDJ_700.browserManyTracksFix, area: 'Browse', midSet: true, symptom: 'Categories and tracks were not shown in the browser when a database had many tracks. Search results did not appear when moving the cursor.' },
-      { fixedIn: XDJ_700.searchFix, area: 'Browse', midSet: true, symptom: 'SEARCH worked incorrectly under certain conditions.' },
-      { fixedIn: XDJ_700.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync on. Popping noise in a loop with QUANTIZE and MASTER TEMPO enabled.' },
-      { fixedIn: XDJ_700.usbAudioControlFix, area: 'Audio', midSet: true, symptom: 'The USB audio function did not work in DJ Software Control mode.' },
-    ],
-  },
-  {
-    model: 'DJM-V10 / V10-LF',
-    href: '/knowledge/pioneer-dj/djm-v10',
-    source: DJM_V10.source,
-    issues: [
-      { fixedIn: DJM_V10.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognized.' },
-      { fixedIn: DJM_V10.cdj3000LinkAudioFix, area: 'Audio', midSet: true, symptom: 'Potential audio cut-out when connected to CDJ-3000s over PRO DJ LINK.' },
-      { fixedIn: DJM_V10.midiFix, area: 'MIDI', midSet: false, symptom: 'Incorrect MIDI output under certain operation.' },
-      { fixedIn: DJM_V10.channelInputFix, area: 'Audio', midSet: true, symptom: 'Audio sometimes failing to input to a channel.' },
-    ],
-  },
-  {
-    model: 'DJM-A9',
-    href: '/knowledge/pioneer-dj/djm-a9',
-    source: DJM_A9.source,
-    issues: [
-      { fixedIn: DJM_A9.linkFreezeFix, area: 'Link', midSet: true, symptom: 'Rare freeze under heavy PRO DJ LINK network load.' },
-      { fixedIn: DJM_A9.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognized.' },
-      { fixedIn: DJM_A9.multiIoInsertFix, area: 'Routing', midSet: true, symptom: 'Insert method intermittently disabling itself when switching the Multi I/O input selector, and DVS phono input malfunction on USB-B after swapping computers across ports.' },
-    ],
-  },
-  {
-    model: 'DJM-900NXS2',
-    href: '/knowledge/pioneer-dj/djm-900nxs2',
-    // Corrected 2026-08-04: this used DJM_REC.source, which is the DJM-REC APP
-    // support page, so the firmware row cited the wrong document entirely.
-    // Points at AlphaTheta's own DJM-900NXS2 support article instead.
-    source: 'https://support.alphatheta.com/en-US/articles/4404624354969',
-    issues: [
-      { fixedIn: DJM_REC.nxs2RecHaltFixes[1], area: 'Recording', midSet: false, symptom: 'DJM-REC recording halts affecting iOS and iPadOS audio.' },
-      { fixedIn: DJM_REC.nxs2RecHaltFixes[0], area: 'Recording', midSet: false, symptom: 'DJM-REC recording could halt part-way through a set.' },
-    ],
-    note: 'AlphaTheta has published no hardware defect fix for this mixer beyond the DJM-REC recording halts. The rest of its change history is feature work.',
-  },
-];
 
 // XDJ-1000MK2. Added 2026-08-07, and it ARRIVES WITH A CORRECTION TO THIS SITE.
 //
@@ -822,6 +678,297 @@ export const DJM_900NXS = {
   sourceProduct: 'https://www.pioneerdj.com/en-us/product/mixer/archive/djm-900nxs/black/overview/',
   sourcePeakLimiter: 'https://downloads.support.alphatheta.com/firmwares/dj-mixers/DJM-900NXS/PEAK_LIMITER_DJM-900NXS_E.pdf',
 };
+// ---------------------------------------------------------------------------
+// FIRMWARE ISSUE MATRIX (2026-08-01)
+//
+// POSITION IN THIS FILE IS LOAD ORDER, NOT TASTE (moved 2026-08-08). This array
+// used to sit in the middle of the model constants, which worked only for as
+// long as every model it referenced happened to be declared above it. Adding the
+// XDJ-1000MK2, DJM-900NXS, DJM-750MK2 and euphonia rows broke the module
+// outright with "Cannot access before initialization", because those four are
+// declared further down. It now sits AFTER every model constant, so any model in
+// this file can be referenced here. Keep it last.
+//
+// WHY THIS EXISTS: every fact below already lived in this file, but scattered
+// across six separate model pages and buried inside collapsed accordions, so
+// nobody could answer the one question a DJ actually has in a booth: "the deck
+// says version X, what is broken on it?" AlphaTheta publishes this only as one
+// change-history PDF per model. Nobody aggregates it. This array is the
+// aggregation, and /knowledge/pioneer-dj/firmware renders it.
+//
+// FACT DISCIPLINE, unchanged: every entry restates a fix already recorded and
+// sourced in the model constants above. Nothing new is invented here. If a
+// symptom is not in AlphaTheta's own change history, it does not go in.
+//
+// `midSet` is the one editorial field: true when the documented symptom can
+// interrupt a set in progress (audio, playback, browsing, link). It is our
+// read of the vendor's own wording, not a vendor severity rating, and the page
+// says so.
+/*
+ * TWO STRINGS SHARED BY SEVERAL ENTRIES, named rather than repeated.
+ *
+ * They were copied by hand into each entry until 2026-08-08, when adding the
+ * XDJ-1000MK2 and the DJM-750MK2 would have made the Ecodesign paragraph appear
+ * three times. A sentence written out three times is three sentences that can
+ * drift, and the /pt and /es pages translate these BY EXACT STRING MATCH, so a
+ * one-word divergence in any copy silently drops that row back to English.
+ * That is precisely the bug the firmware i18n gate check exists to catch, and
+ * one constant removes the chance of creating it.
+ */
+const NO_HISTORY_PUBLISHED =
+  'AlphaTheta has published no firmware change history for this unit, so there is no documented fix to report. This section stays empty until one exists.';
+const ECODESIGN_STANDBY =
+  'Not a defect. From this version the unit automatically switches off after 20 minutes of no use when Power Management is on, following the EU Ecodesign Directive. A deck that powered down during a long changeover is obeying that setting, not failing.';
+
+export const FIRMWARE_ISSUES = [
+  {
+    model: 'CDJ-3000X',
+    href: '/knowledge/pioneer-dj/cdj-3000x',
+    source: CDJ_3000X.source,
+    issues: [],
+    noneNote: 'A young unit. AlphaTheta has published no defect fix for it, so there is nothing to report here. This section stays empty until a documented one exists.',
+  },
+  {
+    model: 'CDJ-3000',
+    href: '/knowledge/pioneer-dj/cdj-3000',
+    source: CDJ_3000.source,
+    warning: {
+      version: CDJ_3000.onelibraryWithdrawn,
+      text: 'Withdrawn by AlphaTheta. It added OneLibrary, then playlists failed to display for people exporting from older rekordbox. No music or data was deleted, and the player reverted to Device Library. Do not install this version.',
+      sourceUrl: CDJ_3000.sourceWithdrawal,
+    },
+    issues: [
+      { fixedIn: CDJ_3000.linkDjm2000nxsFix, area: 'Link', midSet: true, symptom: 'PRO DJ LINK connection with a DJM-2000NXS could fail.' },
+      { fixedIn: CDJ_3000.screenDeadFix, area: 'Display', midSet: true, symptom: 'Rare dead screen on power-on.' },
+      { fixedIn: CDJ_3000.stabilityFix, area: 'Audio', midSet: true, symptom: 'Occasional no-audio, display blackouts and system freezes on some units.' },
+      { fixedIn: CDJ_3000.browseWaitingFix, area: 'Browse', midSet: true, symptom: 'A "Waiting" popup could block the BROWSE screen entirely.' },
+      { fixedIn: CDJ_3000.emergencyLoopHotCueFix, area: 'Playback', midSet: true, symptom: 'Emergency Loop triggering wrongly during a Hot Cue pause.' },
+    ],
+  },
+  {
+    model: 'CDJ-2000NXS2',
+    href: '/knowledge/pioneer-dj/cdj-2000nxs2',
+    source: CDJ_2000NXS2.source,
+    issues: [
+      { fixedIn: CDJ_2000NXS2.slipHotCueFix, area: 'Playback', midSet: false, symptom: 'A startup issue affecting SLIP HOT CUE behaviour.' },
+      { fixedIn: CDJ_2000NXS2.waveformColorFix, area: 'Display', midSet: false, symptom: 'Waveform colour selection went missing, then was restored.' },
+      { fixedIn: CDJ_2000NXS2.controlModeDropoutFix, area: 'Audio', midSet: true, symptom: 'Audio dropouts during Control Mode playback.' },
+    ],
+  },
+  {
+    // THE LONGEST LIST HERE, and the reason this matrix exists. Eleven versions of
+    // documented faults on a player still installed in an enormous number of
+    // booths, most of which have never been updated. Every entry is AlphaTheta's
+    // own wording, condensed, from the change history PDF read in full.
+    model: 'CDJ-2000NXS',
+    href: '/knowledge/pioneer-dj/cdj-2000nxs',
+    source: CDJ_2000NXS.sourceHistory,
+    issues: [
+      // THREE ROWS THAT WERE MISSING UNTIL 2026-08-08. The constant above carries
+      // fourteen defect fixes and this list carried eleven. 1.04, 1.20 and 1.21 were
+      // absent, which is the same shape of error the constant's own comment records:
+      // the page said the history had been read in full while four versions were
+      // missing. Reading it in full and then transcribing part of it is the same
+      // outcome for the reader. The audit named two of the three; counting the fix
+      // fields found the third.
+      { fixedIn: CDJ_2000NXS.bpmSyncFix, area: 'Playback', midSet: true, symptom: 'BPM could fluctuate during playback using Sync, and so could the tempo of a track with Slip Mode engaged.' },
+      { fixedIn: CDJ_2000NXS.crashHotCueFix, area: 'Playback', midSet: true, symptom: 'The player crashed on repeated HOT CUE presses with Master Tempo enabled.' },
+      { fixedIn: CDJ_2000NXS.syncDropoutFix, area: 'Audio', midSet: true, symptom: 'Audio dropout on the slave deck when using SYNC.' },
+      { fixedIn: CDJ_2000NXS.tagListFreezeFix, area: 'Browse', midSet: true, symptom: 'A freeze could occur while editing the TAG LIST.' },
+      { fixedIn: CDJ_2000NXS.browseSlowFix, area: 'Browse', midSet: true, symptom: 'The browse screen slowed or stopped after several hours of use, and a freeze occurred holding HOT CUE over a second during auto hot cue loading.' },
+      { fixedIn: CDJ_2000NXS.loopDisplayFix, area: 'Display', midSet: false, symptom: 'The loop beat display returned to WAVE after a loop ended, and SYNC MASTER switched itself when SYNC was disabled.' },
+      { fixedIn: CDJ_2000NXS.needleSearchFix, area: 'Playback', midSet: true, symptom: 'Needle Search pad faults, a sorted playlist not being restored on return, and the Master Player switching when an Active Loop started.' },
+      { fixedIn: CDJ_2000NXS.wavHeaderFix, area: 'Playback', midSet: true, symptom: 'A WAVE file with an incompatible header left "Loading.." on screen indefinitely. Folders did not list on a 2TB HDD.' },
+      { fixedIn: CDJ_2000NXS.hddRecognitionFix, area: 'USB', midSet: true, symptom: 'Some hard drives were not recognized. Noise when Master Tempo was activated.' },
+      { fixedIn: CDJ_2000NXS.aiffLoadFix, area: 'Playback', midSet: true, symptom: 'AIFF at 24bit/48kHz stopped playing and could not be loaded to a deck. Audio noise while scratching.' },
+      { fixedIn: CDJ_2000NXS.nxs2FeatureFix, area: 'Link', midSet: true, symptom: 'Linked to a CDJ-2000NXS, some CDJ-2000NXS2 features were disabled.' },
+      { fixedIn: CDJ_2000NXS.wavNoiseFix, area: 'Audio', midSet: true, symptom: 'Digitally distorted white noise on certain WAV files. An active loop could activate a very short loop.' },
+      { fixedIn: CDJ_2000NXS.slipHotCueFix, area: 'Playback', midSet: true, symptom: 'Issues during playback and track selection, and with SLIP HOT CUE.' },
+      { fixedIn: CDJ_2000NXS.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync on. Popping noise in a loop with QUANTIZE and MASTER TEMPO enabled.' },
+    ],
+  },
+  {
+    /*
+     * NO PUBLISHED CHANGE HISTORY, AND IT SAYS SO RATHER THAN BEING ABSENT.
+     * Added 2026-08-08 with DJM-V5 and euphonia for one reason: a DJ who looks up
+     * their own unit and finds NO ROW cannot tell "AlphaTheta has published no
+     * fixes" from "this site has not got to it yet". Those are opposite answers
+     * and the reader was being left to guess which one they had. An empty section
+     * with a sentence in it answers the question; an omission does not.
+     */
+    model: 'CDJ-1500X',
+    href: '/knowledge/pioneer-dj/cdj-1500x',
+    source: CDJ_1500X.source,
+    issues: [],
+    noneNote: NO_HISTORY_PUBLISHED,
+  },
+  {
+    // Its history ENDED at 1.31 in October 2017, so the floor and the ceiling are
+    // the same number and no fix is coming for anything not listed here.
+    model: 'CDJ-900NXS',
+    href: '/knowledge/pioneer-dj/cdj-900nxs',
+    source: CDJ_900NXS.sourceHistory,
+    issues: [
+      { fixedIn: CDJ_900NXS.beatDivideFix, area: 'Audio', midSet: true, symptom: 'Playback sound stopped while BEAT DIVIDE was activated.' },
+      { fixedIn: CDJ_900NXS.hddFolderFix, area: 'Browse', midSet: true, symptom: 'Folder browsing failed on 2TB hard drives. Slow track list browsing in Serato DJ HID mode.' },
+      { fixedIn: CDJ_900NXS.hddRecognitionFix, area: 'USB', midSet: true, symptom: 'Some hard drives were not recognized. Noise when Master Tempo was activated.' },
+      { fixedIn: CDJ_900NXS.aiffLoadFix, area: 'Playback', midSet: true, symptom: 'AIFF at 24bit/48kHz stopped playing and could not be loaded. Digitally distorted white noise on certain WAV files.' },
+      { fixedIn: CDJ_900NXS.nxs2LinkFix, area: 'Link', midSet: true, symptom: 'PRO DJ LINK compatibility with the CDJ-2000NXS2 and XDJ-1000MK2.' },
+      { fixedIn: CDJ_900NXS.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync enabled.' },
+    ],
+  },
+  {
+    /*
+     * ADDED 2026-08-08, and its absence was the second worst on this page. This
+     * player is in an enormous number of installed booths, its own model page
+     * carries the full fault list, and the link that brings a reader here says
+     * "Every model". Eleven documented fixes across seven versions were sitting
+     * one file away from the aggregation that exists to hold them.
+     */
+    model: 'XDJ-1000MK2',
+    href: '/knowledge/pioneer-dj/xdj-1000mk2',
+    source: XDJ_1000MK2.source,
+    warning: {
+      version: XDJ_1000MK2.ecoStandbyIntro,
+      text: ECODESIGN_STANDBY,
+      sourceUrl: XDJ_1000MK2.source,
+    },
+    issues: [
+      { fixedIn: XDJ_1000MK2.alacPlayFix, area: 'Playback', midSet: true, symptom: 'Some Apple Lossless files would not play.' },
+      { fixedIn: XDJ_1000MK2.catalinaAudioFix, area: 'Audio', midSet: true, symptom: 'macOS Catalina 10.15 could not see the unit as an audio device.' },
+      { fixedIn: XDJ_1000MK2.matchingFix, area: 'Browse', midSet: false, symptom: 'Inconsistencies in the matching function.' },
+      { fixedIn: XDJ_1000MK2.loopPopFix, area: 'Audio', midSet: true, symptom: 'Popping noise during a LOOP with QUANTIZE and MASTER TEMPO on.' },
+      { fixedIn: XDJ_1000MK2.hotCueLoopFix, area: 'Playback', midSet: true, symptom: 'A HOT CUE fired after jumping to LOOP-IN when changing the loop beat length with QUANTIZE on.' },
+      // Reuses the CDJ-900NXS wording deliberately. It is the same documented
+      // symptom on a different unit, and one string means one translation rather
+      // than two that drift apart.
+      { fixedIn: XDJ_1000MK2.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync enabled.' },
+      { fixedIn: XDJ_1000MK2.apeTagLoopFix, area: 'Playback', midSet: true, symptom: 'Emergency loop triggering on certain MP3 files carrying APE tag data.' },
+      { fixedIn: XDJ_1000MK2.controlModeDropoutFix, area: 'Audio', midSet: true, symptom: 'Audio dropouts during Control Mode playback.' },
+      { fixedIn: XDJ_1000MK2.longSessionLoadFix, area: 'Browse', midSet: true, symptom: 'Track load time grew after several hours of use.' },
+      { fixedIn: XDJ_1000MK2.slipHotCueFix, area: 'Playback', midSet: false, symptom: 'Faults using SLIP HOT CUE.' },
+      { fixedIn: XDJ_1000MK2.tour1PlaybackFix, area: 'Link', midSet: true, symptom: 'Some tracks would not play on a linked CDJ-TOUR1.' },
+    ],
+  },
+  {
+    // The Ecodesign entry is a BEHAVIOUR, not a defect, so it rides as a warning
+    // rather than an issue: a deck that switched itself off is obeying a setting,
+    // and calling it a fault would send a DJ looking for a repair.
+    model: 'XDJ-700',
+    href: '/knowledge/pioneer-dj/xdj-700',
+    source: XDJ_700.sourceHistory,
+    warning: {
+      version: XDJ_700.ecoStandbyIntro,
+      text: ECODESIGN_STANDBY,
+      sourceUrl: XDJ_700.sourceHistory,
+    },
+    issues: [
+      { fixedIn: XDJ_700.browserManyTracksFix, area: 'Browse', midSet: true, symptom: 'Categories and tracks were not shown in the browser when a database had many tracks. Search results did not appear when moving the cursor.' },
+      { fixedIn: XDJ_700.searchFix, area: 'Browse', midSet: true, symptom: 'SEARCH worked incorrectly under certain conditions.' },
+      { fixedIn: XDJ_700.syncBpmFix, area: 'Playback', midSet: true, symptom: 'Speed did not return to the displayed BPM with Sync on. Popping noise in a loop with QUANTIZE and MASTER TEMPO enabled.' },
+      { fixedIn: XDJ_700.usbAudioControlFix, area: 'Audio', midSet: true, symptom: 'The USB audio function did not work in DJ Software Control mode.' },
+    ],
+  },
+  {
+    model: 'DJM-V10 / V10-LF',
+    href: '/knowledge/pioneer-dj/djm-v10',
+    source: DJM_V10.source,
+    issues: [
+      { fixedIn: DJM_V10.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognized.' },
+      { fixedIn: DJM_V10.cdj3000LinkAudioFix, area: 'Audio', midSet: true, symptom: 'Potential audio cut-out when connected to CDJ-3000s over PRO DJ LINK.' },
+      { fixedIn: DJM_V10.midiFix, area: 'MIDI', midSet: false, symptom: 'Incorrect MIDI output under certain operation.' },
+      { fixedIn: DJM_V10.channelInputFix, area: 'Audio', midSet: true, symptom: 'Audio sometimes failing to input to a channel.' },
+    ],
+  },
+  {
+    // No published change history. See the CDJ-1500X entry for why it is here
+    // rather than absent.
+    model: 'DJM-V5',
+    href: '/knowledge/pioneer-dj/djm-v5',
+    source: DJM_V5.source,
+    issues: [],
+    noneNote: NO_HISTORY_PUBLISHED,
+  },
+  {
+    model: 'DJM-A9',
+    href: '/knowledge/pioneer-dj/djm-a9',
+    source: DJM_A9.source,
+    issues: [
+      { fixedIn: DJM_A9.linkFreezeFix, area: 'Link', midSet: true, symptom: 'Rare freeze under heavy PRO DJ LINK network load.' },
+      { fixedIn: DJM_A9.uaspFix, area: 'USB', midSet: true, symptom: 'UASP-compatible USB drives not recognized.' },
+      { fixedIn: DJM_A9.multiIoInsertFix, area: 'Routing', midSet: true, symptom: 'Insert method intermittently disabling itself when switching the Multi I/O input selector, and DVS phono input malfunction on USB-B after swapping computers across ports.' },
+    ],
+  },
+  {
+    model: 'DJM-900NXS2',
+    href: '/knowledge/pioneer-dj/djm-900nxs2',
+    // Corrected 2026-08-04: this used DJM_REC.source, which is the DJM-REC APP
+    // support page, so the firmware row cited the wrong document entirely.
+    // Points at AlphaTheta's own DJM-900NXS2 support article instead.
+    source: 'https://support.alphatheta.com/en-US/articles/4404624354969',
+    issues: [
+      { fixedIn: DJM_REC.nxs2RecHaltFixes[1], area: 'Recording', midSet: false, symptom: 'DJM-REC recording halts affecting iOS and iPadOS audio.' },
+      { fixedIn: DJM_REC.nxs2RecHaltFixes[0], area: 'Recording', midSet: false, symptom: 'DJM-REC recording could halt part-way through a set.' },
+    ],
+    note: 'AlphaTheta has published no hardware defect fix for this mixer beyond the DJM-REC recording halts. The rest of its change history is feature work.',
+  },
+
+  {
+    /*
+     * ADDED 2026-08-08, and this was the worst omission on the page. The
+     * DJM-900NXS model page calls "below 1.28 this mixer shuts itself down" its
+     * headline fact, then links here under "Every model, by firmware version",
+     * and a DJ following that link found no row at all. The one page whose
+     * headline is a firmware number was the one page the firmware matrix did not
+     * cover.
+     */
+    model: 'DJM-900NXS',
+    href: '/knowledge/pioneer-dj/djm-900nxs',
+    source: DJM_900NXS.source,
+    issues: [
+      { fixedIn: DJM_900NXS.wakeUpFix, area: 'Power', midSet: true, symptom: 'Standby could not always be cancelled with the LFO FORM (WAKE UP) control.' },
+      { fixedIn: DJM_900NXS.usbNoiseFix, area: 'Audio', midSet: true, symptom: 'Noise in USB audio in and out on some computers.' },
+      { fixedIn: DJM_900NXS.effectsNotEngagingFix, area: 'Audio', midSet: true, symptom: 'Some effects did not work as expected when switched on.' },
+      // THE ONE PEOPLE ARRIVE LOOKING FOR. AlphaTheta's own wording is that the
+      // unit could shut down unexpectedly, and on a mixer that means the room
+      // goes silent, so it is the reason this model needed a row.
+      { fixedIn: DJM_900NXS.shutdownFix, area: 'Power', midSet: true, symptom: 'The mixer shut itself down unexpectedly.' },
+      { fixedIn: DJM_900NXS.slipBpmDisplayFix, area: 'Display', midSet: false, symptom: 'BPM display fluctuating when SLIP was used on a linked CDJ-2000NXS or CDJ-900.' },
+      { fixedIn: DJM_900NXS.rollVolumeFix, area: 'Audio', midSet: true, symptom: 'ROLL, REV ROLL and SLIP ROLL volume was not always stable.' },
+      { fixedIn: DJM_900NXS.revRollSilentFix, area: 'Audio', midSet: true, symptom: 'No effect sound when REV ROLL followed ROLL immediately.' },
+      { fixedIn: DJM_900NXS.xpadNoiseFix, area: 'Audio', midSet: false, symptom: 'Slight noise while operating the X-PAD.' },
+    ],
+  },
+  {
+    model: 'DJM-750MK2',
+    href: '/knowledge/pioneer-dj/djm-750mk2',
+    source: DJM_750MK2.source,
+    warning: {
+      version: DJM_750MK2.ecoStandbyIntro,
+      text: ECODESIGN_STANDBY,
+      sourceUrl: DJM_750MK2.source,
+    },
+    issues: [
+      { fixedIn: DJM_750MK2.iosAudioFix, area: 'Audio', midSet: false, symptom: 'Audio communication with iOS and iPadOS devices.' },
+      { fixedIn: DJM_750MK2.recHaltFix, area: 'Recording', midSet: false, symptom: 'DJM-REC recording or live streaming sometimes stopped.' },
+      { fixedIn: DJM_750MK2.fxAssignPopFix, area: 'Audio', midSet: true, symptom: 'Popping noise through USB audio when switching FX ASSIGN with BEAT FX on.' },
+    ],
+    // The published history starts at 1.03, and 1.05 lists only "Minor issues"
+    // with no detail. So this is every DOCUMENTED fix, which is not the same as
+    // every fix, and the note says which one it is.
+    note: 'AlphaTheta published no detail for version 1.05 beyond "Minor issues", and versions 1.00 to 1.02 are not listed at all. What is above is every documented fix for this mixer, not necessarily every fix.',
+  },
+  {
+    // No published change history. See the CDJ-1500X entry for why it is here
+    // rather than absent.
+    model: 'euphonia',
+    href: '/knowledge/pioneer-dj/euphonia',
+    source: EUPHONIA.source,
+    issues: [],
+    noneNote: NO_HISTORY_PUBLISHED,
+  },
+];
+
 
 // ===========================================================================
 // ALLEN & HEATH. The second manufacturer, added 2026-08-07.

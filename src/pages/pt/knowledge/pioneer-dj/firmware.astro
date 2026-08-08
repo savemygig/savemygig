@@ -38,6 +38,7 @@ const AREA = {
   MIDI: 'MIDI',
   Routing: 'Roteamento',
   Recording: 'Gravação',
+  Power: 'Energia',
 };
 
 const SYMPTOM = {
@@ -73,6 +74,111 @@ const SYMPTOM = {
     'Paradas de gravação do DJM-REC afetando o áudio no iOS e no iPadOS.',
   'DJM-REC recording could halt part-way through a set.':
     'A gravação do DJM-REC podia parar no meio do set.',
+
+
+  /*
+   * THE 19 ROWS THAT READ IN ENGLISH UNTIL 2026-08-08. The CDJ-2000NXS, the
+   * CDJ-900NXS and the XDJ-700 joined FIRMWARE_ISSUES without their fault text
+   * joining this map, so `map[s] ?? s` did what it promises and a Brazilian
+   * reader got 19 English sentences inside a Portuguese table, on the page this
+   * site offers as its citable asset. scripts/check-firmware-i18n.mjs now fails
+   * the gate on a missing key, so the next model cannot repeat it.
+   * Control labels stay in English on purpose: HOT CUE, TAG LIST, QUANTIZE,
+   * MASTER TEMPO, SEARCH and BEAT DIVIDE are printed on the deck, and a DJ
+   * looking at the button needs the page to say what the button says.
+   */
+  'The player crashed on repeated HOT CUE presses with Master Tempo enabled.':
+    'O player travava ao apertar HOT CUE várias vezes com o Master Tempo ligado.',
+  'Audio dropout on the slave deck when using SYNC.':
+    'Queda de áudio no deck slave usando SYNC.',
+  'A freeze could occur while editing the TAG LIST.':
+    'Podia travar ao editar a TAG LIST.',
+  'The browse screen slowed or stopped after several hours of use, and a freeze occurred holding HOT CUE over a second during auto hot cue loading.':
+    'A tela de browse ficava lenta ou parava depois de várias horas de uso, e travava ao segurar HOT CUE por mais de um segundo durante o carregamento automático de hot cue.',
+  'A WAVE file with an incompatible header left "Loading.." on screen indefinitely. Folders did not list on a 2TB HDD.':
+    'Um arquivo WAVE com header incompatível deixava "Loading.." na tela para sempre. As pastas não apareciam em um HD de 2TB.',
+  'Some hard drives were not recognized. Noise when Master Tempo was activated.':
+    'Alguns HDs não eram reconhecidos. Ruído ao ativar o Master Tempo.',
+  'AIFF at 24bit/48kHz stopped playing and could not be loaded to a deck. Audio noise while scratching.':
+    'AIFF em 24bit/48kHz parava de tocar e não carregava em um deck. Ruído no áudio ao fazer scratch.',
+  'Linked to a CDJ-2000NXS, some CDJ-2000NXS2 features were disabled.':
+    'Ligado a um CDJ-2000NXS, alguns recursos do CDJ-2000NXS2 ficavam desativados.',
+  'Digitally distorted white noise on certain WAV files. An active loop could activate a very short loop.':
+    'Ruído branco com distorção digital em certos arquivos WAV. Um loop ativo podia acionar um loop muito curto.',
+  'Issues during playback and track selection, and with SLIP HOT CUE.':
+    'Problemas durante a reprodução e a seleção de tracks, e com o SLIP HOT CUE.',
+  'Speed did not return to the displayed BPM with Sync on. Popping noise in a loop with QUANTIZE and MASTER TEMPO enabled.':
+    'A velocidade não voltava para o BPM mostrado na tela com o Sync ligado. Estalo dentro de um loop com QUANTIZE e MASTER TEMPO ligados.',
+  'Playback sound stopped while BEAT DIVIDE was activated.':
+    'O som parava com o BEAT DIVIDE acionado.',
+  'Folder browsing failed on 2TB hard drives. Slow track list browsing in Serato DJ HID mode.':
+    'A navegação por pastas falhava em HDs de 2TB. Lista de tracks lenta no modo Serato DJ HID.',
+  'AIFF at 24bit/48kHz stopped playing and could not be loaded. Digitally distorted white noise on certain WAV files.':
+    'AIFF em 24bit/48kHz parava de tocar e não carregava. Ruído branco com distorção digital em certos arquivos WAV.',
+  'PRO DJ LINK compatibility with the CDJ-2000NXS2 and XDJ-1000MK2.':
+    'Compatibilidade PRO DJ LINK com o CDJ-2000NXS2 e o XDJ-1000MK2.',
+  'Speed did not return to the displayed BPM with Sync enabled.':
+    'A velocidade não voltava para o BPM mostrado na tela com o Sync ligado.',
+  'Categories and tracks were not shown in the browser when a database had many tracks. Search results did not appear when moving the cursor.':
+    'As categorias e as tracks não apareciam no browser quando o banco de dados tinha muitas tracks. Os resultados da busca não apareciam ao mover o cursor.',
+  'SEARCH worked incorrectly under certain conditions.':
+    'O SEARCH funcionava de forma incorreta em determinadas condições.',
+  'The USB audio function did not work in DJ Software Control mode.':
+    'A função de áudio USB não funcionava no modo DJ Software Control.',
+
+  /*
+   * SIX MODELS AND THREE ROWS JOINED THE MATRIX ON 2026-08-08, taking it from
+   * 9 models and 38 rows to 15 and 63. The strings below are their fault text.
+   * Adding them here in the SAME commit is the point: the reason the previous
+   * batch shipped in English is that the data landed and the maps did not, and
+   * the gate check now refuses the build rather than trusting anyone to remember.
+   */
+  'BPM could fluctuate during playback using Sync, and so could the tempo of a track with Slip Mode engaged.':
+    'O BPM podia oscilar durante a reprodução com o Sync, e o tempo de uma track com o Slip Mode ativado também.',
+  'The loop beat display returned to WAVE after a loop ended, and SYNC MASTER switched itself when SYNC was disabled.':
+    'O display de beats do loop voltava para WAVE quando o loop terminava, e o SYNC MASTER mudava sozinho ao desligar o SYNC.',
+  'Needle Search pad faults, a sorted playlist not being restored on return, and the Master Player switching when an Active Loop started.':
+    'Falhas no pad do Needle Search, uma playlist ordenada que não voltava ao estado anterior, e o Master Player mudando ao iniciar um Active Loop.',
+  'Some Apple Lossless files would not play.':
+    'Alguns arquivos Apple Lossless não tocavam.',
+  'macOS Catalina 10.15 could not see the unit as an audio device.':
+    'O macOS Catalina 10.15 não reconhecia o aparelho como dispositivo de áudio.',
+  'Inconsistencies in the matching function.':
+    'Inconsistências na função de matching.',
+  'Popping noise during a LOOP with QUANTIZE and MASTER TEMPO on.':
+    'Estalo durante um LOOP com QUANTIZE e MASTER TEMPO ligados.',
+  'A HOT CUE fired after jumping to LOOP-IN when changing the loop beat length with QUANTIZE on.':
+    'Um HOT CUE disparava depois de pular para o LOOP-IN ao mudar o tamanho do loop em beats com o QUANTIZE ligado.',
+  'Emergency loop triggering on certain MP3 files carrying APE tag data.':
+    'Emergency loop disparando em certos arquivos MP3 que carregam dados de tag APE.',
+  'Track load time grew after several hours of use.':
+    'O tempo de carregamento das tracks aumentava depois de várias horas de uso.',
+  'Faults using SLIP HOT CUE.':
+    'Falhas ao usar o SLIP HOT CUE.',
+  'Some tracks would not play on a linked CDJ-TOUR1.':
+    'Algumas tracks não tocavam em um CDJ-TOUR1 ligado por link.',
+  'Standby could not always be cancelled with the LFO FORM (WAKE UP) control.':
+    'Nem sempre era possível sair do standby pelo controle LFO FORM (WAKE UP).',
+  'Noise in USB audio in and out on some computers.':
+    'Ruído na entrada e na saída de áudio USB em alguns computadores.',
+  'Some effects did not work as expected when switched on.':
+    'Alguns efeitos não funcionavam como esperado ao serem acionados.',
+  'The mixer shut itself down unexpectedly.':
+    'O mixer se desligava sozinho de forma inesperada.',
+  'BPM display fluctuating when SLIP was used on a linked CDJ-2000NXS or CDJ-900.':
+    'O display de BPM oscilando ao usar o SLIP em um CDJ-2000NXS ou CDJ-900 ligado por link.',
+  'ROLL, REV ROLL and SLIP ROLL volume was not always stable.':
+    'O volume de ROLL, REV ROLL e SLIP ROLL não era sempre estável.',
+  'No effect sound when REV ROLL followed ROLL immediately.':
+    'Nenhum som de efeito quando o REV ROLL vinha logo depois do ROLL.',
+  'Slight noise while operating the X-PAD.':
+    'Um ruído leve ao operar o X-PAD.',
+  'Audio communication with iOS and iPadOS devices.':
+    'Comunicação de áudio com aparelhos iOS e iPadOS.',
+  'DJM-REC recording or live streaming sometimes stopped.':
+    'A gravação do DJM-REC ou a transmissão ao vivo às vezes parava.',
+  'Popping noise through USB audio when switching FX ASSIGN with BEAT FX on.':
+    'Estalo no áudio USB ao trocar o FX ASSIGN com o BEAT FX ligado.',
 };
 
 const LONG = {
@@ -82,6 +188,13 @@ const LONG = {
     'A AlphaTheta não publicou nenhuma correção de defeito de hardware para este mixer além das paradas de gravação do DJM-REC. O resto do histórico de mudanças é recurso novo.',
   'Withdrawn by AlphaTheta. It added OneLibrary, then playlists failed to display for people exporting from older rekordbox. No music or data was deleted, and the player reverted to Device Library. Do not install this version.':
     'Retirada pela AlphaTheta. Ela trouxe o OneLibrary, e aí as playlists deixaram de aparecer para quem exportava de um rekordbox mais antigo. Nenhuma música e nenhum dado foram apagados, e o player voltou para o Device Library. Não instale esta versão.',
+
+  'Not a defect. From this version the unit automatically switches off after 20 minutes of no use when Power Management is on, following the EU Ecodesign Directive. A deck that powered down during a long changeover is obeying that setting, not failing.':
+    'Não é defeito. A partir desta versão o aparelho se desliga sozinho depois de 20 minutos sem uso quando o Power Management está ligado, seguindo a Diretiva Ecodesign da União Europeia. Um deck que desligou durante uma troca longa está obedecendo a essa configuração, não falhando.',
+  'AlphaTheta has published no firmware change history for this unit, so there is no documented fix to report. This section stays empty until one exists.':
+    'A AlphaTheta não publicou nenhum histórico de mudanças de firmware para este aparelho, então não há correção documentada a relatar. Esta seção fica vazia até existir uma.',
+  'AlphaTheta published no detail for version 1.05 beyond "Minor issues", and versions 1.00 to 1.02 are not listed at all. What is above is every documented fix for this mixer, not necessarily every fix.':
+    'A AlphaTheta não publicou nenhum detalhe da versão 1.05 além de "Minor issues", e as versões 1.00 a 1.02 não aparecem na lista. O que está acima é toda correção documentada deste mixer, e não necessariamente toda correção.',
 };
 
 const tr = (map, s) => (s == null ? s : map[s] ?? s);
@@ -262,9 +375,11 @@ const schema = {
 
     <p class="dim fw-foot">
       Só falhas. Recursos novos ficam de fora de propósito, porque recurso
-      faltando não acaba com um set. Um modelo entra aqui quando o histórico de
-      mudanças dele já foi lido na fonte primária, e é por isso que esta
-      lista é menor que o catálogo. Achou alguma coisa errada aqui?
+      faltando não acaba com um set. Todo modelo AlphaTheta que existe neste
+      site tem uma seção aqui, inclusive os que não têm nada a relatar: quando a
+      AlphaTheta não publicou histórico de mudanças, a seção diz isso em vez de
+      ficar de fora, porque uma seção que falta e uma ficha limpa parecem a
+      mesma coisa de fora. Achou alguma coisa errada aqui?
       <a href="/pt/feedback">Conte pra gente</a> e a gente confere na fonte.
     </p>
 
