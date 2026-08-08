@@ -107,8 +107,8 @@ const schema = {
     <details class="acc-sec" name="djm900-acc" id="no-signal"><summary><h3 class="acc-h2">A channel has no signal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Short answer.</strong> Before assuming the channel has failed,
-        check the channel fader, the crossfader assignment, and the input selector,
-        in that order.</p>
+        check the channel fader, the crossfader assignment, the input selector, and
+        the send and return, in that order.</p>
         <p><strong>Why this happens.</strong> The channel fader can simply be down,
         the crossfader assign switch can have that channel routed to the opposite
         side you are pushing, or the input selector can be set to a source that is
@@ -118,9 +118,18 @@ const schema = {
         actually is. Confirm the input selector for that channel matches your source.
         If all three check out, move the source to a different channel to isolate
         whether the problem is the channel strip or upstream.</p>
+        <p><strong>The one people forget: the send and return.</strong> This mixer
+        has discrete SEND and RETURN terminals for an outboard effector, and a jack
+        sitting in the return puts whatever is on the other end of that cable into
+        the signal path. If that unit is switched off, on standby, in a bypass mode
+        that does not pass audio, or simply not connected at the far end, nothing
+        comes back. Nothing on the top panel hints at it, and a cable coiled behind
+        an installed booth is the version of this that catches people. Pull the jack
+        out of the return and the path restores itself.</p>
         <p><strong>Avoid it next time.</strong> Do a full gain and routing check on
         every channel before doors open, not after the first complaint from the
-        booth.</p>
+        booth, and treat the send and return as a patch you commit to rather than
+        one you leave hanging.</p>
         <p class="acc-related">Related: <a href="#faders">Faders behaving unexpectedly</a> <a href="/emergency">Start Emergency Mode</a></p>
       </div>
     </details>

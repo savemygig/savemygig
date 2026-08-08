@@ -1637,3 +1637,23 @@ summary:focus-visible {
     align-items: center; justify-content: center;
   }
 }
+
+/* THE REST OF THE HARDWARE PAGE CONTRACT, PROMOTED TO GLOBAL (2026-08-08).
+   Same reasoning as the photo box above, found the same way. Antonio asked for
+   "the same format, same layouts like the pioneer one", and measuring the new
+   Technics and XDJ pages against xdj-1000mk2 and xone-96 found three rules the
+   trimmed style blocks had left behind:
+     .rb-h1 margin        6.4px on every other hardware page, 0 on the new ones
+     .rb-h1 .accent       the red word rendered 54.4px instead of 52.2px
+     [id] scroll-margin    24px everywhere else, 0 on the new ones, which is
+                          FUNCTIONAL rather than cosmetic: without it an in-page
+                          "Related:" link lands the heading flush against the top
+                          of the viewport instead of clear of it.
+   All three were identical in all 60 pages that declared them, with no competing
+   values anywhere, so there was nothing to reconcile: they were always meant to be
+   one rule. The per-page copies stay and keep winning through Astro's scoped
+   styles; this is the default that makes a new page correct before anyone
+   remembers to copy anything. */
+.rb-h1 { margin-bottom: 0.4rem; }
+.rb-h1 .accent { font-size: 96%; }
+[id] { scroll-margin-top: 1.5rem; }

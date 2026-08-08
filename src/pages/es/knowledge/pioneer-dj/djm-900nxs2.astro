@@ -106,8 +106,8 @@ const schema = {
     <details class="acc-sec" name="djm900-acc" id="no-signal"><summary><h3 class="acc-h2">Un canal no tiene señal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Respuesta corta.</strong> Antes de suponer que el canal falló,
-        revisa el fader de canal, la asignación del crossfader y el selector de
-        entrada, en ese orden.</p>
+        revisa el fader de canal, la asignación del crossfader, el selector de
+        entrada y el send y return, en ese orden.</p>
         <p><strong>Por qué pasa esto.</strong> El fader de canal puede estar
         simplemente abajo, el switch de asignación del crossfader puede tener ese
         canal ruteado al lado opuesto al que estás empujando, o el selector de
@@ -118,9 +118,18 @@ const schema = {
         está realmente tu crossfader. Confirma que el selector de entrada de ese
         canal coincida con tu fuente. Si las tres cosas están bien, pasa la fuente a
         otro canal para aislar si el problema es el strip de canal o algo antes.</p>
+        <p><strong>Lo que todos olvidan: el send y return.</strong> Este mixer
+        tiene terminales SEND y RETURN separados para un procesador externo, y un
+        plug metido en el return pone en el camino de la señal lo que esté en el otro
+        extremo de ese cable. Si ese equipo está apagado, en standby, en un modo de
+        bypass que no pasa audio, o simplemente sin conexión del otro lado, no vuelve
+        nada. Nada en el panel superior lo indica, y un cable enrollado detrás de un
+        booth instalado es la versión de esto que agarra a la gente. Saca el plug del
+        return y el camino se restablece solo.</p>
         <p><strong>Evítalo la próxima vez.</strong> Haz un chequeo completo de
         ganancia y ruteo en cada canal antes de que abran puertas, no después del
-        primer reclamo desde el booth.</p>
+        primer reclamo desde el booth, y trata el send y return como un patch que
+        asumes, no como uno que dejas colgando.</p>
         <p class="acc-related">Relacionados: <a href="#faders">Faders que se comportan raro</a> <a href="/es/emergency">Abrir Emergency Mode</a></p>
       </div>
     </details>

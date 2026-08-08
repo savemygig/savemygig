@@ -106,7 +106,67 @@ for (const file of pages) {
   }
 }
 
+/*
+ * LAYOUT PARITY WITH THE REFERENCE PAGES. Added 2026-08-08, same session and the
+ * same cause as the photo box.
+ *
+ * Antonio asked for "the same format, same layouts like the pioneer one", and the
+ * hardware pages achieve that by each carrying an identical copy of the same
+ * ~17 rule style block. The new Technics and XDJ pages carried a trimmed one, so
+ * three rules were missing: the h1 bottom margin, the accent word's 96% size, and
+ * the anchor scroll offset. The third is functional, not cosmetic: without it an
+ * in-page "Related:" link lands its heading flush against the top of the
+ * viewport. All three are defaults in global.css now, and this measures the
+ * result rather than trusting anyone to copy a style block correctly.
+ *
+ * THE REFERENCE IS A PAGE THAT SHIPPED AND WAS APPROVED, not an average, for the
+ * same reason the booth briefing band is anchored to the DJM-900NXS2: if the whole
+ * corpus drifts, an average drifts with it and the check keeps passing.
+ */
+const REFERENCE = path.join(DIST, 'knowledge', 'pioneer-dj', 'xdj-1000mk2.html');
+
+async function metrics(page, file) {
+  await page.goto(`file://${path.resolve(file)}`);
+  return page.evaluate(() => {
+    const h1 = document.querySelector('h1');
+    const accent = h1?.querySelector('.accent');
+    const target = document.querySelector('main [id]');
+    const para = [...document.querySelectorAll('main .acc-body p')].find((x) => x.textContent.trim().length > 60);
+    const g = (el) => (el ? getComputedStyle(el) : null);
+    const h = g(h1), a = g(accent), t = g(target), p = g(para);
+    return {
+      h1MarginBottom: h?.marginBottom, accentFontSize: a?.fontSize,
+      anchorScrollMargin: t?.scrollMarginTop,
+      paraColor: p?.color, paraLineHeight: p?.lineHeight,
+    };
+  });
+}
+
 const browser = await chromium.launch();
+
+if (fs.existsSync(REFERENCE)) {
+  const page = await browser.newPage();
+  await page.setViewportSize({ width: 1280, height: 900 });
+  const ref = await metrics(page, REFERENCE);
+  let parity = 0;
+  for (const file of pages) {
+    if (path.resolve(file) === path.resolve(REFERENCE)) continue;
+    const m = await metrics(page, file);
+    const off = Object.keys(ref).filter((k) => ref[k] && m[k] && ref[k] !== m[k]);
+    if (off.length) {
+      fail(`${file.replace(`${DIST}/`, '')}: layout differs from the reference hardware page`,
+        ...off.map((k) => `${k}: this page ${m[k]}, ${path.basename(REFERENCE)} ${ref[k]}`),
+        'The hardware pages are one family. Those rules are defaults in global.css.');
+    } else {
+      parity++;
+    }
+  }
+  if (parity === pages.length - 1) console.log(`PASS  layout parity ${parity} pages match ${path.basename(REFERENCE)}`);
+  await page.close();
+} else {
+  console.log(`note  reference ${REFERENCE} not built, skipped layout parity`);
+}
+
 for (const width of WIDTHS) {
   const page = await browser.newPage();
   await page.setViewportSize({ width, height: 900 });

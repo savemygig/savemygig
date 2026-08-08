@@ -106,8 +106,8 @@ const schema = {
     <details class="acc-sec" name="djm900-acc" id="no-signal"><summary><h3 class="acc-h2">Um canal está sem sinal</h3><span class="acc-chev" aria-hidden="true"></span></summary>
       <div class="acc-body">
         <p><strong>Resposta curta.</strong> Antes de dar o canal por morto, confira
-        o fader de canal, o assign do crossfader e o seletor de entrada, nessa
-        ordem.</p>
+        o fader de canal, o assign do crossfader, o seletor de entrada e o send e
+        return, nessa ordem.</p>
         <p><strong>Por que isso acontece.</strong> O fader de canal pode estar
         simplesmente embaixo, a chave de assign do crossfader pode estar mandando
         aquele canal para o lado oposto ao que você está empurrando, ou o seletor
@@ -119,9 +119,18 @@ const schema = {
         seletor de entrada daquele canal combina com a sua fonte. Se os três
         estiverem certos, passe a fonte para outro canal para descobrir se o
         problema é o canal ou algo antes dele.</p>
+        <p><strong>O que todo mundo esquece: o send e return.</strong> Este mixer
+        tem terminais SEND e RETURN separados para um processador externo, e um
+        plugue parado no return coloca no caminho do sinal o que estiver na outra
+        ponta daquele cabo. Se esse aparelho estiver desligado, em standby, num modo
+        de bypass que não passa áudio, ou simplesmente sem conexão na outra ponta,
+        nada volta. Nada no painel de cima avisa, e um cabo enrolado atrás de uma
+        booth instalada é a versão disso que pega as pessoas. Tire o plugue do
+        return e o caminho se restabelece sozinho.</p>
         <p><strong>Evite da próxima vez.</strong> Faça uma conferência completa de
         ganho e roteamento em cada canal antes de abrir as portas, e não depois da
-        primeira reclamação na booth.</p>
+        primeira reclamação na booth, e trate o send e return como um patch que você
+        assume, não como um que você deixa pendurado.</p>
         <p class="acc-related">Relacionados: <a href="#faders">Faders se comportando de forma estranha</a> <a href="/pt/emergency">Abrir o Emergency Mode</a></p>
       </div>
     </details>
